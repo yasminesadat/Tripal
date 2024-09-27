@@ -12,7 +12,7 @@ const port = process.env.PORT || "8000";
 
 
 const routes = require('./routes/Routes');
-
+const activityRoutes = require('./routes/activityControllerRoutes');
 // configurations
 // Mongo DB
 mongoose.connect(MongoURI)
@@ -27,5 +27,5 @@ mongoose.connect(MongoURI)
 
 app.use(express.json())
 app.use('/api', routes);
-
+app.use('/activity', activityRoutes);
 
