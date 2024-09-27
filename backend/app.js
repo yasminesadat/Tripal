@@ -3,13 +3,16 @@ const express = require("express");
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
+
+const routes = require ('./routes/preferenceTagRoutes');
 const MongoURI = process.env.MONGO_URI;
 
 
 //App variables
 const app = express();
 const port = process.env.PORT || "8000";
-
+app.use(express.json())
+app.use('/', routes)
 // configurations
 // Mongo DB
 mongoose.connect(MongoURI)
@@ -29,7 +32,7 @@ app.get("/home", (req, res) => {
 });
 
 
-app.use(express.json())
+
 
 
 
