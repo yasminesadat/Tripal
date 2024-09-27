@@ -10,6 +10,9 @@ const MongoURI = process.env.MONGO_URI;
 const app = express();
 const port = process.env.PORT || "8000";
 
+
+const routes = require('./routes/Routes');
+
 // configurations
 // Mongo DB
 mongoose.connect(MongoURI)
@@ -21,19 +24,8 @@ mongoose.connect(MongoURI)
         })
     })
     .catch(err => console.log(err));
-/*
-                                                    Start of your code
-*/
-app.get("/home", (req, res) => {
-    res.status(200).send("You have everything installed!");
-});
-
 
 app.use(express.json())
+app.use('/api', routes);
 
-
-
-/*
-                                                    End of your code
-*/
 
