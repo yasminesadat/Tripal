@@ -10,8 +10,9 @@ const MongoURI = process.env.MONGO_URI;
 const app = express();
 const port = process.env.PORT || "8000";
 
+//Route Imports
+const routes = require('./routes/index');
 
-const routes = require('./routes/Routes');
 
 // configurations
 // Mongo DB
@@ -26,6 +27,4 @@ mongoose.connect(MongoURI)
     .catch(err => console.log(err));
 
 app.use(express.json())
-app.use('/api', routes);
-
-
+app.use('/', routes);
