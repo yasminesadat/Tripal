@@ -1,4 +1,4 @@
-const preferenceTag = require ('../model/preferenceTag.js');
+const preferenceTag = require ('../models/PreferenceTag.js');
 const { default: mongoose } = require('mongoose');
 
 const createPrefTags =  async (req, res) => {
