@@ -3,16 +3,16 @@ const express = require("express");
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-
-const routes = require ('./routes/preferenceTagRoutes');
 const MongoURI = process.env.MONGO_URI;
 
 
 //App variables
 const app = express();
 const port = process.env.PORT || "8000";
-app.use(express.json())
-app.use('/', routes)
+
+
+const routes = require('./routes/Routes');
+
 // configurations
 // Mongo DB
 mongoose.connect(MongoURI)
@@ -24,19 +24,6 @@ mongoose.connect(MongoURI)
         })
     })
     .catch(err => console.log(err));
-/*
-                                                    Start of your code
-*/
-app.get("/home", (req, res) => {
-    res.status(200).send("You have everything installed!");
-});
 
-
-
-
-
-
-/*
-                                                    End of your code
-*/
-
+app.use(express.json())
+app.use('/api', routes);
