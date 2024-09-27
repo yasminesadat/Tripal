@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { createTourGuide } = require('../controllers/TourGuideController.js');
-const { createSeller } = require('../controllers/SellerController.js');
-const { createAdvertiser } = require('../controllers/AdvertiserController.js');
+const controllers = require('../controllers');
+
 
 // defining tour-guide routes
-router.post("/tour-guide",createTourGuide);
+router.post("/tour-guide",controllers.createTourGuide);
 
 // defining seller routes
-router.post("/seller",createSeller);
+router.post("/seller",controllers.createSeller);
 
 //defining advertiser routes
-router.post("/advertiser",createAdvertiser);
+router.post("/advertiser",controllers.createAdvertiser);
 
 module.exports = router;
