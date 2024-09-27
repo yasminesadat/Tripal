@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getPrefTags, createPrefTags, updatePrefTags, deletePrefTags} = require ('../controllers/preferenceTagController.js');
+const {getPrefTags, createPrefTags, updatePrefTags, deletePrefTags} = require ('../controllers/PreferenceTagController.js');
 
 router.get ('/getPrefTags', getPrefTags);
 router.post ('/createPrefTags', createPrefTags);
