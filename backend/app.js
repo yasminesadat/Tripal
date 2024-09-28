@@ -1,6 +1,7 @@
 // External variables
 const express = require("express");
 const mongoose = require('mongoose');
+const cors = require('cors')
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
@@ -27,4 +28,5 @@ mongoose.connect(MongoURI)
     .catch(err => console.log(err));
 
 app.use(express.json())
+app.use(cors())
 app.use('/', routes);
