@@ -1,6 +1,7 @@
 // External variables
 const express = require("express");
 const mongoose = require('mongoose');
+const cors = require('cors');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
@@ -9,9 +10,6 @@ const MongoURI = process.env.MONGO_URI;
 //App variables
 const app = express();
 const port = process.env.PORT || "8000";
-
-
-const corsMiddleware = require('./middleware/cors');
 
 //Route Imports
 const routes = require('./routes/index');
@@ -29,13 +27,6 @@ mongoose.connect(MongoURI)
     })
     .catch(err => console.log(err));
 
-
-    app.use(corsMiddleware); 
-    app.use(express.json());
-    app.use('/', routes);
-    
-    // Handle preflight requests for specific routes if needed
-    app.options('/sellers/seller', corsMiddleware);
-// app.use(express.json())
-// app.use('/', routes);
-// app.use(corsMiddleware);
+app.use(express.json());
+app.use('/', routes);
+app.use(cors());
