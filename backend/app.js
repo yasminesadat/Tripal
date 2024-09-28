@@ -5,7 +5,6 @@ const cors = require('cors')
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
-const cors = require('cors');
 
 //App variables
 const app = express();

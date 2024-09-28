@@ -1,7 +1,7 @@
 import axios from 'axios'
 import react from 'react'
 
-const baseURL = 'http://localhost:5050/tags/pref-tags'
+const baseURL = 'http://localhost:5050/api/pref-tags'
 
 // Create a new tag
 export const createTag = async (tagData) => {
