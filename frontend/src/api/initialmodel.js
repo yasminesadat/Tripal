@@ -1,5 +1,5 @@
 import { axios } from './axios'
-
+// example 
 export async function signUp (newUser) {
     try {
         const response = await axios.post('/sellers/seller', newUser);
