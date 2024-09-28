@@ -6,7 +6,8 @@ const routes = [
     './SellerRoutes',
     './TourGuideRoutes',
     './AdvertiserRoutes',
-    './activityControllerRoutes'
+    './activityControllerRoutes',
+    './TouristRoutes'
 ];
 
 routes.forEach(route => {
