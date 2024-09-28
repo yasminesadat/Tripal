@@ -55,12 +55,12 @@ const TagManager = () => {
     }
   };
 
-  // Delete tag
+  // handle delete
   const handleDeleteTag = async (id) => {
     try {
       await deleteTag(id);
       message.success('Tag deleted successfully!');
-      fetchTags(); // Refresh the list
+      fetchTags();
     } catch (error) {
       message.error('Error deleting tag');
     }
@@ -75,11 +75,8 @@ const TagManager = () => {
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}
           placeholder="Enter new tag"
-          //style={{ width: '300px', marginRight: '10px' }}
         />
-        <Button type="primary" onClick={handleCreateTag}>
-          Create Tag
-        </Button>
+        <Button type="primary" onClick={handleCreateTag}>Create Tag</Button>
       </div>
 
       <List
@@ -95,9 +92,7 @@ const TagManager = () => {
             <Tag>{tag.Name}</Tag>
           </List.Item>
         )}
-        //style={{ marginTop: '20px' }}
       />
-
 
       <Modal
         title="Update Tag"
