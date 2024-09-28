@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const createTourist = async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const tourist = await tourist.create({
+        const tourist = await touristModel.create({
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,

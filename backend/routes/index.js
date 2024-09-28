@@ -8,5 +8,5 @@ router.use('/prefTags', require('./PreferenceTagRoutes'));
 router.use('/sellers', require('./SellerRoutes'));
 router.use('/tourguides', require('./TourGuideRoutes'));
 router.use('/advertisers', require('./AdvertiserRoutes'));
-
+router.use('/tourist', require('./touristRoutes'));
 module.exports = router;
