@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Use the imported routes
-router.use('/prefTags', require('./PreferenceTagRoutes'));
+router.use('/tags', require('./PreferenceTagRoutes'));
 router.use('/sellers', require('./SellerRoutes'));
 router.use('/tourguides', require('./TourGuideRoutes'));
 router.use('/advertisers', require('./AdvertiserRoutes'));
