@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createActivityCategory, getActivityCategories } = require('../controllers/activityCategoryController.js');
+const { createActivityCategory, getActivityCategories } = require('../controllers/ActivityCategoryController.js');
 
 // create a new activity category
 router.post("/addCategory", createActivityCategory);
