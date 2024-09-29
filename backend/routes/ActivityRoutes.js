@@ -5,7 +5,7 @@ const {
   getActivities,
   updateActivity,
   deleteActivity
-} = require('../controllers/activityController');  
+} = require('../controllers/ActivityController');  
 
 router.post('/activities', createActivity);      
 router.get('/activities/:username', getActivities);        
