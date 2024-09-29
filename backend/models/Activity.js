@@ -32,11 +32,13 @@ const activitySchema = new Schema({
     required: true
   },
   category: {
-    type: String,
+    type: Schema.Types.ObjectId,  
+    ref: 'activityCategory',  
     required: true
   },
   tags: [{
-    type: String
+    type: Schema.Types.ObjectId,  
+    ref: 'preferenceTag' 
   }],
   specialDiscounts: {
     type: String
