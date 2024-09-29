@@ -4,16 +4,6 @@ const ActivityCategory = require('../models/activityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
 
 const createActivity = async (req, res) => {
-  // try {
-  //   const activity = new Activity({
-  //     ...req.body,
-  //     advertiser: req.advertiser._id  //assuming advertiser is authenticated
-  //   });
-  //   await activity.save();
-  //   res.status(201).json(activity);
-  // } catch (error) {
-  //   res.status(400).json({ error: error.message });
-  // }
   const { advertiser, title, description, date, time, location, priceRange, category: categoryName, tags: tagNames, specialDiscounts, isBookingOpen } = req.body;
   try {
     const existingAdvertiser = await Advertiser.findOne({ userName: advertiser });

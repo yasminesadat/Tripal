@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const routes = [
-    './PreferenceTagRoutes',
-    './SellerRoutes',
-    './TourGuideRoutes',
-    './AdvertiserRoutes',
-    './activityControllerRoutes',
-    './TouristRoutes',
-    './ProductRoutes',
+    './preference-tag-routes',
+    './seller-routes',
+    './tour-guide-routes',
+    './advertiser-routes',
+    './activity-category-routes',
+    './tourist-routes',
+    './product-routes',
     './ActivityRoutes',
 ];
 
