@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const activitySchema = new Schema({
   advertiser: {
-    type: Schema.Types.ObjectId,
-    ref: 'Advertiser',  // Link to Advertiser
-    required: true
+    type: String,  
+    required: true,
+    ref: 'Advertiser'  
   },
   title: {
     type: String,
