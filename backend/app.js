@@ -1,17 +1,18 @@
 // External variables
 const express = require("express");
 const mongoose = require('mongoose');
+const cors = require('cors')
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
-
 
 //App variables
 const app = express();
 const port = process.env.PORT || "8000";
 
-
-const routes = require('./routes/Routes');
+//Route Imports
+const routes = require('./routes/index');
+app.use(cors());
 
 // configurations
 // Mongo DB
@@ -26,6 +27,4 @@ mongoose.connect(MongoURI)
     .catch(err => console.log(err));
 
 app.use(express.json())
-app.use('/api', routes);
-
-
+app.use('/', routes);
