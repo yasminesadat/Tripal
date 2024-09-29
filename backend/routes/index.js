@@ -9,6 +9,7 @@ const routes = [
     './activityControllerRoutes',
     './TouristRoutes',
     './ProductRoutes',
+    './ActivityRoutes',
 ];
 
 routes.forEach(route => {
