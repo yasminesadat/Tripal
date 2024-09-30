@@ -1,19 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 const routes = [
-    './preference-tag-routes',
-    './seller-routes',
-    './tour-guide-routes',
-    './advertiser-routes',
-    './activity-category-routes',
-    './tourist-routes',
-    './product-routes',
-    './ActivityRoutes',
+  "./PreferenceTagRoutes",
+  "./SellerRoutes",
+  "./TourGuideRoutes",
+  "./AdvertiserRoutes",
+  "./ActivityCategoryRoutes",
+  "./TouristRoutes",
+  "./ProductRoutes",
+  "./ActivityRoutes",
 ];
 
-routes.forEach(route => {
-    router.use('/api', require(route));
+routes.forEach((route) => {
+  router.use("/api", require(route));
 });
 
 module.exports = router;
