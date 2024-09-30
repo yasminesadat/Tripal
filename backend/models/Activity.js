@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const activitySchema = new Schema(
   {
     advertiser: {
-      type: Schema.Types.ObjectId,
+      type: String, //will it be string or the id??
       required: true,
-      ref: "advertiser",
+      ref: "Advertiser",
     },
     title: {
       type: String,
@@ -25,31 +25,23 @@ const activitySchema = new Schema(
       required: true,
     },
     location: {
-      type: String,      //mapsss!!!
+      type: String,
       required: true,
     },
-    price: {
-      type: Number, required: true,
+    priceRange: {
+      type: String, //to store price or range
+      required: true,
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: "ActivityCategory",
+      required: true,
     },
     tags: [
       {
         type: Schema.Types.ObjectId,
         ref: "PreferenceTag",
-        default: []
-
       },
-    ],
-    ratings: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Rating",
-        default: []
-      },
-
     ],
     specialDiscounts: {
       type: String,
@@ -61,7 +53,5 @@ const activitySchema = new Schema(
   },
   { timestamps: true }
 );
-const Activity = mongoose.model("Activity", activitySchema);
 
-
-module.exports = Activity
+module.exports = mongoose.model("Activity", activitySchema);
