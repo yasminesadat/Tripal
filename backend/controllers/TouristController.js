@@ -1,5 +1,7 @@
 const touristModel = require('../models/Tourist');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const walletModel = require('../models/Wallet')
 
 const createTourist = async (req, res) => {
     try {
@@ -13,10 +15,89 @@ const createTourist = async (req, res) => {
             dateOfBirth: req.body.dateOfBirth,
             job: req.body.job
         });
+        const id = tourist._id
+        const wallet = await walletModel.create({
+            userID: id
+        });
+
         res.status(200).json(tourist);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
+const getTouristInfo = async (req, res) => {
+    try {
+        const { id } = req.params;
 
-module.exports = { createTourist };
+        // checks if the id is a valid one 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid tourist ID'
+            });
+        }
+
+        // retreives all the info beta3 el tourist by his id 
+        const touristInformation = await touristModel.findById(id).lean();
+        if (!touristInformation) {
+            return res.status(404).json('Tourist profile doesn\'t exist');
+        }
+        // find corresponding wallet for this user (by default created with a balance of 0)
+        const touristWallet = await walletModel.findOne({ userID: id });
+        let walletBalance = 'No wallet information available';
+
+
+        if (touristWallet) {
+            walletBalance = `${touristWallet.amount} ${touristWallet.currency}`;
+        }
+
+        touristInformation.walletBalance = walletBalance;
+
+        return res.status(200).json(touristInformation);
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+};
+
+const updateTouristProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ...updateParameters } = req.body
+
+        if (updateParameters.userName) {
+            res.status(400).json({
+                status: 'error',
+                message: 'You cannot update your username'
+            })
+        }
+        if (updateParameters.walletBalance) {
+            res.status(400).json({
+                status: 'error',
+                message: 'You cannot update your balance'
+            })
+        }
+        if (updateParameters.dateOfBirth) {
+            res.status(400).json({
+                status: 'error',
+                message: 'You cannot update your date of birth, dont you know when you were born??'
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid tourist ID'
+            });
+        }
+        const touristToBeUpdated = await touristModel.findByIdAndUpdate(id, updateParameters, { new: true })
+        console.log(touristToBeUpdated)
+        if (!touristToBeUpdated) {
+            return res.status(404).json('Tourist profile doesnt exist');
+        }
+
+        return res.status(200).json({ status: 'success', data: { touristToBeUpdated } })
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+module.exports = { createTourist, getTouristInfo, updateTouristProfile };

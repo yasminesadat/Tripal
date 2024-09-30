@@ -1,6 +1,6 @@
 const Activity = require('../models/Activity');
 const Advertiser = require('../models/Advertiser');
-const ActivityCategory = require('../models/activityCategory');
+const ActivityCategory = require('../models/ActivityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
 
 const createActivity = async (req, res) => {
@@ -18,9 +18,9 @@ const createActivity = async (req, res) => {
     if (!tags || tags.length === 0) {
       return res.status(404).json({ error: "Tags not found" });
     }
- 
+
     const newActivity = new Activity({
-      advertiser: existingAdvertiser.userName,  
+      advertiser: existingAdvertiser.userName,
       title,
       description,
       date,
@@ -43,7 +43,7 @@ const createActivity = async (req, res) => {
 
 const getActivities = async (req, res) => {
   try {
-    const { username } = req.params; 
+    const { username } = req.params;
     const activities = await Activity.find({ advertiser: username });
     if (activities.length === 0) {
       return res.status(404).json({ error: "No activities found for this advertiser" });
@@ -100,17 +100,17 @@ const updateActivity = async (req, res) => {
 const deleteActivity = async (req, res) => {
   try {
     const activity = await Activity.findByIdAndDelete(req.params.id);
-    if (!activity) 
-        return res.status(404).json({ error: 'Activity not found' });
+    if (!activity)
+      return res.status(404).json({ error: 'Activity not found' });
     res.status(200).json({ message: 'Activity deleted' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-module.exports={
-    createActivity,
-    getActivities,
-    updateActivity,
-    deleteActivity
+module.exports = {
+  createActivity,
+  getActivities,
+  updateActivity,
+  deleteActivity
 }
