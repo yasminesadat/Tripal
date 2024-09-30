@@ -39,7 +39,6 @@ git merge development
 ```
 
 ### 5. Create Pull Request
-Create a Pull Request (PR)
 Once your changes are complete and tested, create a Pull Request to merge your team branch back into the development branch. Make sure to:
 
 Clearly describe the changes and their purpose.
