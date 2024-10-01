@@ -23,4 +23,4 @@ const walletSchema = new Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("walletSchema", walletSchema);
+module.exports = mongoose.model("Wallet", walletSchema);
