@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const advertiserSchema = new Schema(
   {
-    userName: {
+    name: {
       type: String,
       required: true,
       unique: true,
