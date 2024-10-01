@@ -8,7 +8,7 @@ const {
 
 // create a new activity category
 router.post("/activityCategory", createActivityCategory);
-// get all activity categorie
+// get all activity categories
 router.get("/activityCategories", getActivityCategories);
 router.delete('/activityCategory/:id', deleteActivityCategory)
 router.put('/activityCategory/:id', updateActivityCategory)
