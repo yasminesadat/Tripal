@@ -2,7 +2,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-mongoose.set("strictQuery", false);
+const colors = require("colors");
+
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
 
@@ -22,10 +23,12 @@ mongoose
     console.log("MongoDB is now connected!");
     // Starting server
     app.listen(port, () => {
-      console.log(`Listening to requests on http://localhost:${port}`);
+      console.log(
+        `Listening to requests on http://localhost:${port}`.cyan.underline
+      );
     });
   })
   .catch((err) => console.log(err));
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", routes);

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const productRatingSchema = new Schema(
+const ratingSchema = new Schema(
   {
     rating: {
       type: Number,
@@ -21,5 +21,5 @@ const productRatingSchema = new Schema(
   { timestamps: true }
 );
 
-const ProductRating = mongoose.model("ProductRating", productRatingSchema);
-module.exports = ProductRating;
+const ProductRating = mongoose.model("Rating", ratingSchema);
+module.exports = Rating;
