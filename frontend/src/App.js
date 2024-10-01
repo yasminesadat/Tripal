@@ -9,6 +9,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Pages.Home />} />
             <Route path="/preference-tags" element={<TagManager />} />
+            <Route path="/view-products" element={<Pages.ProductList />} />
           </Routes>
         </div>
       </BrowserRouter>

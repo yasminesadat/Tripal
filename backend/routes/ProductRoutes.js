@@ -4,6 +4,6 @@ const {getProducts, createProduct, searchProductsByName} = require ('../controll
 
 router.get ('/products', getProducts);
 router.post ('/products', createProduct);
-router.get ('/products', searchProductsByName);
+router.get ('/products/search', searchProductsByName);
 
 module.exports = router;
