@@ -14,5 +14,5 @@ const activityCategorySchema = new Schema(
 );
 
 module.exports =
-  mongoose.models.ActivityCategory ||
-  mongoose.model("ActivityCategory", activityCategorySchema);
+  mongoose.model("ActivityCategory", activityCategorySchema) ||
+  mongoose.models.ActivityCategory;
