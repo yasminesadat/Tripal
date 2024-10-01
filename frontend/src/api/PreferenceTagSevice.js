@@ -1,7 +1,7 @@
-import axios from 'axios'
-import react from 'react'
+import axios from "axios";
+import react from "react";
 
-const baseURL = 'http://localhost:5050/api/pref-tags'
+const baseURL = "http://localhost:5000/api/pref-tags";
 
 // Create a new tag
 export const createTag = async (tagData) => {
@@ -22,4 +22,3 @@ export const updateTag = async (id, tagData) => {
 export const deleteTag = async (id) => {
   return axios.delete(`${baseURL}/${id}`);
 };
-
