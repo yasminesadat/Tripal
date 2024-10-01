@@ -1,7 +1,8 @@
-const Activity = require("../models/Activity");
-const Advertiser = require("../models/Advertiser");
-const ActivityCategory = require("../models/ActivityCategory");
-const PreferenceTag = require("../models/PreferenceTag");
+const Activity = require('../models/Activity');
+const Advertiser = require('../models/Advertiser');
+const ActivityCategory = require('../models/ActivityCategory');
+const PreferenceTag = require('../models/PreferenceTag');
+
 
 const createActivity = async (req, res) => {
   const {
@@ -132,8 +133,10 @@ const updateActivity = async (req, res) => {
 const deleteActivity = async (req, res) => {
   try {
     const activity = await Activity.findByIdAndDelete(req.params.id);
-    if (!activity) return res.status(404).json({ error: "Activity not found" });
-    res.status(200).json({ message: "Activity deleted" });
+    if (!activity)
+      return res.status(404).json({ error: 'Activity not found' });
+    res.status(200).json({ message: 'Activity deleted' });
+
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -145,3 +148,4 @@ module.exports = {
   updateActivity,
   deleteActivity,
 };
+
