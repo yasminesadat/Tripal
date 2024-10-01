@@ -2,10 +2,51 @@ const touristModel = require('../models/Tourist');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const walletModel = require('../models/Wallet')
+var validator = require("email-validator");
+var passwordValidator = require('password-validator');
+var schema = new passwordValidator();
+schema
+    .is().min(8)
+    .is().max(100)
+    .has().uppercase()
+    .has().lowercase()
+    .has().digits(1)
+    .has().not().spaces()
+    .has().symbols()
+    .is().not().oneOf(['Passw0rd', 'Password123']);
 
 const createTourist = async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const { userName, email, password, confirmPassword, mobileNumber, nationality, dateOfBirth, job } = req.body
+        if (!userName || !email || !password) {
+            res.status(400);
+            throw new Error("Please add all fields");
+        }
+
+
+        const userExists = await touristModel.findOne({ email });
+        if (userExists) {
+            res.status(400);
+            throw new Error("User already exists");
+        }
+        // validate email and password= confirm password
+        if (!validator.validate(email)) {
+            res.status(400);
+            throw new Error("Wrong email format");
+        }
+        if (!schema.validate(password)) {
+            res.status(400);
+            throw new Error("Weak password , min 8 characters , 1 uppercase , 1 lowercase , 1 special symbol , and a number");
+        }
+
+        if (!password == confirmPassword) {
+            res.status(400);
+            throw new Error("Passwords do not match");
+        }
+
+        // 8 character minimum , upper case lower case number special character 
+        console.log("email validity", validator.validate(email));
         const tourist = await touristModel.create({
             userName: req.body.userName,
             email: req.body.email,
@@ -15,6 +56,7 @@ const createTourist = async (req, res) => {
             dateOfBirth: req.body.dateOfBirth,
             job: req.body.job
         });
+
         const id = tourist._id
         const wallet = await walletModel.create({
             userID: id
@@ -25,6 +67,7 @@ const createTourist = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
 const getTouristInfo = async (req, res) => {
     try {
         const { id } = req.params;
