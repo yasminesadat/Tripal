@@ -56,14 +56,22 @@ const createActivity = async (req, res) => {
 };
 
 const getActivities = async (req, res) => {
+  const { username } = req.query;
   try {
-    const { username } = req.params;
-    const activities = await Activity.find({ advertiser: username });
-    if (activities.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No activities found for this advertiser" });
+    let activities;
+
+    if (username) {
+      activities = await Activity.find({ advertiser: username });
+      if (activities.length === 0) {
+        return res.status(404).json({ error: "No activities found for this advertiser" });
+      }
+    } else {
+      activities = await Activity.find();
+      if (activities.length === 0) {
+        return res.status(404).json({ error: "No activities available" });
+      }
     }
+
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -139,9 +147,123 @@ const deleteActivity = async (req, res) => {
   }
 };
 
-module.exports = {
+const searchActivities = async (req, res) => {
+  const { term } = req.query; 
+
+  try {
+    let searches = {}; 
+
+    // Search by name
+    if (term) {
+      searches.title = { $regex: term, $options: 'i' }; 
+    }
+
+    // Search by category
+    const existingCategory = await ActivityCategory.findOne({ Name: { $regex: term, $options: 'i' } });
+    if (existingCategory) {
+      searches.category = existingCategory._id; 
+    }
+
+    // Search by tags
+    const existingTags = await PreferenceTag.find({ Name: { $regex: term, $options: 'i' } });
+    if (existingTags.length > 0) {
+      searches.tags = { $in: existingTags.map(tag => tag._id) }; 
+    }
+
+    const activities = await Activity.find({
+      $or: Object.keys(searches).map(key => ({ [key]: searches[key] }))
+    }).populate('category').populate('tags');
+
+    if (activities.length === 0) {
+      return res.status(404).json({ error: 'No activities found' });
+    }
+
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const filterActivities = async (req, res) => {
+  const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
+  
+  try{
+
+    let filters = {};
+
+    // Filter based on budget 
+    if (budgetMin || budgetMax) {
+      filters.priceRange = {};
+      if (budgetMin) filters.priceRange.$gte = budgetMin;
+      if (budgetMax) filters.priceRange.$lte = budgetMax;
+    }
+
+    // Filter based on date
+    // should i specify a start and end or just take 1 value and give all what's equal 
+    if (startDate || endDate) {
+      filters.date = {};
+      if (startDate) filters.date.$gte = new Date(startDate);
+      if (endDate) filters.date.$lte = new Date(endDate);
+    }
+    
+    // Filter based on category
+    if (category) {
+      const existingCategory = await ActivityCategory.findOne({ Name: category });
+      if (existingCategory) {
+        filters.category = existingCategory._id;
+      } else {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+    }
+
+    // Filter based on rating
+    if (rating) {
+      filters.ratings = { $gte: rating };
+    }
+
+    const filteredActivities = await Activity.find(filters)
+      .populate('category')
+      .populate('tags');
+
+    res.status(200).json(filteredActivities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const sortActivities = async (req, res) => {
+  const { sortBy } = req.query;
+
+  let sortCriteria = {};
+
+  if (sortBy === 'price') {
+    sortCriteria = { priceRange: 1 }; 
+  } else if (sortBy === 'ratings') {
+    sortCriteria = { ratings: -1 };  
+  } else {
+    sortCriteria = { date: 1 };
+  }
+
+  try {
+    const activities = await Activity.find()
+      .sort(sortCriteria) 
+
+    if (activities.length === 0) {
+      return res.status(404).json({ error: 'No activities found' });
+    }
+
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+module.exports={
   createActivity,
   getActivities,
   updateActivity,
   deleteActivity,
-};
+  filterActivities,
+  sortActivities,
+  searchActivities
+}

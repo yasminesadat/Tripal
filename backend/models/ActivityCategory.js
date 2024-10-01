@@ -13,6 +13,4 @@ const activityCategorySchema = new Schema(
   { timestamps: true }
 );
 
-module.exports =
-  mongoose.model("ActivityCategory", activityCategorySchema) ||
-  mongoose.models.ActivityCategory;
+module.exports = mongoose.model("ActivityCategory", activityCategorySchema);

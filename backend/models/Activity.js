@@ -34,13 +34,13 @@ const activitySchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: "activityCategory",
+      ref: "ActivityCategory",
       required: true,
     },
     tags: [
       {
         type: Schema.Types.ObjectId,
-        ref: "preferenceTag",
+        ref: "PreferenceTag",
       },
     ],
     specialDiscounts: {
