@@ -32,7 +32,7 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find().populate("seller").populate("reviews");
+  const products = await Product.find().populate("seller").populate("ratings");
   res.status(200).json(products);
 });
 
@@ -40,7 +40,7 @@ const searchProductsByName = asyncHandler(async (req, res) => {
   const { name } = req.query;
   if (!name) {
     res.status(400);
-    throw new Error("Product name is required");
+    throw new Error("name is required");
   }
 
   const products = await Product.find({
@@ -103,17 +103,7 @@ const editProduct = asyncHandler(async (req, res) => {
 
 const addRating = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { rating, review, user } = req.body;
-
-  if (!user) {
-    res.status(400);
-    throw new Error("User is required");
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(user)) {
-    res.status(400);
-    throw new Error("Invalid userID");
-  }
+  const { rating, review, userID } = req.body;
 
   const product = await Product.findById(id);
   if (!product) {
@@ -121,7 +111,7 @@ const addRating = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 
-  const tourist = await Tourist.findById(user);
+  const tourist = await Tourist.findById(userID);
   if (!tourist) {
     res.status(404);
     throw new Error("User not found");
@@ -130,7 +120,7 @@ const addRating = asyncHandler(async (req, res) => {
   const newRating = new Rating({
     rating,
     review,
-    user,
+    userID,
   });
 
   await newRating.save();
