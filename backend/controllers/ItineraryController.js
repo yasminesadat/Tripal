@@ -103,7 +103,7 @@ const updateItinerary = async(req,res) => {
 const deleteItinerary = async(req,res) => {
      try {
           const { id } = req.params;//check for this
-          const itinerary = await Itinerary.findById(id);
+          const itinerary = await itineraryModel.findById(id);
           if (!itinerary) {
               return res.status(404).json({ error: 'Itinerary not found' });
           }
