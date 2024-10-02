@@ -12,12 +12,12 @@ const updateItinerary = async(req,res) => {};
 
 const deleteItinerary = async(req,res) => {
      try {
-          const { id } = req.params;
+          const { id } = req.params;//check for this
           const itinerary = await Itinerary.findById(id);
           if (!itinerary) {
               return res.status(404).json({ error: 'Itinerary not found' });
           }
-            await itinerary.remove();
+        await itinerary.remove();
           res.status(200).json({ message: 'Itinerary deleted' });
       } catch (error) {
           res.status(400).json({ error: error.message });

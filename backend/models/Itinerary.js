@@ -31,7 +31,7 @@ const itinerarySchema = new mongoose.Schema({
     tags:[{type:String}] // lesa idk how to use this do i need tags from activity?
 
 }, {timestamps: true});
-
+//this hook middleware is used to prevent the deletion of an itinerary that has bookings
   itinerarySchema.pre('remove', async function (next) {
     const bookings = await Booking.find({ itinerary: this._id });
     if (bookings.length > 0) {
