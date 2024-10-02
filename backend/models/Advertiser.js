@@ -3,24 +3,33 @@ const Schema = mongoose.Schema;
 const User = require('../models/User');
 const advertiserSchema = new Schema(
   {
-    companyLink: {
+    userName: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
       type: String,
       required: true
     },
-
     hotline: {
-      type: Number,
-      required: true
+      type: String,
+      required: false
     },
-
+    // fix
     companyProfile: {
       type: String,
-      required: true
+      required: false
     }
 
   },
   { timestamps: true }
 );
 
-const Advertiser = User.discriminator('Advertiser', advertiserSchema);
+const Advertiser = mongoose.model('advertiser', advertiserSchema);
 module.exports = Advertiser;
