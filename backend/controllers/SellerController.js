@@ -20,25 +20,40 @@ const createSeller = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
-const updateSellerData = async (req, res) => {
+
+
+const readSellerData= async (req,res) =>{
+try {
+    const seller = await Seller.findOne({ userName: req.params.userName });
+    
+    if (!seller) {
+        return res.status(404).json({ error: 'Seller not found' });
+    }
+    
+    res.status(200).json({ status: 'success', data: seller });
+} catch (error) {
+    res.status(400).json({ error: error.message });
+}
+
+
+}
+
+const updateSellerData = async (req, res) => {  // SAME CODE AS CREATE PROFILE???
+    const { name, description } = req.body;
     try {
-        const { id } = req.params;
-
-
-
-        const updatedSeller = await sellerModel.findByIdAndUpdate(
-            id,
-            { ...req.body },
-            { new: true });
+        const updatedSeller = await Seller.findOneAndUpdate(
+            { userName: req.params.userName },
+            { name, description },
+            { new: true, runValidators: true } 
+        );
 
         if (!updatedSeller) {
-            return res.status(404).json('Seller  not found');
+            return res.status(404).json({ error: 'Seller not found' });
         }
 
-        return res.status(200).json({ updatedSeller })
-    }
-    catch (error) {
+        res.status(200).json({ status: 'success', data: updatedSeller });
+    } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
-module.exports = { createSeller, updateSellerData };
+module.exports = { createSeller, readSellerData, updateSellerData };
