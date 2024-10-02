@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const activityCategorySchema = new Schema(
   {
-    Name: {
+    name: {
       type: String,
       required: true,
       unique: true,
@@ -13,6 +13,4 @@ const activityCategorySchema = new Schema(
   { timestamps: true }
 );
 
-module.exports =
-  mongoose.model("ActivityCategory", activityCategorySchema) ||
-  mongoose.models.ActivityCategory;
+module.exports = mongoose.model("ActivityCategory", activityCategorySchema);

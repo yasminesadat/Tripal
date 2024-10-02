@@ -1,28 +1,21 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const User = require ('../models/User');
 const advertiserSchema = new Schema(
   {
-    userName: {
-      type: String,
-      required: true,
-      unique: true,
+    hotline: {
+      type: Int16Array,
+      required: true
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    accepted: {
-      type: Boolean,
-      default: false,
-    },
+
+    companyProfile: {
+      type: string,
+      required: true
+    }
+
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Advertiser", advertiserSchema);
+const Advertiser = User.discriminator('advertiser', advertiserSchema);
+module.exports = Advertiser;

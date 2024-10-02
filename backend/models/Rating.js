@@ -12,7 +12,7 @@ const ratingSchema = new Schema(
     review: {
       type: String,
     },
-    user: {
+    userID: {
       type: mongoose.Schema.Types.ObjectId, //check this when we change the user schema
       ref: "Tourist",
       required: [true, "User is required"],
@@ -21,5 +21,5 @@ const ratingSchema = new Schema(
   { timestamps: true }
 );
 
-const ProductRating = mongoose.model("Rating", ratingSchema);
+const Rating = mongoose.model("Rating", ratingSchema);
 module.exports = Rating;
