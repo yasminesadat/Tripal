@@ -1,18 +1,25 @@
 const mongoose = require('mongoose');
 const itinerarySchema = new mongoose.Schema({
+
     title:{type: String, required: true},
+
     description: {type: String, required: true},
-    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide', required: true},
+
+    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide'
+        , required: true},
+
     activities:[{type: mongoose.Schema.Types.ObjectId, ref: 'Activity'
         , required: true}],
 
-    locations:[{type:String, required:false}],//kol activity already 3ando location yetmely men activites
+    locations:[{type:String}],//kol activity already 3ando location yetmely men activites
 
     //timeline btetrateb when, kol activity 3ando time attribute
-    timeline: [{
-        activityName: { type: String, required: true },
-        time : {type: String, required: true}
-    }],
+    timeline: [
+        {
+            activityName: { type: String}, 
+            time: { type: String},
+        },
+    ],
 
     //duration for each activity activity 3ando time already
 
