@@ -19,6 +19,8 @@ const ActivityCategoryDetails = () => {
                 console.log("Fetched categories:", response);
             } catch (error) {
                 console.error('Error fetching activity categories:', error);
+                toast.error('Failed to fetch activity categories!');
+
             }
         };
         fetchData();
@@ -44,6 +46,8 @@ const ActivityCategoryDetails = () => {
             notifyCreate(nameValue);
         } catch (error) {
             console.error('Error creating activity category:', error);
+            toast.error('Failed to create activity category!');
+
         }
     };
 
@@ -55,6 +59,8 @@ const ActivityCategoryDetails = () => {
             notifyDelete(name);
         } catch (error) {
             console.error(`Error deleting activity category with id ${id}:`, error);
+            toast.error('Failed to delete activity category!');
+
         }
     };
     const editActivityCategory = async (id, name) => {
@@ -83,11 +89,21 @@ const ActivityCategoryDetails = () => {
 
         } catch (error) {
             console.error(`Error updating activity category with id ${id}:`, error);
+            toast.error('Failed to update activity category!');
+
         }
 
     };
     return (
-        <div>
+        <div style={{
+            width: '700px',
+            marginTop: '5%',
+            marginLeft: '25%',
+            backgroundColor: 'lightblue',
+            padding: '20px',
+            borderRadius: '5px',
+            textAlign: 'left'
+        }}>
             <h2>Create a new activity Category</h2>
             <Input
                 value={nameValue}
@@ -100,7 +116,7 @@ const ActivityCategoryDetails = () => {
             <br>
             </br>
             <Button onClick={handleButtonClick} type="primary">Submit</Button>
-
+            <h2>View existing activity categories</h2>
             <List
                 itemLayout="horizontal"
                 dataSource={data}
