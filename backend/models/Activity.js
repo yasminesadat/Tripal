@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const activitySchema = new Schema(
   {
     advertiser: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "Advertiser",
     },
@@ -25,12 +25,11 @@ const activitySchema = new Schema(
       required: true,
     },
     location: {
-      type: String, //integrate Google Maps API here!!!!!!!!!!!!!!!!!!!
+      type: String,
       required: true,
     },
-    priceRange: {
-      type: String, //to store price or range
-      required: true,
+    price: {
+      type: Number, required: true ,
     },
     category: {
       type: Schema.Types.ObjectId,
