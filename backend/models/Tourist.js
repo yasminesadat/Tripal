@@ -3,20 +3,6 @@ const Schema = mongoose.Schema;
 
 const touristSchema = new Schema(
   {
-    userName: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
     mobileNumber: {
       type: String,
       required: true,
@@ -37,4 +23,5 @@ const touristSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Tourist", touristSchema);
+const Tourist = User.discriminator('tourist', touristSchema);
+module.exports = Tourist;
