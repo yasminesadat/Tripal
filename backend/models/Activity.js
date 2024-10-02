@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const activitySchema = new Schema(
   {
     advertiser: {
-      type: String, //will it be string or the id??
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "Advertiser",
     },
@@ -28,9 +28,8 @@ const activitySchema = new Schema(
       type: String,
       required: true,
     },
-    priceRange: {
-      type: String, //to store price or range
-      required: true,
+    price: {
+      type: Number, required: true ,
     },
     category: {
       type: Schema.Types.ObjectId,
