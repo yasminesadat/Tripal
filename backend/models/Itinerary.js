@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const itinerarySchema = new mongoose.Schema({
     title:{type: String, required: true},
     description: {type: String, required: true},
@@ -28,17 +27,19 @@ const itinerarySchema = new mongoose.Schema({
     dropoffLocation: {type: String, required: true},
 
 
-    tags:[{type:String}] // lesa idk how to use this do i need tags from activity?
+    tags:[{type:String}], // lesa idk how to use this do i need tags from activity?
+    tourists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }] // Add this line
 
 }, {timestamps: true});
+
 //this hook middleware is used to prevent the deletion of an itinerary that has bookings
-  itinerarySchema.pre('remove', async function (next) {
-    const bookings = await Booking.find({ itinerary: this._id });
-    if (bookings.length > 0) {
-        next(new Error('Cannot delete itinerary with existing bookings.'));
+itinerarySchema.pre('remove', async function (next) {
+    if (this.tourists.length > 0) {
+        next(new Error('Cannot delete itinerary with associated tourists.'));
     } else {
         next();
     }
 });
+
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 module.exports = Itinerary;
