@@ -55,7 +55,14 @@ const createItinerary = async(req,res) => {
 
     };
 
-const getItineraries = async(req,res) => {};
+const getItineraries = async(req,res) => {
+    try {
+        const itineraries = await itineraryModel.find();
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
 const updateItinerary = async(req,res) => {
     try{
@@ -98,7 +105,6 @@ const updateItinerary = async(req,res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
 
 const deleteItinerary = async(req,res) => {
      try {
