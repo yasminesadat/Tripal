@@ -27,12 +27,16 @@ const productSchema = new mongoose.Schema(
       ref: "Seller",
       required: [true, "Seller is required"],
     },
-    reviews: [
+    ratings: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Review",
+        ref: "Rating",
       },
     ],
+    averageRating: {
+      type: Number,
+      default: 0.0,
+    },
   },
   { timestamps: true }
 );

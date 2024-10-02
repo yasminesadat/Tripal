@@ -33,13 +33,7 @@ const ProductList = () => {
   return (
     <div className="productList">
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "1%",
-          marginBottom: "1%",
-        }}
+        style={{ display: "flex",justifyContent: "space-between",alignItems: "center",margin: '1%'}}
       >
         <h1 style={{ margin: 0 }}>VIEW PRODUCTS</h1>
         <Search

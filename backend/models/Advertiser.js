@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 const User = require ('../models/User');
 const advertiserSchema = new Schema(
   {
-    companyLink: {
-      type: string,
-      required: true
-    },
-
     hotline: {
       type: Int16Array,
       required: true

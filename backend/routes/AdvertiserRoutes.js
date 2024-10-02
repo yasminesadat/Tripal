@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {createAdvertiser} = require ('../controllers/AdvertiserController');
+const { createAdvertiser } = require("../controllers/AdvertiserController");
 
 router.post("/advertiser", createAdvertiser);
 
