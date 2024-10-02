@@ -10,6 +10,8 @@ const routes = [
   "./TouristRoutes",
   "./ProductRoutes",
   "./ActivityRoutes",
+  "./TourismGovernorRoutes",
+  "./HistoricalTagRoutes"
 ];
 
 routes.forEach((route) => {
