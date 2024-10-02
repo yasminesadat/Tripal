@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const activityCategorySchema = new Schema(
   {
-    name: {
+    Name: {
       type: String,
       required: true,
       unique: true,

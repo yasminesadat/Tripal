@@ -15,6 +15,7 @@ const ActivityCategoryDetails = () => {
         const fetchData = async () => {
             try {
                 const response = await ActivityCategoryApi.getActivityCategories();
+
                 setData(response);
                 console.log("Fetched categories:", response);
             } catch (error) {
@@ -125,6 +126,7 @@ const ActivityCategoryDetails = () => {
                         actions={[
                             <Button type="link" onClick={() => editActivityCategory(activityCategory._id, activityCategory.Name)}>Edit</Button>,
                             <Button type="link" danger onClick={() => deleteActivityCategory(activityCategory._id, activityCategory.Name)}>Delete</Button>
+
                         ]}
 
                     >

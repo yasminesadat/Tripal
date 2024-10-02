@@ -1,29 +1,30 @@
 const activityCategory = require('../models/ActivityCategory')
 const { default: mongoose } = require('mongoose');
+const asyncHandler = require("express-async-handler");
 
+const createActivityCategory = asyncHandler(async (req, res) => {
+    const { Name } = req.body;
+    if (!Name) {
+        res.status(400);
+        throw new Error("Cant have an Category Name");
+    }
+    if (activityCategory.find({ Name: Name })) {
+        res.status(400);
+        throw new Error("Duplicate activity category");
+    }
+    const activityCategoryCreated = await activityCategory.create({ Name });
+    if (activityCategoryCreated) {
+        res.status(201).json(activityCategoryCreated);
+    } else {
+        res.status(400);
+        throw new Error("Invalid Activity Category Name");
+    }
+});
 
-const createActivityCategory = async (req, res) => {
-    try {
-        const activityCategoryCreated = await activityCategory.create({
-            Name: req.body.Name
-        })
-        res.status(200).json(activityCategoryCreated)
-    }
-    catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-
-}
-const getActivityCategories = async (req, res) => {
-    try {
-        const existingActivityCategories = await activityCategory.find({})
-        res.status(200).json(existingActivityCategories)
-    }
-    catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-
-}
+const getActivityCategories = asyncHandler(async (req, res) => {
+    const existingActivityCategories = await activityCategory.find({});
+    res.status(200).json(existingActivityCategories);
+});
 const deleteActivityCategory = async (req, res) => {
     try {
         const { id } = req.params;
