@@ -1,11 +1,11 @@
 const preferenceTag = require('../models/PreferenceTag.js');
 
 const createPrefTags = async (req, res) => {
-    const { Name } = req.body;
+    const { name } = req.body;
     try {
-        const createdPrefTag = await preferenceTag.create({ Name });
+        const createdPrefTag = await preferenceTag.create({ name });
 
-        if (!Name) {
+        if (!name) {
             res.status(406).json('Name is required');
         }
         res.status(200).json({ status: 'success', data: { createdPrefTag } });

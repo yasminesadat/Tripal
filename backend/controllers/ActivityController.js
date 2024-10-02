@@ -2,6 +2,7 @@ const Activity = require('../models/Activity');
 const Advertiser = require('../models/Advertiser');
 const ActivityCategory = require('../models/ActivityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
+const Rating = require('../models/Rating');
 
 
 const createActivity = async (req, res) => {
@@ -15,13 +16,13 @@ const createActivity = async (req, res) => {
     priceRange,
     category: categoryName,
     tags: tagNames,
+    ratings: ratingIds,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
+  console.log(req.body)
   try {
-    const existingAdvertiser = await Advertiser.findOne({
-      userName: advertiser,
-    });
+    const existingAdvertiser = await Advertiser.findById(advertiser);
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
@@ -29,13 +30,19 @@ const createActivity = async (req, res) => {
     if (!category) {
       return res.status(404).json({ error: "Category not found" });
     }
-    const tags = await PreferenceTag.find({ Name: { $in: tagNames } });
-    if (!tags || tags.length === 0) {
+    console.log("Tag names being searched:", tagNames);
+    const existingTags = await PreferenceTag.find({ Name: { $in: tagNames } });
+    console.log(existingTags)
+    if (!existingTags || existingTags.length === 0) {
       return res.status(404).json({ error: "Tags not found" });
+    }
+    const ratings = await Rating.find({ _id: { $in: ratingIds } });
+    if (!ratings || ratings.length === 0) {
+      return res.status(404).json({ error: "Ratings not found" });
     }
 
     const newActivity = new Activity({
-      advertiser: existingAdvertiser.userName,
+      advertiser: existingAdvertiser._id,
       title,
       description,
       date,
@@ -43,7 +50,8 @@ const createActivity = async (req, res) => {
       location,
       priceRange,
       category: category._id, // Use the ObjectId of the category
-      tags: tags.map((tag) => tag._id), // Use ObjectIds for tags
+      tags: existingTags.map((tag) => tag._id), // Use ObjectIds for tags
+      ratings: ratings.map((rating) => rating._id), // Use ObjectIds for ratings
       specialDiscounts,
       isBookingOpen,
     });
@@ -57,12 +65,12 @@ const createActivity = async (req, res) => {
 };
 
 const getActivities = async (req, res) => {
-  const { username } = req.query;
+  const { advertiserId } = req.query;
   try {
     let activities;
 
-    if (username) {
-      activities = await Activity.find({ advertiser: username });
+    if (advertiserId) {
+      activities = await Activity.find({ advertiser: advertiserId });
       if (activities.length === 0) {
         return res.status(404).json({ error: "No activities found for this advertiser" });
       }
@@ -89,6 +97,7 @@ const updateActivity = async (req, res) => {
     priceRange,
     category,
     tags,
+    ratings,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
@@ -120,6 +129,14 @@ const updateActivity = async (req, res) => {
         activity.tags = existingTags.map((tag) => tag._id); // Store the ObjectIds of the tags
       } else {
         return res.status(404).json({ error: "Tags not found" });
+      }
+    }
+    if (ratings && Array.isArray(ratings)) {
+      const existingRatings = await Rating.find({ _id: { $in: ratings } });
+      if (existingRatings.length > 0) {
+        activity.ratings = existingRatings.map((rating) => rating._id); // Store ObjectIds for ratings
+      } else {
+        return res.status(404).json({ error: "Ratings not found" });
       }
     }
     activity.title = title || activity.title;

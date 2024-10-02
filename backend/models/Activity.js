@@ -25,7 +25,7 @@ const activitySchema = new Schema(
       required: true,
     },
     location: {
-      type: String,
+      type: String,      //mapsss!!!
       required: true,
     },
     price: {
@@ -40,6 +40,13 @@ const activitySchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "PreferenceTag",
+        required: true ,
+      },
+    ],
+    ratings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Rating",
       },
     ],
     specialDiscounts: {
