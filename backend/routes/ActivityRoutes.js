@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const {createActivity, getActivities, updateActivity, deleteActivity, filterActivities, sortActivities, searchActivities} = require('../controllers/ActivityController');  
+const {createActivity, getAdvertiserActivities, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities, filterUpcomingActivities, sortUpcomingActivities} = require('../controllers/ActivityController');  
 
-router.get('/activities', getActivities); //view all activities (can take username param to get a specific advertiser's activities)   
+router.get('/activities', getAdvertiserActivities); 
 router.post('/activities', createActivity);    
 router.put('/activities/:id', updateActivity);   
 router.delete('/activities/:id', deleteActivity); 
-router.get('/activities/filter', filterActivities);
-router.get('/activities/sort', sortActivities);
 router.get('/activities/search', searchActivities);
+router.get('/activities/view', viewUpcomingActivities);
+router.get('/activities/filter', filterUpcomingActivities);
+router.get('/activities/sort', sortUpcomingActivities);
 
 module.exports = router;

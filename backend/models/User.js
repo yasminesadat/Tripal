@@ -5,7 +5,6 @@ const baseOptions = {
   discriminatorKey: 'role',  // Discriminator key
   collection: 'users',       // Collection name
 };
-
 const userSchema = new Schema({
   username: {
     type: String,
@@ -23,14 +22,17 @@ const userSchema = new Schema({
   role: {
     type: String,
     required: true,
-    enum: ['seller', 'advertiser', 'admin', 'tour guide', 'tourist','tourism governor'],
-    //default: 'seller',  
+    enum: ['Seller', 'Advertiser', 'Admin', 'Tour guide', 'Tourist', 'Tourism governor'],
+    default: 'Tourist',
   },
   accepted: {
     type: Boolean,
     default: false,
   }
-}, baseOptions);
+}, {
+  timestamps: true,
+  baseOptions
+});
 
 // Create the base User model
 const User = mongoose.model('User', userSchema);
