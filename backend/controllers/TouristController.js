@@ -4,21 +4,15 @@ const mongoose = require("mongoose");
 const walletModel = require("../models/Wallet");
 var validator = require("email-validator");
 var passwordValidator = require("password-validator");
+const userModel = require('../models/User.js')
 var schema = new passwordValidator();
 schema
-  .is()
-  .min(8)
-  .is()
-  .max(100)
-  .has()
-  .uppercase()
-  .has()
-  .lowercase()
-  .has()
-  .digits(1)
-  .has()
-  .not()
-  .spaces()
+  .is().min(8)
+  .is().max(100)
+  .has().uppercase()
+  .has().lowercase()
+  .has().digits(1)
+  .has().not().spaces()
   .has()
   .symbols()
   .is()
@@ -78,6 +72,10 @@ const createTourist = async (req, res) => {
     });
 
     const id = tourist._id;
+    await userModel.create({
+      userID: id,
+      role: "Tourist"
+    })
     const wallet = await walletModel.create({
       userID: id,
     });

@@ -1,19 +1,33 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const User = require ('../models/User');
+const User = require('../models/User');
 const tourGuideSchema = new Schema(
   {
-    mobileNumber: {
+    userName: {
       type: String,
       required: true,
+      unique: true
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    mobileNumber: {
+      type: String,
+      required: false,
     },
 
     experienceYears: {
-      type: Int16Array,
-      required: true
+      type: Number,
+      required: false
     }
   },
   { timestamps: true }
 );
-const TourGuide = User.discriminator('tour guide', tourGuideSchema);
+const TourGuide = mongoose.model('tour guide', tourGuideSchema);
 module.exports = TourGuide;
