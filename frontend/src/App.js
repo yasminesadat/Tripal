@@ -2,12 +2,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import * as Pages from './pages';
 import TagManager from './components/PreferenceTagComponent';
 import AdminDashboard from './components/AdminDashboard';
+import UpcomingActivities from './pages/UpcomingActivities';
+import NavigationBar from './components/NavigationBar';
 
 import ActivityCategoryDetails from './components/ActivityCategoryDetails';
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <NavigationBar />
         <div className="pages">
           <Routes>
             <Route path="/" element={<Pages.Home />} />
@@ -16,6 +19,7 @@ function App() {
             <Route path="/view-products" element={<Pages.ProductList />} />
             <Route path="/product/:productName" element={<Pages.ProductDetails />} />
             <Route path="/adminActivityCategories" element={<ActivityCategoryDetails />} />
+            <Route path="/upcoming-activities" element={<UpcomingActivities />} />
           </Routes>
         </div>
       </BrowserRouter>

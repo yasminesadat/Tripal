@@ -14,7 +14,7 @@ export async function deleteActivity () {
 
 export async function searchActivities () {
     try {
-        const response = await axios.get('/activities/search');
+        const response = await axios.get('/api/activities/search');
         return response;
     } catch (error) {
         console.error("Can't search for activities",error);
@@ -24,7 +24,7 @@ export async function searchActivities () {
 
 export async function viewUpcomingActivities () {
     try {
-        const response = await axios.get('/activities/view');
+        const response = await axios.get('/api/activities/view');
         return response;
     } catch (error) {
         console.error("Can't view activities",error);
@@ -34,7 +34,7 @@ export async function viewUpcomingActivities () {
 
 export async function filterUpcomingActivities () {
     try{
-        const response = await axios.get('/activities/filter');
+        const response = await axios.get('/api/activities/filter');
         return response;
     } catch (error) {
         console.error("Can't filter activities",error);
@@ -44,7 +44,7 @@ export async function filterUpcomingActivities () {
 
 export async function sortUpcomingActivities () {
     try{
-        const response = await axios.get('/activities/sort');
+        const response = await axios.get('/api/activities/sort');
         return response;
     } catch (error) {
         console.error("Can't sort activities",error);

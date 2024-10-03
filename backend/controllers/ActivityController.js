@@ -191,10 +191,10 @@ const viewUpcomingActivities = async(req, res) => {
   try {
     const currentDate = new Date();
     
-    const activities = await Activity.find({ date: { $gte: currentDate } });
+    const activities = await Activity.find({ date: { $gte: currentDate } })
+      .populate('category')
+      .populate('tags');
     
-    console.log("Upcoming Activities:", activities);
-
     if (activities.length === 0) {
       return res.status(404).json({ error: "No upcoming activities available" });
     }
@@ -210,8 +210,9 @@ const filterUpcomingActivities = async (req, res) => {
 
   try {
     const currentDate = new Date();
+    
     let filters = { date: { $gte: currentDate } }; 
-    console.log(currentDate)
+
     // Filter based on budget 
     if (budgetMin || budgetMax) {
       filters.priceRange = {};
