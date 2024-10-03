@@ -26,7 +26,7 @@ const TagManager = () => {
   // POST a new tag
   const handleCreateTag = async () => {
     try {
-      await createTag({ Name: newTag });
+      await createTag({ name: newTag });
       message.success('Tag created successfully!');
       setNewTag('');
       fetchTags(); //refersh tag list after creating
@@ -43,10 +43,10 @@ const TagManager = () => {
     setIsModalVisible(true);
   };
 
-  
+
   const handleUpdateTag = async () => {
     try {
-      await updateTag(updateTagId, { Name: updateTagName });
+      await updateTag(updateTagId, { name: updateTagName });
       message.success('Tag updated successfully!');
       setIsModalVisible(false);
       fetchTags();
@@ -57,14 +57,14 @@ const TagManager = () => {
 
   const handleDeleteTag = async (id) => {
     try {
-        await deleteTag(id);
-        message.success('Tag deleted successfully!');
-        // Update the state by filtering out the deleted tag
-        setTags((prevTags) => prevTags.filter(tag => tag._id !== id));
+      await deleteTag(id);
+      message.success('Tag deleted successfully!');
+      // Update the state by filtering out the deleted tag
+      setTags((prevTags) => prevTags.filter(tag => tag._id !== id));
     } catch (error) {
-        message.error('Error deleting tag');
+      message.error('Error deleting tag');
     }
-};
+  };
 
 
   return (
@@ -86,11 +86,11 @@ const TagManager = () => {
         renderItem={(tag) => (
           <List.Item
             actions={[
-              <Button type="link" onClick={() => showUpdateModal(tag._id, tag.Name)}>Edit</Button>,
+              <Button type="link" onClick={() => showUpdateModal(tag._id, tag.name)}>Edit</Button>,
               <Button type="link" danger onClick={() => handleDeleteTag(tag._id)}>Delete</Button>
             ]}
           >
-            <Tag>{tag.Name}</Tag>
+            <Tag>{tag.name}</Tag>
           </List.Item>
         )}
       />

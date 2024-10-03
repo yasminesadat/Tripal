@@ -33,11 +33,11 @@ const getPrefTags = async (req, res) => {
 const updatePrefTags = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Name } = req.body;
+        const { name } = req.body;
 
         const updatedPrefTag = await preferenceTag.findByIdAndUpdate(
             id,
-            { Name },
+            { name },
             { new: true });
 
         if (!updatedPrefTag) {
