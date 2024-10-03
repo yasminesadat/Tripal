@@ -7,7 +7,7 @@ const requestSchema = new mongoose.Schema(
       required: [true, "userName name is required"],
     },
     email: {
-      type: Number,
+      type: String,
       required: [true, "email is required"],
     },
     password: {
@@ -15,6 +15,7 @@ const requestSchema = new mongoose.Schema(
       required: [true, "password is required"],
     },
     role: {
+      type:String,
         enum: ['seller', 'tourGuide', 'advertiser'],
         required: true,
       },
