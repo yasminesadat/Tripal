@@ -60,7 +60,7 @@ const advertiserSchema = new Schema(
             type: String,
             required: false
           },
-        },       
+        },
         socialMedia: {
           linkedin: {
             type: String,
@@ -93,12 +93,12 @@ const advertiserSchema = new Schema(
         ]
       },
       required: false // The whole object is optional
-    
+
     }
 
   },
   { timestamps: true }
 );
 
-const Advertiser = mongoose.model('advertiser', advertiserSchema);
+const Advertiser = mongoose.model('Advertiser', advertiserSchema);
 module.exports = Advertiser;

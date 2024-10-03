@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { Row, Col, Input } from "antd";
 import { fetchProducts, searchProductsByName } from "../api/ProductsAPI";
-
 const { Search } = Input;
 
 const ProductList = () => {
-  const [products, setProducts] = useState(null);
-  const [filteredProducts, setFilteredProducts] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
       const productsData = await fetchProducts();
+      console.log(productsData);
       if (productsData) {
         setProducts(productsData);
         setFilteredProducts(productsData);
+        console.log("filtered", productsData)
       }
     };
 
@@ -33,7 +34,7 @@ const ProductList = () => {
   return (
     <div className="productList">
       <div
-        style={{ display: "flex",justifyContent: "space-between",alignItems: "center",margin: '1%'}}
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: '1%' }}
       >
         <h1 style={{ margin: 0 }}>VIEW PRODUCTS</h1>
         <Search
