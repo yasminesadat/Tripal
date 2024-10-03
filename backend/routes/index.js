@@ -13,6 +13,7 @@ const routes = [
   "./TourismGovernorRoutes",
   "./HistoricalTagRoutes",
   "./RequestRoutes"
+  "./AdminRoutes"
 ];
 
 routes.forEach((route) => {
