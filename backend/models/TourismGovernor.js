@@ -12,7 +12,7 @@ const TourismGovernorSchema = new Schema(
       type: String,
       required: true,
     }
-   
+
   },
   { timestamps: true }
 );
@@ -21,5 +21,4 @@ const TourismGovernor = mongoose.model(
   "TourismGovernor",
   TourismGovernorSchema
 );
-
 module.exports = TourismGovernor;
