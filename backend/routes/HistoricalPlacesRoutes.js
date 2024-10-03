@@ -1,5 +1,5 @@
 const express = require('express');
-const historialPlaceCotroller = require('../controllers/HistorialPlaceController');
+const historialPlaceCotroller = require('../controllers/HistoricalPlacesController');
 const historicalPlaceRouter = express.Router();
 let path='/historicalPlaces';
 historicalPlaceRouter.get(path+'/create', historialPlaceCotroller.historical_place_create_get);
