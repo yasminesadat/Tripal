@@ -12,8 +12,8 @@ const routes = [
   "./ActivityRoutes",
   "./TourismGovernorRoutes",
   "./HistoricalTagRoutes",
-  "./historicalPlacesRoutes"
-  "./RequestRoutes"
+  "./historicalPlacesRoutes",
+  "./RequestRoutes",
   "./AdminRoutes"
 
 ];
