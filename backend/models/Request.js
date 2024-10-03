@@ -4,10 +4,10 @@ const requestSchema = new mongoose.Schema(
   {
     userName: {
       type: String,
-      required: [true, "userName name is required"],
+      required: [true, "userName is required"],
     },
     email: {
-      type: Number,
+      type: String,
       required: [true, "email is required"],
     },
     password: {
@@ -15,11 +15,10 @@ const requestSchema = new mongoose.Schema(
       required: [true, "password is required"],
     },
     role: {
-        enum: ['seller', 'tourGuide', 'advertiser'],
-        required: true,
-      },
-
-    
+      type: String,
+      enum: ["seller", "tourGuide", "advertiser"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

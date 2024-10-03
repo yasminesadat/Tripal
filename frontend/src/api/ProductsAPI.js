@@ -15,25 +15,28 @@ export const fetchProducts = async () => {
   //   return null;
   // }
   try {
-    const products = await axios.get('http://localhost:5050/api/products');
+    const products = await axios.get("http://localhost:5050/api/products");
     console.log(products);
 
     return products.data;
   } catch (error) {
     console.error("Can't search for products", error);
-    throw error
+    throw error;
   }
 };
 
 export const searchProductsByName = async (name) => {
   try {
-    const products = await axios.get(`http://localhost:5050/api/products/search?name=${encodeURIComponent(name)}`);
+    const products = await axios.get(
+      `http://localhost:5050/api/products/search?name=${encodeURIComponent(
+        name
+      )}`
+    );
     console.log(products);
 
     return products.data;
   } catch (error) {
     console.error("Can't search for products", error);
-    throw error
+    throw error;
   }
-
 };

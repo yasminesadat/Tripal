@@ -7,6 +7,7 @@
     "start:backend": "cd backend && npm run dev"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "concurrently": "^9.0.1"
   }
 }
