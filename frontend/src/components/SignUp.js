@@ -5,7 +5,7 @@ import { createAdvertiser } from '../api/AdvertiserApi';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
-        userName: '', 
+        userName: '',
         email: '',
         password: ''
     });
@@ -44,9 +44,9 @@ const SignUp = () => {
             } else if (role === 'advertiser') {
                 await createAdvertiser(newUser);
             }
-            setSuccess(true); 
+            setSuccess(true);
         } catch (err) {
-            setError(err.message); 
+            setError(err.message);
         }
     };
 
@@ -60,9 +60,9 @@ const SignUp = () => {
                     <label htmlFor="userName">User Name:</label>
                     <input
                         type="text"
-                        id="userName" 
-                        name="userName" 
-                        value={formData.userName} 
+                        id="userName"
+                        name="userName"
+                        value={formData.userName}
                         onChange={handleChange}
                         required
                     />
@@ -89,7 +89,7 @@ const SignUp = () => {
                         required
                     />
                 </div>
-                
+
                 <div>
                     <label>
                         <input
@@ -121,6 +121,7 @@ const SignUp = () => {
                         />
                         Advertiser
                     </label>
+
                 </div>
 
                 <button type="submit">Sign Up</button>
