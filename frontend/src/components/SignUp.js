@@ -121,7 +121,16 @@ const SignUp = () => {
                         />
                         Advertiser
                     </label>
-
+                    <label>
+                        <input
+                            type="radio"
+                            name="role"
+                            value="tourist"
+                            checked={role === 'tourist'}
+                            onChange={handleRoleChange}
+                        />
+                        Tourist
+                    </label>
                 </div>
 
                 <button type="submit">Sign Up</button>

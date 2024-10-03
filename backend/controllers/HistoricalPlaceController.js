@@ -1,11 +1,11 @@
 const HistoricalPlace = require("../models/HistoricalPlace");
 
-const historical_place_create_post = (req, res) => {
+const createHistoricalPlace = (req, res) => {
   const historicalPlace = new HistoricalPlace(req.body);
   historicalPlace
     .save()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(201).json(result);
       //res.redirect(); redirect to the previous page
     })
     .catch((err) => {
@@ -13,11 +13,11 @@ const historical_place_create_post = (req, res) => {
     });
 };
 
-const historical_place_create_get = (req, res) => {
-  //render the create page
-};
+// const historical_place_create_get = (req, res) => {
+//   //render the create page
+// };
 
-const historical_place_details = (req, res) => {
+const getHistoricalPlace = (req, res) => {
   const id = req.params.id;
   HistoricalPlace.findById(id)
     .then((result) => {
@@ -28,7 +28,7 @@ const historical_place_details = (req, res) => {
       res.status(404).json(err);
     });
 };
-const historical_place_delete = (req, res) => {
+const deleteHistoricalPlace = (req, res) => {
   const id = req.params.id;
   HistoricalPlace.findByIdAndDelete(id)
     .then((result) => {
@@ -39,7 +39,7 @@ const historical_place_delete = (req, res) => {
       res.status(404).json(err);
     });
 };
-const historical_place_index = (req, res) => {
+const getAllHistoricalPlaces = (req, res) => {
   HistoricalPlace.find()
     .then((result) => {
       res.status(200).json(result);
@@ -49,7 +49,7 @@ const historical_place_index = (req, res) => {
       res.status(404).json(err);
     });
 };
-const historical_place_update = (req, res) => {
+const updateHistoricalPlaces = (req, res) => {
   const id = req.params.id;
   const { updates } = req.body;
   HistoricalPlace.findByIdAndUpdate(id, updates, { new: true })
@@ -63,10 +63,9 @@ const historical_place_update = (req, res) => {
     });
 };
 module.exports = {
-  historical_place_index,
-  historical_place_details,
-  historical_place_create_get,
-  historical_place_create_post,
-  historical_place_delete,
-  historical_place_update,
+  createHistoricalPlace,
+  getHistoricalPlace,
+  deleteHistoricalPlace,
+  getAllHistoricalPlaces,
+  updateHistoricalPlaces
 };
