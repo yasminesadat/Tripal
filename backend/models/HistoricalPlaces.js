@@ -75,11 +75,13 @@ tags:{
     type: [mongoose.Types.ObjectId],
     ref:'HistoricalTagType',
     required:false,
+    default:[]
 },
 historicalPeriod:{
     type: [mongoose.Types.ObjectId],
     ref:'HistoricalTagPeriod',
     required:false,
+    default:[]
 }
 }, { timestamps: true });
 

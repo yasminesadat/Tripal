@@ -1,5 +1,4 @@
-
-const HistoricalPlace=require('../models/HistoricalPlace');
+const HistoricalPlace=require('../models/HistoricalPlaces');
 
 const historical_place_create_post=(req,res)=>{
     const historicalPlace = new HistoricalPlace(req.body);
@@ -49,7 +48,7 @@ const historical_place_index=(req,res)=>{
 };
 const historical_place_update=(req,res)=>{
     const id= req.params.id;
-    const {updates}=req.body;
+    const updates=req.body;
     HistoricalPlace.findByIdAndUpdate(id,updates,{ new: true}).
     then((result)=>{
         res.status(200).json(result);
