@@ -14,6 +14,7 @@ const port = process.env.PORT || "5000";
 //Route Imports
 const routes = require("./routes/index");
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 // configurations
 // Mongo DB
