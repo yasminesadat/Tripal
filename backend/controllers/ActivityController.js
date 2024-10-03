@@ -3,7 +3,6 @@ const Advertiser = require('../models/Advertiser');
 const ActivityCategory = require('../models/ActivityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
 const Rating = require('../models/Rating');
-const tagsController = require('./PreferenceTagController');
 
 
 const createActivity = async (req, res) => {
@@ -81,12 +80,7 @@ const getActivities = async (req, res) => {
         return res.status(404).json({ error: "No activities found for this advertiser" });
       }
     } else {
-      activities = await Activity.find().populate("advertiser").populate("category").populate("tags.list").populate("ratings.list");
-      // activities.forEach((activity)=>{
-      //   activity.tags.forEach((tag)=> {
-      //               tagsController.
-      //   }
-      // })
+      activities = await Activity.find().populate("advertiser").populate("category").populate("tags").populate("ratings");
       if (activities.length === 0) {
         return res.status(404).json({ error: "No activities available" });
       }
