@@ -10,8 +10,13 @@ const addTourismGovernor = async (req, res) => {
   
       // Check if username already exists
       const existingName = await TourismGovernor.findOne({ username });
+      
+      if (!username || !password) {
+        return res.status(400).json({ error: "Missing required fields: username and password" });
+      }
+      
       if (existingName) {
-        return res.status(400).json({ error: "Username already exists" });
+        return res.status(409).json({ error: "Username already exists" });
       }
   
   
@@ -31,7 +36,7 @@ const addTourismGovernor = async (req, res) => {
       res.status(200).json(newTourismGovernor);
   
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   };
 
