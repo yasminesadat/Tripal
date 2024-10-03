@@ -1,8 +1,13 @@
+import React from 'react';
+import SignUp from '../components/SignUp'; 
+
 const Home = () => {
-    return(
+    return (
         <div className="home">
             <h1>WELCOME TO TRIPAL</h1>
-        </div> 
-    )
-}
+            <SignUp />
+        </div>
+    );
+};
+
 export default Home;

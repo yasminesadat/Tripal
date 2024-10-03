@@ -1,3 +1,3 @@
 window.env={
-    SERVER_DOMAIN_NAME_API:'http://127.0.0.1:5050',
+    SERVER_DOMAIN_NAME_API:"http://localhost:5050",
 }
