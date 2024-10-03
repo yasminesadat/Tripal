@@ -69,7 +69,7 @@ const createActivity = async (req, res) => {
     res.status(500).json({ error: "Failed to save activity" });
   }
 };
-const getActivities = async (req, res) => {
+const getAdvertiserActivities = async (req, res) => {
   const { advertiserId } = req.query;
   try {
     let activities;
@@ -285,7 +285,7 @@ const sortActivities = async (req, res) => {
 
 module.exports = {
   createActivity,
-  getActivities,
+  getAdvertiserActivities,
   updateActivity,
   deleteActivity,
   filterActivities,
