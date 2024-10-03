@@ -9,11 +9,12 @@ const MongoURI = process.env.MONGO_URI;
 
 //App variables
 const app = express();
-const port = process.env.PORT || "5000";
+const port = process.env.PORT || "5050";
 
 //Route Imports
 const routes = require("./routes/index");
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 // configurations
 // Mongo DB
