@@ -2,6 +2,7 @@ const Activity = require('../models/Activity');
 const Advertiser = require('../models/Advertiser');
 const ActivityCategory = require('../models/ActivityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
+const Rating = require('../models/Rating');
 
 
 const createActivity = async (req, res) => {
@@ -12,41 +13,54 @@ const createActivity = async (req, res) => {
     date,
     time,
     location,
-    priceRange,
+    price,
     category: categoryName,
-    tags: tagNames,
+    tags: tagIds,
+    ratings: ratingIds,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
+  // console.log(req.body)
   try {
-    const existingAdvertiser = await Advertiser.findOne({
-      userName: advertiser,
-    });
+    const existingAdvertiser = await Advertiser.findById(advertiser);
+    console.log(existingAdvertiser)
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const category = await ActivityCategory.findOne({ Name: categoryName });
-    if (!category) {
-      return res.status(404).json({ error: "Category not found" });
-    }
-    const tags = await PreferenceTag.find({ Name: { $in: tagNames } });
-    if (!tags || tags.length === 0) {
-      return res.status(404).json({ error: "Tags not found" });
-    }
+    // if (!category) {
+    //   return res.status(404).json({ error: "Category not found" });
+    // }
+    // console.log("Tag names being searched:", tagNames);
+
+
+    // const existingTags = await PreferenceTag.find({ _id: { $in: tagIds } });
+    // console.log(existingTags)
+    // if (!existingTags || existingTags.length === 0) {
+    //   return res.status(404).json({ error: "Tags not found" });
+
+    // }
+    // console.log(existingTags)
+    // const ratings = await Rating.find({ _id: { $in: ratingIds } });
+    // if (!ratings || ratings.length === 0) {
+    //   return res.status(404).json({ error: "Ratings not found" });
+    // }
 
     const newActivity = new Activity({
-      advertiser: existingAdvertiser.userName,
+      advertiser: existingAdvertiser._id,
       title,
       description,
       date,
       time,
       location,
-      priceRange,
+      price,
       category: category._id, // Use the ObjectId of the category
-      tags: tags.map((tag) => tag._id), // Use ObjectIds for tags
+      tags: tagIds, // Use ObjectIds for tags
+      ratings: ratingIds,
       specialDiscounts,
       isBookingOpen,
     });
+
 
     await newActivity.save();
     res.status(201).json(newActivity);
@@ -56,18 +70,19 @@ const createActivity = async (req, res) => {
   }
 };
 
-const getActivities = async (req, res) => {
-  const { username } = req.query;
+const getAdvertiserActivities = async (req, res) => {
+  const { advertiserId } = req.query;
+
   try {
     let activities;
 
-    if (username) {
-      activities = await Activity.find({ advertiser: username });
+    if (advertiserId) {
+      activities = await Activity.find({ advertiser: advertiserId });
       if (activities.length === 0) {
         return res.status(404).json({ error: "No activities found for this advertiser" });
       }
     } else {
-      activities = await Activity.find();
+      activities = await Activity.find().populate("advertiser").populate("category").populate("tags").populate("ratings");
       if (activities.length === 0) {
         return res.status(404).json({ error: "No activities available" });
       }
@@ -89,6 +104,7 @@ const updateActivity = async (req, res) => {
     priceRange,
     category,
     tags,
+    ratings,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
@@ -122,6 +138,14 @@ const updateActivity = async (req, res) => {
         return res.status(404).json({ error: "Tags not found" });
       }
     }
+    if (ratings && Array.isArray(ratings)) {
+      const existingRatings = await Rating.find({ _id: { $in: ratings } });
+      if (existingRatings.length > 0) {
+        activity.ratings = existingRatings.map((rating) => rating._id); // Store ObjectIds for ratings
+      } else {
+        return res.status(404).json({ error: "Ratings not found" });
+      }
+    }
     activity.title = title || activity.title;
     activity.description = description || activity.description;
     activity.date = date || activity.date;
@@ -151,26 +175,26 @@ const deleteActivity = async (req, res) => {
 };
 
 const searchActivities = async (req, res) => {
-  const { term } = req.query; 
+  const { term } = req.query;
 
   try {
-    let searches = {}; 
+    let searches = {};
 
     // Search by name
     if (term) {
-      searches.title = { $regex: term, $options: 'i' }; 
+      searches.title = { $regex: term, $options: 'i' };
     }
 
     // Search by category
     const existingCategory = await ActivityCategory.findOne({ Name: { $regex: term, $options: 'i' } });
     if (existingCategory) {
-      searches.category = existingCategory._id; 
+      searches.category = existingCategory._id;
     }
 
     // Search by tags
     const existingTags = await PreferenceTag.find({ Name: { $regex: term, $options: 'i' } });
     if (existingTags.length > 0) {
-      searches.tags = { $in: existingTags.map(tag => tag._id) }; 
+      searches.tags = { $in: existingTags.map(tag => tag._id) };
     }
 
     const activities = await Activity.find({
@@ -187,12 +211,32 @@ const searchActivities = async (req, res) => {
   }
 };
 
-const filterActivities = async (req, res) => {
-  const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
-  
-  try{
+const viewUpcomingActivities = async(req, res) => {
+  try {
+    const currentDate = new Date();
+    
+    const activities = await Activity.find({ date: { $gte: currentDate } })
+      .populate('category')
+      .populate('tags');
+    
+    if (activities.length === 0) {
+      return res.status(404).json({ error: "No upcoming activities available" });
+    }
 
-    let filters = {};
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const filterUpcomingActivities = async (req, res) => {
+  const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
+
+
+  try {
+    const currentDate = new Date();
+    
+    let filters = { date: { $gte: currentDate } }; 
 
     // Filter based on budget 
     if (budgetMin || budgetMax) {
@@ -202,13 +246,12 @@ const filterActivities = async (req, res) => {
     }
 
     // Filter based on date
-    // should i specify a start and end or just take 1 value and give all what's equal 
     if (startDate || endDate) {
-      filters.date = {};
+      if (!filters.date) filters.date = {}; 
       if (startDate) filters.date.$gte = new Date(startDate);
       if (endDate) filters.date.$lte = new Date(endDate);
     }
-    
+
     // Filter based on category
     if (category) {
       const existingCategory = await ActivityCategory.findOne({ Name: category });
@@ -234,39 +277,46 @@ const filterActivities = async (req, res) => {
   }
 };
 
-const sortActivities = async (req, res) => {
+const sortUpcomingActivities = async (req, res) => {
   const { sortBy } = req.query;
+  const currentDate = new Date(); 
 
   let sortCriteria = {};
 
   if (sortBy === 'price') {
-    sortCriteria = { priceRange: 1 }; 
+    sortCriteria = { priceRange: 1 };
   } else if (sortBy === 'ratings') {
-    sortCriteria = { ratings: -1 };  
+    sortCriteria = { ratings: -1 };
   } else {
-    sortCriteria = { date: 1 };
+    sortCriteria = { date: 1 }; 
   }
 
   try {
-    const activities = await Activity.find()
-      .sort(sortCriteria) 
+
+    const activities = await Activity.find({ date: { $gte: currentDate } }) 
+      .sort(sortCriteria); 
 
     if (activities.length === 0) {
-      return res.status(404).json({ error: 'No activities found' });
+      return res.status(404).json({ error: 'No upcoming activities found' });
     }
 
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-}
+};
 
-module.exports={
+module.exports = {
   createActivity,
-  getActivities,
+  getAdvertiserActivities,
   updateActivity,
   deleteActivity,
-  filterActivities,
-  sortActivities,
-  searchActivities
+  searchActivities,
+  viewUpcomingActivities,
+  filterUpcomingActivities,
+  sortUpcomingActivities
 }
+
+console.log("Current Date:", new Date());
+console.log("Activity Date:", new Date("2024-10-10T12:00:00.000Z"));
+console.log(new Date("2024-10-10T12:00:00.000Z") > new Date())
