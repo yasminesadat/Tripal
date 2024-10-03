@@ -1,5 +1,4 @@
 import axios from "axios";
-import react from "react";
 
 const baseURL = "http://localhost:5050/api/pref-tags";
 

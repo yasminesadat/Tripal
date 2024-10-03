@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { Row, Col, Input } from "antd";
-import { fetchProducts, searchProductsByName } from "../api/ProductsAPI";
+import { fetchProducts, searchProductsByName } from "../api/ProductService";
 const { Search } = Input;
 
 const ProductList = () => {
@@ -15,7 +15,7 @@ const ProductList = () => {
       if (productsData) {
         setProducts(productsData);
         setFilteredProducts(productsData);
-        console.log("filtered", productsData)
+        console.log("filtered", productsData);
       }
     };
 
@@ -34,7 +34,12 @@ const ProductList = () => {
   return (
     <div className="productList">
       <div
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: '1%' }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margin: "1%",
+        }}
       >
         <h1 style={{ margin: 0 }}>VIEW PRODUCTS</h1>
         <Search

@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Tag, Input, Button, Modal, List, Space, message } from 'antd';
-import { createTag, getTags, updateTag, deleteTag } from '../api/PreferenceTagSevice';
+import React, { useState, useEffect } from "react";
+import { Tag, Input, Button, Modal, List, message } from "antd";
+import {
+  createTag,
+  getTags,
+  updateTag,
+  deleteTag,
+} from "../api/PreferenceTagService";
 
 const TagManager = () => {
   const [tags, setTags] = useState([]);
-  const [newTag, setNewTag] = useState('');
-  const [updateTagId, setUpdateTagId] = useState('');
-  const [updateTagName, setUpdateTagName] = useState('');
+  const [newTag, setNewTag] = useState("");
+  const [updateTagId, setUpdateTagId] = useState("");
+  const [updateTagName, setUpdateTagName] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
@@ -19,7 +24,7 @@ const TagManager = () => {
       const response = await getTags();
       setTags(response.data);
     } catch (error) {
-      message.error('Error fetching tags');
+      message.error("Error fetching tags");
     }
   };
 
@@ -27,11 +32,11 @@ const TagManager = () => {
   const handleCreateTag = async () => {
     try {
       await createTag({ name: newTag });
-      message.success('Tag created successfully!');
-      setNewTag('');
+      message.success("Tag created successfully!");
+      setNewTag("");
       fetchTags(); //refersh tag list after creating
     } catch (error) {
-      message.error('Error creating tag');
+      message.error("Error creating tag");
     }
   };
 
@@ -43,29 +48,27 @@ const TagManager = () => {
     setIsModalVisible(true);
   };
 
-
   const handleUpdateTag = async () => {
     try {
       await updateTag(updateTagId, { name: updateTagName });
-      message.success('Tag updated successfully!');
+      message.success("Tag updated successfully!");
       setIsModalVisible(false);
       fetchTags();
     } catch (error) {
-      message.error('Error updating tag');
+      message.error("Error updating tag");
     }
   };
 
   const handleDeleteTag = async (id) => {
     try {
       await deleteTag(id);
-      message.success('Tag deleted successfully!');
+      message.success("Tag deleted successfully!");
       // Update the state by filtering out the deleted tag
-      setTags((prevTags) => prevTags.filter(tag => tag._id !== id));
+      setTags((prevTags) => prevTags.filter((tag) => tag._id !== id));
     } catch (error) {
-      message.error('Error deleting tag');
+      message.error("Error deleting tag");
     }
   };
-
 
   return (
     <div>
@@ -77,7 +80,9 @@ const TagManager = () => {
           onChange={(e) => setNewTag(e.target.value)}
           placeholder="Enter new tag"
         />
-        <Button type="primary" onClick={handleCreateTag}>Create Tag</Button>
+        <Button type="primary" onClick={handleCreateTag}>
+          Create Tag
+        </Button>
       </div>
 
       <List
@@ -86,8 +91,19 @@ const TagManager = () => {
         renderItem={(tag) => (
           <List.Item
             actions={[
-              <Button type="link" onClick={() => showUpdateModal(tag._id, tag.name)}>Edit</Button>,
-              <Button type="link" danger onClick={() => handleDeleteTag(tag._id)}>Delete</Button>
+              <Button
+                type="link"
+                onClick={() => showUpdateModal(tag._id, tag.name)}
+              >
+                Edit
+              </Button>,
+              <Button
+                type="link"
+                danger
+                onClick={() => handleDeleteTag(tag._id)}
+              >
+                Delete
+              </Button>,
             ]}
           >
             <Tag>{tag.name}</Tag>
