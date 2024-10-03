@@ -9,5 +9,5 @@ const preferenceTagSchema = new Schema(
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("PreferenceTag", preferenceTagSchema);
+const PreferenceTag = mongoose.model("PreferenceTag", preferenceTagSchema);
+module.exports = PreferenceTag

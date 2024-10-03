@@ -9,5 +9,5 @@ const hisTagPeriodchema = new Schema(
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("HistoricalTagPeriod", hisTagPeriodchema);
+const HistoricalTagPeriod = mongoose.model("HistoricalTagPeriod", hisTagPeriodchema);
+module.exports = HistoricalTagPeriod

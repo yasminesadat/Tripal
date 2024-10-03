@@ -7,10 +7,10 @@ const hisTagTypeSchema = new Schema(
       type: String,
       // enum: ['Monuments','Museums', 'Religious Sites','Palaces/Castles','Archaeological Sites','Historical Routes','World Heritage Sites','Natural Heritage Sites'],
       required: true,
-      unique:true
+      unique: true
     },
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("HistoricalTagType", hisTagTypeSchema);
+const HistoricalTagType = mongoose.model("HistoricalTagType", hisTagTypeSchema);
+module.exports = HistoricalTagType
