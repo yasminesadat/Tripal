@@ -4,7 +4,7 @@ import axiosClient from "axios";
 const accessToken = localStorage.getItem("TRIPAL_ACCESS_TOKEN");
 
 export const axios = axiosClient.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "http://localhost:5050",
   headers: {
     Authorization: accessToken ? `Bearer ${accessToken}` : "",
   },

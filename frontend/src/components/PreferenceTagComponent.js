@@ -55,16 +55,17 @@ const TagManager = () => {
     }
   };
 
-  // handle delete
   const handleDeleteTag = async (id) => {
     try {
-      await deleteTag(id);
-      message.success('Tag deleted successfully!');
-      fetchTags();
+        await deleteTag(id);
+        message.success('Tag deleted successfully!');
+        // Update the state by filtering out the deleted tag
+        setTags((prevTags) => prevTags.filter(tag => tag._id !== id));
     } catch (error) {
-      message.error('Error deleting tag');
+        message.error('Error deleting tag');
     }
-  };
+};
+
 
   return (
     <div>

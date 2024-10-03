@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const preferenceTagSchema = new Schema(
   {
-    name: {
+    Name: {
       type: String,
       required: true,
     },
