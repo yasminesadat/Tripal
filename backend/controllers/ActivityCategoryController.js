@@ -1,69 +1,67 @@
 const activityCategory = require('../models/ActivityCategory')
 const { default: mongoose } = require('mongoose');
+const asyncHandler = require("express-async-handler");
 
+const createActivityCategory = asyncHandler(async (req, res) => {
+    const { Name } = req.body;
 
-const createActivityCategory = async (req, res) => {
-    try {
-        const activityCategoryCreated = await activityCategory.create({
-            Name: req.body.Name
-        })
-        res.status(200).json(activityCategoryCreated)
-    }
-    catch (error) {
-        res.status(400).json({ error: error.message });
+    if (!Name) {
+        res.status(400);
+        throw new Error("Category Name is required");
     }
 
-}
-const getActivityCategories = async (req, res) => {
-    try {
-        const existingActivityCategories = await activityCategory.find({})
-        res.status(200).json(existingActivityCategories)
-    }
-    catch (error) {
-        res.status(400).json({ error: error.message });
+    const existingCategory = await activityCategory.findOne({ Name });
+    if (existingCategory) {
+        res.status(400);
+        throw new Error("Duplicate activity category");
     }
 
-}
-const deleteActivityCategory = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedCategory = await activityCategory.findByIdAndDelete(id);
-
-        if (!deletedCategory) {
-            return res.status(404).json({ message: "Activity category not found" });
-        }
-
-        res.status(200).json({ message: "Activity category deleted successfully", data: { deletedCategory } });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
+    const activityCategoryCreated = await activityCategory.create({ Name });
+    if (activityCategoryCreated) {
+        res.status(201).json(activityCategoryCreated);
+    } else {
+        res.status(400);
+        throw new Error("Invalid Activity Category Name");
     }
-};
-const updateActivityCategory = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { Name } = req.body;
+});
 
-        const newActivityCategory = await activityCategory.findByIdAndUpdate(
-            id,
-            { Name },
-            { new: true });
+const getActivityCategories = asyncHandler(async (req, res) => {
+    const existingActivityCategories = await activityCategory.find({});
+    res.status(200).json(existingActivityCategories);
+});
 
-        if (!newActivityCategory) {
-            return res.status(404).json('Activity category not found');
-        }
+const deleteActivityCategory = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const deletedCategory = await activityCategory.findByIdAndDelete(id);
 
-        return res.status(200).json({ status: 'success', data: { newActivityCategory } })
+    if (!deletedCategory) {
+        return res.status(404).json({ message: "Activity category not found" });
     }
-    catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-}
 
+    res.status(200).json({ message: "Activity category deleted successfully", data: { deletedCategory } });
+});
+
+const updateActivityCategory = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { Name } = req.body;
+
+    const existingCategory = await activityCategory.findOne({ Name });
+    if (existingCategory && existingCategory._id.toString() !== id) {
+        return res.status(400).json({ error: 'An activity category with this name already exists' });
+    }
+
+    const newActivityCategory = await activityCategory.findByIdAndUpdate(id, { Name }, { new: true });
+
+    if (!newActivityCategory) {
+        return res.status(404).json({ error: 'Activity category not found' });
+    }
+
+    return res.status(200).json({ status: 'success', data: { newActivityCategory } });
+});
 
 module.exports = {
     createActivityCategory,
     getActivityCategories,
     deleteActivityCategory,
     updateActivityCategory
-
-}
+};

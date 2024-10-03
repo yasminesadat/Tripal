@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const preferenceTagSchema = new Schema(
+const hisTagPeriodchema = new Schema(
   {
-    Name: {
+    name: {
       type: String,
       required: true,
     },
@@ -10,4 +10,4 @@ const preferenceTagSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("PreferenceTag", preferenceTagSchema);
+module.exports = mongoose.model("HistoricalTagPeriod", hisTagPeriodchema);
