@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
-
-const requestSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+const requestSchema = new Schema(
   {
     userName: {
       type: String,
       required: [true, "userName name is required"],
     },
     email: {
-      type: Number,
+      type: String,
       required: [true, "email is required"],
     },
     password: {
@@ -15,11 +15,10 @@ const requestSchema = new mongoose.Schema(
       required: [true, "password is required"],
     },
     role: {
+      type:String,
         enum: ['seller', 'tourGuide', 'advertiser'],
         required: true,
       },
-
-    
   },
   { timestamps: true }
 );
