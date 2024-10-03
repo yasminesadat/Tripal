@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const requestSchema = new Schema(
+
+const requestSchema = new mongoose.Schema(
   {
     userName: {
       type: String,
@@ -19,10 +19,6 @@ const requestSchema = new Schema(
       enum: ["seller", "tourGuide", "advertiser"],
       required: true,
     },
-      type:String,
-        enum: ['seller', 'tourGuide', 'advertiser'],
-        required: true,
-      },
   },
   { timestamps: true }
 );
