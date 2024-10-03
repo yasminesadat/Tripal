@@ -32,7 +32,7 @@ const updateSellerData = async (req, res) => {
             { new: true });
 
         if (!updatedSeller) {
-            return res.status(404).json('Seller  not found');
+            return res.status(404).json('Seller not found');
         }
 
         return res.status(200).json({ updatedSeller })

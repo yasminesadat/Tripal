@@ -6,7 +6,7 @@ const activitySchema = new Schema(
     advertiser: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Advertiser",
+      ref: "advertiser",
     },
     title: {
       type: String,
@@ -29,25 +29,27 @@ const activitySchema = new Schema(
       required: true,
     },
     price: {
-      type: Number, required: true ,
+      type: Number, required: true,
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: "ActivityCategory",
-      required: true,
     },
     tags: [
       {
         type: Schema.Types.ObjectId,
         ref: "PreferenceTag",
-        required: true ,
+        default: []
+
       },
     ],
     ratings: [
       {
         type: Schema.Types.ObjectId,
         ref: "Rating",
+        default: []
       },
+
     ],
     specialDiscounts: {
       type: String,

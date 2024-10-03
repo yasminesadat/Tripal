@@ -3,6 +3,7 @@ const Advertiser = require('../models/Advertiser');
 const ActivityCategory = require('../models/ActivityCategory');
 const PreferenceTag = require('../models/PreferenceTag');
 const Rating = require('../models/Rating');
+const tagsController = require('./PreferenceTagController');
 
 
 const createActivity = async (req, res) => {
@@ -13,33 +14,38 @@ const createActivity = async (req, res) => {
     date,
     time,
     location,
-    priceRange,
+    price,
     category: categoryName,
-    tags: tagNames,
+    tags: tagIds,
     ratings: ratingIds,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
   try {
     const existingAdvertiser = await Advertiser.findById(advertiser);
+    console.log(existingAdvertiser)
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const category = await ActivityCategory.findOne({ Name: categoryName });
-    if (!category) {
-      return res.status(404).json({ error: "Category not found" });
-    }
-    console.log("Tag names being searched:", tagNames);
-    const existingTags = await PreferenceTag.find({ Name: { $in: tagNames } });
-    console.log(existingTags)
-    if (!existingTags || existingTags.length === 0) {
-      return res.status(404).json({ error: "Tags not found" });
-    }
-    const ratings = await Rating.find({ _id: { $in: ratingIds } });
-    if (!ratings || ratings.length === 0) {
-      return res.status(404).json({ error: "Ratings not found" });
-    }
+    // if (!category) {
+    //   return res.status(404).json({ error: "Category not found" });
+    // }
+    // console.log("Tag names being searched:", tagNames);
+
+
+    // const existingTags = await PreferenceTag.find({ _id: { $in: tagIds } });
+    // console.log(existingTags)
+    // if (!existingTags || existingTags.length === 0) {
+    //   return res.status(404).json({ error: "Tags not found" });
+
+    // }
+    // console.log(existingTags)
+    // const ratings = await Rating.find({ _id: { $in: ratingIds } });
+    // if (!ratings || ratings.length === 0) {
+    //   return res.status(404).json({ error: "Ratings not found" });
+    // }
 
     const newActivity = new Activity({
       advertiser: existingAdvertiser._id,
@@ -48,13 +54,14 @@ const createActivity = async (req, res) => {
       date,
       time,
       location,
-      priceRange,
+      price,
       category: category._id, // Use the ObjectId of the category
-      tags: existingTags.map((tag) => tag._id), // Use ObjectIds for tags
-      ratings: ratings.map((rating) => rating._id), // Use ObjectIds for ratings
+      tags: tagIds, // Use ObjectIds for tags
+      ratings: ratingIds,
       specialDiscounts,
       isBookingOpen,
     });
+
 
     await newActivity.save();
     res.status(201).json(newActivity);
@@ -63,7 +70,6 @@ const createActivity = async (req, res) => {
     res.status(500).json({ error: "Failed to save activity" });
   }
 };
-
 const getActivities = async (req, res) => {
   const { advertiserId } = req.query;
   try {
@@ -75,7 +81,12 @@ const getActivities = async (req, res) => {
         return res.status(404).json({ error: "No activities found for this advertiser" });
       }
     } else {
-      activities = await Activity.find();
+      activities = await Activity.find().populate("advertiser").populate("category").populate("tags.list").populate("ratings.list");
+      // activities.forEach((activity)=>{
+      //   activity.tags.forEach((tag)=> {
+      //               tagsController.
+      //   }
+      // })
       if (activities.length === 0) {
         return res.status(404).json({ error: "No activities available" });
       }
@@ -168,26 +179,26 @@ const deleteActivity = async (req, res) => {
 };
 
 const searchActivities = async (req, res) => {
-  const { term } = req.query; 
+  const { term } = req.query;
 
   try {
-    let searches = {}; 
+    let searches = {};
 
     // Search by name
     if (term) {
-      searches.title = { $regex: term, $options: 'i' }; 
+      searches.title = { $regex: term, $options: 'i' };
     }
 
     // Search by category
     const existingCategory = await ActivityCategory.findOne({ Name: { $regex: term, $options: 'i' } });
     if (existingCategory) {
-      searches.category = existingCategory._id; 
+      searches.category = existingCategory._id;
     }
 
     // Search by tags
     const existingTags = await PreferenceTag.find({ Name: { $regex: term, $options: 'i' } });
     if (existingTags.length > 0) {
-      searches.tags = { $in: existingTags.map(tag => tag._id) }; 
+      searches.tags = { $in: existingTags.map(tag => tag._id) };
     }
 
     const activities = await Activity.find({
@@ -206,8 +217,8 @@ const searchActivities = async (req, res) => {
 
 const filterActivities = async (req, res) => {
   const { budgetMin, budgetMax, startDate, endDate, category, rating } = req.query;
-  
-  try{
+
+  try {
 
     let filters = {};
 
@@ -225,7 +236,7 @@ const filterActivities = async (req, res) => {
       if (startDate) filters.date.$gte = new Date(startDate);
       if (endDate) filters.date.$lte = new Date(endDate);
     }
-    
+
     // Filter based on category
     if (category) {
       const existingCategory = await ActivityCategory.findOne({ Name: category });
@@ -257,16 +268,16 @@ const sortActivities = async (req, res) => {
   let sortCriteria = {};
 
   if (sortBy === 'price') {
-    sortCriteria = { priceRange: 1 }; 
+    sortCriteria = { priceRange: 1 };
   } else if (sortBy === 'ratings') {
-    sortCriteria = { ratings: -1 };  
+    sortCriteria = { ratings: -1 };
   } else {
     sortCriteria = { date: 1 };
   }
 
   try {
     const activities = await Activity.find()
-      .sort(sortCriteria) 
+      .sort(sortCriteria)
 
     if (activities.length === 0) {
       return res.status(404).json({ error: 'No activities found' });
@@ -278,7 +289,7 @@ const sortActivities = async (req, res) => {
   }
 }
 
-module.exports={
+module.exports = {
   createActivity,
   getActivities,
   updateActivity,
