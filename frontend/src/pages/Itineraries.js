@@ -30,7 +30,8 @@ const ItinerariesPage = () => {
         const fetchItineraries = async () => {
             try {
                 const response = await getItineraries();
-                setItineraries(response.data);
+                console.log('Itineraries:', response.data);
+                setItineraries(response);
             } catch (error) {
                 message.error('Failed to fetch itineraries');
             }
