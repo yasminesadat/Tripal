@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema(
     },
     picture: {
       type: String,
-      required: [true, "Product picture is required"],
+      required: true,
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,

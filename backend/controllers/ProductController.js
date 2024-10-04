@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
+const cloudinary = require("../cloudinary");
 
 const Product = require("../models/Product.js");
 const Rating = require("../models/Rating");
@@ -14,15 +15,24 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Seller not found");
   }
+  let result;
+  try {
+    result = await cloudinary.uploader.upload(picture, {
+      folder: "products",
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
   const product = await Product.create({
     name,
     seller,
     price,
     description,
     quantity,
-    picture,
+    picture: result.secure_url,
   });
-
+  await product.save();
   if (product) {
     res.status(201).json(product);
   } else {
