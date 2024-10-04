@@ -4,15 +4,17 @@ const { createHistoricalPlace,
   getHistoricalPlace,
   deleteHistoricalPlace,
   getAllHistoricalPlaces,
-  updateHistoricalPlaces } = require("../controllers/HistoricalPlaceController");
+  updateHistoricalPlaces,
+getTourismGovernerHistoricalPlaces } = require("../controllers/HistoricalPlaceController");
 const historicalPlaceRouter = express.Router();
-let path = "/historicalPlaces";
+
 // historicalPlaceRouter.get(
 //   path + "/create", historicalPlaceController.historical_place_create_get);
-historicalPlaceRouter.get(path + "/", getAllHistoricalPlaces);
-historicalPlaceRouter.post(path + "/", createHistoricalPlace);
-historicalPlaceRouter.get(path + "/:id", getHistoricalPlace);
-historicalPlaceRouter.delete(path + "/:id", deleteHistoricalPlace);
-historicalPlaceRouter.put(path + "/:id", updateHistoricalPlaces
-);
+historicalPlaceRouter.get("/historicalPlaces", getAllHistoricalPlaces);
+historicalPlaceRouter.post("/historicalPlaces", createHistoricalPlace);
+historicalPlaceRouter.get("/historicalPlaces/:id", getHistoricalPlace);
+historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
+historicalPlaceRouter.put("/historicalPlaces/:id", updateHistoricalPlaces);
+historicalPlaceRouter.get("/historicalPlaces/tourism-governer/:id", getTourismGovernerHistoricalPlaces);
+
 module.exports = historicalPlaceRouter;
