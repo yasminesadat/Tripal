@@ -14,13 +14,13 @@ const createItinerary = async(req,res) => {
         return res.status(404).json({ error: 'No activities found' });
     }
 
-    let price = serviceFee;
+    let price = Number(serviceFee);
     const locations = []; //gama3ly locations
     const timeline = []; //name w time
     const tags = new Set(); //to remove dups
 
     fetchedActivities.forEach((activity) => {
-        price+=activity.price;
+        price+=Number(activity.price);
         locations.push(activity.location);
         timeline.push({activityName: activity.title, time: activity.time});
         activity.tags.forEach((tag) => tags.add(tag));
