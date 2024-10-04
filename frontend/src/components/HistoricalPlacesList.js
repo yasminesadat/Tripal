@@ -2,41 +2,43 @@ import React from "react";
 
 const HistoricalPlacesList = ({ places = [] }) => {
   return (
-    <ul>
+    <div class="list" >
       {places.map((place) => (
-        <li key={place._id}>
-          <h2>{place.name}</h2>
-          <p>{place.description}</p>
-          {place.pictures && place.pictures.length > 0 && (
-            <div>
-              <h3>Pictures:</h3>
-              <img
-                src={place.pictures[0]}
-                alt={place.name}
-                style={{ width: "200px" }}
-              />
+        <div class="list-item" key={place._id}>
+            <div class="list-item-header">{place.name}</div>
+            <div class="list-item-attributes">
+              <div class="list-item-attribute">{place.description}</div>
+              {place.pictures && place.pictures.length > 0 && (
+                <div class="list-item-attribute">
+                  <div>Pictures:</div>
+                  <img
+                    src={place.pictures[0]}
+                    alt={place.name}
+                    style={{ width: "200px" }}
+                  />
+                </div>
+              )}
+              <div class="list-item-attribute">Location: {place.location.address}</div>
+              <div class="list-item-attribute">
+                Opening Hours: Weekdays {place.openingHours.weekdays.openingTime} -{" "}
+                {place.openingHours.weekdays.closingTime}, Weekends{" "}
+                {place.openingHours.weekends.openingTime} -{" "}
+                {place.openingHours.weekends.closingTime}
+              </div>
+              <div class="list-item-attribute">
+                Ticket Prices: Foreigner: ${place.ticketPrices.foreigner}, Native: $
+                {place.ticketPrices.native}, Student: ${place.ticketPrices.student}
+              </div>
+              <div class="list-item-attribute">
+                Tags:{" "}
+                {place.tags && place.tags.length > 0
+                  ? place.tags.map((tag) => tag.name).join(", ")
+                  : "N/A"}
+              </div>
             </div>
-          )}
-          <p>Location: {place.location.address}</p>
-          <p>
-            Opening Hours: Weekdays {place.openingHours.weekdays.openingTime} -{" "}
-            {place.openingHours.weekdays.closingTime}, Weekends{" "}
-            {place.openingHours.weekends.openingTime} -{" "}
-            {place.openingHours.weekends.closingTime}
-          </p>
-          <p>
-            Ticket Prices: Foreigner: ${place.ticketPrices.foreigner}, Native: $
-            {place.ticketPrices.native}, Student: ${place.ticketPrices.student}
-          </p>
-          <p>
-            Tags:{" "}
-            {place.tags && place.tags.length > 0
-              ? place.tags.map((tag) => tag.name).join(", ")
-              : "N/A"}
-          </p>
-        </li>
+          </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import TouristProfile from "../components/TouristProfile";
-import { getTouristInformation } from "../api/TouristService";
+import TouristProfile from "../../components/TouristProfile";
+import { getTouristInformation } from "../../api/TouristService";
 const TouristHomePage = () => {
   const [profileInformation, setProfileInformation] = useState([]);
 
