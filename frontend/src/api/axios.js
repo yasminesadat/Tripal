@@ -1,6 +1,6 @@
 import axiosClient from "axios";
 
-//set it later in the login
+// Set it later in the login
 const accessToken = localStorage.getItem("TRIPAL_ACCESS_TOKEN");
 
 export const axios = axiosClient.create({
