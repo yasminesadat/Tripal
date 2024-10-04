@@ -32,7 +32,7 @@ const createPeriodTags = async (req, res) => {
 
         res.status(201).json({ status: 'success', data: { createdPeriodTag } }); // Use 201 Created status
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -51,7 +51,7 @@ const getHistTags = async (req, res) => {
         }
         res.status(200).json(combinedTags);
     } catch (error) {
-        res.status(400).json({ message: 'Error fetching all tags', error });
+        res.status(500).json({ message: 'Error fetching all tags', error });
     }
 };
 
