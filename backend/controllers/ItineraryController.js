@@ -25,7 +25,7 @@ const createItinerary = async(req,res) => {
         timeline.push({activityName: activity.title, time: activity.time});
         activity.tags.forEach((tag) => tags.add(tag));
     })
-    const uniqueTags = Array.from(allTags);
+    const uniqueTags = Array.from(tags);
 
 
     const resultItinerary = await itineraryModel.create({
