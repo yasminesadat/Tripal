@@ -4,15 +4,16 @@ import { createProduct } from "../../api/ProductService";
 import { sellerId } from "../../IDs";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
+import "./product.css";
 
 const ProductForm = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState({
     name: "",
     sellerID: sellerId,
-    price: "",
+    price: 0,
     description: "",
-    quantity: "",
+    quantity: 0,
     picture: null,
   });
 
@@ -23,43 +24,64 @@ const ProductForm = () => {
     }
   };
 
+  const handleNumberChange = (name, value) => {
+    setProduct({ ...product, [name]: value });
+  };
+
   const handleImageChange = (info) => {
-    if (info.file.status === "done") {
-      setProduct({ ...product, picture: info.file.originFileObj });
+    if (info.fileList.length === 0) {
+      setProduct({ ...product, picture: null });
+      return;
+    }
+
+    const file = info.file.originFileObj || info.file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProduct({ ...product, picture: reader.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("name", product.name);
-    formData.append("sellerID", product.sellerID);
-    formData.append("price", product.price);
-    formData.append("description", product.description);
-    formData.append("quantity", product.quantity);
-    formData.append("picture", product.picture);
+  const handleBeforeUpload = (file) => {
+    if (product.picture) {
+      message.error("Only one picture can be uploaded.");
+      return Upload.LIST_IGNORE;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setProduct({ ...product, picture: reader.result });
+    };
+    reader.readAsDataURL(file);
+    return false;
+  };
 
+  const handleRemove = () => {
+    setProduct({ ...product, picture: null });
+  };
+
+  const handleSubmit = async () => {
     try {
-      await createProduct(formData);
+      const productData = {
+        name: product.name,
+        sellerID: product.sellerID,
+        price: product.price,
+        description: product.description,
+        quantity: product.quantity,
+        picture: product.picture, // Picture is now a Base64 string
+      };
+
+      await createProduct(productData);
       message.success("Product created successfully!");
       navigate("/view-products");
     } catch (error) {
-      message.error("Error creating product", error);
+      message.error("Error creating product: " + error.message);
     }
   };
 
   return (
-    <div
-      style={{
-        width: "50%",
-        marginTop: "5%",
-        marginBottom: "5%",
-        marginLeft: "25%",
-        backgroundColor: "lightblue",
-        padding: "20px",
-        borderRadius: "5px",
-        textAlign: "left",
-      }}
-    >
+    <div className="product-form-container">
       <Form layout="vertical" onFinish={handleSubmit}>
         <Form.Item
           label="Name"
@@ -83,11 +105,10 @@ const ProductForm = () => {
           ]}
         >
           <InputNumber
-            type="number"
             name="price"
             min={0}
             value={product.price}
-            onChange={(value) => handleInputChange}
+            onChange={(value) => handleNumberChange("price", value)}
             placeholder="Enter price"
             style={{ width: "100%" }}
           />
@@ -117,11 +138,10 @@ const ProductForm = () => {
           ]}
         >
           <InputNumber
-            type="number"
             name="quantity"
             min={0}
             value={product.quantity}
-            onChange={handleInputChange}
+            onChange={(value) => handleNumberChange("quantity", value)}
             placeholder="Enter quantity"
             style={{ width: "100%" }}
           />
@@ -138,24 +158,30 @@ const ProductForm = () => {
             name="picture"
             listType="picture"
             accept=".png,.jpeg,.jpg"
-            beforeUpload={(file) => {
-              const isValidType =
-                file.type === "image/png" ||
-                file.type === "image/jpeg" ||
-                file.type === "image/jpg";
-              if (!isValidType) {
-                message.error("You can only upload PNG, JPEG, or JPG files!");
-              }
-              return isValidType ? true : Upload.LIST_IGNORE;
-            }}
+            beforeUpload={handleBeforeUpload} // Prevent multiple uploads
             onChange={handleImageChange}
+            onRemove={handleRemove} // Allow removal of the picture
+            fileList={
+              product.picture
+                ? [
+                    {
+                      uid: "-1",
+                      name: "image.png",
+                      status: "done",
+                      url: product.picture,
+                    },
+                  ]
+                : []
+            } // Ensure only one file is shown
           >
-            <Button icon={<UploadOutlined />}>Upload Picture</Button>
+            {!product.picture && (
+              <Button icon={<UploadOutlined />}>Upload Picture</Button>
+            )}
           </Upload>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Create Product
           </Button>
         </Form.Item>
