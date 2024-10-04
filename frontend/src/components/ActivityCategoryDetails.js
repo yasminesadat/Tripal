@@ -39,11 +39,14 @@ const ActivityCategoryDetails = () => {
 
   const handleButtonClick = async () => {
     try {
-      // const createdCategory = await ActivityCategoryApi.createActivityCategory(
-      //   nameValue
-      // );
+      const createdCategory = await ActivityCategoryApi.createActivityCategory(
+        nameValue
+      );
+      console.log("just created", createdCategory);
+      const id = createdCategory._id;
       const newObject = {
         Name: nameValue,
+        _id: id
       };
       setData([...data, newObject]);
       setNameValue("");

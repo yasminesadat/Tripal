@@ -66,9 +66,9 @@ const getAllHistoricalPlaces = (req, res) => {
 // };
 
 const getTourismGovernerHistoricalPlaces = async (req, res) => {
-  const { touridmGovernerID } = req.params.id;
+  const { tourismGovernorID } = req.params.id;
   try{
-    const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: touridmGovernerID });
+    const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: tourismGovernorID });
     res.status(200).json(historicalPlaces);
   }catch(error){
     res.status(400).json({ error: error.message })

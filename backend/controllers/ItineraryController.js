@@ -99,7 +99,7 @@ const updateItinerary = async(req,res) => {
             tourGuide, activities, availableDates, availableTime, language,
             accessibility, pickupLocation, dropoffLocation, price, locations,
             timeline,tags: uniqueTags},{ new: true });
-        
+            console.log('Collected Tags:', Array.from(tags)); // Log the collected tags
             if (!updatedItinerary) {
                 return res.status(404).json({ error: 'Itinerary not found' });
             }
@@ -124,4 +124,15 @@ const deleteItinerary = async(req,res) => {
       }
 };
 
-module.exports = {createItinerary, getItineraries, updateItinerary, deleteItinerary};
+const getTourGuideItineraries = async (req, res) => {
+    const { id } = req.params;
+    try{
+      const itineraries = await itineraryModel.find({ tourGuide: id })
+      .populate("activities").populate("tags");
+      res.status(200).json(itineraries);
+    }catch(error){
+      res.status(400).json({ error: error.message })
+    }
+  };
+
+module.exports = {createItinerary, getItineraries, updateItinerary, deleteItinerary, getTourGuideItineraries};

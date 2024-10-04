@@ -3,21 +3,20 @@ import React, { useState } from "react";
 const HistoricalPlacesSearch = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch(searchTerm);
+  const handleInputChange = (e) => {
+    const newSearchTerm = e.target.value;
+    setSearchTerm(newSearchTerm);
+    onSearch(newSearchTerm);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Search for historical places..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button type="submit">Search</button>
-    </form>
+    <input
+      className="search-bar"
+      type="text"
+      placeholder="Search for historical places..."
+      value={searchTerm}
+      onChange={handleInputChange}
+    />
   );
 };
 
