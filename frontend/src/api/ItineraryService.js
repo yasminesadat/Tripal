@@ -1,7 +1,19 @@
-import axios from "axios";
+import { axios } from "./axios";
 
 const baseURL = `http://localhost:5050/api/itinerary`;
 
+// for tourist
+export async function viewItineraries() {
+  try {
+    const response = await axios.get("itinerary/view");
+    return response.data;
+  } catch (error) {
+    console.error("Can't fetch itineraries", error);
+    throw error;
+  }
+}
+
+// for tourguide
 export const getItineraries = async () => {
     try {
         const response = await axios.get(baseURL);
