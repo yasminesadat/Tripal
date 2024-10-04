@@ -6,7 +6,7 @@ const activitySchema = new Schema(
     advertiser: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "advertiser",
+      ref: "Advertiser",
     },
     title: {
       type: String,
