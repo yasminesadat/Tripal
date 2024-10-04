@@ -4,7 +4,7 @@ const activityModel = require('../models/Activity');
 
 const createItinerary = async(req,res) => {
     try {
-    const {title, description, tourGuide, activities,
+    const {title, description, tourGuide, activities,serviceFee,    
     language,availableDates,availableTime,accessibility,
     pickupLocation,dropoffLocation} = req.body;
 
@@ -14,7 +14,7 @@ const createItinerary = async(req,res) => {
         return res.status(404).json({ error: 'No activities found' });
     }
 
-    let price = 0;
+    let price = serviceFee;
     const locations = []; //gama3ly locations
     const timeline = []; //name w time
     const tags = new Set(); //to remove dups
@@ -67,7 +67,7 @@ const getItineraries = async(req,res) => {
 const updateItinerary = async(req,res) => {
     try{
         const {id} = req.params;
-        const {title, description, tourGuide, activities,
+        const {title, description, tourGuide, activities,serviceFee,
             language,availableDates,availableTime,accessibility,
             pickupLocation,dropoffLocation} = req.body;
         
@@ -77,7 +77,7 @@ const updateItinerary = async(req,res) => {
             return res.status(404).json({ error: 'No activities found' });
         }
 
-        let price = 0;
+        let price = serviceFee;
         const locations = [];
         const timeline = [];
         const allTags = new Set();
