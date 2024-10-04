@@ -39,14 +39,14 @@ const createItinerary = async(req,res) => {
         accessibility,
         pickupLocation,
         dropoffLocation,
-        tourists: []
-    });
-    res.status(201).json({
-        itinerary: resultItinerary,
+        tourists: [],
         price,
         locations,
         timeline,
         tags: uniqueTags
+    });
+    res.status(201).json({
+        itinerary: resultItinerary,
     });
     } 
     catch (error) {
