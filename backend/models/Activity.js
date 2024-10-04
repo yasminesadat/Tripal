@@ -48,7 +48,6 @@ const activitySchema = new Schema(
         ref: "Rating",
         default: []
       },
-
     ],
     specialDiscounts: {
       type: String,
