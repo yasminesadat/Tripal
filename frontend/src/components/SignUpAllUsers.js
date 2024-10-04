@@ -5,6 +5,7 @@ import { createAdvertiser } from "../api/AdvertiserService";
 import { createTourist } from "../api/TouristService";
 import { nationalities } from "../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
+
 const SignUpAllUsers = () => {
   const navigate = useNavigate();
 
@@ -41,7 +42,7 @@ const SignUpAllUsers = () => {
     const formattedDateOfBirth = new Date(formData.dateOfBirth)
       .toISOString()
       .split("T")[0];
-    console.log(formattedDateOfBirth);
+
     const commonUser = {
       userName: formData.userName,
       email: formData.email,
@@ -82,14 +83,15 @@ const SignUpAllUsers = () => {
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      {error && <p style={{ color: "red" }}>{error.message}</p>}
-      {success && <p style={{ color: "green" }}>Sign up successful!</p>}
+    <div className="signUpUsersForm-container">
+      <h2 className="signUpUsersForm-title">Sign Up</h2>
+      {error && <p className="signUpUsersForm-error">{error.message}</p>}
+      {success && <p className="signUpUsersForm-success">Sign up successful!</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="userName">User Name:</label>
+          <label className="signUpUsersForm-label" htmlFor="userName">User Name:</label>
           <input
+            className="signUpUsersForm-input"
             type="text"
             id="userName"
             name="userName"
@@ -99,8 +101,9 @@ const SignUpAllUsers = () => {
           />
         </div>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label className="signUpUsersForm-label" htmlFor="email">Email:</label>
           <input
+            className="signUpUsersForm-input"
             type="email"
             id="email"
             name="email"
@@ -110,8 +113,9 @@ const SignUpAllUsers = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label className="signUpUsersForm-label" htmlFor="password">Password:</label>
           <input
+            className="signUpUsersForm-input"
             type="password"
             id="password"
             name="password"
@@ -122,8 +126,9 @@ const SignUpAllUsers = () => {
         </div>
 
         <div>
-          <label>
+          <label className="signUpUsersForm-label">
             <input
+              className="signUpUsersForm-radio"
               type="radio"
               name="role"
               value="seller"
@@ -132,8 +137,9 @@ const SignUpAllUsers = () => {
             />
             Seller
           </label>
-          <label>
+          <label className="signUpUsersForm-label">
             <input
+              className="signUpUsersForm-radio"
               type="radio"
               name="role"
               value="tour-guide"
@@ -142,8 +148,9 @@ const SignUpAllUsers = () => {
             />
             Tour Guide
           </label>
-          <label>
+          <label className="signUpUsersForm-label">
             <input
+              className="signUpUsersForm-radio"
               type="radio"
               name="role"
               value="advertiser"
@@ -152,8 +159,9 @@ const SignUpAllUsers = () => {
             />
             Advertiser
           </label>
-          <label>
+          <label className="signUpUsersForm-label">
             <input
+              className="signUpUsersForm-radio"
               type="radio"
               name="role"
               value="tourist"
@@ -164,12 +172,12 @@ const SignUpAllUsers = () => {
           </label>
         </div>
 
-        {/* Only show the additional fields for tourists */}
         {role === "tourist" && (
           <>
             <div>
-              <label htmlFor="mobileNumber">Mobile Number:</label>
+              <label className="signUpUsersForm-label" htmlFor="mobileNumber">Mobile Number:</label>
               <input
+                className="signUpUsersForm-input"
                 type="tel"
                 id="mobileNumber"
                 name="mobileNumber"
@@ -179,8 +187,9 @@ const SignUpAllUsers = () => {
               />
             </div>
             <div>
-              <label htmlFor="nationality">Nationality:</label>
+              <label className="signUpUsersForm-label" htmlFor="nationality">Nationality:</label>
               <select
+                className="signUpUsersForm-select"
                 id="nationality"
                 name="nationality"
                 value={formData.nationality}
@@ -196,8 +205,9 @@ const SignUpAllUsers = () => {
               </select>
             </div>
             <div>
-              <label>Date of Birth</label>
+              <label className="signUpUsersForm-label">Date of Birth</label>
               <input
+                className="signUpUsersForm-input"
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
@@ -206,8 +216,9 @@ const SignUpAllUsers = () => {
               />
             </div>
             <div>
-              <label htmlFor="job">Job</label>
+              <label className="signUpUsersForm-label" htmlFor="job">Job</label>
               <input
+                className="signUpUsersForm-input"
                 type="text"
                 id="job"
                 name="job"
@@ -218,7 +229,7 @@ const SignUpAllUsers = () => {
             </div>
           </>
         )}
-        <button type="submit">Sign Up</button>
+        <button className="signUpUsersForm-button" type="submit">Sign Up</button>
       </form>
     </div>
   );

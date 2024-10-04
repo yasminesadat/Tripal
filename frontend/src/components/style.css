@@ -129,3 +129,63 @@ a:hover {
 .tourist-profile li:hover {
     transform: scale(1.02);
 }
+
+.signUpUsersForm-container {
+    /* max-width: 400px; */
+    margin: 5% 20%;
+    padding: 20px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+
+
+
+}
+
+.signUpUsersForm-title {
+    color: #007BFF;
+    text-align: center;
+}
+
+.signUpUsersForm-label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+.signUpUsersForm-input,
+.signUpUsersForm-select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #007BFF;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.signUpUsersForm-radio {
+    margin-right: 5px;
+}
+
+.signUpUsersForm-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.signUpUsersForm-button:hover {
+    background-color: #0056b3;
+}
+
+.signUpUsersForm-error {
+    color: red;
+}
+
+.signUpUsersForm-success {
+    color: green;
+}
