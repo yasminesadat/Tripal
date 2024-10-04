@@ -1,5 +1,5 @@
-const itineraryModel = require('..models/Itinerary.js');
-const activityModel = require('..models/Activity.js');
+const itineraryModel = require('../models/Itinerary');
+const activityModel = require('../models/Activity');
 
 
 const createItinerary = async(req,res) => {
