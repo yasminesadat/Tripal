@@ -1,5 +1,4 @@
 import React from "react";
-import SignUp from "../components/SignUp";
 import SignUpAllUsers from "../components/SignUpAllUsers";
 import mainLogo from "../assets/images/Tripal-logo.png";
 const Home = () => {
@@ -8,7 +7,7 @@ const Home = () => {
       <h1>WELCOME TO TRIPAL</h1>
       <img
         src={mainLogo}
-        alt="Description of the image"
+        alt="logo"
         style={{
           float: "right",
           maxWidth: "100%",

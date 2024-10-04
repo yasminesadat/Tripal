@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { createProduct } from "../api/ProductService";
-import axios from "axios";
 
 const ProductForm = ({ onProductCreated }) => {
   const [product, setProduct] = useState({
@@ -19,15 +18,14 @@ const ProductForm = ({ onProductCreated }) => {
   };
 
   const handleSubmit = async () => {
-  try{
-    await createProduct(product); 
-    message.success("Product created successfully!")
-  }
-  catch (error) {
-    message.error("Error creating product", error);
-  }};
+    try {
+      await createProduct(product);
+      message.success("Product created successfully!");
+    } catch (error) {
+      message.error("Error creating product", error);
+    }
+  };
 
-  
   return (
     <Form layout="vertical" onFinish={handleSubmit}>
       <Form.Item label="Name" required>
