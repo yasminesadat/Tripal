@@ -1,6 +1,8 @@
-import { useState} from 'react';
+import { useState, useEffect} from 'react';
 import { createItinerary, getItineraries, updateItinerary,deleteItinerary } from '../api/ItineraryService';
-import { List, message } from "antd";
+import {  message } from "antd";
+import ItinerariesList from '../components/ItinerariesList';
+
 const activities = ["66fe41ef35af91d0fea02ac1"];
 const tourGuide = "66fdd5beb6a46aa09c57e0d9";
 const accessibilityOptions = [
@@ -23,7 +25,19 @@ const ItinerariesPage = () => {
         pickupLocation: '',
         dropoffLocation: '',
     });
+    const [itineraries, setItineraries] = useState([]);
+    useEffect(() => {
+        const fetchItineraries = async () => {
+            try {
+                const response = await getItineraries();
+                setItineraries(response.data);
+            } catch (error) {
+                message.error('Failed to fetch itineraries');
+            }
+        };
 
+        fetchItineraries();
+    }, []);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setItinerary(prev => ({ ...prev, [name]: value }));
@@ -59,6 +73,7 @@ const ItinerariesPage = () => {
     return (
         <div style={{alignContent:'center', alignSelf:'center',}}>
             <h1>Itineraries</h1>
+
             <form onSubmit={handleSubmit}>
                 <label>
                     Title:
@@ -149,7 +164,9 @@ const ItinerariesPage = () => {
                 <br />
                 <button type="submit">Create Itinerary</button>
             </form>
-            <p>Itineraries page content</p>
+            <p> Itineraries page content</p>
+            <ItinerariesList itineraries={itineraries} />
+
         </div>
     );
 };
