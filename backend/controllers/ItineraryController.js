@@ -127,7 +127,8 @@ const deleteItinerary = async(req,res) => {
 const getTourGuideItineraries = async (req, res) => {
     const { id } = req.params;
     try{
-      const itineraries = await itineraryModel.find({ tourGuide: id });
+      const itineraries = await itineraryModel.find({ tourGuide: id })
+      .populate("activities").populate("tags");
       res.status(200).json(itineraries);
     }catch(error){
       res.status(400).json({ error: error.message })
