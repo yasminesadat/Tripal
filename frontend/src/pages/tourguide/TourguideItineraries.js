@@ -167,7 +167,6 @@ const ItinerariesPage = () => {
             </form>
             <p> Itineraries page content</p>
             <ItinerariesList itineraries={itineraries} />
-
         </div>
     );
 };
