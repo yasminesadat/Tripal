@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import * as Pages from './pages';
-import TagManager from './components/PreferenceTagComponent';
-import AdminDashboard from './components/AdminDashboard';
-import UpcomingActivities from './pages/UpcomingActivities';
-import NavigationBar from './components/NavigationBar';
-import ProductForm from './pages/ProductForm';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import * as Pages from "./pages";
+import TagManager from "./components/PreferenceTagComponent";
+import AdminDashboard from "./components/AdminDashboard";
+import UpcomingActivities from "./pages/UpcomingActivities";
+import NavigationBar from "./components/NavigationBar";
+import ProductForm from "./pages/ProductForm";
 
-import TouristHomePage from './pages/TouristHomePage';
-import ActivityCategoryDetails from './components/ActivityCategoryDetails';
-import HistoricalPlaces from './pages/HistoricalPlaces';
+import TouristHomePage from "./pages/TouristHomePage";
+import ActivityCategoryDetails from "./components/ActivityCategoryDetails";
+import HistoricalPlaces from "./pages/HistoricalPlaces";
 
 function App() {
   return (
@@ -21,9 +21,18 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/preference-tags" element={<TagManager />} />
             <Route path="/view-products" element={<Pages.ProductList />} />
-            <Route path="/product/:productName" element={<Pages.ProductDetails />} />
-            <Route path="/adminActivityCategories" element={<ActivityCategoryDetails />} />
-            <Route path="/upcoming-activities" element={<UpcomingActivities />} />
+            <Route
+              path="/product/:productName"
+              element={<Pages.ProductDetails />}
+            />
+            <Route
+              path="/adminActivityCategories"
+              element={<ActivityCategoryDetails />}
+            />
+            <Route
+              path="/upcoming-activities"
+              element={<UpcomingActivities />}
+            />
             <Route path="/historical-places" element={<HistoricalPlaces />} />
             <Route path="/create-product" element={<ProductForm />} />
             <Route path="/tourist-home" element={<TouristHomePage />} />
