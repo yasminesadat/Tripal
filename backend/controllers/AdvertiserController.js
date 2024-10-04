@@ -47,20 +47,27 @@ const updateAdvertiser = async (req, res) => {
         if (password) {
             hashedPassword = await bcrypt.hash(password, 10);
         }
+        const updateData = {
+            userName,
+            email,
+            password: hashedPassword, 
+            website,
+            hotline
+          };
+        if (companyProfile) {
+            // Merge the existing companyProfile with the new fields
+            updateData['companyProfile'] = {
+              ...existingAdvertiser.companyProfile.toObject(), // Preserve existing fields
+              ...companyProfile // Overwrite with new data
+            };
+          }
 
-        const updatedAdvertiser = await advertiserModel.findByIdAndUpdate(
+          const updatedAdvertiser = await advertiserModel.findByIdAndUpdate(
             req.params.id,
-            {
-              userName,
-              email,
-              password: hashedPassword, 
-              website,
-              hotline,
-              companyProfile
-            },
+            { $set: updateData }, // Use $set to update only the provided fields
             { new: true, runValidators: true }
           );
-      
+          
           if (!updatedAdvertiser) {
             return res.status(404).json({ error: "Advertiser not found" });
           }

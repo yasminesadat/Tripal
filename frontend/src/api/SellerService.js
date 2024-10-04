@@ -1,10 +1,10 @@
-import { axios } from './axios'
+import { axios } from "./axios";
 
 export async function createSeller(newUser) {
-    try {
-        await axios.post('/seller', newUser);
-    } catch (error) {
-        console.log("eee",error);
-        throw error;
-    }
+  try {
+    await axios.post("/seller", newUser);
+  } catch (error) {
+    console.log("eee", error);
+    throw error;
+  }
 }

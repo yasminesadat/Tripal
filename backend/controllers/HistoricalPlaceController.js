@@ -9,7 +9,7 @@ const createHistoricalPlace = (req, res) => {
       //res.redirect(); redirect to the previous page
     })
     .catch((err) => {
-      res.status(404).json(err);
+      res.status(400).json(err);
     });
 };
 
@@ -25,9 +25,10 @@ const getHistoricalPlace = (req, res) => {
       //render the detail page with passing the details
     })
     .catch((err) => {
-      res.status(404).json(err);
+      res.status(400).json(err);
     });
 };
+
 const deleteHistoricalPlace = (req, res) => {
   const id = req.params.id;
   HistoricalPlace.findByIdAndDelete(id)
@@ -36,19 +37,44 @@ const deleteHistoricalPlace = (req, res) => {
       //render the previous /current page without this item
     })
     .catch((err) => {
-      res.status(404).json(err);
+      res.status(400).json(err);
     });
 };
+
 const getAllHistoricalPlaces = (req, res) => {
   HistoricalPlace.find()
+    .populate('tags')   
+    .populate('historicalPeriod')
     .then((result) => {
       res.status(200).json(result);
       // render the all historical view place and pass the result (array of historical places)
     })
     .catch((err) => {
-      res.status(404).json(err);
+      res.status(400).json(err);
     });
 };
+
+// const getTourismGovernerHistoricalPlaces = async (req, res) => {
+//   const { id: tourismGovernerID } = req.params;
+//   try{
+//     //const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: touridmGovernerID });
+//     const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: mongoose.Types.ObjectId(tourismGovernerID) });
+//     res.status(200).json(historicalPlaces);
+//   }catch(error){
+//     res.status(400).json({ error: error.message })
+//   }
+// };
+
+const getTourismGovernerHistoricalPlaces = async (req, res) => {
+  const { tourismGovernorID } = req.params.id;
+  try{
+    const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: tourismGovernorID });
+    res.status(200).json(historicalPlaces);
+  }catch(error){
+    res.status(400).json({ error: error.message })
+  }
+};
+
 const updateHistoricalPlaces = (req, res) => {
   const id = req.params.id;
   const { updates } = req.body;
@@ -59,7 +85,7 @@ const updateHistoricalPlaces = (req, res) => {
       //or redirect to the page with the updates
     })
     .catch((err) => {
-      res.status(404).json(err);
+      res.status(400).json(err);
     });
 };
 module.exports = {
@@ -67,5 +93,6 @@ module.exports = {
   getHistoricalPlace,
   deleteHistoricalPlace,
   getAllHistoricalPlaces,
+  getTourismGovernerHistoricalPlaces,
   updateHistoricalPlaces
 };

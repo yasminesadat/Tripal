@@ -19,10 +19,6 @@ const getPrefTags = async (req, res) => {
     try {
         const tags = await preferenceTag.find();
 
-        if (tags.length === 0) {
-            return res.status(404).json('No tags found');
-        }
-
         res.status(200).json(tags);
     }
     catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ActivitySearch = ({ onSearch }) => {
+const HistoricalPlacesSearch = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleInputChange = (e) => {
@@ -13,11 +13,11 @@ const ActivitySearch = ({ onSearch }) => {
     <input
       className="search-bar"
       type="text"
-      placeholder="Search for activities by name, category, or tags..."
+      placeholder="Search for historical places..."
       value={searchTerm}
-      onChange={handleInputChange} 
+      onChange={handleInputChange}
     />
   );
 };
 
-export default ActivitySearch;
+export default HistoricalPlacesSearch;

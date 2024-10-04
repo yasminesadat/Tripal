@@ -20,11 +20,13 @@ const tourGuideSchema = new Schema(
     mobileNumber: {
       type: String,
       required: false,
+      default: ""
     },
 
     experienceYears: {
       type: Number,
-      required: false
+      required: false,
+      default: 0
     }
   },
   { timestamps: true }

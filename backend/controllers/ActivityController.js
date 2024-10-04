@@ -68,33 +68,14 @@ const createActivity = async (req, res) => {
 };
 
 const getAdvertiserActivities = async (req, res) => {
-  const { advertiserId } = req.query;
-
-  try {
-    let activities;
-
-    if (advertiserId) {
-      activities = await Activity.find({ advertiser: advertiserId });
-      if (activities.length === 0) {
-        return res
-          .status(404)
-          .json({ error: "No activities found for this advertiser" });
-      }
-    } else {
-      activities = await Activity.find()
-        .populate("advertiser")
-        .populate("category")
-        .populate("tags")
-        .populate("ratings");
-      if (activities.length === 0) {
-        return res.status(404).json({ error: "No activities available" });
-      }
+  const { id } = req.params;
+    try{
+      const activites = await Activity.find({ advertiser: id })
+      .populate("advertiser").populate("category").populate("tags").populate("ratings");
+      res.status(200).json(activites);
+    }catch(error){
+      res.status(400).json({ error: error.message })
     }
-
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
 };
 
 const updateActivity = async (req, res) => {
@@ -225,12 +206,6 @@ const viewUpcomingActivities = async (req, res) => {
     const activities = await Activity.find({ date: { $gte: currentDate } })
       .populate("category")
       .populate("tags");
-
-    if (activities.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No upcoming activities available" });
-    }
 
     res.status(200).json(activities);
   } catch (error) {

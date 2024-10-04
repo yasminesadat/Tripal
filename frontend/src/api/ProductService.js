@@ -1,42 +1,34 @@
 import axios from "axios";
-export const fetchProducts = async () => {
-  // try {
-  //   const response = await fetch("/api/products");
-  //   const json = await response.json();
-  //   if (response.ok) {
-  //     return json;
-  //   } else {
-  //     console.log("error")
-  //     throw new Error("Failed to fetch products");
 
-  //   }
+const API_URL = "http://localhost:5050/api/products";
+
+export const createProduct = async (product) => {
+  return axios.post(API_URL, product);
+  // return response;
   // } catch (error) {
-  //   console.error("Error fetching products:", error);
-  //   return null;
+  //   console.error("Error creating product:", error);
+  //   throw error;
   // }
-  try {
-    const products = await axios.get("http://localhost:5050/api/products");
-    console.log(products);
+};
 
-    return products.data;
+export const fetchProducts = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    return response.data;
   } catch (error) {
-    console.error("Can't search for products", error);
+    console.error("Error fetching products:", error);
     throw error;
   }
 };
 
 export const searchProductsByName = async (name) => {
   try {
-    const products = await axios.get(
-      `http://localhost:5050/api/products/search?name=${encodeURIComponent(
-        name
-      )}`
+    const response = await axios.get(
+      `${API_URL}/search?name=${encodeURIComponent(name)}`
     );
-    console.log(products);
-
-    return products.data;
+    return response.data;
   } catch (error) {
-    console.error("Can't search for products", error);
+    console.error("Error searching products:", error);
     throw error;
   }
 };
