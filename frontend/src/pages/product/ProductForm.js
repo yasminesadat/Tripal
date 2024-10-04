@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { createProduct } from "../api/ProductService";
-import { sellerId } from "../IDs";
+import { createProduct } from "../../api/ProductService";
+import { sellerId } from "../../IDs";
 import { useNavigate } from "react-router-dom";
 const ProductForm = ({ onProductCreated }) => {
   const navigate = useNavigate();
