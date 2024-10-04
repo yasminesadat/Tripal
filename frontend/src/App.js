@@ -6,6 +6,8 @@ import UpcomingActivities from './pages/UpcomingActivities';
 import NavigationBar from './components/NavigationBar';
 import TouristHomePage from './pages/TouristHomePage';
 import ActivityCategoryDetails from './components/ActivityCategoryDetails';
+import HistoricalPlaces from './pages/HistoricalPlaces';
+
 function App() {
   return (
     <div className="App">
@@ -20,6 +22,7 @@ function App() {
             <Route path="/product/:productName" element={<Pages.ProductDetails />} />
             <Route path="/adminActivityCategories" element={<ActivityCategoryDetails />} />
             <Route path="/upcoming-activities" element={<UpcomingActivities />} />
+            <Route path="/historical-places" element={<HistoricalPlaces />} />
             <Route path="/tourist-home" element={<TouristHomePage />} />
           </Routes>
         </div>

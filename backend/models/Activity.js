@@ -40,7 +40,6 @@ const activitySchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "PreferenceTag",
         default: []
-
       },
     ],
     ratings: [

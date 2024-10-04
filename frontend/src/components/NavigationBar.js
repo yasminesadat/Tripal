@@ -21,6 +21,9 @@ const NavigationBar = () => {
                     <Link to="/upcoming-activities">View Upcoming Activities</Link>
                 </li>
                 <li>
+                    <Link to="/historical-places">View Historical Places</Link>
+                </li>
+                <li>
                     <Link to="/adminActivityCategories">Activity Categories</Link>
                 </li>
             </ul>

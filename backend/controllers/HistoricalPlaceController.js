@@ -28,6 +28,7 @@ const getHistoricalPlace = (req, res) => {
       res.status(404).json(err);
     });
 };
+
 const deleteHistoricalPlace = (req, res) => {
   const id = req.params.id;
   HistoricalPlace.findByIdAndDelete(id)
@@ -39,8 +40,11 @@ const deleteHistoricalPlace = (req, res) => {
       res.status(404).json(err);
     });
 };
+
 const getAllHistoricalPlaces = (req, res) => {
   HistoricalPlace.find()
+    .populate('tags')   
+    .populate('historicalPeriod')
     .then((result) => {
       res.status(200).json(result);
       // render the all historical view place and pass the result (array of historical places)
