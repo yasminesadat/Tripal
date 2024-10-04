@@ -57,15 +57,21 @@ const createItinerary = async(req,res) => {
 
     };
 
-const getItineraries = async(req,res) => {
-    try {
-        const itineraries = await itineraryModel.find();
-        res.status(200).json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-
+    const getItineraries = async (req, res) => {
+        const { tourGuideId } = req.query; 
+        try {
+            const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
+    
+            if (itineraries.length === 0) {
+                return res.status(404).json({ message: 'No itineraries found for this tour guide.' });
+            }
+    
+            res.status(200).json(itineraries);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    };
+    
 const updateItinerary = async(req,res) => {
     try{
         const {id} = req.params;
@@ -124,15 +130,13 @@ const deleteItinerary = async(req,res) => {
       }
 };
 
-const getTourGuideItineraries = async (req, res) => {
-    const { id } = req.params;
-    try{
-      const itineraries = await itineraryModel.find({ tourGuide: id })
-      .populate("activities").populate("tags");
-      res.status(200).json(itineraries);
-    }catch(error){
-      res.status(400).json({ error: error.message })
+const viewItineraries = async(req,res) => {
+    try {
+        const itineraries = await itineraryModel.find();
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
-  };
+};
 
-module.exports = {createItinerary, getItineraries, updateItinerary, deleteItinerary, getTourGuideItineraries};
+module.exports = {createItinerary, getItineraries, updateItinerary, deleteItinerary, viewItineraries};
