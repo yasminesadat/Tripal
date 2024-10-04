@@ -39,9 +39,9 @@ const ActivityCategoryDetails = () => {
 
   const handleButtonClick = async () => {
     try {
-      const createdCategory = await ActivityCategoryApi.createActivityCategory(
-        nameValue
-      );
+      // const createdCategory = await ActivityCategoryApi.createActivityCategory(
+      //   nameValue
+      // );
       const newObject = {
         Name: nameValue,
       };
@@ -73,7 +73,7 @@ const ActivityCategoryDetails = () => {
     try {
       await ActivityCategoryApi.updateActivityCategory(id, name);
       const newData = data.map((c) => {
-        if (c._id == id) {
+        if (c._id === id) {
           const newObj = {
             Name: updateCategoryName,
           };

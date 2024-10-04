@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Layout, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const { Content } = Layout;
+//const { Content } = Layout;
 const { Title } = Typography;
 
 const AdminDashboard = () => {

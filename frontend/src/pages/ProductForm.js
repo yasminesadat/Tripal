@@ -29,7 +29,6 @@ const ProductForm = ({ onProductCreated }) => {
     message.error("Error creating product", error);
   }};
 
-  
   return (
     <Form layout="vertical" onFinish={handleSubmit}>
       <Form.Item label="Name" required>

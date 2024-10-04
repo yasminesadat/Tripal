@@ -73,7 +73,7 @@ const SignUpAllUsers = () => {
         await createTourist(newUser);
       }
       setSuccess(true);
-      if (role == "tourist") {
+      if (role === "tourist") {
         navigate("/tourist-home");
       }
     } catch (err) {
