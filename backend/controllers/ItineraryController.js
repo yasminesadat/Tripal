@@ -79,19 +79,21 @@ const updateItinerary = async(req,res) => {
             return res.status(404).json({ error: 'No activities found' });
         }
 
-        let price = serviceFee;
+        let price = Number(serviceFee);
         const locations = [];
         const timeline = [];
         const allTags = new Set();
 
         fetchedActivities.forEach((activity) => {
-            price+=activity.price;
+            price+=Number(activity.price);
             locations.push(activity.location);
             timeline.push({activityName: activity.title, time: activity.time});
             activity.tags.forEach((tag) => allTags.add(tag));
         })
 
-        const uniqueTags = Array.from(allTags);
+        const uniqueTagIds = Array.from(allTags);
+        const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
+        const uniqueTags = fetchedTags.map(tag => tag.name);
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {title, description, 
             tourGuide, activities, availableDates, availableTime, language,
