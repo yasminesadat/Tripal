@@ -1,6 +1,6 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
-
+const preferenceTagModel = require('../models/PreferenceTag');
 
 const createItinerary = async(req,res) => {
     try {
@@ -25,7 +25,9 @@ const createItinerary = async(req,res) => {
         timeline.push({activityName: activity.title, time: activity.time});
         activity.tags.forEach((tag) => tags.add(tag));
     })
-    const uniqueTags = Array.from(tags);
+    const uniqueTagIds = Array.from(tags);
+    const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
+    const uniqueTags = fetchedTags.map(tag => tag.name);
 
 
     const resultItinerary = await itineraryModel.create({
