@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { createProduct } from "../api/ProductService";
-import axios from "axios";
-
+import { createProduct } from "../../api/ProductService";
+import { sellerId } from "../../IDs";
+import { useNavigate } from "react-router-dom";
 const ProductForm = ({ onProductCreated }) => {
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     name: "",
-    sellerID: "",
+    sellerID: sellerId,
     price: "",
     description: "",
     quantity: "",
@@ -19,15 +20,15 @@ const ProductForm = ({ onProductCreated }) => {
   };
 
   const handleSubmit = async () => {
-  try{
-    await createProduct(product); 
-    message.success("Product created successfully!")
-  }
-  catch (error) {
-    message.error("Error creating product", error);
-  }};
+    try {
+      await createProduct(product);
+      message.success("Product created successfully!");
+      navigate("/view-products");
+    } catch (error) {
+      message.error("Error creating product", error);
+    }
+  };
 
-  
   return (
     <Form layout="vertical" onFinish={handleSubmit}>
       <Form.Item label="Name" required>
@@ -38,7 +39,7 @@ const ProductForm = ({ onProductCreated }) => {
           placeholder="Enter product name"
         />
       </Form.Item>
-
+      {/* 
       <Form.Item label="Seller ID" required>
         <Input
           name="sellerID"
@@ -46,7 +47,7 @@ const ProductForm = ({ onProductCreated }) => {
           onChange={handleInputChange}
           placeholder="Enter seller ID"
         />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label="Price" required>
         <Input
