@@ -12,7 +12,7 @@ const ActivitiesList = ({ activities }) => {
           <p>Location: {activity.location}</p>
           <p>Price: ${activity.price}</p>
           <p>Category: {activity.category?.Name}</p>
-          <p>Tags: {activity.tags.map((tag) => tag.Name).join(", ")}</p>
+          <p>Tags: {activity.tags.map((tag) => tag.name).join(", ")}</p>
           <p>Special Discounts: {activity.specialDiscounts || "N/A"}</p>
           <p>Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</p>
         </li>
