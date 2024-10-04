@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import { Row, Col, Input } from "antd";
-import { fetchProducts, searchProductsByName } from "../api/ProductService";
+import { fetchProducts, searchProductsByName } from "../../api/ProductService";
 import { Button } from "antd"; // Import Button from Ant Design
 import { useNavigate } from "react-router-dom";
 

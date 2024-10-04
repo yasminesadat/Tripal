@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { createProduct } from "../api/ProductService";
+import { createProduct } from "../../api/ProductService";
 
 const ProductForm = ({ onProductCreated }) => {
   const [product, setProduct] = useState({
