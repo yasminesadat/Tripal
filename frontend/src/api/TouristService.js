@@ -19,3 +19,13 @@ export async function getTouristInformation(id) {
         throw error;
     }
 }
+export async function updateTouristInformation(id) {
+    try {
+
+        const response = await axios.put(`/updateTourist/${id}`);
+        return response.data
+    } catch (error) {
+        console.log("eee", error);
+        throw error;
+    }
+}
