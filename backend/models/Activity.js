@@ -25,31 +25,22 @@ const activitySchema = new Schema(
       required: true,
     },
     location: {
-      type: String,      //mapsss!!!
+      type: String,
       required: true,
     },
     price: {
-      type: Number, required: true,
+      type: Number, required: true ,
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: "ActivityCategory",
+      required: true,
     },
     tags: [
       {
         type: Schema.Types.ObjectId,
         ref: "PreferenceTag",
-        default: []
-
       },
-    ],
-    ratings: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Rating",
-        default: []
-      },
-
     ],
     specialDiscounts: {
       type: String,
@@ -61,7 +52,5 @@ const activitySchema = new Schema(
   },
   { timestamps: true }
 );
-const Activity = mongoose.model("Activity", activitySchema);
 
-
-module.exports = Activity
+module.exports = mongoose.model("Activity", activitySchema);

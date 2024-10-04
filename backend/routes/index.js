@@ -15,6 +15,7 @@ const routes = [
   "./HistoricalPlaceRoutes",
   "./RequestRoutes",
   "./AdminRoutes",
+  "./ItineraryRoutes",
 ];
 
 routes.forEach((route) => {
