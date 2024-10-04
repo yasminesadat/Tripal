@@ -113,8 +113,8 @@ const deleteItinerary = async(req,res) => {
           if (!itinerary) {
               return res.status(404).json({ error: 'Itinerary not found' });
           }
-        await itinerary.remove();
-          res.status(200).json({ message: 'Itinerary deleted' });
+          await itineraryModel.findByIdAndDelete(id);
+        res.status(200).json({message:"deleted yay", itinerary});
       } catch (error) {
           res.status(400).json({ error: error.message });
       }

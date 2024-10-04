@@ -40,8 +40,9 @@ const itinerarySchema = new mongoose.Schema({
 }, {timestamps: true});
 
 //this hook middleware is used to prevent the deletion of an itinerary that has bookings
-itinerarySchema.pre('remove', async function (next) {
-    if (this.tourists.length > 0) {
+itinerarySchema.pre('findOneAndDelete', async function (next) {
+    const itinerary = await this.model.findOne(this.getQuery());
+    if (itinerary.tourists.length > 0) {
         next(new Error('Cannot delete itinerary with associated tourists.'));
     } else {
         next();
