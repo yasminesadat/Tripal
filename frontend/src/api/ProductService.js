@@ -1,14 +1,13 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5050/api/products"; 
+const API_URL = "http://localhost:5050/api/products";
 
 export const createProduct = async (product) => {
- 
-    return axios.post(API_URL, product);
-    // return response; 
+  return axios.post(API_URL, product);
+  // return response;
   // } catch (error) {
   //   console.error("Error creating product:", error);
-  //   throw error; 
+  //   throw error;
   // }
 };
 
