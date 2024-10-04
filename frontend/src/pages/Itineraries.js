@@ -26,34 +26,25 @@ const ItinerariesPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setItinerary((prevItinerary) => ({
-            ...prevItinerary,
-            [name]: value,
-        }));
+        setItinerary(prev => ({ ...prev, [name]: value }));
     };
+
+    const handleArrayChange = (name, value) => {
+        setItinerary(prev => ({ ...prev, [name]: [...prev[name], value] }));
+    };
+
     const handleDateChange = (e) => {
-        const date = e.target.value;
-        setItinerary((prevItinerary) => ({
-            ...prevItinerary,
-            availableDates: [...prevItinerary.availableDates, date],
-        }));
+        handleArrayChange('availableDates', e.target.value);
     };
 
     const handleTimeChange = (e) => {
-        const time = e.target.value;
-        setItinerary((prevItinerary) => ({
-            ...prevItinerary,
-            availableTime: [...prevItinerary.availableTime, time],
-        }));
+        handleArrayChange('availableTime', e.target.value);
     };
 
     const handleAccessibilityChange = (e) => {
-        const value = e.target.value;
-        setItinerary((prevItinerary) => ({
-            ...prevItinerary,
-            accessibility: [...prevItinerary.accessibility, value],
-        }));
+        handleArrayChange('accessibility', e.target.value);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -65,8 +56,6 @@ const ItinerariesPage = () => {
             message.error('Error creating itinerary');
         }
     };
-
-
     return (
         <div style={{alignContent:'center', alignSelf:'center',}}>
             <h1>Itineraries</h1>
