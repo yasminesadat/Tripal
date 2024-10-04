@@ -1,10 +1,10 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
-
+const preferenceTagModel = require('../models/PreferenceTag');
 
 const createItinerary = async(req,res) => {
     try {
-    const {title, description, tourGuide, activities,
+    const {title, description, tourGuide, activities,serviceFee,    
     language,availableDates,availableTime,accessibility,
     pickupLocation,dropoffLocation} = req.body;
 
@@ -14,18 +14,20 @@ const createItinerary = async(req,res) => {
         return res.status(404).json({ error: 'No activities found' });
     }
 
-    let price = 0;
+    let price = Number(serviceFee);
     const locations = []; //gama3ly locations
     const timeline = []; //name w time
     const tags = new Set(); //to remove dups
 
     fetchedActivities.forEach((activity) => {
-        price+=activity.price;
+        price+=Number(activity.price);
         locations.push(activity.location);
         timeline.push({activityName: activity.title, time: activity.time});
         activity.tags.forEach((tag) => tags.add(tag));
     })
-    const uniqueTags = Array.from(tags);
+    const uniqueTagIds = Array.from(tags);
+    const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
+    const uniqueTags = fetchedTags.map(tag => tag.name);
 
 
     const resultItinerary = await itineraryModel.create({
@@ -67,7 +69,7 @@ const getItineraries = async(req,res) => {
 const updateItinerary = async(req,res) => {
     try{
         const {id} = req.params;
-        const {title, description, tourGuide, activities,
+        const {title, description, tourGuide, activities,serviceFee,
             language,availableDates,availableTime,accessibility,
             pickupLocation,dropoffLocation} = req.body;
         
@@ -77,19 +79,21 @@ const updateItinerary = async(req,res) => {
             return res.status(404).json({ error: 'No activities found' });
         }
 
-        let price = 0;
+        let price = Number(serviceFee);
         const locations = [];
         const timeline = [];
         const allTags = new Set();
 
         fetchedActivities.forEach((activity) => {
-            price+=activity.price;
+            price+=Number(activity.price);
             locations.push(activity.location);
             timeline.push({activityName: activity.title, time: activity.time});
             activity.tags.forEach((tag) => allTags.add(tag));
         })
 
-        const uniqueTags = Array.from(allTags);
+        const uniqueTagIds = Array.from(allTags);
+        const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
+        const uniqueTags = fetchedTags.map(tag => tag.name);
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {title, description, 
             tourGuide, activities, availableDates, availableTime, language,

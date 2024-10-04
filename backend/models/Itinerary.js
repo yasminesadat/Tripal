@@ -22,7 +22,7 @@ const itinerarySchema = new mongoose.Schema({
     ],
 
     //duration for each activity activity 3ando time already
-
+    serviceFee: {type: Number, default: 0}, 
     language: {type: String, required: true},
     price:{type: Number}, //activity 3ando price also 3ando special disscpunts
 
