@@ -26,6 +26,9 @@ const NavigationBar = () => {
         <div class="nav-bar-link">
           <Link to="/adminActivityCategories">Activity Categories</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/itineraries">Itineraries</Link>
+      </div>
       </div>
     </nav>
   );
