@@ -69,13 +69,13 @@ const createActivity = async (req, res) => {
 
 const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
-    try{
-      const activites = await Activity.find({ advertiser: id })
+  try {
+    const activites = await Activity.find({ advertiser: id })
       .populate("advertiser").populate("category").populate("tags").populate("ratings");
-      res.status(200).json(activites);
-    }catch(error){
-      res.status(400).json({ error: error.message })
-    }
+    res.status(200).json(activites);
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
 };
 
 const updateActivity = async (req, res) => {
@@ -205,7 +205,7 @@ const viewUpcomingActivities = async (req, res) => {
 
     const activities = await Activity.find({ date: { $gte: currentDate } })
       .populate("category")
-      .populate("tags");
+      .populate("tags").populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
