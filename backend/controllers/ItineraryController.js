@@ -99,7 +99,7 @@ const updateItinerary = async(req,res) => {
             tourGuide, activities, availableDates, availableTime, language,
             accessibility, pickupLocation, dropoffLocation, price, locations,
             timeline,tags: uniqueTags},{ new: true });
-        
+            console.log('Collected Tags:', Array.from(tags)); // Log the collected tags
             if (!updatedItinerary) {
                 return res.status(404).json({ error: 'Itinerary not found' });
             }
