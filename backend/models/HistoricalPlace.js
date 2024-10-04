@@ -2,6 +2,11 @@ const mongoose= require('mongoose');
 const Schema= mongoose.Schema;
 
 const historicalPlaceSchema =new Schema({
+tourismGovernor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "TourismGovernor",
+    required: true
+},
 name:{
     type:String,
     required:true
@@ -68,8 +73,6 @@ ticketPrices:{
             type: Number,
             required: true
          }
-      
- 
 },
 tags:{
     type: [mongoose.Types.ObjectId],
