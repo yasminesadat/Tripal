@@ -19,15 +19,3 @@ export const fetchProducts = async () => {
     throw error;
   }
 };
-
-export const searchProductsByName = async (name) => {
-  try {
-    const response = await axios.get(
-      `${API_URL}/search?name=${encodeURIComponent(name)}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error searching products:", error);
-    throw error;
-  }
-};
