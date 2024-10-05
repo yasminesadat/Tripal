@@ -89,8 +89,7 @@ const sortProductsByRatings = asyncHandler(async (req, res) => {
 
 const editProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { description, price } = req.body;
-
+  const { price, description } = req.body;
   const product = await Product.findById(id);
   if (!product) {
     res.status(404);

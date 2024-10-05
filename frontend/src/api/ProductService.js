@@ -20,14 +20,15 @@ export const fetchProducts = async () => {
   }
 };
 
-export const searchProductsByName = async (name) => {
+export const editProduct = async (id, productData) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/search?name=${encodeURIComponent(name)}`
-    );
-    return response.data;
+    await axios.patch(`${API_URL}/${id}`, productData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
-    console.error("Error searching products:", error);
+    console.error("Error updating product:", error);
     throw error;
   }
 };
