@@ -8,6 +8,7 @@ const ItinerariesList = ({ itineraries }) => {
                     <div class="list-item-header">{itinerary.title}</div>
                     <div class="list-item-attributes">
                         <div class="list-item-attribute">{itinerary.description}</div>
+                        <div className="list-item-attribute">Rating: {itinerary.averageRating || 'N/A'}</div>
                         {/* <div className="list-item-attribute">Tour Guide ID: {itinerary.tourGuide}</div> */}
                         <div class="list-item-attribute-sublist">
                             <div class="list-item-attribute-sublist-header">Activities:</div>

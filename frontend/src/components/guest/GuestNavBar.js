@@ -31,7 +31,10 @@ const NavigationBar = () => {
         </div>
         <div class="nav-bar-link">
           <Link to="/tour-guide-itineraries">Itineraries</Link>
-      </div>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/seller">Seller</Link>  
+        </div>
       </div>
     </nav>
   );

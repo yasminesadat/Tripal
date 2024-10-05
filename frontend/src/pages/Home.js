@@ -1,6 +1,7 @@
 import React from "react";
 import SignUpAllUsers from "../components/guest/SignUpAllUsers";
 import mainLogo from "../assets/images/Tripal-logo.png";
+
 const Home = () => {
   return (
     <div className="home">
