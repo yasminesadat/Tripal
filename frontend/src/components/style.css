@@ -97,6 +97,23 @@ a:hover {
     padding: 2%;
 }
 
+.list-item-attribute{
+
+}
+
+.list-item-attribute-sublist{
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-attribute-sublist-header{
+    font-size: 20px;
+}
+
+.list-item-attribute-sublist-component{
+
+}
+
 .tourist-profile {
     list-style-type: none;
     padding: 0;

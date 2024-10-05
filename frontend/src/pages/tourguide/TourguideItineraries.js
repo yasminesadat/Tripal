@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import { createItinerary, getItineraries, updateItinerary,deleteItinerary,viewItineraries } from '../../api/ItineraryService';
+import { createItinerary, getItineraries, updateItinerary,deleteItinerary } from '../../api/ItineraryService';
 import {  message } from "antd";
 import ItinerariesList from '../../components/ItinerariesList';
 
@@ -29,8 +29,7 @@ const ItinerariesPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await viewItineraries();
-                console.log('Itineraries:', response);
+                const response = await getItineraries(tourGuide);
                 setItineraries(response);
             } catch (error) {
                 message.error('Failed to fetch itineraries');

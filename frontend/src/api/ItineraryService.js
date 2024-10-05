@@ -14,9 +14,9 @@ export async function viewItineraries() {
 }
 
 // for tourguide
-export const getItineraries = async () => {
+export const getItineraries = async (tourGuideId) => {
     try {
-        const response = await axios.get(baseURL);
+        const response = await axios.get(`${baseURL}?tourGuideId=${tourGuideId}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching itineraries", error);
