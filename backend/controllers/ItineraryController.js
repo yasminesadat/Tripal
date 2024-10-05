@@ -1,5 +1,6 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
+const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
 
 const createItinerary = async(req,res) => {
@@ -133,7 +134,20 @@ const deleteItinerary = async(req,res) => {
 const viewItineraries = async(req,res) => {
     try {
         const itineraries = await itineraryModel.find();
-        res.status(200).json(itineraries);
+
+        const itinerariesWithRatings = itineraries.map(itinerary => {
+            const ratings = itinerary.ratings || [];
+            const averageRating = ratings.length > 0 
+                ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length 
+                : 0;
+            
+            return {
+                ...itinerary.toObject(),
+                averageRating: averageRating.toFixed(1) 
+            };
+        });
+
+        res.status(200).json(itinerariesWithRatings);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
