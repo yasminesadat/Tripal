@@ -10,8 +10,8 @@ const historicalPlaceRouter = express.Router();
 
 // historicalPlaceRouter.get(
 //   path + "/create", historicalPlaceController.historical_place_create_get);
-historicalPlaceRouter.get("/historicalPlaces", getAllHistoricalPlaces);
-historicalPlaceRouter.post("/historicalPlaces", createHistoricalPlace);
+historicalPlaceRouter.get("/historicalPlaces/", getAllHistoricalPlaces);
+historicalPlaceRouter.post("/historicalPlaces/", createHistoricalPlace);
 historicalPlaceRouter.get("/historicalPlaces/:id", getHistoricalPlace);
 historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
 historicalPlaceRouter.put("/historicalPlaces/:id", updateHistoricalPlaces);
