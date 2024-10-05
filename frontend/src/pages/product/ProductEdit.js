@@ -30,17 +30,17 @@ const ProductEdit = () => {
   const handleSubmit = async () => {
     const { price, description } = product;
     const validPrice = price !== null && price !== initialPrice;
-    const validdescription =
+    const validDescription =
       description !== null && description !== initialDescription;
     console.log(`${description} and ${initialDescription}`);
     // Check if at least one field is filled and different from the initial values
-    if (validPrice || validdescription) {
+    if (validPrice || validDescription) {
       try {
         const productData = {};
         if (validPrice) {
           productData.price = price;
         }
-        if (validdescription) {
+        if (validDescription) {
           productData.description = description;
         }
         // Call the API to update the product
