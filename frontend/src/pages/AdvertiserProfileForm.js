@@ -1,86 +1,96 @@
-import React, { useEffect, useState } from 'react';
-import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../api/AdvertiserService';
-import { useParams } from 'react-router-dom';
-
+import React, { useEffect, useState } from "react";
+import {
+  createAdvertiser,
+  updateAdvertiser,
+  getAdvertiser,
+} from "../api/AdvertiserService";
+import { useParams, useLocation } from "react-router-dom";
 
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
-  const { advertiserId } = useParams(); 
+  const { advertiserId } = useParams();
+  const location = useLocation();
+  const advertiser = location.state?.advertiser;
+
   const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
-    website: '',
-    hotline: '',
+    userName: advertiser?.userName || "",
+    email: advertiser?.email || "",
+    password: "",
+    website: advertiser?.website || "",
+    hotline: advertiser?.hotline || "",
     companyProfile: {
-      companyName: '',
-      industry: '',
-      description: '',
-      foundedYear: '',
-      employees: '',
+      companyName: advertiser?.companyProfile?.companyName || "",
+      industry: advertiser?.companyProfile?.industry || "",
+      description: advertiser?.companyProfile?.description || "",
+      foundedYear: advertiser?.companyProfile?.foundedYear || "",
+      employees: advertiser?.companyProfile?.employees || "",
       headquarters: {
-        address: '',
-        city: '',
-        country: '',
+        address: advertiser?.companyProfile?.headquarters?.address || "",
+        city: advertiser?.companyProfile?.headquarters?.city || "",
+        country: advertiser?.companyProfile?.headquarters?.country || "",
       },
       socialMedia: {
-        linkedin: '',
-        twitter: '',
+        linkedin: advertiser?.companyProfile?.socialMedia?.linkedin || "",
+        twitter: advertiser?.companyProfile?.socialMedia?.twitter || "",
       },
-      certifications: [],
-      awards: [],
+      certifications: advertiser?.companyProfile?.certifications || [],
+      awards: advertiser?.companyProfile?.awards || [],
     },
   });
 
-  const [error, setError] = useState(''); 
-  const [success, setSuccess] = useState(''); 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isUpdate && advertiserId) {
       // Fetch existing data here
-      getAdvertiser(advertiserId).then(data => {
+      getAdvertiser(advertiserId).then((data) => {
         setFormData(data); // Set fetched data to formData
       });
     }
   }, [isUpdate, advertiserId]);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,        //fix thisssssssssssssssssssss
-    }));
+    const keys = name.split(".");
+
+    setFormData((prevData) => {
+      let updatedData = { ...prevData };
+
+      keys.reduce((acc, key, index) => {
+        if (index === keys.length - 1) {
+          acc[key] = value;
+        } else {
+          acc[key] = { ...acc[key] };
+        }
+        return acc[key];
+      }, updatedData);
+
+      return updatedData;
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    if (isUpdate) {
-      // Call API to update the advertiser
-      updateAdvertiser(formData)
-        .then(() => {
-          setSuccess('Advertiser updated successfully!');
-          setError('');
-        })
-        .catch((err) => {
-          setError(err.message || 'An error occurred while updating.');
-          setSuccess('');
-        });
-    } else {
-      // Call API to create a new advertiser
-      createAdvertiser(formData)
-        .then(() => {
-          setSuccess('Advertiser created successfully!');
-          setError('');
-        })
-        .catch((err) => {
-          setError(err.message || 'An error occurred while creating.');
-          setSuccess('');
-        });
+    try {
+      if (isUpdate) {
+        // Call API to update the advertiser
+        await updateAdvertiser(advertiserId, formData);
+      } else {
+        // Call API to create a new advertiser
+        await createAdvertiser(formData);
+      }
+      setSuccess("Advertiser updated successfully!");
+      setError("");
+    } catch (err) {
+      setError(err.message || "An error occurred while updating.");
+      setSuccess("");
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -227,10 +237,12 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
         </div>
       </div>
       <button type="submit" disabled={loading}>
-        {loading ? 'Creating...' : 'Create Advertiser'}
+        {loading ? "Updating..." : "Update Profile"}
       </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>Advertiser created successfully!</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && (
+        <p style={{ color: "green" }}>Advertiser updated successfully!</p>
+      )}
     </form>
   );
 };
