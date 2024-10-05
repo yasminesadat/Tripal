@@ -30,7 +30,7 @@ const NavigationBar = () => {
           <Link to="/adminActivityCategories">Activity Categories</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/itineraries">Itineraries</Link>
+          <Link to="/tour-guide-itineraries">Itineraries</Link>
       </div>
       </div>
     </nav>
