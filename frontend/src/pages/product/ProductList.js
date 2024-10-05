@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/seller/ProductCard";
 import { Row, Col, Input, Button, Select, Slider } from "antd";
 import { fetchProducts } from "../../api/ProductService";
 import { useNavigate } from "react-router-dom";

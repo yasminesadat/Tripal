@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { viewUpcomingActivities } from "../../api/ActivityService";
-import ActivitiesList from "../../components/ActivitiesList";
-import ActivitySearch from "../../components/ActivitySearch";
-import ActivityFilter from "../../components/ActivityFilter";
-import ActivitySort from "../../components/ActivitySort";
+import ActivitiesList from "../../components/tourist/ActivitiesList";
+import ActivitySearch from "../../components/tourist/ActivitySearch";
+import ActivityFilter from "../../components/tourist/ActivityFilter";
+import ActivitySort from "../../components/tourist/ActivitySort";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);

@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react';
 import { createItinerary, getItineraries, updateItinerary,deleteItinerary } from '../../api/ItineraryService';
 import {  message } from "antd";
-import ItinerariesList from '../../components/ItinerariesList';
+import ItinerariesList from '../../components/tourist/ItinerariesList.js';
 
 const activities = ["66fe41ef35af91d0fea02ac1"];
 const tourGuide = "66fdd5beb6a46aa09c57e0d9";

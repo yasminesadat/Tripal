@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { List, Button, Modal, Input } from "antd";
-import ActivityCategoryApi from "../api/ActivityCategoryService";
+import ActivityCategoryApi from "../../api/ActivityCategoryService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
