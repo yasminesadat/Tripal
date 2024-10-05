@@ -19,3 +19,16 @@ export const fetchProducts = async () => {
     throw error;
   }
 };
+
+export const editProduct = async (id, productData) => {
+  try {
+    await axios.patch(`${API_URL}/${id}`, productData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    throw error;
+  }
+};

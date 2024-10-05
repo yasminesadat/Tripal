@@ -6,10 +6,12 @@ import {
 } from "@ant-design/icons";
 import { Card, Rate } from "antd";
 import { useNavigate } from "react-router-dom";
+import "../pages/product/product.css";
 
 const { Meta } = Card;
 
 const ProductCard = ({
+  id,
   name,
   sellerID,
   price,
@@ -21,22 +23,20 @@ const ProductCard = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/product/${name}`, {
+    navigate(`/product/${id}`, {
       state: { name, sellerID, price, description, quantity, picture, rating },
+    });
+  };
+
+  const handleEditClick = () => {
+    navigate(`/edit-product/${id}`, {
+      state: { price, description },
     });
   };
 
   return (
     <Card
-      onClick={handleCardClick}
-      style={{
-        width: 300,
-        padding: "10px",
-        border: "1px solid #f0f0f0",
-        borderRadius: "5px",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        cursor: "pointer",
-      }}
+      className="product-card"
       cover={
         <div
           style={{
@@ -51,6 +51,7 @@ const ProductCard = ({
           <img
             alt={name}
             src={picture}
+            onClick={handleCardClick}
             style={{
               maxWidth: "100%",
               maxHeight: "100%",
@@ -61,12 +62,19 @@ const ProductCard = ({
       }
       actions={[
         <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
+        <EditOutlined key="edit" onClick={handleEditClick} />,
         <EllipsisOutlined key="ellipsis" />,
       ]}
     >
-      <Meta title={`${name} - $${price}`} description={description} />
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
+      <Meta
+        title={`${name} - $${price}`}
+        description={description}
+        onClick={handleCardClick}
+      />
+      <div
+        style={{ marginTop: "20px", textAlign: "center" }}
+        onClick={handleCardClick}
+      >
         <Rate value={rating} disabled allowHalf />
       </div>
     </Card>

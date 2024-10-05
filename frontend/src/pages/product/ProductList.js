@@ -11,7 +11,7 @@ const ProductList = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [, setSortOrder] = useState("asc");
   const [priceRange, setPriceRange] = useState([0, 3000]); // Default price range
   const [searchValue, setSearchValue] = useState(""); // State for search value
 
@@ -140,6 +140,7 @@ const ProductList = () => {
               filteredProducts.map((product) => (
                 <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
                   <ProductCard
+                    id={product._id}
                     name={product.name}
                     description={product.description}
                     price={product.price}
