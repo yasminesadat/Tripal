@@ -55,22 +55,22 @@ const createItinerary = async(req,res) => {
     res.status(400).json({ error: error.message });
     };
 
-    };
+};
 
-    const getItineraries = async (req, res) => {
-        const { tourGuideId } = req.query; 
-        try {
-            const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
-    
-            if (itineraries.length === 0) {
-                return res.status(404).json({ message: 'No itineraries found for this tour guide.' });
-            }
-    
-            res.status(200).json(itineraries);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
+const getItineraries = async (req, res) => {
+    const { tourGuideId } = req.query; 
+    try {
+        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
+
+        if (itineraries.length === 0) {
+            return res.status(404).json({ message: 'No itineraries found for this tour guide.' });
         }
-    };
+
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
     
 const updateItinerary = async(req,res) => {
     try{

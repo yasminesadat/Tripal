@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getAdvertiserActivities } from "../api/ActivityService";
-import ActivitiesList from "../components/ActivitiesList";
+import { getAdvertiserActivities } from "../../api/ActivityService";
+import ActivitiesList from "../../components/tourist/ActivitiesList.js";
 
 
 const AdvertiserActivitiesPage = () => {

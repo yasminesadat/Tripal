@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import HistoricalPlacesList from "../../components/HistoricalPlacesList";
-import HistoricalPlacesSearch from "../../components/HistoricalPlacesSearch";
+import HistoricalPlacesList from "../../components/tourist/HistoricalPlacesList";
+import HistoricalPlacesSearch from "../../components/tourist/HistoricalPlacesSearch";
 import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
 
 const HistoricalPlacesPage = () => {

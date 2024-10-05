@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../api/AdvertiserService';
+import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../../api/AdvertiserService';
 import { useParams } from 'react-router-dom';
 
 

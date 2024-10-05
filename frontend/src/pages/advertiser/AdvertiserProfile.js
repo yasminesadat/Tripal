@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAdvertiser } from '../api/AdvertiserService';
+import { getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, Link } from 'react-router-dom'; 
 
 

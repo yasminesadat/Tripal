@@ -5,7 +5,7 @@ import {
   getTags,
   updateTag,
   deleteTag,
-} from "../api/PreferenceTagService";
+} from "../../api/PreferenceTagService";
 
 const TagManager = () => {
   const [tags, setTags] = useState([]);

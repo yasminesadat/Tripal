@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/ItinerariesList';
-import ItinerarySearch from '../../components/ItinerarySearch';
-// import ItineraryFilter from '../../components/ItineraryFilter';
-import ItinerarySort from '../../components/ItinerarySort';
+import ItinerariesList from '../../components/tourist/ItinerariesList';
+import ItinerarySearch from '../../components/tourist/ItinerarySearch';
+// import ItineraryFilter from '../../components/tourist/ItineraryFilter';
+import ItinerarySort from '../../components/tourist/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
 
 const ItineraryPage = () => {

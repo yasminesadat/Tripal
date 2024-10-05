@@ -1,5 +1,5 @@
-import ActivityForm from "../components/ActivityForm";
-import AdvertiserActivitiesPage from "../pages/AdvertiserActivities"
+import ActivityForm from "../components/advertiser/ActivityForm";
+import AdvertiserActivitiesPage from "../pages/advertiser/AdvertiserActivities"
 
 const activityRoutes = [
   { path: "/create-activity", element: <ActivityForm /> },
