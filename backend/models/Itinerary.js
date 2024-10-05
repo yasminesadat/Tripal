@@ -32,8 +32,7 @@ const itinerarySchema = new mongoose.Schema({
     accessibility: [{type: String, required: true}],
     pickupLocation: {type: String, required: true},
     dropoffLocation: {type: String, required: true},
-
-
+    ratings: [{type: mongoose.Schema.Types.ObjectId,ref: "Rating",default: []},],
     tags:[{type:String}], // lesa idk how to use this do i need tags from activity?
     tourists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }] // Add this line
 
