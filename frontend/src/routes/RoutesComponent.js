@@ -3,8 +3,10 @@ import adminRoutes from "./AdminRoutes";
 import touristRoutes from "./TouristRoutes"
 import productRoutes from "./ProductRoutes";
 import generalRoutes from "./GeneralRoutes";
+import advertiserRoutes from "./AdvertiserRoutes";
 
-const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes];
+
+const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes];
 
 const RoutesComponent = () => (
   <Routes>
