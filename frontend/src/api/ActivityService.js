@@ -1,6 +1,15 @@
+import { useDebugValue } from "react";
 import { axios } from "./axios";
 
-export async function getAdvertiserActivities() {}
+export async function getAdvertiserActivities(advertiser) {
+  try {
+    const response = await axios.get(`/activities/advertiser/${advertiser}`);
+    return response;
+  } catch (error) {
+    console.error("Can't get advertiser's activities", error);
+    throw error;
+  }
+}
 
 export async function createActivity() {}
 

@@ -15,8 +15,13 @@ const UpcomingActivitiesPage = () => {
     const fetchActivities = async () => {
       try {
         const response = await viewUpcomingActivities();
-        setActivities(response.data);
-        setFilteredActivities(response.data);
+        const activitiesWithAvgRatings = response.data.map(activity => ({
+          ...activity,
+          averageRating: calculateAverageRating(activity.ratings),
+        }));
+
+        setActivities(activitiesWithAvgRatings);
+        setFilteredActivities(activitiesWithAvgRatings);
       } catch (err) {
         setError(err.response?.data?.error || "Error fetching activities");
       } finally {
@@ -26,6 +31,12 @@ const UpcomingActivitiesPage = () => {
 
     fetchActivities();
   }, []);
+
+  const calculateAverageRating = (ratings) => {
+    if (!ratings || ratings.length === 0) return 0;
+    const total = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    return (total / ratings.length).toFixed(1); 
+  };
 
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -51,13 +62,13 @@ const UpcomingActivitiesPage = () => {
 
   const handleFilter = (filters) => {
     const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
-
+  
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
       const activityBudget = activity.price;
       const activityCategory = activity.category;
-      const activityRating = activity.ratings;
-
+      const activityRating = activity.averageRating; 
+  
       const isDateValid =
         (!startDate || activityDate >= new Date(startDate)) &&
         (!endDate || activityDate <= new Date(endDate));
@@ -69,19 +80,27 @@ const UpcomingActivitiesPage = () => {
         (activityCategory.name &&
           activityCategory.name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
-        !rating || (activityRating && activityRating >= rating);
-
+        !rating || (activityRating >= rating); 
+  
       return isDateValid && isBudgetValid && isCategoryValid && isRatingValid;
     });
-
+  
     setFilteredActivities(filtered);
   };
+  
 
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
-      const aValue = field === "price" ? a.price : a.ratings;
-      const bValue = field === "price" ? b.price : b.ratings;
-
+      let aValue, bValue;
+  
+      if (field === "price") {
+        aValue = a.price;
+        bValue = b.price;
+      } else if (field === "ratings") {
+        aValue = a.averageRating;
+        bValue = b.averageRating;
+      }
+  
       if (order === "asc") {
         return aValue - bValue;
       } else {
