@@ -11,7 +11,7 @@ const { Content } = Layout;
 
 const ProductDetails = () => {
   const location = useLocation();
-  const { name, sellerID, price, description, quantity, picture, rating } =
+  const { name, seller, price, description, quantity, picture, rating } =
     location.state;
 
   return (
@@ -66,7 +66,7 @@ const ProductDetails = () => {
                 <strong>Price:</strong> ${price}
               </p>
               <p>
-                <strong>Seller ID:</strong> {sellerID}
+                <strong>Seller ID:</strong> {seller}
               </p>
               <p>
                 <strong>Description:</strong> {description}

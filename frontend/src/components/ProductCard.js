@@ -13,7 +13,7 @@ const { Meta } = Card;
 const ProductCard = ({
   id,
   name,
-  sellerID,
+  seller,
   price,
   description,
   quantity,
@@ -24,7 +24,7 @@ const ProductCard = ({
 
   const handleCardClick = () => {
     navigate(`/product/${id}`, {
-      state: { name, sellerID, price, description, quantity, picture, rating },
+      state: { name, seller, price, description, quantity, picture, rating },
     });
   };
 
