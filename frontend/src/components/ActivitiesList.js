@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Divider, Flex, Tag } from 'antd';
 const ActivitiesList = ({ activities }) => {
   return (
     <div class="list" >
@@ -13,7 +13,14 @@ const ActivitiesList = ({ activities }) => {
             <div class="list-item-attribute">Location: {activity.location}</div>
             <div class="list-item-attribute">Price: {activity.price}</div>
             <div class="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
-            <div class="list-item-attribute">Tags: {activity.tags.map((tag) => tag.name).join(", ")}</div>
+            <div className="list-item-attribute">
+              Tags: {activity.tags.map((tag) => (
+                <Tag key={tag.id} color="geekblue">
+                  {tag.name}
+                </Tag>
+              ))}
+            </div>
+
             <div class="list-item-attribute">Ratings: {activity.ratings.map((single) => single.rating).join(", ")}</div>
             <div class="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
             <div class="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
