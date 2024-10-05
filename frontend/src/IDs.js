@@ -1,6 +1,5 @@
-
-const sellerId = "66fe7f19f4fd7897ac7fbc10";
+const sellerId = "66ffc04687831d849b4be0ec";
 
 module.exports = {
-  sellerId
+  sellerId,
 };

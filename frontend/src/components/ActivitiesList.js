@@ -1,23 +1,33 @@
 import React from "react";
-
+import { Divider, Flex, Tag } from 'antd';
 const ActivitiesList = ({ activities }) => {
   return (
-    <ul>
+    <div class="list" >
       {activities.map((activity) => (
-        <li key={activity._id}>
-          <h2>{activity.title}</h2>
-          <p>{activity.description}</p>
-          <p>Date: {new Date(activity.date).toLocaleDateString()}</p>
-          <p>Time: {activity.time}</p>
-          <p>Location: {activity.location}</p>
-          <p>Price: {activity.price}</p>
-          <p>Category: {activity.category ? activity.category.Name : "N/A"}</p>
-          <p>Tags: {activity.tags.map((tag) => tag.name).join(", ")}</p>
-          <p>Special Discounts: {activity.specialDiscounts || "N/A"}</p>
-          <p>Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</p>
-        </li>
+        <div class="list-item" key={activity._id}>
+          <div class="list-item-header">{activity.title}</div>
+          <div class="list-item-attributes">
+            <div class="list-item-attribute">{activity.description}</div>
+            <div class="list-item-attribute">Date: {new Date(activity.date).toLocaleDateString()}</div>
+            <div class="list-item-attribute">Time: {activity.time}</div>
+            <div class="list-item-attribute">Location: {activity.location}</div>
+            <div class="list-item-attribute">Price: {activity.price}</div>
+            <div class="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
+            <div className="list-item-attribute">
+              Tags: {activity.tags.map((tag) => (
+                <Tag key={tag.id} color="geekblue">
+                  {tag.name}
+                </Tag>
+              ))}
+            </div>
+
+            <div class="list-item-attribute">Ratings: {activity.ratings.map((single) => single.rating).join(", ")}</div>
+            <div class="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
+            <div class="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

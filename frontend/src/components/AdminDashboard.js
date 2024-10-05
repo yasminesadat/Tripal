@@ -13,7 +13,7 @@ const AdminDashboard = () => {
   };
 
   const handleActivityCategory = () => {
-    navigate("/activity-category");
+    navigate("/adminActivityCategories");
   };
 
   return (

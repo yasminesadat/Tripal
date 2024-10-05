@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities } from "../api/ActivityService";
-import ActivitiesList from "../components/ActivitiesList";
-import ActivitySearch from "../components/ActivitySearch";
-import ActivityFilter from "../components/ActivityFilter";
-import ActivitySort from "../components/ActivitySort";
+import { viewUpcomingActivities } from "../../api/ActivityService";
+import ActivitiesList from "../../components/ActivitiesList";
+import ActivitySearch from "../../components/ActivitySearch";
+import ActivityFilter from "../../components/ActivityFilter";
+import ActivitySort from "../../components/ActivitySort";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -50,8 +50,7 @@ const UpcomingActivitiesPage = () => {
   };
 
   const handleFilter = (filters) => {
-    const { startDate, endDate, budgetMin, budgetMax, category, rating } =
-      filters;
+    const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
@@ -96,12 +95,16 @@ const UpcomingActivitiesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h1>Upcoming Activities</h1>
+    <div class="page-container">
+      <div class="page-title">Upcoming Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <ActivityFilter onFilter={handleFilter} />
-      <ActivitySort onSort={handleSort} />
-      <ActivitiesList activities={filteredActivities} />
+      <div class="filter-sort-list">
+        <div class="filter-sort">
+          <ActivityFilter onFilter={handleFilter} />
+          <ActivitySort onSort={handleSort} />
+        </div>
+        <ActivitiesList activities={filteredActivities} />
+      </div>
     </div>
   );
 };

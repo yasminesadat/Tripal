@@ -4,29 +4,35 @@ import { Link } from "react-router-dom";
 const NavigationBar = () => {
   return (
     <nav>
-      <ul>
-        <li>
+      <div class="home-nav-bar">
+        <div class="nav-bar-link">
           <Link to="/">Home</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/admin">Admin Dashboard</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/preference-tags">Manage Preference Tags</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/view-products">View Products</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/upcoming-activities">View Upcoming Activities</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/historical-places">View Historical Places</Link>
-        </li>
-        <li>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/itineraries">View Itineraries</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/adminActivityCategories">Activity Categories</Link>
-        </li>
-      </ul>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/tour-guide-itineraries">Itineraries</Link>
+      </div>
+      </div>
     </nav>
   );
 };

@@ -28,15 +28,16 @@ const ActivityCategoryService = {
       Name: name,
     };
     console.log(`${baseURL}/activityCategory`);
-    await axios
-      .post(`${baseURL}/activityCategory`, requestBody)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      const response = await axios.post(`${baseURL}/activityCategory`, requestBody);
+      console.log("Response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
   },
+
   updateActivityCategory: async (id, name) => {
     try {
       const requestBody = {

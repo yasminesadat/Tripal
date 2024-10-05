@@ -1,5 +1,12 @@
 const HistoricalPlace = require("../models/HistoricalPlace");
-
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/'); 
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });
 const createHistoricalPlace = (req, res) => {
   const historicalPlace = new HistoricalPlace(req.body);
   historicalPlace
@@ -66,9 +73,9 @@ const getAllHistoricalPlaces = (req, res) => {
 // };
 
 const getTourismGovernerHistoricalPlaces = async (req, res) => {
-  const { touridmGovernerID } = req.params.id;
+  const { tourismGovernorID } = req.params.id;
   try{
-    const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: touridmGovernerID });
+    const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: tourismGovernorID });
     res.status(200).json(historicalPlaces);
   }catch(error){
     res.status(400).json({ error: error.message })
@@ -77,7 +84,7 @@ const getTourismGovernerHistoricalPlaces = async (req, res) => {
 
 const updateHistoricalPlaces = (req, res) => {
   const id = req.params.id;
-  const { updates } = req.body;
+  const updates = req.body;
   HistoricalPlace.findByIdAndUpdate(id, updates, { new: true })
     .then((result) => {
       res.status(200).json(result);

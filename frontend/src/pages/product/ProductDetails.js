@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Rate, Layout, Breadcrumb, Button, Space, Divider } from "antd";
 import { InputNumber } from "antd";
 
@@ -10,10 +10,9 @@ const onChange = (value) => {
 const { Content } = Layout;
 
 const ProductDetails = () => {
-  const { productName } = useParams();
   const location = useLocation();
-  const { name, sellerID, price, description, quantity, picture, rating } =
-    location.state || {};
+  const { name, seller, price, description, quantity, picture, rating } =
+    location.state;
 
   return (
     <div className="productDetails">
@@ -59,15 +58,15 @@ const ProductDetails = () => {
               <Breadcrumb.Item>
                 <Link to="/view-products">Products</Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>{productName || name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{name}</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ minHeight: 280 }}>
-              <h1>{productName || name}</h1>
+              <h1>{name}</h1>
               <p>
                 <strong>Price:</strong> ${price}
               </p>
               <p>
-                <strong>Seller ID:</strong> {sellerID}
+                <strong>Seller:</strong> {seller}
               </p>
               <p>
                 <strong>Description:</strong> {description}

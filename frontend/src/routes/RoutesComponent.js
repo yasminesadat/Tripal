@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import adminRoutes from "./AdminRoutes";
+import touristRoutes from "./TouristRoutes"
 import productRoutes from "./ProductRoutes";
 import generalRoutes from "./GeneralRoutes";
 import advertiserRoutes from "./AdvertiserRoutes";
 
-const allRoutes = [...adminRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes];
+
+const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes];
 
 const RoutesComponent = () => (
   <Routes>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import HistoricalPlacesList from "../components/HistoricalPlacesList";
-import HistoricalPlacesSearch from "../components/HistoricalPlacesSearch";
-import { getAllHistoricalPlaces } from "../api/HistoricalPlaceService";
+import HistoricalPlacesList from "../../components/HistoricalPlacesList";
+import HistoricalPlacesSearch from "../../components/HistoricalPlacesSearch";
+import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
 
 const HistoricalPlacesPage = () => {
   const [places, setPlaces] = useState([]);
@@ -27,10 +27,6 @@ const HistoricalPlacesPage = () => {
     fetchPlaces();
   }, []);
 
-  useEffect(() => {
-    console.log("Updated places:", places); // Log when places is updated
-  }, [places]);
-
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const results = places.filter((place) => {
@@ -54,10 +50,15 @@ const HistoricalPlacesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h1>Historical Places</h1>
+    <div class="page-container">
+      <div class="page-title">Historical Places</div>
       <HistoricalPlacesSearch onSearch={handleSearch} />
-      <HistoricalPlacesList places={filteredPlaces} />
+      <div class="filter-sort-list">
+        <div class="filter-sort">
+          {/* <HistoricalPlacesFilter onFilter={handleFilter} /> */} 
+        </div>
+        <HistoricalPlacesList places={filteredPlaces} />
+      </div>
     </div>
   );
 };

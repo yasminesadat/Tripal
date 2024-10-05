@@ -2,13 +2,12 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5050/api/products";
 
-export const createProduct = async (product) => {
-  return axios.post(API_URL, product);
-  // return response;
-  // } catch (error) {
-  //   console.error("Error creating product:", error);
-  //   throw error;
-  // }
+export const createProduct = (productData) => {
+  return axios.post(API_URL, productData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
 
 export const fetchProducts = async () => {
@@ -21,14 +20,15 @@ export const fetchProducts = async () => {
   }
 };
 
-export const searchProductsByName = async (name) => {
+export const editProduct = async (id, productData) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/search?name=${encodeURIComponent(name)}`
-    );
-    return response.data;
+    await axios.patch(`${API_URL}/${id}`, productData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
-    console.error("Error searching products:", error);
+    console.error("Error updating product:", error);
     throw error;
   }
 };
