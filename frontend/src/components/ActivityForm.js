@@ -1,5 +1,7 @@
+// ActivityForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import LocationMap from './MapComponent'; // Import the LocationMap component
 
 const ActivityForm = () => {
   const [activityData, setActivityData] = useState({
@@ -8,17 +10,17 @@ const ActivityForm = () => {
     description: '',
     date: '',
     time: '',
-    location: '',
     price: 0,
     category: '',
     tags: [],
     specialDiscounts: '',
-    isBookingOpen: false
+    isBookingOpen: false,
   });
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
-
+  const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); // Default position (London)
+  const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,7 +28,7 @@ const ActivityForm = () => {
         const response = await axios.get('http://localhost:5050/api/activityCategories');
         setCategories(response.data);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       }
     };
 
@@ -35,7 +37,7 @@ const ActivityForm = () => {
         const response = await axios.get('http://localhost:5050/api/pref-tags');
         setTags(response.data);
       } catch (error) {
-        console.error("Error fetching tags:", error);
+        console.error('Error fetching tags:', error);
       }
     };
 
@@ -45,13 +47,12 @@ const ActivityForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     setActivityData({
       ...activityData,
       price: Number(activityData.price),
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     });
-    console.log(activityData)
   };
 
   const handleTagChange = (e) => {
@@ -60,14 +61,17 @@ const ActivityForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    debugger
     e.preventDefault();
     try {
-      
-      const response = await axios.post('http://localhost:5050/api/activities', activityData);
-      console.log("Activity created:", response.data);
+        const response = await axios.post('http://localhost:5050/api/activities', {
+            ...activityData,
+            location: selectedLocation, // Store the location string
+            latitude: markerPosition[0], // Send the latitude
+            longitude: markerPosition[1], // Send the longitude
+          });
+      console.log('Activity created:', response.data);
     } catch (error) {
-      console.error("Error creating activity:", error);
+      console.error('Error creating activity:', error);
     }
   };
 
@@ -91,11 +95,6 @@ const ActivityForm = () => {
       <div>
         <label>Time:</label>
         <input type="time" name="time" value={activityData.time} onChange={handleChange} required />
-      </div>
-
-      <div>
-        <label>Location:</label>
-        <input type="text" name="location" value={activityData.location} onChange={handleChange} required />
       </div>
 
       <div>
@@ -134,6 +133,19 @@ const ActivityForm = () => {
       <div>
         <label>Booking Open:</label>
         <input type="checkbox" name="isBookingOpen" checked={activityData.isBookingOpen} onChange={handleChange} />
+      </div>
+
+      {/* Map Component */}
+      <div>
+        <label>Location (click on map to select):</label>
+        <LocationMap 
+          markerPosition={markerPosition} 
+          setMarkerPosition={setMarkerPosition} 
+          setSelectedLocation={setSelectedLocation} 
+        />
+        <div>
+          <strong>Selected Location:</strong> {selectedLocation}
+        </div>
       </div>
 
       <button type="submit">Create Activity</button>
