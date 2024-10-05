@@ -2,7 +2,7 @@ import React from 'react';
 
 const ItinerariesList = ({ itineraries }) => {
     return (
-        <div className="list">
+        <div class="list">
             {itineraries.map(itinerary => (
                 <div className="list-item" key={itinerary._id}>
                     <div className="list-item-header">{itinerary.title}</div>
@@ -50,10 +50,17 @@ const ItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
                         </div>
-
-                        <h3>Accessibility:</h3>
-                        <div className="list-item-attribute">
-                            {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}
+                        <div class="list-item-attribute-sublist">
+                            <div>Accessibility:</div>
+                            <div className="list-item-attribute-sublist-component">
+                                {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}
+                            </div>
+                        </div>
+                        <div class="list-item-attribute">Pickup Location: {itinerary.pickupLocation}</div>
+                        <div class="list-item-attribute">Dropoff Location: {itinerary.dropoffLocation}</div>
+                        <div class="list-item-attribute-sublist">
+                            <div>Tags:</div>
+                            <div class="list-item-attribute-sublist-component">{itinerary.tags.length > 0 ? itinerary.tags.join(', ') : 'N/A'}</div>
                         </div>
 
                         <div className="list-item-attribute">Pickup Location: {itinerary.pickupLocation}</div>

@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {createActivity, getAdvertiserActivities, updateActivity, deleteActivity, searchActivities, viewUpcomingActivities, filterUpcomingActivities, sortUpcomingActivities} = require('../controllers/ActivityController');  
+const {createActivity, getAdvertiserActivities, updateActivity, deleteActivity, addRating, searchActivities, viewUpcomingActivities, filterUpcomingActivities, sortUpcomingActivities} = require('../controllers/ActivityController');  
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities); 
 router.post('/activities', createActivity);    
-router.put('/activities/:id', updateActivity);   
+router.put('/activities/:id', updateActivity); 
+router.post('/activityRating/:id', addRating);   
 router.delete('/activities/:id', deleteActivity); 
 router.get('/activities/search', searchActivities);
 router.get('/activities/view', viewUpcomingActivities);
