@@ -56,7 +56,7 @@ const ActivityFilter = ({ onFilter }) => {
         />
       </div>
       <div>
-        <label>Rating:</label>
+        <label>Min Rating:</label>
         <input
           type="number"
           value={rating}
