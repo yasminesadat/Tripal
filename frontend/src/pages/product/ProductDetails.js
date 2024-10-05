@@ -66,7 +66,7 @@ const ProductDetails = () => {
                 <strong>Price:</strong> ${price}
               </p>
               <p>
-                <strong>Seller ID:</strong> {seller}
+                <strong>Seller:</strong> {seller}
               </p>
               <p>
                 <strong>Description:</strong> {description}
