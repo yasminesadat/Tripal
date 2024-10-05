@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ItinerariesList from '../../components/ItinerariesList';
 import ItinerarySearch from '../../components/ItinerarySearch';
-// import ItineraryFilter from '../../components/ItineraryFilter';
+ import ItineraryFilter from '../../components/ItineraryFilter';
 import ItinerarySort from '../../components/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
 
@@ -65,6 +65,51 @@ const ItineraryPage = () => {
         setFilteredItineraries(sortedItineraries);
     };
 
+    const handleFilter = (filters) => {
+        const { startDate, endDate, budgetMin, budgetMax, preferences, language } = filters;
+    
+        if (!startDate && !endDate && !budgetMin && !budgetMax && !preferences && !language) {
+            setFilteredItineraries(itineraries);
+            return;
+        }
+    
+        const filtered = itineraries.filter(itinerary => {
+            const itineraryDates = itinerary.availableDates.map(date => new Date(date));
+            const itineraryBudget = itinerary.price;
+            const itineraryLanguage = itinerary.language;
+
+            const start = startDate ? new Date(startDate) : null;
+            const end = endDate ? new Date(endDate) : null;
+    
+            const isDateValid = itineraryDates.some(date => {
+                const isWithinStart = !start || date >= start;
+                const isWithinEnd = !end || date <= end;
+                return isWithinStart && isWithinEnd;
+            });
+
+            const isBudgetValid =
+                (!budgetMin || itineraryBudget >= budgetMin) &&
+                (!budgetMax || itineraryBudget <= budgetMax);
+            
+                const isPreferencesValid = !preferences || 
+                preferences.split(',').some(pref => {
+                    const normalizedPref = pref.trim().toLowerCase();
+                    return itinerary.activities.some(activity => 
+                        activity.tags.some(tag => tag.name.toLowerCase() === normalizedPref)
+                    );
+                });
+            
+            const isLanguageValid = 
+                !language || 
+                (itineraryLanguage && itineraryLanguage.toLowerCase() === language.toLowerCase());
+    
+            return isDateValid && isBudgetValid && isPreferencesValid && isLanguageValid;
+        });
+    
+        setFilteredItineraries(filtered);
+    };
+    
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -74,7 +119,7 @@ const ItineraryPage = () => {
             <ItinerarySearch onSearch={handleSearch} />
             <div class="filter-sort-list">
                 <div class="filter-sort">
-                    {/* <ItineraryFilter onFilter={handleFilter} /> */}
+                    <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
                 <ItinerariesList itineraries={filteredItineraries} />

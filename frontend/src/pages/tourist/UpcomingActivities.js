@@ -51,7 +51,6 @@ const UpcomingActivitiesPage = () => {
 
   const handleFilter = (filters) => {
     const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
-
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
       const activityBudget = activity.price;

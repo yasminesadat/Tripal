@@ -12,9 +12,15 @@ const ItinerariesList = ({ itineraries }) => {
                         
                         <h3>Activities:</h3>
                         <ul>
-                            {itinerary.activities.map(activityId => (
-                                <li key={activityId} className="list-item-attribute">
-                                    <p>Activity: {activityId}</p>
+                            {itinerary.activities.map(activity => (
+                                <li key={activity._id} className="list-item-attribute">
+                                    <p>Activity: {activity.title} - {activity.description}</p>
+                                    <h4>Tags:</h4>
+                                    <div>
+                                        {activity.tags && activity.tags.length > 0 
+                                            ? activity.tags.map(tag => tag.name).join(', ')
+                                            : 'No tags available'}
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -53,8 +59,8 @@ const ItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">Pickup Location: {itinerary.pickupLocation}</div>
                         <div className="list-item-attribute">Dropoff Location: {itinerary.dropoffLocation}</div>
 
-                        <h3>Tags:</h3>
-                        <div className="list-item-attribute">{itinerary.tags.length > 0 ? itinerary.tags.join(', ') : 'N/A'}</div>
+                        {/* <h3>Itinerary Tags:</h3>
+                        <div className="list-item-attribute">{itinerary.tags.length > 0 ? itinerary.tags.map(tag => tag.name).join(', ') : 'N/A'}</div> */}
                     </div>
                 </div>
             ))}

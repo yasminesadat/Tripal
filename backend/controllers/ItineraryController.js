@@ -62,10 +62,6 @@ const createItinerary = async(req,res) => {
         try {
             const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
     
-            if (itineraries.length === 0) {
-                return res.status(404).json({ message: 'No itineraries found for this tour guide.' });
-            }
-    
             res.status(200).json(itineraries);
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -132,7 +128,12 @@ const deleteItinerary = async(req,res) => {
 
 const viewItineraries = async(req,res) => {
     try {
-        const itineraries = await itineraryModel.find();
+        const itineraries = await itineraryModel.find().populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags");
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
