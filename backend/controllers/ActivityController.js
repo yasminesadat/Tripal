@@ -3,6 +3,8 @@ const Advertiser = require("../models/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
+const Tourist = require("../models/Tourist.js");
+
 
 const createActivity = async (req, res) => {
   const {
@@ -13,20 +15,19 @@ const createActivity = async (req, res) => {
     time,
     location,
     price,
-    category: categoryName,
+    category: categoryId,
     tags: tagIds,
-    ratings: ratingIds,
     specialDiscounts,
     isBookingOpen,
   } = req.body;
-  // console.log(req.body)
+  console.log(req.body.category)
   try {
     const existingAdvertiser = await Advertiser.findById(advertiser);
-    console.log(existingAdvertiser);
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
-    const category = await ActivityCategory.findOne({ Name: categoryName });
+    const category = await ActivityCategory.findById({ _id: categoryId });
+    console.log(category)
     // if (!category) {
     //   return res.status(404).json({ error: "Category not found" });
     // }
@@ -54,7 +55,6 @@ const createActivity = async (req, res) => {
       price,
       category: category._id, // Use the ObjectId of the category
       tags: tagIds, // Use ObjectIds for tags
-      ratings: ratingIds,
       specialDiscounts,
       isBookingOpen,
     });
@@ -98,68 +98,37 @@ const getAdvertiserActivities = async (req, res) => {
 };
 
 const updateActivity = async (req, res) => {
-  const {
-    title,
-    description,
-    date,
-    time,
-    location,
-    priceRange,
-    category,
-    tags,
-    ratings,
-    specialDiscounts,
-    isBookingOpen,
-  } = req.body;
+  const { id } = req.params;
+  const { tags, category, ...updateParameters } = req.body;
 
   try {
-    const activity = await Activity.findById(req.params.id);
+    const activity = await Activity.findById(id);
     if (!activity) {
       return res.status(404).json({ error: "Activity not found" });
     }
-    //validate and update category if provided
+
     if (category) {
-      const existingCategory = await ActivityCategory.findOne({
-        Name: category,
-      });
+      const existingCategory = await ActivityCategory.findOne({ Name: category });
       if (existingCategory) {
-        activity.category = existingCategory._id; // Store the ObjectId of the category
+        updateParameters.category = existingCategory._id; // Store the ObjectId of the category
       } else {
         return res.status(404).json({ error: "Category not found" });
       }
     }
 
-    // If tags are provided, validate and update
     if (tags && Array.isArray(tags)) {
-      const tagNames = tags; // Assuming tags are sent as an array of names
-      const existingTags = await PreferenceTag.find({
-        Name: { $in: tagNames },
-      });
+      const existingTags = await PreferenceTag.find({ _id: { $in: tags } });
       if (existingTags.length > 0) {
-        activity.tags = existingTags.map((tag) => tag._id); // Store the ObjectIds of the tags
+        const currentTagIds = new Set(activity.tags.map(tag => tag.toString()));
+        existingTags.forEach(tag => currentTagIds.add(tag._id.toString()));
+        updateParameters.tags = Array.from(currentTagIds);
       } else {
         return res.status(404).json({ error: "Tags not found" });
       }
     }
-    if (ratings && Array.isArray(ratings)) {
-      const existingRatings = await Rating.find({ _id: { $in: ratings } });
-      if (existingRatings.length > 0) {
-        activity.ratings = existingRatings.map((rating) => rating._id); // Store ObjectIds for ratings
-      } else {
-        return res.status(404).json({ error: "Ratings not found" });
-      }
-    }
-    activity.title = title || activity.title;
-    activity.description = description || activity.description;
-    activity.date = date || activity.date;
-    activity.time = time || activity.time;
-    activity.location = location || activity.location;
-    activity.priceRange = priceRange || activity.priceRange;
-    activity.specialDiscounts = specialDiscounts || activity.specialDiscounts;
-    activity.isBookingOpen =
-      isBookingOpen !== undefined ? isBookingOpen : activity.isBookingOpen;
-    await activity.save();
-    res.status(200).json(activity);
+
+    const updatedActivity = await Activity.findByIdAndUpdate(id, updateParameters, { new: true });
+    res.status(200).json(updatedActivity);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -174,6 +143,40 @@ const deleteActivity = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+const addRating = (async (req, res) => {
+  const { id } = req.params;
+  const { rating, review, userID } = req.body;
+
+  const activity = await Activity.findById(id);
+  if (!activity) {
+    res.status(404);
+    throw new Error("activity not found");
+  }
+
+  const tourist = await Tourist.findById(userID);
+  if (!tourist) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  const newRating = new Rating({
+    rating,
+    review,
+    userID,
+  });
+
+  await newRating.save();
+
+  activity.ratings.push(newRating._id);
+
+  await activity.save();
+
+  res.status(201).json({
+    message: "Rating added successfully",
+    rating: newRating
+  });
+});
 
 const searchActivities = async (req, res) => {
   const { term } = req.query;
@@ -322,6 +325,7 @@ module.exports = {
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
+  addRating,
   searchActivities,
   viewUpcomingActivities,
   filterUpcomingActivities,
