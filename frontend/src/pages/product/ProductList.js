@@ -145,7 +145,7 @@ const ProductList = () => {
                     description={product.description}
                     price={product.price}
                     picture={product.picture}
-                    sellerID={product.sellerID}
+                    seller={product.seller.name}
                     quantity={product.quantity}
                     rating={product.averageRating} // Pass the averageRating to ProductCard
                   />
