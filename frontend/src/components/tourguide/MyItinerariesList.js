@@ -11,14 +11,14 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
                     <div className="list-item-attributes">
                         <div className="list-item-attribute">{itinerary.description}</div>
                         <div className="list-item-attribute-sublist">
-                            <div className="list-item-attribute-sublist-header">Activities:</div>
-                            <div className="list-item-attribute-sublist-component">
+                            {/*<div className="list-item-attribute-sublist-header">Activities:</div>*/}
+                            {/*<div className="list-item-attribute-sublist-component">
                                 {itinerary.activities.map(activityId => (
                                     <div className="list-item-attribute-sublist-component" key={activityId}>
                                         <div>Activity: {activityId}</div>
                                     </div>
                                 ))}
-                            </div>
+                            </div>*/}
                         </div>
                         <div className="list-item-attribute-sublist">
                             <div>Locations:</div>
@@ -65,7 +65,7 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
                         </div>
                     </div>
                     <div className="list-item-actions">
-                        <button onClick={() => onUpdate(itinerary._id)}>Update</button>
+                        <button onClick={() => onUpdate(itinerary._id)}>Edit</button>
                         <button onClick={() => onDelete(itinerary._id)}>Delete</button>
                     </div>
                 </div>

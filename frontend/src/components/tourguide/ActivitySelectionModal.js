@@ -2,7 +2,7 @@ import { Modal, List, Checkbox } from 'antd';
 import { useEffect, useState } from 'react';
 import { viewUpcomingActivities } from '../../api/ActivityService';
 
-const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities }) => {
+const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSelectedActivities }) => {
     const [activities, setActivities] = useState([]);
     const [selectedActivities, setSelectedActivities] = useState([]);
 
@@ -14,6 +14,13 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities }) => {
 
         fetchActivities();
     }, []);
+
+    useEffect(() => {
+        // Set selectedActivities based on preSelectedActivities prop whenever the modal is opened
+        if (isVisible) {
+            setSelectedActivities(preSelectedActivities || []); // Default to empty array if preSelectedActivities is undefined
+        }
+    }, [preSelectedActivities, isVisible]);
 
     const handleSelect = (activityId, checked) => {
         const updatedSelected = checked 
@@ -40,6 +47,7 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities }) => {
                 renderItem={activity => (
                     <List.Item>
                         <Checkbox
+                            checked={selectedActivities.includes(activity._id)}
                             onChange={(e) => handleSelect(activity._id, e.target.checked)}
                         >
                             {activity.title}
