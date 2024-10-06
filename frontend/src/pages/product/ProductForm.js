@@ -156,11 +156,11 @@ const ProductForm = () => {
           rules={[
             {
               required: isCreate,
-              message: "Please enter the product description",
+              message: "Please input the product description!",
             },
           ]}
         >
-          <Input
+          <Input.TextArea
             type="text"
             name="description"
             value={product.description}
