@@ -7,7 +7,9 @@ import advertiserRoutes from "./AdvertiserRoutes";
 import sellerRoutes from "./SellerRoutes"
 import tourguideRoutes from "./TourguideRoutes"
 import historicalPlaceRoutes from "./HistoricalPlaceRoutes";
-const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes, ...sellerRoutes, ...tourguideRoutes,...historicalPlaceRoutes];
+import governorRoutes from "./GovernorRoutes";
+
+const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes, ...sellerRoutes, ...tourguideRoutes,...historicalPlaceRoutes, ...governorRoutes];
 
 const RoutesComponent = () => (
   <Routes>
