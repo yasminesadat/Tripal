@@ -28,7 +28,7 @@ const addAdmin = async (req, res) => {
       username: req.body.username,
       password: hashedPassword,
     });
-    res.status(200).json(newAdmin);
+    res.status(201).json(newAdmin);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
