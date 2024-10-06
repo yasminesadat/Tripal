@@ -6,7 +6,7 @@ const AdvertiserHome = () => {
 
   return (
     <div>
-      <AdvertiserNavBar advertiserId={advertiserId} />
+      <AdvertiserNavBar />
     </div>
   );
 };

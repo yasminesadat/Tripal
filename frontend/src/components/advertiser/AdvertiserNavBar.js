@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const AdvertiserNavBar = ({ advertiserId }) => {
+const AdvertiserNavBar = () => {
   return (
     <nav>
       <div class="nav-bar">
