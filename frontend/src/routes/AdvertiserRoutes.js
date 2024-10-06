@@ -6,7 +6,7 @@ import AdvertiserActivitiesPage from "../pages/advertiser/AdvertiserActivities"
 
 const advertiserRoutes = [
   { path: "/advertiser", element: <AdvertiserHome /> }, 
-  { path: "/advertiser/:id", element: <AdvertiserProfile /> }, // View
+  { path: "/advertiser/:id", element: <AdvertiserProfile /> },
   { path: "/update-advertiser/:id", element: <AdvertiserForm isUpdate={true} /> }, 
   { path: "/create-advertiser", element: <AdvertiserForm isUpdate={false} /> }, 
   { path: "/create-activity", element: <ActivityForm /> },
