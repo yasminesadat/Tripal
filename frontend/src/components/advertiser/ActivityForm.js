@@ -27,6 +27,7 @@ const ActivityForm = ({isUpdate}) => {
     tags: existingActivity?.tags ? existingActivity.tags.map(tag => tag._id) : [],
     specialDiscounts: existingActivity?.specialDiscounts || '',
     isBookingOpen: existingActivity?.isBookingOpen || false,
+    location: existingActivity?.location ||  'No location selected yet' ,
   });
 
   
@@ -77,10 +78,7 @@ const ActivityForm = ({isUpdate}) => {
 
   const handleSubmit = async () => {
     try {
-      console.log(isUpdate)
         if(isUpdate){
-          console.log(isUpdate)
-          console.log("im updatingggggggggggggg!!!!!!!!!!!!")
           console.log("print activityData", activityData)
           const response = await axios.put(`http://localhost:5050/api/activities/${id}`,{
             ...activityData,
@@ -92,8 +90,6 @@ const ActivityForm = ({isUpdate}) => {
           setTimeout(() => navigate("/advertiser-activity/6701cc555e553adca0a5c640"), 1000);
         }
         else{
-          console.log("im creatinggggggggg!!!!!!!!!!!!")
-          debugger
           const response = await axios.post('http://localhost:5050/api/activities', {
             ...activityData,
             location: selectedLocation, // Store the location string
@@ -107,7 +103,7 @@ const ActivityForm = ({isUpdate}) => {
         }
     } catch (error) {
       console.error('Error creating ACTIVITY:', error);
-      message.error('Failed to create activity.');
+      message.error('Failed to save activity.');
     }
   };
 
