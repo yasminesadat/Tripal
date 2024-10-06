@@ -128,6 +128,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                     />
                 </label>
                 <br /><br />
+                <label> Select your Language: </label>
                 <label>
                     <select 
                         name="language" 
@@ -146,7 +147,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
 
                 <br /><br />
                 <label>
-                    Service Fee:
+                    Service Fee: 
                     <input
                         type="number"
                         name="serviceFee"
@@ -157,7 +158,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                 <br /><br />
 
                 <label>
-                    Pickup Location:
+                    Pickup Location: 
                     <input
                         type="text"
                         name="pickupLocation"
