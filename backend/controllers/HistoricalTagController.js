@@ -39,23 +39,56 @@ const createPeriodTags = async (req, res) => {
 const getHistTags = async (req, res) => {
     try {
         const typeTags = await TypeTag.find();
-        const periodTags = await PeriodTag.find();
 
-        const combinedTags = {
-            typeTags,
-            periodTags
-        };
+        // const combinedTags = {
+        //     typeTags,
+        //     periodTags
+        // };
 
-        if (typeTags.length === 0 && periodTags.length === 0) {
+        if (typeTags.length === 0) {
             return res.status(404).json('No tags found');
         }
-        res.status(200).json(combinedTags);
+        res.status(200).json(typeTags);
     } catch (error) {
         res.status(400).json({ message: 'Error fetching all tags', error });
     }
 };
+const getAllHistoricalPeriod=(req,res)=>{
+    PeriodTag.find()
+    .then((result)=>{
+        if (result.length === 0) {
+            return res.status(404).json('No tags found');
+        }
+        res.status(200).json(result);
+    
+    })
+    .catch(err=>{
+        res.status(400).json({ message: 'Error fetching period tags', err });
+    })
+
+}
+const getHistTagById=(req,res)=>{
+    const id =req.params.id;
+    TypeTag.findById(id)
+    .then((result)=>{
+        res.status(200).json(result);
+    })
+    .catch((err)=>{
+        res.status(400).json(err);
+    })
+}
+const getHistPeriodById=(req,res)=>{
+    const id =req.params.id;
+    PeriodTag.findById(id)
+    .then((result)=>{
+        res.status(200).json(result);
+    })
+    .catch((err)=>{
+        res.status(400).json(err);
+    })
+}
 
 
 
 
-module.exports = { createTypeTags, createPeriodTags , getHistTags };
+module.exports = { createTypeTags, createPeriodTags , getHistTags,getAllHistoricalPeriod,getHistPeriodById,getHistTagById };

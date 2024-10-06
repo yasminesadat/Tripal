@@ -2,22 +2,35 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LocationMap from '../MapComponent'; // Import the LocationMap component
 import { Form, Input, Button, Select, Checkbox, DatePicker, TimePicker, InputNumber, message } from 'antd';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { updateActivity } from '../../api/ActivityService';
 
 const { TextArea } = Input;
 
-const ActivityForm = () => {
+const ActivityForm = ({isUpdate}) => {
+  const { id } = useParams();
+  const location = useLocation();
+  console.log("ISUPDATEEEE:", isUpdate); // Debugging line
+  const navigate = useNavigate();
+
+
+  const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
-    advertiser: '6701cb215e553adca0a5c62a',
-    title: '',
-    description: '',
-    date: '',
-    time: '',
-    price: 0,
-    category: '',
-    tags: [],
-    specialDiscounts: '',
-    isBookingOpen: false,
+    advertiser: existingActivity?.advertiser._id || '6701cc555e553adca0a5c640', // Use optional chaining here as well
+    title: existingActivity?.title || '',
+    description: existingActivity?.description || '',
+    date: existingActivity?.date ? new Date(existingActivity.date).toISOString().split('T')[0] : '',
+    time: existingActivity?.time || '',
+    price: existingActivity?.price || 0,
+    category: existingActivity?.category.Name || '',
+    tags: existingActivity?.tags ? existingActivity.tags.map(tag => tag._id) : [],
+    specialDiscounts: existingActivity?.specialDiscounts || '',
+    isBookingOpen: existingActivity?.isBookingOpen || false,
+    location: existingActivity?.location ||  'No location selected yet' ,
   });
+
+  
+  console.log(activityData)
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -25,6 +38,7 @@ const ActivityForm = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
+
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:5050/api/activityCategories');
@@ -43,8 +57,11 @@ const ActivityForm = () => {
       }
     };
 
+  
     fetchCategories();
     fetchTags();
+  
+
   }, []);
 
   const handleChange = (name, value) => {
@@ -60,19 +77,32 @@ const ActivityForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5050/api/activities', {
-        ...activityData,
-        location: selectedLocation, // Store the location string
-        latitude: markerPosition[0], // Send the latitude
-        longitude: markerPosition[1], // Send the longitude
-      });
+        if(isUpdate){
+          console.log("print activityData", activityData)
+          const response = await axios.put(`http://localhost:5050/api/activities/${id}`,{
+            ...activityData,
+            location: selectedLocation, // Store the location string
+            latitude: markerPosition[0], // Send the latitude
+            longitude: markerPosition[1], // Send the longitude
+          } );
+          message.success('Activity updated successfully!');
+          setTimeout(() => navigate("/advertiser-activity/6701cc555e553adca0a5c640"), 1000);
+        }
+        else{
+          const response = await axios.post('http://localhost:5050/api/activities', {
+            ...activityData,
+            location: selectedLocation, // Store the location string
+            latitude: markerPosition[0], // Send the latitude
+            longitude: markerPosition[1], // Send the longitude
+          });
 
-      // Show success message
-      message.success('Activity created successfully!');
-      console.log('Activity created:', response.data);
+          message.success('Activity created successfully!');
+          console.log('Activity created:', response.data);
+          setTimeout(() => navigate("/advertiser-activity/6701cc555e553adca0a5c640"), 1000);
+        }
     } catch (error) {
-      console.error('Error creating activity:', error);
-      message.error('Failed to create activity.');
+      console.error('Error creating ACTIVITY:', error);
+      message.error('Failed to save activity.');
     }
   };
 
@@ -173,7 +203,7 @@ const ActivityForm = () => {
         <Checkbox
           checked={activityData.isBookingOpen}
           onChange={(e) => handleChange('isBookingOpen', e.target.checked)}
-          required
+          
         >
           Is Booking Open?
         </Checkbox>
@@ -185,7 +215,7 @@ const ActivityForm = () => {
           markerPosition={markerPosition}
           setMarkerPosition={setMarkerPosition}
           setSelectedLocation={setSelectedLocation}
-          required
+          
         />
         <div style={{ marginTop: '10px' }}>
           <strong>Selected Location:</strong> {selectedLocation || 'No location selected yet'}
@@ -193,9 +223,11 @@ const ActivityForm = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" block>
-          Create Activity
+        <Button type="primary" htmlType="submit" block   
+        >
+          Submit Activity
         </Button>
+        
       </Form.Item>
     </Form>
   );

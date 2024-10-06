@@ -1,6 +1,5 @@
 const mongoose= require('mongoose');
 const Schema= mongoose.Schema;
-
 const historicalPlaceSchema =new Schema({
 tourismGovernor: {
     type: mongoose.Schema.Types.ObjectId,
@@ -15,10 +14,20 @@ description:{
     type:String,
     required:true,
 },
-pictures:{
-    type:[String],
-    required:false,
-},
+
+    images: [
+        {
+            public_id:{
+                 type:String,
+                 required:true
+            },
+            url:{
+                type:String,
+                required:true
+            }
+        }
+      ],
+
 location:{
     address: {
         type: String,

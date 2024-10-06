@@ -13,9 +13,28 @@ export async function getAdvertiserActivities(advertiser) {
 
 export async function createActivity() {}
 
-export async function updateActivity() {}
+export async function updateActivity(id) {
+  // try {
+  //   debugger
+  //   console.log("trying to update")
+  //   const response = await axios.put(`activities/${id}`);
+  //   console.log("i updated ")
+  //   return response.data; 
+  // } catch (error) {
+  //   console.error('Error updating activity:', error);
+  //   throw error; 
+  // }
+}
 
-export async function deleteActivity() {}
+export async function deleteActivity(id) {
+  try {
+    const response = await axios.delete(`/activities/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't delete activity", error);
+    throw error;
+  }
+}
 
 export async function searchActivities() {
   try {
