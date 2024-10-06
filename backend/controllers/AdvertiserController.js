@@ -33,7 +33,7 @@ const createAdvertiser = async (req, res) => {
             userID: id,
             role: "Advertiser"
         })
-        res.status(200).json(advertiser);
+        res.status(201).json(advertiser);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
