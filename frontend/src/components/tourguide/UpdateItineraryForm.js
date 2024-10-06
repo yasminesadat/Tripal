@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, message, Input, Tag, DatePicker, TimePicker, Button, theme } from 'antd';
+import { Modal, message, Input, Tag, DatePicker, TimePicker, theme } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { updateItinerary } from '../../api/ItineraryService.js'; // Assuming you have an updateItinerary function
-import dayjs from 'dayjs';
+import { updateItinerary } from '../../api/ItineraryService.js';
+import  languages  from '../../assets/constants/Languages.js';
 
 const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const { token } = theme.useToken();
@@ -14,7 +14,6 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const inputRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
     
-    // State for available dates and times
     const [availableDates, setAvailableDates] = useState([]);
     const [availableTimes, setAvailableTimes] = useState([]);
 
@@ -44,17 +43,13 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     };
 
     const handleInputConfirm = () => {
-        const trimmedInputValue = inputValue.trim();  // Remove extra spaces
+        const trimmedInputValue = inputValue.trim(); 
     
         if (trimmedInputValue && !tags.includes(trimmedInputValue)) {
-            // Add the new tag to the available tags
             setTags(prevTags => [...prevTags, trimmedInputValue]);
     
-            // Automatically select the new tag as well
             setSelectedTags(prevSelectedTags => [...prevSelectedTags, trimmedInputValue]);
         }
-    
-        // Clear input and close input box
         setInputVisible(false);
         setInputValue('');
     };
@@ -69,12 +64,12 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
 
     const handleOk = async () => {
         setConfirmLoading(true);
-        updatedItinerary.accessibility = selectedTags; // Update accessibility with selected tags
-        updatedItinerary.availableDates = availableDates; // Update available dates
-        updatedItinerary.availableTimes = availableTimes; // Update available times
+        updatedItinerary.accessibility = selectedTags;
+        updatedItinerary.availableDates = availableDates;
+        updatedItinerary.availableTimes = availableTimes;
 
         try {
-            await updateItinerary(updatedItinerary._id, updatedItinerary); // API call
+            await updateItinerary(updatedItinerary._id, updatedItinerary);
             message.success('Itinerary updated successfully!');
             onUpdate(updatedItinerary);
         } catch (error) {
@@ -85,26 +80,22 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
         }
     };
 
-    // Handle date selection
     const handleDateChange = (date, dateString) => {
         if (date && !availableDates.includes(dateString)) {
             setAvailableDates([...availableDates, dateString]);
         }
     };
 
-    // Handle time selection
     const handleTimeChange = (time, timeString) => {
         if (time && !availableTimes.includes(timeString)) {
             setAvailableTimes([...availableTimes, timeString]);
         }
     };
 
-    // Remove selected date
     const removeDate = (dateToRemove) => {
         setAvailableDates(availableDates.filter(date => date !== dateToRemove));
     };
 
-    // Remove selected time
     const removeTime = (timeToRemove) => {
         setAvailableTimes(availableTimes.filter(time => time !== timeToRemove));
     };
@@ -141,15 +132,21 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                 </label>
                 <br /><br />
                 <label>
-                    Language:
-                    <input
-                        type="text"
-                        name="language"
+                    <select 
+                        name="language" 
                         value={updatedItinerary.language || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, language: e.target.value })}
+                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, language: e.target.value })} 
                         required
-                    />
+                    >
+                        <option value="" disabled>Select a language</option>
+                        {languages.map((lang, index) => (
+                            <option key={index} value={lang}>
+                                {lang}
+                            </option>
+                        ))}
+                    </select>
                 </label>
+
                 <br /><br />
                 <label>
                     Service Fee:

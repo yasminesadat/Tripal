@@ -1,6 +1,7 @@
 import { useState } from 'react';  
 import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
+import  languages  from '../../assets/constants/Languages.js';
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
@@ -111,14 +112,19 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Language: 
-                    <input 
-                        type="text" 
+                    <select 
                         name="language" 
                         value={itinerary.language}
                         onChange={handleChange} 
-                        required 
-                    />
+                        required
+                    >
+                        <option value="" disabled>Select a language</option>
+                        {languages.map((lang, index) => (
+                            <option key={index} value={lang}>
+                                {lang}
+                            </option>
+                        ))}
+                    </select>
                 </label>
                 <br /><br />
                 <label>
@@ -164,7 +170,6 @@ const ItinerariesForm = () => {
                             {tag}
                         </Tag.CheckableTag>
                     ))}
-                    {/* Display custom tags as well */}
                     {itinerary.accessibility.filter(tag => !selectedTags.includes(tag)).map(tag => (
                         <Tag 
                             key={tag} 
