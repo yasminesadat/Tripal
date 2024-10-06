@@ -1,15 +1,15 @@
-import TouristHomePage from "../pages/tourist/TouristHomePage";
+import TouristHome from "../pages/tourist/TouristHome";
+import TouristProfile from "../pages/tourist/TouristProfile";
 import UpcomingActivities from "../pages/tourist/UpcomingActivities";
 import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 import Itineraries from "../pages/tourist/Itineraries";
-import TourguideItineraries from "../pages/tourguide/TourguideItineraries";
 
 const TouristRoutes = [
+    { path: "/tourist", element: <TouristHome /> },
     { path: "/upcoming-activities", element: <UpcomingActivities /> },
-    { path: "/tourist-home", element: <TouristHomePage /> },
+    { path: "/tourist-profile", element: <TouristProfile /> },
     { path: "/historical-places", element: <HistoricalPlaces /> },
     { path: "/itineraries", element: <Itineraries /> },
-    {path: "/tour-guide-itineraries", element: <TourguideItineraries />},
 ];
 
 export default TouristRoutes;
