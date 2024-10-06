@@ -12,7 +12,7 @@ const GuestNavBar = () => {
           <Link to="/admin">Admin</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/preference-tags">Manage Preference Tags</Link>
+          <Link to="/advertiser">Advertiser</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/view-products">View Products</Link>
