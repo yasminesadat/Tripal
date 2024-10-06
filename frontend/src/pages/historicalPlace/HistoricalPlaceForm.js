@@ -1,7 +1,8 @@
 import React from 'react';
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import {CreateNewHistoricalPlace} from '../../api/HistoricalPlaceService';
-import {CreateNewHistoricalPlace} from '../../api/HistoricalPlaceService';
+import {getAllPeriodTags,CreateNewPeriodTag} from '../../api/HistoricalPlacePeriodService';
+import {getAllTypeTags,CreateNewTypeTag} from '../../api/HistoricalPlaceTagService';
 import { toast } from 'react-toastify';
 import { Form, Input,Select, Button, message, Upload, InputNumber,TimePicker } from "antd";
 import Maps from '../../components/HistPlaceMap/Maps';
@@ -34,27 +35,29 @@ function HistoricalPlaceForm(){
      const [periodTagsOptions,setPeriodTagsOption]=useState([]);
      
     useEffect(() => {
-    const getHistoricalTags = async () => {
+    const getHistoricalPeriods = async () => {
       setLoading(true);
-      const productsData = await fet();
-      if (productsData) {
-        setProducts(productsData);
-        setFilteredProducts(productsData);
+      const PeriodTagsData = await getAllPeriodTags();
+      if (PeriodTagsData) {
+        setPeriodTagsOption(PeriodTagsData);
+ 
       }
       setLoading(false);
     };
-    const getHistoricalPeriods = async () => {
+    getHistoricalPeriods();
+  }, []);
+  useEffect(()=>{
+    const getHistoricalTags = async () => {
         setLoading(true);
-        const productsData = await fetchProducts();
-        if (productsData) {
-          setProducts(productsData);
-          setFilteredProducts(productsData);
+        const typeTagsData = await getAllTypeTags();
+        if (typeTagsData) {
+            setTagsOption(typeTagsData);
         }
         setLoading(false);
       };
-
-    getProducts();
-  }, []);
+      getHistoricalTags();
+  },[])
+  
 
   
 
@@ -88,7 +91,37 @@ function HistoricalPlaceForm(){
         })
         console.log(images);
     }
-    function handleSubmition(){
+    async function createTags(){
+        const tagID=[];
+       const tagsIDs= tagsOptions.map(
+            (tag)=>tag._id
+            );
+        tags.forEach(async (tag)=>{
+          if(!tagsIDs.includes(tag)){
+           const response= await CreateNewTypeTag(tag);
+           tagID.add(response._id);
+          }
+          tagID.add(tag);
+        })
+        setTags(tagID);
+    }
+    async function createTags(){
+        const periadTagID=[];
+       const periodTagsIDs= periodTagsOptions.map(
+            (periodtag)=>periodtag._id
+            );
+            
+        periodTags.forEach(async (periodTag)=>{
+          if(!periodTagsIDs.includes(periodTag)){
+           const response= await CreateNewPeriodTag(periodTag);
+           periadTagID.add(response._id);
+          }
+          periadTagID.add(periodTag);
+        })
+        setTags(periadTagID);
+    }
+   async function handleSubmition(){
+        await createTags();
        const newHistoricalPlace={
             tourismGovernor:tourismGovernerID
                 ,
@@ -256,7 +289,10 @@ function HistoricalPlaceForm(){
           placeholder="Select or create tags"
           value={tags}
           onChange={(selectedTags) => setTags(selectedTags)}
-          options={tagsOptions}
+          options= {tagsOptions.map(tag => ({
+            label: tag.name,   
+            value: tag._id      
+}))}
         />
       </Form.Item>
 
@@ -270,8 +306,13 @@ function HistoricalPlaceForm(){
           style={{ width: '100%' }}
           placeholder="Select or create period tags"
           value={periodTags}
-          onChange={(selectedPeriodTags) => setPeriodTags(selectedPeriodTags)}
-          options= {periodTagsOptions}
+          onChange={(selectedPeriodTags) => {
+            setPeriodTags(selectedPeriodTags);
+          }}
+          options= {periodTagsOptions.map(period => ({
+            label: period.name,   
+            value: period._id      
+}))}
         />
       </Form.Item>
       <Form.Item

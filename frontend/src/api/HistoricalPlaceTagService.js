@@ -10,13 +10,13 @@ export async function getAllTypeTags() {
   }
 }
 
-export const CreateNewTypeTag = (data) => {
-  axios.post(tagsPath, data)
-    .then((result) => {
-      return result
-    }).catch((err) => {
-      throw err;
-    })
+export const CreateNewTypeTag = async (data) => {
+  try {
+    const result = await axios.post(tagsPath, data)
+    return result;
+  } catch (err) {
+    throw err;
+  }
 
 }
 
