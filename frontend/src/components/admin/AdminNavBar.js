@@ -6,13 +6,13 @@ const AdminNavBar = () => {
     <nav>
       <div class="nav-bar">
         <div class="nav-bar-link">
-          <Link to="/seller">Home</Link>
+          <Link to="/admin">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/create-product">Activity Categories</Link>
+          <Link to="/activity-categories">Activity Categories</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/view-products">Preference Tags</Link>
+          <Link to="/preference-tags">Preference Tags</Link>
         </div>
       </div>
     </nav>

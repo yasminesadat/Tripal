@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getAdvertiserActivities } from "../../api/ActivityService";
 import ActivitiesList from "../../components/tourist/ActivitiesList.js";
-
+import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
 
 const AdvertiserActivitiesPage = () => {
   const { id } = useParams(); // Get advertiserId from the URL params
@@ -32,6 +32,7 @@ const AdvertiserActivitiesPage = () => {
 
   return (
     <div className="advertiser-activities-page">
+      <AdvertiserNavBar />
       <h1>Your Activities </h1>
       <ActivitiesList activities={activities} />
     </div>

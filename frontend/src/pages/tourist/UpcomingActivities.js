@@ -4,6 +4,7 @@ import ActivitiesList from "../../components/tourist/ActivitiesList";
 import ActivitySearch from "../../components/tourist/ActivitySearch";
 import ActivityFilter from "../../components/tourist/ActivityFilter";
 import ActivitySort from "../../components/tourist/ActivitySort";
+import TouristNavBar from "../../components/tourist/TouristNavBar";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -115,6 +116,7 @@ const UpcomingActivitiesPage = () => {
 
   return (
     <div class="page-container">
+      <TouristNavBar />
       <div class="page-title">Upcoming Activities</div>
       <ActivitySearch onSearch={handleSearch} />
       <div class="filter-sort-list">

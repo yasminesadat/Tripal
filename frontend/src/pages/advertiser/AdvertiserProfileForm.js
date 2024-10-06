@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, useLocation } from 'react-router-dom';
-
+import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
 
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   const { id } = useParams();
@@ -182,6 +182,7 @@ const handleRemoveItem = (index, type) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <AdvertiserNavBar />
       <div>
         <label>User Name:</label>
         <input

@@ -4,6 +4,7 @@ import ItinerarySearch from '../../components/tourist/ItinerarySearch';
  import ItineraryFilter from '../../components/tourist/ItineraryFilter';
 import ItinerarySort from '../../components/tourist/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
+import TouristNavBar from "../../components/tourist/TouristNavBar";
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -115,6 +116,7 @@ const ItineraryPage = () => {
 
     return (
         <div class="page-container">
+            <TouristNavBar />
             <div class="page-title">Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div class="filter-sort-list">

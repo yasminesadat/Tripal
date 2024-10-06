@@ -5,7 +5,7 @@ import TagManager from "../pages/admin/PreferenceTags";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
-  { path: "/adminActivityCategories", element: <ActivityCategoryDetails /> },
+  { path: "/activity-categories", element: <ActivityCategoryDetails /> },
   { path: "/preference-tags", element: <TagManager /> },
 ];
 

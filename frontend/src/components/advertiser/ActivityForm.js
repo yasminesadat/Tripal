@@ -3,7 +3,6 @@ import axios from 'axios';
 import LocationMap from '../MapComponent'; // Import the LocationMap component
 import { Form, Input, Button, Select, Checkbox, DatePicker, TimePicker, InputNumber, message } from 'antd';
 
-
 const { TextArea } = Input;
 
 const ActivityForm = () => {
