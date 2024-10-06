@@ -47,30 +47,7 @@ const HistoricalPlacesPage = () => {
     });
     setFilteredPlaces(results);
   };
-
-//   const handleFilter = (filters) => {
-//     const { historicType, historicalTag } = filters;
-
-//     if (!historicType && !historicalTag) {
-//         setFilteredPlaces(places);
-//         return;
-//     }
-
-//     const filtered = places.filter((place) => {
-//         const matchesHistoricType = !historicType || 
-//             (place.historicalPeriod && place.historicalPeriod.toLowerCase() === historicType.toLowerCase());
-
-//         const matchesHistoricalTag = !historicalTag || 
-//             (place.tags && place.tags.some(tagId => tagId.toString() === historicalTag));
-
-//         return matchesHistoricType && matchesHistoricalTag; 
-//     });
-
-//     console.log('Filters:', filters);
-//     console.log('Filtered Places:', filtered);
-//     setFilteredPlaces(filtered);
-// };
-
+  
 const handleFilter = (filters) => {
   const { historicType, historicalTagPeriod } = filters;
 
