@@ -15,7 +15,7 @@ const AdvertiserNavBar = ({ advertiserId }) => {
           <Link to="/create-activity">Create Activity</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/advertiser-activity/:id">Activities</Link>
+          <Link to={`/advertiser-activity/${advertiserId}`}>Activities</Link>
         </div>
 
       </div>
