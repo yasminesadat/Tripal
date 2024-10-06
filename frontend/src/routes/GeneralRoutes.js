@@ -1,5 +1,5 @@
 import Home from "../pages/Home";
-import TagManager from "../components/PreferenceTagComponent";
+import TagManager from "../components/admin/PreferenceTagComponent";
 
 const generalRoutes = [
   { path: "/", element: <Home /> },

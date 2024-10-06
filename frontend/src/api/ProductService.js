@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5050/api/products";
+import { axios } from "./axios";
 
 export const createProduct = (productData) => {
-  return axios.post(API_URL, productData, {
+  return axios.post("/products", productData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -12,7 +10,7 @@ export const createProduct = (productData) => {
 
 export const fetchProducts = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get("/products");
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -22,7 +20,7 @@ export const fetchProducts = async () => {
 
 export const editProduct = async (id, productData) => {
   try {
-    await axios.patch(`${API_URL}/${id}`, productData, {
+    await axios.patch(`/products/${id}`, productData, {
       headers: {
         "Content-Type": "application/json",
       },
