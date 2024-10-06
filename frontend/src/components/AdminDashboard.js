@@ -16,6 +16,14 @@ const AdminDashboard = () => {
     navigate("/activity-category");
   };
 
+  const handleAdmins = () => {
+    navigate("/new-admin");
+  };
+
+  const handleGovernors = () => {
+    navigate("/new-governor");
+  };
+
   return (
     <Layout>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -30,6 +38,12 @@ const AdminDashboard = () => {
         </Button>
         <Button type="primary" size="large" onClick={handleActivityCategory}>
           Manage Activity Categories
+        </Button>
+        <Button type="primary" size="large" onClick={handleAdmins}>
+          Create New Admin
+        </Button>
+        <Button type="primary" size="large" onClick={handleGovernors}>
+          Create New Governor
         </Button>
       </div>
     </Layout>
