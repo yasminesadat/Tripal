@@ -89,23 +89,58 @@ const sortProductsByRatings = asyncHandler(async (req, res) => {
 
 const editProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { price, description } = req.body;
+  const { name, price, description, quantity, picture, initialPicture } =
+    req.body;
   const product = await Product.findById(id);
   if (!product) {
     res.status(404);
     throw new Error("Product not found");
   }
 
-  if (!description && !price) {
+  if (
+    !name &&
+    !price &&
+    !description &&
+    !quantity &&
+    !picture &&
+    !initialPicture
+  ) {
     res.status(400);
     throw new Error("At least one value should be provided");
   }
+  let updatedProduct;
+  if (picture) {
+    let result;
+    try {
+      const oldPicturePublicId = product.picture
+        .split("/")
+        .slice(-2)
+        .join("/")
+        .split(".")[0];
 
-  const updatedProduct = await Product.findByIdAndUpdate(
-    id,
-    { description, price },
-    { new: true }
-  );
+      // Delete old picture
+      await cloudinary.uploader.destroy(oldPicturePublicId);
+
+      // Upload new picture
+      result = await cloudinary.uploader.upload(picture, {
+        folder: "products",
+      });
+
+      updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        { name, price, description, quantity, picture: result.secure_url },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  } else {
+    updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { name, price, description, quantity },
+      { new: true }
+    );
+  }
 
   res.status(200).json(updatedProduct);
 });
