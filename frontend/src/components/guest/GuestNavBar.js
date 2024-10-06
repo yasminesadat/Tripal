@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NavigationBar = () => {
+const GuestNavBar = () => {
   return (
     <nav>
-      <div class="home-nav-bar">
+      <div class="nav-bar">
         <div class="nav-bar-link">
           <Link to="/">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/admin">Admin Dashboard</Link>
+          <Link to="/admin">Admin</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/preference-tags">Manage Preference Tags</Link>
@@ -40,4 +40,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default GuestNavBar;

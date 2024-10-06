@@ -1,10 +1,12 @@
 import React from "react";
+import GuestNavBar from "../components/guest/GuestNavBar";
 import SignUpAllUsers from "../components/guest/SignUpAllUsers";
 import mainLogo from "../assets/images/Tripal-logo.png";
 
 const Home = () => {
   return (
     <div className="home">
+      <GuestNavBar />
       <h1 style={{
         color: '#007BFF',
         textAlign: 'center',
