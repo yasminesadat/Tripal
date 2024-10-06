@@ -30,13 +30,18 @@ const ItinerariesForm = () => {
         setItinerary(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleArrayChange = (name, value) => {
-        setItinerary(prev => ({ ...prev, [name]: [...prev[name], value] }));
+    const handleArrayChange = (field, newDate) => {
+        setItinerary(prevState => ({
+            ...prevState,
+            [field]: [...prevState[field], newDate]  // Append new date to the existing array
+        }));
     };
 
     const handleDateChange = (e) => {
-        handleArrayChange('availableDates', e.target.value);
-    };
+        const newDate = e.target.value;  // Get the new date from the input
+        if (newDate.length === 10) {
+            handleArrayChange('availableDates', newDate);  // Update array only when full date is selected
+        }    };
 
     const handleTimeChange = (e) => {
         handleArrayChange('availableTime', e.target.value);
