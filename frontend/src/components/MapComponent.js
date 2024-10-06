@@ -14,19 +14,23 @@ import "leaflet-geosearch/dist/geosearch.css";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-const LocationMap = ({ markerPosition, setMarkerPosition, setSelectedLocation }) => {
-
+const LocationMap = ({
+  markerPosition,
+  setMarkerPosition,
+  setSelectedLocation,
+}) => {
   const LocationMarker = () => {
     useMapEvents({
       click(e) {
         const { lat, lng } = e.latlng;
         setMarkerPosition([lat, lng]);
-        setSelectedLocation(`${lat}, ${lng}`);
+        setSelectedLocation(`${lat}, ${lng}`); // Save coordinates when clicking on the map
       },
     });
 
@@ -46,7 +50,7 @@ const LocationMap = ({ markerPosition, setMarkerPosition, setSelectedLocation })
       const searchControl = new GeoSearchControl({
         provider,
         style: "bar",
-        showMarker: true,
+        showMarker: false, // Disable default marker
         showPopup: false,
         marker: {
           icon: new L.Icon.Default(),
@@ -63,10 +67,11 @@ const LocationMap = ({ markerPosition, setMarkerPosition, setSelectedLocation })
 
       map.addControl(searchControl);
 
+      // Event listener for when a location is selected from the search
       map.on("geosearch/showlocation", (result) => {
-        const { x, y } = result.location;
+        const { x, y, label } = result.location;
         setMarkerPosition([y, x]);
-        setSelectedLocation(`${y}, ${x}`);
+        setSelectedLocation(label); // Save the readable place name when searching
       });
 
       return () => map.removeControl(searchControl);
@@ -75,7 +80,6 @@ const LocationMap = ({ markerPosition, setMarkerPosition, setSelectedLocation })
     return null;
   };
 
-
   return (
     <MapContainer
       center={markerPosition}
@@ -83,8 +87,12 @@ const LocationMap = ({ markerPosition, setMarkerPosition, setSelectedLocation })
       style={{ height: "400px", width: "100%" }}
     >
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        subdomains={["a", "b", "c", "d"]}
+        minZoom={0}
+        maxZoom={18}
+        ext="png"
       />
       <SearchControl />
       <LocationMarker />
