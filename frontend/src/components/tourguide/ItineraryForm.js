@@ -1,6 +1,6 @@
-import { useState} from 'react';
-import { createItinerary} from '../../api/ItineraryService.js';
-import {  message } from "antd";
+import { useState } from 'react';
+import { createItinerary } from '../../api/ItineraryService.js';
+import { message } from "antd";
 
 const activities = ["670000464e4bb1fd7e91b628"];
 const tourGuide = "6700780a15fe2c9f96f1a96e";
@@ -9,14 +9,17 @@ const accessibilityOptions = [
     "Pet Friendly",
     "Family Friendly",
     "Senior Friendly",
+    "Elevator Access",
+    "Sign Language Interpretation"
 ];
+
 const ItinerariesForm = () => {
     const [itinerary, setItinerary] = useState({
         title: '',
         description: '',
         tourGuide: tourGuide,
         activities: activities,
-        serviceFee:0,
+        serviceFee: 0,
         language: '',
         availableDates: [],
         availableTime: [],
@@ -24,31 +27,53 @@ const ItinerariesForm = () => {
         pickupLocation: '',
         dropoffLocation: '',
     });
-  
+    const [customAccessibility, setCustomAccessibility] = useState('');
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setItinerary(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleArrayChange = (field, newDate) => {
+    const handleArrayChange = (field, newItem) => {
         setItinerary(prevState => ({
             ...prevState,
-            [field]: [...prevState[field], newDate]  // Append new date to the existing array
+            [field]: [...prevState[field], newItem]
         }));
     };
 
     const handleDateChange = (e) => {
-        const newDate = e.target.value;  // Get the new date from the input
-        if (newDate.length === 10) {
-            handleArrayChange('availableDates', newDate);  // Update array only when full date is selected
-        }    };
+        const newDate = e.target.value;
+        const datePattern = /^20\d{2}-\d{2}-\d{2}$/;  // Regular expression to check full YYYY-MM-DD format starting with year 2000    
+        if (datePattern.test(newDate)) {
+            handleArrayChange('availableDates', newDate);  // Update array only when full date is entered
+        }
+    };
 
     const handleTimeChange = (e) => {
         handleArrayChange('availableTime', e.target.value);
     };
 
     const handleAccessibilityChange = (e) => {
-        handleArrayChange('accessibility', e.target.value);
+        const { value, checked } = e.target;
+        if (checked) {
+            handleArrayChange('accessibility', value);
+        } else {
+            setItinerary(prevState => ({
+                ...prevState,
+                accessibility: prevState.accessibility.filter(option => option !== value)
+            }));
+        }
+    };
+
+    const handleCustomAccessibilityChange = (e) => {
+        setCustomAccessibility(e.target.value);
+    };
+
+    const handleAddCustomAccessibility = () => {
+        if (customAccessibility) {
+            handleArrayChange('accessibility', customAccessibility);
+            setCustomAccessibility('');  // Reset input
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -62,8 +87,9 @@ const ItinerariesForm = () => {
             message.error('Error creating itinerary');
         }
     };
+
     return (
-        <div style={{alignContent:'center', alignSelf:'center',}}>
+        <div style={{ alignContent: 'center', alignSelf: 'center' }}>
             <form onSubmit={handleSubmit}>
                 <label>
                     Title:
@@ -75,21 +101,28 @@ const ItinerariesForm = () => {
                         required
                     />
                 </label>
-                <br />
-                <br />
-                <label>Description: <input type="text"name="description"
-                value={itinerary.description}
-                onChange={handleChange} required />
+                <br /><br />
+                <label>Description: 
+                    <input 
+                        type="text"
+                        name="description"
+                        value={itinerary.description}
+                        onChange={handleChange} 
+                        required 
+                    />
                 </label>
-                <br />
-                <br />
+                <br /><br />
                 <label>
-                Language: <input type="text" name="language" 
-                value={itinerary.language}
-                onChange={handleChange} required />
+                    Language: 
+                    <input 
+                        type="text" 
+                        name="language" 
+                        value={itinerary.language}
+                        onChange={handleChange} 
+                        required 
+                    />
                 </label>
-                <br />
-                <br />
+                <br /><br />
                 <label>
                     Service Fee:
                     <input
@@ -99,6 +132,7 @@ const ItinerariesForm = () => {
                         onChange={handleChange}
                     />
                 </label>
+                <br /><br />
                 <label>
                     Available Dates:
                     <input
@@ -106,7 +140,9 @@ const ItinerariesForm = () => {
                         onChange={handleDateChange}
                     />
                 </label>
-                <br />
+                <div>
+                    Selected Dates: {itinerary.availableDates.join(', ')}
+                </div>
                 <br />
                 <label>
                     Available Times:
@@ -115,18 +151,41 @@ const ItinerariesForm = () => {
                         onChange={handleTimeChange}
                     />
                 </label>
+                <div>
+                    Selected Times: {itinerary.availableTime.join(', ')}
+                </div>
                 <br />
-                <br />
-                <label>
-                    Accessibility:
-                    <select onChange={handleAccessibilityChange}>
-                        <option value="">Select Accessibility Option</option>
-                        {accessibilityOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                        ))}
-                    </select>
-                </label>
-                <br />
+                <label>Accessibility:</label>
+                <div>
+                    {accessibilityOptions.map(option => (
+                        <div key={option}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    value={option}
+                                    onChange={handleAccessibilityChange}
+                                />
+                                {option}
+                            </label>
+                        </div>
+                    ))}
+                    <div>
+                        <label>
+                            Custom Accessibility:
+                            <input
+                                type="text"
+                                value={customAccessibility}
+                                onChange={handleCustomAccessibilityChange}
+                            />
+                        </label>
+                        <button type="button" onClick={handleAddCustomAccessibility}>
+                            Add
+                        </button>
+                    </div>
+                    <div>
+                        Selected Accessibility: {itinerary.accessibility.join(', ')}
+                    </div>
+                </div>
                 <br />
                 <label>
                     Pickup Location:
@@ -138,8 +197,7 @@ const ItinerariesForm = () => {
                         required
                     />
                 </label>
-                <br />
-                <br />
+                <br /><br />
                 <label>
                     Dropoff Location:
                     <input
@@ -150,11 +208,9 @@ const ItinerariesForm = () => {
                         required
                     />
                 </label>
-                <br />
-                <br />
+                <br /><br />
                 <button type="submit">Create Itinerary</button>
             </form>
-
         </div>
     );
 };
