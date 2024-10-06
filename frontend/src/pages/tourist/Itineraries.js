@@ -54,10 +54,10 @@ const ItineraryPage = () => {
                 sortedItineraries.sort((a, b) => b.price - a.price);
                 break;
             case 'ratingAsc':
-                sortedItineraries.sort((a, b) => a.rating - b.rating);
+                sortedItineraries.sort((a, b) => a.averageRating - b.averageRating);
                 break;
             case 'ratingDesc':
-                sortedItineraries.sort((a, b) => b.rating - a.rating);
+                sortedItineraries.sort((a, b) => b.averageRating - a.averageRating);
                 break;
             default:
                 break;

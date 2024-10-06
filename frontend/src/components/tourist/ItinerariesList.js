@@ -13,7 +13,6 @@ const ItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             <strong>Rating:</strong> {itinerary.averageRating || 'N/A'}
                         </div>
-                        {/* Display individual ratings if available */}
                         {itinerary.ratings && itinerary.ratings.length > 0 ? (
                             <div className="list-item-attribute">
                                 <h3>Ratings & Reviews:</h3>
