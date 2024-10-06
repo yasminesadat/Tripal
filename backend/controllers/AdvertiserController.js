@@ -5,11 +5,24 @@ const userModel = require('../models/User.js')
 const createAdvertiser = async (req, res) => {
     try {
         const { userName, email, password, website, hotline, companyProfile } = req.body;
+        // if (!userName || !password || !email) {
+        //     return res.status(400).json({ error: "Missing required fields" });
+        //   }
+        const hashedPassword = await bcrypt.hash(req.body.password, 10); 
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const existingName = await advertiserModel.findOne({ userName });
+        if (existingName) {
+          return res.status(409).json({ error: "Username already exists" });
+        }
+
+        const existingEmail = await advertiserModel.findOne({ email });
+        if (existingEmail) {
+            return res.status(409).json({ error: "Email already exists" });
+        }
+
         const advertiser = await advertiserModel.create({
-            userName,
-            email,
+            userName: userName,
+            email: email,
             password: hashedPassword,
             website, 
             hotline, 
