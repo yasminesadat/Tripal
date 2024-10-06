@@ -39,9 +39,10 @@ const SignUpAllUsers = () => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
-    const formattedDateOfBirth = new Date(formData.dateOfBirth)
-      .toISOString()
-      .split("T")[0];
+
+   const formattedDateOfBirth = role === "tourist" 
+    ? new Date(formData.dateOfBirth).toISOString().split("T")[0] 
+    : formData.dateOfBirth;
 
     const commonUser = {
       userName: formData.userName,
