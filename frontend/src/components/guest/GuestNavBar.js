@@ -23,7 +23,7 @@ const GuestNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/tourguide">Tourguide</Link>  
         </div>
-        <div class="nav-bar-link">
+        <div class="nav-bar-link"></div>
         <Link to="/create-historicalPlace">Historical Places</Link>  
         </div>
       </div>
