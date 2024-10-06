@@ -3,8 +3,8 @@
 
 const historicalPlaceRoutes = [
 
- // { path: "/create-historicalPlace", element: <HistoricalPlaceForm /> },
- 
+  // { path: "/create-historicalPlace", element: <HistoricalPlaceForm /> },
+
 ];
 
 export default historicalPlaceRoutes;
