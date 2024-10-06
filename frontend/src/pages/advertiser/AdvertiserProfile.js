@@ -30,13 +30,16 @@ const AdvertiserProfile = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (!advertiser) return <p>Can't find advertiser...</p>;
 
-  const notProvidedStyle = { color: "red" };
+  const notProvidedStyle = { color: "#6c757d", 
+    fontStyle: "italic",};
   const addLinkStyle = {
-    color: "blue",
-    textDecoration: "underline",
-    cursor: "pointer",
-    border: "none",
-    background: "none",
+    color: "#0056b3",  // Darker blue for a professional look
+  textDecoration: "underline",
+  cursor: "pointer",
+  border: "none",
+  background: "none",
+  padding: 0,
+  marginLeft: "5px",
   };
   const headerStyle = { fontWeight: "bold" };
 
@@ -73,8 +76,10 @@ const AdvertiserProfile = () => {
     },
   ];
 
+  
+
   return (
-    <div>
+    <div className="tourist-profile">
       <h2>{advertiser.userName}'s Profile</h2>
       {fields.map((field, index) => (
         <p key={index}>
@@ -82,7 +87,7 @@ const AdvertiserProfile = () => {
           <br />
           {field.value ? (
             field.isLink ? (
-              <a href={field.value} target="_blank" rel="noopener noreferrer">
+              <a href={field.value} target="_blank" rel="noopener noreferrer" className="custom-link">
                 {field.value}
               </a>
             ) : (
