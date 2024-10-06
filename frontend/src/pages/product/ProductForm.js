@@ -1,4 +1,3 @@
-//form
 import { useState } from "react";
 import { Form, Input, Button, message, Upload, InputNumber } from "antd";
 import { createProduct, editProduct } from "../../api/ProductService";
@@ -13,20 +12,29 @@ const ProductForm = () => {
   const isCreate = id === undefined;
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const {
+    initialName,
+    initialPrice,
+    initialDescription,
+    initialQuantity,
+    initialPicture,
+  } = location.state || {};
+
   const [product, setProduct] = useState({
     name: null,
     sellerID: sellerId,
     price: null,
     description: null,
     quantity: null,
-    picture: null,
+    picture: isCreate ? null : initialPicture,
   });
 
   const [loading, setLoading] = useState(false); // State for loading
   const [buttonText, setButtonText] = useState(
     isCreate ? "Create Product" : "Update Product"
-  ); // State for button text
-  const [buttonType, setButtonType] = useState("primary"); // State for button type
+  );
 
   const handleInputChange = (e) => {
     if (e && e.target) {
@@ -94,10 +102,10 @@ const ProductForm = () => {
           !product.price &&
           !product.description &&
           !product.quantity &&
-          !product.picture
+          product.picture === initialPicture
         ) {
           message.error(
-            "At least one field must be filled to update the product."
+            "At least one field must be edited to update the product."
           );
           return;
         }
@@ -108,7 +116,7 @@ const ProductForm = () => {
         if (product.price) productData.price = product.price;
         if (product.description) productData.description = product.description;
         if (product.quantity) productData.quantity = product.quantity;
-        if (product.picture) {
+        if (product.picture !== initialPicture) {
           productData.picture = product.picture;
           productData.initalPicture = picture;
         }
@@ -145,6 +153,7 @@ const ProductForm = () => {
           <Input
             type="text"
             name="name"
+            defaultValue={initialName}
             value={product.name}
             onChange={handleInputChange}
             placeholder="Enter product name"
@@ -161,6 +170,7 @@ const ProductForm = () => {
           <InputNumber
             name="price"
             min={0}
+            defaultValue={initialPrice}
             value={product.price}
             onChange={(value) => handleNumberChange("price", value)}
             placeholder="Enter price"
@@ -181,6 +191,7 @@ const ProductForm = () => {
           <Input.TextArea
             type="text"
             name="description"
+            defaultValue={initialDescription}
             value={product.description}
             onChange={handleInputChange}
             placeholder="Enter product description"
@@ -200,6 +211,7 @@ const ProductForm = () => {
           <InputNumber
             name="quantity"
             min={0}
+            defaultValue={initialQuantity}
             value={product.quantity}
             onChange={(value) => handleNumberChange("quantity", value)}
             placeholder="Enter quantity"
@@ -242,7 +254,7 @@ const ProductForm = () => {
 
         <Form.Item>
           <Button
-            type={buttonType}
+            type="primary"
             htmlType="submit"
             style={{ width: "100%" }}
             loading={loading}
