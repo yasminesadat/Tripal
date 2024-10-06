@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, deleteActivity } from "../../api/ActivityService";
 import { Tag, Button, notification } from 'antd';
 
@@ -8,6 +8,8 @@ const AdvertiserActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -39,12 +41,31 @@ const AdvertiserActivitiesPage = () => {
     }
   };
 
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="advertiser-activities-page">
-      <h1>Your Activities</h1>
+      {/* Header and Button in a single row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+        <h1 style={{ margin: 0 }}>Your Activities</h1>
+        <Link to="/create-activity">
+          <Button 
+            type="primary" 
+            style={{ 
+              backgroundColor: "#86b9d0", 
+              color: "white", 
+              border: "none", 
+              padding: "10px 20px", 
+              fontSize: "16px", 
+              borderRadius: "5px"
+            }}
+          >
+            Create Activity
+          </Button>
+        </Link>
+      </div>
       <div className="list">
         {activities.map((activity) => (
           <div className="list-item" key={activity._id}>
@@ -55,7 +76,7 @@ const AdvertiserActivitiesPage = () => {
               <div className="list-item-attribute">Time: {activity.time}</div>
               <div className="list-item-attribute">Location: {activity.location}</div>
               <div className="list-item-attribute">Price: {activity.price}</div>
-              <div className="list-item-attribute">Category: {activity.category ? activity.category.name : "N/A"}</div>
+              <div className="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
               <div className="list-item-attribute">
                 Tags: {activity.tags.map((tag) => (
                   <Tag key={tag._id} color="geekblue">
@@ -81,6 +102,21 @@ const AdvertiserActivitiesPage = () => {
                   onClick={() => handleDeleteActivity(activity._id)}
               >
               Delete
+            </Button>
+            <Button 
+              type="default" 
+              style={{
+                backgroundColor: "#87CEEB", 
+                color: "white", 
+                border: "none", 
+                borderRadius: "5px", 
+                padding: "8px 12px",
+                cursor: "pointer",
+                marginRight: "10px" // Adds space between Update and Delete buttons
+              }}
+              onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })} // Redirects to the update page
+              >
+              Update
             </Button>
             </div>
           </div>

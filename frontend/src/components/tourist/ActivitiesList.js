@@ -13,7 +13,7 @@ const ActivitiesList = ({ activities }) => {
             <div className="list-item-attribute">Time: {activity.time}</div>
             <div className="list-item-attribute">Location: {activity.location}</div>
             <div className="list-item-attribute">Price: {activity.price}</div>
-            <div className="list-item-attribute">Category: {activity.category ? activity.category.name : "N/A"}</div>
+            <div className="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
             <div className="list-item-attribute">
               Tags: {activity.tags.map((tag) => (
                 <Tag key={tag._id} color="geekblue">
