@@ -21,6 +21,12 @@ const ProductForm = () => {
     picture: null,
   });
 
+  const [loading, setLoading] = useState(false); // State for loading
+  const [buttonText, setButtonText] = useState(
+    isCreate ? "Create Product" : "Update Product"
+  ); // State for button text
+  const [buttonType, setButtonType] = useState("primary"); // State for button type
+
   const handleInputChange = (e) => {
     if (e && e.target) {
       const { name, value } = e.target;
@@ -66,8 +72,10 @@ const ProductForm = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Set loading to true before form submission
     try {
       if (isCreate) {
+        setButtonText("Submitting...");
         const productData = {
           name: product.name,
           sellerID: product.sellerID,
@@ -78,6 +86,7 @@ const ProductForm = () => {
         };
         await createProduct(productData);
         message.success("Product created successfully");
+        setButtonText("Success!");
       } else {
         if (
           !product.name &&
@@ -91,6 +100,7 @@ const ProductForm = () => {
           );
           return;
         }
+        setButtonText("Submitting...");
         const picture = useLocation.state;
         let productData = {};
         if (product.name) productData.name = product.name;
@@ -103,14 +113,21 @@ const ProductForm = () => {
         }
         await editProduct(id, productData);
         message.success("Product updated successfully");
+        setButtonText("Success!");
       }
-      navigate("/view-products");
+      setTimeout(() => navigate("/view-products"), 1000);
     } catch (error) {
       message.error(
         `${
           isCreate ? "Error creating product: " : "Error updating product: "
         }` + error.message
       );
+      setButtonText("Failed");
+    } finally {
+      setLoading(false); // Set loading to false after form submission
+      setTimeout(() => {
+        setButtonText(isCreate ? "Create Product" : "Update Product");
+      }, 1000);
     }
   };
 
@@ -223,8 +240,13 @@ const ProductForm = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-            {isCreate ? "Create Product" : "Update Product"}
+          <Button
+            type={buttonType}
+            htmlType="submit"
+            style={{ width: "100%" }}
+            loading={loading}
+          >
+            {buttonText}
           </Button>
         </Form.Item>
       </Form>
