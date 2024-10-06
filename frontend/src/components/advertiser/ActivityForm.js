@@ -61,6 +61,14 @@ const ActivityForm = ({isUpdate}) => {
   
     fetchCategories();
     fetchTags();
+
+    if (isUpdate && existingActivity) {
+      setSelectedLocation(existingActivity.location || 'No location selected yet');
+      setMarkerPosition([
+        existingActivity.latitude || 51.505, // Default to London's latitude if not available
+        existingActivity.longitude || -0.09 // Default to London's longitude if not available
+      ]);
+    }
   
 
   }, []);
