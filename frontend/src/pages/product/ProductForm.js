@@ -1,21 +1,31 @@
+//form
 import { useState } from "react";
 import { Form, Input, Button, message, Upload, InputNumber } from "antd";
-import { createProduct } from "../../api/ProductService";
+import { createProduct, editProduct } from "../../api/ProductService";
 import { sellerId } from "../../IDs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import "./product.css";
 
 const ProductForm = () => {
+  const { id } = useParams();
+  const isCreate = id === undefined;
+
   const navigate = useNavigate();
   const [product, setProduct] = useState({
-    name: "",
+    name: null,
     sellerID: sellerId,
-    price: 0,
-    description: "",
-    quantity: 0,
+    price: null,
+    description: null,
+    quantity: null,
     picture: null,
   });
+
+  const [loading, setLoading] = useState(false); // State for loading
+  const [buttonText, setButtonText] = useState(
+    isCreate ? "Create Product" : "Update Product"
+  ); // State for button text
+  const [buttonType, setButtonType] = useState("primary"); // State for button type
 
   const handleInputChange = (e) => {
     if (e && e.target) {
@@ -62,21 +72,62 @@ const ProductForm = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Set loading to true before form submission
     try {
-      const productData = {
-        name: product.name,
-        sellerID: product.sellerID,
-        price: product.price,
-        description: product.description,
-        quantity: product.quantity,
-        picture: product.picture, // Picture is now a Base64 string
-      };
-
-      await createProduct(productData);
-      message.success("Product created successfully!");
-      navigate("/view-products");
+      if (isCreate) {
+        setButtonText("Submitting...");
+        const productData = {
+          name: product.name,
+          sellerID: product.sellerID,
+          price: product.price,
+          description: product.description,
+          quantity: product.quantity,
+          picture: product.picture, // Picture is now a Base64 string
+        };
+        await createProduct(productData);
+        message.success("Product created successfully");
+        setButtonText("Success!");
+      } else {
+        if (
+          !product.name &&
+          !product.price &&
+          !product.description &&
+          !product.quantity &&
+          !product.picture
+        ) {
+          message.error(
+            "At least one field must be filled to update the product."
+          );
+          return;
+        }
+        setButtonText("Submitting...");
+        const picture = useLocation.state;
+        let productData = {};
+        if (product.name) productData.name = product.name;
+        if (product.price) productData.price = product.price;
+        if (product.description) productData.description = product.description;
+        if (product.quantity) productData.quantity = product.quantity;
+        if (product.picture) {
+          productData.picture = product.picture;
+          productData.initalPicture = picture;
+        }
+        await editProduct(id, productData);
+        message.success("Product updated successfully");
+        setButtonText("Success!");
+      }
+      setTimeout(() => navigate("/view-products"), 1000);
     } catch (error) {
-      message.error("Error creating product: " + error.message);
+      message.error(
+        `${
+          isCreate ? "Error creating product: " : "Error updating product: "
+        }` + error.message
+      );
+      setButtonText("Failed");
+    } finally {
+      setLoading(false); // Set loading to false after form submission
+      setTimeout(() => {
+        setButtonText(isCreate ? "Create Product" : "Update Product");
+      }, 1000);
     }
   };
 
@@ -86,7 +137,9 @@ const ProductForm = () => {
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: "Please enter the product name" }]}
+          rules={[
+            { required: isCreate, message: "Please enter the product name" },
+          ]}
         >
           <Input
             type="text"
@@ -101,7 +154,7 @@ const ProductForm = () => {
           label="Price"
           name="price"
           rules={[
-            { required: true, message: "Please enter the product price" },
+            { required: isCreate, message: "Please enter the product price" },
           ]}
         >
           <InputNumber
@@ -118,10 +171,13 @@ const ProductForm = () => {
           label="Description"
           name="description"
           rules={[
-            { required: true, message: "Please enter the product description" },
+            {
+              required: isCreate,
+              message: "Please input the product description!",
+            },
           ]}
         >
-          <Input
+          <Input.TextArea
             type="text"
             name="description"
             value={product.description}
@@ -134,7 +190,10 @@ const ProductForm = () => {
           label="Quantity"
           name="quantity"
           rules={[
-            { required: true, message: "Please enter the product quantity" },
+            {
+              required: isCreate,
+              message: "Please enter the product quantity",
+            },
           ]}
         >
           <InputNumber
@@ -151,7 +210,7 @@ const ProductForm = () => {
           label="Picture"
           name="picture"
           rules={[
-            { required: true, message: "Please upload a product picture" },
+            { required: isCreate, message: "Please upload a product picture" },
           ]}
         >
           <Upload
@@ -181,8 +240,13 @@ const ProductForm = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-            Create Product
+          <Button
+            type={buttonType}
+            htmlType="submit"
+            style={{ width: "100%" }}
+            loading={loading}
+          >
+            {buttonText}
           </Button>
         </Form.Item>
       </Form>
