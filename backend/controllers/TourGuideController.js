@@ -31,7 +31,7 @@ const createTourGuide = async (req, res) => {
             userID: id,
             role: "TourGuide"
         })
-        res.status(200).json(tourGuide);
+        res.status(201).json(tourGuide);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

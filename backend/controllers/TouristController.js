@@ -126,7 +126,7 @@ const createTourist = async (req, res) => {
 
     await walletModel.create({ userID: id });
 
-    return res.status(200).json(tourist);
+    return res.status(201).json(tourist);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

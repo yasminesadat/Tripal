@@ -30,7 +30,7 @@ const createSeller = async (req, res) => {
             userID: id,
             role: "Seller"
         })
-        res.status(200).json(sellernew);
+        res.status(201).json(sellernew);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
