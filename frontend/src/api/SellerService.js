@@ -1,31 +1,28 @@
-import axios from "axios";
-
-const baseURL = 'http://localhost:5050/api/seller'; 
-
-export const createSeller = async (newSeller) => {
+import { axios } from "./axios";
+const path = '/seller'
+export async function createSeller(newUser) {
   try {
-    const response = await axios.post(`${baseURL}`, newSeller);
-    return response.data;
+    await axios.post(path, newUser);
   } catch (error) {
     throw error;
   }
-};
+}
+export const updateSeller = (id, data) => {
+  axios.put(`${path}/${id}`, data)
+    .then((result) => {
+      return result;
+    })
+    .catch(err => {
+      throw err;
+    })
+}
 
-export const getSellerDetails = async (id) => {
-  try {
-    const response = await axios.get(`${baseURL}/${id}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-export const updateSeller = async (id, updatedData) => {
-  try {
-    const response = await axios.put(`${baseURL}/${id}`, updatedData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+export const getSellerDetails = (id) => {
+  axios.get(`${path}/${id}`)
+    .then((result) => {
+      return result;
+    })
+    .catch(err => {
+      throw err;
+    })
+}
