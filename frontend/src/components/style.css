@@ -83,6 +83,7 @@ a:hover {
     flex-direction: column;
     border-radius: 10px;
     background-color: lightblue;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .list-item-header {
@@ -91,6 +92,7 @@ a:hover {
     padding: 1%;
     background-color: rgb(44, 44, 169);
     color: azure;
+    font-size: 1.5em;
 }
 
 .list-item-attributes {
@@ -98,20 +100,29 @@ a:hover {
 }
 
 .list-item-attribute{
-
+    /* margin: 5px 0; */
+    /* font-weight: 700; */
 }
 
 .list-item-attribute-sublist{
     display: flex;
     flex-direction: column;
-}
-
-.list-item-attribute-sublist-header{
-    font-size: 20px;
+    margin-left: 20px;
+    font-weight: 600;
 }
 
 .list-item-attribute-sublist-component{
+    /* margin: 5px 0; */
+}
 
+.list-item-attribute strong {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.list-item-attribute-sublist strong {
+    font-weight: 640;
+    font-size: 1.2rem;
 }
 
 .tourist-profile {
