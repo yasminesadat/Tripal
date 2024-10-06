@@ -1,7 +1,9 @@
 import TourguideItineraries from "../pages/tourguide/TourguideItineraries";
+import TourguideHome from "../pages/tourguide/TourguideHome";
 
 const TourguideRoutes = [
-    {path: "/tour-guide-itineraries", element: <TourguideItineraries />},
+    {path: "/tourguide", element: <TourguideHome />},
+    {path: "/tourguide-itineraries", element: <TourguideItineraries />},
 ];
 
 export default TourguideRoutes;

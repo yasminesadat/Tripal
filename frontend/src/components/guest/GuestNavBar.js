@@ -21,10 +21,7 @@ const GuestNavBar = () => {
           <Link to="/tourist">Tourist</Link>  
         </div>
         <div class="nav-bar-link">
-          <Link to="/tourist">Tourguide</Link>  
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/tour-guide-itineraries">Itineraries</Link>
+          <Link to="/tourguide">Tourguide</Link>  
         </div>
       </div>
     </nav>
