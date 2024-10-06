@@ -8,7 +8,7 @@ const { TextArea } = Input;
 
 const ActivityForm = () => {
   const [activityData, setActivityData] = useState({
-    advertiser: '66fdd5beb6a46aa09c57e0d9',
+    advertiser: '6701cb215e553adca0a5c62a',
     title: '',
     description: '',
     date: '',
