@@ -2,9 +2,10 @@ import { axios } from "./axios";
 
 export async function createAdvertiser(newUser) {
   try {
-    await axios.post("/advertiser", newUser);
+    const response = await axios.post("/advertiser", newUser);
+    return response.data;
   } catch (error) {
-    throw error;
+    throw new Error(error.response?.data?.message || "An error occurred while creating the advertiser.");
   }
 }
 export async function getAdvertiser(id) {

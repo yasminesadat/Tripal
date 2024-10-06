@@ -1,5 +1,5 @@
-import AdvertiserProfile from "../pages/AdvertiserProfile";
-import AdvertiserForm from "../pages/AdvertiserProfileForm"; 
+import AdvertiserProfile from "../pages/advertiser/AdvertiserProfile";
+import AdvertiserForm from "../pages/advertiser/AdvertiserProfileForm"; 
 
 const advertiserRoutes = [
   { path: "/advertiser/:id", element: <AdvertiserProfile /> }, // View

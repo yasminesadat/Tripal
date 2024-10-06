@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const colors = require("colors");
 
 require("dotenv").config();
@@ -15,6 +16,10 @@ const port = process.env.PORT || "5050";
 const routes = require("./routes/index");
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+
+// Increase payload size limit
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // configurations
 // Mongo DB

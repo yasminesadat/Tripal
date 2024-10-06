@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { createSeller } from "../api/SellerService";
-import { createTourGuide } from "../api/TourGuideService";
-import { createAdvertiser } from "../api/AdvertiserService";
+import { createSeller } from "../../api/SellerService";
+import { createTourGuide } from "../../api/TourGuideService";
+import { createAdvertiser } from "../../api/AdvertiserService";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({

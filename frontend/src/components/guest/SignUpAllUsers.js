@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { createSeller } from "../api/SellerService";
-import { createTourGuide } from "../api/TourGuideService";
-import { createAdvertiser } from "../api/AdvertiserService";
-import { createTourist } from "../api/TouristService";
-import { nationalities } from "../assets/Nationalities";
+import { createSeller } from "../../api/SellerService";
+import { createTourGuide } from "../../api/TourGuideService";
+import { createAdvertiser } from "../../api/AdvertiserService";
+import { createTourist } from "../../api/TouristService";
+import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
 
 const SignUpAllUsers = () => {

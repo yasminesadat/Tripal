@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Card, Rate } from "antd";
 import { useNavigate } from "react-router-dom";
-import "../pages/product/product.css";
+import "../../pages/product/product.css";
 
 const { Meta } = Card;
 
@@ -30,7 +30,7 @@ const ProductCard = ({
 
   const handleEditClick = () => {
     navigate(`/edit-product/${id}`, {
-      state: { price, description },
+      state: { picture },
     });
   };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/ItinerariesList';
-import ItinerarySearch from '../../components/ItinerarySearch';
-// import ItineraryFilter from '../../components/ItineraryFilter';
-import ItinerarySort from '../../components/ItinerarySort';
+import ItinerariesList from '../../components/tourist/ItinerariesList';
+import ItinerarySearch from '../../components/tourist/ItinerarySearch';
+// import ItineraryFilter from '../../components/tourist/ItineraryFilter';
+import ItinerarySort from '../../components/tourist/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
 
 const ItineraryPage = () => {
@@ -44,7 +44,7 @@ const ItineraryPage = () => {
 
     const handleSort = (sortOption) => {
         let sortedItineraries = [...filteredItineraries];
-
+    
         switch (sortOption) {
             case 'priceAsc':
                 sortedItineraries.sort((a, b) => a.price - b.price);
@@ -53,15 +53,15 @@ const ItineraryPage = () => {
                 sortedItineraries.sort((a, b) => b.price - a.price);
                 break;
             case 'ratingAsc':
-                // Placeholder for future implementation
+                sortedItineraries.sort((a, b) => a.averageRating - b.averageRating);
                 break;
             case 'ratingDesc':
-                // Placeholder for future implementation
+                sortedItineraries.sort((a, b) => b.averageRating - a.averageRating);
                 break;
             default:
                 break;
         }
-
+    
         setFilteredItineraries(sortedItineraries);
     };
 
