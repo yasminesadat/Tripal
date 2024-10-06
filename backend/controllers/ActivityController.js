@@ -14,6 +14,8 @@ const createActivity = async (req, res) => {
     date,
     time,
     location,
+    latitude,
+    longitude,
     price,
     category: categoryId,
     tags: tagIds,
@@ -52,6 +54,8 @@ const createActivity = async (req, res) => {
       date,
       time,
       location,
+      latitude,
+      longitude,
       price,
       category: category._id, // Use the ObjectId of the category
       tags: tagIds, // Use ObjectIds for tags

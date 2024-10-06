@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import LocationMap from '../MapComponent'; // Import the LocationMap component
+import { Form, Input, Button, Select, Checkbox, DatePicker, TimePicker, InputNumber, message } from 'antd';
+
+
+const { TextArea } = Input;
 
 const ActivityForm = () => {
   const [activityData, setActivityData] = useState({
@@ -8,17 +13,17 @@ const ActivityForm = () => {
     description: '',
     date: '',
     time: '',
-    location: '',
     price: 0,
     category: '',
     tags: [],
     specialDiscounts: '',
-    isBookingOpen: false
+    isBookingOpen: false,
   });
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
-
+  const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); // Default position (London)
+  const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,7 +31,7 @@ const ActivityForm = () => {
         const response = await axios.get('http://localhost:5050/api/activityCategories');
         setCategories(response.data);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       }
     };
 
@@ -35,7 +40,7 @@ const ActivityForm = () => {
         const response = await axios.get('http://localhost:5050/api/pref-tags');
         setTags(response.data);
       } catch (error) {
-        console.error("Error fetching tags:", error);
+        console.error('Error fetching tags:', error);
       }
     };
 
@@ -43,101 +48,157 @@ const ActivityForm = () => {
     fetchTags();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    
+  const handleChange = (name, value) => {
     setActivityData({
       ...activityData,
-      price: Number(activityData.price),
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value,
     });
-    console.log(activityData)
   };
 
-  const handleTagChange = (e) => {
-    const selectedTags = Array.from(e.target.selectedOptions, (option) => option.value);
-    setActivityData({ ...activityData, tags: selectedTags });
+  const handleTagChange = (value) => {
+    setActivityData({ ...activityData, tags: value });
   };
 
-  const handleSubmit = async (e) => {
-    debugger
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
-      
-      const response = await axios.post('http://localhost:5050/api/activities', activityData);
-      console.log("Activity created:", response.data);
+      const response = await axios.post('http://localhost:5050/api/activities', {
+        ...activityData,
+        location: selectedLocation, // Store the location string
+        latitude: markerPosition[0], // Send the latitude
+        longitude: markerPosition[1], // Send the longitude
+      });
+
+      // Show success message
+      message.success('Activity created successfully!');
+      console.log('Activity created:', response.data);
     } catch (error) {
-      console.error("Error creating activity:", error);
+      console.error('Error creating activity:', error);
+      message.error('Failed to create activity.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Title:</label>
-        <input type="text" name="title" value={activityData.title} onChange={handleChange} required />
-      </div>
+    <Form
+      layout="vertical"
+      onFinish={handleSubmit}
+      style={{ maxWidth: '600px', margin: 'auto', padding: '20px', border: '1px solid #f0f0f0', borderRadius: '10px' }}
+    >
+      <Form.Item label="Title" required>
+        <Input
+          value={activityData.title}
+          onChange={(e) => handleChange('title', e.target.value)}
+          placeholder="Enter activity title"
+          required
+        />
+      </Form.Item>
 
-      <div>
-        <label>Description:</label>
-        <textarea name="description" value={activityData.description} onChange={handleChange} required />
-      </div>
+      <Form.Item label="Description" required>
+        <TextArea
+          value={activityData.description}
+          onChange={(e) => handleChange('description', e.target.value)}
+          placeholder="Enter activity description"
+          required
+        />
+      </Form.Item>
 
-      <div>
-        <label>Date:</label>
-        <input type="date" name="date" value={activityData.date} onChange={handleChange} required />
-      </div>
+      <Form.Item label="Date" required>
+        <input
+          type="date"
+          name="date"
+          value={activityData.date}
+          onChange={(e) => handleChange(e.target.name, e.target.value)}
+          required
+        />
+      </Form.Item>
 
-      <div>
-        <label>Time:</label>
-        <input type="time" name="time" value={activityData.time} onChange={handleChange} required />
-      </div>
+      <Form.Item label="Time" required>
+        <input
+          type="time"
+          name="time"
+          value={activityData.time}
+          onChange={(e) => handleChange(e.target.name, e.target.value)}
+          required
+        />
+      </Form.Item>
 
-      <div>
-        <label>Location:</label>
-        <input type="text" name="location" value={activityData.location} onChange={handleChange} required />
-      </div>
 
-      <div>
-        <label>Price:</label>
-        <input type="number" name="price" value={activityData.price} onChange={handleChange} required />
-      </div>
+      <Form.Item label="Price" required>
+        <InputNumber
+          value={activityData.price}
+          onChange={(value) => handleChange('price', value)}
+          min={0}
+          style={{ width: '100%' }}
+          required
+        />
+      </Form.Item>
 
-      <div>
-        <label>Category:</label>
-        <select name="category" value={activityData.category} onChange={handleChange} required>
-          <option value="">Select Category</option>
+      <Form.Item label="Category" required>
+        <Select
+          value={activityData.category}
+          onChange={(value) => handleChange('category', value)}
+          placeholder="Select category"
+          required
+        >
           {categories.map((category) => (
-            <option key={category._id} value={category._id}>
+            <Select.Option key={category._id} value={category._id}>
               {category.Name}
-            </option>
+            </Select.Option>
           ))}
-        </select>
-      </div>
+        </Select>
+      </Form.Item>
 
-      <div>
-        <label>Tags:</label>
-        <select name="tags" multiple onChange={handleTagChange} required>
+      <Form.Item label="Tags" required>
+        <Select
+          mode="multiple"
+          value={activityData.tags}
+          onChange={handleTagChange}
+          placeholder="Select tags"
+        >
           {tags.map((tag) => (
-            <option key={tag._id} value={tag._id}>
+            <Select.Option key={tag._id} value={tag._id}>
               {tag.name}
-            </option>
+            </Select.Option>
           ))}
-        </select>
-      </div>
+        </Select>
+      </Form.Item>
 
-      <div>
-        <label>Special Discounts:</label>
-        <input type="text" name="specialDiscounts" value={activityData.specialDiscounts} onChange={handleChange} />
-      </div>
+      <Form.Item label="Special Discounts">
+        <Input
+          value={activityData.specialDiscounts}
+          onChange={(e) => handleChange('specialDiscounts', e.target.value)}
+          placeholder="Enter special discounts (if any)"
+        />
+      </Form.Item>
 
-      <div>
-        <label>Booking Open:</label>
-        <input type="checkbox" name="isBookingOpen" checked={activityData.isBookingOpen} onChange={handleChange} />
-      </div>
+      <Form.Item label="Booking Open">
+        <Checkbox
+          checked={activityData.isBookingOpen}
+          onChange={(e) => handleChange('isBookingOpen', e.target.checked)}
+          required
+        >
+          Is Booking Open?
+        </Checkbox>
+      </Form.Item>
 
-      <button type="submit">Create Activity</button>
-    </form>
+      {/* Map Component */}
+      <Form.Item label="Location (click on map to select)">
+        <LocationMap
+          markerPosition={markerPosition}
+          setMarkerPosition={setMarkerPosition}
+          setSelectedLocation={setSelectedLocation}
+          required
+        />
+        <div style={{ marginTop: '10px' }}>
+          <strong>Selected Location:</strong> {selectedLocation || 'No location selected yet'}
+        </div>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" block>
+          Create Activity
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
