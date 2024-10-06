@@ -2,15 +2,32 @@ import React from 'react';
 
 const ItinerariesList = ({ itineraries }) => {
     return (
-        <div class="list">
+        <div className="list">
             {itineraries.map(itinerary => (
                 <div className="list-item" key={itinerary._id}>
                     <div className="list-item-header">{itinerary.title}</div>
                     <div className="list-item-attributes">
                         <div className="list-item-attribute">{itinerary.description}</div>
                         <div className="list-item-attribute">Rating: {itinerary.averageRating || 'N/A'}</div>
-                        {/* <div className="list-item-attribute">Tour Guide ID: {itinerary.tourGuide}</div> */}
                         
+                        {/* Display individual ratings if available */}
+                        {itinerary.ratings && itinerary.ratings.length > 0 ? (
+                            <div className="list-item-attribute">
+                                <h3>Ratings & Reviews:</h3>
+                                <ul>
+                                    {itinerary.ratings.map((rating, index) => (
+                                        <li key={index}>
+                                            <p><strong>Rating:</strong> {rating.rating} / 5</p>
+                                            <p><strong>Review:</strong> {rating.review}</p>
+                                            <p><strong>By User ID:</strong> {rating.userID}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : (
+                            <div className="list-item-attribute">No ratings yet.</div>
+                        )}
+
                         <h3>Activities:</h3>
                         <ul>
                             {itinerary.activities.map(activity => (
@@ -28,7 +45,7 @@ const ItinerariesList = ({ itineraries }) => {
                         
                         <h3>Locations:</h3>
                         <div className="list-item-attribute">{itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}</div>
-
+                            
                         <h3>Timeline:</h3>
                         <ul>
                             {itinerary.timeline.map((entry, index) => (
@@ -51,7 +68,7 @@ const ItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
                         </div>
-                        <div class="list-item-attribute-sublist">
+                        <div className="list-item-attribute-sublist">
                             <h3>Accessibility:</h3>
                             <div className="list-item-attribute-sublist-component">
                                 {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}
@@ -60,9 +77,6 @@ const ItinerariesList = ({ itineraries }) => {
 
                         <div className="list-item-attribute">Pickup Location: {itinerary.pickupLocation}</div>
                         <div className="list-item-attribute">Dropoff Location: {itinerary.dropoffLocation}</div>
-
-                        {/* <h3>Itinerary Tags:</h3>
-                        <div className="list-item-attribute">{itinerary.tags.length > 0 ? itinerary.tags.map(tag => tag.name).join(', ') : 'N/A'}</div> */}
                     </div>
                 </div>
             ))}
