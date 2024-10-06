@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, deleteActivity } from "../../api/ActivityService";
 import { Tag, Button, notification } from 'antd';
+import ActivitiesList from "../../components/tourist/ActivitiesList.js";
+import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
 
 const AdvertiserActivitiesPage = () => {
-  const { id } = useParams(); // Get advertiserId from the URL params
+  const { id } = useParams(); 
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,24 +49,10 @@ const AdvertiserActivitiesPage = () => {
 
   return (
     <div className="advertiser-activities-page">
+      <AdvertiserNavBar />
       {/* Header and Button in a single row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
         <h1 style={{ margin: 0 }}>Your Activities</h1>
-        <Link to="/create-activity">
-          <Button 
-            type="primary" 
-            style={{ 
-              backgroundColor: "#86b9d0", 
-              color: "white", 
-              border: "none", 
-              padding: "10px 20px", 
-              fontSize: "16px", 
-              borderRadius: "5px"
-            }}
-          >
-            Create Activity
-          </Button>
-        </Link>
       </div>
       <div className="list">
         {activities.map((activity) => (

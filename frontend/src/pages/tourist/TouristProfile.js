@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import TouristProfile from "../../components/tourist/TouristProfile";
 import { getTouristInformation } from "../../api/TouristService";
+import TouristNavBar from "../../components/tourist/TouristNavBar";
+
 const TouristHomePage = () => {
   const [profileInformation, setProfileInformation] = useState([]);
 
@@ -19,6 +21,7 @@ const TouristHomePage = () => {
 
   return (
     <div>
+      <TouristNavBar />
       <h1>Your Profile</h1>
       <TouristProfile tourist={profileInformation} />
       <button>Update Profile</button>

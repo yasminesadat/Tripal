@@ -6,6 +6,7 @@ import { sellerId } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import "./product.css";
+// import SellerNavBar from "../../components/seller/SellerNavBar";
 
 const ProductForm = () => {
   const { id } = useParams();

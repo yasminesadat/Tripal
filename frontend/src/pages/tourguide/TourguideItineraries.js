@@ -2,9 +2,8 @@ import {useState, useEffect} from 'react';
 import { getItineraries,deleteItinerary } from '../../api/ItineraryService';
 import { Empty, message} from "antd";
 import MyItinerariesList from '../../components/tourguide/MyItinerariesList.js';
-import ItinerariesForm from '../../components/tourguide/ItineraryForm.js';
-import UpdateItineraryForm from '../../components/tourguide/UpdateItineraryForm.js'; // Import the update form
-
+import UpdateItineraryForm from '../../components/tourguide/UpdateItineraryForm.js'; 
+import TourguideNavBar from "../../components/tourguide/TourguideNavBar";
 
 const tourGuide = "6700780a15fe2c9f96f1a96e";
 
@@ -42,8 +41,7 @@ const ItinerariesPage = () => {
     };
     return (
         <div style={{alignContent:'center', alignSelf:'center',}}>
-            <h1>Create your Itinerary</h1>
-            <ItinerariesForm />
+            <TourguideNavBar />
             <h1>My Itineraries</h1>
             {itineraries.length > 0 ? (
                 <MyItinerariesList itineraries={itineraries} onUpdate={handleUpdate} onDelete={handleDelete} />
