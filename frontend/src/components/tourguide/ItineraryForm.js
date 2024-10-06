@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
+import ActivitySelectionModal from './ActivitySelectionModal'; 
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
@@ -10,7 +11,7 @@ const ItinerariesForm = () => {
         title: '',
         description: '',
         tourGuide: '6700780a15fe2c9f96f1a96e',
-        activities: ["670000464e4bb1fd7e91b628"],
+        activities: [],//["670000464e4bb1fd7e91b628"]
         serviceFee: 0,
         language: '',
         availableDates: [],
@@ -74,7 +75,12 @@ const ItinerariesForm = () => {
             accessibility: prev.accessibility.filter(t => t !== tag) // Remove selected tag
         }));
     };
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
+
+    const handleSelectActivities = (selectedActivities) => {
+        setItinerary(prev => ({ ...prev, activities: selectedActivities }));
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -111,6 +117,19 @@ const ItinerariesForm = () => {
                     />
                 </label>
                 <br /><br />
+                <div><Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
+                 {/* <div>
+                  Selected Activities: <p>
+                    {itinerary.activities.join(', ')}         
+                    </p>
+                </div>*/}
+                    <ActivitySelectionModal
+                isVisible={isModalVisible}
+                onClose={() => setIsModalVisible(false)}
+                onSelectActivities={handleSelectActivities}
+            /></div>
+            <br/>
+                 <label>Select a Language</label>
                 <label>
                     <select 
                         name="language" 
