@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import LocationMap from '../MapComponent'; // Import the LocationMap component
+import LocationMap from '../MapComponent';
 import { Form, Input, Button, Select, Checkbox, DatePicker, TimePicker, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { updateActivity } from '../../api/ActivityService';

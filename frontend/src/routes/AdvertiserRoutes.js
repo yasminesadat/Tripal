@@ -3,6 +3,7 @@ import AdvertiserProfile from "../pages/advertiser/AdvertiserProfile";
 import AdvertiserForm from "../pages/advertiser/AdvertiserProfileForm"; 
 import CreateActivity from "../pages/advertiser/CreateActivity";
 import AdvertiserActivitiesPage from "../pages/advertiser/AdvertiserActivities"
+import ActivityForm from "../components/advertiser/ActivityForm"; 
 
 const advertiserRoutes = [
   { path: "/advertiser", element: <AdvertiserHome /> }, 
