@@ -15,7 +15,15 @@ export async function createActivity() {}
 
 export async function updateActivity() {}
 
-export async function deleteActivity() {}
+export async function deleteActivity(id) {
+  try {
+    const response = await axios.delete(`/activities/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't delete activity", error);
+    throw error;
+  }
+}
 
 export async function searchActivities() {
   try {
