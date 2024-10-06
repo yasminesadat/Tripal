@@ -118,7 +118,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <div><Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
-                 {/* <div>
+                 {/* leave this commented ill fix later <div>
                   Selected Activities: <p>
                     {itinerary.activities.join(', ')}         
                     </p>
