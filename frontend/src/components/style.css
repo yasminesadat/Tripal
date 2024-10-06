@@ -206,3 +206,13 @@ a:hover {
 .signUpUsersForm-success {
     color: green;
 }
+
+
+.custom-link {
+    color: #0056b3; 
+    text-decoration: none; 
+  }
+  
+  .custom-link:hover {
+    text-decoration: underline; 
+  }

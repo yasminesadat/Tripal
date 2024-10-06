@@ -88,36 +88,38 @@ const AdvertiserActivitiesPage = () => {
               <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
               <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
 
-              {/* Delete button for advertisers */}
-              <Button 
+                                    {/* Buttons container */}
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+                <Button 
+                  type="default" 
+                  style={{
+                    backgroundColor: "#003DA5", 
+                    color: "white", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    padding: "12px 20px",
+                    cursor: "pointer",
+                    marginRight: "10px" // Adds space between Update and Delete buttons
+                  }}
+                  onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })} // Redirects to the update page
+                >
+                  Update
+                </Button>
+                <Button 
                   type="danger" 
                   style={{
                     backgroundColor: "#f08080", 
                     color: "white", 
                     border: "none", 
                     borderRadius: "5px", 
-                    padding: "8px 12px",
+                    padding: "12px 20px",
                     cursor: "pointer"
                   }}
                   onClick={() => handleDeleteActivity(activity._id)}
-              >
-              Delete
-            </Button>
-            <Button 
-              type="default" 
-              style={{
-                backgroundColor: "#87CEEB", 
-                color: "white", 
-                border: "none", 
-                borderRadius: "5px", 
-                padding: "8px 12px",
-                cursor: "pointer",
-                marginRight: "10px" // Adds space between Update and Delete buttons
-              }}
-              onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })} // Redirects to the update page
-              >
-              Update
-            </Button>
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           </div>
         ))}
