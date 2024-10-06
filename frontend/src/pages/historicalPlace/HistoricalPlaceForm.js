@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import {CreateNewHistoricalPlace} from '../../api/HistoricalPlaceService';
+import {CreateNewHistoricalPlace} from '../../api/HistoricalPlaceService';
 import { toast } from 'react-toastify';
 import { Form, Input,Select, Button, message, Upload, InputNumber,TimePicker } from "antd";
 import Maps from '../../components/HistPlaceMap/Maps';
@@ -31,6 +32,29 @@ function HistoricalPlaceForm(){
      const [loading,setLoading]=useState(false);
      const [tagsOptions,setTagsOption]=useState([]);
      const [periodTagsOptions,setPeriodTagsOption]=useState([]);
+     
+    useEffect(() => {
+    const getHistoricalTags = async () => {
+      setLoading(true);
+      const productsData = await fet();
+      if (productsData) {
+        setProducts(productsData);
+        setFilteredProducts(productsData);
+      }
+      setLoading(false);
+    };
+    const getHistoricalPeriods = async () => {
+        setLoading(true);
+        const productsData = await fetchProducts();
+        if (productsData) {
+          setProducts(productsData);
+          setFilteredProducts(productsData);
+        }
+        setLoading(false);
+      };
+
+    getProducts();
+  }, []);
 
   
 
