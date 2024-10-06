@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Card, Rate } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../pages/product/product.css";
@@ -18,64 +14,57 @@ const ProductCard = ({
   description,
   quantity,
   picture,
-  rating,
+  ratings,
+  averageRating
 }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/product/${id}`, {
-      state: { name, seller, price, description, quantity, picture, rating },
+      state: { name, seller, price, description, quantity, picture, ratings, averageRating },
     });
   };
-
-  const handleEditClick = () => {
+  
+  const handleEditClick = (e) => {
     navigate(`/edit-product/${id}`, {
       state: { picture },
     });
   };
 
+  const descriptionLength = description.length;
+    const formattedDescription = (
+    <div style={{ flexDirection: 'column' }}>
+      {description}
+      {descriptionLength <= 30 && <div style={{ height: '20px' }} />} 
+    </div>
+  );
+
   return (
     <Card
       className="product-card"
       cover={
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "200px",
-            overflow: "hidden",
-            marginBottom: "-20px",
-          }}
-        >
+        <div className="product-card-image-container">
           <img
             alt={name}
             src={picture}
             onClick={handleCardClick}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-            }}
+            className="product-card-image"
           />
         </div>
       }
       actions={[
-        <SettingOutlined key="setting" />,
         <EditOutlined key="edit" onClick={handleEditClick} />,
-        <EllipsisOutlined key="ellipsis" />,
+        <EllipsisOutlined key="ellipsis" onClick={handleCardClick}/>,
       ]}
     >
       <Meta
         title={`${name} - $${price}`}
-        description={description}
+        description={formattedDescription} 
         onClick={handleCardClick}
       />
-      <div
-        style={{ marginTop: "20px", textAlign: "center" }}
-        onClick={handleCardClick}
-      >
-        <Rate value={rating} disabled allowHalf />
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <Rate value={averageRating} disabled allowHalf />
+        <span style={{marginLeft:'5%', marginBottom:'5%', color:"gray"}}>({averageRating})</span>
       </div>
     </Card>
   );

@@ -42,7 +42,13 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find().populate("seller").populate("ratings");
+  const products = await Product.find().populate("seller").populate({
+    path: 'ratings',
+    populate: {
+      path: 'userID', // Populating the userID field
+      select: 'userName' // Select only the userName field (or add more if needed)
+    }
+  });
   res.status(200).json(products);
 });
 

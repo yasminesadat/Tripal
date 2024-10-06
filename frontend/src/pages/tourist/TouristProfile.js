@@ -19,7 +19,7 @@ const TouristHomePage = () => {
 
   return (
     <div>
-      <h1>Welcome to your tourist home page</h1>
+      <h1>Your Profile</h1>
       <TouristProfile tourist={profileInformation} />
       <button>Update Profile</button>
     </div>

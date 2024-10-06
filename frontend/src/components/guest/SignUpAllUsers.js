@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Form, Input, Button, Select, DatePicker, Radio, message } from "antd";
+import moment from "moment";
 import { createSeller } from "../../api/SellerService";
 import { createTourGuide } from "../../api/TourGuideService";
 import { createAdvertiser } from "../../api/AdvertiserService";
@@ -6,9 +8,10 @@ import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
 
+const { Option } = Select;
+
 const SignUpAllUsers = () => {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -20,11 +23,9 @@ const SignUpAllUsers = () => {
   });
 
   const [role, setRole] = useState("seller");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [form] = Form.useForm();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (name, value) => {
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -33,20 +34,18 @@ const SignUpAllUsers = () => {
 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
+    form.resetFields();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
-    const formattedDateOfBirth = new Date(formData.dateOfBirth)
-      .toISOString()
-      .split("T")[0];
+  const handleSubmit = async (values) => {
+    const formattedDateOfBirth = role === "tourist"
+      ? new Date(values.dateOfBirth).toISOString().split("T")[0]
+      : values.dateOfBirth;
 
     const commonUser = {
-      userName: formData.userName,
-      email: formData.email,
-      password: formData.password,
+      userName: values.userName,
+      email: values.email,
+      password: values.password,
     };
 
     let newUser;
@@ -54,10 +53,10 @@ const SignUpAllUsers = () => {
     if (role === "tourist") {
       newUser = {
         ...commonUser,
-        mobileNumber: formData.mobileNumber,
-        nationality: formData.nationality,
+        mobileNumber: values.mobileNumber,
+        nationality: values.nationality,
         dateOfBirth: formattedDateOfBirth,
-        job: formData.job,
+        job: values.job,
       };
     } else {
       newUser = commonUser;
@@ -73,164 +72,127 @@ const SignUpAllUsers = () => {
       } else if (role === "tourist") {
         await createTourist(newUser);
       }
-      setSuccess(true);
+      message.success("Sign up successful!");
       if (role === "tourist") {
         navigate("/tourist-home");
       }
     } catch (err) {
-      setError(err.message);
+      message.error(err.response.data.error);
     }
   };
 
   return (
     <div className="signUpUsersForm-container">
       <h2 className="signUpUsersForm-title">Sign Up</h2>
-      {error && <p className="signUpUsersForm-error">{error.message}</p>}
-      {success && <p className="signUpUsersForm-success">Sign up successful!</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label className="signUpUsersForm-label" htmlFor="userName">User Name:</label>
-          <input
-            className="signUpUsersForm-input"
-            type="text"
-            id="userName"
-            name="userName"
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form.Item
+          label="Username"
+          name="userName"
+          rules={[{ required: true, message: "Please enter your user name" }]}
+        >
+          <Input
             value={formData.userName}
-            onChange={handleChange}
-            required
+            onChange={(e) => handleChange("userName", e.target.value)}
           />
-        </div>
-        <div>
-          <label className="signUpUsersForm-label" htmlFor="email">Email:</label>
-          <input
-            className="signUpUsersForm-input"
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label className="signUpUsersForm-label" htmlFor="password">Password:</label>
-          <input
-            className="signUpUsersForm-input"
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        </Form.Item>
 
-        <div>
-          <label className="signUpUsersForm-label">
-            <input
-              className="signUpUsersForm-radio"
-              type="radio"
-              name="role"
-              value="seller"
-              checked={role === "seller"}
-              onChange={handleRoleChange}
-            />
-            Seller
-          </label>
-          <label className="signUpUsersForm-label">
-            <input
-              className="signUpUsersForm-radio"
-              type="radio"
-              name="role"
-              value="tour-guide"
-              checked={role === "tour-guide"}
-              onChange={handleRoleChange}
-            />
-            Tour Guide
-          </label>
-          <label className="signUpUsersForm-label">
-            <input
-              className="signUpUsersForm-radio"
-              type="radio"
-              name="role"
-              value="advertiser"
-              checked={role === "advertiser"}
-              onChange={handleRoleChange}
-            />
-            Advertiser
-          </label>
-          <label className="signUpUsersForm-label">
-            <input
-              className="signUpUsersForm-radio"
-              type="radio"
-              name="role"
-              value="tourist"
-              checked={role === "tourist"}
-              onChange={handleRoleChange}
-            />
-            Tourist
-          </label>
-        </div>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: "Please enter your email" },
+            { type: "email", message: "Please enter a valid email address" },
+          ]}
+        >
+          <Input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            { required: true, message: "Please enter your password" },
+            { min: 6, message: "Password must be at least 6 characters" },
+          ]}
+        >
+          <Input.Password
+            value={formData.password}
+            onChange={(e) => handleChange("password", e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Role">
+          <Radio.Group onChange={handleRoleChange} value={role}>
+            <Radio value="seller">Seller</Radio>
+            <Radio value="tour-guide">Tour Guide</Radio>
+            <Radio value="advertiser">Advertiser</Radio>
+            <Radio value="tourist">Tourist</Radio>
+          </Radio.Group>
+        </Form.Item>
 
         {role === "tourist" && (
           <>
-            <div>
-              <label className="signUpUsersForm-label" htmlFor="mobileNumber">Mobile Number:</label>
-              <input
-                className="signUpUsersForm-input"
+            <Form.Item
+              label="Mobile Number"
+              name="mobileNumber"
+              rules={[{ required: true, message: "Please enter your mobile number" }]}
+            >
+              <Input
                 type="tel"
-                id="mobileNumber"
-                name="mobileNumber"
                 value={formData.mobileNumber}
-                onChange={handleChange}
-                required
+                onChange={(e) => handleChange("mobileNumber", e.target.value)}
               />
-            </div>
-            <div>
-              <label className="signUpUsersForm-label" htmlFor="nationality">Nationality:</label>
-              <select
-                className="signUpUsersForm-select"
-                id="nationality"
-                name="nationality"
+            </Form.Item>
+            <Form.Item
+              label="Nationality"
+              name="nationality"
+              rules={[{ required: true, message: "Please select your nationality" }]}
+            >
+              <Select
                 value={formData.nationality}
-                onChange={handleChange}
-                required
+                onChange={(value) => handleChange("nationality", value)}
               >
-                <option value="">Select Nationality</option>
+                <Option value="">Select Nationality</Option>
                 {nationalities.map((nationality, index) => (
-                  <option key={index} value={nationality}>
+                  <Option key={index} value={nationality}>
                     {nationality}
-                  </option>
+                  </Option>
                 ))}
-              </select>
-            </div>
-            <div>
-              <label className="signUpUsersForm-label">Date of Birth</label>
-              <input
-                className="signUpUsersForm-input"
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                required
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Date of Birth"
+              name="dateOfBirth"
+              rules={[{ required: true, message: "Please select your date of birth" }]}
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                value={formData.dateOfBirth ? moment(formData.dateOfBirth) : null}
+                onChange={(date, dateString) => handleChange("dateOfBirth", dateString)}
               />
-            </div>
-            <div>
-              <label className="signUpUsersForm-label" htmlFor="job">Job</label>
-              <input
-                className="signUpUsersForm-input"
-                type="text"
-                id="job"
-                name="job"
+            </Form.Item>
+            <Form.Item
+              label="Job"
+              name="job"
+              rules={[{ required: true, message: "Please enter your job" }]}
+            >
+              <Input
                 value={formData.job}
-                onChange={handleChange}
-                required
+                onChange={(e) => handleChange("job", e.target.value)}
               />
-            </div>
+            </Form.Item>
           </>
         )}
-        <button className="signUpUsersForm-button" type="submit">Sign Up</button>
-      </form>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+            Sign Up
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

@@ -1,43 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NavigationBar = () => {
+const GuestNavBar = () => {
   return (
     <nav>
-      <div class="home-nav-bar">
+      <div class="nav-bar">
         <div class="nav-bar-link">
           <Link to="/">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/admin">Admin Dashboard</Link>
+          <Link to="/admin">Admin</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/preference-tags">Manage Preference Tags</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/view-products">View Products</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/upcoming-activities">View Upcoming Activities</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/historical-places">View Historical Places</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/itineraries">View Itineraries</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/adminActivityCategories">Activity Categories</Link>
-        </div>
-        <div class="nav-bar-link">
-          <Link to="/tour-guide-itineraries">Itineraries</Link>
+          <Link to="/advertiser">Advertiser</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/seller">Seller</Link>  
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/tourist">Tourist</Link>  
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/tourguide">Tourguide</Link>  
         </div>
       </div>
     </nav>
   );
 };
 
-export default NavigationBar;
+export default GuestNavBar;

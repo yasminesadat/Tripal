@@ -58,20 +58,16 @@ const createItinerary = async(req,res) => {
 
 };
 
-const getItineraries = async (req, res) => {
-    const { tourGuideId } = req.query; 
-    try {
-        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
-
-        if (itineraries.length === 0) {
-            return res.status(404).json({ message: 'No itineraries found for this tour guide.' });
+    const getItineraries = async (req, res) => {
+        const { tourGuideId } = req.query; 
+        try {
+            const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
+    
+            res.status(200).json(itineraries);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
         }
-
-        res.status(200).json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
+    };
     
 const updateItinerary = async(req,res) => {
     try{
@@ -133,7 +129,12 @@ const deleteItinerary = async(req,res) => {
 
 const viewItineraries = async(req,res) => {
     try {
-        const itineraries = await itineraryModel.find();
+        const itineraries = await itineraryModel.find().populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags");
 
         const itinerariesWithRatings = itineraries.map(itinerary => {
             const ratings = itinerary.ratings || [];
