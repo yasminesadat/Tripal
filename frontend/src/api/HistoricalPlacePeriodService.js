@@ -1,5 +1,5 @@
 import { axios } from "./axios";
-const periodTagsPath='/periodtags';
+const periodTagsPath='http://localhost:5050/api/periodtags';
 export async function getAllPeriodTags() {
   try {
     const response = await axios.get(periodTagsPath);
