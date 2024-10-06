@@ -1,24 +1,15 @@
-import { useState } from 'react';
+import { useState } from 'react';  
 import { createItinerary } from '../../api/ItineraryService.js';
-import { message } from "antd";
+import { message, Tag, Input, Button } from "antd";
 
-const activities = ["670000464e4bb1fd7e91b628"];
-const tourGuide = "6700780a15fe2c9f96f1a96e";
-const accessibilityOptions = [
-    "Wheelchair",
-    "Pet Friendly",
-    "Family Friendly",
-    "Senior Friendly",
-    "Elevator Access",
-    "Sign Language Interpretation"
-];
+const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
 const ItinerariesForm = () => {
     const [itinerary, setItinerary] = useState({
         title: '',
         description: '',
-        tourGuide: tourGuide,
-        activities: activities,
+        tourGuide: '6700780a15fe2c9f96f1a96e',
+        activities: ["670000464e4bb1fd7e91b628"],
         serviceFee: 0,
         language: '',
         availableDates: [],
@@ -28,6 +19,7 @@ const ItinerariesForm = () => {
         dropoffLocation: '',
     });
     const [customAccessibility, setCustomAccessibility] = useState('');
+    const [selectedTags, setSelectedTags] = useState([...tagsData]); // Initialize with predefined tags
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -53,27 +45,33 @@ const ItinerariesForm = () => {
         handleArrayChange('availableTime', e.target.value);
     };
 
-    const handleAccessibilityChange = (e) => {
-        const { value, checked } = e.target;
-        if (checked) {
-            handleArrayChange('accessibility', value);
-        } else {
-            setItinerary(prevState => ({
-                ...prevState,
-                accessibility: prevState.accessibility.filter(option => option !== value)
+    const handleTagChange = (tag, checked) => {
+        const nextSelectedTags = checked
+            ? [...itinerary.accessibility, tag] // Add tag
+            : itinerary.accessibility.filter(t => t !== tag); // Remove tag
+
+        setItinerary(prev => ({
+            ...prev,
+            accessibility: Array.from(new Set(nextSelectedTags)) // Remove duplicates
+        }));
+    };
+
+    const handleCustomTagSubmit = () => {
+        const trimmedTag = customAccessibility.trim();
+        if (trimmedTag !== '' && !itinerary.accessibility.includes(trimmedTag)) {
+            setItinerary(prev => ({
+                ...prev,
+                accessibility: [...prev.accessibility, trimmedTag] // Add custom tag if it doesn't exist
             }));
+            setCustomAccessibility(''); // Clear the input field
         }
     };
 
-    const handleCustomAccessibilityChange = (e) => {
-        setCustomAccessibility(e.target.value);
-    };
-
-    const handleAddCustomAccessibility = () => {
-        if (customAccessibility) {
-            handleArrayChange('accessibility', customAccessibility);
-            setCustomAccessibility('');  // Reset input
-        }
+    const removeTag = (tag) => {
+        setItinerary(prev => ({
+            ...prev,
+            accessibility: prev.accessibility.filter(t => t !== tag) // Remove selected tag
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -155,38 +153,38 @@ const ItinerariesForm = () => {
                     Selected Times: {itinerary.availableTime.join(', ')}
                 </div>
                 <br />
-                <label>Accessibility:</label>
                 <div>
-                    {accessibilityOptions.map(option => (
-                        <div key={option}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value={option}
-                                    onChange={handleAccessibilityChange}
-                                />
-                                {option}
-                            </label>
-                        </div>
+                    <label>Accessibility:</label>
+                    {selectedTags.map(tag => (
+                        <Tag.CheckableTag
+                            key={tag}
+                            checked={itinerary.accessibility.includes(tag)}
+                            onChange={checked => handleTagChange(tag, checked)}
+                        >
+                            {tag}
+                        </Tag.CheckableTag>
                     ))}
-                    <div>
-                        <label>
-                            Custom Accessibility:
-                            <input
-                                type="text"
-                                value={customAccessibility}
-                                onChange={handleCustomAccessibilityChange}
-                            />
-                        </label>
-                        <button type="button" onClick={handleAddCustomAccessibility}>
-                            Add
-                        </button>
-                    </div>
-                    <div>
-                        Selected Accessibility: {itinerary.accessibility.join(', ')}
-                    </div>
+                    {/* Display custom tags as well */}
+                    {itinerary.accessibility.filter(tag => !selectedTags.includes(tag)).map(tag => (
+                        <Tag 
+                            key={tag} 
+                            closable 
+                            onClose={() => removeTag(tag)} // Remove tag on close
+                            style={{ margin: '4px' }}
+                        >
+                            {tag}
+                        </Tag>
+                    ))}
                 </div>
                 <br />
+                <Input
+                    value={customAccessibility}
+                    onChange={(e) => setCustomAccessibility(e.target.value)}
+                    placeholder="Add custom tag"
+                    style={{ width: 200, marginRight: 8 }}
+                />
+                <Button onClick={handleCustomTagSubmit} type="primary">Add Tag</Button>
+                <br /><br />
                 <label>
                     Pickup Location:
                     <input
