@@ -13,7 +13,6 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
-    
     const [availableDates, setAvailableDates] = useState([]);
     const [availableTimes, setAvailableTimes] = useState([]);
 
@@ -47,14 +46,12 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     
         if (trimmedInputValue && !tags.includes(trimmedInputValue)) {
             setTags(prevTags => [...prevTags, trimmedInputValue]);
-    
             setSelectedTags(prevSelectedTags => [...prevSelectedTags, trimmedInputValue]);
         }
         setInputVisible(false);
         setInputValue('');
     };
     
-
     const handleTagChange = (tag, checked) => {
         const nextSelectedTags = checked
             ? [...selectedTags, tag]
@@ -158,6 +155,31 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                     />
                 </label>
                 <br /><br />
+
+                <label>
+                    Pickup Location:
+                    <input
+                        type="text"
+                        name="pickupLocation"
+                        value={updatedItinerary.pickupLocation || ''}
+                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, pickupLocation: e.target.value })}
+                        required
+                    />
+                </label>
+                <br /><br />
+
+                <label>
+                    Dropoff Location:
+                    <input
+                        type="text"
+                        name="dropoffLocation"
+                        value={updatedItinerary.dropoffLocation || ''}
+                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, dropoffLocation: e.target.value })}
+                        required
+                    />
+                </label>
+                <br /><br />
+
                 <div>
                     <label>Available Dates:</label>
                     <DatePicker onChange={handleDateChange} />
@@ -185,6 +207,20 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                     </div>
                 </div>
                 <br />
+                <label>Accessibility:</label>
+                
+                <div>
+       
+                    {tags.map(tag => (
+                        <Tag.CheckableTag
+                            key={tag}
+                            checked={selectedTags.includes(tag)}
+                            onChange={checked => handleTagChange(tag, checked)}
+                        >
+                            {tag}
+                        </Tag.CheckableTag>
+                    ))}
+                </div>
                 <div style={{ marginBottom: 16 }}>
                     {selectedTags.map((tag) => (
                         <span key={tag} style={{ display: 'inline-block', marginRight: 8 }}>
@@ -215,18 +251,6 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                             <PlusOutlined /> New Tag
                         </Tag>
                     )}
-                </div>
-                <div>
-                    <label>Accessibility:</label>
-                    {tags.map(tag => (
-                        <Tag.CheckableTag
-                            key={tag}
-                            checked={selectedTags.includes(tag)}
-                            onChange={checked => handleTagChange(tag, checked)}
-                        >
-                            {tag}
-                        </Tag.CheckableTag>
-                    ))}
                 </div>
             </div>
         </Modal>
