@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../../components/seller/ProductCard";
-import { Row, Col, Input, Button, Select, Slider, Spin } from "antd";
+import { Row, Col, Input, Button, Select, Slider, Spin, Empty } from "antd";
 import { fetchProducts } from "../../api/ProductService";
 import { useNavigate } from "react-router-dom";
 
@@ -78,16 +78,8 @@ const ProductList = () => {
   };
 
   return (
-    <div className="productList" style={{ display: "flex" }}>
-      <div
-        style={{
-          width: "20%",
-          padding: "10px",
-          backgroundColor: "#f3f3f3",
-          borderRadius: "5px",
-          marginRight: "10px",
-        }}
-      >
+    <div className="product-list-container">
+      <div className="product-sidebar">
         <h2>Filter & Sort</h2>
         <div style={{ marginBottom: "10px" }}>
           <h3>Price Range</h3>
@@ -117,22 +109,27 @@ const ProductList = () => {
           <Option value="desc">Sort by Rating: High to Low</Option>
         </Select>
       </div>
-      <div style={{ width: "80%" }}>
+      <div className="product-list">
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "10px",
+            marginTop: "10px",
           }}
         >
-          <Button type="primary" onClick={() => navigate("/create-product")}>
+          <Button
+            style={{ marginLeft: "2%" }}
+            type="primary"
+            onClick={() => navigate("/create-product")}
+          >
             Create Product
           </Button>
           <Search
             placeholder="Search products by name"
             onChange={handleSearchChange}
-            style={{ width: 300 }}
+            style={{ width: 300, marginRight: "3.3%" }}
             allowClear
             onSearch={handleGoClick}
           />
@@ -142,25 +139,39 @@ const ProductList = () => {
             <Spin size="large" />
           </div>
         ) : (
-          <div className="productGrid">
-            <Row gutter={[16, 16]}>
-              {filteredProducts &&
-                filteredProducts.map((product) => (
-                  <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
-                    <ProductCard
-                      id={product._id}
-                      name={product.name}
-                      description={product.description}
-                      price={product.price}
-                      picture={product.picture}
-                      seller={product.seller.name}
-                      quantity={product.quantity}
-                      rating={product.averageRating} // Pass the averageRating to ProductCard
-                    />
-                  </Col>
-                ))}
-            </Row>
-          </div>
+          <>
+            {filteredProducts.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                <Empty description="No relevant products to display" />
+              </div>
+            ) : (
+              <>
+                <div
+                  className="productGrid"
+                  style={{ marginLeft: "2%", marginBottom: "5%" }}
+                >
+                  <Row gutter={[16, 32]}>
+                    {filteredProducts &&
+                      filteredProducts.map((product) => (
+                        <Col key={product._id} xs={24} sm={12} md={8}>
+                          <ProductCard
+                            id={product._id}
+                            name={product.name}
+                            description={product.description}
+                            price={product.price}
+                            picture={product.picture}
+                            seller={product.seller.name}
+                            quantity={product.quantity}
+                            ratings={product.ratings}
+                            averageRating={product.averageRating}
+                          />
+                        </Col>
+                      ))}
+                  </Row>
+                </div>
+              </>
+            )}
+          </>
         )}
       </div>
     </div>

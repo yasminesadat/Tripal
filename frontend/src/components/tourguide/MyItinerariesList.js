@@ -1,7 +1,9 @@
 import React from 'react';
 
 const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
+    if (!itineraries) return null;
     return (
+        
         <div className="list">
             {itineraries.map(itinerary => (
                 <div className="list-item" key={itinerary._id}>
@@ -32,21 +34,22 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
                                         <div>Activity: {entry.activityName}, Time: {entry.time}</div>
                                     </div>
                                 ))}
+                                <br></br>
                             </div>
                         </div>
-                        <div className="list-item-attribute">Service Fee: ${itinerary.serviceFee}</div>
                         <div className="list-item-attribute">Language: {itinerary.language}</div>
                         <div className="list-item-attribute">Price: {itinerary.price}</div>
                         <div className="list-item-attribute-sublist">
-                            <div>Available Dates:</div>
+                            
                             <div className="list-item-attribute-sublist-component">
+                            <div>Available Dates:</div>
                                 {itinerary.availableDates.length > 0 ? itinerary.availableDates.map(date => new Date(date).toLocaleDateString()).join(', ') : 'N/A'}
                             </div>
                         </div>
                         <div className="list-item-attribute-sublist">
-                            <div>Available Times:</div>
+                          
                             <div className="list-item-attribute-sublist-component">
-                                {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
+                            Available Times: { itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
                             </div>
                         </div>
                         <div className="list-item-attribute-sublist">

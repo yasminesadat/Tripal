@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
 import { getItineraries,deleteItinerary } from '../../api/ItineraryService';
-import { message} from "antd";
+import { Empty, message} from "antd";
 import MyItinerariesList from '../../components/tourguide/MyItinerariesList.js';
 import ItinerariesForm from '../../components/tourguide/ItineraryForm.js';
+import UpdateItineraryForm from '../../components/tourguide/UpdateItineraryForm.js'; // Import the update form
 
 
 const tourGuide = "6700780a15fe2c9f96f1a96e";
@@ -16,7 +17,7 @@ const ItinerariesPage = () => {
                 const response = await getItineraries(tourGuide);
                 setItineraries(response);
             } catch (error) {
-                message.error('Failed to fetch itineraries');
+                console.log('Error fetching itineraries', error);
             }
         };
 
@@ -32,12 +33,23 @@ const ItinerariesPage = () => {
             message.error('Error deleting itinerary');
         }
     };
+
+    const handleUpdate = async (id) => {
+        // Logic for updating the itinerary (you need to implement this)
+        // Example: Navigate to a form for updating the itinerary
+        console.log(`Update itinerary with ID: ${id}`);
+        // You can implement navigation or show a modal for updating the itinerary
+    };
     return (
         <div style={{alignContent:'center', alignSelf:'center',}}>
             <h1>Create your Itinerary</h1>
             <ItinerariesForm />
             <h1>My Itineraries</h1>
-            <MyItinerariesList itineraries={itineraries} onDelete={handleDelete} />
+            {itineraries.length > 0 ? (
+                <MyItinerariesList itineraries={itineraries} onUpdate={handleUpdate} onDelete={handleDelete} />
+            ) : (
+                <Empty />
+            )}
         </div>
     );
 };
