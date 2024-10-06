@@ -28,6 +28,14 @@ const activitySchema = new Schema(
       type: String,
       required: true,
     },
+    latitude: {
+      type: Number,
+      required: true, // Make required if you always want to have a latitude
+    },
+    longitude: {
+      type: Number,
+      required: true, // Make required if you always want to have a longitude
+    },
     price: {
       type: Number, required: true ,
     },
