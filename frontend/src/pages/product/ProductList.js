@@ -27,11 +27,6 @@ const ProductList = () => {
     getProducts();
   }, []);
 
-  const handleSearch = (value) => {
-    setSearchValue(value);
-    filterProducts(value, priceRange);
-  };
-
   const handleSortChange = (value) => {
     setSortOrder(value);
     const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -64,7 +59,7 @@ const ProductList = () => {
     setFilteredProducts(searchResults);
   };
 
-  const handleGoClick = () => {
+  const handleSearch = () => {
     filterProducts(searchValue, priceRange);
   };
 
@@ -101,7 +96,7 @@ const ProductList = () => {
           <Button
             type="primary"
             style={{ width: "100%" }}
-            onClick={handleGoClick}
+            onClick={handleSearch}
           >
             Go
           </Button>
@@ -129,9 +124,10 @@ const ProductList = () => {
           </Button>
           <Search
             placeholder="Search products by name"
-            onChange={(e) => handleSearch(e.target.value)} // Trigger search on each character typed
+            onChange={(e) => setSearchValue(e.target.value)}
             style={{ width: 300 }}
             allowClear
+            onSearch={handleSearch}
           />
         </div>
         <div className="productGrid">

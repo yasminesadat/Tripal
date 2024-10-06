@@ -30,7 +30,7 @@ const ProductCard = ({
 
   const handleEditClick = () => {
     navigate(`/edit-product/${id}`, {
-      state: { price, description },
+      state: { picture },
     });
   };
 
