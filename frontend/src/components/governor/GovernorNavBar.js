@@ -12,7 +12,7 @@ const GovernorNavBar = () => {
           <Link to="/add-historical-place">Add Historical Place</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/historical-places">Historical Places</Link>
+          <Link to="/my-historical-places">Historical Places</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/create-tags">Create Tags</Link>  
