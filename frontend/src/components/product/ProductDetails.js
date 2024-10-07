@@ -14,6 +14,7 @@ import {
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
+import Footer from "../Footer";
 
 const onChange = (value) => {
   console.log("changed", value);
@@ -22,7 +23,7 @@ const onChange = (value) => {
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const ProductDetails = () => {
+const ProductDetails = ({homeURL, productsURL}) => {
   const location = useLocation();
   const {
     name,
@@ -33,7 +34,7 @@ const ProductDetails = () => {
     picture,
     ratings,
     averageRating,
-  } = location.state; // Assuming 'ratings' array is part of the location state
+  } = location.state; 
 
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -45,6 +46,7 @@ const ProductDetails = () => {
   };
 
   return (
+    <>
     <div className="productDetails">
       <div style={{ display: "flex", margin: "5%" }}>
         <div
@@ -83,10 +85,10 @@ const ProductDetails = () => {
           <Content style={{ padding: "0 5%" }}>
             <Breadcrumb style={{ margin: "1.5%" }}>
               <Breadcrumb.Item>
-                <Link to="/">Home</Link>
+                <Link to={homeURL}>Home</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/view-products">Products</Link>
+                <Link to={productsURL}>Products</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>{name}</Breadcrumb.Item>
             </Breadcrumb>
@@ -184,8 +186,11 @@ const ProductDetails = () => {
         ) : (
           <p>No reviews available for this product.</p>
         )}
+        <br/>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

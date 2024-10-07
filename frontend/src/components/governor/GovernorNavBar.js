@@ -15,7 +15,10 @@ const GovernorNavBar = () => {
           <Link to="/my-historical-places">Historical Places</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/create-tags">Create Tags</Link>  
+          <Link to="/create-tags">Create Tags</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
         </div>
       </div>
     </nav>
