@@ -95,7 +95,7 @@ const deleteUser = async (req, res) => {
       }
       else {
          const x = await model.findByIdAndDelete(id);
-         const y = await User.findOne({userID:id});
+         const y = await User.deleteOne({ userID: id });
          if (!x ){
           return res.status(404).json({ error: "Error deleting from DocumentModel" });
   
