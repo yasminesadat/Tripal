@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { fetchProducts } from "../../api/ProductService";
 import ProductCard from "./ProductCard";
-
+import Footer from "../Footer";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -96,6 +96,7 @@ const ProductList = () => {
   };
 
   return (
+    <>
     <div className="product-list-container">
       <div className="product-sidebar">
         <h2>Filter & Sort</h2>
@@ -184,6 +185,8 @@ const ProductList = () => {
         )}
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

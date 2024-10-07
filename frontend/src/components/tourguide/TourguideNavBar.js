@@ -14,6 +14,9 @@ const TourguideNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/tourguide-itineraries">My Itineraries</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
+        </div>
       </div>
     </nav>
   );

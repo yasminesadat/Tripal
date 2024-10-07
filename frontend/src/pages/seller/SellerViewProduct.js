@@ -6,7 +6,7 @@ const SellerViewProduct = () => {
   return (
     <div>
       <SellerNavbar />
-      <ProductDetails />
+      <ProductDetails homeURL={"/seller"} productsURL={"/seller/view-products"}/>
     </div>
   );
 };
