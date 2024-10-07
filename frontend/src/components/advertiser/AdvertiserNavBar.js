@@ -17,7 +17,9 @@ const AdvertiserNavBar = () => {
         <div class="nav-bar-link">
           <Link to={`/advertiser-activity/6701cc555e553adca0a5c640`}>Activities</Link>
         </div>
-
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
+        </div>
       </div>
     </nav>
   );

@@ -23,6 +23,9 @@ const TouristNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/tourist/view-products">Products</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
+        </div>
       </div>
     </nav>
   );
