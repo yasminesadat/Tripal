@@ -72,6 +72,7 @@ const ActivityCategoryDetails = () => {
   };
   const editActivityCategory = async (id, name) => {
     setUpdateCategoryID(id);
+    setUpdateCategoryName(name)
     setIsModalVisible(true);
   };
   const handleUpdate = async (id, name) => {
