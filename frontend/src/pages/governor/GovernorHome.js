@@ -5,7 +5,9 @@ const GovernorHome = () => {
   return (
     <div>
       <GovernorNavBar />
-      <h1> Welcome to the governor page </h1>
+      <h1 style={{ fontSize: "48px", textAlign: "center", margin: "200px 0" }}>
+        Governor
+      </h1>
     </div>
   );
 };
