@@ -279,7 +279,7 @@ function HistoricalPlaceForm({ state }) {
                     weekdayOpening: formData.weekdayOpening ? moment(formData.weekdayOpening, "HH:mm") : null,
                     weekdayClosing: formData.weekdayClosing ? moment(formData.weekdayClosing, "HH:mm") : null,
                     weekendOpening: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
-                    weekendClosing: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
+                    weekendClosing: formData.weekendClosing ? moment(formData.weekendClosing, "HH:mm") : null,
                     foreignerPrice: formData.foreignerPrice,
                     nativePrice: formData.nativePrice,
                     studentPrice: formData.studentPrice,
