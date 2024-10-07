@@ -124,7 +124,7 @@ const ProductForm = () => {
         message.success("Product updated successfully");
         setButtonText("Success!");
       }
-      setTimeout(() => navigate("/view-products"), 1000);
+      setTimeout(() => navigate("/seller/view-products"), 1000); 
     } catch (error) {
       message.error(
         `${
