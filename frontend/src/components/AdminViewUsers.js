@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../api/AdminService"; // Assuming getUsers is an async function
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import the toastify CSS
-import './UserList.css'; // Import a CSS file for styling
+import "react-toastify/dist/ReactToastify.css";
+
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -14,49 +14,54 @@ const UserList = () => {
         const response = await getUsers(); // Fetch users from the API
         setUsers(response.users); // Assuming `response.users` contains the users array
         setInitLoading(false);
-        // toast.success("Users fetched successfully!"); // Notify success on user fetch
       } catch (error) {
         console.error("Error fetching users:", error);
         setInitLoading(false);
-        toast.error("Failed to fetch users!"); // Notify error on user fetch
       }
     };
 
     fetchData();
   }, []);
 
-  const deleteUsers = async (id) => {
+  const notifyDelete = (name) =>
+    toast(`Activity Category ${name} is deleted successfully!`);
+
+  const deleteUsers = async (id, name) => {
     try {
-      const response = await deleteUser(id);
-      const message = response.message || "User deleted successfully"; 
+      await deleteUser(id);
       const updatedData = users.filter((item) => item._id !== id);
       setUsers(updatedData);
-      toast.success(message); // Show success toast when a user is deleted
+      notifyDelete(name);
     } catch (error) {
       console.error(`Error deleting user with id ${id}:`, error);
-      toast.error("Failed to delete user!"); // Show error toast if delete fails
+      toast.error("Failed to delete activity category!");
     }
   };
+
+//   // Function to delete a user
+//   const deleteUser = async (userId) => {
+//     try {
+//       await axios.delete(`/admin/user/${userId}`); // Adjust the URL to match your delete endpoint
+//       setUsers((prevUsers) => prevUsers.filter(user => user._id !== userId)); // Update the local state to remove the deleted user
+//     } catch (error) {
+//       console.error("Error deleting user:", error);
+//     }
+//   };
 
   if (initLoading) return <div>Loading...</div>; // Loading state
 
   return (
-    <div className="user-list-container">
-      <h1 className="user-list-title">User List</h1>
-      <ul className="user-list">
+    <div>
+      <h1>User List</h1>
+      <ul>
         {users.map(user => (
-          <li key={user._id} className="user-list-item">
-            <div className="user-details">
-              <span><strong>ID:</strong> {user._id}</span>
-              <span><strong>Type:</strong> {user.userType}</span>
-            </div>
-            <button className="delete-button" onClick={() => deleteUsers(user._id)}>Delete</button>
+          <li key={user._id}>
+            <span>{user.userType}: {user.name} {/* Adjust the property names as necessary */}</span>
+            <button onClick={() => deleteUsers(user._id)}>Delete</button>
           </li>
         ))}
       </ul>
-
-      {/* Toast container for showing notifications */}
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+      
     </div>
   );
 };
