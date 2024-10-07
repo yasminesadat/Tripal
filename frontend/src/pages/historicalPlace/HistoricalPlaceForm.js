@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { CreateNewHistoricalPlace, getHistoricalPlaceDetails, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
 import { getAllPeriodTags, CreateNewPeriodTag } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags, CreateNewTypeTag } from '../../api/HistoricalPlaceTagService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { Form, Input, Select, Button, message, Upload, InputNumber, TimePicker } from "antd";
 import Maps from '../../components/HistPlaceMap/Maps';
 import SearchBox from '../../components/HistPlaceMap/SearchBox';
@@ -164,12 +164,12 @@ function HistoricalPlaceForm({ state }) {
     }
 
     async function handleSubmition() {
-        console.log("tags before waiting", tags)
-        await createTags();
+        // console.log("tags before waiting", tags)
+        // await createTags();
 
         // await createPeriodTags();
 
-        console.log("tags after waiting", tags)
+        //console.log("tags after waiting", tags)
         const newHistoricalPlace = {
             tourismGovernor: tourismGovernerID
             ,
@@ -491,7 +491,7 @@ function HistoricalPlaceForm({ state }) {
                         htmlType="submit"
                         style={{ width: "100%" }}
                         loading={loading}
-                        onClick={() => navigate('/historicalPlace/tourismGoverner')}
+                       // onClick={() => navigate('/historicalPlace/tourismGoverner')}
                     >
                         {id === undefined ? "Create" : "Update"}
 
@@ -501,7 +501,7 @@ function HistoricalPlaceForm({ state }) {
 
 
 
-
+            <ToastContainer />
         </div>
 
 
