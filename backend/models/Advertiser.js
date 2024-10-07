@@ -50,26 +50,33 @@ const advertiserSchema = new Schema(
         headquarters: {
           address: {
             type: String,
-            required: false
+            required: false,
+            default: ""
           },
           city: {
             type: String,
-            required: false
+            required: false,
+            default: ""
           },
           country: {
             type: String,
-            required: false
+            required: false,
+            default: ""
           },
+          default: {}
         },
         socialMedia: {
           linkedin: {
             type: String,
-            required: false
+            required: false,
+            default: ""
           },
           twitter: {
             type: String,
-            required: false
-          }
+            required: false,
+            default: ""
+          },
+          default: {}
         },
         certifications: {
           type: [String], // Array of strings
@@ -92,9 +99,10 @@ const advertiserSchema = new Schema(
           }
         ]
       },
-      required: false // The whole object is optional
-
+      required: false, // The whole object is optional
+      default: {}
     }
+
 
   },
   { timestamps: true }

@@ -4,6 +4,7 @@ import ActivityCategoryApi from "../../api/ActivityCategoryService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminNavBar from "../../components/admin/AdminNavBar";
+import Footer from "../../components/Footer";
 
 const ActivityCategoryDetails = () => {
   const [nameValue, setNameValue] = useState("");
@@ -95,82 +96,86 @@ const ActivityCategoryDetails = () => {
     }
   };
   return (
-    <div
-      style={{
-        width: "700px",
-        marginTop: "5%",
-        marginLeft: "25%",
-        backgroundColor: "lightblue",
-        padding: "20px",
-        borderRadius: "5px",
-        textAlign: "left",
-      }}
-    >
+    <div className="page-container2">
+
       <AdminNavBar />
-      <h2>Create a new activity Category</h2>
-      <Input
-        value={nameValue}
-        onChange={handleInputChange}
-        placeholder="Enter new activity category name"
-      />
-      <br></br>
-      <br></br>
-      <Button onClick={handleButtonClick} type="primary">
-        Submit
-      </Button>
-      <h2>View existing activity categories</h2>
-      <List
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(activityCategory) => (
-          <List.Item
-            actions={[
-              <Button
-                type="link"
-                onClick={() =>
-                  editActivityCategory(
-                    activityCategory._id,
-                    activityCategory.Name
-                  )
-                }
-              >
-                Edit
-              </Button>,
-              <Button
-                type="link"
-                danger
-                onClick={() =>
-                  deleteActivityCategory(
-                    activityCategory._id,
-                    activityCategory.Name
-                  )
-                }
-              >
-                Delete
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta
-              title={<a href="https://ant.design">{activityCategory.Name}</a>}
-              description={activityCategory.Name}
-            />
-          </List.Item>
-        )}
-      />
-      <Modal
-        title="Update Activity Category"
-        open={isModalVisible}
-        onOk={() => handleUpdate(updateCategoryID, updateCategoryName)}
-        onCancel={() => setIsModalVisible(false)}
-      >
+      <br></br>   <br></br>   <br></br>
+      <div style={{
+        width: "800px",
+        margin: "0 auto",
+        padding: "20px",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      }}> { }
+        <h2>Create a new activity Category</h2>
         <Input
-          value={updateCategoryName}
-          onChange={(e) => setUpdateCategoryName(e.target.value)}
+          value={nameValue}
+          onChange={handleInputChange}
           placeholder="Enter new activity category name"
         />
-      </Modal>
-      <ToastContainer />
-    </div>
+        <br></br>
+        <br></br>
+        <Button onClick={handleButtonClick} type="primary">
+          Submit
+        </Button>
+        <h2>View existing activity categories</h2>
+        <List
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(activityCategory) => (
+            <List.Item
+              actions={[
+                <Button
+                  type="link"
+                  onClick={() =>
+                    editActivityCategory(
+                      activityCategory._id,
+                      activityCategory.Name
+                    )
+                  }
+                >
+                  Edit
+                </Button>,
+                <Button
+                  type="link"
+                  danger
+                  onClick={() =>
+                    deleteActivityCategory(
+                      activityCategory._id,
+                      activityCategory.Name
+                    )
+                  }
+                >
+                  Delete
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={<a href="https://ant.design">{activityCategory.Name}</a>}
+                description={activityCategory.Name}
+              />
+            </List.Item>
+          )}
+        />
+        <Modal
+          title="Update Activity Category"
+          open={isModalVisible}
+          onOk={() => handleUpdate(updateCategoryID, updateCategoryName)}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <Input
+            value={updateCategoryName}
+            onChange={(e) => setUpdateCategoryName(e.target.value)}
+            placeholder="Enter new activity category name"
+          />
+        </Modal>
+        <ToastContainer />
+      </div>
+
+      <Footer />
+
+    </div >
   );
 };
 

@@ -8,8 +8,11 @@ const TouristNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/tourist">Home</Link>
         </div>
-        <div class="nav-bar-link">
+        {/* <div class="nav-bar-link">
           <Link to="/tourist-profile">Profile</Link>
+        </div> */}
+        <div class="nav-bar-link">
+          <Link to={`/tourist-profile/66ffac1a139be95d178bb78d`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/upcoming-activities">Activities</Link>
@@ -22,6 +25,9 @@ const TouristNavBar = () => {
         </div>
         <div class="nav-bar-link">
           <Link to="/tourist/view-products">Products</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
         </div>
       </div>
     </nav>

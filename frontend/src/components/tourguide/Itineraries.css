@@ -1,0 +1,73 @@
+.list {
+  margin: 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 90%; /* Dynamic width to make the list smaller than the screen */
+  max-width: 1200px; /* Optional: Set a maximum width to avoid it becoming too wide */
+}
+
+.list-item {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-color: lightblue;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.list-item-header {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 1%;
+  background-color: rgb(44, 44, 169);
+  color: azure;
+  font-size: 1.5em;
+}
+
+.list-item-attributes {
+  padding: 2%;
+}
+
+.list-item-attribute {
+  font-weight: 300; /* Set thin font for the values */
+  margin-bottom: 5px;
+}
+
+.list-item-attribute-sublist {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.list-item-attribute-sublist-component {
+  margin: 5px 0;
+}
+
+.list-item-attribute strong {
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.list-item-attribute-sublist strong {
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.list-item-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgb(44, 44, 169);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkblue;
+}
