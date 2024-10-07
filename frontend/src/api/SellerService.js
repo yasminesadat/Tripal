@@ -1,8 +1,11 @@
-import { axios } from "./axios";
-const path = '/seller'
-export async function createSeller(newUser) {
+import axios from "axios";
+
+const baseURL = 'http://localhost:5050/api/seller';
+
+export const createSeller = async (newSeller) => {
   try {
-    await axios.post(path, newUser);
+    const response = await axios.post(`${baseURL}`, newSeller);
+    return response.data;
   } catch (error) {
     throw error;
   }
