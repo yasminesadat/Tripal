@@ -3,7 +3,7 @@ import SellerProducts from "../pages/seller/SellerProducts";
 import SellerProductCreation from "../pages/seller/SellerProductCreation";
 import SellerProductEdit from "../pages/seller/SellerProducEdit";
 import SellerViewProduct from "../pages/seller/SellerViewProduct";
-import SellerProfile from "../components/seller/SellerProfile";
+import SellerProfile from "../pages/seller/SellerProfile";
 const sellerRoutes = [
   { path: "/seller", element: <SellerHome /> },
   { path: "/seller/view-products", element: <SellerProducts /> },

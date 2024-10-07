@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getSellerDetails, updateSeller } from "../../api/SellerService";
+import SellerNavBar from "../../components/seller/SellerNavBar";
 import { sellerId } from "../../IDs";
 import { Form, Input, Button, message } from "antd";
+import './SellerProfile.css'; 
 
 const SellerProfile = () => {
   const [seller, setSeller] = useState(null);
@@ -23,7 +25,7 @@ const SellerProfile = () => {
         setUpdatedSeller({
           userName: response.data.userName || "",
           email: response.data.email || "",
-          password: response.data.password ||"", 
+          password: response.data.password || "",
           name: response.data.name || "",
           description: response.data.description || "",
         });
@@ -54,7 +56,7 @@ const SellerProfile = () => {
       setUpdatedSeller({
         userName: response.data.userName || "",
         email: response.data.email || "",
-        password: response.data.password||"",
+        password: response.data.password || "",
         name: response.data.name || "",
         description: response.data.description || "",
       });
@@ -73,14 +75,15 @@ const SellerProfile = () => {
   }
 
   return (
-    <div>
-      <h2>Seller Profile</h2>
+    <> <SellerNavBar/> 
+ 
+    <div className="seller-profile-container">
+      <h2 className="profile-title">Seller Profile</h2>
 
       {!isEditing ? (
-        <div>
+        <div className="profile-info">
           <p><strong>User Name:</strong> {seller.userName}</p>
           <p><strong>Email:</strong> {seller.email}</p>
-          <p><strong>Password:</strong> ********</p>
           <p><strong>Name:</strong> {seller.name || "N/A"}</p>
           <p><strong>Description:</strong> {seller.description || "N/A"}</p>
           <Button onClick={() => setIsEditing(true)} type="primary">Edit Profile</Button>
@@ -106,7 +109,8 @@ const SellerProfile = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
+            rules={[{ required: true, message: 'Please input your email!' }, 
+              { type: 'email', message: 'Please enter a valid email!' }]}
           >
             <Input
               name="email"
@@ -115,7 +119,7 @@ const SellerProfile = () => {
               onChange={handleInputChange}
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Password"
             name="password"
             rules={[{ required: true, message: 'Please input your password!' }]}
@@ -126,7 +130,7 @@ const SellerProfile = () => {
               value={updatedSeller.password}
               onChange={handleInputChange}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Name"
             name="name"
@@ -162,6 +166,7 @@ const SellerProfile = () => {
         </Form>
       )}
     </div>
+    </>
   );
 };
 
