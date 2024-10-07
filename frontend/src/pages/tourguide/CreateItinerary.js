@@ -7,6 +7,8 @@ const CreateItinerary = () => {
   return (
     <div>
       <TourguideNavBar />
+      <h1>Create an Itinerary</h1>
+      <br />
       <ItineraryForm />
     </div>
   );

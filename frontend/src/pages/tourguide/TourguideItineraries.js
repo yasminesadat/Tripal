@@ -38,7 +38,7 @@ const ItinerariesPage = () => {
     const handleUpdate = (id) => {
         const itineraryToUpdate = itineraries.find(itinerary => itinerary._id === id);
         setSelectedItinerary(itineraryToUpdate);
-        setIsModalOpen(true); // Open the modal when an itinerary is selected
+        setIsModalOpen(true);
     };
 
     const handleFormUpdate = (updatedId) => {
@@ -53,19 +53,18 @@ const ItinerariesPage = () => {
 
         fetchItineraries();
         setSelectedItinerary(null);
-        setIsModalOpen(false); // Close the modal after updating
+        setIsModalOpen(false);
     };
 
     const handleModalClose = () => {
         setIsModalOpen(false);
-        setSelectedItinerary(null); // Reset selected itinerary when closing the modal
+        setSelectedItinerary(null);
     };
 
     return (
         <div>
             <TourguideNavBar />
             <div style={{ alignContent: 'center', alignSelf: 'center' }}>
-                <h1>My Itineraries</h1>
                 {itineraries.length > 0 ? (
                     <MyItinerariesList 
                         itineraries={itineraries} 
@@ -76,13 +75,13 @@ const ItinerariesPage = () => {
                     <Empty />
                 )}
 
-                {/* Render the UpdateItineraryForm if an itinerary is selected */}
+
                 {selectedItinerary && (
                     <UpdateItineraryForm 
                         itinerary={selectedItinerary} 
                         onUpdate={handleFormUpdate} 
-                        isVisible={isModalOpen} // Control modal visibility
-                        onClose={handleModalClose} // Handle closing modal
+                        isVisible={isModalOpen}
+                        onClose={handleModalClose} 
                     />
                 )}
             </div>

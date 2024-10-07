@@ -4,6 +4,7 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
     if (!itineraries) return null;
         return (
             <div className="list">
+                <h1>My Itineraries</h1>
                 {itineraries.map(itinerary => (
                     <div className="list-item" key={itinerary._id}>
                         <div className="list-item-header">{itinerary.title}</div>
@@ -33,7 +34,7 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
                         </div>
     
                         <div className="list-item-actions">
-                            <button onClick={() => onUpdate(itinerary._id)}>Edit</button>
+                            <button onClick={() => onUpdate(itinerary._id)}>Edit Details</button>
                             <button onClick={() => onDelete(itinerary._id)}>Delete</button>
                         </div>
                     </div>

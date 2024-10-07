@@ -3,7 +3,7 @@ import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
 import ActivitySelectionModal from './ActivitySelectionModal';
- 
+
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
 const ItinerariesForm = () => {
@@ -21,7 +21,7 @@ const ItinerariesForm = () => {
         dropoffLocation: '',
     });
     const [customAccessibility, setCustomAccessibility] = useState('');
-    const [selectedTags, setSelectedTags] = useState([...tagsData]); // Initialize with predefined tags
+    const [selectedTags, setSelectedTags] = useState([...tagsData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,9 +37,9 @@ const ItinerariesForm = () => {
 
     const handleDateChange = (e) => {
         const newDate = e.target.value;
-        const datePattern = /^20\d{2}-\d{2}-\d{2}$/;  // Regular expression to check full YYYY-MM-DD format starting with year 2000    
+        const datePattern = /^20\d{2}-\d{2}-\d{2}$/; 
         if (datePattern.test(newDate)) {
-            handleArrayChange('availableDates', newDate);  // Update array only when full date is entered
+            handleArrayChange('availableDates', newDate);
         }
     };
 
@@ -49,12 +49,12 @@ const ItinerariesForm = () => {
 
     const handleTagChange = (tag, checked) => {
         const nextSelectedTags = checked
-            ? [...itinerary.accessibility, tag] // Add tag
-            : itinerary.accessibility.filter(t => t !== tag); // Remove tag
+            ? [...itinerary.accessibility, tag] 
+            : itinerary.accessibility.filter(t => t !== tag); 
 
         setItinerary(prev => ({
             ...prev,
-            accessibility: Array.from(new Set(nextSelectedTags)) // Remove duplicates
+            accessibility: Array.from(new Set(nextSelectedTags))
         }));
     };
 
@@ -63,16 +63,16 @@ const ItinerariesForm = () => {
         if (trimmedTag !== '' && !itinerary.accessibility.includes(trimmedTag)) {
             setItinerary(prev => ({
                 ...prev,
-                accessibility: [...prev.accessibility, trimmedTag] // Add custom tag if it doesn't exist
+                accessibility: [...prev.accessibility, trimmedTag]
             }));
-            setCustomAccessibility(''); // Clear the input field
+            setCustomAccessibility(''); 
         }
     };
 
     const removeTag = (tag) => {
         setItinerary(prev => ({
             ...prev,
-            accessibility: prev.accessibility.filter(t => t !== tag) // Remove selected tag
+            accessibility: prev.accessibility.filter(t => t !== tag) 
         }));
     };
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -193,7 +193,7 @@ const ItinerariesForm = () => {
                         <Tag 
                             key={tag} 
                             closable 
-                            onClose={() => removeTag(tag)} // Remove tag on close
+                            onClose={() => removeTag(tag)}
                             style={{ margin: '4px' }}
                         >
                             {tag}
@@ -232,6 +232,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <button type="submit">Create Itinerary</button>
+                <br /><br />
             </form>
         </div>
     );

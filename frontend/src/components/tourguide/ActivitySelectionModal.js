@@ -16,9 +16,8 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
     }, []);
 
     useEffect(() => {
-        // Set selectedActivities based on preSelectedActivities prop whenever the modal is opened
         if (isVisible) {
-            setSelectedActivities(preSelectedActivities || []); // Default to empty array if preSelectedActivities is undefined
+            setSelectedActivities(preSelectedActivities || []);
         }
     }, [preSelectedActivities, isVisible]);
 
