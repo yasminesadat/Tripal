@@ -5,6 +5,7 @@ import ActivitySearch from "../../components/tourist/ActivitySearch";
 import ActivityFilter from "../../components/tourist/ActivityFilter";
 import ActivitySort from "../../components/tourist/ActivitySort";
 import TouristNavBar from "../../components/tourist/TouristNavBar";
+import Footer from "../../components/Footer";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -36,7 +37,7 @@ const UpcomingActivitiesPage = () => {
   const calculateAverageRating = (ratings) => {
     if (!ratings || ratings.length === 0) return 0;
     const total = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return (total / ratings.length).toFixed(1); 
+    return (total / ratings.length).toFixed(1);
   };
 
   const handleSearch = (searchTerm) => {
@@ -63,13 +64,13 @@ const UpcomingActivitiesPage = () => {
 
   const handleFilter = (filters) => {
     const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
-  
+
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
       const activityBudget = activity.price;
       const activityCategory = activity.category;
-      const activityRating = activity.averageRating; 
-  
+      const activityRating = activity.averageRating;
+
       const isDateValid =
         (!startDate || activityDate >= new Date(startDate)) &&
         (!endDate || activityDate <= new Date(endDate));
@@ -81,19 +82,19 @@ const UpcomingActivitiesPage = () => {
         (activityCategory.name &&
           activityCategory.name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
-        !rating || (activityRating >= rating); 
-  
+        !rating || (activityRating >= rating);
+
       return isDateValid && isBudgetValid && isCategoryValid && isRatingValid;
     });
-  
+
     setFilteredActivities(filtered);
   };
-  
+
 
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
-  
+
       if (field === "price") {
         aValue = a.price;
         bValue = b.price;
@@ -101,7 +102,7 @@ const UpcomingActivitiesPage = () => {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
-  
+
       if (order === "asc") {
         return aValue - bValue;
       } else {
@@ -126,6 +127,7 @@ const UpcomingActivitiesPage = () => {
         </div>
         <ActivitiesList activities={filteredActivities} />
       </div>
+      <Footer />
     </div>
   );
 };
