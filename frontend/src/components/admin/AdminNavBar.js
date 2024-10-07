@@ -17,7 +17,11 @@ const AdminNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/admin/view-products">Products</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
+        </div>
       </div>
+
     </nav>
   );
 };

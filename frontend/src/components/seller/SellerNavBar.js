@@ -14,6 +14,9 @@ const SellerNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/seller/view-products">View All Products</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/">Log out</Link>
+        </div>
       </div>
     </nav>
   );
