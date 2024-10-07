@@ -14,6 +14,7 @@ import {
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
+import Footer from "../Footer";
 
 const onChange = (value) => {
   console.log("changed", value);
@@ -45,6 +46,7 @@ const ProductDetails = ({homeURL, productsURL}) => {
   };
 
   return (
+    <>
     <div className="productDetails">
       <div style={{ display: "flex", margin: "5%" }}>
         <div
@@ -184,8 +186,11 @@ const ProductDetails = ({homeURL, productsURL}) => {
         ) : (
           <p>No reviews available for this product.</p>
         )}
+        <br/>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

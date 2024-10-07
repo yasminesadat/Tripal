@@ -5,6 +5,7 @@ import { sellerId } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import "../../components/product/product.css";
+import Footer from "../Footer";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -267,6 +268,7 @@ const ProductForm = () => {
           </Form.Item>
         </Form>
       </div>
+      <Footer/>
     </div>
   );
 };
