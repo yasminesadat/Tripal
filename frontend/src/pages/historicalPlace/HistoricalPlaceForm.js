@@ -136,12 +136,11 @@ function HistoricalPlaceForm({ state }) {
             } else {
                 tagID.push(tag);
             }
-            console.log("arrayofTags", tagID)
+            console.log("inside function createTags", tagID)
         });
-
         await Promise.all(tagPromises);  // Wait for all async tag creations
         setTags(tagID);  // Set the tags after all have been processed
-        console.log("tag ids:", tagID);
+        console.log("tag ids after setting:", tagID);
     }
     async function createPeriodTags() {
         let periodTagID = [];
@@ -164,9 +163,10 @@ function HistoricalPlaceForm({ state }) {
     }
 
     async function handleSubmition() {
+        console.log("tags before waiting", tags)
         await createTags();
 
-        await createPeriodTags();
+        // await createPeriodTags();
 
         console.log("tags after waiting", tags)
         const newHistoricalPlace = {
@@ -276,7 +276,9 @@ function HistoricalPlaceForm({ state }) {
     }
     return (
         <div>
-            <h2 >Create new historical place</h2>
+            {id === undefined && <h2 >Create new historical place</h2>}
+            {id !== undefined && <h2 >Update historical place</h2>
+            }
             <Form form={form} layout="vertical" onFinish={handleSubmition}
                 initialValues={{
                     name: formData.name,
