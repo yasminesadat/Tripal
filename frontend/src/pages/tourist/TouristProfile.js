@@ -3,6 +3,8 @@ import { getTouristInformation, updateTouristInformation } from "../../api/Touri
 import TouristNavBar from "../../components/tourist/TouristNavBar";
 import { useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toastify
 
 const TouristHomePage = () => {
   const { id } = useParams();
@@ -26,19 +28,20 @@ const TouristHomePage = () => {
   };
 
   const handleEditClick = async () => {
-    if (isEditing) {  // i want to save and call the api 
-
+    if (isEditing) {
+      // Save and call the API
       setIsEditing(false);
       console.log("New value", editedProfile);
       try {
         const response = await updateTouristInformation(id, editedProfile);
         console.log("Profile updated successfully", response);
-        setFeedback({ message: "Profile updated successfully!", isSuccess: true });
+        toast.success("Profile updated successfully");
       } catch (error) {
         console.error("Failed to update user information:", error);
-        setFeedback({ message: "Error updating profile", isSuccess: false });
+        toast.error("Error updating profile");
       }
-    } else { // im clicking on edit 
+    } else {
+      // Clicking on edit
       setIsEditing(true);
       console.log("Editing mode enabled");
     }
@@ -70,11 +73,7 @@ const TouristHomePage = () => {
       fontWeight: "bold",
     };
 
-    return (
-      <div style={feedbackStyle}>
-        {message}
-      </div>
-    );
+    return <div style={feedbackStyle}>{message}</div>;
   };
 
   return (
@@ -165,13 +164,16 @@ const TouristHomePage = () => {
           </li>
         </ul>
 
-        {/* Render the feedback message here */}
-        <FeedbackMessage message={feedback.message} isSuccess={feedback.isSuccess} />
+        {/* Render the feedback message here
+        <FeedbackMessage message={feedback.message} isSuccess={feedback.isSuccess} /> */}
 
         <button onClick={handleEditClick}>
           {isEditing ? "Save" : "Update"}
         </button>
       </div>
+
+      {/* Toast container for displaying notifications */}
+      <ToastContainer />
     </div>
   );
 };
