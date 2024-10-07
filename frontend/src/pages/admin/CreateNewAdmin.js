@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
-import { createAdmin } from '../api/AdminService'; // Adjust the path as necessary
+import { createAdmin } from "../../api/AdminService"; // Adjust the path as necessary
+import AdminNavBar from "../../components/admin/AdminNavBar";
 
 const CreateAdmin = () => {
   const [username, setUsername] = useState('');
@@ -33,6 +34,7 @@ const CreateAdmin = () => {
   };
 
   return (
+    <> <AdminNavBar />
     <div style={{ width: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '5px' }}>
       <h2>Create New Admin</h2>
       <Form onFinish={handleSubmit}>
@@ -44,6 +46,7 @@ const CreateAdmin = () => {
           <Input 
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
+          
           />
         </Form.Item>
 
@@ -59,12 +62,13 @@ const CreateAdmin = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+          <Button type="primary" htmlType="submit" style={{ width: '100%' }}  >
             Create Admin
           </Button>
         </Form.Item>
       </Form>
     </div>
+    </>
   );
 };
 
