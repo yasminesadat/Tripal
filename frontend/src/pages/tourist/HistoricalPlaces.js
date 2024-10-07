@@ -48,29 +48,30 @@ const HistoricalPlacesPage = () => {
     setFilteredPlaces(results);
   };
   
-const handleFilter = (filters) => {
-  const { historicType, historicalTagPeriod } = filters;
-
-  if (!historicType && !historicalTagPeriod) {
-      setFilteredPlaces(places);
+  const handleFilter = (filters) => {
+    const { historicType, historicalTagPeriod } = filters;
+    console.log(filters);
+    console.log(historicType);
+    console.log(historicalTagPeriod);
+    if (!historicType && !historicalTagPeriod) {
+      setFilteredPlaces(places); 
       return;
-  }
-
-  const filtered = places.filter((place) => {
-      const matchesHistoricType = !historicType || 
-          (place.historicType && place.historicType.toLowerCase() === historicType.toLowerCase());
-
-      const matchesHistoricalTag = !historicalTagPeriod || 
-          (place.tags && place.tags.some(tagId => tagId.toString() === historicalTagPeriod));
-
-      return matchesHistoricType && matchesHistoricalTag;
-  });
-
-  setFilteredPlaces(filtered);
-};
-
-
-
+    }
+  
+    const filtered = places.filter((place) => {
+      const matchesHistoricType = !historicType && 
+        (place.historicType && place.historicType.toLowerCase().includes(historicType.toLowerCase()));
+  console.log(matchesHistoricType);
+      const matchesHistoricalTag = !historicalTagPeriod &&
+        (place.tags && place.tags.some(tag => tag.name && tag.name.toLowerCase().includes(historicalTagPeriod.toLowerCase())));
+  
+      return matchesHistoricType || matchesHistoricalTag;
+    });
+  
+    setFilteredPlaces(filtered); 
+  };
+  
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
