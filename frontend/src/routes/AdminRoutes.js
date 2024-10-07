@@ -9,7 +9,7 @@ import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
-  { path: "/adminActivityCategories", element: <ActivityCategoryDetails /> },
+  { path: "/activity-categories", element: <ActivityCategoryDetails /> },
   { path: "/preference-tags", element: <TagManager /> },
   { path: "/admin/view-products", element: <AdminProducts /> },
   { path: "/admin/view-products/product/:id", element: <AdminViewProduct /> },
