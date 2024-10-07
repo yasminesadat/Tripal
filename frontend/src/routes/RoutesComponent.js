@@ -17,7 +17,7 @@ const allRoutes = [
   ...tourguideRoutes,
   ...historicalPlaceRoutes,
   ...governorRoutes
-  ]
+]
 
 const RoutesComponent = () => (
   <Routes>

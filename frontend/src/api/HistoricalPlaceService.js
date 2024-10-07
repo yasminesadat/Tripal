@@ -2,9 +2,18 @@ import { axios } from "./axios";
 const path='/historicalPlaces/';
 export async function getAllHistoricalPlaces() {
   try {
-    const response = await axios.get(path);
+    const response = await axios.get('/historicalPlaces/');
     return response.data;
   } catch (error) {
+    console.error("Can't fetch historical places", error);
+    throw error;
+  }
+}
+export async function getAllHistoricalPlacesByTourismGoverner(id) {
+  try {
+    const response = await axios.get(`/historicalPlaces/tourismGoverner/${id}`);
+    return response.data;
+  } catch (error) {             
     console.error("Can't fetch historical places", error);
     throw error;
   }
@@ -12,7 +21,7 @@ export async function getAllHistoricalPlaces() {
 
 export const CreateNewHistoricalPlace=async(data)=>{
   try{
-    const result= await axios.post(path,data)
+    const result= await axios.post('/historicalPlaces/',data)
    return result;
   }catch(err){
       throw err;
@@ -21,7 +30,7 @@ export const CreateNewHistoricalPlace=async(data)=>{
 }
 export const updateHistoricalPlace=(id,data)=>{
   try{
-  const result =axios.put(path+`/${id}`,data)
+  const result =axios.put(`/historicalPlaces/${id}`,data)
     return result;
   }
   catch(err){
@@ -31,10 +40,20 @@ export const updateHistoricalPlace=(id,data)=>{
 
 export const getHistoricalPlaceDetails=(id)=>{
   try{
-    const result =axios.get(path+`/${id}`)
+    const result =axios.get(`/historicalPlaces/${id}`);
     return result;
   }
   catch(err){
     throw err;
   }
+}
+export const deleteHistoricalPlace=(id)=>{
+try{
+  //historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
+  const result=axios.delete(`/historicalPlaces/${id}/`);
+  return result;
+}
+catch(e){
+  throw e;
+}
 }

@@ -12,7 +12,7 @@ const createTypeTags = async (req, res) => {
     try {
         const createdTypeTag = await TypeTag.create({ name }); // Create the tag with the lowercase variable
 
-        res.status(201).json({ status: 'success', data: { createdTypeTag } }); // Use 201 Created status
+        res.status(201).json(createdTypeTag); // Use 201 Created status
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -30,7 +30,7 @@ const createPeriodTags = async (req, res) => {
     try {
         const createdPeriodTag = await PeriodTag.create({ name }); // Create the tag with the lowercase variable
 
-        res.status(201).json({ status: 'success', data: { createdPeriodTag } }); // Use 201 Created status
+        res.status(201).json(createdPeriodTag); // Use 201 Created status
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

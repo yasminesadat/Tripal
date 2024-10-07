@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, message, Input, Tag, DatePicker, TimePicker, theme,Button } from 'antd';
+import { Modal, message, Input, Tag, DatePicker, TimePicker, theme, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { updateItinerary } from '../../api/ItineraryService.js';
-import  languages  from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from './ActivitySelectionModal'; 
+import languages from '../../assets/constants/Languages.js';
+import ActivitySelectionModal from './ActivitySelectionModal';
 
 const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const { token } = theme.useToken();
@@ -44,8 +44,8 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     };
 
     const handleInputConfirm = () => {
-        const trimmedInputValue = inputValue.trim(); 
-    
+        const trimmedInputValue = inputValue.trim();
+
         if (trimmedInputValue && !tags.includes(trimmedInputValue)) {
             setTags(prevTags => [...prevTags, trimmedInputValue]);
             setSelectedTags(prevSelectedTags => [...prevSelectedTags, trimmedInputValue]);
@@ -53,7 +53,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
         setInputVisible(false);
         setInputValue('');
     };
-    
+
     const handleTagChange = (tag, checked) => {
         const nextSelectedTags = checked
             ? [...selectedTags, tag]
@@ -137,17 +137,17 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                         isVisible={isModalVisible}
                         onClose={() => setIsModalVisible(false)}
                         onSelectActivities={handleSelectActivities}
-                        preSelectedActivities={updatedItinerary.activities || []} 
+                        preSelectedActivities={updatedItinerary.activities || []}
                     />
                 </div>
 
                 <br /><br />
                 <label> Select your Language: </label>
                 <label>
-                    <select 
-                        name="language" 
+                    <select
+                        name="language"
                         value={updatedItinerary.language || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, language: e.target.value })} 
+                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, language: e.target.value })}
                         required
                     >
                         <option value="" disabled>Select a language</option>
@@ -161,7 +161,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
 
                 <br /><br />
                 <label>
-                    Service Fee: 
+                    Service Fee:
                     <input
                         type="number"
                         name="serviceFee"
@@ -172,7 +172,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                 <br /><br />
 
                 <label>
-                    Pickup Location: 
+                    Pickup Location:
                     <input
                         type="text"
                         name="pickupLocation"
@@ -209,9 +209,9 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                 <br />
                 <div>
                     <label>Available Times:</label>
-                    <TimePicker 
-                        onChange={handleTimeChange} 
-                        format="HH:mm" 
+                    <TimePicker
+                        onChange={handleTimeChange}
+                        format="HH:mm"
                     />
                     <div>
                         {availableTimes.map(time => (
@@ -223,9 +223,9 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                 </div>
                 <br />
                 <label>Accessibility:</label>
-                
+
                 <div>
-       
+
                     {tags.map(tag => (
                         <Tag.CheckableTag
                             key={tag}

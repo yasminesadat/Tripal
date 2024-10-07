@@ -19,7 +19,7 @@ const { Option } = Select;
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
@@ -30,8 +30,9 @@ const ProductList = () => {
       try {
         const productsData = await fetchProducts();
         if (productsData) {
-          setProducts(productsData);
-          setFilteredProducts(productsData);
+          const sortedProducts = productsData.sort((a, b) => b.averageRating - a.averageRating);
+          setProducts(sortedProducts);
+          setFilteredProducts(sortedProducts);
         }
       } catch (error) {
         if (!errorDisplayedRef.current) {
@@ -54,38 +55,42 @@ const ProductList = () => {
 
   const handleSortChange = (value) => {
     setSortOrder(value);
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
-      if (value === "asc") {
-        return a.averageRating - b.averageRating;
-      } else {
-        return b.averageRating - a.averageRating;
-      }
-    });
-    setFilteredProducts(sortedProducts);
+    filterProducts(searchValue, priceRange, value); 
   };
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
   };
 
-  const filterProducts = (searchValue, priceRange) => {
-    let searchResults = products;
-    if (searchValue) {
-      searchResults = searchResults.filter((product) =>
+  const filterProducts = (searchValue, priceRange, sortOrder) => {
+    let results = products;
+    
+    if (results) {
+        results = results.filter((product) =>
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       );
     }
-    searchResults = searchResults.filter((product) => {
+    
+    results = results.filter((product) => {
       if (priceRange[1] === 3000) {
         return product.price >= priceRange[0];
       }
       return product.price >= priceRange[0] && product.price <= priceRange[1];
     });
-    setFilteredProducts(searchResults);
+
+    results = results.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.averageRating - b.averageRating;
+      } else {
+        return b.averageRating - a.averageRating;
+      }
+    });
+
+    setFilteredProducts(results);
   };
 
   const handleGoClick = () => {
-    filterProducts(searchValue, priceRange);
+    filterProducts(searchValue, priceRange, sortOrder); 
   };
 
   const formatPriceRange = () => {
@@ -120,12 +125,12 @@ const ProductList = () => {
           </Button>
         </div>
         <Select
-          defaultValue="asc"
-          style={{ width: "100%" }}
+            defaultValue="desc" 
+            style={{ width: "100%" }}
           onChange={handleSortChange}
         >
-          <Option value="asc">Sort by Rating: Low to High</Option>
           <Option value="desc">Sort by Rating: High to Low</Option>
+          <Option value="asc">Sort by Rating: Low to High</Option>
         </Select>
       </div>
       <div className="product-list">

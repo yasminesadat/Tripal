@@ -44,7 +44,7 @@ const getTourguideInfo = async (req, res) => {
             return res.status(404).json({ error: 'Tour Guide not found' });
         }
 
-        res.status(200).json({ status: 'success', data: tourGuide });
+        res.status(200).json(tourGuide);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
