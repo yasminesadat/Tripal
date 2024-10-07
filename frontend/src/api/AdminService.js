@@ -15,6 +15,7 @@ export const getUsers = async () => {
     try {
         // Use backticks for template literals
         const response = await axios.delete(`/admin/user/${id}`);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error(`Error deleting user with id ${id}:`, error);
@@ -33,7 +34,7 @@ export const getUsers = async () => {
      return response.data; 
    }
    catch(error) {
-        console.error("Error:", error);
+      throw error;
       };
   }
 
@@ -47,6 +48,6 @@ export const getUsers = async () => {
      return response.data; 
    }
    catch(error) {
-        console.error("Error:", error);
+       throw error;
       };
   }

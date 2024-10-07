@@ -18,10 +18,16 @@ const CreateGovernor = () => {
       setUsername(''); // Reset the form
       setPassword('');
     } catch (error) {
+      if (error.status === 409) {
+        notification.error({
+          message: 'Username Taken',
+          description: 'The username is already in use. Please choose a different one.',
+        });}
+        else{
       notification.error({
         message: 'Error',
-        description: 'Failed to create governor. Please try again.',
-      });
+        description: 'Failed to create admin. Please try again.',
+      });}
     }
   };
 
