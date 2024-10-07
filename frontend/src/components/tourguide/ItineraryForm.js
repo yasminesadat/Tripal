@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from './ActivitySelectionModal'; 
-
+import ActivitySelectionModal from './ActivitySelectionModal';
+ 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
 const ItinerariesForm = () => {
@@ -11,7 +11,7 @@ const ItinerariesForm = () => {
         title: '',
         description: '',
         tourGuide: '6700780a15fe2c9f96f1a96e',
-        activities: [],//["670000464e4bb1fd7e91b628"]
+        activities: [],
         serviceFee: 0,
         language: '',
         availableDates: [],
