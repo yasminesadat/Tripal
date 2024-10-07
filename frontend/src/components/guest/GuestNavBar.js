@@ -15,21 +15,17 @@ const GuestNavBar = () => {
           <Link to="/advertiser">Advertiser</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/seller">Seller</Link>  
+          <Link to="/seller">Seller</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/tourist">Tourist</Link>  
+          <Link to="/tourist">Tourist</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/tourguide">Tourguide</Link>  
+          <Link to="/tourguide">Tourguide</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/governor">Governor</Link>  
+          <Link to="/governor">Governor</Link>
         </div>
-        <div class="nav-bar-link">
-        <Link to="/create-historicalPlace">Historical Places</Link>  
-        </div>
-        
       </div>
     </nav>
   );

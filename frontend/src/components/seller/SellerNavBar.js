@@ -9,6 +9,9 @@ const SellerNavBar = () => {
           <Link to="/seller">Home</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/create-seller">Create Profile</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/seller/profile">Edit Profile</Link>
         </div>
         <div class="nav-bar-link">

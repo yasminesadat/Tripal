@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = 'http://localhost:5050/api/seller'; 
+const baseURL = 'http://localhost:5050/api/seller';
 
 export const createSeller = async (newSeller) => {
   try {
@@ -23,6 +23,7 @@ export const getSellerDetails = async (id) => {
 
 export const updateSeller = async (id, updatedData) => {
   try {
+    console.log(updatedData)
     const response = await axios.put(`${baseURL}/${id}`, updatedData);
     return response.data;
   } catch (error) {

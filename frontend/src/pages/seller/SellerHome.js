@@ -5,7 +5,9 @@ const SellerHome = () => {
   return (
     <div>
       <SellerNavBar />
-      <h1>Welcome to Tripal</h1>
+      <h1 style={{ fontSize: "48px", textAlign: "center", margin: "200px 0" }}>
+        Seller
+      </h1>
     </div>
   );
 };

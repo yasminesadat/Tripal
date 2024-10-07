@@ -2,6 +2,7 @@ const TypeTag = require('../models/HistoricalTagType.js');
 const PeriodTag = require('../models/HistoricalTagPeriod.js');
 
 const createTypeTags = async (req, res) => {
+    console.log(req);
     const { name } = req.body; // Use lowercase 'name' to match the schema
 
     // Check if 'name' is provided
@@ -12,25 +13,25 @@ const createTypeTags = async (req, res) => {
     try {
         const createdTypeTag = await TypeTag.create({ name }); // Create the tag with the lowercase variable
 
-        res.status(201).json({ status: 'success', data: { createdTypeTag } }); // Use 201 Created status
+        res.status(201).json(createdTypeTag); // Use 201 Created status
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json(error);
     }
 };
 
 
 const createPeriodTags = async (req, res) => {
-    const { name } = req.body; // Use lowercase 'name' to match the schema
+    // //const { name } = req.body; // Use lowercase 'name' to match the schema
 
-    // Check if 'name' is provided
-    if (!name) {
-        return res.status(400).json({ error: 'Name is required' }); // Return early if 'name' is not present
-    }
+    // // Check if 'name' is provided
+    // if (!name) {
+    //     return res.status(400).json({ error: 'Name is required' }); // Return early if 'name' is not present
+    // }
 
     try {
-        const createdPeriodTag = await PeriodTag.create({ name }); // Create the tag with the lowercase variable
+        const createdPeriodTag = await PeriodTag.create({...req.body }); // Create the tag with the lowercase variable
 
-        res.status(201).json({ status: 'success', data: { createdPeriodTag } }); // Use 201 Created status
+        res.status(201).json(createdPeriodTag); // Use 201 Created status
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

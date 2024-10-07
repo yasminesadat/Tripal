@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
+import marker from '../../assets/images/placeholder.png';
 const icon = L.icon({
-  iconUrl: "./placeholder.png",
+  iconUrl:marker,
   iconSize: [38, 38],
 });
 
@@ -34,6 +34,7 @@ export default function Maps(props) {
   const locationSelection = [selectPosition?.lat, selectPosition?.lon];
 
   return (
+    <div style={{ width: '100%', height: '400px' }}>
     <MapContainer
       center={position}
       zoom={8}
@@ -52,5 +53,6 @@ export default function Maps(props) {
       )}
       <ResetCenterView selectPosition={selectPosition} />
     </MapContainer>
+    </div>
   );
 }

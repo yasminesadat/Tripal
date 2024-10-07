@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HistoricalPlacesList from "../../components/tourist/HistoricalPlacesList";
 import HistoricalPlacesSearch from "../../components/tourist/HistoricalPlacesSearch";
+import HistoricalPlacesFilter from "../../components/tourist/HistoricalPlacesFilter";
 import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
 import TouristNavBar from "../../components/tourist/TouristNavBar";
 
@@ -46,6 +47,33 @@ const HistoricalPlacesPage = () => {
     });
     setFilteredPlaces(results);
   };
+  
+  const handleFilter = (filters) => {
+    const { historicType, historicalTagPeriod } = filters;
+
+    if (!historicType && !historicalTagPeriod) {
+        setFilteredPlaces(places);
+        return;
+    }
+
+    const filtered = places.filter((place) => {
+      const matchesHistoricType = historicType
+        ? place.tags && place.tags.some(tag => tag.name && tag.name.toLowerCase().includes(historicType.toLowerCase()))
+        : true;
+  
+      const matchesHistoricalTag = historicalTagPeriod
+        ? place.historicalPeriod && place.historicalPeriod.some(tag => tag.name && tag.name.toLowerCase().includes(historicalTagPeriod.toLowerCase()))
+        : true;
+  
+      return matchesHistoricType && matchesHistoricalTag;
+    });
+  
+    setFilteredPlaces(filtered);
+  };
+
+
+  
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -57,7 +85,7 @@ const HistoricalPlacesPage = () => {
       <HistoricalPlacesSearch onSearch={handleSearch} />
       <div class="filter-sort-list">
         <div class="filter-sort">
-          {/* <HistoricalPlacesFilter onFilter={handleFilter} /> */} 
+          <HistoricalPlacesFilter onFilter={handleFilter} />
         </div>
         <HistoricalPlacesList places={filteredPlaces} />
       </div>

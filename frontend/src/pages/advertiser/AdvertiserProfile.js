@@ -41,7 +41,45 @@ const AdvertiserProfile = () => {
   padding: 0,
   marginLeft: "5px",
   };
-  const headerStyle = { fontWeight: "bold" };
+  const headerStyle = {
+    fontWeight: "bold",
+    fontSize: "1.1em",
+    marginBottom: "5px",
+  };
+  
+  const containerStyle = {
+    maxWidth: "600px",
+    margin: "0 auto",
+    padding: "20px",
+    backgroundColor: "#f8f9fa",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  };
+  
+  const sectionTitleStyle = {
+    fontSize: "1.5em",
+    color: "#343a40",
+    marginBottom: "20px",
+  };
+  
+  
+  const buttonStyle = {
+    backgroundColor: "#2a2ea8", // Bootstrap primary blue
+    color: "#fff",
+    padding: "6px 12px",
+    fontSize: "1em",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+    display: "block",
+    margin: "10px 0",  
+  };
+  
+  const awardItemStyle = {
+    padding: "10px 0",
+    borderBottom: "1px solid #e9ecef",
+    marginBottom: "10px",
+  };
 
   const fields = [
     { label: "Email", value: advertiser.email },
@@ -81,6 +119,7 @@ const AdvertiserProfile = () => {
   return (
     <div>
       <AdvertiserNavBar />
+      <div style={containerStyle}>
       <h2>{advertiser.userName}'s Profile</h2>
       {fields.map((field, index) => (
         <p key={index}>
@@ -97,13 +136,14 @@ const AdvertiserProfile = () => {
           ) : (
             <>
               <span style={notProvidedStyle}>not provided</span>{" "}
-              <button style={addLinkStyle} onClick={handleNavigate}>
+              <button style={buttonStyle} onClick={handleNavigate}>
                 Add
               </button>
             </>
           )}
         </p>
       ))}
+      <div style={awardItemStyle}>
       <h3 style={headerStyle}>Awards</h3>
       {advertiser.companyProfile?.awards.length > 0 ? (
         advertiser.companyProfile.awards.map((award, index) => (
@@ -120,13 +160,16 @@ const AdvertiserProfile = () => {
       ) : (
         <>
           <span style={notProvidedStyle}>Awards not provided</span>{" "}
-          <button style={addLinkStyle} onClick={handleNavigate}>
+          <button style={buttonStyle} onClick={handleNavigate}>
             Add
           </button>
         </>
       )}
+      </div>
       <br />
       <button onClick={handleNavigate}>Edit Profile</button>
+      </div>
+
     </div>
   );
 };
