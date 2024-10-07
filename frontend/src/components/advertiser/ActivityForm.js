@@ -176,11 +176,13 @@ const ActivityForm = ({ isUpdate }) => {
           placeholder="Select category"
           required
         >
+
           {categories.map((category) => (
             <Select.Option key={category._id} value={isUpdate ? category.Name : category._id}>
               {category.Name}
             </Select.Option>
           ))}
+
         </Select>
       </Form.Item>
 
