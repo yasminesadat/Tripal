@@ -29,9 +29,7 @@ const GuestNavBar = () => {
         <div class="nav-bar-link">
         <Link to="/create-historicalPlace">Historical Places</Link>  
         </div>
-        {/* <div class="nav-bar-link">
-          <Link to="/adminDeleteUser">View User</Link>
-        </div> */}
+        
       </div>
     </nav>
   );
