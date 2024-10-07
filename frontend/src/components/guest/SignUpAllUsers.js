@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Select, DatePicker, Radio, message } from "antd";
 import moment from "moment";
-import { createSeller } from "../../api/SellerService";
-import { createTourGuide } from "../../api/TourGuideService";
-import { createAdvertiser } from "../../api/AdvertiserService";
+// import { createSeller } from "../../api/SellerService";
+// import { createTourGuide } from "../../api/TourGuideService";
+// import { createAdvertiser } from "../../api/AdvertiserService";
 import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
-
+import { createRequest } from "../../api/RequestService";
 const { Option } = Select;
 
 const SignUpAllUsers = () => {
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
@@ -64,15 +65,54 @@ const SignUpAllUsers = () => {
 
     try {
       if (role === "seller") {
-        await createSeller(newUser);
+        const data = await createRequest({
+          ...commonUser,
+          role: "seller"
+        })
+        // setRequest(data)
+        console.log({
+          ...commonUser,
+          role: "seller"
+        })
+        navigate("/seller/pending", {
+          state: {
+            ...commonUser,
+            role: "seller"
+
+          }
+        })
       } else if (role === "tour-guide") {
-        await createTourGuide(newUser);
+        await createRequest({
+          ...commonUser,
+          role: "tourGuide"
+
+        })
+        navigate("/seller/pending", {
+          state: {
+            ...commonUser,
+            role: "tourGuide"
+
+          }
+        })
+        // await createTourGuide(newUser);
       } else if (role === "advertiser") {
-        await createAdvertiser(newUser);
+        await createRequest({
+          ...commonUser,
+          role: "advertiser"
+        })
+        navigate("/seller/pending", {
+          state: {
+            ...commonUser,
+            role: "advertiser"
+
+          }
+        })
+        // await createAdvertiser(newUser);
       } else if (role === "tourist") {
         await createTourist(newUser);
+        message.success("Sign up successful!");
       }
-      message.success("Sign up successful!");
+
       if (role === "tourist") {
         navigate("/tourist");
       }

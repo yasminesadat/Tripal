@@ -5,6 +5,7 @@ import SellerProductEdit from "../pages/seller/SellerProductEdit";
 import SellerViewProduct from "../pages/seller/SellerViewProduct";
 import SellerProfile from "../pages/seller/SellerProfile";
 import CreateSeller from "../pages/seller/sellerCreateProfile";
+import PendingPage from "../pages/seller/PendingPage"
 const sellerRoutes = [
   { path: "/seller", element: <SellerHome /> },
   { path: "/seller/view-products", element: <SellerProducts /> },
@@ -13,6 +14,7 @@ const sellerRoutes = [
   { path: "/seller/view-products/product/:id", element: <SellerViewProduct /> },
   { path: "/seller/profile", element: <SellerProfile /> },
   { path: "/create-seller", element: <CreateSeller /> },
+  { path: "/seller/pending", element: <PendingPage /> },
 
 ];
 

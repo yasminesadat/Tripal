@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 const HistoricalPlacesFilter = ({ onFilter }) => {
-    const [historicType, setPreferences] = useState("");
-    const [historicalTagPeriod, setHistorical] = useState("");
+    const [historicType, setHistoricType] = useState("");
+  const [historicalTagPeriod, setHistoricalTagPeriod] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,7 +21,7 @@ const HistoricalPlacesFilter = ({ onFilter }) => {
                     type="text"
                     placeholder="e.g. Museums"
                     value={historicType}
-                    onChange={(e) => setPreferences(e.target.value)}
+                    onChange={(e) => setHistoricType(e.target.value)}
                 />
             </div>
             <div>
@@ -30,7 +30,7 @@ const HistoricalPlacesFilter = ({ onFilter }) => {
                     type="text"
                     placeholder="e.g. Classical"
                     value={historicalTagPeriod}
-                    onChange={(e) => setHistorical(e.target.value)}
+                    onChange={(e) => setHistoricalTagPeriod(e.target.value)}
                 />
             </div>
             <button type="submit">Filter</button>
