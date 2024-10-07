@@ -43,8 +43,9 @@ function HistoricalPlaceForm({ state }) {
     });
     useEffect(() => {
         setTags(passedData ? passedData.tags : [])
+        // console.log("TAGS I GOT", passedData.tags)
         setPeriodTags(passedData ? passedData.historicalPeriod : [])
-        setSelectPosition(passedData ? { lat: passedData.location.coordinates.latitude, lon: passedData.location.coordinates.longitude } : null)
+        setSelectPosition(passedData ? { lat: passedData.location.coordinates.latitude ? passedData.location.coordinates.latitude : '-77.0364', lon: passedData.location.coordinates.longitude ? passedData.location.coordinates.longitude : '-77.0364' } : null)
         setSelectLocation(passedData ? passedData.location.address : '');
         console.log("passed", passedData)
 
@@ -135,6 +136,7 @@ function HistoricalPlaceForm({ state }) {
             } else {
                 tagID.push(tag);
             }
+            console.log("arrayofTags", tagID)
         });
 
         await Promise.all(tagPromises);  // Wait for all async tag creations
@@ -163,7 +165,10 @@ function HistoricalPlaceForm({ state }) {
 
     async function handleSubmition() {
         await createTags();
+
         await createPeriodTags();
+
+        console.log("tags after waiting", tags)
         const newHistoricalPlace = {
             tourismGovernor: tourismGovernerID
             ,
@@ -283,7 +288,7 @@ function HistoricalPlaceForm({ state }) {
                     foreignerPrice: formData.foreignerPrice,
                     nativePrice: formData.nativePrice,
                     studentPrice: formData.studentPrice,
-                    tags: tags,
+                    tags: tags.map((tag) => tag.name),
                     periods: periodTags
                 }}>
                 <Form.Item
