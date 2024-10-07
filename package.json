@@ -1,0 +1,16 @@
+{
+  "name": "tripal",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm run dev"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "cloudinary": "^2.5.0"
+  }
+}

@@ -1,14 +1,14 @@
 const preferenceTag = require('../models/PreferenceTag.js');
 
 const createPrefTags = async (req, res) => {
-    const { Name } = req.body;
+    const { name } = req.body;
     try {
-        const createdPrefTag = await preferenceTag.create({ Name });
+        const createdPrefTag = await preferenceTag.create({ name });
 
-        if (!Name) {
+        if (!name) {
             res.status(406).json('Name is required');
         }
-        res.status(200).json({ status: 'success', data: { createdPrefTag } });
+        res.status(201).json({ status: 'success', data: { createdPrefTag } });
     }
     catch (error) {
         res.status(400).json({ error: error.message });
@@ -18,10 +18,6 @@ const createPrefTags = async (req, res) => {
 const getPrefTags = async (req, res) => {
     try {
         const tags = await preferenceTag.find();
-
-        if (tags.length === 0) {
-            return res.status(404).json('No tags found');
-        }
 
         res.status(200).json(tags);
     }
@@ -33,11 +29,11 @@ const getPrefTags = async (req, res) => {
 const updatePrefTags = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Name } = req.body;
+        const { name } = req.body;
 
         const updatedPrefTag = await preferenceTag.findByIdAndUpdate(
             id,
-            { Name },
+            { name },
             { new: true });
 
         if (!updatedPrefTag) {

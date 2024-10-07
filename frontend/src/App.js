@@ -1,20 +1,16 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import * as Pages from './pages';
-import TagManager from './components/PreferenceTagComponent';
+import { BrowserRouter } from "react-router-dom";
+import RoutesComponent from "./routes/RoutesComponent";
+import './components/style.css'
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <div className='pages'>
-          <Routes>
-            <Route path="/" element={<Pages.Home />} />
-            <Route path="/preference-tags" element={<TagManager />} />
-          </Routes>
+        <div className="pages">
+          <RoutesComponent />
         </div>
       </BrowserRouter>
-
     </div>
-    
   );
 }
 

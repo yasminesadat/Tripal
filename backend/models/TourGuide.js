@@ -1,28 +1,35 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const User = require('../models/User');
 const tourGuideSchema = new Schema(
   {
     userName: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
-      required: true,
+      required: true
     },
-    accepted: {
-      type: Boolean,
-      default: false,
+    mobileNumber: {
+      type: String,
+      required: false,
+      default: ""
     },
+
+    experienceYears: {
+      type: Number,
+      required: false,
+      default: 0
+    }
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("TourGuide", tourGuideSchema);
+const TourGuide = mongoose.model('tour guide', tourGuideSchema);
+module.exports = TourGuide;

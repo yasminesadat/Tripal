@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const {
   createActivityCategory,
-  getActivityCategories,
+  getActivityCategories, deleteActivityCategory, updateActivityCategory
 } = require("../controllers/ActivityCategoryController.js");
+const validateIDs = require('../middleware/IDMiddleware')
 
-// get all activity category
-router.get("/getCategories", getActivityCategories);
 
 // create a new activity category
-router.post("/addCategory", createActivityCategory);
-
+router.post("/activityCategory", createActivityCategory);
+// get all activity categories
+router.get("/activityCategories", getActivityCategories);
+router.delete('/activityCategory/:id', validateIDs(['id']), deleteActivityCategory);
+router.put('/activityCategory/:id', validateIDs(['id']), updateActivityCategory);
 module.exports = router;
