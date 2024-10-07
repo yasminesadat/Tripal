@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import HistoricalPlacesList from "../../components/HistoricalPlacesList";
-import HistoricalPlacesSearch from "../../components/HistoricalPlacesSearch";
+import HistoricalPlacesList from "../../components/tourist/HistoricalPlacesList";
+import HistoricalPlacesSearch from "../../components/tourist/HistoricalPlacesSearch";
 import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
+import TouristNavBar from "../../components/tourist/TouristNavBar";
 
 const HistoricalPlacesPage = () => {
   const [places, setPlaces] = useState([]);
@@ -51,6 +52,7 @@ const HistoricalPlacesPage = () => {
 
   return (
     <div class="page-container">
+      <TouristNavBar/>
       <div class="page-title">Historical Places</div>
       <HistoricalPlacesSearch onSearch={handleSearch} />
       <div class="filter-sort-list">

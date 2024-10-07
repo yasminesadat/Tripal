@@ -1,40 +1,53 @@
 const HistoricalPlace = require("../models/HistoricalPlace");
-
-const createHistoricalPlace = (req, res) => {
+const cloudinary=require('../cloudinary');
+const createHistoricalPlace =async (req, res) => {
+  let images=[... req.body.images];
+  let imageBuffer=[];
+  for(let i=0;i<images.length;i++){
+     let result =await cloudinary.uploader.upload(images[i],{folder:"historicalPlaces"})
+       imageBuffer.push(
+         {
+           public_id:await result.public_id,
+           url:await result.secure_url
+         }
+     );
+  }
+  req.body.images=imageBuffer;
   const historicalPlace = new HistoricalPlace(req.body);
   historicalPlace
     .save()
     .then((result) => {
       res.status(201).json(result);
-      //res.redirect(); redirect to the previous page
     })
     .catch((err) => {
       res.status(400).json(err);
     });
 };
 
-// const historical_place_create_get = (req, res) => {
-//   //render the create page
-// };
+
 
 const getHistoricalPlace = (req, res) => {
   const id = req.params.id;
   HistoricalPlace.findById(id)
     .then((result) => {
       res.status(200).json(result);
-      //render the detail page with passing the details
     })
     .catch((err) => {
       res.status(400).json(err);
     });
 };
 
-const deleteHistoricalPlace = (req, res) => {
+const deleteHistoricalPlace =async (req, res) => {
   const id = req.params.id;
+  const historicalPlace= HistoricalPlace.findById(id);
+  const images=historicalPlace.images;
+  for(let i=0;i<images.length;i++){
+    const imageID=images[i].public_id;
+    await cloudinary.uploader.destroy(imageID)
+  }
   HistoricalPlace.findByIdAndDelete(id)
     .then((result) => {
       res.status(200).json({ msg: "Document is deleted successfully" });
-      //render the previous /current page without this item
     })
     .catch((err) => {
       res.status(400).json(err);
@@ -77,7 +90,7 @@ const getTourismGovernerHistoricalPlaces = async (req, res) => {
 
 const updateHistoricalPlaces = (req, res) => {
   const id = req.params.id;
-  const { updates } = req.body;
+  const updates = req.body;
   HistoricalPlace.findByIdAndUpdate(id, updates, { new: true })
     .then((result) => {
       res.status(200).json(result);

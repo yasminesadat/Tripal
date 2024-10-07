@@ -8,7 +8,7 @@ const createPrefTags = async (req, res) => {
         if (!name) {
             res.status(406).json('Name is required');
         }
-        res.status(200).json({ status: 'success', data: { createdPrefTag } });
+        res.status(201).json({ status: 'success', data: { createdPrefTag } });
     }
     catch (error) {
         res.status(400).json({ error: error.message });

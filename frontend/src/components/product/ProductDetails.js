@@ -1,0 +1,192 @@
+import React from "react";
+import { useLocation, Link } from "react-router-dom";
+import {
+  Rate,
+  Layout,
+  Breadcrumb,
+  Button,
+  Space,
+  Divider,
+  List,
+  Typography,
+  Avatar,
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
+import { userRole } from "../../IDs";
+
+const onChange = (value) => {
+  console.log("changed", value);
+};
+
+const { Content } = Layout;
+const { Title, Paragraph } = Typography;
+
+const ProductDetails = () => {
+  const location = useLocation();
+  const {
+    name,
+    seller,
+    price,
+    description,
+    quantity,
+    picture,
+    ratings,
+    averageRating,
+  } = location.state; // Assuming 'ratings' array is part of the location state
+
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  return (
+    <div className="productDetails">
+      <div style={{ display: "flex", margin: "5%" }}>
+        <div
+          className="imagePlaceholder"
+          style={{ flex: "0 0 25%", marginLeft: "20%" }}
+        >
+          {picture && (
+            <div
+              style={{
+                border: "2px solid #ccc",
+                padding: "2%",
+                borderRadius: "1%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <img
+                src={picture}
+                alt={name}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "70%",
+                  borderRadius: "5%",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+          )}
+        </div>
+        <div
+          className="contentPlaceholder"
+          style={{ flex: "1", marginLeft: "3%" }}
+        >
+          <Content style={{ padding: "0 5%" }}>
+            <Breadcrumb style={{ margin: "1.5%" }}>
+              <Breadcrumb.Item>
+                <Link to="/">Home</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link to="/view-products">Products</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>{name}</Breadcrumb.Item>
+            </Breadcrumb>
+            <div style={{ minHeight: 280 }}>
+              <Title level={1}>{name}</Title>
+              <Paragraph>
+                <strong>Price:</strong> ${price}
+              </Paragraph>
+              <Paragraph>
+                <strong>Seller:</strong> {seller}
+              </Paragraph>
+              <Paragraph>
+                <strong>Description:</strong> {description}
+              </Paragraph>
+              {userRole !== "Tourist" ? (
+                <>
+                  <Paragraph>
+                    <strong>Quantity:</strong> {quantity}
+                  </Paragraph>
+                </>
+              ) : (
+                <></>
+              )}
+              <Paragraph>
+                <strong>Average Rating:</strong>{" "}
+                <Rate value={averageRating} disabled allowHalf />
+                <span style={{ marginLeft: "5%" }}>({averageRating})</span>{" "}
+              </Paragraph>
+            </div>
+            <Space
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "20px",
+              }}
+            >
+              {userRole === "Tourist" ? (
+                <>
+                  <InputNumber
+                    defaultValue={1}
+                    min={1}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+                    parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
+                    onChange={onChange}
+                    style={{ textAlign: "center", width: "100px" }}
+                  />
+                  <Button type="primary" style={{ marginLeft: "10px" }}>
+                    Add to Cart
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </Space>
+          </Content>
+        </div>
+      </div>
+      <Divider
+        orientation="left"
+        style={{ padding: "0 10%", borderColor: "#aaa" }}
+      >
+        Reviews
+      </Divider>
+      <div className="reviewsSection" style={{ padding: "0 10%" }}>
+        {ratings && ratings.length > 0 ? (
+          <List
+            itemLayout="horizontal"
+            dataSource={ratings}
+            renderItem={(item) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      style={{ backgroundColor: getRandomColor() }}
+                      icon={<UserOutlined />}
+                    />
+                  }
+                  title={
+                    <span>
+                      {item.userID ? item.userID.userName : "Unknown User"}
+                    </span>
+                  }
+                  description={
+                    <div>
+                      <Rate value={item.rating} disabled allowHalf />
+                      <Paragraph>{item.review}</Paragraph>
+                    </div>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        ) : (
+          <p>No reviews available for this product.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetails;

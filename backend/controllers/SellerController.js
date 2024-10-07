@@ -2,13 +2,11 @@ const Seller = require('../models/Seller.js');
 const bcrypt = require('bcrypt');
 const userModel = require('../models/User.js')
 const createSeller = async (req, res) => {
-    
     try {
-        
         const {userName,email,password}=req.body;
          
         if (!userName || !password || !email) {
-            return res.status(400).json({ error: "Missing required fields: username and password" });
+            return res.status(400).json({ error: "Missing required fields" });
           }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         
@@ -32,7 +30,7 @@ const createSeller = async (req, res) => {
             userID: id,
             role: "Seller"
         })
-        res.status(200).json(sellernew);
+        res.status(201).json(sellernew);
 
     } catch (error) {
         res.status(500).json({ error: error.message });

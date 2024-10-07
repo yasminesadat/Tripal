@@ -1,23 +1,21 @@
-import axios from "axios";
-
-const baseURL = "http://localhost:5050/api/pref-tags";
+import { axios } from "./axios";
 
 // Create a new tag
 export const createTag = async (tagData) => {
-  return axios.post(baseURL, tagData);
+  return axios.post("/pref-tags", tagData);
 };
 
 // Get all tags
 export const getTags = async () => {
-  return axios.get(baseURL);
+  return axios.get("/pref-tags");
 };
 
 // Update a tag
 export const updateTag = async (id, tagData) => {
-  return axios.put(`${baseURL}/${id}`, tagData);
+  return axios.put(`/pref-tags/${id}`, tagData);
 };
 
 // Delete a tag
 export const deleteTag = async (id) => {
-  return axios.delete(`${baseURL}/${id}`);
+  return axios.delete(`/pref-tags/${id}`);
 };

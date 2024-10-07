@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
+const cloudinary = require("../cloudinary");
 
 const Product = require("../models/Product.js");
 const Rating = require("../models/Rating");
@@ -14,15 +15,24 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Seller not found");
   }
+  let result;
+  try {
+    result = await cloudinary.uploader.upload(picture, {
+      folder: "products",
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
   const product = await Product.create({
     name,
     seller,
     price,
     description,
     quantity,
-    picture,
+    picture: result.secure_url,
   });
-
+  await product.save();
   if (product) {
     res.status(201).json(product);
   } else {
@@ -32,7 +42,13 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find().populate("seller").populate("ratings");
+  const products = await Product.find().populate("seller").populate({
+    path: 'ratings',
+    populate: {
+      path: 'userID', // Populating the userID field
+      select: 'userName' // Select only the userName field (or add more if needed)
+    }
+  });
   res.status(200).json(products);
 });
 
@@ -79,24 +95,58 @@ const sortProductsByRatings = asyncHandler(async (req, res) => {
 
 const editProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { description, price } = req.body;
-
+  const { name, price, description, quantity, picture, initialPicture } =
+    req.body;
   const product = await Product.findById(id);
   if (!product) {
     res.status(404);
     throw new Error("Product not found");
   }
 
-  if (!description && !price) {
+  if (
+    !name &&
+    !price &&
+    !description &&
+    !quantity &&
+    !picture &&
+    !initialPicture
+  ) {
     res.status(400);
     throw new Error("At least one value should be provided");
   }
+  let updatedProduct;
+  if (picture) {
+    let result;
+    try {
+      const oldPicturePublicId = product.picture
+        .split("/")
+        .slice(-2)
+        .join("/")
+        .split(".")[0];
 
-  const updatedProduct = await Product.findByIdAndUpdate(
-    id,
-    { description, price },
-    { new: true }
-  );
+      // Delete old picture
+      await cloudinary.uploader.destroy(oldPicturePublicId);
+
+      // Upload new picture
+      result = await cloudinary.uploader.upload(picture, {
+        folder: "products",
+      });
+
+      updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        { name, price, description, quantity, picture: result.secure_url },
+        { new: true }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  } else {
+    updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { name, price, description, quantity },
+      { new: true }
+    );
+  }
 
   res.status(200).json(updatedProduct);
 });
