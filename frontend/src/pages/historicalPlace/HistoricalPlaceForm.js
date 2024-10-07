@@ -10,11 +10,11 @@ import SearchBox from '../../components/HistPlaceMap/SearchBox';
 import moment from 'moment';
 import { tourismGovernerID } from '../../IDs';
 import { InboxOutlined } from '@ant-design/icons';
-import { useParams, useLocation, useNavigate  } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
-function HistoricalPlaceForm({state}) {
+function HistoricalPlaceForm({ state }) {
     const { id } = useParams();
-    const isCreate = id ===undefined;
+    const isCreate = id === undefined;
     const [form] = Form.useForm();
     const [selectPosition, setSelectPosition] = useState(null);
     const [selectLocation, setSelectLocation] = useState(null);
@@ -31,24 +31,24 @@ function HistoricalPlaceForm({state}) {
     const location = useLocation();
     const passedData = location.state?.place;
     const [formData, setFormData] = useState({
-        name:passedData?passedData.name: "",
-        description:passedData?passedData.description: "",
-         weekdayOpening:passedData?passedData.openingHours.weekdays.openingTime: "",
-         weekdayClosing:passedData?passedData.openingHours.weekdays.closingTime: "",
-         weekendOpening:passedData?passedData.openingHours.weekends.openingTime:"",
-         weekendClosing:passedData?passedData.openingHours.weekends.closingTime:"",
-        foreignerPrice:passedData?passedData.ticketPrices.foreigner:0,
-        nativePrice:passedData?passedData.ticketPrices.native:0,
-        studentPrice: passedData?passedData.ticketPrices.student:0,
+        name: passedData ? passedData.name : "",
+        description: passedData ? passedData.description : "",
+        weekdayOpening: passedData ? passedData.openingHours.weekdays.openingTime : "",
+        weekdayClosing: passedData ? passedData.openingHours.weekdays.closingTime : "",
+        weekendOpening: passedData ? passedData.openingHours.weekends.openingTime : "",
+        weekendClosing: passedData ? passedData.openingHours.weekends.closingTime : "",
+        foreignerPrice: passedData ? passedData.ticketPrices.foreigner : 0,
+        nativePrice: passedData ? passedData.ticketPrices.native : 0,
+        studentPrice: passedData ? passedData.ticketPrices.student : 0,
     });
     useEffect(() => {
-        setTags( passedData?passedData.tags:[])
-        setPeriodTags(passedData?passedData.historicalPeriod:[])
-        setSelectPosition(passedData?{ lat: passedData.location.coordinates.latitude, lon: passedData.location.coordinates.longitude }:null)
-        setSelectLocation(passedData?passedData.location.address:'');
-        console.log(passedData)
+        setTags(passedData ? passedData.tags : [])
+        setPeriodTags(passedData ? passedData.historicalPeriod : [])
+        setSelectPosition(passedData ? { lat: passedData.location.coordinates.latitude, lon: passedData.location.coordinates.longitude } : null)
+        setSelectLocation(passedData ? passedData.location.address : '');
+        console.log("passed", passedData)
 
-}, [passedData]);  
+    }, [passedData]);
 
     // useEffect(() => {
     //     const fetchHistoricalPlaceDetails = async (historicalPlaceId) => {
@@ -165,7 +165,7 @@ function HistoricalPlaceForm({state}) {
         await createTags();
         await createPeriodTags();
         const newHistoricalPlace = {
-            tourismGoverner: tourismGovernerID
+            tourismGovernor: tourismGovernerID
             ,
             name: formData.name
             ,
@@ -199,62 +199,63 @@ function HistoricalPlaceForm({state}) {
         };
         setLoading(true);
         console.log("historical Places", newHistoricalPlace);
-        if(id===undefined){
-        try {
-            const result = await CreateNewHistoricalPlace(newHistoricalPlace);
-            if (result) {
+        // console.log("Im ")
+        if (id === undefined) {
+            try {
+                const result = await CreateNewHistoricalPlace(newHistoricalPlace);
+                if (result) {
+                    setLoading(false);
+                    toast.success('Historical place created successfully')
+                    setImages([]);
+                    setFormData({
+                        name: '',
+                        description: '',
+                        weekdayOpening: '',
+                        weekdayClosing: '',
+                        weekendOpening: '',
+                        weekendClosing: '',
+                        foreignerPrice: '',
+                        nativePrice: '',
+                        studentPrice: '',
+                    });
+                    setTags([]);
+                    setPeriodTags([]);
+                    setSelectPosition(null);
+                }
+            }
+            catch (err) {
+                toast.error(err);
                 setLoading(false);
-                toast.success('Historical place created successfully')
-                setImages([]);
-                setFormData({
-                    name: '',
-                    description: '',
-                    weekdayOpening: '',
-                    weekdayClosing: '',
-                    weekendOpening: '',
-                    weekendClosing: '',
-                    foreignerPrice: '',
-                    nativePrice: '',
-                    studentPrice: '',
-                });
-                setTags([]);
-                setPeriodTags([]);
-                setSelectPosition(null);
             }
         }
-        catch (err) {
-            toast.error(err);
-            setLoading(false);
-        }
-           }
-           else{
-            try{
-            const result = await updateHistoricalPlace(id ,newHistoricalPlace);
-            if (result) {
+        else {
+            try {
+                const result = await updateHistoricalPlace(id, newHistoricalPlace);
+                if (result) {
+                    setLoading(false);
+                    toast.success('Historical place Updated successfully')
+                    setImages([]);
+                    setFormData({
+                        name: '',
+                        description: '',
+                        weekdayOpening: '',
+                        weekdayClosing: '',
+                        weekendOpening: '',
+                        weekendClosing: '',
+                        foreignerPrice: '',
+                        nativePrice: '',
+                        studentPrice: '',
+                    });
+                    setTags([]);
+                    setPeriodTags([]);
+                    setSelectPosition(null);
+                }
+
+            } catch (err) {
+                toast.error(err);
                 setLoading(false);
-                toast.success('Historical place Updated successfully')
-                setImages([]);
-                setFormData({
-                    name: '',
-                    description: '',
-                    weekdayOpening: '',
-                    weekdayClosing: '',
-                    weekendOpening: '',
-                    weekendClosing: '',
-                    foreignerPrice: '',
-                    nativePrice: '',
-                    studentPrice: '',
-                });
-                setTags([]);
-                setPeriodTags([]);
-                setSelectPosition(null);
             }
-        
-        }catch (err) {
-            toast.error(err);
-            setLoading(false);
         }
-           }
     }
     const handleInputChange = (e) => {
         console.log(e.target.value);
@@ -262,7 +263,7 @@ function HistoricalPlaceForm({state}) {
         setFormData({ ...formData, [name]: value });
     };
     const handleTime = (field, time) => {
-            setFormData({ ...formData, [field]: time.format("HH:mm") });
+        setFormData({ ...formData, [field]: time.format("HH:mm") });
     }
     const handlePrices = (field, price) => {
         setFormData({ ...formData, [field]: price });
@@ -271,29 +272,29 @@ function HistoricalPlaceForm({state}) {
     return (
         <div>
             <h2 >Create new historical place</h2>
-            <Form  form={form} layout="vertical" onFinish={handleSubmition}
-            initialValues={{
-                name: formData.name,
-                description: formData.description,
-                weekdayOpening:formData.weekdayOpening ? moment(formData.weekdayOpening, "HH:mm") : null,
-                weekdayClosing: formData.weekdayClosing ? moment(formData.weekdayClosing, "HH:mm") : null,
-                weekendOpening: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
-                weekendClosing: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
-                foreignerPrice: formData.foreignerPrice,
-                nativePrice: formData.nativePrice,
-                studentPrice: formData.studentPrice,
-                tags: tags,
-                periods: periodTags
-            }}>
+            <Form form={form} layout="vertical" onFinish={handleSubmition}
+                initialValues={{
+                    name: formData.name,
+                    description: formData.description,
+                    weekdayOpening: formData.weekdayOpening ? moment(formData.weekdayOpening, "HH:mm") : null,
+                    weekdayClosing: formData.weekdayClosing ? moment(formData.weekdayClosing, "HH:mm") : null,
+                    weekendOpening: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
+                    weekendClosing: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
+                    foreignerPrice: formData.foreignerPrice,
+                    nativePrice: formData.nativePrice,
+                    studentPrice: formData.studentPrice,
+                    tags: tags,
+                    periods: periodTags
+                }}>
                 <Form.Item
                     label="Name"
                     name="name"
-                    rules={[{ required: id===undefined, message: "Please enter the name of the place" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the name of the place" }]}
                 >
                     <Input
                         type="text"
                         name="name"
-                        value={ formData.name }
+                        value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Enter historical place name"
                     />
@@ -301,12 +302,12 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Description"
                     name="description"
-                    rules={[{ required: id===undefined, message: "Please enter the description of the historical place" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the description of the historical place" }]}
                 >
                     <Input
                         type="text"
                         name="description"
-                        value={ formData.description }
+                        value={formData.description}
                         onChange={handleInputChange}
                         placeholder="Enter historical place decription"
                     />
@@ -318,7 +319,7 @@ function HistoricalPlaceForm({state}) {
                 >
                     <TimePicker
                         format="HH:mm"
-                        value={ (formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null) }
+                        value={(formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null)}
                         onChange={(time) => handleTime('weekendOpening', time)}
                         placeholder="Select weekend opening time"
                         style={{ width: '100%' }}
@@ -327,11 +328,11 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Weekend Closing Time"
                     name="weekendClosing"
-                    rules={[{ required: id===undefined, message: "Please enter the weekend closing time" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the weekend closing time" }]}
                 >
                     <TimePicker
                         format="HH:mm"
-                        value={formData.weekendClosing ? moment(formData.weekendClosing, "HH:mm") : null }
+                        value={formData.weekendClosing ? moment(formData.weekendClosing, "HH:mm") : null}
                         onChange={(time) => handleTime('weekendClosing', time)}
                         placeholder="Select weekend Closing time"
                         style={{ width: '100%' }}
@@ -340,7 +341,7 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Weekdays Opening Time"
                     name="weekdayOpening"
-                    rules={[{ required: id===undefined, message: "Please enter the weekdays opening time" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the weekdays opening time" }]}
                 >
                     <TimePicker
                         format="HH:mm"
@@ -353,7 +354,7 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Weekdays Closing Time"
                     name="weekdayClosing"
-                    rules={[{ required: id===undefined, message: "Please enter the weekdays closing time" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the weekdays closing time" }]}
                 >
                     <TimePicker
                         format="HH:mm"
@@ -372,7 +373,7 @@ function HistoricalPlaceForm({state}) {
                         mode="tags"
                         style={{ width: '100%' }}
                         placeholder="Select or create tags"
-                        value={ tags }
+                        value={tags}
                         onChange={(selectedTags) => setTags(selectedTags)}
                         options={tagsOptions.map(tag => ({
                             label: tag.name,
@@ -390,7 +391,7 @@ function HistoricalPlaceForm({state}) {
                         mode="tags"
                         style={{ width: '100%' }}
                         placeholder="Select or create period tags"
-                        value={ periodTags  }
+                        value={periodTags}
                         onChange={(selectedPeriodTags) => {
                             setPeriodTags(selectedPeriodTags);
                         }}
@@ -402,11 +403,11 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Foreigner Price"
                     name="foreignerPrice"
-                    rules={[{ required: id===undefined, message: "Please enter the foreigner ticket price" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the foreigner ticket price" }]}
                 >
                     <InputNumber
                         min={0}
-                        value={formData.foreignerPrice }
+                        value={formData.foreignerPrice}
                         onChange={(value) => { handlePrices('foreignerPrice', value) }}
                         placeholder="Enter foreigner ticket price"
                         style={{ width: '100%' }}
@@ -417,11 +418,11 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Native Price"
                     name="nativePrice"
-                    rules={[{ required: id===undefined, message: "Please enter the native ticket price" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the native ticket price" }]}
                 >
                     <InputNumber
                         min={0}
-                        value={ formData.nativePrice }
+                        value={formData.nativePrice}
                         onChange={(value) => { handlePrices('nativePrice', value) }}
                         placeholder="Enter native ticket price"
                         style={{ width: '100%' }}
@@ -432,7 +433,7 @@ function HistoricalPlaceForm({state}) {
                 <Form.Item
                     label="Student Price"
                     name="studentPrice"
-                    rules={[{ required: id===undefined, message: "Please enter the student ticket price" }]}
+                    rules={[{ required: id === undefined, message: "Please enter the student ticket price" }]}
                 >
                     <InputNumber
                         min={0}
@@ -472,8 +473,8 @@ function HistoricalPlaceForm({state}) {
                 />
                 < Maps selectPosition={selectPosition} />
                 <div style={{ marginTop: '10px' }}>
-          <strong>Selected Location:</strong> {selectLocation || 'No location selected yet'}
-        </div>
+                    <strong>Selected Location:</strong> {selectLocation || 'No location selected yet'}
+                </div>
 
                 <Form.Item>
                     <Button
@@ -482,7 +483,7 @@ function HistoricalPlaceForm({state}) {
                         style={{ width: "100%" }}
                         loading={loading}
                     >
-                        {id===undefined ? "Create" : "Update"}
+                        {id === undefined ? "Create" : "Update"}
                     </Button>
                 </Form.Item>
             </Form>
