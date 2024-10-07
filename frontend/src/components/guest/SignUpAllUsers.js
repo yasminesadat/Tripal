@@ -74,7 +74,7 @@ const SignUpAllUsers = () => {
       }
       message.success("Sign up successful!");
       if (role === "tourist") {
-        navigate("/tourist-home");
+        navigate("/tourist");
       }
     } catch (err) {
       message.error(err.response.data.error);
@@ -109,7 +109,7 @@ const SignUpAllUsers = () => {
           label="Email"
           name="email"
           rules={[{ required: true, message: "Please enter your email" },
-            { type: "email", message: "Please enter a valid email address" },
+          { type: "email", message: "Please enter a valid email address" },
           ]}
         >
           <Input
