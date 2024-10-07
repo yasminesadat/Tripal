@@ -1,15 +1,23 @@
 import { Routes, Route } from "react-router-dom";
 import adminRoutes from "./AdminRoutes";
-import touristRoutes from "./TouristRoutes"
-import productRoutes from "./ProductRoutes";
+import touristRoutes from "./TouristRoutes";
 import generalRoutes from "./GeneralRoutes";
 import advertiserRoutes from "./AdvertiserRoutes";
-import sellerRoutes from "./SellerRoutes"
-import tourguideRoutes from "./TourguideRoutes"
+import sellerRoutes from "./SellerRoutes";
+import tourguideRoutes from "./TourguideRoutes";
 import historicalPlaceRoutes from "./HistoricalPlaceRoutes";
 import governorRoutes from "./GovernorRoutes";
 
-const allRoutes = [...adminRoutes, ...touristRoutes, ...productRoutes, ...generalRoutes, ...advertiserRoutes, ...sellerRoutes, ...tourguideRoutes,...historicalPlaceRoutes, ...governorRoutes];
+const allRoutes = [
+  ...adminRoutes,
+  ...touristRoutes,
+  ...generalRoutes,
+  ...advertiserRoutes,
+  ...sellerRoutes,
+  ...tourguideRoutes,
+  ...historicalPlaceRoutes,
+  ...governorRoutes
+  ]
 
 const RoutesComponent = () => (
   <Routes>

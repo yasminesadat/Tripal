@@ -2,12 +2,14 @@ import React from "react";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Card, Rate } from "antd";
 import { useNavigate } from "react-router-dom";
-import "../../pages/product/product.css";
+import "./product.css";
+import { currUser } from "../../IDs";
 
 const { Meta } = Card;
 
 const ProductCard = ({
   id,
+  productSeller,
   name,
   seller,
   price,
@@ -20,7 +22,7 @@ const ProductCard = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/product/${id}`, {
+    navigate(`product/${id}`, {
       state: {
         name,
         seller,
@@ -35,7 +37,7 @@ const ProductCard = ({
   };
 
   const handleEditClick = (e) => {
-    navigate(`/edit-product/${id}`, {
+    navigate(`/seller/edit-product/${id}`, {
       state: {
         initialName: name,
         initialPrice: price,
@@ -67,10 +69,14 @@ const ProductCard = ({
           />
         </div>
       }
-      actions={[
-        <EditOutlined key="edit" onClick={handleEditClick} />,
-        <EllipsisOutlined key="ellipsis" onClick={handleCardClick} />,
-      ]}
+      actions={
+        currUser === productSeller
+          ? [
+              <EditOutlined key="edit" onClick={handleEditClick} />,
+              <EllipsisOutlined key="ellipsis" onClick={handleCardClick} />,
+            ]
+          : [<EllipsisOutlined key="ellipsis" onClick={handleCardClick} />]
+      }
     >
       <Meta
         title={`${name} - $${price}`}

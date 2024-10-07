@@ -1,30 +1,48 @@
-import { useEffect, useState } from "react";
-import ProductCard from "../../components/seller/ProductCard";
-import { Row, Col, Input, Button, Select, Slider, Spin, Empty } from "antd";
+import { useEffect, useState, useRef } from "react";
+import {
+  Row,
+  Col,
+  Input,
+  Button,
+  Select,
+  Slider,
+  Spin,
+  Empty,
+  message,
+} from "antd";
 import { fetchProducts } from "../../api/ProductService";
-import { useNavigate } from "react-router-dom";
+import ProductCard from "./ProductCard";
 
 const { Search } = Input;
 const { Option } = Select;
 
 const ProductList = () => {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [, setSortOrder] = useState("asc");
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
+  const errorDisplayedRef = useRef(false);
 
   useEffect(() => {
     const getProducts = async () => {
-      setLoading(true);
-      const productsData = await fetchProducts();
-      if (productsData) {
-        setProducts(productsData);
-        setFilteredProducts(productsData);
+      try {
+        const productsData = await fetchProducts();
+        if (productsData) {
+          setProducts(productsData);
+          setFilteredProducts(productsData);
+        }
+      } catch (error) {
+        if (!errorDisplayedRef.current) {
+          message.error(
+            "Network Error: Unable to fetch products. Please try again later."
+          );
+          errorDisplayedRef.current = true; // Set error displayed to true
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getProducts();
@@ -119,17 +137,10 @@ const ProductList = () => {
             marginTop: "10px",
           }}
         >
-          <Button
-            style={{ marginLeft: "2%" }}
-            type="primary"
-            onClick={() => navigate("/create-product")}
-          >
-            Create Product
-          </Button>
           <Search
             placeholder="Search products by name"
             onChange={handleSearchChange}
-            style={{ width: 300, marginRight: "3.3%" }}
+            style={{ width: 300, marginLeft: "auto" }}
             allowClear
             onSearch={handleGoClick}
           />
@@ -146,16 +157,14 @@ const ProductList = () => {
               </div>
             ) : (
               <>
-                <div
-                  className="productGrid"
-                  style={{ marginLeft: "2%", marginBottom: "5%" }}
-                >
+                <div className="productGrid" style={{ marginBottom: "5%" }}>
                   <Row gutter={[16, 32]}>
                     {filteredProducts &&
                       filteredProducts.map((product) => (
                         <Col key={product._id} xs={24} sm={12} md={8}>
                           <ProductCard
                             id={product._id}
+                            productSeller={product.seller._id}
                             name={product.name}
                             description={product.description}
                             price={product.price}
