@@ -12,7 +12,6 @@ const ActivityForm = ({isUpdate}) => {
   console.log("ISUPDATEEEE:", isUpdate);
   const navigate = useNavigate();
 
-
   const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
     advertiser: existingActivity?.advertiser._id || '6701cc555e553adca0a5c640', // Use optional chaining here as well

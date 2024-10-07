@@ -85,13 +85,13 @@ ticketPrices:{
 },
 tags:{
     type: [mongoose.Types.ObjectId],
-    ref:'HistoricalTagType',
+    ref:'historicaltagtypes',
     required:false,
     default:[]
 },
 historicalPeriod:{
     type: [mongoose.Types.ObjectId],
-    ref:'HistoricalTagPeriod',
+    ref:'historicaltagperiods',
     required:false,
     default:[]
 }

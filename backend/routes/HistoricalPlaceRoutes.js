@@ -15,6 +15,6 @@ historicalPlaceRouter.post("/historicalPlaces/", createHistoricalPlace);
 historicalPlaceRouter.get("/historicalPlaces/:id", getHistoricalPlace);
 historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
 historicalPlaceRouter.put("/historicalPlaces/:id", updateHistoricalPlaces);
-historicalPlaceRouter.get("/historicalPlaces/tourism-governer/:id", getTourismGovernerHistoricalPlaces);
+historicalPlaceRouter.get("/historicalPlaces/tourismGoverner/:id", getTourismGovernerHistoricalPlaces);
 
 module.exports = historicalPlaceRouter;
