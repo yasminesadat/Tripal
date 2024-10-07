@@ -4,6 +4,7 @@ import { Empty, message } from "antd";
 import MyItinerariesList from '../../components/tourguide/MyItinerariesList.js';
 import UpdateItineraryForm from '../../components/tourguide/UpdateItineraryForm.js';
 import TourguideNavBar from '../../components/tourguide/TourguideNavBar.js';
+import Footer from '../../components/Footer.js';
 
 const tourGuide = "6700780a15fe2c9f96f1a96e"; // Tour guide ID
 
@@ -84,6 +85,7 @@ const ItinerariesPage = () => {
                         onClose={handleModalClose} 
                     />
                 )}
+                <Footer />
             </div>
         </div>
     );
