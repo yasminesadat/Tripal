@@ -94,21 +94,20 @@ const ItinerariesForm = () => {
     };
 
     return (
-        <div style={{ alignContent: 'center', alignSelf: 'center' }}>
+        <div className='signUpUsersForm-container'> {/*will fix this lol*/}
+              <h1 className='signUpUsersForm-title'>Create an Itinerary</h1>
+              <br></br>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Title:
-                    <input
+                    Title: <input
                         type="text"
                         name="title"
                         value={itinerary.title}
                         onChange={handleChange}
-                        required
-                    />
+                        required/>
                 </label>
                 <br /><br />
-                <label>Description: 
-                    <input 
+                <label>Description: <input 
                         type="text"
                         name="description"
                         value={itinerary.description}
@@ -129,7 +128,7 @@ const ItinerariesForm = () => {
                 onSelectActivities={handleSelectActivities}
             /></div>
             <br/>
-                 <label>Select a Language</label>
+                 <label>Select a Language: </label>
                 <label>
                     <select 
                         name="language" 
@@ -147,8 +146,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Service Fee:
-                    <input
+                    Service Fee: <input
                         type="number"
                         name="serviceFee"
                         value={itinerary.serviceFee}
@@ -157,8 +155,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Available Dates:
-                    <input
+                    Available Dates: <input
                         type="date"
                         onChange={handleDateChange}
                     />
@@ -179,7 +176,7 @@ const ItinerariesForm = () => {
                 </div>
                 <br />
                 <div>
-                    <label>Accessibility:</label>
+                    <label>Accessibility: </label>
                     {selectedTags.map(tag => (
                         <Tag.CheckableTag
                             key={tag}
@@ -210,8 +207,7 @@ const ItinerariesForm = () => {
                 <Button onClick={handleCustomTagSubmit} type="primary">Add Tag</Button>
                 <br /><br />
                 <label>
-                    Pickup Location:
-                    <input
+                    Pickup Location: <input
                         type="text"
                         name="pickupLocation"
                         value={itinerary.pickupLocation}
@@ -221,8 +217,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Dropoff Location:
-                    <input
+                    Dropoff Location: <input
                         type="text"
                         name="dropoffLocation"
                         value={itinerary.dropoffLocation}
