@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { CreateNewHistoricalPlace, getHistoricalPlaceDetails, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
 import { getAllPeriodTags, CreateNewPeriodTag } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags, CreateNewTypeTag } from '../../api/HistoricalPlaceTagService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { Form, Input, Select, Button, message, Upload, InputNumber, TimePicker } from "antd";
 import Maps from '../../components/HistPlaceMap/Maps';
 import SearchBox from '../../components/HistPlaceMap/SearchBox';
@@ -501,7 +501,7 @@ function HistoricalPlaceForm({ state }) {
 
 
 
-
+            <ToastContainer />
         </div>
 
 
