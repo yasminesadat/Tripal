@@ -7,7 +7,9 @@ const TourguideHome = () => {
     <div className="page-container2">
       <TourguideNavBar />
       <main className="content2">
-        <h1>Welcome to the Tour guide Home Page</h1>
+        <h1 style={{ fontSize: "48px", textAlign: "center", margin: "200px 0" }}>
+          Tour-Guide
+        </h1>
       </main>
       <Footer />
     </div>

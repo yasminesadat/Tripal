@@ -9,6 +9,9 @@ const AdvertiserNavBar = () => {
           <Link to="/advertiser">Home</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/create-advertiser">Create Profile</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to={`/advertiser/6701cc555e553adca0a5c640`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
