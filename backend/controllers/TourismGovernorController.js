@@ -2,8 +2,6 @@ const bcrypt = require("bcrypt");
 const TourismGovernor = require("../models/TourismGovernor.js");
 const userModel = require('../models/User.js')
 
-
-
 const addTourismGovernor = async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -33,7 +31,7 @@ const addTourismGovernor = async (req, res) => {
             userID: id,
             role: "TourismGovernor"
         })
-      res.status(200).json(newTourismGovernor);
+      res.status(201).json(newTourismGovernor);
   
     } catch (error) {
       res.status(500).json({ error: error.message });
