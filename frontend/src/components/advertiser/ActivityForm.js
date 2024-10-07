@@ -177,7 +177,7 @@ const ActivityForm = ({ isUpdate }) => {
           required
         >
           {categories.map((category) => (
-            <Select.Option key={category._id} value={category.Name}>
+            <Select.Option key={category._id} value={isUpdate ? category.Name : category._id}>
               {category.Name}
             </Select.Option>
           ))}
