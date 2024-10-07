@@ -227,3 +227,24 @@ a:hover {
   .custom-link:hover {
     text-decoration: underline; 
   }
+
+  .footer {
+    background-color: #1f1c60;
+    color: #fff;
+    text-align: center;
+    padding: 0.5%;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+  }
+  .page-container2 {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .content2 {
+    flex: 1; 
+    padding: 20px; 
+  }

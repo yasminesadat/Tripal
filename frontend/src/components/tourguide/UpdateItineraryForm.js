@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, message, Input, Tag, DatePicker, TimePicker, theme } from 'antd';
+import { Modal, message, Input, Tag, DatePicker, TimePicker, theme,Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { updateItinerary } from '../../api/ItineraryService.js';
 import  languages  from '../../assets/constants/Languages.js';
+import ActivitySelectionModal from './ActivitySelectionModal'; 
 
 const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const { token } = theme.useToken();
@@ -15,6 +16,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [availableDates, setAvailableDates] = useState([]);
     const [availableTimes, setAvailableTimes] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         if (itinerary) {
@@ -96,7 +98,9 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const removeTime = (timeToRemove) => {
         setAvailableTimes(availableTimes.filter(time => time !== timeToRemove));
     };
-
+    const handleSelectActivities = (selectedActivities) => {
+        setUpdatedItinerary(prev => ({ ...prev, activities: selectedActivities }));
+    };
     return (
         <Modal
             title="Update Itinerary"
@@ -127,6 +131,16 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                         required
                     />
                 </label>
+                <div>
+                    <Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
+                    <ActivitySelectionModal
+                        isVisible={isModalVisible}
+                        onClose={() => setIsModalVisible(false)}
+                        onSelectActivities={handleSelectActivities}
+                        preSelectedActivities={updatedItinerary.activities || []} 
+                    />
+                </div>
+
                 <br /><br />
                 <label> Select your Language: </label>
                 <label>

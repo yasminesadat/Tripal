@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from './ActivitySelectionModal'; 
+import ActivitySelectionModal from './ActivitySelectionModal';
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
@@ -11,7 +11,7 @@ const ItinerariesForm = () => {
         title: '',
         description: '',
         tourGuide: '6700780a15fe2c9f96f1a96e',
-        activities: [],//["670000464e4bb1fd7e91b628"]
+        activities: [],
         serviceFee: 0,
         language: '',
         availableDates: [],
@@ -21,7 +21,7 @@ const ItinerariesForm = () => {
         dropoffLocation: '',
     });
     const [customAccessibility, setCustomAccessibility] = useState('');
-    const [selectedTags, setSelectedTags] = useState([...tagsData]); // Initialize with predefined tags
+    const [selectedTags, setSelectedTags] = useState([...tagsData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,9 +37,9 @@ const ItinerariesForm = () => {
 
     const handleDateChange = (e) => {
         const newDate = e.target.value;
-        const datePattern = /^20\d{2}-\d{2}-\d{2}$/;  // Regular expression to check full YYYY-MM-DD format starting with year 2000    
+        const datePattern = /^20\d{2}-\d{2}-\d{2}$/; 
         if (datePattern.test(newDate)) {
-            handleArrayChange('availableDates', newDate);  // Update array only when full date is entered
+            handleArrayChange('availableDates', newDate);
         }
     };
 
@@ -49,12 +49,12 @@ const ItinerariesForm = () => {
 
     const handleTagChange = (tag, checked) => {
         const nextSelectedTags = checked
-            ? [...itinerary.accessibility, tag] // Add tag
-            : itinerary.accessibility.filter(t => t !== tag); // Remove tag
+            ? [...itinerary.accessibility, tag] 
+            : itinerary.accessibility.filter(t => t !== tag); 
 
         setItinerary(prev => ({
             ...prev,
-            accessibility: Array.from(new Set(nextSelectedTags)) // Remove duplicates
+            accessibility: Array.from(new Set(nextSelectedTags))
         }));
     };
 
@@ -63,16 +63,16 @@ const ItinerariesForm = () => {
         if (trimmedTag !== '' && !itinerary.accessibility.includes(trimmedTag)) {
             setItinerary(prev => ({
                 ...prev,
-                accessibility: [...prev.accessibility, trimmedTag] // Add custom tag if it doesn't exist
+                accessibility: [...prev.accessibility, trimmedTag]
             }));
-            setCustomAccessibility(''); // Clear the input field
+            setCustomAccessibility(''); 
         }
     };
 
     const removeTag = (tag) => {
         setItinerary(prev => ({
             ...prev,
-            accessibility: prev.accessibility.filter(t => t !== tag) // Remove selected tag
+            accessibility: prev.accessibility.filter(t => t !== tag) 
         }));
     };
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -94,21 +94,20 @@ const ItinerariesForm = () => {
     };
 
     return (
-        <div style={{ alignContent: 'center', alignSelf: 'center' }}>
+        <div className='signUpUsersForm-container'> {/*will fix this lol*/}
+              <h1 className='signUpUsersForm-title'>Create an Itinerary</h1>
+              <br></br>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Title:
-                    <input
+                    Title: <input
                         type="text"
                         name="title"
                         value={itinerary.title}
                         onChange={handleChange}
-                        required
-                    />
+                        required/>
                 </label>
                 <br /><br />
-                <label>Description: 
-                    <input 
+                <label>Description: <input 
                         type="text"
                         name="description"
                         value={itinerary.description}
@@ -118,7 +117,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <div><Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
-                 {/* <div>
+                 {/* leave this commented ill fix later <div>
                   Selected Activities: <p>
                     {itinerary.activities.join(', ')}         
                     </p>
@@ -129,7 +128,7 @@ const ItinerariesForm = () => {
                 onSelectActivities={handleSelectActivities}
             /></div>
             <br/>
-                 <label>Select a Language</label>
+                 <label>Select a Language: </label>
                 <label>
                     <select 
                         name="language" 
@@ -147,8 +146,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Service Fee:
-                    <input
+                    Service Fee: <input
                         type="number"
                         name="serviceFee"
                         value={itinerary.serviceFee}
@@ -157,8 +155,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Available Dates:
-                    <input
+                    Available Dates: <input
                         type="date"
                         onChange={handleDateChange}
                     />
@@ -179,7 +176,7 @@ const ItinerariesForm = () => {
                 </div>
                 <br />
                 <div>
-                    <label>Accessibility:</label>
+                    <label>Accessibility: </label>
                     {selectedTags.map(tag => (
                         <Tag.CheckableTag
                             key={tag}
@@ -193,7 +190,7 @@ const ItinerariesForm = () => {
                         <Tag 
                             key={tag} 
                             closable 
-                            onClose={() => removeTag(tag)} // Remove tag on close
+                            onClose={() => removeTag(tag)}
                             style={{ margin: '4px' }}
                         >
                             {tag}
@@ -210,8 +207,7 @@ const ItinerariesForm = () => {
                 <Button onClick={handleCustomTagSubmit} type="primary">Add Tag</Button>
                 <br /><br />
                 <label>
-                    Pickup Location:
-                    <input
+                    Pickup Location: <input
                         type="text"
                         name="pickupLocation"
                         value={itinerary.pickupLocation}
@@ -221,8 +217,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Dropoff Location:
-                    <input
+                    Dropoff Location: <input
                         type="text"
                         name="dropoffLocation"
                         value={itinerary.dropoffLocation}
@@ -232,6 +227,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <button type="submit">Create Itinerary</button>
+                <br /><br />
             </form>
         </div>
     );
