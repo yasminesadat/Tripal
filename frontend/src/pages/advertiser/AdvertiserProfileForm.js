@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, useLocation } from 'react-router-dom';
 import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
+import "../../pages/advertiser/advForm.css"; 
+import { useNavigate } from "react-router-dom";
+
 
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   const { id } = useParams();
   const location = useLocation();
   const advertiser = location.state?.advertiser;
+  const navigate = useNavigate();
+
 
   const [formData, setFormData] = useState({
     userName: advertiser?.userName || "",
@@ -165,6 +170,7 @@ const handleRemoveItem = (index, type) => {
       if (isUpdate) {
         // Call API to update the advertiser
         await updateAdvertiser(id, formData);
+        navigate(`/advertiser/${id}`)
       } else {
         console.log(formData)
         // Call API to create a new advertiser
@@ -181,196 +187,203 @@ const handleRemoveItem = (index, type) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
+      {/* Move AdvertiserNavBar outside of the form */}
       <AdvertiserNavBar />
-      <div>
-        <label>User Name:</label>
-        <input
-          type="text"
-          name="userName"
-          value={formData.userName}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Website:</label>
-        <input
-          type="url"
-          name="website"
-          value={formData.website}
-          onChange={handleChange}
-          placeholder="Enter your website URL"
-        />
-      </div>
-      <div>
-        <label>Hotline:</label>
-        <input
-          type="tel"
-          name="hotline"
-          value={formData.hotline}
-          onChange={handleChange}
-          placeholder="Enter your hotline number"
-        />
-      </div>
-      <div>
-        <h3>Company Profile</h3>
-        <div>
-          <label>Company Name:</label>
+  
+      <form className="form-container" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>User Name:</label>
           <input
             type="text"
-            name="companyProfile.companyName"
-            value={formData.companyProfile.companyName}
+            name="userName"
+            value={formData.userName}
             onChange={handleChange}
-            placeholder="Enter company name"
+            required
           />
         </div>
-        <div>
-          <label>Industry:</label>
+        <div className="form-group">
+          <label>Email:</label>
           <input
-            type="text"
-            name="companyProfile.industry"
-            value={formData.companyProfile.industry}
+            type="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            placeholder="Enter Industry"
+            required
           />
         </div>
-        <div>
-          <label>Description:</label>
-          <textarea
-            name="companyProfile.description"
-            value={formData.companyProfile.description}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Founded Year:</label>
+        <div className="form-group">
+          <label>Password:</label>
           <input
-            type="text"
-            name="companyProfile.foundedYear"
-            value={formData.companyProfile.foundedYear}
+            type="password"
+            name="password"
+            value={formData.password}
             onChange={handleChange}
-            placeholder="Enter valid year"
+            required
           />
         </div>
-        <div>
-          <label>Employees:</label>
+        <div className="form-group">
+          <label>Website:</label>
           <input
-            type="text"
-            name="companyProfile.employees"
-            value={formData.companyProfile.employees}
+            type="url"
+            name="website"
+            value={formData.website}
             onChange={handleChange}
-            placeholder="Enter number of employees"
+            placeholder="Enter your website URL"
           />
         </div>
-        <h4>Headquarters</h4>
-        <div>
-          <label>Address:</label>
+        <div className="form-group">
+          <label>Hotline:</label>
           <input
-            type="text"
-            name="companyProfile.headquarters.address"
-            value={formData.companyProfile.headquarters.address}
+            type="tel"
+            name="hotline"
+            value={formData.hotline}
             onChange={handleChange}
-            placeholder="Enter address"
-
+            placeholder="Enter your hotline number"
           />
         </div>
+  
         <div>
-          <label>City:</label>
-          <input
-            type="text"
-            name="companyProfile.headquarters.city"
-            value={formData.companyProfile.headquarters.city}
-            onChange={handleChange}
-            placeholder="Enter city"
-
-          />
+          <h3>Company Profile</h3>
+          <div className="form-group">
+            <label>Company Name:</label>
+            <input
+              type="text"
+              name="companyProfile.companyName"
+              value={formData.companyProfile.companyName}
+              onChange={handleChange}
+              placeholder="Enter company name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Industry:</label>
+            <input
+              type="text"
+              name="companyProfile.industry"
+              value={formData.companyProfile.industry}
+              onChange={handleChange}
+              placeholder="Enter Industry"
+            />
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea
+              name="companyProfile.description"
+              value={formData.companyProfile.description}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Founded Year:</label>
+            <input
+              type="text"
+              name="companyProfile.foundedYear"
+              value={formData.companyProfile.foundedYear}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Employees:</label>
+            <input
+              type="text"
+              name="companyProfile.employees"
+              value={formData.companyProfile.employees}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Headquarters Address:</label>
+            <input
+              type="text"
+              name="companyProfile.headquarters.address"
+              value={formData.companyProfile.headquarters.address}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>City:</label>
+            <input
+              type="text"
+              name="companyProfile.headquarters.city"
+              value={formData.companyProfile.headquarters.city}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Country:</label>
+            <input
+              type="text"
+              name="companyProfile.headquarters.country"
+              value={formData.companyProfile.headquarters.country}
+              onChange={handleChange}
+            />
+          </div>
         </div>
+  
         <div>
-          <label>Country:</label>
-          <input
-            type="text"
-            name="companyProfile.headquarters.country"
-            value={formData.companyProfile.headquarters.country}
-            onChange={handleChange}
-            placeholder="Enter country"
-
-          />
+          <h4>Social Media</h4>
+          <div className="form-group">
+            <label>LinkedIn:</label>
+            <input
+              type="url"
+              name="companyProfile.socialMedia.linkedin"
+              value={formData.companyProfile.socialMedia.linkedin}
+              onChange={handleChange}
+              placeholder="Enter LinkedIn profile URL"
+            />
+          </div>
+          <div className="form-group">
+            <label>Twitter:</label>
+            <input
+              type="url"
+              name="companyProfile.socialMedia.twitter"
+              value={formData.companyProfile.socialMedia.twitter}
+              onChange={handleChange}
+              placeholder="Enter Twitter profile URL"
+            />
+          </div>
         </div>
-        <h4>Social Media</h4>
-        <div>
-          <label>LinkedIn:</label>
-          <input
-            type="text"
-            name="companyProfile.socialMedia.linkedin"
-            value={formData.companyProfile.socialMedia.linkedin}
-            onChange={handleChange}
-            placeholder="Enter linkedin profile link"
-
-          />
-        </div>
-        <div>
-          <label>Twitter:</label>
-          <input
-            type="text"
-            name="companyProfile.socialMedia.twitter"
-            value={formData.companyProfile.socialMedia.twitter}
-            onChange={handleChange}
-            placeholder="Enter twitter profile link"
-
-          />
-        </div>
-        {/* Certifications Section */}
+  
+        {/* Certifications and Awards */}
         <div>
           <h4>Certifications</h4>
           {formData.companyProfile.certifications.map((cert, index) => (
-            <div key={index}>
+            <div key={index} className="cert-award-container">
               <input
                 type="text"
-                name={`companyProfile.certifications[${index}]`}
                 value={cert}
                 onChange={(e) =>
-                  handleItemChange(e, index, null, 'certifications') // Pass 'null' for field since it's an array of strings
+                  handleItemChange(e, index, "", "certifications")
                 }
+                placeholder="Enter certification"
               />
-              <button type="button" onClick={() => handleRemoveItem(index, 'certifications')}>
+              <button
+                type="button"
+                className="remove-button"
+                onClick={() => handleRemoveItem(index, "certifications")}
+              >
                 Remove
               </button>
             </div>
           ))}
-          <button type="button" onClick={() => handleAddItem('certifications')}>
+          <button
+            type="button"
+            className="add-button"
+            onClick={() => handleAddItem("certifications")}
+          >
             Add Certification
           </button>
         </div>
 
-        {/* Awards Section */}
-        <div>
+
+         {/* Awards Section */}
+         <div>
           <h4>Awards</h4>
           {formData.companyProfile.awards.map((award, index) => (
-            <div key={index}>
+            <div key={index}  className="cert-award-container">
               <input
                 type="text"
-                name={`companyProfile.awards[${index}].title`}
+                name={`companyProfile.awards[${index}].title`}               
                 value={award.title}
                 onChange={(e) =>
                   handleItemChange(e, index, 'title', 'awards') // Specify 'title' for the awards field
@@ -395,26 +408,28 @@ const handleRemoveItem = (index, type) => {
                 }
                 placeholder="Issuer"
               />
-              <button type="button" onClick={() => handleRemoveItem(index, 'awards')}>
+              <button type="button" className="remove-button" onClick={() => handleRemoveItem(index, 'awards')}>
                 Remove
               </button>
             </div>
           ))}
-          <button type="button" onClick={() => handleAddItem('awards')}>
+          <button type="button" className="add-button" onClick={() => handleAddItem('awards')}>
             Add Award
           </button>
         </div>
 
-      </div>
-      <button type="submit" disabled={loading}>
-        {loading ? "Updating..." : "Update Profile"}
-      </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && (
-        <p style={{ color: "green" }}>Profile updated successfully!</p>
-      )}
-    </form>
+  
+        <div className="button-group">
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? "Submitting..." : isUpdate ? "Update" : "Submit"}
+          </button>
+        </div>
+  
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+      </form>
+    </>
   );
+  
 };
-
 export default AdvertiserForm;
