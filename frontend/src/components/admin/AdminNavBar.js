@@ -14,6 +14,9 @@ const AdminNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/preference-tags">Preference Tags</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/admin/view-products">Products</Link>
+        </div>
       </div>
     </nav>
   );

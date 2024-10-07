@@ -4,8 +4,7 @@ import { createProduct, editProduct } from "../../api/ProductService";
 import { sellerId } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
-import "./product.css";
-// import SellerNavBar from "../../components/seller/SellerNavBar";
+import "../../components/product/product.css";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -129,7 +128,7 @@ const ProductForm = () => {
       message.error(
         `${
           isCreate ? "Error creating product: " : "Error updating product: "
-        }` + error.message
+        } Please try again later.`
       );
       setButtonText("Failed");
     } finally {
@@ -141,128 +140,133 @@ const ProductForm = () => {
   };
 
   return (
-    <div className="product-form-container">
-      <Form layout="vertical" onFinish={handleSubmit}>
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[
-            { required: isCreate, message: "Please enter the product name" },
-          ]}
-        >
-          <Input
-            type="text"
+    <div>
+      <div className="product-form-container">
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            label="Name"
             name="name"
-            defaultValue={initialName}
-            value={product.name}
-            onChange={handleInputChange}
-            placeholder="Enter product name"
-          />
-        </Form.Item>
+            rules={[
+              { required: isCreate, message: "Please enter the product name" },
+            ]}
+          >
+            <Input
+              type="text"
+              name="name"
+              defaultValue={initialName}
+              value={product.name}
+              onChange={handleInputChange}
+              placeholder="Enter product name"
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Price"
-          name="price"
-          rules={[
-            { required: isCreate, message: "Please enter the product price" },
-          ]}
-        >
-          <InputNumber
+          <Form.Item
+            label="Price"
             name="price"
-            min={0}
-            defaultValue={initialPrice}
-            value={product.price}
-            onChange={(value) => handleNumberChange("price", value)}
-            placeholder="Enter price"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
+            rules={[
+              { required: isCreate, message: "Please enter the product price" },
+            ]}
+          >
+            <InputNumber
+              name="price"
+              min={0}
+              defaultValue={initialPrice}
+              value={product.price}
+              onChange={(value) => handleNumberChange("price", value)}
+              placeholder="Enter price"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Description"
-          name="description"
-          rules={[
-            {
-              required: isCreate,
-              message: "Please input the product description!",
-            },
-          ]}
-        >
-          <Input.TextArea
-            type="text"
+          <Form.Item
+            label="Description"
             name="description"
-            defaultValue={initialDescription}
-            value={product.description}
-            onChange={handleInputChange}
-            placeholder="Enter product description"
-          />
-        </Form.Item>
+            rules={[
+              {
+                required: isCreate,
+                message: "Please input the product description!",
+              },
+            ]}
+          >
+            <Input.TextArea
+              type="text"
+              name="description"
+              defaultValue={initialDescription}
+              value={product.description}
+              onChange={handleInputChange}
+              placeholder="Enter product description"
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Quantity"
-          name="quantity"
-          rules={[
-            {
-              required: isCreate,
-              message: "Please enter the product quantity",
-            },
-          ]}
-        >
-          <InputNumber
+          <Form.Item
+            label="Quantity"
             name="quantity"
-            min={0}
-            defaultValue={initialQuantity}
-            value={product.quantity}
-            onChange={(value) => handleNumberChange("quantity", value)}
-            placeholder="Enter quantity"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
+            rules={[
+              {
+                required: isCreate,
+                message: "Please enter the product quantity",
+              },
+            ]}
+          >
+            <InputNumber
+              name="quantity"
+              min={0}
+              defaultValue={initialQuantity}
+              value={product.quantity}
+              onChange={(value) => handleNumberChange("quantity", value)}
+              placeholder="Enter quantity"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Picture"
-          name="picture"
-          rules={[
-            { required: isCreate, message: "Please upload a product picture" },
-          ]}
-        >
-          <Upload
+          <Form.Item
+            label="Picture"
             name="picture"
-            listType="picture"
-            accept=".png,.jpeg,.jpg"
-            beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-            onChange={handleImageChange}
-            onRemove={handleRemove} // Allow removal of the picture
-            fileList={
-              product.picture
-                ? [
-                    {
-                      uid: "-1",
-                      name: "image.png",
-                      status: "done",
-                      url: product.picture,
-                    },
-                  ]
-                : []
-            } // Ensure only one file is shown
+            rules={[
+              {
+                required: isCreate,
+                message: "Please upload a product picture",
+              },
+            ]}
           >
-            {!product.picture && (
-              <Button icon={<UploadOutlined />}>Upload Picture</Button>
-            )}
-          </Upload>
-        </Form.Item>
+            <Upload
+              name="picture"
+              listType="picture"
+              accept=".png,.jpeg,.jpg"
+              beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+              onChange={handleImageChange}
+              onRemove={handleRemove} // Allow removal of the picture
+              fileList={
+                product.picture
+                  ? [
+                      {
+                        uid: "-1",
+                        name: "image.png",
+                        status: "done",
+                        url: product.picture,
+                      },
+                    ]
+                  : []
+              } // Ensure only one file is shown
+            >
+              {!product.picture && (
+                <Button icon={<UploadOutlined />}>Upload Picture</Button>
+              )}
+            </Upload>
+          </Form.Item>
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ width: "100%" }}
-            loading={loading}
-          >
-            {buttonText}
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: "100%" }}
+              loading={loading}
+            >
+              {buttonText}
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };

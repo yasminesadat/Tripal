@@ -1,24 +1,24 @@
 .product-list-container {
   min-height: 100vh;
-  min-width: 100vw;
+
   display: flex;
 }
 
 .product-sidebar {
-  width: 20%;
+  width: 25%;
   padding: 10px;
   background-color: #f3f3f3;
   border-radius: 5px;
-  margin-right: 10px;
 }
 
 .product-list {
-  width: 80%;
+  width: 78%;
+  margin-inline: 5%;
 }
 
 .product-form-container {
   width: 50%;
-  margin-top: 5%;
+  margin-top: 2%;
   margin-bottom: 5%;
   margin-left: 25%;
   background-color: lightblue;
@@ -56,6 +56,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   line-height: 20px;
 }
