@@ -85,6 +85,15 @@ const SignUpAllUsers = () => {
     <div className="signUpUsersForm-container">
       <h2 className="signUpUsersForm-title">Sign Up</h2>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form.Item label="Role">
+          <Radio.Group onChange={handleRoleChange} value={role}>
+            <Radio value="seller">Seller</Radio>
+            <Radio value="tour-guide">Tour Guide</Radio>
+            <Radio value="advertiser">Advertiser</Radio>
+            <Radio value="tourist">Tourist</Radio>
+          </Radio.Group>
+        </Form.Item>
+
         <Form.Item
           label="Username"
           name="userName"
@@ -122,15 +131,6 @@ const SignUpAllUsers = () => {
             value={formData.password}
             onChange={(e) => handleChange("password", e.target.value)}
           />
-        </Form.Item>
-
-        <Form.Item label="Role">
-          <Radio.Group onChange={handleRoleChange} value={role}>
-            <Radio value="seller">Seller</Radio>
-            <Radio value="tour-guide">Tour Guide</Radio>
-            <Radio value="advertiser">Advertiser</Radio>
-            <Radio value="tourist">Tourist</Radio>
-          </Radio.Group>
         </Form.Item>
 
         {role === "tourist" && (

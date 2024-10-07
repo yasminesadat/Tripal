@@ -3,6 +3,7 @@ import { List, Button, Modal, Input } from "antd";
 import ActivityCategoryApi from "../../api/ActivityCategoryService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AdminNavBar from "../../components/admin/AdminNavBar";
 
 const ActivityCategoryDetails = () => {
   const [nameValue, setNameValue] = useState("");
@@ -105,6 +106,7 @@ const ActivityCategoryDetails = () => {
         textAlign: "left",
       }}
     >
+      <AdminNavBar />
       <h2>Create a new activity Category</h2>
       <Input
         value={nameValue}

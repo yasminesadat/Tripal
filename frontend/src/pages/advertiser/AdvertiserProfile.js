@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, useNavigate } from 'react-router-dom'; 
-
+import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
 
 const AdvertiserProfile = () => {
   const { id } = useParams();
@@ -79,7 +79,8 @@ const AdvertiserProfile = () => {
   
 
   return (
-    <div className="tourist-profile">
+    <div>
+      <AdvertiserNavBar />
       <h2>{advertiser.userName}'s Profile</h2>
       {fields.map((field, index) => (
         <p key={index}>

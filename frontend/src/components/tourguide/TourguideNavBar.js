@@ -6,13 +6,13 @@ const TourguideNavBar = () => {
     <nav>
       <div class="nav-bar">
         <div class="nav-bar-link">
-          <Link to="/">Home</Link>
+          <Link to="/tourguide">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/tourguide">New Itinerary</Link>
+          <Link to="/create-itinerary">New Itinerary</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/tourguide-itineraries">View my Itineraries</Link>
+          <Link to="/tourguide-itineraries">My Itineraries</Link>
         </div>
       </div>
     </nav>

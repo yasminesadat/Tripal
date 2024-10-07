@@ -9,10 +9,10 @@ const SellerNavBar = () => {
           <Link to="/seller">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/create-product">Create Product</Link>
+          <Link to="/seller/create-product">Create Product</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/view-products">Products List</Link>
+          <Link to="/seller/view-products">View All Products</Link>
         </div>
       </div>
     </nav>

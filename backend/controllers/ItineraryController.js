@@ -6,7 +6,7 @@ const preferenceTagModel = require('../models/PreferenceTag');
 const createItinerary = async(req,res) => {
     try {
     const {title, description, tourGuide, activities,serviceFee,    
-    language,availableDates,availableTime,accessibility,
+    language,availableDates,availableTime,accessibility,ratings,
     pickupLocation,dropoffLocation} = req.body;
 
     const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
@@ -44,6 +44,7 @@ const createItinerary = async(req,res) => {
         dropoffLocation,
         tourists: [],
         price,
+        ratings,
         locations,
         timeline,
         tags: uniqueTags
@@ -102,7 +103,6 @@ const updateItinerary = async(req,res) => {
             tourGuide, activities, availableDates, availableTime, language,
             accessibility, pickupLocation, dropoffLocation, price, locations,
             timeline,tags: uniqueTags},{ new: true });
-            console.log('Collected Tags:', Array.from(tags)); // Log the collected tags
             if (!updatedItinerary) {
                 return res.status(404).json({ error: 'Itinerary not found' });
             }
@@ -134,7 +134,10 @@ const viewItineraries = async(req,res) => {
             populate: {
                 path: 'tags',
             },
-        }).populate("tags");
+        }).populate("tags") .populate({
+            path: 'ratings',
+            populate: { path: 'userID', select: 'name' }
+        });
 
         const itinerariesWithRatings = itineraries.map(itinerary => {
             const ratings = itinerary.ratings || [];
@@ -147,7 +150,6 @@ const viewItineraries = async(req,res) => {
                 averageRating: averageRating.toFixed(1) 
             };
         });
-
         res.status(200).json(itinerariesWithRatings);
     } catch (error) {
         res.status(400).json({ error: error.message });

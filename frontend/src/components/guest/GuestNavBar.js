@@ -24,6 +24,9 @@ const GuestNavBar = () => {
           <Link to="/tourguide">Tourguide</Link>  
         </div>
         <div class="nav-bar-link">
+          <Link to="/governor">Governor</Link>  
+        </div>
+        <div class="nav-bar-link">
         <Link to="/create-historicalPlace">Historical Places</Link>  
         </div>
       </div>

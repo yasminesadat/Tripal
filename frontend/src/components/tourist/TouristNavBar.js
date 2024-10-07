@@ -20,6 +20,9 @@ const TouristNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/historical-places">Historical Places</Link>
         </div>
+        <div class="nav-bar-link">
+          <Link to="/tourist/view-products">Products</Link>
+        </div>
       </div>
     </nav>
   );
