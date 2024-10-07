@@ -34,10 +34,10 @@ function HistoricalPlaceForm({ state }) {
     const [formData, setFormData] = useState({
         name: passedData ? passedData.name : "",
         description: passedData ? passedData.description : "",
-        weekdayOpening: passedData ? passedData.openingHours.weekdays.openingTime : "",
-        weekdayClosing: passedData ? passedData.openingHours.weekdays.closingTime : "",
-        weekendOpening: passedData ? passedData.openingHours.weekends.openingTime : "",
-        weekendClosing: passedData ? passedData.openingHours.weekends.closingTime : "",
+        weekdayOpening: passedData ? passedData.openingHours.weekdays.openingTime : '',
+        weekdayClosing: passedData ? passedData.openingHours.weekdays.closingTime : '',
+        weekendOpening: passedData ? passedData.openingHours.weekends.openingTime : '',
+        weekendClosing: passedData ? passedData.openingHours.weekends.closingTime : '',
         foreignerPrice: passedData ? passedData.ticketPrices.foreigner : 0,
         nativePrice: passedData ? passedData.ticketPrices.native : 0,
         studentPrice: passedData ? passedData.ticketPrices.student : 0,
@@ -236,6 +236,7 @@ function HistoricalPlaceForm({ state }) {
         }
         else {
             try {
+                console.log(newHistoricalPlace);
                 const result = await updateHistoricalPlace(id, newHistoricalPlace);
                 if (result) {
                     setLoading(false);
@@ -263,12 +264,19 @@ function HistoricalPlaceForm({ state }) {
             }
         }
     }
+    const handleChange = (name, value) => {
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
     const handleInputChange = (e) => {
         console.log(e.target.value);
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
     const handleTime = (field, time) => {
+        console.log("inside handle time ", field, time.format("HH:mm"));
         setFormData({ ...formData, [field]: time.format("HH:mm") });
     }
     const handlePrices = (field, price) => {
@@ -321,58 +329,45 @@ function HistoricalPlaceForm({ state }) {
                         placeholder="Enter historical place decription"
                     />
                 </Form.Item>
-                <Form.Item
-                    label="Weekend Opening Time"
-                    name="weekendOpening"
-                    rules={[{ required: isCreate, message: "Please enter the weekend opening time" }]}
-                >
-                    <TimePicker
-                        format="HH:mm"
-                        value={(formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null)}
-                        onChange={(time) => handleTime('weekendOpening', time)}
-                        placeholder="Select weekend opening time"
-                        style={{ width: '100%' }}
+                <Form.Item label="weekday Opening" required>
+                    <Input
+                        type="time"
+                        name="weekdayOpening"
+                        value={formData.weekdayOpening}
+                        onChange={handleInputChange}
+                        required
                     />
                 </Form.Item>
-                <Form.Item
-                    label="Weekend Closing Time"
-                    name="weekendClosing"
-                    rules={[{ required: id === undefined, message: "Please enter the weekend closing time" }]}
-                >
-                    <TimePicker
-                        format="HH:mm"
-                        value={formData.weekendClosing ? moment(formData.weekendClosing, "HH:mm") : null}
-                        onChange={(time) => handleTime('weekendClosing', time)}
-                        placeholder="Select weekend Closing time"
-                        style={{ width: '100%' }}
+                <Form.Item label="weekday Closing" required>
+                    <Input
+                        type="time"
+                        name="weekdayClosing"
+                        value={formData.weekdayClosing}
+                        onChange={handleInputChange}
+                        required
                     />
                 </Form.Item>
-                <Form.Item
-                    label="Weekdays Opening Time"
-                    name="weekdayOpening"
-                    rules={[{ required: id === undefined, message: "Please enter the weekdays opening time" }]}
-                >
-                    <TimePicker
-                        format="HH:mm"
-                        value={formData.weekdayOpening ? moment(formData.weekdayOpening, "HH:mm") : null}
-                        onChange={(time) => handleTime('weekdayOpening', time)}
-                        placeholder="Select weekdays opening time"
-                        style={{ width: '100%' }}
+
+
+                <Form.Item label="weekend Opening" required>
+                    <Input
+                        type="time"
+                        name="weekendOpening"
+                        value={formData.weekendOpening}
+                        onChange={handleInputChange}
+                        required
                     />
                 </Form.Item>
-                <Form.Item
-                    label="Weekdays Closing Time"
-                    name="weekdayClosing"
-                    rules={[{ required: id === undefined, message: "Please enter the weekdays closing time" }]}
-                >
-                    <TimePicker
-                        format="HH:mm"
-                        value={formData.weekdayClosing ? moment(formData.weekdayClosing, "HH:mm") : null}
-                        onChange={(time) => handleTime('weekdayClosing', time)}
-                        placeholder="Select weekdays closing time"
-                        style={{ width: '100%' }}
+                <Form.Item label="weekend Closing" required>
+                    <Input
+                        type="time"
+                        name='weekendClosing'
+                        value={formData.weekendClosing}
+                        onChange={ handleInputChange}
+                        required
                     />
                 </Form.Item>
+
                 <Form.Item
                     label="Tags"
                     name="tags"
@@ -491,7 +486,7 @@ function HistoricalPlaceForm({ state }) {
                         htmlType="submit"
                         style={{ width: "100%" }}
                         loading={loading}
-                       // onClick={() => navigate('/historicalPlace/tourismGoverner')}
+                    // onClick={() => navigate('/historicalPlace/tourismGoverner')}
                     >
                         {id === undefined ? "Create" : "Update"}
 

@@ -20,7 +20,7 @@ const handleSubmit = async () => {
       const updatedprofile= await updateSeller(response._id,{name,description});
       notification.success({
         message: 'Seller profile Created',
-        description: `Admin ${response.userName} created successfully!`, // Adjust according to your API response
+        description: `Seller ${response.userName} created successfully!`, // Adjust according to your API response
       });
       // Clear the input fields after success
 
