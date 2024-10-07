@@ -5,6 +5,7 @@ import { sellerId } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import "../../components/product/product.css";
+import Footer from "../Footer";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -123,7 +124,7 @@ const ProductForm = () => {
         message.success("Product updated successfully");
         setButtonText("Success!");
       }
-      setTimeout(() => navigate("/view-products"), 1000);
+      setTimeout(() => navigate("/seller/view-products"), 1000); 
     } catch (error) {
       message.error(
         `${
@@ -267,6 +268,7 @@ const ProductForm = () => {
           </Form.Item>
         </Form>
       </div>
+      <Footer/>
     </div>
   );
 };

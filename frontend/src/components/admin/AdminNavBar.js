@@ -18,6 +18,15 @@ const AdminNavBar = () => {
           <Link to="/admin/view-products">Products</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/admin/new-admin">Add Admin</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/admin/new-governor">Add Governor</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/admin/delete-user">Delete User</Link>
+        </div>
+       <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
       </div>
