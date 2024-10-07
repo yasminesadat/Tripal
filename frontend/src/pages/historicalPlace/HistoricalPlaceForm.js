@@ -11,9 +11,10 @@ import moment from 'moment';
 import { tourismGovernerID } from '../../IDs';
 import { InboxOutlined } from '@ant-design/icons';
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-
+import GovernorNavBar from '../../components/governor/GovernorNavBar';
 function HistoricalPlaceForm({ state }) {
     const { id } = useParams();
+    const navigate = useNavigate();
     const isCreate = id === undefined;
     const [form] = Form.useForm();
     const [selectPosition, setSelectPosition] = useState(null);
@@ -276,6 +277,7 @@ function HistoricalPlaceForm({ state }) {
     }
     return (
         <div>
+            <GovernorNavBar />
             {id === undefined && <h2 >Create new historical place</h2>}
             {id !== undefined && <h2 >Update historical place</h2>
             }
@@ -444,7 +446,7 @@ function HistoricalPlaceForm({ state }) {
                 >
                     <InputNumber
                         min={0}
-                        value={formData.studentPricePrice}
+                        value={formData.studentPrice}
                         onChange={(value) => { handlePrices('studentPrice', value) }}
                         placeholder="Enter student ticket price"
                         style={{ width: '100%' }}
@@ -489,8 +491,10 @@ function HistoricalPlaceForm({ state }) {
                         htmlType="submit"
                         style={{ width: "100%" }}
                         loading={loading}
+                        onClick={() => navigate('/historicalPlace/tourismGoverner')}
                     >
                         {id === undefined ? "Create" : "Update"}
+
                     </Button>
                 </Form.Item>
             </Form>
