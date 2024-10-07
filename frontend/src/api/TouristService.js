@@ -17,9 +17,11 @@ export async function getTouristInformation(id) {
     throw error;
   }
 }
-export async function updateTouristInformation(id) {
+export async function updateTouristInformation(id, body) {
   try {
-    const response = await axios.put(`/updateTourist/${id}`);
+    console.log("the body ", body)
+    const response = await axios.put(`/updateTourist/${id}`, body);
+    console.log("after update", response.data)
     return response.data;
   } catch (error) {
     console.error("error", error);
