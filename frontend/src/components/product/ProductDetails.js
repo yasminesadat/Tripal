@@ -22,7 +22,7 @@ const onChange = (value) => {
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const ProductDetails = () => {
+const ProductDetails = ({homeURL, productsURL}) => {
   const location = useLocation();
   const {
     name,
@@ -33,7 +33,7 @@ const ProductDetails = () => {
     picture,
     ratings,
     averageRating,
-  } = location.state; // Assuming 'ratings' array is part of the location state
+  } = location.state; 
 
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -83,10 +83,10 @@ const ProductDetails = () => {
           <Content style={{ padding: "0 5%" }}>
             <Breadcrumb style={{ margin: "1.5%" }}>
               <Breadcrumb.Item>
-                <Link to="/">Home</Link>
+                <Link to={homeURL}>Home</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/view-products">Products</Link>
+                <Link to={productsURL}>Products</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>{name}</Breadcrumb.Item>
             </Breadcrumb>

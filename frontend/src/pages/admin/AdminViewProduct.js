@@ -6,7 +6,7 @@ const AdminViewProduct = () => {
   return (
     <div>
       <AdminNavbar />
-      <ProductDetails />
+      <ProductDetails homeURL={"/admin"} productsURL={"/admin/view-products"}/>
     </div>
   );
 };

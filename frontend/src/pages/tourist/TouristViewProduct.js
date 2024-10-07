@@ -6,7 +6,7 @@ const TouristViewProduct = () => {
   return (
     <div>
       <TouristNavbar />
-      <ProductDetails />
+      <ProductDetails homeURL={"/tourist"} productsURL={"/tourist/view-products"}/>
     </div>
   );
 };
