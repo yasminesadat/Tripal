@@ -1,10 +1,62 @@
 const HistoricalPlace = require("../models/HistoricalPlace");
 const cloudinary = require('../cloudinary');
+const HistoricalTagsController = require("../controllers/HistoricalTagController");
+const TypeTag = require('../models/HistoricalTagType.js');
+const PeriodTag = require('../models/HistoricalTagPeriod.js');
+function isObjectId(id) {
+  const objectIdPattern = /^[0-9a-fA-F]{24}$/;
+  if (objectIdPattern.test(id)) {
+    return true;
+  }
+  else {
+    return false;
+  }
+
+}
 const createHistoricalPlace = async (req, res) => {
   let images = [...req.body.images];
   let imageBuffer = [];
-  console.log("body: ", req.body)
+  let tags = [...req.body.tags];
+  let historicalPeriod = [...req.body.historicalPeriod];
+  let tagsID = [];
+  let historicalPeriodsID = [];
+  console.log(req.body);
+  try {
+    for (let i = 0; i < tags.length; i++) {
+      if (!isObjectId(tags[i])) {
+        console.log(tags[i]);
+        const result = await TypeTag.create({ name:tags[i] });
+         const resultData=await result._id;
+        console.log(resultData);
+        tagsID.push(resultData);
+      }
 
+      else {
+        tagsID.push(tags[i]);
+      }
+    }
+  } catch (err) {
+    console.log("in cataaah tagg")
+    res.status(400).json(err);
+  }
+  try {
+    for (let i = 0; i < historicalPeriod.length; i++) {
+      if (!isObjectId(historicalPeriod[i])) {
+        const result = await PeriodTag.create({ name:historicalPeriod[i] }); 
+        const resultData = await result._id;
+        console.log(resultData);
+        historicalPeriodsID.push(resultData);
+      }
+
+      else {
+        historicalPeriodsID.push(historicalPeriod[i]);
+      }
+    }
+  } catch (error) {
+    console.log("in cataaah")
+    res.status(400).json(err);
+  }
+try{
   for (let i = 0; i < images.length; i++) {
     let result = await cloudinary.uploader.upload(images[i], { folder: "historicalPlaces" })
     imageBuffer.push(
@@ -14,7 +66,14 @@ const createHistoricalPlace = async (req, res) => {
       }
     );
   }
+}catch(e){
+  res.status(400).json(err);
+}
+  console.log("tagsss", tagsID)
+  console.log("periodss", historicalPeriodsID)
   req.body.images = imageBuffer;
+  req.body.tags = tagsID;
+  req.body.historicalPeriod = historicalPeriodsID;
   const historicalPlace = await HistoricalPlace.create({
     ...req.body
   });
