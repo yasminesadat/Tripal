@@ -3,8 +3,8 @@ const router = express.Router();
 const { createTourGuide, updateTourguideData, getTourguideInfo } = require('../controllers/TourGuideController');
 
 // defining tour-guide routes
-router.post("/tour-guide", createTourGuide);
-router.put("/tour-guide/:id", updateTourguideData);
-router.get("/tour-guide/:id", getTourguideInfo);
+router.post("/tourGuide", createTourGuide);
+router.put("/tourGuide/:id", updateTourguideData);
+router.get("/tourGuide/:id", getTourguideInfo);
 
 module.exports = router;
