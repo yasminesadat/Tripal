@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { nationalities } from "../../assets/Nationalities";
+import { nationalities } from ".."
 const TouristProfile = ({ tourist }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState({ ...tourist });
