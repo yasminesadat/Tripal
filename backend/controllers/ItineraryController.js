@@ -40,6 +40,7 @@ const createItinerary = async(req,res) => {
         availableTime,
         language,
         accessibility,
+        serviceFee,
         pickupLocation,
         dropoffLocation,
         tourists: [],
@@ -101,7 +102,7 @@ const updateItinerary = async(req,res) => {
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {title, description, 
             tourGuide, activities, availableDates, availableTime, language,
-            accessibility, pickupLocation, dropoffLocation, price, locations,
+            accessibility, pickupLocation, dropoffLocation, price, locations,serviceFee,
             timeline,tags: uniqueTags},{ new: true });
             if (!updatedItinerary) {
                 return res.status(404).json({ error: 'Itinerary not found' });

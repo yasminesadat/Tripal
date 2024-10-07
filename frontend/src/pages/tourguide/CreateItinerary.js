@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ItineraryForm from "../../components/tourguide/ItineraryForm";
 import TourguideNavBar from "../../components/tourguide/TourguideNavBar";
 
@@ -14,5 +14,4 @@ const CreateItinerary = () => {
   );
 };
   
-  export default CreateItinerary;
-  
+export default CreateItinerary;

@@ -5,6 +5,7 @@ const TourguideHome = () => {
   return (
     <div>
         <TourguideNavBar />
+        <h1>Welcome to the Tour guide Home Page</h1>
     </div>
   );
 };

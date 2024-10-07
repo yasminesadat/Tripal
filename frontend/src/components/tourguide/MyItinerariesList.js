@@ -19,7 +19,9 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
                             ))}
     
                             <div><strong>Language:</strong> {itinerary.language}</div>
-                            <div><strong>Price:</strong> {itinerary.price}</div>
+                            <div><strong>Service Fee:</strong> {itinerary.serviceFee} LE</div>
+
+                            <div><strong>Price:</strong> {itinerary.price} LE</div>
     
                             <div><strong>Available Dates:</strong> {itinerary.availableDates.length > 0 ? itinerary.availableDates.map(date => new Date(date).toLocaleDateString()).join(', ') : 'N/A'}</div>
                             
