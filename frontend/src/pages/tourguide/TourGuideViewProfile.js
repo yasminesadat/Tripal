@@ -1,16 +1,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {createTourGuide,updateProfile,getProfileData} from "../../api/TourGuideService";
+import { createTourGuide, updateProfile, getProfileData } from "../../api/TourGuideService";
 const TourGuideProfile = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-        console.log("hh");
+      console.log("hh");
       try {
         const response = await getProfileData(id);
         if (!response) {

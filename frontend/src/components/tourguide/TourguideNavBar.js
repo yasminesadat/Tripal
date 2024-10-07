@@ -6,6 +6,9 @@ const TourguideNavBar = () => {
     <nav>
       <div class="nav-bar">
         <div class="nav-bar-link">
+          <Link to="/tourguide/create">Profile</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/tourguide">Home</Link>
         </div>
         <div class="nav-bar-link">
@@ -17,6 +20,7 @@ const TourguideNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
+
       </div>
     </nav>
   );
