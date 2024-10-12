@@ -237,10 +237,10 @@ const ItinerariesForm = () => {
                 <Input
                     value={customAccessibility}
                     onChange={(e) => setCustomAccessibility(e.target.value)}
-                    placeholder="Add custom tag"
+                    placeholder="Add custom accessibility tag"
                     style={{ width: 200, marginRight: 8 }}
                 />
-                <Button onClick={handleCustomTagSubmit} type="primary">Add Tag</Button>
+                <Button onClick={handleCustomTagSubmit} type="primary">Add</Button>
                 <br /><br />
                 <label>
                     Pickup Location: <input
