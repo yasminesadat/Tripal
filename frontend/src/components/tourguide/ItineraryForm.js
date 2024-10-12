@@ -23,6 +23,7 @@ const ItinerariesForm = () => {
     const [customAccessibility, setCustomAccessibility] = useState('');
     const [selectedTags, setSelectedTags] = useState([...tagsData]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
 
     // State to hold selected activities in case of openeing the modal again
     const [selectedActivities, setSelectedActivities] = useState([]);
@@ -48,6 +49,10 @@ const ItinerariesForm = () => {
         const datePattern = /^20\d{2}-\d{2}-\d{2}$/; 
         if (datePattern.test(newDate) && !itinerary.availableDates.includes(newDate)) {
             handleArrayChange('availableDates', newDate);
+            // Clear the selected date after adding it to available dates
+            setSelectedDate(''); // Clear the selected date after it's used
+        } else {
+            setSelectedDate(newDate); // Set the selected date if it’s valid but not added
         }
     };
 
@@ -179,6 +184,7 @@ const ItinerariesForm = () => {
                     Available Dates: <input
                         type="date"
                         onChange={handleDateChange}
+                        value={selectedDate}
                     />
                 </label>
                 <div>
