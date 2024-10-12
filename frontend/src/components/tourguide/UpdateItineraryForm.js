@@ -4,6 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { updateItinerary } from '../../api/ItineraryService.js';
 import languages from '../../assets/constants/Languages.js';
 import ActivitySelectionModal from './ActivitySelectionModal';
+import MapPopUp from '../governor/PopUpForMap.js';
 
 const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const { token } = theme.useToken();
@@ -18,12 +19,18 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const [availableTime, setAvailableTimes] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
+    //tetsong maps
+    const [pickupLocation, setPickupLocation] = useState('');
+    const [dropoffLocation, setDropoffLocation] = useState('');
+    const [markerPosition, setMarkerPosition] = useState(null);
     useEffect(() => {
         if (itinerary) {
             setUpdatedItinerary(itinerary);
             setSelectedTags(itinerary.accessibility || []);
             setAvailableDates(itinerary.availableDates || []);
             setAvailableTimes(itinerary.availableTime || []);
+            setPickupLocation(itinerary.pickupLocation || '');
+            setDropoffLocation(itinerary.dropoffLocation || '');
         }
         if (inputVisible) {
             inputRef.current?.focus();
@@ -66,7 +73,8 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
         updatedItinerary.accessibility = selectedTags;
         updatedItinerary.availableDates = availableDates;
         updatedItinerary.availableTime = availableTime;
-
+        updatedItinerary.pickupLocation = pickupLocation;
+        updatedItinerary.dropoffLocation = dropoffLocation;
         try {
             await updateItinerary(updatedItinerary._id, updatedItinerary);
             message.success('Itinerary updated successfully!');
@@ -176,11 +184,17 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                     <input
                         type="text"
                         name="pickupLocation"
-                        value={updatedItinerary.pickupLocation || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, pickupLocation: e.target.value })}
+                        value={pickupLocation} // Use the state variable for pickup location
+                        onChange={(e) => setPickupLocation(e.target.value)} // Update pickup location state
                         required
                     />
                 </label>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setPickupLocation} // Set selected location
+                    selectedLocation={pickupLocation} // Show selected location
+                />
                 <br /><br />
 
                 <label>
@@ -188,11 +202,18 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                     <input
                         type="text"
                         name="dropoffLocation"
-                        value={updatedItinerary.dropoffLocation || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, dropoffLocation: e.target.value })}
+                        value={dropoffLocation} // Use the state variable for dropoff location
+                        onChange={(e) => setDropoffLocation(e.target.value)} // Update dropoff location state
                         required
                     />
                 </label>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setDropoffLocation} // Set selected location
+                    selectedLocation={dropoffLocation} // Show selected location
+                />
+
                 <br /><br />
 
                 <div>
