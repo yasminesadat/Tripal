@@ -15,7 +15,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const inputRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
     const [availableDates, setAvailableDates] = useState([]);
-    const [availableTimes, setAvailableTimes] = useState([]);
+    const [availableTime, setAvailableTimes] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
             setUpdatedItinerary(itinerary);
             setSelectedTags(itinerary.accessibility || []);
             setAvailableDates(itinerary.availableDates || []);
-            setAvailableTimes(itinerary.availableTimes || []);
+            setAvailableTimes(itinerary.availableTime || []);
         }
         if (inputVisible) {
             inputRef.current?.focus();
@@ -65,7 +65,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
         setConfirmLoading(true);
         updatedItinerary.accessibility = selectedTags;
         updatedItinerary.availableDates = availableDates;
-        updatedItinerary.availableTimes = availableTimes;
+        updatedItinerary.availableTime = availableTime;
 
         try {
             await updateItinerary(updatedItinerary._id, updatedItinerary);
@@ -86,8 +86,8 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     };
 
     const handleTimeChange = (time, timeString) => {
-        if (time && !availableTimes.includes(timeString)) {
-            setAvailableTimes([...availableTimes, timeString]);
+        if (time && !availableTime.includes(timeString)) {
+            setAvailableTimes([...availableTime, timeString]);
         }
     };
 
@@ -96,7 +96,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     };
 
     const removeTime = (timeToRemove) => {
-        setAvailableTimes(availableTimes.filter(time => time !== timeToRemove));
+        setAvailableTimes(availableTime.filter(time => time !== timeToRemove));
     };
     const handleSelectActivities = (selectedActivities) => {
         setUpdatedItinerary(prev => ({ ...prev, activities: selectedActivities }));
@@ -214,7 +214,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
                         format="HH:mm"
                     />
                     <div>
-                        {availableTimes.map(time => (
+                        {availableTime.map(time => (
                             <Tag key={time} closable onClose={() => removeTime(time)}>
                                 {time}
                             </Tag>
