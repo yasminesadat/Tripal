@@ -3,6 +3,7 @@ import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
 import ActivitySelectionModal from './ActivitySelectionModal';
+import MapPopUp from '../governor/PopUpForMap.js';
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
@@ -28,7 +29,10 @@ const ItinerariesForm = () => {
     // State to hold selected activities in case of openeing the modal again
     const [selectedActivities, setSelectedActivities] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
-
+    const [markerPosition, setMarkerPosition] = useState(null);
+    const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
+    const [selectedDropoffLocation, setSelectedDropoffLocation] = useState('');
+    
     const handleSelectActivities = (activities) => {
         setSelectedActivities(activities); // Update selected activities
         setItinerary(prev => ({ ...prev, activities })); // Also update itinerary
@@ -107,10 +111,17 @@ const ItinerariesForm = () => {
             availableTime: prev.availableTime.filter(t => t !== time)
         }));
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const updatedItinerary = {
+            ...itinerary,
+            pickupLocation: selectedPickupLocation,
+            dropoffLocation: selectedDropoffLocation,
+        };
+        
         try {
-            const response = await createItinerary(itinerary);
+            const response = await createItinerary(updatedItinerary);
             console.log('Itinerary created:', response);
             message.success('Itinerary created successfully!');
         } catch (error) {
@@ -118,14 +129,14 @@ const ItinerariesForm = () => {
             message.error('Error creating itinerary');
         }
     };
-
+    
     return (
         <div className='signUpUsersForm-container'> {/*will fix this lol*/}
               <h1 className='signUpUsersForm-title'>Create an Itinerary</h1>
               <br></br>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Title: <input
+                    Title: <Input
                         type="text"
                         name="title"
                         value={itinerary.title}
@@ -133,7 +144,7 @@ const ItinerariesForm = () => {
                         required/>
                 </label>
                 <br /><br />
-                <label>Description: <input 
+                <label>Description: <Input 
                         type="text"
                         name="description"
                         value={itinerary.description}
@@ -183,7 +194,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Service Fee: <input
+                    Service Fee: <Input
                         type="number"
                         name="serviceFee"
                         value={itinerary.serviceFee}
@@ -192,7 +203,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Available Dates: <input
+                    Available Dates: <Input
                         type="date"
                         onChange={handleDateChange}
                         value={selectedDate}
@@ -213,7 +224,7 @@ const ItinerariesForm = () => {
                 <br />
                 <label>
                     Available Times:
-                    <input
+                    <Input
                         type="time"
                         onChange={handleTimeChange}
                     />
@@ -262,25 +273,29 @@ const ItinerariesForm = () => {
                 />
                 <Button onClick={handleCustomTagSubmit} type="primary">Add</Button>
                 <br /><br />
-                <label>
-                    Pickup Location: <input
-                        type="text"
-                        name="pickupLocation"
-                        value={itinerary.pickupLocation}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br /><br />
-                <label>
-                    Dropoff Location: <input
-                        type="text"
-                        name="dropoffLocation"
-                        value={itinerary.dropoffLocation}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <div>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setSelectedPickupLocation}
+                    selectedLocation={selectedPickupLocation}
+                />
+                <div style={{ marginTop: '10px' }}>
+                    <strong>Selected Pickup Location:</strong> {selectedPickupLocation || 'No location selected yet'}
+                </div>
+            </div>
+            <br />
+            <div>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setSelectedDropoffLocation}
+                    selectedLocation={selectedDropoffLocation}
+                />
+                <div style={{ marginTop: '10px' }}>
+                    <strong>Selected Dropoff Location:</strong> {selectedDropoffLocation || 'No location selected yet'}
+                </div>
+            </div>
                 <br /><br />
                 <button type="submit">Create Itinerary</button>
                 <br /><br />
