@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ActivityCategoryService from '../../api/ActivityCategoryService'
 
 const ActivityFilter = ({ onFilter }) => {
   const [startDate, setStartDate] = useState("");
@@ -7,6 +8,24 @@ const ActivityFilter = ({ onFilter }) => {
   const [budgetMax, setBudgetMax] = useState("");
   const [category, setCategory] = useState("");
   const [rating, setRating] = useState("");
+  const [categories, setCategories] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await ActivityCategoryService.getActivityCategories();
+        setCategories(response);
+      } catch (err) {
+        setError("Error fetching categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleFilter = (e) => {
     e.preventDefault();
@@ -49,11 +68,17 @@ const ActivityFilter = ({ onFilter }) => {
       </div>
       <div>
         <label>Category:</label>
-        <input
-          type="text"
+        <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-        />
+        >
+          <option value="">Select A Category</option>
+          {categories && categories.map((cat) => (
+            <option key={cat._id} value={cat.Name}>
+              {cat.Name}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label>Min Rating:</label>

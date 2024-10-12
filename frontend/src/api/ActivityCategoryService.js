@@ -5,7 +5,7 @@ const ActivityCategoryService = {
     try {
       const response = await axios.get(`/activityCategories`);
       console.log(response.data);
-      return response.data;
+      return response.data || [];
     } catch (error) {
       console.error("Error fetching activity categories:", error);
       throw error;
