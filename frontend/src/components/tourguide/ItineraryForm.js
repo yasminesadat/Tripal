@@ -46,13 +46,14 @@ const ItinerariesForm = () => {
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         const datePattern = /^20\d{2}-\d{2}-\d{2}$/; 
-        if (datePattern.test(newDate)) {
+        if (datePattern.test(newDate) && !itinerary.availableDates.includes(newDate)) {
             handleArrayChange('availableDates', newDate);
         }
     };
 
     const handleTimeChange = (e) => {
-        handleArrayChange('availableTime', e.target.value);
+        if (!itinerary.availableTime.includes(e.target.value))
+            handleArrayChange('availableTime', e.target.value);
     };
 
     const handleTagChange = (tag, checked) => {
@@ -83,7 +84,13 @@ const ItinerariesForm = () => {
             accessibility: prev.accessibility.filter(t => t !== tag) 
         }));
     };
- 
+    
+    const removeDate = (date) => {
+        setItinerary(prev => ({
+            ...prev,
+            availableDates: prev.availableDates.filter(d => d !== date) // Remove the date
+        }));
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -175,7 +182,16 @@ const ItinerariesForm = () => {
                     />
                 </label>
                 <div>
-                    Selected Dates: {itinerary.availableDates.join(', ')}
+                    <h3>Selected Dates:</h3>
+                    {itinerary.availableDates.length > 0 ? (
+                        itinerary.availableDates.map(date => (
+                            <Tag key={date} closable onClose={() => removeDate(date)}>
+                                {date}
+                            </Tag>
+                        ))
+                    ) : (
+                        <p>No dates selected.</p>
+                    )}
                 </div>
                 <br />
                 <label>
