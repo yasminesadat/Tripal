@@ -14,9 +14,9 @@ const GovernorNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/historicalPlace/tourismGoverner">Historical Places</Link>
         </div>
-        <div class="nav-bar-link">
+        {/* <div class="nav-bar-link">
           <Link to="/create-tags">Create Tags</Link>
-        </div>
+        </div> */}
         <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>

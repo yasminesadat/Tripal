@@ -21,6 +21,7 @@ const TouristProfile = ({ tourist }) => {
       <ul className="tourist-profile">
         <li key={tourist._id}>
           <h2>
+            <b>Email:</b>
             <input
               type="text"
               name="userName"
