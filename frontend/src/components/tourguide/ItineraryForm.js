@@ -22,7 +22,15 @@ const ItinerariesForm = () => {
     });
     const [customAccessibility, setCustomAccessibility] = useState('');
     const [selectedTags, setSelectedTags] = useState([...tagsData]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
+    // State to hold selected activities in case of openeing the modal again
+    const [selectedActivities, setSelectedActivities] = useState([]);
+    
+    const handleSelectActivities = (activities) => {
+        setSelectedActivities(activities); // Update selected activities
+        setItinerary(prev => ({ ...prev, activities })); // Also update itinerary
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setItinerary(prev => ({ ...prev, [name]: value }));
@@ -75,12 +83,7 @@ const ItinerariesForm = () => {
             accessibility: prev.accessibility.filter(t => t !== tag) 
         }));
     };
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-
-    const handleSelectActivities = (selectedActivities) => {
-        setItinerary(prev => ({ ...prev, activities: selectedActivities }));
-    };
+ 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -117,16 +120,29 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <div><Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
-                 {/* leave this commented ill fix later <div>
-                  Selected Activities: <p>
-                    {itinerary.activities.join(', ')}         
-                    </p>
-                </div>*/}
+      
                     <ActivitySelectionModal
                 isVisible={isModalVisible}
                 onClose={() => setIsModalVisible(false)}
                 onSelectActivities={handleSelectActivities}
+                preSelectedActivities={itinerary.activities}
             /></div>
+
+             <div>
+                    <h3>Selected Activities:</h3>
+                    {selectedActivities.length > 0 ? (
+                        selectedActivities.map(activityId => (
+                            <Tag key={activityId} closable onClose={() => {
+                                setSelectedActivities(prev => prev.filter(id => id !== activityId));
+                                setItinerary(prev => ({ ...prev, activities: prev.activities.filter(id => id !== activityId) }));
+                            }}>
+                                {activityId} {/* Here you might want to show the activity title instead of ID */}
+                            </Tag>
+                        ))
+                    ) : (
+                        <p>No activities selected.</p>
+                    )}
+                </div>
             <br/>
                  <label>Select a Language: </label>
                 <label>
