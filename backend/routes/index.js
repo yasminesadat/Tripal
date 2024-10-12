@@ -16,6 +16,7 @@ const routes = [
   "./RequestRoutes",
   "./AdminRoutes",
   "./ItineraryRoutes",
+  "./ComplaintsRoutes"
 ];
 
 routes.forEach((route) => {
