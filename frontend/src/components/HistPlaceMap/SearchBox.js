@@ -6,6 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import image from '../../assets/images/placeholder.png';
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 const params = {
@@ -15,13 +16,13 @@ const params = {
 };
 
 export default function SearchBox(props) {
-  const { selectPosition, setSelectPosition,selectLocation,setSelectLocation } = props;
+  const { selectPosition, setSelectPosition, selectLocation, setSelectLocation } = props;
   const [searchText, setSearchText] = useState("");
   const [listPlace, setListPlace] = useState([]);
-  const[placeHolder,setPlaceHolder]=useState([]);
+  const [placeHolder, setPlaceHolder] = useState([]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" , marginTop: '16px' }}>
+    <div style={{ display: "flex", flexDirection: "column", marginTop: '16px' }}>
       <div style={{ display: "flex" }}>
         <div style={{ flex: 1 }}>
           <OutlinedInput
@@ -99,7 +100,7 @@ export default function SearchBox(props) {
                 >
                   <ListItemIcon>
                     <img
-                      src="./placeholder.png"
+                      src={image}
                       alt="Placeholder"
                       style={{ width: 38, height: 38 }}
                     />
