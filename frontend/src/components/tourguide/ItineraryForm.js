@@ -15,7 +15,7 @@ const ItinerariesForm = () => {
         serviceFee: 0,
         language: '',
         availableDates: [],
-        availableTime: [],
+        availableTimes: [],
         accessibility: [],
         pickupLocation: '',
         dropoffLocation: '',
@@ -172,7 +172,7 @@ const ItinerariesForm = () => {
                     />
                 </label>
                 <div>
-                    Selected Times: {itinerary.availableTime.join(', ')}
+                    Selected Times: {itinerary.availableTimes.join(', ')}
                 </div>
                 <br />
                 <div>

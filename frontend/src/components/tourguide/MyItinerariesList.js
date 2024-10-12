@@ -25,7 +25,7 @@ const MyItinerariesList = ({ itineraries, onUpdate, onDelete }) => {
     
                             <div><strong>Available Dates:</strong> {itinerary.availableDates.length > 0 ? itinerary.availableDates.map(date => new Date(date).toLocaleDateString()).join(', ') : 'N/A'}</div>
                             
-                            <div><strong>Available Times:</strong> {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}</div>
+                            <div><strong>Available Times:</strong> {itinerary.availableTimes.length > 0 ? itinerary.availableTimes.join(', ') : 'N/A'}</div>
     
                             <div><strong>Accessibility:</strong> {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}</div>
     

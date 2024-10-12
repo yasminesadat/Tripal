@@ -27,7 +27,7 @@ const itinerarySchema = new mongoose.Schema({
     price:{type: Number}, //activity 3ando price also 3ando special disscpunts
 
     availableDates:[{type: Date, required: true}],
-    availableTime: [{type: String, required: true}],
+    availableTimes: [{type: String, required: true}],
 
     accessibility: [{type: String, required: true}],
     pickupLocation: {type: String, required: true},
