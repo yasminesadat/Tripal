@@ -27,7 +27,8 @@ const ItinerariesForm = () => {
 
     // State to hold selected activities in case of openeing the modal again
     const [selectedActivities, setSelectedActivities] = useState([]);
-    
+    const [selectedTime, setSelectedTime] = useState('');
+
     const handleSelectActivities = (activities) => {
         setSelectedActivities(activities); // Update selected activities
         setItinerary(prev => ({ ...prev, activities })); // Also update itinerary
@@ -57,8 +58,11 @@ const ItinerariesForm = () => {
     };
 
     const handleTimeChange = (e) => {
-        if (!itinerary.availableTime.includes(e.target.value))
-            handleArrayChange('availableTime', e.target.value);
+        const newTime = e.target.value;
+        if (!itinerary.availableTime.includes(newTime)) {
+            handleArrayChange('availableTime', newTime);
+            setSelectedTime('');
+        }
     };
 
     const handleTagChange = (tag, checked) => {
@@ -93,7 +97,14 @@ const ItinerariesForm = () => {
     const removeDate = (date) => {
         setItinerary(prev => ({
             ...prev,
-            availableDates: prev.availableDates.filter(d => d !== date) // Remove the date
+            availableDates: prev.availableDates.filter(d => d !== date)
+        }));
+    };
+
+    const removeTime = (time) => {
+        setItinerary(prev => ({
+            ...prev,
+            availableTime: prev.availableTime.filter(t => t !== time)
         }));
     };
     const handleSubmit = async (e) => {
@@ -208,7 +219,16 @@ const ItinerariesForm = () => {
                     />
                 </label>
                 <div>
-                    Selected Times: {itinerary.availableTime.join(', ')}
+                    <h3>Selected Times:</h3>
+                    {itinerary.availableTime.length > 0 ? (
+                        itinerary.availableTime.map(time => (
+                            <Tag key={time} closable onClose={() => removeTime(time)}>
+                                {time}
+                            </Tag>
+                        ))
+                    ) : (
+                        <p>No times selected.</p>
+                    )}
                 </div>
                 <br />
                 <div>
