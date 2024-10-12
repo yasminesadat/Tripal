@@ -75,7 +75,7 @@ const ItinerariesList = ({ itineraries }) => {
                         </div>
                         <div className="list-item-attribute">
                             <strong>Available Times:</strong> 
-                            {itinerary.availableTimes.length > 0 ? itinerary.availableTimes.join(', ') : 'N/A'}
+                            {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
                         </div>
                         <div className="list-item-attribute">
                             <strong>Accessibility:</strong> 

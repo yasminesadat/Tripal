@@ -6,7 +6,7 @@ const preferenceTagModel = require('../models/PreferenceTag');
 const createItinerary = async(req,res) => {
     try {
     const {title, description, tourGuide, activities,serviceFee,    
-    language,availableDates,availableTimes,accessibility,ratings,
+    language,availableDates,availableTime,accessibility,ratings,
     pickupLocation,dropoffLocation} = req.body;
 
     const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
@@ -37,7 +37,7 @@ const createItinerary = async(req,res) => {
         tourGuide,
         activities,
         availableDates,
-        availableTimes,
+        availableTime,
         language,
         accessibility,
         serviceFee,
@@ -75,7 +75,7 @@ const updateItinerary = async(req,res) => {
     try{
         const {id} = req.params;
         const {title, description, tourGuide, activities,serviceFee,
-            language,availableDates,availableTimes,accessibility,
+            language,availableDates,availableTime,accessibility,
             pickupLocation,dropoffLocation} = req.body;
         
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
@@ -101,7 +101,7 @@ const updateItinerary = async(req,res) => {
         const uniqueTags = fetchedTags.map(tag => tag.name);
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {title, description, 
-            tourGuide, activities, availableDates, availableTimes, language,
+            tourGuide, activities, availableDates, availableTime, language,
             accessibility, pickupLocation, dropoffLocation, price, locations,serviceFee,
             timeline,tags: uniqueTags},{ new: true });
             if (!updatedItinerary) {
