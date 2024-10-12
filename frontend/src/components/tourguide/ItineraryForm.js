@@ -129,19 +129,17 @@ const ItinerariesForm = () => {
             /></div>
 
              <div>
-                    <h3>Selected Activities:</h3>
+             <h3>Selected Activities:</h3>
                     {selectedActivities.length > 0 ? (
-                        selectedActivities.map(activityId => (
-                            <Tag key={activityId} closable onClose={() => {
-                                setSelectedActivities(prev => prev.filter(id => id !== activityId));
-                                setItinerary(prev => ({ ...prev, activities: prev.activities.filter(id => id !== activityId) }));
-                            }}>
-                                {activityId} {/* Here you might want to show the activity title instead of ID */}
-                            </Tag>
+                        selectedActivities.map(activity => (
+                            <Tag key={activity._id}>{activity.title}</Tag>
                         ))
                     ) : (
                         <p>No activities selected.</p>
                     )}
+
+
+
                 </div>
             <br/>
                  <label>Select a Language: </label>
