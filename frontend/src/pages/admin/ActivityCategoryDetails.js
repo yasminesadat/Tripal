@@ -44,7 +44,6 @@ const ActivityCategoryDetails = () => {
       const createdCategory = await ActivityCategoryApi.createActivityCategory(
         nameValue
       );
-      console.log("just created", createdCategory);
       const id = createdCategory._id;
       const newObject = {
         Name: nameValue,
@@ -78,10 +77,13 @@ const ActivityCategoryDetails = () => {
   const handleUpdate = async (id, name) => {
     try {
       await ActivityCategoryApi.updateActivityCategory(id, name);
+      let oldName;
       const newData = data.map((c) => {
         if (c._id === id) {
+          oldName = c.Name;
           const newObj = {
             Name: updateCategoryName,
+            _id: id
           };
           return newObj;
         } else {
@@ -89,7 +91,7 @@ const ActivityCategoryDetails = () => {
         }
       });
       setData(newData);
-      notifyUpdate();
+      notifyUpdate(oldName);
       setIsModalVisible(false);
     } catch (error) {
       console.error(`Error updating activity category with id ${id}:`, error);
