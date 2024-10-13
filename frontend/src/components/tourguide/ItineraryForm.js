@@ -3,6 +3,7 @@ import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
 import ActivitySelectionModal from './ActivitySelectionModal';
+import MapPopUp from '../governor/PopUpForMap.js';
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
@@ -22,7 +23,20 @@ const ItinerariesForm = () => {
     });
     const [customAccessibility, setCustomAccessibility] = useState('');
     const [selectedTags, setSelectedTags] = useState([...tagsData]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
 
+    // State to hold selected activities in case of openeing the modal again
+    const [selectedActivities, setSelectedActivities] = useState([]);
+    const [selectedTime, setSelectedTime] = useState('');
+    const [markerPosition, setMarkerPosition] = useState(null);
+    const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
+    const [selectedDropoffLocation, setSelectedDropoffLocation] = useState('');
+    
+    const handleSelectActivities = (activities) => {
+        setSelectedActivities(activities); // Update selected activities
+        setItinerary(prev => ({ ...prev, activities })); // Also update itinerary
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setItinerary(prev => ({ ...prev, [name]: value }));
@@ -38,13 +52,21 @@ const ItinerariesForm = () => {
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         const datePattern = /^20\d{2}-\d{2}-\d{2}$/; 
-        if (datePattern.test(newDate)) {
+        if (datePattern.test(newDate) && !itinerary.availableDates.includes(newDate)) {
             handleArrayChange('availableDates', newDate);
+            // Clear the selected date after adding it to available dates
+            setSelectedDate(''); // Clear the selected date after it's used
+        } else {
+            setSelectedDate(newDate); // Set the selected date if it’s valid but not added
         }
     };
 
     const handleTimeChange = (e) => {
-        handleArrayChange('availableTime', e.target.value);
+        const newTime = e.target.value;
+        if (!itinerary.availableTime.includes(newTime)) {
+            handleArrayChange('availableTime', newTime);
+            setSelectedTime('');
+        }
     };
 
     const handleTagChange = (tag, checked) => {
@@ -75,16 +97,31 @@ const ItinerariesForm = () => {
             accessibility: prev.accessibility.filter(t => t !== tag) 
         }));
     };
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-
-    const handleSelectActivities = (selectedActivities) => {
-        setItinerary(prev => ({ ...prev, activities: selectedActivities }));
+    
+    const removeDate = (date) => {
+        setItinerary(prev => ({
+            ...prev,
+            availableDates: prev.availableDates.filter(d => d !== date)
+        }));
     };
+
+    const removeTime = (time) => {
+        setItinerary(prev => ({
+            ...prev,
+            availableTime: prev.availableTime.filter(t => t !== time)
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const updatedItinerary = {
+            ...itinerary,
+            pickupLocation: selectedPickupLocation,
+            dropoffLocation: selectedDropoffLocation,
+        };
+        
         try {
-            const response = await createItinerary(itinerary);
+            const response = await createItinerary(updatedItinerary);
             console.log('Itinerary created:', response);
             message.success('Itinerary created successfully!');
         } catch (error) {
@@ -92,14 +129,14 @@ const ItinerariesForm = () => {
             message.error('Error creating itinerary');
         }
     };
-
+    
     return (
         <div className='signUpUsersForm-container'> {/*will fix this lol*/}
               <h1 className='signUpUsersForm-title'>Create an Itinerary</h1>
               <br></br>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Title: <input
+                    Title: <Input
                         type="text"
                         name="title"
                         value={itinerary.title}
@@ -107,7 +144,7 @@ const ItinerariesForm = () => {
                         required/>
                 </label>
                 <br /><br />
-                <label>Description: <input 
+                <label>Description: <Input 
                         type="text"
                         name="description"
                         value={itinerary.description}
@@ -117,16 +154,27 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <div><Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
-                 {/* leave this commented ill fix later <div>
-                  Selected Activities: <p>
-                    {itinerary.activities.join(', ')}         
-                    </p>
-                </div>*/}
+      
                     <ActivitySelectionModal
                 isVisible={isModalVisible}
                 onClose={() => setIsModalVisible(false)}
                 onSelectActivities={handleSelectActivities}
+                preSelectedActivities={itinerary.activities}
             /></div>
+
+             <div>
+             <h3>Selected Activities:</h3>
+                    {selectedActivities.length > 0 ? (
+                        selectedActivities.map(activity => (
+                            <Tag key={activity._id}>{activity.title}</Tag>
+                        ))
+                    ) : (
+                        <p>No activities selected.</p>
+                    )}
+
+
+
+                </div>
             <br/>
                  <label>Select a Language: </label>
                 <label>
@@ -146,7 +194,7 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Service Fee: <input
+                    Service Fee: <Input
                         type="number"
                         name="serviceFee"
                         value={itinerary.serviceFee}
@@ -155,24 +203,43 @@ const ItinerariesForm = () => {
                 </label>
                 <br /><br />
                 <label>
-                    Available Dates: <input
+                    Available Dates: <Input
                         type="date"
                         onChange={handleDateChange}
+                        value={selectedDate}
                     />
                 </label>
                 <div>
-                    Selected Dates: {itinerary.availableDates.join(', ')}
+                    <h3>Selected Dates:</h3>
+                    {itinerary.availableDates.length > 0 ? (
+                        itinerary.availableDates.map(date => (
+                            <Tag key={date} closable onClose={() => removeDate(date)}>
+                                {date}
+                            </Tag>
+                        ))
+                    ) : (
+                        <p>No dates selected.</p>
+                    )}
                 </div>
                 <br />
                 <label>
                     Available Times:
-                    <input
+                    <Input
                         type="time"
                         onChange={handleTimeChange}
                     />
                 </label>
                 <div>
-                    Selected Times: {itinerary.availableTime.join(', ')}
+                    <h3>Selected Times:</h3>
+                    {itinerary.availableTime.length > 0 ? (
+                        itinerary.availableTime.map(time => (
+                            <Tag key={time} closable onClose={() => removeTime(time)}>
+                                {time}
+                            </Tag>
+                        ))
+                    ) : (
+                        <p>No times selected.</p>
+                    )}
                 </div>
                 <br />
                 <div>
@@ -201,30 +268,34 @@ const ItinerariesForm = () => {
                 <Input
                     value={customAccessibility}
                     onChange={(e) => setCustomAccessibility(e.target.value)}
-                    placeholder="Add custom tag"
+                    placeholder="Add custom accessibility tag"
                     style={{ width: 200, marginRight: 8 }}
                 />
-                <Button onClick={handleCustomTagSubmit} type="primary">Add Tag</Button>
+                <Button onClick={handleCustomTagSubmit} type="primary">Add</Button>
                 <br /><br />
-                <label>
-                    Pickup Location: <input
-                        type="text"
-                        name="pickupLocation"
-                        value={itinerary.pickupLocation}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br /><br />
-                <label>
-                    Dropoff Location: <input
-                        type="text"
-                        name="dropoffLocation"
-                        value={itinerary.dropoffLocation}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <div>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setSelectedPickupLocation}
+                    selectedLocation={selectedPickupLocation}
+                />
+                <div style={{ marginTop: '10px' }}>
+                    <strong>Selected Pickup Location:</strong> {selectedPickupLocation || 'No location selected yet'}
+                </div>
+            </div>
+            <br />
+            <div>
+                <MapPopUp
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    setSelectedLocation={setSelectedDropoffLocation}
+                    selectedLocation={selectedDropoffLocation}
+                />
+                <div style={{ marginTop: '10px' }}>
+                    <strong>Selected Dropoff Location:</strong> {selectedDropoffLocation || 'No location selected yet'}
+                </div>
+            </div>
                 <br /><br />
                 <button type="submit">Create Itinerary</button>
                 <br /><br />

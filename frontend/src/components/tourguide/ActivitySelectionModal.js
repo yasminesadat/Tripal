@@ -21,13 +21,14 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
         }
     }, [preSelectedActivities, isVisible]);
 
-    const handleSelect = (activityId, checked) => {
+    const handleSelect = (activity, checked) => {
         const updatedSelected = checked 
-            ? [...selectedActivities, activityId]
-            : selectedActivities.filter(id => id !== activityId);
-
+            ? [...selectedActivities, activity] // Store the full activity object
+            : selectedActivities.filter(a => a._id !== activity._id);
+    
         setSelectedActivities(updatedSelected);
     };
+    
 
     const handleOk = () => {
         onSelectActivities(selectedActivities);
@@ -46,14 +47,14 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
                 renderItem={activity => (
                     <List.Item>
                         <Checkbox
-                            checked={selectedActivities.includes(activity._id)}
-                            onChange={(e) => handleSelect(activity._id, e.target.checked)}
+                            checked={selectedActivities.some(a => a._id === activity._id)}
+                            onChange={(e) => handleSelect(activity, e.target.checked)}
                         >
                             {activity.title}
                         </Checkbox>
                     </List.Item>
-                )}
-            />
+                    )}
+                />
         </Modal>
     );
 };
