@@ -99,9 +99,14 @@ a:hover {
     padding: 2%;
 }
 
-.list-item-attribute{
-    /* margin: 5px 0; */
-    /* font-weight: 700; */
+.list-item-attributes-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-item-attribute-img{
+    width: 200px;
 }
 
 .list-item-attribute-sublist{
