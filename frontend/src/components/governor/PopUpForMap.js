@@ -1,8 +1,8 @@
-import {React,useState} from 'react';
-import 'reactjs-popup/dist/index.css';
-import {Button, Modal} from "antd";
+import { React, useState } from 'react';
+// import 'reactjs-popup/dist/index.css';
+import { Button, Modal } from "antd";
 import LocationMap from "../MapComponent";
-const MapPopUp=({markerPosition,setMarkerPosition,setSelectedLocation,selectedLocation})=>{
+const MapPopUp = ({ markerPosition, setMarkerPosition, setSelectedLocation, selectedLocation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -13,15 +13,15 @@ const MapPopUp=({markerPosition,setMarkerPosition,setSelectedLocation,selectedLo
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-    return(
-        <>
-      <Button type="primary" onClick={showModal}   style={{
-                        width: '100%',
-                    }}>
-       Add location
+  return (
+    <>
+      <Button type="primary" onClick={showModal} style={{
+        width: '100%',
+      }}>
+        Add location
       </Button>
       <Modal title="Choose your location" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <LocationMap
+        <LocationMap
           markerPosition={markerPosition}
           setMarkerPosition={setMarkerPosition}
           setSelectedLocation={setSelectedLocation}
@@ -31,7 +31,7 @@ const MapPopUp=({markerPosition,setMarkerPosition,setSelectedLocation,selectedLo
         </div>
       </Modal>
     </>
-      );
+  );
 }
 export default MapPopUp
 
