@@ -48,8 +48,8 @@ const UpcomingActivitiesPage = () => {
         .includes(lowerCaseSearchTerm);
       const hasMatchingCategory =
         activity.category &&
-        activity.category.name &&
-        activity.category.name.toLowerCase().includes(lowerCaseSearchTerm);
+        activity.category.Name &&
+        activity.category.Name.toLowerCase().includes(lowerCaseSearchTerm);
       const hasMatchingTags =
         activity.tags &&
         activity.tags.some(
@@ -79,8 +79,9 @@ const UpcomingActivitiesPage = () => {
         (!budgetMax || activityBudget <= budgetMax);
       const isCategoryValid =
         !category ||
-        (activityCategory.name &&
-          activityCategory.name.toLowerCase() === category.toLowerCase());
+        (activityCategory && 
+          activityCategory.Name &&
+          activityCategory.Name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
         !rating || (activityRating >= rating);
 
