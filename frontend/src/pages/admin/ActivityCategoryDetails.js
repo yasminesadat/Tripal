@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { List, Button, Modal, Input } from "antd";
 import ActivityCategoryApi from "../../api/ActivityCategoryService";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import AdminNavBar from "../../components/admin/AdminNavBar";
 import Footer from "../../components/Footer";
-
+import { message } from 'antd'
 const ActivityCategoryDetails = () => {
   const [nameValue, setNameValue] = useState("");
   const [data, setData] = useState([]);
@@ -22,18 +22,18 @@ const ActivityCategoryDetails = () => {
         console.log("Fetched categories:", response);
       } catch (error) {
         console.error("Error fetching activity categories:", error);
-        toast.error("Failed to fetch activity categories!");
+        message.error("Failed to fetch activity categories!");
       }
     };
     fetchData();
   }, []);
 
   const notifyDelete = (name) =>
-    toast(`Activity Category ${name} is deleted successfully!`);
+    message.success(`Activity Category ${name} is deleted successfully!`);
   const notifyCreate = (name) =>
-    toast(`Activity Category ${name} is added successfully!`);
+    message.success(`Activity Category ${name} is added successfully!`);
   const notifyUpdate = (name) =>
-    toast(`Activity Category ${name} is updated successfully!`);
+    message.success(`Activity Category ${name} is updated successfully!`);
 
   const handleInputChange = (event) => {
     setNameValue(event.target.value);
@@ -44,7 +44,6 @@ const ActivityCategoryDetails = () => {
       const createdCategory = await ActivityCategoryApi.createActivityCategory(
         nameValue
       );
-      console.log("just created", createdCategory);
       const id = createdCategory._id;
       const newObject = {
         Name: nameValue,
@@ -54,8 +53,7 @@ const ActivityCategoryDetails = () => {
       setNameValue("");
       notifyCreate(nameValue);
     } catch (error) {
-      console.error("Error creating activity category:", error);
-      toast.error("Failed to create activity category!");
+      message.error("Failed to create activity category!");
     }
   };
 
@@ -66,8 +64,7 @@ const ActivityCategoryDetails = () => {
       setData(updatedData);
       notifyDelete(name);
     } catch (error) {
-      console.error(`Error deleting activity category with id ${id}:`, error);
-      toast.error("Failed to delete activity category!");
+      message.error("Failed to delete activity category!");
     }
   };
   const editActivityCategory = async (id, name) => {
@@ -78,10 +75,13 @@ const ActivityCategoryDetails = () => {
   const handleUpdate = async (id, name) => {
     try {
       await ActivityCategoryApi.updateActivityCategory(id, name);
+      let oldName;
       const newData = data.map((c) => {
         if (c._id === id) {
+          oldName = c.Name;
           const newObj = {
             Name: updateCategoryName,
+            _id: id
           };
           return newObj;
         } else {
@@ -89,11 +89,11 @@ const ActivityCategoryDetails = () => {
         }
       });
       setData(newData);
-      notifyUpdate();
+      notifyUpdate(oldName);
       setIsModalVisible(false);
     } catch (error) {
-      console.error(`Error updating activity category with id ${id}:`, error);
-      toast.error("Failed to update activity category!");
+
+      message.error("Failed to update activity category!");
     }
   };
   return (
@@ -171,7 +171,7 @@ const ActivityCategoryDetails = () => {
             placeholder="Enter new activity category name"
           />
         </Modal>
-        <ToastContainer />
+
       </div>
 
       <Footer />
