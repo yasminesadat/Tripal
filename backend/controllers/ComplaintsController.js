@@ -62,7 +62,7 @@ const getComplaintsByTourist = asyncHandler(async (req, res) => {
 
 const getAllComplaints = asyncHandler(async (req, res) => {
     try {
-        const allComplaints = await complaints.find().populate('issuerId', 'userName'); // Populate issuer's userName
+        const allComplaints = await complaints.find();
 
         if (allComplaints.length === 0) {
             return res.status(404).json({ message: "No complaints found" });
