@@ -156,4 +156,23 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-module.exports = { createTourist, getTouristInfo, updateTouristProfile };
+const changePassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body
+    const hashedOldPassword = await bcrypt.hash(oldPassword, 10);
+
+    const tourist = await touristModel.findById(id);
+    if (hashedOldPassword != tourist.password)
+      return res.status(400).json({ error: "current password is incorrect" });
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await updateTouristProfile(id, {
+      "password": hashedNewPassword
+    })
+    return res.status(200).json("Successful");
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword };

@@ -55,8 +55,8 @@ const UserList = () => {
                 <span><strong>ID:</strong> {user._id}</span>
                 <span><strong>Type:</strong> {user.role}</span>
               </div>
-              {user.role != "Admin" && <button className="delete-button" onClick={() => deleteUsers(user.userId)}>Delete</button>
-              }
+              <button className="delete-button" onClick={() => deleteUsers(user.userId)}>Delete</button>
+
             </li>
           ))}
         </ul>
