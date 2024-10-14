@@ -1,8 +1,9 @@
 import React from "react";
 import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
+import { advertiserId } from "../../IDs";
+
 
 const AdvertiserHome = () => {
-  const advertiserId = "6701cc555e553adca0a5c640";
 
   return (
     <div>

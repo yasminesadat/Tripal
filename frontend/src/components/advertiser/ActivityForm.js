@@ -3,6 +3,7 @@ import axios from 'axios';
 import LocationMap from '../MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import {advertiserID} from "../../IDs";
 
 const { TextArea } = Input;
 
@@ -14,7 +15,7 @@ const ActivityForm = ({ isUpdate }) => {
 
   const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
-    advertiser: existingActivity?.advertiser._id || '6701cc555e553adca0a5c640', // Use optional chaining here as well
+    advertiser: existingActivity?.advertiser._id || advertiserID, // Use optional chaining here as well
     title: existingActivity?.title || '',
     description: existingActivity?.description || '',
     date: existingActivity?.date ? new Date(existingActivity.date).toISOString().split('T')[0] : '',
@@ -94,7 +95,7 @@ const ActivityForm = ({ isUpdate }) => {
           longitude: markerPosition[1], // Send the longitude
         });
         message.success('Activity updated successfully!');
-        setTimeout(() => navigate("/advertiser-activity/6701cc555e553adca0a5c640"), 1000);
+        setTimeout(() => navigate(`/advertiser-activity/${advertiserID}`), 1000);
       }
       else {
         const response = await axios.post('http://localhost:5050/api/activities', {
@@ -106,7 +107,7 @@ const ActivityForm = ({ isUpdate }) => {
 
         message.success('Activity created successfully!');
         console.log('Activity created:', response.data);
-        setTimeout(() => navigate("/advertiser-activity/6701cc555e553adca0a5c640"), 1000);
+        setTimeout(() => navigate(`/advertiser-activity/${advertiserID}`), 1000);
       }
     } catch (error) {
       console.error('Error creating ACTIVITY:', error);
