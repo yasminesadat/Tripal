@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {advertiserID} from "../../IDs";
+
 
 const AdvertiserNavBar = () => {
   return (
@@ -12,13 +14,13 @@ const AdvertiserNavBar = () => {
           <Link to="/create-advertiser">Create Profile</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/advertiser/6701cc555e553adca0a5c640`}>Profile</Link>
+          <Link to={`/advertiser/${advertiserID}`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/create-activity">Create Activity</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/advertiser-activity/6701cc555e553adca0a5c640`}>Activities</Link>
+          <Link to={`/advertiser-activity/${advertiserID}`}>Activities</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/">Log out</Link>

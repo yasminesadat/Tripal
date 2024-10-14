@@ -2,6 +2,7 @@ const sellerId = "66feba9d07e241bd01e73609";
 const tourismGovernerID = "6703aa9d78a7632a67a38dfe";
 const adminId = "66fe7f731bea1d5e8a2d2f8c";
 const touristId = "66ffa8ab139be95d178bb779";
+const advertiserID="670c57b8b8b7301413bb4cc0";
 
 //mimics what will be in token to adjust some component
 // features based on it
@@ -16,4 +17,5 @@ module.exports = {
   tourismGovernerID,
   adminId,
   touristId,
+  advertiserID
 };

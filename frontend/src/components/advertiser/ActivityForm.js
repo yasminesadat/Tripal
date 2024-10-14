@@ -3,6 +3,7 @@ import axios from 'axios';
 import LocationMap from '../MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import {advertiserID} from "../../IDs";
 
 const { TextArea } = Input;
 
@@ -14,7 +15,7 @@ const ActivityForm = ({ isUpdate }) => {
 
   const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
-    advertiser: existingActivity?.advertiser._id || '6701cc555e553adca0a5c640', // Use optional chaining here as well
+    advertiser: existingActivity?.advertiser._id || advertiserID, // Use optional chaining here as well
     title: existingActivity?.title || '',
     description: existingActivity?.description || '',
     date: existingActivity?.date ? new Date(existingActivity.date).toISOString().split('T')[0] : '',
