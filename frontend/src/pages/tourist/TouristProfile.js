@@ -157,7 +157,7 @@ const TouristHomePage = () => {
               <input
                 type="text"
                 name="walletBalance"
-                value={profileInformation.walletBalance}
+                value={profileInformation.wallet.amount + " " + profileInformation.wallet.currency}
                 readOnly
               />
             </p>
