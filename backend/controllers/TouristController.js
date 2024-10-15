@@ -89,19 +89,11 @@ const getTouristInfo = async (req, res) => {
     }
 
     // retreives all the info beta3 el tourist by his id
-    const touristInformation = await touristModel.findById(id).lean();
+    const touristInformation = await touristModel.findById(id);
     if (!touristInformation) {
       return res.status(404).json("Tourist profile doesn't exist");
     }
-    // find corresponding wallet for this user (by default created with a balance of 0)
-    const touristWallet = await walletModel.findOne({ userID: id });
-    let walletBalance = "No wallet information available";
 
-    if (touristWallet) {
-      walletBalance = `${touristWallet.amount} ${touristWallet.currency}`;
-    }
-
-    touristInformation.walletBalance = walletBalance;
 
     return res.status(200).json(touristInformation);
   } catch (error) {
