@@ -1,14 +1,14 @@
-const sellerId = "66feba9d07e241bd01e73609";
+const sellerId = "67092b1651baf2ce64114a26";
 const tourismGovernerID = "6703aa9d78a7632a67a38dfe";
-const adminId = "66fe7f731bea1d5e8a2d2f8c";
-const touristId = "66ffa8ab139be95d178bb779";
-const advertiserID="670c57b8b8b7301413bb4cc0";
+const adminId = "670c3f8b4d912d42ccf5580c";
+const touristId = "670d4e900cb9ea7937cc9968";
+const advertiserID = "670c57b8b8b7301413bb4cc0";
 
 //mimics what will be in token to adjust some component
 // features based on it
 //change to test different roles in the website
-const currUser = "66feba9d07e241bd01e73609";
-const userRole = "Seller"; //used to test [Admin, Tourist, Seller]
+const currUser = touristId;
+const userRole = "Tourist"; //used to test [Admin, Tourist, Seller]
 
 module.exports = {
   currUser,
@@ -17,5 +17,5 @@ module.exports = {
   tourismGovernerID,
   adminId,
   touristId,
-  advertiserID
+  advertiserID,
 };
