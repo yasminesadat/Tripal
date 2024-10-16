@@ -30,3 +30,14 @@ export const editProduct = async (id, productData) => {
     throw error;
   }
 };
+
+export const getRatings = async (id) => {
+  try {
+    const response = await axios.get(`/products/${id}/ratings`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    throw error;
+  }
+};
+
