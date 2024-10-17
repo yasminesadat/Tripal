@@ -41,3 +41,16 @@ export const getRatings = async (id) => {
   }
 };
 
+export const addRating = async (productID, ratingData) => {
+  try {
+    const response = await axios.post(`/products/${productID}/ratings`, ratingData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error adding rating:", error);
+    throw error;
+  }
+};

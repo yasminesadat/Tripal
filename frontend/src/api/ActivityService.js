@@ -75,3 +75,27 @@ export async function sortUpcomingActivities() {
     throw error;
   }
 }
+
+export const getRatings = async (id) => {
+  try {
+    const response = await axios.get(`/activities/${id}/ratings`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    throw error;
+  }
+};
+
+export const addRating = async (activityID, ratingData) => {
+  try {
+    const response = await axios.post(`/activities/${activityID}/ratings`, ratingData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error adding rating:", error);
+    throw error;
+  }
+};

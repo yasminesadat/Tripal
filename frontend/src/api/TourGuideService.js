@@ -26,3 +26,27 @@ export const getProfileData = async (id) => {
     throw error;
   }
 };
+
+export const getRatings = async (id) => {
+  try {
+    const response = await axios.get(`/tourGuide/${id}/ratings`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    throw error;
+  }
+};
+
+export const addRating = async (tourGuideID, ratingData) => {
+  try {
+    const response = await axios.post(`/tourGuide/${tourGuideID}/ratings`, ratingData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error adding rating:", error);
+    throw error;
+  }
+};

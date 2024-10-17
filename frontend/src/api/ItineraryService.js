@@ -51,3 +51,27 @@ export const deleteItinerary = async (id) => {
         throw error;
     }
 };
+
+export const getRatings = async (id) => {
+    try {
+      const response = await axios.get(`/itinerary/${id}/ratings`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching ratings:", error);
+      throw error;
+    }
+  };
+  
+  export const addRating = async (itineraryID, ratingData) => {
+    try {
+      const response = await axios.post(`/itinerary/${itineraryID}/ratings`, ratingData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data; 
+    } catch (error) {
+      console.error("Error adding rating:", error);
+      throw error;
+    }
+  };

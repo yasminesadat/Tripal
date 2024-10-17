@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useLocation, Link } from "react-router-dom";
-import { getRatings } from "../../api/ProductService"; // Ensure this points to your API function
+import { getRatings } from "../../api/ProductService"; 
 import {
   Rate,
   Layout,

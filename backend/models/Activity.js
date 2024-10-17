@@ -51,13 +51,10 @@ const activitySchema = new Schema(
         default: []
       },
     ],
-    ratings: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Rating",
-        default: []
-      },
-    ],
+    averageRating: {
+      type: Number,
+      default: 0.0,
+    },
     specialDiscounts: {
       type: String,
     },
