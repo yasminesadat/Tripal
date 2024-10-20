@@ -4,7 +4,7 @@ const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
 const Activity = require("../models/Activity");
 const ActivityRating = require("../models/ActivityRating");
-const { createActivity, getAdvertiserActivities, updateActivity, deleteActivity, addRating, viewUpcomingActivities, addActivityComment, getActivityComments } = require('../controllers/ActivityController');
+const { createActivity, getAdvertiserActivities, updateActivity, deleteActivity, viewUpcomingActivities, addActivityComment, getActivityComments } = require('../controllers/ActivityController');
 
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities);

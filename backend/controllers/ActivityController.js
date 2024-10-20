@@ -22,7 +22,7 @@ const createActivity = async (req, res) => {
     specialDiscounts,
     isBookingOpen,
   } = req.body;
-  
+
   try {
     const existingAdvertiser = await Advertiser.findById(advertiser);
     if (!existingAdvertiser) {
@@ -57,8 +57,8 @@ const createActivity = async (req, res) => {
       latitude,
       longitude,
       price,
-      category: category._id, 
-      tags: tagIds, 
+      category: category._id,
+      tags: tagIds,
       specialDiscounts,
       isBookingOpen,
     });
@@ -98,7 +98,7 @@ const updateActivity = async (req, res) => {
     if (category) {
       const existingCategory = await ActivityCategory.findOne({ Name: category });
       if (existingCategory) {
-        updateParameters.category = existingCategory._id; 
+        updateParameters.category = existingCategory._id;
       } else {
         return res.status(404).json({ error: "Category not found" });
       }
@@ -149,11 +149,11 @@ const viewUpcomingActivities = async (req, res) => {
 
 const addActivityComment = async (req, res) => {
   const { userId, activityId, text } = req.body;
-  
+
   if (!text) {
     return res.status(400).json({ message: "Please enter a comment." });
   }
-  
+
   try {
     const comment = new ActivityComment({ userId, activityId, text });
     await comment.save();
@@ -168,7 +168,7 @@ const getActivityComments = async (req, res) => {
 
   try {
     const comments = await ActivityComment.find({ activityId })
-      .populate('userId', 'name'); 
+      .populate('userId', 'name');
     return res.status(200).json(comments);
   } catch (error) {
     return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
@@ -180,7 +180,6 @@ module.exports = {
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
-  addRating,
   addActivityComment,
   viewUpcomingActivities,
   addActivityComment,

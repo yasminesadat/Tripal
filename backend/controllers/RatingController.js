@@ -3,7 +3,7 @@ const Tourist = require('../models/users/Tourist');
 
 const addRating = (Model, RatingModel, entityIDField) =>
   asyncHandler(async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     const { rating, review, userID } = req.body;
 
     const entity = await Model.findById(id);
@@ -22,15 +22,15 @@ const addRating = (Model, RatingModel, entityIDField) =>
       rating,
       review,
       userID,
-      [entityIDField]: id, 
+      [entityIDField]: id,
     });
 
     await newRating.save();
 
     // Calculate new average rating
-    const allRatings = await RatingModel.find({ [entityIDField]: id }); 
+    const allRatings = await RatingModel.find({ [entityIDField]: id });
     const newAverage =
-      allRatings.reduce((acc, r) => acc + r.rating, 0) / allRatings.length || 0; 
+      allRatings.reduce((acc, r) => acc + r.rating, 0) / allRatings.length || 0;
 
     entity.averageRating = newAverage;
 
@@ -43,23 +43,23 @@ const addRating = (Model, RatingModel, entityIDField) =>
     });
   });
 
-  const getRatings = (Model, RatingModel, entityIDField) =>
-    asyncHandler(async (req, res) => {
-      const { id } = req.params; 
-  
-      const entity = await Model.findById(id);
-      if (!entity) {
-        res.status(404);
-        throw new Error(`${Model.modelName} not found`);
-      }
-  
-      const ratings = await RatingModel.find({ [entityIDField]: id }).populate('userID', 'userName'); 
+const getRatings = (Model, RatingModel, entityIDField) =>
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
 
-      res.status(200).json({
-        ratings,
-        totalRatings: ratings.length,
-      });
+    const entity = await Model.findById(id);
+    if (!entity) {
+      res.status(404);
+      throw new Error(`${Model.modelName} not found`);
+    }
+
+    const ratings = await RatingModel.find({ [entityIDField]: id }).populate('userID', 'userName');
+
+    res.status(200).json({
+      ratings,
+      totalRatings: ratings.length,
     });
+  });
 
 module.exports = {
   addRating,

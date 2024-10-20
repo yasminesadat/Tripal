@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
-const { createItinerary, getItineraries, updateItinerary, deleteItinerary, viewItineraries} = require('../controllers/ItineraryController');
-const { addRating, getRatings } = require("../controllers/RatingController"); 
-const Itinerary = require("../models/Itinerary"); 
+const { addRating, getRatings } = require("../controllers/RatingController");
+const Itinerary = require("../models/Itinerary");
 const ItineraryRating = require("../models/ItineraryRating");
-const { createItinerary, getItineraries, updateItinerary, deleteItinerary, viewItineraries, addItineraryRating, getItineraryRatings, addItineraryComment, getItineraryComments } = require('../controllers/ItineraryController');
+const { createItinerary, getItineraries, updateItinerary, deleteItinerary, viewItineraries, getItineraryRatings, addItineraryComment, getItineraryComments } = require('../controllers/ItineraryController');
 
-router.post('/itinerary', createItinerary); 
+router.post('/itinerary', createItinerary);
 router.get('/itinerary', getItineraries);
 router.put('/itinerary/:id', updateItinerary);
 router.delete('/itinerary/:id', deleteItinerary);
