@@ -12,7 +12,7 @@ const TouristNavBar = () => {
           <Link to="/tourist-profile">Profile</Link>
         </div> */}
         <div class="nav-bar-link">
-          <Link to={`/tourist-profile/66ffac1a139be95d178bb78d`}>Profile</Link>
+          <Link to={`/tourist-profile/670d4e900cb9ea7937cc9968`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/upcoming-activities">Activities</Link>

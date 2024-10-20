@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getTouristInformation, updateTouristInformation } from "../../api/TouristService";
+import {
+  getTouristInformation,
+  updateTouristInformation,
+} from "../../api/TouristService";
 import TouristNavBar from "../../components/tourist/TouristNavBar";
 import { useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toastify
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 
 const TouristHomePage = () => {
   const { id } = useParams();
-  const [profileInformation, setProfileInformation] = useState([]);
+  const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [feedback, setFeedback] = useState({ message: "", isSuccess: false });
 
   const [editedProfile, setEditedProfile] = useState({
     email: "",
@@ -64,17 +66,7 @@ const TouristHomePage = () => {
 
   useEffect(() => {
     getUserInformation();
-  }, []);
-
-  const FeedbackMessage = ({ message, isSuccess }) => {
-    const feedbackStyle = {
-      color: isSuccess ? "green" : "red",
-      margin: "10px 0",
-      fontWeight: "bold",
-    };
-
-    return <div style={feedbackStyle}>{message}</div>;
-  };
+  });
 
   return (
     <div>
@@ -106,7 +98,9 @@ const TouristHomePage = () => {
               <input
                 type="text"
                 name="dateOfBirth"
-                value={new Date(profileInformation.dateOfBirth).toLocaleDateString()}
+                value={new Date(
+                  profileInformation.dateOfBirth
+                ).toLocaleDateString()}
                 readOnly
               />
             </p>
@@ -125,11 +119,7 @@ const TouristHomePage = () => {
                   ))}
                 </select>
               ) : (
-                <input
-                  type="text"
-                  value={editedProfile.nationality}
-                  readOnly
-                />
+                <input type="text" value={editedProfile.nationality} readOnly />
               )}
             </p>
             <p>
@@ -154,18 +144,23 @@ const TouristHomePage = () => {
             </p>
             <p>
               <b>Balance:</b>
-              <input
-                type="text"
-                name="walletBalance"
-                value={profileInformation.walletBalance}
-                readOnly
-              />
+              {profileInformation.wallet ? (
+                <input
+                  type="text"
+                  name="walletBalance"
+                  value={
+                    profileInformation.wallet.amount +
+                    " " +
+                    profileInformation.wallet.currency
+                  }
+                  readOnly
+                />
+              ) : (
+                <span>No wallet information available</span>
+              )}
             </p>
           </li>
         </ul>
-
-        {/* Render the feedback message here
-        <FeedbackMessage message={feedback.message} isSuccess={feedback.isSuccess} /> */}
 
         <button onClick={handleEditClick}>
           {isEditing ? "Save" : "Update"}

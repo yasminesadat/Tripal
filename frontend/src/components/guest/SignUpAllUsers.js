@@ -7,11 +7,11 @@ import moment from "moment";
 import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
-import { createRequest } from "../../api/RequestService";
+import { createRequest, acceptRequest } from "../../api/RequestService";
 const { Option } = Select;
 
 const SignUpAllUsers = () => {
-
+  const [requestId, setRequestId] = useState('')
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
@@ -22,7 +22,9 @@ const SignUpAllUsers = () => {
     dateOfBirth: "",
     job: "",
   });
-
+  const handleAcceptRequest = () => {
+    acceptRequestFE(requestId);
+  };
   const [role, setRole] = useState("seller");
   const [form] = Form.useForm();
 
@@ -32,7 +34,16 @@ const SignUpAllUsers = () => {
       [name]: value,
     }));
   };
+  const acceptRequestFE = async (RequestID) => {
+    try {
+      const response = await acceptRequest(RequestID);
+      console.log("Request accepted successfully:", response);
+      return response;
+    } catch (error) {
+      console.error("Error accepting request:", error.message);
 
+    }
+  };
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
@@ -50,7 +61,7 @@ const SignUpAllUsers = () => {
     };
 
     let newUser;
-
+    let response;
     if (role === "tourist") {
       newUser = {
         ...commonUser,
@@ -65,61 +76,55 @@ const SignUpAllUsers = () => {
 
     try {
       if (role === "seller") {
-        const data = await createRequest({
+        response = await createRequest({
           ...commonUser,
-          role: "seller"
-        })
-        // setRequest(data)
-        console.log({
-          ...commonUser,
-          role: "seller"
-        })
+          role: "Seller"
+        });
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "seller"
-
+            role: "Seller"
           }
-        })
+        });
       } else if (role === "tour-guide") {
-        await createRequest({
+        response = await createRequest({
           ...commonUser,
-          role: "tourGuide"
-
-        })
+          role: "Tour Guide"
+        });
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "tourGuide"
-
+            role: "Tour Guide"
           }
-        })
-        // await createTourGuide(newUser);
+        });
       } else if (role === "advertiser") {
-        await createRequest({
+        response = await createRequest({
           ...commonUser,
-          role: "advertiser"
-        })
+          role: "Advertiser"
+        });
+        console.log("response", response)
         navigate("/seller/pending", {
           state: {
             ...commonUser,
-            role: "advertiser"
-
+            role: "Advertiser"
           }
-        })
-        // await createAdvertiser(newUser);
+        });
       } else if (role === "tourist") {
-        await createTourist(newUser);
+        response = await createTourist(newUser);
         message.success("Sign up successful!");
-      }
-
-      if (role === "tourist") {
         navigate("/tourist");
       }
-    } catch (err) {
-      message.error(err.response.data.error);
+
+    } catch (error) {
+      console.log('Error object:', error);
+      // Check if error response exists and display the error message
+
+      message.error(error.message); // Display backend error
+
     }
   };
+
+
 
   return (
     <div className="signUpUsersForm-container">
@@ -233,7 +238,20 @@ const SignUpAllUsers = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Input
+        placeholder="enter request/user id"
+        value={requestId}
+        onChange={(e) => setRequestId(e.target.value)}
+      />
+      <br></br> <br></br>
+      <Button type="primary" style={{ width: "50%" }} onClick={handleAcceptRequest}>
+        Accept Request
+      </Button>
+
+      <br></br> <br></br>
+
     </div>
+
   );
 };
 

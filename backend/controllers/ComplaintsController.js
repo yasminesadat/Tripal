@@ -1,7 +1,7 @@
 const complaints = require('../models/Complaint');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
-const Tourist = require('../models/Tourist');
+const Tourist = require('../models/users/Tourist');
 
 const createComplaint = asyncHandler(async (req, res) => {
     const { title, body } = req.body;
@@ -62,8 +62,8 @@ const getComplaintsByTourist = asyncHandler(async (req, res) => {
 
 const getAllComplaints = asyncHandler(async (req, res) => {
     try {
-        const allComplaints = await complaints.find().populate('issuerId', 'userName'); // Populate issuer's userName
-        
+        const allComplaints = await complaints.find();
+
         if (allComplaints.length === 0) {
             return res.status(404).json({ message: "No complaints found" });
         }
@@ -123,7 +123,7 @@ const updateComplaintStatus = asyncHandler(async (req, res) => {
 
 const replyToComplaint = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { reply } = req.body; 
+    const { reply } = req.body;
     if (!reply) {
         return res.status(400).json({ message: "Reply content is required" });
     }
@@ -132,7 +132,7 @@ const replyToComplaint = asyncHandler(async (req, res) => {
         // Find the complaint by ID and update the reply
         const updatedComplaint = await complaints.findByIdAndUpdate(
             id,
-            { reply }, 
+            { reply },
             { new: true } // return the updated document
         );
 
@@ -154,7 +154,7 @@ module.exports = {
     getComplaintById,
     updateComplaintStatus,
     replyToComplaint,
-    
+
 };
 
 
