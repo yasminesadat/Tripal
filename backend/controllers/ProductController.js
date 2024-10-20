@@ -4,24 +4,24 @@ const cloudinary = require("../cloudinary");
 
 const Product = require("../models/Product.js");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/Tourist.js");
-const Seller = require("../models/Seller.js");
+const Tourist = require("../models/users/Tourist.js");
+const Seller = require("../models/users/Seller.js");
 
 const createProduct = asyncHandler(async (req, res) => {
   const { name, sellerID, price, description, quantity, picture } = req.body;
 
   const seller = await Seller.findById(sellerID);
   if (!seller) {
-    res.status(404);
-    throw new Error("Seller not found");
+    return res.status(404).json({ error: "Seller not found" });
   }
+
   let result;
   try {
     result = await cloudinary.uploader.upload(picture, {
       folder: "products",
     });
   } catch (error) {
-    console.log(error.message);
+    return res.status(500).json({ error: "Failed to upload picture" });
   }
 
   const product = await Product.create({
@@ -32,35 +32,35 @@ const createProduct = asyncHandler(async (req, res) => {
     quantity,
     picture: result.secure_url,
   });
-  await product.save();
+
   if (product) {
     res.status(201).json(product);
   } else {
-    res.status(400);
-    throw new Error("Invalid product data");
+    res.status(400).json({ error: "Invalid product data" });
   }
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find().populate("seller").populate({
-    path: 'ratings',
-    populate: {
-      path: 'userID', // Populating the userID field
-      select: 'userName' // Select only the userName field (or add more if needed)
-    }
-  });
+  const products = await Product.find()
+    .populate("seller")
+    .populate({
+      path: "ratings",
+      populate: {
+        path: "userID", // Populating the userID field
+        select: "userName", // Select only the userName field (or add more if needed)
+      },
+    });
   res.status(200).json(products);
 });
 
 const searchProductsByName = asyncHandler(async (req, res) => {
   const { name } = req.query;
   if (!name) {
-    res.status(400);
-    throw new Error("name is required");
+    return res.status(400).json({ error: "Name is required" });
   }
 
   const products = await Product.find({
-    name: { $regex: new RegExp(`${name}`, "i") }, //match name anywhere in string
+    name: { $regex: new RegExp(`${name}`, "i") },
   });
 
   res.status(200).json(products);
@@ -70,8 +70,9 @@ const filterProductsByPrice = asyncHandler(async (req, res) => {
   const { minPrice, maxPrice } = req.query;
 
   if (!minPrice && !maxPrice) {
-    res.status(400);
-    throw new Error("At least one value should be provided");
+    return res
+      .status(400)
+      .json({ error: "At least one value should be provided" });
   }
 
   const query = {};
@@ -94,61 +95,53 @@ const sortProductsByRatings = asyncHandler(async (req, res) => {
 });
 
 const editProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
   const { name, price, description, quantity, picture, initialPicture } =
     req.body;
-  const product = await Product.findById(id);
-  if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
-  }
+  let result;
 
-  if (
-    !name &&
-    !price &&
-    !description &&
-    !quantity &&
-    !picture &&
-    !initialPicture
-  ) {
-    res.status(400);
-    throw new Error("At least one value should be provided");
-  }
-  let updatedProduct;
   if (picture) {
-    let result;
     try {
-      const oldPicturePublicId = product.picture
-        .split("/")
-        .slice(-2)
-        .join("/")
-        .split(".")[0];
+      if (initialPicture) {
+        const oldPicturePublicId = initialPicture
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
 
-      // Delete old picture
-      await cloudinary.uploader.destroy(oldPicturePublicId);
+        // Delete old picture
+        await cloudinary.uploader.destroy(oldPicturePublicId);
+      }
 
-      // Upload new picture
       result = await cloudinary.uploader.upload(picture, {
         folder: "products",
       });
-
-      updatedProduct = await Product.findByIdAndUpdate(
-        id,
-        { name, price, description, quantity, picture: result.secure_url },
-        { new: true }
-      );
     } catch (error) {
-      console.log(error.message);
+      return res.status(500).json({ error: "Failed to update picture" });
     }
-  } else {
-    updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { name, price, description, quantity },
-      { new: true }
-    );
   }
 
-  res.status(200).json(updatedProduct);
+  const updateData = {
+    name,
+    price,
+    description,
+    quantity,
+  };
+
+  if (result && result.secure_url) {
+    updateData.picture = result.secure_url;
+  }
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    req.params.id,
+    updateData,
+    { new: true, runValidators: true } // Options: return updated document, run validation
+  );
+
+  if (!updatedProduct) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  res.status(200).json({ status: "success", data: updatedProduct });
 });
 
 const addRating = asyncHandler(async (req, res) => {
@@ -157,14 +150,12 @@ const addRating = asyncHandler(async (req, res) => {
 
   const product = await Product.findById(id);
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+    return res.status(404).json({ error: "Product not found" });
   }
 
   const tourist = await Tourist.findById(userID);
   if (!tourist) {
-    res.status(404);
-    throw new Error("User not found");
+    return res.status(404).json({ error: "User not found" });
   }
 
   const newRating = new Rating({
@@ -187,7 +178,7 @@ const addRating = asyncHandler(async (req, res) => {
   await product.save();
 
   res.status(201).json({
-    message: "Rating added successfully",
+    error: "Rating added successfully",
     rating: newRating,
     newAverage: newAverage,
   });

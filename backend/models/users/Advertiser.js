@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const User = require('../models/User');
 const advertiserSchema = new Schema(
   {
     userName: {
@@ -79,7 +78,7 @@ const advertiserSchema = new Schema(
           default: {}
         },
         certifications: {
-          type: [String], // Array of strings
+          type: [String],
           required: false
         },
         awards: [
