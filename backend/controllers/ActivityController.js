@@ -139,7 +139,7 @@ const viewUpcomingActivities = async (req, res) => {
     const activities = await Activity.find({ date: { $gte: currentDate } })
       .populate("category")
       .populate("tags")
-      .populate("ratings");
+    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
