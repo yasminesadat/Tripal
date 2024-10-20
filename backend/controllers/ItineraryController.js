@@ -159,31 +159,32 @@ const viewItineraries = async (req, res) => {
     }
 };
 
+// const addItineraryRating = async (req, res) => {
 
-// try {
-//     const itinerary = await Itinerary.findById(id);
-//     if (!itinerary) {
-//         return res.status(404).json({ error: "Itinerary not found" });
+//     try {
+//         const itinerary = await Itinerary.findById(id);
+//         if (!itinerary) {
+//             return res.status(404).json({ error: "Itinerary not found" });
+//         }
+
+//         const tourist = await Tourist.findById(userID);
+//         if (!tourist) {
+//             return res.status(404).json({ error: "User not found" });
+//         }
+
+//         const newRating = new Rating({ rating, review, userID });
+//         await newRating.save();
+
+//         itinerary.ratings.push(newRating._id);
+//         await itinerary.save();
+
+//         res.status(201).json({
+//             message: "Rating added successfully",
+//             rating: newRating
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
 //     }
-
-//     const tourist = await Tourist.findById(userID);
-//     if (!tourist) {
-//         return res.status(404).json({ error: "User not found" });
-//     }
-
-//     const newRating = new Rating({ rating, review, userID });
-//     await newRating.save();
-
-//     itinerary.ratings.push(newRating._id);
-//     await itinerary.save();
-
-//     res.status(201).json({
-//         message: "Rating added successfully",
-//         rating: newRating
-//     });
-// } catch (error) {
-//     res.status(500).json({ error: error.message });
-// }
 // };
 
 const getItineraryRatings = async (req, res) => {
@@ -235,6 +236,7 @@ module.exports = {
     updateItinerary,
     deleteItinerary,
     viewItineraries,
+
     getItineraryRatings,
     addItineraryComment,
     getItineraryComments
