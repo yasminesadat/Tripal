@@ -1,6 +1,6 @@
 import React from "react";
 import ProductDetails from "../../components/product/ProductDetails";
-import SellerNavbar from "../../components/seller/SellerNavBar";
+import SellerNavbar from "../../components/navbar/SellerNavBar";
 
 const SellerViewProduct = () => {
   return (

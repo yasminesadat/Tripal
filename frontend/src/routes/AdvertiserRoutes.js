@@ -3,7 +3,7 @@ import AdvertiserProfile from "../pages/advertiser/AdvertiserProfile";
 import AdvertiserForm from "../pages/advertiser/AdvertiserProfileForm";
 import CreateActivity from "../pages/advertiser/CreateActivity";
 import AdvertiserActivitiesPage from "../pages/advertiser/AdvertiserActivities";
-import ActivityForm from "../components/advertiser/ActivityForm";
+import ActivityForm from "../components/activity/CreateActivityForm";
 
 const advertiserRoutes = [
   { path: "/advertiser", element: <AdvertiserHome /> },
@@ -15,7 +15,7 @@ const advertiserRoutes = [
   { path: "/create-advertiser", element: <AdvertiserForm isUpdate={false} /> },
   { path: "/create-activity", element: <CreateActivity isUpdate={false} /> },
   { path: "/update-activity/:id", element: <ActivityForm isUpdate={true} /> },
-  { path: "/advertiser-activity/:id", element: <AdvertiserActivitiesPage /> }, //advertiser view his own activity
+  { path: "/advertiser-activity/:id", element: <AdvertiserActivitiesPage /> }, 
   { path: "/delete-activity/:id", element: <AdvertiserActivitiesPage /> },
 ];
 

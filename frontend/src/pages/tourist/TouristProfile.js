@@ -3,13 +3,12 @@ import {
   getTouristInformation,
   updateTouristInformation,
 } from "../../api/TouristService";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 import Badge from "../../components/tourist/Badge";
-
 const TouristHomePage = () => {
   const { id } = useParams();
   const [profileInformation, setProfileInformation] = useState({});

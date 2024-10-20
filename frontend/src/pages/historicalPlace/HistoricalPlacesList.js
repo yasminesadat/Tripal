@@ -1,11 +1,12 @@
 import { React, useEffect, useState } from "react";
 import { tourismGovernerID } from '../../IDs';
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace } from '../../api/HistoricalPlaceService';
-import Maps from '../../components/HistPlaceMap/Maps';
+import Maps from '../../components/historicalplace/Maps';
 import { toast } from 'react-toastify';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useParams, Link, useNavigate } from "react-router-dom";
-import GovernorNavBar from "../../components/governor/GovernorNavBar";
+import GovernorNavBar from "../../components/navbar/GovernorNavBar";
+
 const HistoricalPlacesList = () => {
     const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
     const [loading, setLoading] = useState(false);

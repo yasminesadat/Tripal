@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, useNavigate } from 'react-router-dom'; 
-import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 
 const AdvertiserProfile = () => {
   const { id } = useParams();

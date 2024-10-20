@@ -1,6 +1,6 @@
 import React from "react";
-import GuestNavBar from "../components/guest/GuestNavBar";
-import SignUpAllUsers from "../components/guest/SignUpAllUsers";
+import GuestNavBar from "../components/navbar/GuestNavBar";
+import SignUpAllUsers from "../components/home/SignUpAllUsers";
 import mainLogo from "../assets/images/Tripal-logo.png";
 
 const Home = () => {

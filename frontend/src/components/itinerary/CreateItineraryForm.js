@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { createItinerary } from '../../api/ItineraryService.js';
 import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from './ActivitySelectionModal';
-import MapPopUp from '../governor/PopUpForMap.js';
+import ActivitySelectionModal from '../activity/ActivitySelectionModal.js';
+import MapPopUp from '../common/MapPopUp.js';
 
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 

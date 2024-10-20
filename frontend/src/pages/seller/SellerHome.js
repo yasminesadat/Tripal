@@ -1,5 +1,5 @@
 import React from "react";
-import SellerNavBar from "../../components/seller/SellerNavBar";
+import SellerNavBar from "../../components/navbar/SellerNavBar";
 
 const SellerHome = () => {
   return (

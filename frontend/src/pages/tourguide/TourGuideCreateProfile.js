@@ -3,7 +3,8 @@ import { Form, Input, Button, InputNumber } from 'antd';
 import { createTourGuide, updateProfile, getProfileData } from '../../api/TourGuideService';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import TourguideNavBar from '../../components/tourguide/TourguideNavBar';
+import TourguideNavBar from '../../components/navbar/TourguideNavBar';
+
 const TourGuideForm = () => {
   const { id } = useParams();
   const isUpdate = id;

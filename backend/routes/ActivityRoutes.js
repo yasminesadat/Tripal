@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createActivity, getAdvertiserActivities, updateActivity, deleteActivity, addRating, viewUpcomingActivities} = require('../controllers/ActivityController');  
+const {createActivity, getAdvertiserActivities, updateActivity, deleteActivity, addRating, viewUpcomingActivities, addActivityComment, getActivityComments} = require('../controllers/ActivityController');  
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities); 
 router.post('/activities', createActivity);    
@@ -8,5 +8,7 @@ router.put('/activities/:id', updateActivity);
 router.post('/activityRating/:id', addRating);   
 router.delete('/activities/:id', deleteActivity); 
 router.get('/activities/view', viewUpcomingActivities);
+router.post('/activity/comment', addActivityComment);
+router.get('/activity/:activityId/comments', getActivityComments);
 
 module.exports = router;

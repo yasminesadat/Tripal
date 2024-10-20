@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../../api/AdvertiserService';
 import { useParams, useLocation } from 'react-router-dom';
-import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
-import "../../pages/advertiser/advForm.css"; 
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
+import "./advForm.css"; 
 import { useNavigate } from "react-router-dom";
 
 

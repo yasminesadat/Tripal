@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getUsers, deleteUser } from "../../api/AdminService"; // Assuming getUsers is an async function
-import AdminNavBar from "../../components/admin/AdminNavBar";
-import './UserList.css'; // Import a CSS file for styling
+import { getUsers, deleteUser } from "../../api/AdminService";
+import AdminNavBar from "../../components/navbar/AdminNavBar";
+import './UserList.css'; 
 import { message } from 'antd'
+
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [initLoading, setInitLoading] = useState(true);
