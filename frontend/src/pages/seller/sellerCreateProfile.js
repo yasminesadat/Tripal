@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
-import { createSeller, updateSeller } from "../../api/SellerService"; // Adjust the path as necessary
-import SellerNavBar from "../../components/seller/SellerNavBar";
+import { createSeller, updateSeller } from "../../api/SellerService";
+import SellerNavBar from "../../components/navbar/SellerNavBar";
 
 const CreateSeller = () => {
   const [userName, setUsername] = useState('');

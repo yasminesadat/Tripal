@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import LocationMap from '../MapComponent';
+import LocationMap from '../common/MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {advertiserID} from "../../IDs";
@@ -10,7 +10,6 @@ const { TextArea } = Input;
 const ActivityForm = ({ isUpdate }) => {
   const { id } = useParams();
   const location = useLocation();
-  console.log("ISUPDATEEEE:", isUpdate);
   const navigate = useNavigate();
 
   const existingActivity = location.state?.activity;

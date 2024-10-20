@@ -3,8 +3,8 @@ import { Modal, message, Input, Tag, DatePicker, TimePicker, theme, Button } fro
 import { PlusOutlined } from '@ant-design/icons';
 import { updateItinerary } from '../../api/ItineraryService.js';
 import languages from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from './ActivitySelectionModal';
-import MapPopUp from '../governor/PopUpForMap.js';
+import ActivitySelectionModal from '../activity/ActivitySelectionModal.js';
+import MapPopUp from '../common/MapPopUp.js';
 
 const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
     const { token } = theme.useToken();

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, deleteActivity } from "../../api/ActivityService";
 import { Tag, Button, notification } from 'antd';
-import ActivitiesList from "../../components/tourist/ActivitiesList.js";
-import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 
 const AdvertiserActivitiesPage = () => {
   const { id } = useParams(); 
@@ -28,7 +27,6 @@ const AdvertiserActivitiesPage = () => {
     fetchActivities();
   }, [id]);
 
-  // Handle delete activity for advertisers
   const handleDeleteActivity = async (id) => {
     try {
       await deleteActivity(id);
@@ -50,7 +48,6 @@ const AdvertiserActivitiesPage = () => {
   return (
     <div className="advertiser-activities-page">
       <AdvertiserNavBar />
-      {/* Header and Button in a single row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
         <h1 style={{ margin: 0 }}>Your Activities</h1>
       </div>
@@ -76,7 +73,6 @@ const AdvertiserActivitiesPage = () => {
               <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
               <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
 
-                                    {/* Buttons container */}
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                 <Button 
                   type="default" 
@@ -87,9 +83,9 @@ const AdvertiserActivitiesPage = () => {
                     borderRadius: "5px", 
                     padding: "12px 20px",
                     cursor: "pointer",
-                    marginRight: "10px" // Adds space between Update and Delete buttons
+                    marginRight: "10px"
                   }}
-                  onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })} // Redirects to the update page
+                  onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })}
                 >
                   Update
                 </Button>

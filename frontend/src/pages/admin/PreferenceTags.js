@@ -6,7 +6,7 @@ import {
   updateTag,
   deleteTag,
 } from "../../api/PreferenceTagService";
-import AdminNavBar from "../../components/admin/AdminNavBar";
+import AdminNavBar from "../../components/navbar/AdminNavBar";
 
 const TagManager = () => {
   const [tags, setTags] = useState([]);

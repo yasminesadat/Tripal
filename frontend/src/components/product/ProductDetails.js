@@ -14,7 +14,7 @@ import {
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
-import Footer from "../Footer";
+import Footer from "../common/Footer";
 
 const onChange = (value) => {
   console.log("changed", value);

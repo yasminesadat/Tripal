@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
-// import 'reactjs-popup/dist/index.css';
 import { Button, Modal } from "antd";
-import LocationMap from "../MapComponent";
+import LocationMap from "./MapComponent";
+
 const MapPopUp = ({ markerPosition, setMarkerPosition, setSelectedLocation, selectedLocation }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {

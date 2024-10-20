@@ -1,7 +1,5 @@
 import React from "react";
-import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
-import { advertiserId } from "../../IDs";
-
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 
 const AdvertiserHome = () => {
 

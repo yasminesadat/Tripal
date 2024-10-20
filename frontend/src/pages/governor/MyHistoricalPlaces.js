@@ -1,5 +1,5 @@
 import React from "react";
-import GovernorNavBar from "../../components/governor/GovernorNavBar";
+import GovernorNavBar from "../../components/navbar/GovernorNavBar";
 
 const MyHistoricalPlaces = () => {
   return (

@@ -5,13 +5,14 @@ import { getAllPeriodTags, CreateNewPeriodTag } from '../../api/HistoricalPlaceP
 import { getAllTypeTags, CreateNewTypeTag } from '../../api/HistoricalPlaceTagService';
 import { ToastContainer, toast } from "react-toastify";
 import { Form, Input, Select, Button, message, Upload, InputNumber, TimePicker } from "antd";
-import Maps from '../../components/HistPlaceMap/Maps';
-import SearchBox from '../../components/HistPlaceMap/SearchBox';
+import Maps from '../../components/historicalplace/Maps';
+import SearchBox from '../../components/historicalplace/HistoricalPlaceSearch';
 import moment from 'moment';
 import { tourismGovernerID } from '../../IDs';
 import { InboxOutlined } from '@ant-design/icons';
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import GovernorNavBar from '../../components/governor/GovernorNavBar';
+import GovernorNavBar from '../../components/navbar/GovernorNavBar';
+
 function HistoricalPlaceForm({ state }) {
     const { id } = useParams();
     const navigate = useNavigate();

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/tourist/ItinerariesList';
-import ItinerarySearch from '../../components/tourist/ItinerarySearch';
- import ItineraryFilter from '../../components/tourist/ItineraryFilter';
-import ItinerarySort from '../../components/tourist/ItinerarySort';
+import ItinerariesList from '../../components/itinerary/ItinerariesList';
+import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
+ import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
+import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);

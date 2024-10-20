@@ -3,6 +3,7 @@ import TourguideHome from "../pages/tourguide/TourguideHome";
 import TourGuideForm from "../pages/tourguide/TourGuideCreateProfile";
 import TourGuideProfile from '../pages/tourguide/TourGuideViewProfile'
 import CreateItinerary from '../pages/tourguide/CreateItinerary'
+
 const TourguideRoutes = [
     { path: "/tourguide", element: <TourguideHome /> },
     { path: "/tourguide/create", element: <TourGuideForm /> },
