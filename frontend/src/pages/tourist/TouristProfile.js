@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
+import Badge from "../../components/tourist/Badge";
 
 const TouristHomePage = () => {
   const { id } = useParams();
@@ -71,7 +72,12 @@ const TouristHomePage = () => {
   return (
     <div>
       <TouristNavBar />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <h1>Your Profile</h1>
+      {profileInformation.totalPoints !== undefined && (
+        <Badge totalPoints={profileInformation.totalPoints} />
+      )}
+      </div>
       <div>
         <ul className="tourist-profile">
           <li key={profileInformation._id}>

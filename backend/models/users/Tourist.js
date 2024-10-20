@@ -44,6 +44,14 @@ const touristSchema = new Schema({
       default: "EGP",
     },
   },
+  totalPoints: {
+    type: Number,
+    default: 0
+  },
+  currentPoints: {
+    type: Number,
+    default:0
+  },
 }, { timestamps: true });
 
 const Tourist = mongoose.model("Tourist", touristSchema);
