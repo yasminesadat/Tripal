@@ -201,4 +201,42 @@ const getItineraryRatings = async (req, res) => {
     }
 };
 
-module.exports = {createItinerary, getItineraries, updateItinerary, deleteItinerary, viewItineraries, addItineraryRating, getItineraryRatings};
+const addItineraryComment = async (req, res) => {
+    const { userId, itineraryId, text } = req.body;
+
+    if (!text) {
+        return res.status(400).json({ message: "Please enter a comment." });
+    }
+
+    try {
+        const comment = new ItineraryComment({ userId, itineraryId, text });
+        await comment.save();
+        return res.status(201).json(comment);
+    } catch (error) {
+        return res.status(500).json({ message: "Error saving comment.", error: error.message });
+    }
+};
+
+const getItineraryComments = async (req, res) => {
+    const { itineraryId } = req.params;
+  
+    try {
+      const comments = await ItineraryComment.find({ itineraryId })
+        .populate('userId', 'name'); 
+      return res.status(200).json(comments);
+    } catch (error) {
+      return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
+    }
+};
+  
+module.exports = {
+    createItinerary, 
+    getItineraries, 
+    updateItinerary, 
+    deleteItinerary, 
+    viewItineraries, 
+    addItineraryRating, 
+    getItineraryRatings, 
+    addItineraryComment, 
+    getItineraryComments
+};
