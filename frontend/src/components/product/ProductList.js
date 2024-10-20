@@ -177,7 +177,6 @@ const ProductList = () => {
                             picture={product.picture}
                             seller={product.seller.name}
                             quantity={product.quantity}
-                            ratings={product.ratings}
                             averageRating={product.averageRating}
                           />
                         </Col>

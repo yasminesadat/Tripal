@@ -132,40 +132,6 @@ const deleteActivity = async (req, res) => {
   }
 };
 
-const addRating = (async (req, res) => {
-  const { id } = req.params;
-  const { rating, review, userID } = req.body;
-
-  const activity = await Activity.findById(id);
-  if (!activity) {
-    res.status(404);
-    throw new Error("activity not found");
-  }
-
-  const tourist = await Tourist.findById(userID);
-  if (!tourist) {
-    res.status(404);
-    throw new Error("User not found");
-  }
-
-  const newRating = new Rating({
-    rating,
-    review,
-    userID,
-  });
-
-  await newRating.save();
-
-  activity.ratings.push(newRating._id);
-
-  await activity.save();
-
-  res.status(201).json({
-    message: "Rating added successfully",
-    rating: newRating
-  });
-});
-
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();

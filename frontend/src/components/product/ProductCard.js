@@ -24,13 +24,13 @@ const ProductCard = ({
   const handleCardClick = () => {
     navigate(`product/${id}`, {
       state: {
+        id,
         name,
         seller,
         price,
         description,
         quantity,
         picture,
-        ratings,
         averageRating,
       },
     });

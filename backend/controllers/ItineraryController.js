@@ -156,9 +156,7 @@ const viewItineraries = async(req,res) => {
         res.status(400).json({ error: error.message });
     }
 };
-const addItineraryRating = async (req, res) => {
-    const { id } = req.params;
-    const { rating, review, userID } = req.body;
+
 
     try {
         const itinerary = await Itinerary.findById(id);

@@ -81,14 +81,10 @@ const tourGuideSchema = new Schema(
         }
       }
     ],
-    ratings: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Rating",
-        default: []
-      },
-    ],
-
+    averageRating: {
+      type: Number,
+      default: 0.0,
+    },
     profilePicture: {
       type: String,
       required: false
