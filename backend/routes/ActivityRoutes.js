@@ -9,6 +9,6 @@ router.post('/activityRating/:id', addRating);
 router.delete('/activities/:id', deleteActivity); 
 router.get('/activities/view', viewUpcomingActivities);
 router.post('/activity/comment', addActivityComment);
-router.get('/activity/:activityId/comments', getActivityComments)
+router.get('/activity/:activityId/comments', getActivityComments);
 
 module.exports = router;

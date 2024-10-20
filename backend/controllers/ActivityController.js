@@ -181,11 +181,13 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
-const addActivityComment = async (req, res) {
+const addActivityComment = async (req, res) => {
   const { userId, activityId, text } = req.body;
+  
   if (!text) {
     return res.status(400).json({ message: "Please enter a comment." });
   }
+  
   try {
     const comment = new ActivityComment({ userId, activityId, text });
     await comment.save();
@@ -215,5 +217,6 @@ module.exports = {
   addRating,
   addActivityComment,
   viewUpcomingActivities,
+  addActivityComment,
   getActivityComments
 };
