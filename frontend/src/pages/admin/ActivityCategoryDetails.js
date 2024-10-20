@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { List, Button, Modal, Input } from "antd";
 import ActivityCategoryApi from "../../api/ActivityCategoryService";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-import AdminNavBar from "../../components/admin/AdminNavBar";
-import Footer from "../../components/Footer";
+import AdminNavBar from "../../components/navbar/AdminNavBar";
+import Footer from "../../components/common/Footer";
 import { message } from 'antd'
+
 const ActivityCategoryDetails = () => {
   const [nameValue, setNameValue] = useState("");
   const [data, setData] = useState([]);

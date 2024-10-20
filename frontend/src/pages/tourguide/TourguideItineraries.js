@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getItineraries, deleteItinerary } from '../../api/ItineraryService';
 import { Empty, message } from "antd";
-import MyItinerariesList from '../../components/tourguide/MyItinerariesList.js';
-import UpdateItineraryForm from '../../components/tourguide/UpdateItineraryForm.js';
-import TourguideNavBar from '../../components/tourguide/TourguideNavBar.js';
-import Footer from '../../components/Footer.js';
+import MyItinerariesList from '../../components/itinerary/TourguideItinerariesList.js';
+import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm.js';
+import TourguideNavBar from '../../components/navbar/TourguideNavBar.js';
+import Footer from '../../components/common/Footer.js';
 
 const tourGuide = "6700780a15fe2c9f96f1a96e"; // Tour guide ID
 

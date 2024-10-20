@@ -1,6 +1,6 @@
 import React from "react";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
-import Footer from "../../components/Footer";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
+import Footer from "../../components/common/Footer";
 
 const TouristHome = () => {
 

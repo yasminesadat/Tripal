@@ -1,8 +1,7 @@
-// src/components/CreateAdmin.js
 import React, { useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
-import { createGovernor } from "../../api/AdminService"; // Adjust the path as necessary
-import AdminNavBar from "../../components/admin/AdminNavBar";
+import { createGovernor } from "../../api/AdminService"; 
+import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { message } from "antd";
 
 const CreateGovernor = () => {
@@ -13,7 +12,7 @@ const CreateGovernor = () => {
     try {
       const response = await createGovernor(username, password);
       message.success(`Governer ${response.userName} created successfully`)
-      setUsername(''); // Reset the form
+      setUsername(''); 
       setPassword('');
     } catch (error) {
       message.error(error.message)

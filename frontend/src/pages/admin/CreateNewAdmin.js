@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
-import { createAdmin } from "../../api/AdminService"; // Adjust the path as necessary
-import AdminNavBar from "../../components/admin/AdminNavBar";
+import { createAdmin } from "../../api/AdminService"; 
+import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { message } from 'antd'
+
 const CreateAdmin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async () => {
     try {
-      const response = await createAdmin(username, password); // Assuming API returns the new admin's username
+      const response = await createAdmin(username, password); 
 
       message.success(`Admin ${response.username} created successfully!`)
       setUsername('');

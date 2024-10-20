@@ -11,3 +11,41 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.tourCard__badge {
+  margin-left: 20px; 
+  margin-right: 20px;
+  padding: 10px 20px;
+  width: 140px; 
+  text-align: center;
+  display: inline-block;
+  border-radius: 12px;
+}
+
+.badge-image {
+  width: 30px; 
+  height: 25px; 
+  margin-right: 10px;
+}
+
+.badge-text {
+  margin-top: -2px;
+  color: #FFFFFF;
+}
+
+
+.bronze {
+  background-color: #CE8946; 
+}
+
+.silver {
+  background-color: #c0c0c0; 
+}
+
+.gold {
+  background-color: #ffd700; 
+}
+
+.rounded-12 {
+  border-radius: 12px;
+}

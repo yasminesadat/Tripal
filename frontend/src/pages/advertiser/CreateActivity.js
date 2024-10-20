@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ActivityForm from "../../components/advertiser/ActivityForm";
-import AdvertiserNavBar from "../../components/advertiser/AdvertiserNavBar";
+import ActivityForm from "../../components/activity/CreateActivityForm";
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 
 const CreateActivity = () => {
     

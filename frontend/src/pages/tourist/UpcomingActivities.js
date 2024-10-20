@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { viewUpcomingActivities } from "../../api/ActivityService";
-import ActivitiesList from "../../components/tourist/ActivitiesList";
-import ActivitySearch from "../../components/tourist/ActivitySearch";
-import ActivityFilter from "../../components/tourist/ActivityFilter";
-import ActivitySort from "../../components/tourist/ActivitySort";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
-import Footer from "../../components/Footer";
+import ActivitiesList from "../../components/activity/ActivitiesList";
+import ActivitySearch from "../../components/activity/ActivitySearch";
+import ActivityFilter from "../../components/activity/ActivityFilter";
+import ActivitySort from "../../components/activity/ActivitySort";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
+import Footer from "../../components/common/Footer";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);

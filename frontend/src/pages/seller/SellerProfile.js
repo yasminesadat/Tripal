@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getSellerDetails, updateSeller } from "../../api/SellerService";
-import SellerNavBar from "../../components/seller/SellerNavBar";
+import SellerNavBar from "../../components/navbar/SellerNavBar";
 import { sellerId } from "../../IDs";
 import { Form, Input, Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";

@@ -30,11 +30,11 @@ const activitySchema = new Schema(
     },
     latitude: {
       type: Number,
-      required: true, // Make required if you always want to have a latitude
+      required: true, 
     },
     longitude: {
       type: Number,
-      required: true, // Make required if you always want to have a longitude
+      required: true, 
     },
     price: {
       type: Number, required: true ,

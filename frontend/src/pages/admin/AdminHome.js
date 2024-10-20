@@ -1,5 +1,5 @@
 import React from "react";
-import AdminNavBar from "../../components/admin/AdminNavBar";
+import AdminNavBar from "../../components/navbar/AdminNavBar";
 
 const AdminHome = () => {
   return (

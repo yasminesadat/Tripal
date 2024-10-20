@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { nationalities } from ".."
+
 const TouristProfile = ({ tourist }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState({ ...tourist });
@@ -55,7 +56,7 @@ const TouristProfile = ({ tourist }) => {
               <select
                 name="nationality"
                 value={editedProfile.nationality}
-                onChange={handleInputChange} // Handle changes
+                onChange={handleInputChange} 
               >
                 {nationalities.map((nationality) => (
                   <option key={nationality} value={nationality}>

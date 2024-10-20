@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import HistoricalPlacesList from "../../components/tourist/HistoricalPlacesList";
-import HistoricalPlacesSearch from "../../components/tourist/HistoricalPlacesSearch";
-import HistoricalPlacesFilter from "../../components/tourist/HistoricalPlacesFilter";
+import HistoricalPlacesList from "../../components/historicalplace/HistoricalPlacesList";
+import HistoricalPlacesSearch from "../../components/historicalplace/HistoricalPlacesSearch";
+import HistoricalPlacesFilter from "../../components/historicalplace/HistoricalPlacesFilter";
 import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
 
 const HistoricalPlacesPage = () => {
   const [places, setPlaces] = useState([]);

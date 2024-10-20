@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createTourGuide, updateProfile, getProfileData } from "../../api/TourGuideService";
 import '../seller/SellerProfile.css'; 
-import TourguideNavBar from "../../components/tourguide/TourguideNavBar";
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
 
 
 const TourGuideProfile = () => {

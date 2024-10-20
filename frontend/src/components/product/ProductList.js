@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { fetchProducts } from "../../api/ProductService";
 import ProductCard from "./ProductCard";
-import Footer from "../Footer";
+import Footer from "../common/Footer";
 const { Search } = Input;
 const { Option } = Select;
 
