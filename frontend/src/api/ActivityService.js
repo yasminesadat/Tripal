@@ -1,4 +1,3 @@
-import { useDebugValue } from "react";
 import { axios } from "./axios";
 
 export async function getAdvertiserActivities(advertiser) {
@@ -99,3 +98,14 @@ export const addRating = async (activityID, ratingData) => {
     throw error;
   }
 };
+
+export async function bookActivity(activityId, touristId) {
+  try {
+    console.log("Booking activity", activityId, touristId);
+    const response = await axios.post(`/activity/${activityId}/book`, { touristId });
+    return response.data;
+  } catch (error) {
+    console.error("Error booking activity:", error);
+    throw error;
+  }
+}

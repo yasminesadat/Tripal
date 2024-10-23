@@ -178,10 +178,10 @@ const getActivityComments = async (req, res) => {
 const bookActivity = async (req, res) => {
   const { activityId } = req.params;
   const { touristId } = req.body;
-
+  console.log(activityId, touristId)
   try {
     const activity = await Activity.findById(activityId);
-
+    console.log(activity)
     if (!activity) {
       return res.status(404).json({ error: 'Activity not found' });
     }
