@@ -192,7 +192,9 @@ const bookActivity = async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ error: 'Tourist not found' });
     }
-
+    if (activity.tourists.includes(touristId)) {
+      return res.status(400).json({ error: 'You have already booked this activity.' });
+    }
     activity.tourists.push(touristId);
     await activity.save();
     res.status(200).json({ message: 'Activity booked successfully' });
