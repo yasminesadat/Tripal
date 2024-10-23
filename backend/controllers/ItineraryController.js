@@ -230,6 +230,31 @@ const getItineraryComments = async (req, res) => {
     }
 };
 
+const bookItinerary = async (req, res) => {
+    const { itineraryId } = req.params;
+    const { touristId } = req.body;
+
+    try {
+        const itinerary = await itineraryModel.findById(itineraryId);
+
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+
+        const alreadyBooked = itinerary.tourists.includes(touristId);
+        if (alreadyBooked) {
+            return res.status(400).json({ message: 'You have already booked this itinerary.' });
+        }
+
+        itinerary.tourists.push(touristId);
+        await itinerary.save();
+
+        res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     createItinerary,
     getItineraries,
@@ -239,5 +264,6 @@ module.exports = {
 
     getItineraryRatings,
     addItineraryComment,
-    getItineraryComments
+    getItineraryComments,
+    bookItinerary
 };
