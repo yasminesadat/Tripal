@@ -34,7 +34,7 @@ const itinerarySchema = new mongoose.Schema({
     dropoffLocation: {type: String, required: true},
     averageRating: {type: Number,default: 0.0,},    
     tags:[{type:String}], // lesa idk how to use this do i need tags from activity?
-    tourists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }] // Add this line
+    tourists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }]
 
 }, {timestamps: true});
 

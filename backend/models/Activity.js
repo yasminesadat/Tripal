@@ -62,6 +62,8 @@ const activitySchema = new Schema(
       type: Boolean,
       default: false,
     },
+    tourists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }]
+
   },
   { timestamps: true }
 );

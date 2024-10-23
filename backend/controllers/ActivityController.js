@@ -175,6 +175,32 @@ const getActivityComments = async (req, res) => {
   }
 };
 
+const bookActivity = async (req, res) => {
+  const { activityId } = req.params;
+  const { touristId } = req.body;
+
+  try {
+    const activity = await Activity.findById(activityId);
+
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+    if(activity.isBookingOpen === false) {
+      return res.status(400).json({ error: 'Booking is closed for this activity' });
+    }
+    const tourist = await Tourist.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    activity.tourists.push(touristId);
+    await activity.save();
+    res.status(200).json({ message: 'Activity booked successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
   getAdvertiserActivities,
@@ -183,5 +209,6 @@ module.exports = {
   addActivityComment,
   viewUpcomingActivities,
   addActivityComment,
-  getActivityComments
+  getActivityComments,
+  bookActivity,
 };
