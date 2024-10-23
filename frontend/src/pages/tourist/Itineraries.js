@@ -5,6 +5,8 @@ import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import {bookItinerary} from "../../api/TouristService";
+import { message } from 'antd';
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -110,6 +112,27 @@ const ItineraryPage = () => {
         setFilteredItineraries(filtered);
     };
     
+    const handleBookTicket = async ({ itineraryId, touristId })  => {
+        try {
+            console.log('Booking', itineraryId, touristId);
+            await bookItinerary(itineraryId, touristId);
+            console.log("This Itinerary has been booked successfully!");
+            message.success("Ticket booked successfully!");
+        } catch (error) {
+            console.log("Error details:", error);
+    
+            if (error.response) {
+                const { status, data } = error.response;
+                if (status === 400 && data.message === 'You have already booked this itinerary.') {
+                    message.success("You have already booked this itinerary.");
+                } else if (status === 404) {
+                    message.error("Itinerary not found.");
+                } else {
+                    message.error("Failed to book ticket. Please try again later.");
+                }
+            }
+        }
+    }
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -124,7 +147,7 @@ const ItineraryPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <ItinerariesList itineraries={filteredItineraries} />
+                <ItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket}/>
             </div>
         </div>
     );

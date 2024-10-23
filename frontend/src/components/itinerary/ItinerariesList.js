@@ -1,6 +1,8 @@
 import React from 'react';
 
-const ItinerariesList = ({ itineraries }) => {
+const touristId = '670d4e900cb9ea7937cc9968';
+const ItinerariesList = ({ itineraries,onBook  }) => {
+    
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -87,6 +89,11 @@ const ItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
+                        <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
+                                Book Now
+                                </button>
+                        {console.log(itinerary._id ," ", touristId)}
+
                     </div>
                 </div>
             ))}
