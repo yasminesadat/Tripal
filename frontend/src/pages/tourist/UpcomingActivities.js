@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities } from "../../api/ActivityService";
+import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
 import ActivitiesList from "../../components/activity/ActivitiesList";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
+import { message } from "antd";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -113,6 +114,29 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(sortedActivities);
   };
 
+  const handleBookActivity = async ({ activityId, touristId }) => {
+    try {
+      console.log('Booking', activityId, touristId);
+        const response = await bookActivity(activityId, touristId);
+        message.success(response.message);
+    } catch (error) {
+        if (error.response) {
+            switch (error.response.status) {
+                case 404:
+                    message.error(error.response.data.error); // Activity or tourist not found
+                    break;
+                case 400:
+                    message.success(error.response.data.error); // Booking closed or already booked
+                    break;
+                default:
+                    message.error("An unexpected error occurred. Please try again."); // General error
+            }
+        } else {
+            message.error("Failed to book activity. Please check your network and try again.");
+        }
+    }
+};
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -126,7 +150,7 @@ const UpcomingActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <ActivitiesList activities={filteredActivities} />
+        <ActivitiesList activities={filteredActivities} onBook ={handleBookActivity} />
       </div>
       <Footer />
     </div>

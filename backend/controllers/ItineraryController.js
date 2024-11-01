@@ -137,10 +137,7 @@ const viewItineraries = async (req, res) => {
             populate: {
                 path: 'tags',
             },
-        }).populate("tags").populate({
-            path: 'ratings',
-            populate: { path: 'userID', select: 'name' }
-        });
+        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
 
         const itinerariesWithRatings = itineraries.map(itinerary => {
             const ratings = itinerary.ratings || [];
@@ -159,33 +156,33 @@ const viewItineraries = async (req, res) => {
     }
 };
 
-// const addItineraryRating = async (req, res) => {
+const addItineraryRating = async (req, res) => {
 
-//     try {
-//         const itinerary = await Itinerary.findById(id);
-//         if (!itinerary) {
-//             return res.status(404).json({ error: "Itinerary not found" });
-//         }
+    try {
+        const itinerary = await Itinerary.findById(id);
+        if (!itinerary) {
+            return res.status(404).json({ error: "Itinerary not found" });
+        }
 
-//         const tourist = await Tourist.findById(userID);
-//         if (!tourist) {
-//             return res.status(404).json({ error: "User not found" });
-//         }
+        const tourist = await Tourist.findById(userID);
+        if (!tourist) {
+            return res.status(404).json({ error: "User not found" });
+        }
 
-//         const newRating = new Rating({ rating, review, userID });
-//         await newRating.save();
+        const newRating = new Rating({ rating, review, userID });
+        await newRating.save();
 
-//         itinerary.ratings.push(newRating._id);
-//         await itinerary.save();
+        itinerary.ratings.push(newRating._id);
+        await itinerary.save();
 
-//         res.status(201).json({
-//             message: "Rating added successfully",
-//             rating: newRating
-//         });
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
+        res.status(201).json({
+            message: "Rating added successfully",
+            rating: newRating
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 const getItineraryRatings = async (req, res) => {
     const { id } = req.params;
@@ -230,14 +227,40 @@ const getItineraryComments = async (req, res) => {
     }
 };
 
+const bookItinerary = async (req, res) => {
+    const { itineraryId } = req.params;
+    const { touristId } = req.body;
+
+    try {
+        const itinerary = await itineraryModel.findById(itineraryId);
+
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+
+        const alreadyBooked = itinerary.tourists.includes(touristId);
+        if (alreadyBooked) {
+            return res.status(400).json({ message: 'You have already booked this itinerary.' });
+        }
+
+        itinerary.tourists.push(touristId);
+        await itinerary.save();
+
+        res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     createItinerary,
     getItineraries,
     updateItinerary,
     deleteItinerary,
     viewItineraries,
-
+    addItineraryRating,
     getItineraryRatings,
     addItineraryComment,
-    getItineraryComments
+    getItineraryComments,
+    bookItinerary
 };

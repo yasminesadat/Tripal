@@ -1,7 +1,7 @@
 import React from "react";
-import { Divider, Flex, Tag } from 'antd';
-
-const ActivitiesList = ({ activities }) => {
+import { Tag } from 'antd';
+const touristId = '670d4e900cb9ea7937cc9968';
+const ActivitiesList = ({ activities,onBook }) => {
   return (
     <div className="list">
       {activities.map((activity) => (
@@ -25,6 +25,9 @@ const ActivitiesList = ({ activities }) => {
             <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
             <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
           </div>
+          <button onClick={() => onBook({ activityId: activity._id, touristId })}>
+            Book Now
+          </button>
         </div>
       ))}
     </div>

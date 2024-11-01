@@ -10,6 +10,7 @@ export async function createTourist(newUser) {
 
   }
 }
+
 export async function getTouristInformation(id) {
   try {
     const response = await axios.get(`/getTouristInfo/${id}`);
@@ -19,11 +20,22 @@ export async function getTouristInformation(id) {
     throw error;
   }
 }
+
 export async function updateTouristInformation(id, body) {
   try {
     console.log("the body ", body)
     const response = await axios.put(`/updateTourist/${id}`, body);
     console.log("after update", response.data)
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
+export async function bookItinerary(itineraryId, touristId) {
+  try {
+    const response = await axios.post(`/itineraries/${itineraryId}/book`, { touristId });
     return response.data;
   } catch (error) {
     console.error("error", error);
