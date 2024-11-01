@@ -8,7 +8,7 @@ const Request = require('../models/Request.js')
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job } = req.body;
+    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags=[], categories=[] } = req.body;
 
     // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
@@ -52,6 +52,8 @@ const createTourist = async (req, res) => {
       nationality: req.body.nationality,
       dateOfBirth: req.body.dateOfBirth,
       job: req.body.job,
+      tags,
+      categories,
       wallet: {
         amount: 0,
         currency: "EGP"
@@ -104,7 +106,15 @@ const getTouristInfo = async (req, res) => {
 const updateTouristProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { ...updateParameters } = req.body;
+    const { tags, categories, ...updateParameters } = req.body;
+
+    if (tags) {
+      updateParameters.tags = tags;
+    }
+
+    if (categories) {
+      updateParameters.categories = categories;
+    }
 
     if (updateParameters.userName) {
       res.status(400).json({

@@ -52,6 +52,18 @@ const touristSchema = new Schema({
     type: Number,
     default:0
   },
+  tags: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "PreferenceTag",
+      default: []
+    }
+  ],
+  categories: [{
+    type: Schema.Types.ObjectId,
+    ref: "ActivityCategory",
+    required: true,
+  }],
 }, { timestamps: true });
 
 const Tourist = mongoose.model("Tourist", touristSchema);
