@@ -5,6 +5,8 @@ import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 import Itineraries from "../pages/tourist/Itineraries";
 import TouristProducts from "../pages/tourist/TouristProducts";
 import TouristViewProduct from "../pages/tourist/TouristViewProduct";
+import PreferenceSelection from "../components/tourist/PreferenceSelection";
+import CategorySelection from "../components/tourist/CategorySelection";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -13,6 +15,8 @@ const TouristRoutes = [
   { path: "/historical-places", element: <HistoricalPlaces /> },
   { path: "/itineraries", element: <Itineraries /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
+  { path: "/tourist/select-preferences", element: <PreferenceSelection /> },
+  { path: "/tourist/select-categories", element: <CategorySelection /> },
   {
     path: "/tourist/view-products/product/:id",
     element: <TouristViewProduct />,

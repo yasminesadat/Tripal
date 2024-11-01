@@ -320,3 +320,60 @@ p {
 .pending-page-container:hover p {
     color: #444;
 }
+
+.container {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .selected-tag {
+    display: flex;
+    align-items: center;
+    background-color: #e0e0e0;
+    padding: 4px 8px;
+    border-radius: 12px;
+  }
+  
+  .selected-tag span {
+    margin-right: 4px;
+  }
+  
+  .preference-tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  
+  .tag-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s;
+  }
+  
+  .tag-item.selected {
+    background-color: #d0f0c0;
+  }
+
+  .mt-lg {
+    margin-top: 2rem;
+  }
+  .mb-lg {
+    margin-bottom: 2rem;
+  }
+  .mt-header {
+    margin-top: 7rem;
+  }
+  
+  
