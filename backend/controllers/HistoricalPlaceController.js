@@ -20,71 +20,74 @@ const createHistoricalPlace = async (req, res) => {
   let historicalPeriod = [...req.body.historicalPeriod];
   let tagsID = [];
   let historicalPeriodsID = [];
-  console.log(req.body);
+
+  console.log("aa", historicalPeriod)
+  console.log("tags", tags)
   try {
     for (let i = 0; i < tags.length; i++) {
-      if (!isObjectId(tags[i])) {
-        console.log(tags[i]);
-        const result = await TypeTag.create({ name:tags[i] });
-         const resultData=await result._id;
-        console.log(resultData);
+      if (tags[i]._id === '') {
+        console.log('aaaaaaaaa', tags[i].name);
+        const result = await TypeTag.create({ name: tags[i].name });
+        const resultData = await result._id;
+        console.log("new created tag", resultData);
         tagsID.push(resultData);
       }
-
       else {
-        tagsID.push(tags[i]);
+        tagsID.push(tags[i]._id);
       }
     }
-  } catch (err) {
-    console.log("in cataaah tagg")
-    res.status(400).json(err);
-  }
-  try {
+
     for (let i = 0; i < historicalPeriod.length; i++) {
-      if (!isObjectId(historicalPeriod[i])) {
-        const result = await PeriodTag.create({ name:historicalPeriod[i] }); 
+      console.log("iteration,", i)
+      if (historicalPeriod[i]._id === '') {
+        console.log("before create", historicalPeriod[i].name)
+        const result = await PeriodTag.create({ name: historicalPeriod[i].name });
         const resultData = await result._id;
-        console.log(resultData);
+        console.log("after period create", resultData);
         historicalPeriodsID.push(resultData);
       }
-
       else {
-        historicalPeriodsID.push(historicalPeriod[i]);
+        historicalPeriodsID.push(historicalPeriod[i]._id);
       }
     }
-  } catch (error) {
-    console.log("in cataaah")
-    res.status(400).json(err);
-  }
-try{
-  for (let i = 0; i < images.length; i++) {
-    let result = await cloudinary.uploader.upload(images[i], { folder: "historicalPlaces" })
-    imageBuffer.push(
-      {
-        public_id: await result.public_id,
-        url: await result.secure_url
-      }
-    );
-  }
-}catch(e){
-  res.status(400).json(err);
-}
-  console.log("tagsss", tagsID)
-  console.log("periodss", historicalPeriodsID)
-  req.body.images = imageBuffer;
-  req.body.tags = tagsID;
-  req.body.historicalPeriod = historicalPeriodsID;
-  const historicalPlace = await HistoricalPlace.create({
-    ...req.body
-  });
-  historicalPlace
-    .save()
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
+
+    for (let i = 0; i < images.length; i++) {
+      let result = await cloudinary.uploader.upload(images[i], { folder: "historicalPlaces" })
+      imageBuffer.push(
+        {
+          public_id: await result.public_id,
+          url: await result.secure_url
+        }
+      );
+    }
+
+    console.log("tagsss", tagsID)
+    console.log("periodss", historicalPeriodsID)
+    req.body.images = imageBuffer;
+    req.body.tags = tagsID;
+    req.body.historicalPeriod = historicalPeriodsID;
+    const historicalPlace = await HistoricalPlace.create({
+      ...req.body
     });
+
+
+    historicalPlace
+      .save()
+      .then((result) =>
+        res.status(201).json(result)
+      )
+      .catch((err) => {
+        console.log(err)
+        res.status(400).json(err)
+      }
+
+      );
+  }
+  catch (e) {
+    console.log("errror", e)
+
+    return res.status(400).json(e);
+  }
 };
 
 
@@ -158,39 +161,80 @@ const getTourismGovernerHistoricalPlaces = async (req, res) => {
 
 const updateHistoricalPlaces = async (req, res) => {
   const id = req.params.id;
-  let images = [...req.body.images];
   let imageBuffer = [];
   console.log("body: ", req.body)
-  if (images.length > 0) {
-    const historicalPlace = await HistoricalPlace.findById(id);
-    if (!historicalPlace) {
-      return res.status(404).json({ msg: "Historical place not found" });
-    }
-    const images = historicalPlace.images;
-    for (let i = 0; i < images.length; i++) {
-      const imageID = images[i].public_id;
-      await cloudinary.uploader.destroy(imageID)
-    }
-    for (let i = 0; i < images.length; i++) {
-      let result = await cloudinary.uploader.upload(images[i], { folder: "historicalPlaces" })
-      imageBuffer.push(
-        {
-          public_id: await result.public_id,
-          url: await result.secure_url
-        }
-      );
-    }
-    req.body.images = imageBuffer;
-  }
-  const updates = req.body;
+  let deletedImages = [...req.body.deletedImages]
+  let newImages = [...req.body.images]
+  let Requestedtags = [...req.body.tags];
+  let RequestedhistoricalPeriod = [...req.body.historicalPeriod];
+  let tagsID = [];
+  let historicalPeriodsID = [];
+  console.log(req.body);
   try {
-    const result = await HistoricalPlace.findByIdAndUpdate(id, updates, { new: true })
-    res.status(200).json(result);
-    //i think we need to render the changes in the same page
-    //or redirect to the page with the updates
-  }
-  catch (err) {
-    res.status(400).json(err);
+    for (let i = 0; i < Requestedtags.length; i++) {
+      if (Requestedtags[i]._id === '') {
+        console.log(Requestedtags[i]);
+        const result = await TypeTag.create({ name: Requestedtags[i].name });
+        const resultData = await result._id;
+        console.log('the new tag ', result, resultData);
+        tagsID.push(resultData);
+      }
+
+      else {
+        tagsID.push(Requestedtags[i]._id);
+      }
+    }
+
+    for (let i = 0; i < RequestedhistoricalPeriod.length; i++) {
+      if (RequestedhistoricalPeriod[i]._id === '') {
+        const result = await PeriodTag.create({ name: RequestedhistoricalPeriod[i].name });
+        const resultData = await result._id;
+        console.log('the new historicalpERIOD', result, resultData);
+        historicalPeriodsID.push(resultData);
+      }
+
+      else {
+        historicalPeriodsID.push(RequestedhistoricalPeriod[i]._id);
+      }
+    }
+
+    if (newImages.length > 0 || deletedImages.length > 0) {
+      const historicalPlace = await HistoricalPlace.findById(id);
+      if (!historicalPlace) {
+        return res.status(404).json({ msg: "Historical place not found" });
+      }
+      let existedImages = historicalPlace.images;
+      for (let i = 0; i < deletedImages.length; i++) {
+        let imageID = deletedImages[i].public_id;
+        await cloudinary.uploader.destroy(imageID);
+        existedImages = existedImages.filter((image) => image.public_id !== imageID);
+        console.log("the old imagess", existedImages)
+      }
+      for (let i = 0; i < newImages.length; i++) {
+        let result = await cloudinary.uploader.upload(newImages[i], { folder: "historicalPlaces" })
+        imageBuffer.push(
+          {
+            public_id: await result.public_id,
+            url: await result.secure_url
+          }
+        );
+      }
+      req.body.images = imageBuffer.concat(existedImages);
+    }
+    console.log("tagsss", tagsID);
+    console.log("periodss", historicalPeriodsID);
+    req.body.tags = tagsID;
+    req.body.historicalPeriod = historicalPeriodsID;
+    const { tourismGovernor, name, description, images, location, openingHours, ticketPrices, tags, historicalPeriod } = req.body;
+    try {
+      const result = await HistoricalPlace.findByIdAndUpdate(id, { tourismGovernor, name, description, images, location, openingHours, ticketPrices, tags, historicalPeriod }, { new: true })
+      return res.status(200).json(result);
+    }
+    catch (err) {
+      return res.status(400).json(err);
+    }
+  } catch (e) {
+    return res.status(400).json(e);
   }
 };
 module.exports = {
