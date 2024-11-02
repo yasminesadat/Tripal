@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const complaintSchema = new Schema(
     {
         title: {
@@ -21,11 +22,26 @@ const complaintSchema = new Schema(
             required: true,
             default: "pending"
         },
-        reply: {
-            type: String,
-            required: true,
-            default: "No reply Yet"
-        },
+        replies: {
+            type: [
+              {
+                senderId: {
+                  type: Schema.Types.ObjectId,
+                  ref: "User",
+                  required: true,
+                },
+                message: {
+                  type: String,
+                  required: true,
+                },
+                date: {
+                  type: Date,
+                  default: Date.now,
+                },
+              },
+            ],
+            default: [], // Set default to an empty array
+          },
         issuerId: {
             type: Schema.Types.ObjectId,
             ref: "Tourist",

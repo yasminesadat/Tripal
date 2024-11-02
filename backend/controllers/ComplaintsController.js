@@ -121,31 +121,61 @@ const updateComplaintStatus = asyncHandler(async (req, res) => {
     }
 });
 
+// const replyToComplaint = asyncHandler(async (req, res) => {
+//     const { id } = req.params;
+//     const { reply } = req.body;
+//     if (!reply) {
+//         return res.status(400).json({ message: "Reply content is required" });
+//     }
+
+//     try {
+//         // Find the complaint by ID and update the reply
+//         const updatedComplaint = await complaints.findByIdAndUpdate(
+//             id,
+//             { reply },
+//             { new: true } // return the updated document
+//         );
+
+//         if (!updatedComplaint) {
+//             return res.status(404).json({ message: "Complaint not found" });
+//         }
+
+//         res.status(200).json(updatedComplaint);
+//     } catch (error) {
+//         console.error("Error replying to complaint:", error);
+//         res.status(500).json({ message: "Error replying to complaint" });
+//     }
+// });
+
 const replyToComplaint = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    const { reply } = req.body;
-    if (!reply) {
-        return res.status(400).json({ message: "Reply content is required" });
+    const { id } = req.params; // Complaint ID
+    const { message, senderId } = req.body;
+  
+    if (!message || !senderId ) {
+      return res.status(400).json({ message: "Message is required" });
     }
-
     try {
-        // Find the complaint by ID and update the reply
-        const updatedComplaint = await complaints.findByIdAndUpdate(
-            id,
-            { reply },
-            { new: true } // return the updated document
-        );
-
-        if (!updatedComplaint) {
-            return res.status(404).json({ message: "Complaint not found" });
-        }
-
-        res.status(200).json(updatedComplaint);
+      const complaint = await complaints.findById(id);
+      if (!complaint) {
+        return res.status(404).json({ message: "Complaint not found" });
+      }
+      // Push reply to reply array
+      complaint.replies.push({
+        senderId,
+        message,
+        date: new Date()
+      });
+  
+      // Save the updated complaint with the new reply
+      const updatedComplaint = await complaint.save();
+  
+      res.status(200).json(updatedComplaint);
     } catch (error) {
-        console.error("Error replying to complaint:", error);
-        res.status(500).json({ message: "Error replying to complaint" });
+      console.error("Error replying to complaint:", error);
+      res.status(500).json({ message: "Error replying to complaint" });
     }
-});
+  });
+  
 
 module.exports = {
     createComplaint,
