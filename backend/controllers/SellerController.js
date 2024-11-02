@@ -2,7 +2,6 @@ const Seller = require("../models/users/Seller.js");
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../cloudinary");
-const userModel = require("../models/users/User.js");
 
 const createSeller = asyncHandler(async (req, res) => {
   const { userName, email, password } = req.body;

@@ -6,16 +6,16 @@ const tourGuideSchema = new Schema(
     userName: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
@@ -25,66 +25,66 @@ const tourGuideSchema = new Schema(
     mobileNumber: {
       type: String,
       required: false,
-      default: ""
+      default: "",
     },
     nationality: {
       type: String,
       required: false,
-      default: ""
+      default: "",
     },
     yearsOfExperience: {
       type: Number,
       required: false,
-      default: 0
+      default: 0,
     },
     languagesSpoken: {
       type: [String],
       required: false,
-      default: []
+      default: [],
     },
     education: [
       {
         degree: {
           type: String,
-          required: false
+          required: false,
         },
         institution: {
           type: String,
-          required: false
+          required: false,
         },
         yearOfCompletion: {
           type: Number,
-          required: false
-        }
-      }
+          required: false,
+        },
+      },
     ],
     previousWork: [
       {
         companyName: {
           type: String,
-          required: false
+          required: false,
         },
         position: {
           type: String,
-          required: false
+          required: false,
         },
         location: {
           type: String,
-          required: false
+          required: false,
         },
         startDate: {
           type: Date,
-          required: false
+          required: false,
         },
         endDate: {
           type: Date,
-          required: false
+          required: false,
         },
         description: {
           type: String,
-          required: false
-        }
-      }
+          required: false,
+        },
+      },
     ],
     averageRating: {
       type: Number,
@@ -92,11 +92,12 @@ const tourGuideSchema = new Schema(
     },
     profilePicture: {
       type: String,
-      required: false
-    }
+      required: false,
+      default: "",
+    },
   },
   { timestamps: true }
 );
 
-const TourGuide = mongoose.model('TourGuide', tourGuideSchema);
+const TourGuide = mongoose.model("TourGuide", tourGuideSchema);
 module.exports = TourGuide;
