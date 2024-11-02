@@ -5,7 +5,7 @@ import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { message } from 'antd';
-import { getTouristItineraries } from "../../api/TouristService";
+import { getTouristItineraries, cancelBooking} from "../../api/TouristService";
 
 const touristId = "6724842b5831eed787083b57";
 
@@ -114,6 +114,14 @@ const ItineraryPage = () => {
     };
     
     const handleCancelBooking = async ({ itineraryId, touristId })  => {
+        try {
+            await cancelBooking(itineraryId, touristId);
+            message.success('Booking cancelled successfully');
+            setItineraries(itineraries.filter(itinerary => itinerary._id !== itineraryId));
+            setFilteredItineraries(filteredItineraries.filter(itinerary => itinerary._id !== itineraryId));
+        } catch (err) {
+            message.error('Failed to cancel booking');
+        }
     }
 
     if (loading) return <p>Loading...</p>;

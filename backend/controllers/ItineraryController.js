@@ -251,6 +251,31 @@ const bookItinerary = async (req, res) => {
     }
 };
 
+const cancelBooking = async (req, res) => {
+    const { itineraryId } = req.params;
+    const { touristId } = req.body;
+
+    try {
+        const itinerary = await itineraryModel.findById(itineraryId);
+
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+
+        const touristIndex = itinerary.tourists.findIndex(id => id.toString() === touristId);
+        if (touristIndex === -1) {
+            return res.status(400).json({ message: 'You have no booking reservations for this.' });
+        }
+
+        itinerary.tourists.splice(touristId, 1);
+        await itinerary.save();
+
+        res.status(200).json({ message: 'Itinerary reservation cancelled successfully!', itinerary });
+    } catch (error) {
+        res.status(500).json({ message: 'Error cancelling itinerary reservation', error });
+    }
+};
+
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.params.touristId;
@@ -273,5 +298,6 @@ module.exports = {
     addItineraryComment,
     getItineraryComments,
     bookItinerary,
+    cancelBooking,
     getTouristItineraries
 };
