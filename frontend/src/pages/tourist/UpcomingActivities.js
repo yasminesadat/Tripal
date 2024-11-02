@@ -120,20 +120,10 @@ const UpcomingActivitiesPage = () => {
         const response = await bookActivity(activityId, touristId);
         message.success(response.message);
     } catch (error) {
-        if (error.response) {
-            switch (error.response.status) {
-                case 404:
-                    message.error(error.response.data.error); // Activity or tourist not found
-                    break;
-                case 400:
-                    message.success(error.response.data.error); // Booking closed or already booked
-                    break;
-                default:
-                    message.error("An unexpected error occurred. Please try again."); // General error
-            }
-        } else {
-            message.error("Failed to book activity. Please check your network and try again.");
-        }
+        if (error.response) 
+            message.error(error.response.data.error);       
+        else
+            message.error("Failed to book activity. Please check your network and try again.");   
     }
 };
 
