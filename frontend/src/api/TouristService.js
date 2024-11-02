@@ -50,6 +50,16 @@ export async function redeemPoints(id) {
   } catch (error) {
     throw error;
   }}
+export async function cancelBooking(itineraryId, touristId) {
+  try {
+    const response = await axios.post(`/itineraries/${itineraryId}/cancel`, { touristId });
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
 export async function getTouristItineraries(touristId) {
   try {
     const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
