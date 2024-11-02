@@ -69,7 +69,7 @@ const AdvertiserActivitiesPage = () => {
                   </Tag>
                 ))}
               </div>
-              {/* <div className="list-item-attribute">Rating: {activity.averageRating}</div> */}
+              <div className="list-item-attribute">Rating: {activity.averageRating}</div>
               <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
               <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
 
