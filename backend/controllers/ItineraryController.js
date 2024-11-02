@@ -2,6 +2,7 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
+const touristModel = require('../models/users/Tourist');
 
 const createItinerary = async (req, res) => {
     try {
@@ -241,7 +242,15 @@ const bookItinerary = async (req, res) => {
         if (alreadyBooked) {
             return res.status(400).json({ message: 'You have already booked this itinerary.' });
         }
+        const tourist = await touristModel.findById(touristId);
+        if (!tourist) {
+            return res.status(404).json({ error: 'Tourist not found' });
+        }
 
+        const age = new Date().getFullYear() - new Date(tourist.dateOfBirth).getFullYear();
+        if (age < 18) {
+            return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
+        }
         itinerary.tourists.push(touristId);
         await itinerary.save();
 

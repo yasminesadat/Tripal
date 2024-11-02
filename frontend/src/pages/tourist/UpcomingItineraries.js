@@ -123,12 +123,13 @@ const UpcomingItinerariesPage = () => {
     
             if (error.response) {
                 const { status, data } = error.response;
-                if (status === 400 && data.message === 'You have already booked this itinerary.') {
-                    message.success("You have already booked this itinerary.");
+                if (status === 400) {
+                    message.success(data.message);
                 } else if (status === 404) {
                     message.error("Itinerary not found.");
-                } else {
-                    message.error("Failed to book ticket. Please try again later.");
+                }
+                 else {
+                    message.error(data.error);
                 }
             }
         }
