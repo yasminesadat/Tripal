@@ -1,73 +1,67 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { CreateNewHistoricalPlace, getHistoricalPlaceDetails, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
-import { getAllPeriodTags, CreateNewPeriodTag } from '../../api/HistoricalPlacePeriodService';
-import { getAllTypeTags, CreateNewTypeTag } from '../../api/HistoricalPlaceTagService';
-import { ToastContainer, toast } from "react-toastify";
-import { Form, Input, Select, Button, message, Upload, InputNumber, TimePicker } from "antd";
-import Maps from '../../components/historicalplace/Maps';
-import SearchBox from '../../components/historicalplace/HistoricalPlaceSearch';
-import moment from 'moment';
-import { tourismGovernerID } from '../../IDs';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { tourismGovernerID } from "../../IDs";
+import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-import GovernorNavBar from '../../components/navbar/GovernorNavBar';
-
-function HistoricalPlaceForm({ state }) {
+import MapPopUp from "../../components/governor/PopUpForMap";
+import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
+import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
+import { useLocation } from 'react-router-dom';
+import GovernorNavBar from '../../components/governor/GovernorNavBar';
+import moment from 'moment';
+import { toast } from "react-toastify";
+import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
+const HistoricalPlaceForm = () => {
+    const location = useLocation();
+    const props = location.state?.place;
     const { id } = useParams();
-    const navigate = useNavigate();
-    const isCreate = id === undefined;
-    const [form] = Form.useForm();
-    const [selectPosition, setSelectPosition] = useState(null);
-    const [selectLocation, setSelectLocation] = useState(null);
-    const [searchPlaceHolder, setSearchPlaceHolder] = useState(null);
-
-    const [histDetails, setHistDetails] = useState(null);
-    const [images, setImages] = useState(new Set());
-    const [encodedImages, setEncodedImages] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [periodTags, setPeriodTags] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [address, setAddress] = useState(props?.location?.address || "");
     const [tagsOptions, setTagsOption] = useState([]);
     const [periodTagsOptions, setPeriodTagsOption] = useState([]);
-    const location = useLocation();
-    const passedData = location.state?.place;
+    const [deletedImages, setDeletedImages] = useState(new Set([]));
+    const [newImages, setNewImages] = useState(new Set([]));
+    const [coordinates, setCoordinates] = useState([
+        props?.location?.coordinates?.latitude || 51.505,
+        props?.location?.coordinates?.longitude || -0.09,
+    ]);
     const [formData, setFormData] = useState({
-        name: passedData ? passedData.name : "",
-        description: passedData ? passedData.description : "",
-        weekdayOpening: passedData ? passedData.openingHours.weekdays.openingTime : '',
-        weekdayClosing: passedData ? passedData.openingHours.weekdays.closingTime : '',
-        weekendOpening: passedData ? passedData.openingHours.weekends.openingTime : '',
-        weekendClosing: passedData ? passedData.openingHours.weekends.closingTime : '',
-        foreignerPrice: passedData ? passedData.ticketPrices.foreigner : 0,
-        nativePrice: passedData ? passedData.ticketPrices.native : 0,
-        studentPrice: passedData ? passedData.ticketPrices.student : 0,
+        tourismGovernor: tourismGovernerID,
+        name: props?.name || "",
+        description: props?.description || "",
+        images: new Set(props?.images || []),
+        openingHours: {
+            weekdays: {
+                openingTime: props?.openingHours?.weekdays?.openingTime || '',
+                closingTime: props?.openingHours?.weekdays?.closingTime || '',
+            },
+            weekends: {
+                openingTime: props?.openingHours?.weekends?.openingTime || '',
+                closingTime: props?.openingHours?.weekends?.closingTime || '',
+            }
+        },
+        ticketPrices: {
+            foreigner: props?.ticketPrices?.foreigner || 0,
+            native: props?.ticketPrices?.native || 0,
+            student: props?.ticketPrices?.student || 0,
+        },
+        tags: props?.tags || [],
+        historicalPeriod: props?.historicalPeriod || []
     });
-    useEffect(() => {
-        setTags(passedData ? passedData.tags : [])
-        // console.log("TAGS I GOT", passedData.tags)
-        setPeriodTags(passedData ? passedData.historicalPeriod : [])
-        setSelectPosition(passedData ? { lat: passedData.location.coordinates.latitude ? passedData.location.coordinates.latitude : '-77.0364', lon: passedData.location.coordinates.longitude ? passedData.location.coordinates.longitude : '-77.0364' } : null)
-        setSelectLocation(passedData ? passedData.location.address : '');
-        console.log("passed", passedData)
+    const handleChoosingImage = (e) => {
+        e.fileList.forEach(file => {
+            if (file.status !== 'done') {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj);
+                reader.onloadend = () => {
+                    setNewImages((oldImages) => new Set(oldImages).add(
+                        reader.result
+                    ))
 
-    }, [passedData]);
-
-    // useEffect(() => {
-    //     const fetchHistoricalPlaceDetails = async (historicalPlaceId) => {
-    //         setLoading(true);
-    //         console.log(id);
-    //         const HistoricalPlaceData = await getHistoricalPlaceDetails(historicalPlaceId);
-    //         const data=await HistoricalPlaceData.data;
-    //         setHistDetails(data);
-    //         form.setFieldsValue(data);
-    //         console.log(data);
-    //         setLoading(false);
-    //     };
-    //     if (id!==undefined) {
-    //         fetchHistoricalPlaceDetails(id);
-    //     };
-    // }, []);
+                }
+            }
+        });
+    }
     useEffect(() => {
         const getHistoricalPeriods = async () => {
             setLoading(true);
@@ -77,157 +71,72 @@ function HistoricalPlaceForm({ state }) {
             }
             setLoading(false);
         };
-
         getHistoricalPeriods();
     }, []);
     useEffect(() => {
         const getHistoricalTags = async () => {
             setLoading(true);
-
             const typeTagsData = await getAllTypeTags();
             if (typeTagsData) {
                 setTagsOption(typeTagsData);
             }
             setLoading(false);
         };
-
         getHistoricalTags();
     }, [])
 
 
-    // const handleChoosingImage = (e) => {
-    //     const files = e.target.files;
-    //     Array.from(files).forEach((file) => {
-    //         setFileToBase(file).then((encodedImage) => {
-    //             setImages((prevImages) => [...prevImages, encodedImage]);
-    //         });
-    //     });
-    //     console.log(images);
-    // };
-    // const setFileToBase = (file) => {
-    //     return new Promise((resolve) => {
-    //         const reader = new FileReader();
-    //         reader.readAsDataURL(file);
-    //         reader.onloadend = () => {
-    //             resolve(reader.result);
-    //         };
-    //     });
-    // };
-    const handleChoosingImage = (e) => {
-        const files = e.fileList.map((file) => file.originFileObj);
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImages((oldImages) => new Set(oldImages).add(reader.result));
-                console.log(images);
-            }
-        });
-        console.log(images);
-    }
-    async function createTags() {
-        const tagID = [];
-        const tagsIDs = tagsOptions.map((tag) => tag._id);
-        const tagsNames = tagsOptions.map((tag) => tag.name);
+    const normFile = (e) => {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e?.fileList;
+    };
 
-        const tagPromises = tags.map(async (tag) => {
-            if (!tagsIDs.includes(tag.toString()) && !tagsNames.includes(tag.toString())) {
-                const response = await CreateNewTypeTag({ name: tag.toString() });
-                const responseJSON = await response.data;
-                tagID.push(responseJSON._id);
-            } else {
-                tagID.push(tag);
-            }
-            console.log("inside function createTags", tagID)
-        });
-        await Promise.all(tagPromises);  // Wait for all async tag creations
-        setTags(tagID);  // Set the tags after all have been processed
-        console.log("tag ids after setting:", tagID);
-    }
-    async function createPeriodTags() {
-        let periodTagID = [];
-        const periodTagsIDs = periodTagsOptions.map((periodtag) => periodtag._id);
-        const periodTagsNames = periodTagsOptions.map((periodtag) => periodtag.name);
-
-        const periodTagPromises = periodTags.map(async (periodTag) => {
-            if (!periodTagsIDs.includes(periodTag.toString()) && !periodTagsNames.includes(periodTag.toString())) {
-                const response = await CreateNewPeriodTag({ name: periodTag.toString() });
-                const responseJSON = await response.data;
-                periodTagID.push(responseJSON._id);
-            } else {
-                periodTagID.push(periodTag);
-            }
-        });
-
-        await Promise.all(periodTagPromises);  // Wait for all async period tag creations
-        setPeriodTags(periodTagID);  // Set the period tags after all have been processed
-        console.log(periodTagID);
-    }
-
-    async function handleSubmition() {
-        // console.log("tags before waiting", tags)
-        // await createTags();
-
-        // await createPeriodTags();
-
-        //console.log("tags after waiting", tags)
+    async function handleSubmission() {
+        console.log("ia m hereee")
         const newHistoricalPlace = {
             tourismGovernor: tourismGovernerID
             ,
             name: formData.name
             ,
             description: formData.description,
-            images: [...images],
+            images: [...newImages],
             location: {
-                address: selectLocation.toString(),
+                address: address,
                 coordinates: {
-                    latitude: Number(selectPosition?.lat),
-                    longitude: Number(selectPosition?.lon),
+                    latitude: Number(coordinates[0]),
+                    longitude: Number(coordinates[1]),
                 }
             },
             openingHours: {
                 weekdays: {
-                    openingTime: formData.weekdayOpening.toString(),
-                    closingTime: formData.weekdayClosing.toString(),
+                    openingTime: (formData.openingHours.weekdays.openingTime).toString(),
+                    closingTime: (formData.openingHours.weekdays.closingTime).toString(),
 
                 },
                 weekends: {
-                    openingTime: formData.weekendOpening.toString(),
-                    closingTime: formData.weekendClosing.toString(),
+                    openingTime: (formData.openingHours.weekends.openingTime).toString(),
+                    closingTime: (formData.openingHours.weekends.closingTime).toString(),
                 },
             },
             ticketPrices: {
-                foreigner: formData.foreignerPrice,
-                native: formData.nativePrice,
-                student: formData.studentPrice
+                foreigner: formData.ticketPrices.foreigner,
+                native: formData.ticketPrices.native,
+                student: formData.ticketPrices.student
             },
-            tags: await tags,
-            historicalPeriod: await periodTags,
+            tags: await formData.tags,
+            historicalPeriod: await formData.historicalPeriod,
         };
         setLoading(true);
         console.log("historical Places", newHistoricalPlace);
-        // console.log("Im ")
         if (id === undefined) {
             try {
                 const result = await CreateNewHistoricalPlace(newHistoricalPlace);
                 if (result) {
                     setLoading(false);
                     toast.success('Historical place created successfully')
-                    setImages([]);
-                    setFormData({
-                        name: '',
-                        description: '',
-                        weekdayOpening: '',
-                        weekdayClosing: '',
-                        weekendOpening: '',
-                        weekendClosing: '',
-                        foreignerPrice: '',
-                        nativePrice: '',
-                        studentPrice: '',
-                    });
-                    setTags([]);
-                    setPeriodTags([]);
-                    setSelectPosition(null);
                 }
             }
             catch (err) {
@@ -237,26 +146,45 @@ function HistoricalPlaceForm({ state }) {
         }
         else {
             try {
-                console.log(newHistoricalPlace);
-                const result = await updateHistoricalPlace(id, newHistoricalPlace);
+                const updatedHistoricalPlace = {
+                    tourismGovernor: tourismGovernerID
+                    ,
+                    name: formData.name
+                    ,
+                    description: formData.description,
+                    images: [...newImages],
+                    location: {
+                        address: address,
+                        coordinates: {
+                            latitude: Number(coordinates[0]),
+                            longitude: Number(coordinates[1]),
+                        }
+                    },
+                    openingHours: {
+                        weekdays: {
+                            openingTime: (formData.openingHours.weekdays.openingTime).toString(),
+                            closingTime: (formData.openingHours.weekdays.closingTime).toString(),
+
+                        },
+                        weekends: {
+                            openingTime: (formData.openingHours.weekends.openingTime).toString(),
+                            closingTime: (formData.openingHours.weekends.closingTime).toString(),
+                        },
+                    },
+                    ticketPrices: {
+                        foreigner: formData.ticketPrices.foreigner,
+                        native: formData.ticketPrices.native,
+                        student: formData.ticketPrices.student
+                    },
+                    tags: await formData.tags,
+                    historicalPeriod: await formData.historicalPeriod,
+                    deletedImages: [...deletedImages]
+                }
+                console.log("in update ", updatedHistoricalPlace);
+                const result = await updateHistoricalPlace(id, updatedHistoricalPlace);
                 if (result) {
                     setLoading(false);
                     toast.success('Historical place Updated successfully')
-                    setImages([]);
-                    setFormData({
-                        name: '',
-                        description: '',
-                        weekdayOpening: '',
-                        weekdayClosing: '',
-                        weekendOpening: '',
-                        weekendClosing: '',
-                        foreignerPrice: '',
-                        nativePrice: '',
-                        studentPrice: '',
-                    });
-                    setTags([]);
-                    setPeriodTags([]);
-                    setSelectPosition(null);
                 }
 
             } catch (err) {
@@ -265,201 +193,356 @@ function HistoricalPlaceForm({ state }) {
             }
         }
     }
-    const handleChange = (name, value) => {
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
     const handleInputChange = (e) => {
         console.log(e.target.value);
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    const handleTime = (field, time) => {
-        console.log("inside handle time ", field, time.format("HH:mm"));
-        setFormData({ ...formData, [field]: time.format("HH:mm") });
-    }
-    const handlePrices = (field, price) => {
-        setFormData({ ...formData, [field]: price });
-        console.log(formData);
-    }
+    const fileList = [...formData.images].map((image, index) => ({
+        uid: image.public_id,
+        name: `image-${index + 1}.png`,
+        status: 'done',
+        url: image.url,
+    }));
+
     return (
         <div>
             <GovernorNavBar />
             {id === undefined && <h2 >Create new historical place</h2>}
             {id !== undefined && <h2 >Update historical place</h2>
             }
-            <Form form={form} layout="vertical" onFinish={handleSubmition}
+            <Form
+                layout="vertical"
+                name="validate_other"
+                onFinish={handleSubmission}
                 initialValues={{
-                    name: formData.name,
-                    description: formData.description,
-                    weekdayOpening: formData.weekdayOpening ? moment(formData.weekdayOpening, "HH:mm") : null,
-                    weekdayClosing: formData.weekdayClosing ? moment(formData.weekdayClosing, "HH:mm") : null,
-                    weekendOpening: formData.weekendOpening ? moment(formData.weekendOpening, "HH:mm") : null,
-                    weekendClosing: formData.weekendClosing ? moment(formData.weekendClosing, "HH:mm") : null,
-                    foreignerPrice: formData.foreignerPrice,
-                    nativePrice: formData.nativePrice,
-                    studentPrice: formData.studentPrice,
-                    tags: tags.map((tag) => tag.name),
-                    periods: periodTags
-                }}>
+                    upload: fileList,
+                }}
+            >
+
                 <Form.Item
                     label="Name"
                     name="name"
-                    rules={[{ required: id === undefined, message: "Please enter the name of the place" }]}
+                    rules={[
+                        {
+                            required: id === undefined,
+                            message: 'Please enter the place name!',
+                        },
+                    ]}
                 >
-                    <Input
+                    <Input style={{
+                        width: '100%',
+                    }} name="name"
                         type="text"
-                        name="name"
                         value={formData.name}
-                        onChange={handleInputChange}
                         placeholder="Enter historical place name"
+                        onChange={handleInputChange}
+                        defaultValue={formData.name}
                     />
                 </Form.Item>
                 <Form.Item
                     label="Description"
                     name="description"
-                    rules={[{ required: id === undefined, message: "Please enter the description of the historical place" }]}
+                    rules={[
+                        {
+                            required: id === undefined,
+                            message: 'Please enter the place description!',
+                        },
+                    ]}
                 >
-                    <Input
+                    <Input style={{
+                        width: '100%',
+                    }} name="description"
                         type="text"
-                        name="description"
                         value={formData.description}
+                        placeholder="Enter historical place description"
                         onChange={handleInputChange}
-                        placeholder="Enter historical place decription"
-                    />
+                        defaultValue={formData.description} />
                 </Form.Item>
-                <Form.Item label="weekday Opening" required>
-                    <Input
-                        type="time"
-                        name="weekdayOpening"
-                        value={formData.weekdayOpening}
-                        onChange={handleInputChange}
-                        required
-                    />
+                <Form.Item name="weekendOpeningTime" label="Weekends opening time" rules={[
+                    {
+                        type: 'object',
+                        required: id === undefined,
+                        message: 'Please select weekends opening time!',
+                    },
+                ]}>
+                    <TimePicker style={{
+                        width: '100%',
+                    }}
+                        name="weekendOpeningTime"
+                        value={formData.openingHours?.weekends?.openingTime
+                            ? moment(formData.openingHours.weekends.openingTime, 'HH:mm')
+                            : null}
+                        onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekends: {
+                                        ...data.openingHours.weekends,
+                                        openingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                        defaultValue={formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null}
+                        placeholder="please select the weekends opening time" />
                 </Form.Item>
-                <Form.Item label="weekday Closing" required>
-                    <Input
-                        type="time"
-                        name="weekdayClosing"
-                        value={formData.weekdayClosing}
-                        onChange={handleInputChange}
-                        required
-                    />
+                <Form.Item name="weekendClosingTime" label="Weekends closing time" rules={[
+                    {
+                        type: 'object',
+                        required: id === undefined,
+                        message: 'Please select weekends closing time!',
+                    },
+                ]}>
+                    <TimePicker style={{
+                        width: '100%',
+                    }} name="weekendClosingTime"
+                        value={formData.openingHours?.weekends?.closingTime
+                            ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
+                            : null}
+                        onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekends: {
+                                        ...data.openingHours.weekends,
+                                        closingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                        defaultValue={formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null}
+                        placeholder="please select the weekends closing time" />
                 </Form.Item>
+                <Form.Item name="weekdayOpeningTime" label="Weekdays opening time" rules={[
+                    {
+                        type: 'object',
+                        required: id === undefined,
+                        message: 'Please select weekdays opening time!',
+                    },
+                ]}>
+                    <TimePicker style={{
+                        width: '100%',
+                    }} name="weekdayOpeningTime"
+                        value={formData.openingHours?.weekdays?.openingTime
+                            ? moment(formData.openingHours.weekdays.openingTime, 'HH:mm')
+                            : null}
+                        onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekdays: {
+                                        ...data.openingHours.weekdays,
+                                        openingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                        defaultValue={formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null}
+                        placeholder="please select the weekdays opening time" />
+                </Form.Item>
+                <Form.Item name="weekdayClosingTime" label="Weekday closing time" rules={[
+                    {
+                        type: 'object',
+                        required: id === undefined,
+                        message: 'Please select weekdays closing time!',
+                    },
+                ]}>
+                    <TimePicker style={{
+                        width: '100%',
+                    }} name="weekdayClosingTime"
+                        value={formData.openingHours?.weekdays?.closingTime
+                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+                            : null}
+                        onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekdays: {
+                                        ...data.openingHours.weekdays,
+                                        closingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                        defaultValue={formData.openingHours.weekdays.closingTime ? moment(formData.openingHours.weekdays.closingTime, "HH:mm") : null}
+                        placeholder="please select the weekdays closing time" />
 
-
-                <Form.Item label="weekend Opening" required>
-                    <Input
-                        type="time"
-                        name="weekendOpening"
-                        value={formData.weekendOpening}
-                        onChange={handleInputChange}
-                        required
+                </Form.Item>
+                <Form.Item
+                    label="Historical Periods"
+                    name="historicalPeriod"
+                    rules={[{ required: false, message: "Please select or create historical periods" }]}>
+                    <Select
+                        mode="tags"
+                        placeholder="Please select or create period tags"
+                        defaultValue={[...formData.historicalPeriod.map((period) => ({
+                            label: period.name,
+                            value: period._id
+                        }))]}
+                        onChange={(selectedTags) => {
+                            console.log("helo", selectedTags);
+                            const selectedPeriods = selectedTags.map((tagValue) => {
+                                const period = periodTagsOptions.find((p) => p._id === tagValue);
+                                return {
+                                    name: period ? period.name : tagValue,
+                                    _id: period ? period._id : ''
+                                };
+                            });
+                            console.log(selectedPeriods);
+                            setFormData((data) => ({
+                                ...data,
+                                historicalPeriod: selectedPeriods,
+                            }));
+                        }}
+                        style={{
+                            width: '100%',
+                        }}
+                        options={periodTagsOptions.map((period) => (
+                            {
+                                label: period.name,
+                                value: period._id
+                            }
+                        )
+                        )}
                     />
                 </Form.Item>
-                <Form.Item label="weekend Closing" required>
-                    <Input
-                        type="time"
-                        name='weekendClosing'
-                        value={formData.weekendClosing}
-                        onChange={ handleInputChange}
-                        required
-                    />
-                </Form.Item>
-
                 <Form.Item
                     label="Tags"
                     name="tags"
-                    rules={[{ required: false, message: "Please select or create tags" }]}
-                >
+                    rules={[{ required: false, message: "Please select or create tags" }]}>
                     <Select
                         mode="tags"
-                        style={{ width: '100%' }}
-                        placeholder="Select or create tags"
-                        value={tags}
-                        onChange={(selectedTags) => setTags(selectedTags)}
-                        options={tagsOptions.map(tag => ({
+                        placeholder="Please select or new tags"
+                        defaultValue={[...formData.tags.map((tag) => ({
                             label: tag.name,
                             value: tag._id
-                        }))}
+                        }))]}
+                        onChange={(selectedTags) => {
+                            console.log("helo", selectedTags);
+                            const tags = selectedTags.map((tagValue) => {
+                                const tag = tagsOptions.find((p) => p._id === tagValue);
+                                return {
+                                    name: tag ? tag.name : tagValue,
+                                    _id: tag ? tag._id : ''
+                                };
+                            });
+                            console.log(tags);
+                            setFormData((data) => ({
+                                ...data,
+                                tags: tags,
+                            }));
+                        }}
+                        style={{
+                            width: '100%',
+                        }}
+                        options={tagsOptions.map((tag) => (
+                            {
+                                label: tag.name,
+                                value: tag._id,
+                            }
+                        )
+                        )}
                     />
                 </Form.Item>
-
                 <Form.Item
-                    label="Periods tags"
-                    name="periods"
-                    rules={[{ required: false, message: "Please select or create period tags" }]}
-                >
-                    <Select
-                        mode="tags"
-                        style={{ width: '100%' }}
-                        placeholder="Select or create period tags"
-                        value={periodTags}
-                        onChange={(selectedPeriodTags) => {
-                            setPeriodTags(selectedPeriodTags);
-                        }}
-                        options={periodTagsOptions.map(period => ({
-                            label: period.name,
-                            value: period._id
-                        }))}
-                    /></Form.Item>
-                <Form.Item
-                    label="Foreigner Price"
+                    label="Foreigner ticket Price"
                     name="foreignerPrice"
                     rules={[{ required: id === undefined, message: "Please enter the foreigner ticket price" }]}
                 >
                     <InputNumber
                         min={0}
-                        value={formData.foreignerPrice}
-                        onChange={(value) => { handlePrices('foreignerPrice', value) }}
+                        defaultValue={id !== undefined ? formData.ticketPrices.foreigner : null}
+                        value={formData.ticketPrices.foreigner}
+                        onChange={(value) => (setFormData((data) => ({
+                            ...data,
+                            ticketPrices: {
+                                ...data.ticketPrices,
+                                foreigner: value,
+                            }
+                        })))}
                         placeholder="Enter foreigner ticket price"
                         style={{ width: '100%' }}
                     />
                 </Form.Item>
-
-
                 <Form.Item
-                    label="Native Price"
+                    label="Native ticket Price"
                     name="nativePrice"
                     rules={[{ required: id === undefined, message: "Please enter the native ticket price" }]}
                 >
                     <InputNumber
                         min={0}
-                        value={formData.nativePrice}
-                        onChange={(value) => { handlePrices('nativePrice', value) }}
+                        defaultValue={id !== undefined ? formData.ticketPrices.native : null}
+                        value={formData.ticketPrices.native}
+                        onChange={(value) => (setFormData((data) => ({
+                            ...data,
+                            ticketPrices: {
+                                ...data.ticketPrices,
+                                native: value,
+                            }
+                        })))}
                         placeholder="Enter native ticket price"
                         style={{ width: '100%' }}
                     />
                 </Form.Item>
-
-
                 <Form.Item
-                    label="Student Price"
+                    label="Student ticket Price"
                     name="studentPrice"
                     rules={[{ required: id === undefined, message: "Please enter the student ticket price" }]}
                 >
                     <InputNumber
                         min={0}
-                        value={formData.studentPrice}
-                        onChange={(value) => { handlePrices('studentPrice', value) }}
+                        defaultValue={id !== undefined ? formData.ticketPrices.student : null}
+                        value={formData.ticketPrices.student}
+                        onChange={(value) => (setFormData((data) => ({
+                            ...data,
+                            ticketPrices: {
+                                ...data.ticketPrices,
+                                student: value,
+                            }
+                        })))}
                         placeholder="Enter student ticket price"
                         style={{ width: '100%' }}
                     />
                 </Form.Item>
+
                 <Form.Item
-                    label="Upload Images for the Place"
-                    name="images"
-                    rules={[{ required: false, message: "Please upload at least one image" }]}
+                    name="upload"
+                    label="Upload place images"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    extra="You can select one or more images"
+
                 >
                     <Upload.Dragger
                         name="files"
                         multiple
-                        beforeUpload={() => false}
                         onChange={handleChoosingImage}
-                        showUploadList={true}
-                    >
+                        onRemove={(file) => {
+                            console.log("the file to be removed", file);
+                            if ('url' in file) {
+                                setDeletedImages((oldImages) => new Set([...oldImages]).add({
+                                    public_id: file.uid,
+                                    url: file.url,
+                                }))
+                                console.log("deleted images set", deletedImages)
+                            } else {
+                                setNewImages((oldData) => {
+                                    const reader = new FileReader();
+                                    reader.readAsDataURL(file.originFileObj);
+                                    reader.onloadend = () => {
+                                        const encodedImage = reader.result;
+                                        return new Set([...oldData].filter((image) => image !== encodedImage))
+                                    }
+                                });
+                                console.log("the new images set", newImages)
+                            }
+                        }}
+                        listType="picture">
                         <p >
                             <InboxOutlined />
                         </p>
@@ -469,43 +552,36 @@ function HistoricalPlaceForm({ state }) {
                         </p>
                     </Upload.Dragger>
                 </Form.Item>
-
-                <SearchBox
-                    selectPosition={selectPosition}
-                    setSelectPosition={setSelectPosition}
-                    setSelectLocation={setSelectLocation}
-                    selectLocation={selectLocation}
-                />
-                < Maps selectPosition={selectPosition} />
-                <div style={{ marginTop: '10px' }}>
-                    <strong>Selected Location:</strong> {selectLocation || 'No location selected yet'}
-                </div>
-
                 <Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        style={{ width: "100%" }}
-                        loading={loading}
-                    // onClick={() => navigate('/historicalPlace/tourismGoverner')}
-                    >
-                        {id === undefined ? "Create" : "Update"}
-
-                    </Button>
+                    <MapPopUp
+                        markerPosition={coordinates}
+                        setMarkerPosition={setCoordinates}
+                        setSelectedLocation={setAddress}
+                        selectedLocation={address} />
                 </Form.Item>
+                <div style={{ marginTop: '10px' }}>
+                    <strong>Selected Location:</strong> {address || 'No location selected yet'}
+                </div>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: "100%" }}
+                    loading={loading}
+                >
+                    {id === undefined ? "Create" : "Update"}
+
+                </Button>
             </Form>
-
-
-
-            <ToastContainer />
         </div>
-
-
-
-
-
-    )
+    );
 }
 export default HistoricalPlaceForm;
+
+
+
+
+
+
+
 
 
