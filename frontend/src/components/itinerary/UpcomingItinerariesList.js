@@ -1,8 +1,8 @@
 import React from 'react';
 
 const touristId = '670d4e900cb9ea7937cc9968';
-const ItinerariesList = ({ itineraries,onBook  }) => {
-    
+
+const UpcomingItinerariesList = ({ itineraries,onBook  }) => {    
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -101,4 +101,4 @@ const ItinerariesList = ({ itineraries,onBook  }) => {
     );
 };
 
-export default ItinerariesList;
+export default UpcomingItinerariesList;

@@ -147,6 +147,22 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
+//fix this date when there are entries
+const viewPaidActivities = async (req, res) => {
+  try {
+    const currentDate = new Date();
+
+    const activities = await Activity.find({ date: { $gte: currentDate } })
+      .populate("category")
+      .populate("tags")
+    // .populate("ratings");
+
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const addActivityComment = async (req, res) => {
   const { userId, activityId, text } = req.body;
 
@@ -214,6 +230,7 @@ module.exports = {
   deleteActivity,
   addActivityComment,
   viewUpcomingActivities,
+  viewPaidActivities,
   addActivityComment,
   getActivityComments,
   bookActivity,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
-import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
+import { viewPaidActivities } from "../../api/ActivityService";
+import PaidActivitiesList from "../../components/activity/PaidActivitiesList";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
@@ -8,7 +8,7 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 
-const UpcomingActivitiesPage = () => {
+const PaidActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const UpcomingActivitiesPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewUpcomingActivities();
+        const response = await viewPaidActivities();
         const activitiesWithAvgRatings = response.data.map(activity => ({
           ...activity,
           averageRating: calculateAverageRating(activity.ratings),
@@ -114,47 +114,25 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(sortedActivities);
   };
 
-  const handleBookActivity = async ({ activityId, touristId }) => {
-    try {
-      console.log('Booking', activityId, touristId);
-        const response = await bookActivity(activityId, touristId);
-        message.success(response.message);
-    } catch (error) {
-        if (error.response) {
-            switch (error.response.status) {
-                case 404:
-                    message.error(error.response.data.error); // Activity or tourist not found
-                    break;
-                case 400:
-                    message.success(error.response.data.error); // Booking closed or already booked
-                    break;
-                default:
-                    message.error("An unexpected error occurred. Please try again."); // General error
-            }
-        } else {
-            message.error("Failed to book activity. Please check your network and try again.");
-        }
-    }
-};
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
+    <div>
       <TouristNavBar />
-      <div class="page-title">Upcoming Activities</div>
+      <div class="page-title">Paid Activities</div>
       <ActivitySearch onSearch={handleSearch} />
       <div class="filter-sort-list">
         <div class="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} onBook ={handleBookActivity} />
+        <PaidActivitiesList activities={filteredActivities} />
       </div>
       <Footer />
     </div>
   );
+  
 };
 
-export default UpcomingActivitiesPage;
+export default PaidActivitiesPage;

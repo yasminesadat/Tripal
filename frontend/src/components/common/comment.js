@@ -3,7 +3,7 @@ import React from "react";
 export default function CommentBox() {
   return (
     <>
-      <h2 className="text-30 pt-60">Leave a Comment</h2>
+      {/* <h2 className="text-30 pt-60">Leave a Comment</h2> */}
 
       {/* <div className="reviewsGrid pt-30">
         <div className="reviewsGrid__item">
@@ -127,7 +127,7 @@ export default function CommentBox() {
           <div className="col-12">
             <div className="form-input ">
               <textarea required rows="5"></textarea>
-              <label className="lh-1 text-16 text-light-1">Comment</label>
+              {/* <label className="lh-1 text-16 text-light-1">Comment</label> */}
             </div>
           </div>
         </div>

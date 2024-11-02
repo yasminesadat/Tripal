@@ -1,7 +1,9 @@
 import React from "react";
 import { Tag } from 'antd';
+
 const touristId = '670d4e900cb9ea7937cc9968';
-const ActivitiesList = ({ activities,onBook }) => {
+
+const UpcomingActivitiesList = ({ activities,onBook }) => {
   return (
     <div className="list">
       {activities.map((activity) => (
@@ -34,4 +36,4 @@ const ActivitiesList = ({ activities,onBook }) => {
   );
 };
 
-export default ActivitiesList;
+export default UpcomingActivitiesList;

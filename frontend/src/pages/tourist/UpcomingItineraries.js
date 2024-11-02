@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/itinerary/ItinerariesList';
+import UpcomingItinerariesList from '../../components/itinerary/UpcomingItinerariesList';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
  import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
-import { viewItineraries } from "../../api/ItineraryService";
+import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import {bookItinerary} from "../../api/TouristService";
 import { message } from 'antd';
 
-const ItineraryPage = () => {
+const UpcomingItinerariesPage = () => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const ItineraryPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await viewItineraries();
+                const response = await viewUpcomingItineraries();
                 setItineraries(response);
                 setFilteredItineraries(response);
             } catch (err) {
@@ -138,19 +138,19 @@ const ItineraryPage = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div class="page-container">
+        <div>
             <TouristNavBar />
-            <div class="page-title">Itineraries</div>
+            <div class="page-title">Upcoming Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div class="filter-sort-list">
                 <div class="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <ItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket}/>
+                <UpcomingItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket}/>
             </div>
         </div>
     );
 };
 
-export default ItineraryPage;
+export default UpcomingItinerariesPage;
