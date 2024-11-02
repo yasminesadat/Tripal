@@ -247,10 +247,10 @@ const bookItinerary = async (req, res) => {
             return res.status(404).json({ error: 'Tourist not found' });
         }
 
-        const age = new Date().getFullYear() - new Date(tourist.dateOfBirth).getFullYear();
-        if (age < 18) {
+        if (tourist.calculateAge() < 18) {
             return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
         }
+        
         itinerary.tourists.push(touristId);
         await itinerary.save();
 
