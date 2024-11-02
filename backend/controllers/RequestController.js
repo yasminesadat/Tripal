@@ -4,6 +4,8 @@ const User = require('../models/users/User.js')
 const Seller = require('../models/users/Seller.js')
 const TourGuide = require('../models/users/TourGuide.js')
 const Advertiser = require('../models/users/Advertiser.js')
+const bcrypt = require("bcrypt");
+
 const createRequest = async (req, res) => {
     const { userName, email, password, role } = req.body;
     try {
@@ -36,8 +38,9 @@ const createRequest = async (req, res) => {
             return res.status(400).json({ error: "Request has been submitted with this email" });
         }
 
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        const createdRequest = await Request.create({ userName, email, password, role });
+        const createdRequest = await Request.create({ userName, email, password: hashedPassword, role });
         res.status(201).json(createdRequest);
     } catch (error) {
         // Return a 400 response with the error message
