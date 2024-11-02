@@ -4,7 +4,7 @@ import CommentBox from '../common/Comment'
 
 const touristId = '670d4e900cb9ea7937cc9968';
 
-const PaidActivitiesList = ({ activities,onBook }) => {
+const PaidActivitiesList = ({ activities }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
 

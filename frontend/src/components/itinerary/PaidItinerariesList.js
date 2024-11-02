@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Tag, Modal } from 'antd';
+import CommentBox from '../common/Comment'
 
 const touristId = '670d4e900cb9ea7937cc9968';
 
 const PaidItinerariesList = ({ itineraries }) => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedItinerary, setSelectedItinerary] = useState(null);
+  
+    const showCommentModal = (itinerary) => {
+        setSelectedItinerary(itinerary);
+        setIsModalVisible(true);
+      };
+    
+      const handleClose = () => {
+        setIsModalVisible(false);
+      };
+    
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -89,12 +103,21 @@ const PaidItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
-                        
+                        <button onClick={() => showCommentModal(itinerary)}>
+                            Comment
+                        </button>
                         {console.log(itinerary._id ," ", touristId)}
-
                     </div>
                 </div>
             ))}
+            <Modal
+                title="Leave a Comment"
+                visible={isModalVisible}
+                onCancel={handleClose}
+                footer={null} 
+            >
+                <CommentBox />
+            </Modal>
         </div>
     );
 };
