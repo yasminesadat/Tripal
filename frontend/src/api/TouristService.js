@@ -49,5 +49,13 @@ export async function redeemPoints(id) {
     return response.data;
   } catch (error) {
     throw error;
+  }}
+export async function getTouristItineraries(touristId) {
+  try {
+    const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
   }
 }

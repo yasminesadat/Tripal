@@ -251,6 +251,16 @@ const bookItinerary = async (req, res) => {
     }
 };
 
+const getTouristItineraries = async (req, res) => {
+    try {
+        const touristId = req.params.touristId;
+        const itineraries = await itineraryModel.find({ tourists: touristId }).populate('tourGuide activities tourists');
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching itineraries', error });
+    }
+};
+
 module.exports = {
     createItinerary,
     getItineraries,
@@ -260,5 +270,8 @@ module.exports = {
     viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    bookItinerary
+    addItineraryComment,
+    getItineraryComments,
+    bookItinerary,
+    getTouristItineraries
 };
