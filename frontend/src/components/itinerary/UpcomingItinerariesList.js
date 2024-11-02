@@ -3,7 +3,7 @@ import React from 'react';
 const touristId = '670d4e900cb9ea7937cc9968';
 //const touristId = "6724842b5831eed787083b57"
 //const touristId = '670d4e900cb9ea7937cc9968';
-const UpcomingItinerariesList = ({ itineraries,onBook  }) => {    
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel }) => {    
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -90,10 +90,13 @@ const UpcomingItinerariesList = ({ itineraries,onBook  }) => {
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
-                        <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
+                        {book&& <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
                                 Book Now
-                                </button>
+                                </button>}
                         {console.log(itinerary._id ," ", touristId)}
+                        {cancel&& <button style={{ background: '#b0091a' }}  onClick={() => onCancel({ itineraryId: itinerary._id, touristId })}>
+                                Cancel Booking
+                                </button>}  
 
                     </div>
                 </div>

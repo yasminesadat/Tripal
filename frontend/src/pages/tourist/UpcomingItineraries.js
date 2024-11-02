@@ -147,7 +147,7 @@ const UpcomingItinerariesPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <UpcomingItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket}/>
+                <UpcomingItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket} book ={'diana'}/>
             </div>
         </div>
     );
