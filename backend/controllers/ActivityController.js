@@ -3,8 +3,8 @@ const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/users/Tourist.js");
-
+const Tourist = require("../models/users/Tourist");
+const ActivityComment = require("../models/ActivityComment")
 
 const createActivity = async (req, res) => {
   const {
@@ -168,8 +168,12 @@ const getActivityComments = async (req, res) => {
 
   try {
     const comments = await ActivityComment.find({ activityId })
-      .populate('userId', 'name');
-    return res.status(200).json(comments);
+      .populate('userId', 'userName');
+    
+    if (!comments)
+      return res.status(400).json({ message: "No comments available" });
+    else
+      return res.status(200).json(comments);
   } catch (error) {
     return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
   }

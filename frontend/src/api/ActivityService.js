@@ -109,3 +109,25 @@ export async function bookActivity(activityId, touristId) {
     throw error;
   }
 }
+
+export async function addActivityComment(activityId, userId, text) {
+  try {
+    const response = await axios.post(`/activity/${activityId}/comment`, {
+      userId,
+      activityId,
+      text,
+    });
+    return response.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error adding comment');
+  }
+};
+
+export async function getActivityComments(activityId) {
+  try {
+    const response = await axios.get(`/activity/${activityId}/comments`);
+    return response.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error retrieving comments');
+  }
+};

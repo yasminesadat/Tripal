@@ -13,65 +13,87 @@ export async function viewItineraries() {
 
 // for tourguide
 export const getItineraries = async (tourGuideId) => {
-    try {
-        const response = await axios.get(`/itinerary?tourGuideId=${tourGuideId}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching itineraries", error);
-        throw error;
-    }
+  try {
+    const response = await axios.get(`/itinerary?tourGuideId=${tourGuideId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching itineraries", error);
+    throw error;
+  }
 };
 
 export const createItinerary = async (itinerary) => {
-    try {
-        const response = await axios.post("/itinerary",itinerary);
-        return response.data;
-    } catch (error) {
-        console.error("Error creating itinerary", error);
-        throw error;
-    }
+  try {
+    const response = await axios.post("/itinerary",itinerary);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating itinerary", error);
+    throw error;
+  }
 };
 
 export const updateItinerary = async (id, itinerary) => {
-    try {
-        const response = await axios.put(`/itinerary/${id}`, itinerary);
-        return response.data;
-    } catch (error) {
-        console.error(`Error updating itinerary with id ${id}`, error);
-        throw error;
-    }
+  try {
+    const response = await axios.put(`/itinerary/${id}`, itinerary);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating itinerary with id ${id}`, error);
+    throw error;
+  }
 };
 
 export const deleteItinerary = async (id) => {
-    try {
-        const response = await axios.delete(`/itinerary/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error deleting itinerary with id ${id}`, error);
-        throw error;
-    }
+  try {
+    const response = await axios.delete(`/itinerary/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting itinerary with id ${id}`, error);
+    throw error;
+  }
 };
 
 export const getRatings = async (id) => {
-    try {
-      const response = await axios.get(`/itinerary/${id}/ratings`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching ratings:", error);
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.get(`/itinerary/${id}/ratings`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    throw error;
+  }
+};
   
-  export const addRating = async (itineraryID, ratingData) => {
-    try {
-      const response = await axios.post(`/itinerary/${itineraryID}/ratings`, ratingData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data; 
-    } catch (error) {
-      console.error("Error adding rating:", error);
-      throw error;
-    }
-  };
+export const addRating = async (itineraryID, ratingData) => {
+  try {
+    const response = await axios.post(`/itinerary/${itineraryID}/ratings`, ratingData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error adding rating:", error);
+    throw error;
+  }
+};
+
+export async function addItineraryComment(itineraryId, userId, text) {
+  try {
+    const response = await axios.post(`/itinerary/${itineraryId}/comment`, {
+      userId,
+      itineraryId,
+      text,
+    });
+    return response.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error adding comment');
+  }
+};
+  
+export async function getItineraryComments(itineraryId) {
+  try {
+    const response = await axios.get(`/itinerary/${itineraryId}/comments`);
+    return response.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error retrieving comments');
+  }
+};

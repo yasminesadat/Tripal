@@ -14,7 +14,7 @@ router.delete('/activities/:id', deleteActivity);
 router.get('/activities/view', viewUpcomingActivities);
 router.post("/activities/:id/ratings", validateIDs(["id", "userID"]), addRating(Activity, ActivityRating, 'activityID'));
 router.get("/activities/:id/ratings", validateIDs(["id"]), getRatings(Activity, ActivityRating, 'activityID'));
-router.post('/activity/comment', addActivityComment);
+router.post('/activity/:activityId/comment', addActivityComment);
 router.get('/activity/:activityId/comments', getActivityComments);
 router.post('/activity/:activityId/book', bookActivity);
 
