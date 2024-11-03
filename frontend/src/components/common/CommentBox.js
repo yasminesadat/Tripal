@@ -17,6 +17,7 @@ export default function CommentBox({ activityId, userId, onCommentPosted }) {
 
     try {
       const comment = await addActivityComment(activityId, userId, commentText);
+      console.log(comment);
       setSuccess(true);
       setCommentText(""); 
 

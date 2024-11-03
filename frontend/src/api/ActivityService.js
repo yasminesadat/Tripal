@@ -136,6 +136,7 @@ export async function addActivityComment(activityId, userId, text) {
 export async function getActivityComments(activityId) {
   try {
     const response = await axios.get(`/activity/comments/${activityId}`);
+    // console.log(response.data)
     return response.data; 
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error retrieving comments');

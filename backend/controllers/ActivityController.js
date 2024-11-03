@@ -184,8 +184,8 @@ const getActivityComments = async (req, res) => {
 
   try {
     const comments = await ActivityComment.find({ activityId })
-      .populate('userId', 'userName');
-    
+      // .populate('userId')
+    // console.log(comments)
     if (!comments)
       return res.status(200).json({ message: "No comments available" });
     else
