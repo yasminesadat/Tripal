@@ -301,12 +301,7 @@ const SignUpAllUsers = () => {
             </Upload>
           </Form.Item>
         )}
-        <input
-          type="file"
-          accept="application/pdf"
-          id="video"
-          onChange={(e) => setFormData({ ...formData, document: e.target.files[0] })}
-        />
+
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Sign Up

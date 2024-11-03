@@ -11,7 +11,7 @@ import PreferenceSelection from "../components/tourist/PreferenceSelection";
 import CategorySelection from "../components/tourist/CategorySelection";
 import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
-
+import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
   { path: "/upcoming-activities", element: <UpcomingActivities /> },
@@ -23,9 +23,11 @@ const TouristRoutes = [
   { path: "/tourist/view-products", element: <TouristProducts /> },
   { path: "/tourist/select-preferences", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories", element: <CategorySelection /> },
-  { path: "/activity/:activityId", element: <ActivityDetailsPage />},
-  { path: "/itinerary/view/:itineraryId", element: <ItineraryDetailsPage />},
-  { path: "/tourist/view-products/product/:id", element: <TouristViewProduct />},
+  { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
+  { path: "/itinerary/view/:itineraryId", element: <ItineraryDetailsPage /> },
+  { path: "/tourist/view-products/product/:id", element: <TouristViewProduct /> },
+  { path: "/tourist/create-complaint/:id", element: <ComplaintsForm /> },
+
 ];
 
 export default TouristRoutes;
