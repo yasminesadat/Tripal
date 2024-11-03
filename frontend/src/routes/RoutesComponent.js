@@ -7,6 +7,7 @@ import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import historicalPlaceRoutes from "./HistoricalPlaceRoutes";
 import governorRoutes from "./GovernorRoutes";
+import hotelRoutes from "./HotelRoutes";
 
 const allRoutes = [
   ...adminRoutes,
@@ -16,7 +17,8 @@ const allRoutes = [
   ...sellerRoutes,
   ...tourguideRoutes,
   ...historicalPlaceRoutes,
-  ...governorRoutes
+  ...governorRoutes,
+  ...hotelRoutes
 ]
 
 const RoutesComponent = () => (
