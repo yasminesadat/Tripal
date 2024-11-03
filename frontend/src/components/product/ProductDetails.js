@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useLocation, Link } from "react-router-dom";
-import { getRatings } from "../../api/ProductService"; 
+import { getRatings } from "../../api/RatingService"; 
 import {
   Rate,
   Layout,
@@ -17,6 +17,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
 import Footer from "../common/Footer";
+import ReviewBox from "../common/reviewBox";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -30,7 +31,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   useEffect(() => {
     const fetchRatings = async () => {
       try {
-        const response = await getRatings(id); 
+        const response = await getRatings(id,"products"); 
         setRatings(response.ratings); 
       } catch (error) {
         console.error("Failed to fetch ratings", error);
@@ -171,7 +172,12 @@ const ProductDetails = ({ homeURL, productsURL }) => {
           ) : (
             <p>No reviews available for this product.</p>
           )}
-          <br />
+            <Divider/>
+            {userRole === "Tourist" && (
+            <ReviewBox id={id} type={"products"} />
+          )}
+
+          <br/>
         </div>
       </div>
       <Footer />
