@@ -173,7 +173,10 @@ const ProductDetails = ({ homeURL, productsURL }) => {
             <p>No reviews available for this product.</p>
           )}
             <Divider/>
-          <ReviewBox id={id} type={"products"}/>
+            {userRole === "Tourist" && (
+            <ReviewBox id={id} type={"products"} />
+          )}
+
           <br/>
         </div>
       </div>
