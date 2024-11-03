@@ -115,7 +115,6 @@ const SignUpAllUsers = () => {
         response = await createRequest({
           ...commonUser,
           role: "Seller",
-          // document: formData.document
         }, formData.document);
 
         navigate("/seller/pending", {
@@ -128,8 +127,7 @@ const SignUpAllUsers = () => {
         response = await createRequest({
           ...commonUser,
           role: "Tour Guide",
-          document: formData.document
-        });
+        }, formData.document);
         navigate("/seller/pending", {
           state: {
             ...commonUser,
@@ -141,8 +139,7 @@ const SignUpAllUsers = () => {
         response = await createRequest({
           ...commonUser,
           role: "Advertiser",
-          document: formData.document
-        });
+        }, formData.document);
 
         console.log("response", response)
         navigate("/seller/pending", {
