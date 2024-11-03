@@ -5,9 +5,9 @@ const Seller = require('../models/users/Seller.js')
 const TourGuide = require('../models/users/TourGuide.js')
 const Advertiser = require('../models/users/Advertiser.js')
 const bcrypt = require("bcrypt");
-
 const createRequest = async (req, res) => {
     const { userName, email, password, role } = req.body;
+
     try {
         if (!userName || !email || !password || !role) {
             return res.status(406).json({ error: 'All fields are required!' });
@@ -38,9 +38,26 @@ const createRequest = async (req, res) => {
             return res.status(400).json({ error: "Request has been submitted with this email" });
         }
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        const createdRequest = await Request.create({ userName, email, password: hashedPassword, role });
+
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        // const storage = getStorage(firebaseInstance); // Correctly getting the storage instance
+        // console.log("IN BACKEND IM PRINTING THE DOCUMENT", document.name);
+        // const fileName = new Date().getTime() + "_" + document.originalname; // Concatenating the timestamp and original filename
+        // console.log("IN BACKEND IM PRINTING THE DOCUMENT", document.originalname);
+        // const storageRef = ref(storage, "newSellerDocument"); // Creating a reference to the file in Firebase Storage
+        // await uploadBytesResumable(storageRef, document.get('document'));
+        // const url = await getDownloadURL(storageRef); // Getting the download URL
+        // console.log("the firebase backend url is", url);
+        // console.log("the backend document ", document.get('document'));
+        // // Create request with document URL in MongoDB
+        const createdRequest = await Request.create({
+            userName,
+            email,
+            password: hashedPassword,
+            role
+            // document: url // Store the Firebase URL in the MongoDB document field
+        });
         res.status(201).json(createdRequest);
     } catch (error) {
         // Return a 400 response with the error message
@@ -83,6 +100,20 @@ const deleteRequest = async (req, res) => {
         const req = await Request.findByIdAndDelete(id);
 
         return res.status(200).json('request deleted successfully')
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+const updateRequest = async (req, res) => {
+    const { id } = req.params;
+    const { document } = req.body
+    console.log(document);
+    try {
+        const updatedRequest = await Request.findByIdAndUpdate(id, { "document": document }, { new: true });
+
+
+        return res.status(200).json(updatedRequest)
     }
     catch (error) {
         res.status(400).json({ error: error.message });
@@ -156,5 +187,6 @@ module.exports = {
     getRequests,
     deleteRequest,
     getRequestById,
-    acceptRequest
+    acceptRequest,
+    updateRequest
 }

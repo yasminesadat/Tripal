@@ -32,7 +32,7 @@ const sellerSchema = new Schema(
       type: String,
       required: false,
       default: "",
-    },
+    }
   },
   { timestamps: true }
 );

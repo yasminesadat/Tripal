@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Select, DatePicker, Radio, message } from "antd";
+import { Form, Input, Button, Select, DatePicker, Radio, message, Upload } from "antd";
 import moment from "moment";
+import { UploadOutlined } from "@ant-design/icons";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import firebaseInstance from '../../firebase';
 // import { createSeller } from "../../api/SellerService";
 // import { createTourGuide } from "../../api/TourGuideService";
 // import { createAdvertiser } from "../../api/AdvertiserService";
@@ -21,6 +24,7 @@ const SignUpAllUsers = () => {
     nationality: "",
     dateOfBirth: "",
     job: "",
+    document: ""
   });
   const handleAcceptRequest = () => {
     acceptRequestFE(requestId);
@@ -48,7 +52,35 @@ const SignUpAllUsers = () => {
     setRole(e.target.value);
     form.resetFields();
   };
+  // const handleBeforeUpload = (file) => {
+  //   if (formData.document) {
+  //     message.error("Only one document can be uploaded.");
+  //     return Upload.LIST_IGNORE;
+  //   }
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     setFormData({ ...formData, document: reader.result });
+  //   };
+  //   reader.readAsDataURL(file);
+  //   return false;
+  // };
+  const handleDocumentChange = (info) => {
+    if (info.fileList.length === 0) {
+      setFormData({ ...formData, document: null });
+      return;
+    }
+    const file = info.fileList[0].originFileObj;
+    // const reader = new FileReader();
+    // reader.readAsDataURL(file.originFileObj);
+    // reader.onloadend = () => {
+    setFormData({ ...formData, document: file });
+    console.log("FILE DATA", info.file);
 
+  }
+
+  const handleRemove = () => {
+    setFormData({ ...formData, document: null });
+  };
   const handleSubmit = async (values) => {
     const formattedDateOfBirth = role === "tourist"
       ? new Date(values.dateOfBirth).toISOString().split("T")[0]
@@ -76,10 +108,15 @@ const SignUpAllUsers = () => {
 
     try {
       if (role === "seller") {
+
+        // const newFormData = new FormData();
+        // newFormData.append('document', formData.document); // fileInput is an <input type="file">
+
         response = await createRequest({
           ...commonUser,
-          role: "Seller"
-        });
+          role: "Seller",
+        }, formData.document);
+
         navigate("/seller/pending", {
           state: {
             ...commonUser,
@@ -89,8 +126,8 @@ const SignUpAllUsers = () => {
       } else if (role === "tour-guide") {
         response = await createRequest({
           ...commonUser,
-          role: "Tour Guide"
-        });
+          role: "Tour Guide",
+        }, formData.document);
         navigate("/seller/pending", {
           state: {
             ...commonUser,
@@ -98,10 +135,12 @@ const SignUpAllUsers = () => {
           }
         });
       } else if (role === "advertiser") {
+
         response = await createRequest({
           ...commonUser,
-          role: "Advertiser"
-        });
+          role: "Advertiser",
+        }, formData.document);
+
         console.log("response", response)
         navigate("/seller/pending", {
           state: {
@@ -231,13 +270,51 @@ const SignUpAllUsers = () => {
             </Form.Item>
           </>
         )}
+        {role !== "tourist" && (
+          <Form.Item>
+            <Upload
+              name="document"
+              accept=".pdf"
+              beforeUpload={() => false}
+              // beforeUpload={handleBeforeUpload}
+              onChange={handleDocumentChange}
+              onRemove={handleRemove}
+            >
 
+              {!formData.document && (
+                <Button
+                  icon={<UploadOutlined />}
+                  size="small"
+                  type="default"
+                  style={{
+                    whiteSpace: "nowrap",
+                    padding: "0 8px",
+                    width: "auto",
+                  }}
+
+
+                >
+                  Upload Document
+                </Button>
+              )}
+
+            </Upload>
+          </Form.Item>
+        )}
+        <input
+          type="file"
+          accept="application/pdf"
+          id="video"
+          onChange={(e) => setFormData({ ...formData, document: e.target.files[0] })}
+        />
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Sign Up
           </Button>
         </Form.Item>
+
       </Form>
+
       <Input
         placeholder="enter request/user id"
         value={requestId}
