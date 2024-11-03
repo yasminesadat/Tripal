@@ -9,13 +9,12 @@ import Reviews from "./Reviews";
 import TourSingleSidebar from "./TourSingleSidebar";
 import Gallery1 from "./Gallery1";
 import DateCalender from "./DateCalender";
-import CommentBox from "../common/CommentBox";
-import ActivityComments from "./ActivityComments"; 
+import ReviewBox from "../common/ReviewBox";
+import ActivityReviews from "./ActivityReviews"; 
 
 export default function ActivityDetails({ activity }) {
   if (!activity) return <div>Activity not found.</div>;
   const activityId = activity._id;
-  const userId = '670d4e900cb9ea7937cc9968';
 
   return (
     <>
@@ -56,20 +55,19 @@ export default function ActivityDetails({ activity }) {
                 <Rating />
               </div>
 
-              <Reviews />
+              <ActivityReviews activityId={activityId} />
 
-              <button className="button -md -outline-accent-1 text-accent-1 mt-30">
+              {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
                 <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button>
+              </button> */}
 
               <div className="line mt-60 mb-60"></div>
 
-              <CommentBox activityId={activityId} userId={userId}/>
+              <ReviewBox id={activityId} type="activities"/>
 
               <div className="line mt-60 mb-60"></div>
 
-              <ActivityComments activityId={activityId} />
             </div>
 
             <div className="col-lg-4">

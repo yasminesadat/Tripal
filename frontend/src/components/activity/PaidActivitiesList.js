@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Tag, Modal } from 'antd';
 import { Link } from 'react-router-dom';
-import CommentBox from '../common/CommentBox';
+// import ReviewBox from '../common/ReviewBox';
 
 const PaidActivitiesList = ({ activities }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [selectedActivity, setSelectedActivity] = useState(null);
 
-  const showCommentModal = (activity) => {
-    setSelectedActivity(activity);
-    setIsModalVisible(true);
-  };
+  // const showCommentModal = (activity) => {
+  //   setSelectedActivity(activity);
+  //   setIsModalVisible(true);
+  // };
 
-  const handleClose = () => {
-    setIsModalVisible(false);
-    setSelectedActivity(null); 
-  };
+  // const handleClose = () => {
+  //   setIsModalVisible(false);
+  //   setSelectedActivity(null); 
+  // };
 
   return (
     <div className="list">
@@ -42,19 +42,19 @@ const PaidActivitiesList = ({ activities }) => {
             <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
             <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
           </div>
-          <button onClick={() => showCommentModal(activity)}>
-            Comment
-          </button>
+          {/* <button onClick={() => showCommentModal(activity)}>
+            Review
+          </button> */}
         </div>
       ))}
-      <Modal
+      {/* <Modal
         title="Leave a Comment"
         visible={isModalVisible}
         onCancel={handleClose}
         footer={null}
       >
-        <CommentBox activity={selectedActivity} onClose={handleClose} />
-      </Modal>
+              <ReviewBox activity={selectedActivity} type="activity"/>
+              </Modal> */}
     </div>
   );
 };
