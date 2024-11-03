@@ -4,7 +4,6 @@ const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
 const Tourist = require("../models/users/Tourist");
-const ActivityComment = require("../models/ActivityComment")
 
 const createActivity = async (req, res) => {
   const {
@@ -163,38 +162,6 @@ const viewPaidActivities = async (req, res) => {
   }
 };
 
-const addActivityComment = async (req, res) => {
-  const { userId, activityId, text } = req.body;
-
-  if (!text) {
-    return res.status(400).json({ message: "Please enter a comment." });
-  }
-
-  try {
-    const comment = new ActivityComment({ userId, activityId, text });
-    await comment.save();
-    res.status(201).json(comment);
-  } catch (error) {
-    return res.status(500).json({ message: "An error occurred while saving the comment.", error: error.message });
-  }
-}
-
-const getActivityComments = async (req, res) => {
-  const { activityId } = req.params;
-
-  try {
-    const comments = await ActivityComment.find({ activityId })
-      // .populate('userId')
-    // console.log(comments)
-    if (!comments)
-      return res.status(200).json({ message: "No comments available" });
-    else
-      return res.status(200).json(comments);
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
-  }
-};
-
 const bookActivity = async (req, res) => {
   const { activityId } = req.params;
   const { touristId } = req.body;
@@ -243,10 +210,7 @@ module.exports = {
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
-  addActivityComment,
   viewUpcomingActivities,
   viewPaidActivities,
-  addActivityComment,
-  getActivityComments,
   bookActivity,
 };

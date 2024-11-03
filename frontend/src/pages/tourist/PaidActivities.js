@@ -18,13 +18,9 @@ const PaidActivitiesPage = () => {
     const fetchActivities = async () => {
       try {
         const response = await viewPaidActivities();
-        const activitiesWithAvgRatings = response.data.map(activity => ({
-          ...activity,
-          averageRating: calculateAverageRating(activity.ratings),
-        }));
 
-        setActivities(activitiesWithAvgRatings);
-        setFilteredActivities(activitiesWithAvgRatings);
+        setActivities(response.data);
+        setFilteredActivities(response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Error fetching activities");
       } finally {
@@ -34,12 +30,6 @@ const PaidActivitiesPage = () => {
 
     fetchActivities();
   }, []);
-
-  const calculateAverageRating = (ratings) => {
-    if (!ratings || ratings.length === 0) return 0;
-    const total = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return (total / ratings.length).toFixed(1);
-  };
 
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();

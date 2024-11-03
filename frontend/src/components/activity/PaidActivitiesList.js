@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Tag, Modal } from 'antd';
+import React from "react";
+import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 // import ReviewBox from '../common/ReviewBox';
 

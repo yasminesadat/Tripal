@@ -10,6 +10,7 @@ import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 import PreferenceSelection from "../components/tourist/PreferenceSelection";
 import CategorySelection from "../components/tourist/CategorySelection";
 import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
+import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -23,10 +24,8 @@ const TouristRoutes = [
   { path: "/tourist/select-preferences", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories", element: <CategorySelection /> },
   { path: "/activity/:activityId", element: <ActivityDetailsPage />},
-  {
-    path: "/tourist/view-products/product/:id",
-    element: <TouristViewProduct />,
-  },
+  { path: "/itinerary/view/:itineraryId", element: <ItineraryDetailsPage />},
+  { path: "/tourist/view-products/product/:id", element: <TouristViewProduct />},
 ];
 
 export default TouristRoutes;

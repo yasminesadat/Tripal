@@ -1,27 +1,16 @@
 import React, { useState } from 'react';
-import { Tag, Modal } from 'antd';
-// import CommentBox from '../common/CommentBox'
+import { Link } from 'react-router-dom';
 
-const touristId = '670d4e900cb9ea7937cc9968';
+const touristId = '6724842b5831eed787083b57';
 
 const PaidItinerariesList = ({ itineraries }) => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedItinerary, setSelectedItinerary] = useState(null);
-  
-    const showCommentModal = (itinerary) => {
-        setSelectedItinerary(itinerary);
-        setIsModalVisible(true);
-      };
-    
-      const handleClose = () => {
-        setIsModalVisible(false);
-      };
-    
     return (
         <div className="list">
             {itineraries.map(itinerary => (
                 <div className="list-item" key={itinerary._id}>
-                    <div className="list-item-header">{itinerary.title}</div>
+                    <Link to={`/itinerary/view/${itinerary._id}`} className="list-item-header">
+                        {itinerary.title}
+                    </Link>
                     <div className="list-item-attributes">
                         <div className="list-item-attribute">
                             <strong>Description:</strong> {itinerary.description}
@@ -103,21 +92,10 @@ const PaidItinerariesList = ({ itineraries }) => {
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
-                        <button onClick={() => showCommentModal(itinerary)}>
-                            Comment
-                        </button>
                         {console.log(itinerary._id ," ", touristId)}
                     </div>
                 </div>
             ))}
-            <Modal
-                title="Leave a Comment"
-                visible={isModalVisible}
-                onCancel={handleClose}
-                footer={null} 
-            >
-                {/* <CommentBox /> */}
-            </Modal>
         </div>
     );
 };

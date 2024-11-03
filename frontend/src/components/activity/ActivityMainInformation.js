@@ -1,7 +1,7 @@
 import React from "react";
 import Stars from "../common/Stars";
 
-export default function MainInformation({ activity }) {
+export default function ActivityMainInformation({ activity }) {
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
@@ -30,9 +30,9 @@ export default function MainInformation({ activity }) {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <div className="d-flex x-gap-5 pr-10">
-                  <Stars star={activity?.rating} font={12} />
+                  <Stars star={activity?.averageRating} font={12} />
                 </div>
-                {activity?.rating} ({activity.ratingCount})
+                {activity?.averageRating} ({activity.ratingCount})
               </div>
             </div>
 

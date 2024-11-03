@@ -85,25 +85,3 @@ export const addRating = async (itineraryID, ratingData) => {
     throw error;
   }
 };
-
-export async function addItineraryComment(itineraryId, userId, text) {
-  try {
-    const response = await axios.post(`/itinerary/${itineraryId}/comment`, {
-      userId,
-      itineraryId,
-      text,
-    });
-    return response.data; 
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Error adding comment');
-  }
-};
-  
-export async function getItineraryComments(itineraryId) {
-  try {
-    const response = await axios.get(`/itinerary/${itineraryId}/comments`);
-    return response.data; 
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Error retrieving comments');
-  }
-};
