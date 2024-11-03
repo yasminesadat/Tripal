@@ -234,23 +234,22 @@ const bookItinerary = async (req, res) => {
     try {
         const itinerary = await itineraryModel.findById(itineraryId);
 
-        if (!itinerary) {
+        if (!itinerary) 
             return res.status(404).json({ error: 'Itinerary not found' });
-        }
-
-        const alreadyBooked = itinerary.tourists.includes(touristId);
-        if (alreadyBooked) {
-            return res.status(400).json({ message: 'You have already booked this itinerary.' });
-        }
-        const tourist = await touristModel.findById(touristId);
-        if (!tourist) {
-            return res.status(404).json({ error: 'Tourist not found' });
-        }
-
-        if (tourist.calculateAge() < 18) {
-            return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
-        }
         
+        const alreadyBooked = itinerary.tourists.includes(touristId);
+
+        if (alreadyBooked) 
+            return res.status(400).json({ message: 'You have already booked this itinerary.' });
+        
+        const tourist = await touristModel.findById(touristId);
+        if (!tourist) 
+            return res.status(404).json({ error: 'Tourist not found' });
+        
+        if (tourist.calculateAge() < 18) 
+            return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
+        
+
         itinerary.tourists.push(touristId);
         await itinerary.save();
 
@@ -267,15 +266,15 @@ const cancelBooking = async (req, res) => {
     try {
         const itinerary = await itineraryModel.findById(itineraryId);
 
-        if (!itinerary) {
+        if (!itinerary) 
             return res.status(404).json({ error: 'Itinerary not found' });
-        }
+        
 
         const touristIndex = itinerary.tourists.findIndex(id => id.toString() === touristId);
-        if (touristIndex === -1) {
+        
+        if (touristIndex === -1) 
             return res.status(400).json({ message: 'You have no booking reservations for this.' });
-        }
-
+        
         itinerary.tourists.splice(touristId, 1);
         await itinerary.save();
 

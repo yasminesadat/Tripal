@@ -16,6 +16,9 @@ const TouristNavBar = () => {
           <Link to="/upcoming-activities">Upcoming Activities</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/booked-activities">My Activities</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
         </div>
         <div class="nav-bar-link">
