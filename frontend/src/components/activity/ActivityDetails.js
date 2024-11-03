@@ -1,11 +1,8 @@
-import React, {useEffect, useState} from "react";
-import { useParams } from 'react-router-dom';
 import MainInformation from "./MainInformation";
 import OthersInformation from "./OthersInformation";
 import Overview from "./Overview";
 import MapComponent from "../common/MapComponent";
 import Rating from "./Rating";
-import Reviews from "./Reviews";
 import TourSingleSidebar from "./TourSingleSidebar";
 import Gallery1 from "./Gallery1";
 import DateCalender from "./DateCalender";
