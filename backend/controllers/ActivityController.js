@@ -3,8 +3,8 @@ const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/users/Tourist.js");
-
+const Tourist = require("../models/users/Tourist");
+const ActivityComment = require("../models/ActivityComment")
 
 const createActivity = async (req, res) => {
   const {
@@ -147,6 +147,22 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
+//fix this date when there are entries
+const viewPaidActivities = async (req, res) => {
+  try {
+    const currentDate = new Date();
+
+    const activities = await Activity.find({ date: { $gte: currentDate } })
+      .populate("category")
+      .populate("tags")
+    // .populate("ratings");
+
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const addActivityComment = async (req, res) => {
   const { userId, activityId, text } = req.body;
 
@@ -168,8 +184,12 @@ const getActivityComments = async (req, res) => {
 
   try {
     const comments = await ActivityComment.find({ activityId })
-      .populate('userId', 'name');
-    return res.status(200).json(comments);
+      // .populate('userId')
+    // console.log(comments)
+    if (!comments)
+      return res.status(200).json({ message: "No comments available" });
+    else
+      return res.status(200).json(comments);
   } catch (error) {
     return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
   }
@@ -203,13 +223,29 @@ const bookActivity = async (req, res) => {
   }
 };
 
+const getActivityById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activity = await Activity.findById(id);
+    if (!activity) {
+      return res.status(404).json({ message: "Activity not found." });
+    }
+    res.status(200).json(activity);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving activity.", error: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
+  getActivityById,
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
   addActivityComment,
   viewUpcomingActivities,
+  viewPaidActivities,
   addActivityComment,
   getActivityComments,
   bookActivity,

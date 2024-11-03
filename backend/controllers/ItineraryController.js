@@ -2,6 +2,7 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
+const ItineraryComment = require('../models/ItineraryComment')
 
 const createItinerary = async (req, res) => {
     try {
@@ -130,7 +131,34 @@ const deleteItinerary = async (req, res) => {
     }
 };
 
-const viewItineraries = async (req, res) => {
+//it should be updated to handle the date (upcoming)
+const viewUpcomingItineraries = async (req, res) => {
+    try {
+        const itineraries = await itineraryModel.find().populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
+
+        const itinerariesWithRatings = itineraries.map(itinerary => {
+            const ratings = itinerary.ratings || [];
+            const averageRating = ratings.length > 0
+                ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+                : 0;
+
+            return {
+                ...itinerary.toObject(),
+                averageRating: averageRating.toFixed(1)
+            };
+        });
+        res.status(200).json(itinerariesWithRatings);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+const viewPaidItineraries = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find().populate({
             path: 'activities',
@@ -220,8 +248,11 @@ const getItineraryComments = async (req, res) => {
 
     try {
         const comments = await ItineraryComment.find({ itineraryId })
-            .populate('userId', 'name');
-        return res.status(200).json(comments);
+            .populate('userId', 'userName');
+        if (!comments)
+            return res.status(400).json({ message: "No comments available" });
+        else
+            return res.status(200).json(comments);
     } catch (error) {
         return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
     }
@@ -257,7 +288,8 @@ module.exports = {
     getItineraries,
     updateItinerary,
     deleteItinerary,
-    viewItineraries,
+    viewUpcomingItineraries,
+    viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
     addItineraryComment,
