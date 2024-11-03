@@ -303,8 +303,6 @@ module.exports = {
     viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    addItineraryComment,
-    getItineraryComments,
     bookItinerary,
     cancelBooking,
     getTouristItineraries
