@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import AdminNavBar from "../../components/navbar/AdminNavBar";
-import {createComplaint, getComplaintsByTourist,getAllComplaints,getComplaintById,updateComplaintStatus, replyToComplaint,} from "../../api/ComplaintsService";
-import {adminID} from "../../IDs";
+import {getAllComplaints,getComplaintById,updateComplaintStatus, replyToComplaint,} from "../../api/ComplaintsService";
+import {adminId} from "../../IDs";
 
 
 const ComplaintsPage = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
+    const [newStatus, setNewStatus] = useState(""); 
 
     useEffect(() => {
         const fetchComplaints = async () => {
@@ -36,42 +37,52 @@ const ComplaintsPage = () => {
         }
 
         try {
+          //console.log(replyMessage)
+          //console.log("Admin ID:", adminId);  // Ensure this is defined
             await replyToComplaint(selectedComplaint._id, {
                 message: replyMessage,
-                senderId: adminID,
+                senderId: adminId,
             });
-
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getAllComplaints();
             setComplaints(updatedComplaints);
-            setReplyMessage(""); 
-            setSelectedComplaint(null); 
+            //setReplyMessage(""); 
+            //setSelectedComplaint(null); 
         } catch (error) {
             console.error("Error replying to complaint:", error);
         }
     };
 
-    const handleStatusChange = async (complaintId, newStatus) => {
-        try {
-            await updateComplaintStatus(complaintId, { status: newStatus });
-            // Update local state to reflect changes
-            const updatedComplaints = complaints.map(complaint =>
-                complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
-            );
-            setComplaints(updatedComplaints);
-        } catch (error) {
-            console.error("Error updating complaint status:", error);
-        }
-    };
+    const handleStatusChange = async (complaintId) => {
+      try {
+        //console.log(newStatus)
+        //console.log(complaintId)
+          await updateComplaintStatus(complaintId, { status: newStatus });
+          // Update local state to reflect changes
+          const updatedComplaints = complaints.map(complaint =>
+              complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
+          );
+          setComplaints(updatedComplaints);
+          setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
+      } catch (error) {
+          console.error("Error updating complaint status:", error);
+      }
+  };
 
-    const viewComplaintDetails = async (complaintId) => {
-        try {
-            const complaintDetails = await getComplaintById(complaintId);
-            setSelectedComplaint(complaintDetails);
-        } catch (error) {
-            console.error("Error fetching complaint details:", error);
-        }
-    };
+    const toggleComplaintDetails = async (complaintId) => {
+      if (selectedComplaint && selectedComplaint._id === complaintId) {
+          // If the same complaint is selected, hide it
+          setSelectedComplaint(null);
+      } else {
+          // Otherwise, fetch and show the complaint details
+          try {
+              const complaintDetails = await getComplaintById(complaintId);
+              setSelectedComplaint(complaintDetails);
+          } catch (error) {
+              console.error("Error fetching complaint details:", error);
+          }
+      }
+  };
 
     return (
         <div className="complaints">
@@ -93,40 +104,64 @@ const ComplaintsPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {complaints.map((complaint, i) => (
-                        <tr key={i}>
-                          <td>{complaint._id}</td>
-                          <td>{complaint.title}</td>
-                          <td>{complaint.status}</td>
-                          <td>
-                            <button onClick={() => viewComplaintDetails(complaint._id)}>View Details</button>
-                            <button onClick={() => handleStatusChange(complaint._id, complaint.status === 'Pending' ? 'Resolved' : 'Pending')}>
-                              Toggle Status
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                    {complaints.map((complaint, i) => (
+                                        <React.Fragment key={complaint._id}>
+                                            <tr>
+                                                <td>{complaint._id}</td>
+                                                <td>{complaint.title}</td>
+                                                <td>{complaint.status}</td>
+                                                <td>
+                                                    <button onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                        {selectedComplaint && selectedComplaint._id === complaint._id ? 'Hide Details' : 'View Details'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {selectedComplaint && selectedComplaint._id === complaint._id && (
+                                                <tr>
+                                                    <td colSpan="4">
+                                                        <div className="complaint-details">
+                                                            <h3>Complaint Details</h3>
+                                                            <p><strong>Title:</strong> {selectedComplaint.title}</p>
+                                                            <p><strong>Body:</strong> {selectedComplaint.body}</p>
+                                                            <p><strong>Date:</strong> {selectedComplaint.Date}</p>
+                                                            <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
+                                                            <p><strong>Status:</strong> 
+                                                                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+                                                                    <option value="pending">pending</option>
+                                                                    <option value="resolved">resolved</option>
+                                                                </select>
+                                                            </p>
+                                                            <button onClick={() => handleStatusChange(selectedComplaint._id)}>Update Status</button>
+                                                            <h4>Replies</h4>
+                                                            <ul>
+                                                                {selectedComplaint.replies.map((reply, index) => (
+                                                                    <li key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
+                                                                ))}
+                                                            </ul>
+
+                                                            {/* Reply Form */}
+                                                            <div className="reply-section">
+                                                                <h4>Reply to Complaint</h4>
+                                                                <form onSubmit={handleReplySubmit}>
+                                                                    <textarea
+                                                                        value={replyMessage}
+                                                                        onChange={handleReplyChange}
+                                                                        placeholder="Enter your reply here..."
+                                                                        required
+                                                                    />
+                                                                    <button type="submit">Send Reply</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
+                                    ))}
                     </tbody>
                   </table>
                 </div>
               </div>
-    
-              {/* Reply to Selected Complaint */}
-              {selectedComplaint && (
-                <div className="reply-section mt-30">
-                  <h3>Reply to Complaint: {selectedComplaint.title}</h3>
-                  <form onSubmit={handleReplySubmit}>
-                    <textarea
-                      value={replyMessage}
-                      onChange={handleReplyChange}
-                      placeholder="Enter your reply here..."
-                    />
-                    <button type="submit">Send Reply</button>
-                  </form>
-                </div>
-              )}
-    
-              
             </div>
           </div>
         </div>

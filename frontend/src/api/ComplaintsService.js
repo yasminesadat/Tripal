@@ -32,7 +32,7 @@ export async function getAllComplaints() {
 
   export async function getComplaintById(id) {
     try {
-      const response = await axios.get(`/complaint/${id}`);
+      const response = await axios.get(`/complaints/${id}`);
       return response.data; 
     } catch (error) {
       console.error('Error fetching complaints:', error);
@@ -55,6 +55,7 @@ export async function getAllComplaints() {
       const response = await axios.put(`/complaint/reply/${id}`, updatedReply);
       return response.data; 
     } catch (error) {
+      console.error("Error message:", error.message);
       throw error; 
     }
   }
