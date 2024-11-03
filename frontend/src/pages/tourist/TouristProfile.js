@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   getTouristInformation,
   updateTouristInformation,
+  redeemPoints,
 } from "../../api/TouristService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { useParams } from "react-router-dom";
@@ -62,6 +63,15 @@ const TouristHomePage = () => {
     } catch (error) {
       console.error("Failed to fetch user information:", error);
     }
+  };
+
+   const handleRedeemClick = async () => {
+    if(profileInformation.currentPoints===0){
+      toast.error("No points to redeem");
+      return;
+    }
+    await redeemPoints(id);
+    toast.success("points updated redeemed successfully");
   };
 
   useEffect(() => {
@@ -162,6 +172,24 @@ const TouristHomePage = () => {
                 />
               ) : (
                 <span>No wallet information available</span>
+              )}
+            </p>
+            <p>
+              <b>Points:</b>
+              {profileInformation.currentPoints !== undefined ? (
+                <>
+                  <input
+                    type="text"
+                    name="currentPoints"
+                    value={profileInformation.currentPoints}
+                    readOnly
+                  />
+                  <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
+                    Redeem points to cash
+                  </button>
+                </>
+              ) : (
+                <span>No points</span>
               )}
             </p>
           </li>
