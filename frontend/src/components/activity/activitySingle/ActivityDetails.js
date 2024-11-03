@@ -6,8 +6,8 @@ import Rating from "./Rating";
 import TourSingleSidebar from "./TourSingleSidebar";
 import Gallery1 from "./Gallery1";
 import DateCalender from "./DateCalender";
-import ReviewBox from "../../common/ReviewBox";
-import ActivityReviews from "./ActivityReviews"; 
+import ReviewBox from "../../common/reviewBox";
+import ActivityReviews from "./ActivityReviews";
 
 export default function ActivityDetails({ activity }) {
   if (!activity) return <div>Activity not found.</div>;
@@ -61,7 +61,7 @@ export default function ActivityDetails({ activity }) {
 
               <div className="line mt-60 mb-60"></div>
 
-              <ReviewBox id={activityId} type="activities"/>
+              <ReviewBox id={activityId} type="activities" />
 
               <div className="line mt-60 mb-60"></div>
 

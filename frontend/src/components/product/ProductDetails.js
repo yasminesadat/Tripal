@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { getRatings } from "../../api/RatingService"; 
+import { getRatings } from "../../api/RatingService";
 import {
   Rate,
   Layout,
@@ -17,7 +17,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
 import Footer from "../common/Footer";
-import ReviewBox from "../common/ReviewBox";
+import ReviewBox from "../common/reviewBox";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -25,14 +25,14 @@ const { Title, Paragraph } = Typography;
 const ProductDetails = ({ homeURL, productsURL }) => {
   const location = useLocation();
   const { id, name, seller, price, description, quantity, picture, averageRating } = location.state; // Use 'id' from location.state
-  const [ratings, setRatings] = useState([]); 
-  const [loading, setLoading] = useState(true); 
+  const [ratings, setRatings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRatings = async () => {
       try {
-        const response = await getRatings(id,"products"); 
-        setRatings(response.ratings); 
+        const response = await getRatings(id, "products");
+        setRatings(response.ratings);
       } catch (error) {
         console.error("Failed to fetch ratings", error);
       } finally {
@@ -40,7 +40,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
       }
     };
 
-    fetchRatings(); 
+    fetchRatings();
   }, [id]);
 
   const getRandomColor = () => {
@@ -140,7 +140,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
         </Divider>
         <div className="reviewsSection" style={{ padding: "0 10%" }}>
           {loading ? (
-            <Spin tip="Loading reviews..." style={{marginBottom:'4%'}} />
+            <Spin tip="Loading reviews..." style={{ marginBottom: '4%' }} />
           ) : ratings && ratings.length > 0 ? (
             <List
               itemLayout="horizontal"
@@ -172,12 +172,12 @@ const ProductDetails = ({ homeURL, productsURL }) => {
           ) : (
             <p>No reviews available for this product.</p>
           )}
-            <Divider/>
-            {userRole === "Tourist" && (
+          <Divider />
+          {userRole === "Tourist" && (
             <ReviewBox id={id} type={"products"} />
           )}
 
-          <br/>
+          <br />
         </div>
       </div>
       <Footer />

@@ -6,8 +6,8 @@ import MapComponent from "../../common/MapComponent";
 // import TourSingleSidebar from "./TourSingleSidebar";
 // import Gallery1 from "./Gallery1";
 // import DateCalender from "./DateCalender";
-import ReviewBox from "../../common/ReviewBox";
-import ItineraryReviews from "./ItineraryReviews"; 
+import ReviewBox from "../../common/reviewBox";
+import ItineraryReviews from "./ItineraryReviews";
 
 export default function ItineraryDetails({ itinerary }) {
   if (!itinerary) return <div>Itinerary not found.</div>;
@@ -64,7 +64,7 @@ export default function ItineraryDetails({ itinerary }) {
 
               <div className="line mt-60 mb-60"></div>
 
-              <ReviewBox id={itineraryId} type="itinerary"/>
+              <ReviewBox id={itineraryId} type="itinerary" />
 
             </div>
 
