@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/itinerary/ItinerariesList';
+import ItinerariesList from '../../components/itinerary/UpcomingItinerariesList';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
  import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
