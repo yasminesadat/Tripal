@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Calender from "../common/Calender";
-import { times } from "../../data/tourSingleContent";
+import Calender from "../../common/Calender";
+import { times } from "../../../data/tourSingleContent";
 
 export default function TourSingleSidebar() {
   const prices = {

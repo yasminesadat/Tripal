@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { viewPaidItineraries } from "../../api/ItineraryService";
-import ItineraryDetails from "../../components/itinerary/ItineraryDetails";
+import ItineraryDetails from "../../components/itinerary/itinerarySingle/ItineraryDetails";
 import TouristNavbar from "../../components/navbar/TouristNavBar";
 
 const ItineraryDetailsPage = () => {

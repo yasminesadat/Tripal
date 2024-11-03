@@ -1,5 +1,5 @@
 import React from "react";
-import Stars from "../common/Stars";
+import Stars from "../../common/Stars";
 
 export default function ActivityMainInformation({ activity }) {
   return (

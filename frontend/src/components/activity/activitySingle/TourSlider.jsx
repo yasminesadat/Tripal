@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { tourData } from "../../data/tours";
+import { tourData } from "../../../data/tours";
 
 import Stars from "../common/Stars";
 import { Link } from "react-router-dom";

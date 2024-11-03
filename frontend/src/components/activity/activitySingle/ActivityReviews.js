@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getRatings } from "../../api/RatingService";
-import Stars from "../common/Stars"; 
+import { getRatings } from "../../../api/RatingService";
+import Stars from "../../common/Stars"; 
 
-const ItineraryReviews = ({ itineraryId }) => {
+const ActivityReviews = ({ activityId }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,11 +11,11 @@ const ItineraryReviews = ({ itineraryId }) => {
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        const data = await getRatings(itineraryId, "itinerary");
+        const data = await getRatings(activityId, "activities");
         console.log(data);
         const transformedReviews = data.ratings.map((rating) => ({
-          // avatar: rating.userID.avatar, 
-          name: rating.userID?.userName || "Unknown User",
+          // avatar: rating.userID.avatar, // Make sure your user model has an avatar field
+          name: rating.userID.userName || "Unknown User",
           date: new Date(rating.createdAt).toLocaleDateString(),
           stars: rating.rating, 
           comment: rating.review || "No review text available", 
@@ -29,10 +29,10 @@ const ItineraryReviews = ({ itineraryId }) => {
       }
     };
 
-    if (itineraryId) {
+    if (activityId) {
       fetchReviews();
     }
-  }, [itineraryId]);
+  }, [activityId]);
 
   if (loading) return <p>Loading reviews...</p>;
   if (error) return <p>{error}</p>;
@@ -94,4 +94,4 @@ const ItineraryReviews = ({ itineraryId }) => {
   );
 };
 
-export default ItineraryReviews;
+export default ActivityReviews;

@@ -1,4 +1,4 @@
-import { overallRatingData } from "../../data/tourSingleContent";
+import { overallRatingData } from "../../../data/tourSingleContent";
 import React from "react";
 
 export default function Rating() {
