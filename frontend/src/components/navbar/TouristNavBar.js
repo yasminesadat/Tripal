@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { touristId } from "../../IDs";
 
 const TouristNavBar = () => {
   return (
@@ -9,7 +10,7 @@ const TouristNavBar = () => {
           <Link to="/tourist">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/tourist-profile/670d4e900cb9ea7937cc9968`}>Profile</Link>
+          <Link to={`/tourist-profile/${touristId}`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/upcoming-activities">Upcoming Activities</Link>

@@ -5,7 +5,7 @@ import { Tag, Button, notification } from 'antd';
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 
 const AdvertiserActivitiesPage = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,13 +74,13 @@ const AdvertiserActivitiesPage = () => {
               <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-                <Button 
-                  type="default" 
+                <Button
+                  type="default"
                   style={{
-                    backgroundColor: "#003DA5", 
-                    color: "white", 
-                    border: "none", 
-                    borderRadius: "5px", 
+                    backgroundColor: "#003DA5",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
                     padding: "12px 20px",
                     cursor: "pointer",
                     marginRight: "10px"
@@ -89,13 +89,13 @@ const AdvertiserActivitiesPage = () => {
                 >
                   Update
                 </Button>
-                <Button 
-                  type="danger" 
+                <Button
+                  type="danger"
                   style={{
-                    backgroundColor: "#f08080", 
-                    color: "white", 
-                    border: "none", 
-                    borderRadius: "5px", 
+                    backgroundColor: "#f08080",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
                     padding: "12px 20px",
                     cursor: "pointer"
                   }}

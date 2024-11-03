@@ -17,6 +17,11 @@ const tourGuideSchema = new Schema(
       type: String,
       required: true
     },
+    name: {
+      type: String,
+      required: false,
+      default: "",
+    },
     mobileNumber: {
       type: String,
       required: false,
