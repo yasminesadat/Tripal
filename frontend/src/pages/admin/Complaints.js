@@ -125,7 +125,7 @@ const ComplaintsPage = () => {
                                                             <h3>Complaint Details</h3>
                                                             <p><strong>Title:</strong> {selectedComplaint.title}</p>
                                                             <p><strong>Body:</strong> {selectedComplaint.body}</p>
-                                                            <p><strong>Date:</strong> {selectedComplaint.Date}</p>
+                                                            <p><strong>Date:</strong> {(new Date(selectedComplaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</p>
                                                             <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
                                                             <p><strong>Status:</strong>
                                                                 <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
