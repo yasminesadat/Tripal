@@ -31,7 +31,10 @@ const TouristNavBar = () => {
           <Link to="/tourist/view-products">Products</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/tourist/create-complaint/${touristId}`}>Complaint</Link>
+          <Link to={`/tourist/create-complaint/${touristId}`}>Create Complaint</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to={`/tourist/view-Complaints/${touristId}`}>View Complaints</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/">Log out</Link>
