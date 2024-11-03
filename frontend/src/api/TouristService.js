@@ -42,3 +42,12 @@ export async function bookItinerary(itineraryId, touristId) {
     throw error;
   }
 }
+
+export async function redeemPoints(id) {
+  try {
+    const response = await axios.post(`/redeem/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
