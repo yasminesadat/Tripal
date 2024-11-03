@@ -130,7 +130,8 @@ const deleteItinerary = async (req, res) => {
     }
 };
 
-const viewItineraries = async (req, res) => {
+//it should be updated to handle the date (upcoming)
+const viewUpcomingItineraries = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find().populate({
             path: 'activities',
@@ -139,18 +140,44 @@ const viewItineraries = async (req, res) => {
             },
         }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
 
-        const itinerariesWithRatings = itineraries.map(itinerary => {
-            const ratings = itinerary.ratings || [];
-            const averageRating = ratings.length > 0
-                ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-                : 0;
+        // const itinerariesWithRatings = itineraries.map(itinerary => {
+        //     const ratings = itinerary.ratings || [];
+        //     const averageRating = ratings.length > 0
+        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+        //         : 0;
 
-            return {
-                ...itinerary.toObject(),
-                averageRating: averageRating.toFixed(1)
-            };
-        });
-        res.status(200).json(itinerariesWithRatings);
+        //     return {
+        //         ...itinerary.toObject(),
+        //         averageRating: averageRating.toFixed(1)
+        //     };
+        // });
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+const viewPaidItineraries = async (req, res) => {
+    try {
+        const itineraries = await itineraryModel.find().populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
+
+        // const itinerariesWithRatings = itineraries.map(itinerary => {
+        //     const ratings = itinerary.ratings || [];
+        //     const averageRating = ratings.length > 0
+        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+        //         : 0;
+
+        //     return {
+        //         ...itinerary.toObject(),
+        //         averageRating: averageRating.toFixed(1)
+        //     };
+        // });
+        res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -199,34 +226,6 @@ const getItineraryRatings = async (req, res) => {
     }
 };
 
-const addItineraryComment = async (req, res) => {
-    const { userId, itineraryId, text } = req.body;
-
-    if (!text) {
-        return res.status(400).json({ message: "Please enter a comment." });
-    }
-
-    try {
-        const comment = new ItineraryComment({ userId, itineraryId, text });
-        await comment.save();
-        return res.status(201).json(comment);
-    } catch (error) {
-        return res.status(500).json({ message: "Error saving comment.", error: error.message });
-    }
-};
-
-const getItineraryComments = async (req, res) => {
-    const { itineraryId } = req.params;
-
-    try {
-        const comments = await ItineraryComment.find({ itineraryId })
-            .populate('userId', 'name');
-        return res.status(200).json(comments);
-    } catch (error) {
-        return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
-    }
-};
-
 const bookItinerary = async (req, res) => {
     const { itineraryId } = req.params;
     const { touristId } = req.body;
@@ -257,10 +256,9 @@ module.exports = {
     getItineraries,
     updateItinerary,
     deleteItinerary,
-    viewItineraries,
+    viewUpcomingItineraries,
+    viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    addItineraryComment,
-    getItineraryComments,
     bookItinerary
 };

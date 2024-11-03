@@ -9,17 +9,20 @@ const TouristNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/tourist">Home</Link>
         </div>
-        {/* <div class="nav-bar-link">
-          <Link to="/tourist-profile">Profile</Link>
-        </div> */}
         <div class="nav-bar-link">
           <Link to={`/tourist-profile/${touristId}`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/upcoming-activities">Activities</Link>
+          <Link to="/upcoming-activities">Upcoming Activities</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/itineraries">Itineraries</Link>
+          <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/paid-activities">Paid Activities</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/paid-itineraries">Paid Itineraries</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/historical-places">Historical Places</Link>

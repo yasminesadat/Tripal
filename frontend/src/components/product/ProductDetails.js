@@ -17,7 +17,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import { userRole } from "../../IDs";
 import Footer from "../common/Footer";
-import ReviewBox from "../common/reviewBox";
+import ReviewBox from "../common/ReviewBox";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;

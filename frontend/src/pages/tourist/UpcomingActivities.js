@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
-import ActivitiesList from "../../components/activity/ActivitiesList";
+import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
@@ -150,7 +150,7 @@ const UpcomingActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <ActivitiesList activities={filteredActivities} onBook ={handleBookActivity} />
+        <UpcomingActivitiesList activities={filteredActivities} onBook ={handleBookActivity} />
       </div>
       <Footer />
     </div>
