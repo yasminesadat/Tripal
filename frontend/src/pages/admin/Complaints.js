@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import AdminNavBar from "../../components/navbar/AdminNavBar";
-import {getAllComplaints,getComplaintById,updateComplaintStatus, replyToComplaint,} from "../../api/ComplaintsService";
-import {adminId} from "../../IDs";
+import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
+import { adminId } from "../../IDs";
 
 
 const ComplaintsPage = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
-    const [newStatus, setNewStatus] = useState(""); 
+    const [newStatus, setNewStatus] = useState("");
 
     useEffect(() => {
         const fetchComplaints = async () => {
@@ -30,15 +30,15 @@ const ComplaintsPage = () => {
 
     const handleReplySubmit = async (event) => {
         event.preventDefault();
-        
+
         if (!replyMessage) {
             alert("Please enter a reply message");
             return;
         }
 
         try {
-          //console.log(replyMessage)
-          //console.log("Admin ID:", adminId);  // Ensure this is defined
+            //console.log(replyMessage)
+            //console.log("Admin ID:", adminId);  // Ensure this is defined
             await replyToComplaint(selectedComplaint._id, {
                 message: replyMessage,
                 senderId: adminId,
@@ -54,62 +54,64 @@ const ComplaintsPage = () => {
     };
 
     const handleStatusChange = async (complaintId) => {
-      try {
-        //console.log(newStatus)
-        //console.log(complaintId)
-          await updateComplaintStatus(complaintId, { status: newStatus });
-          // Update local state to reflect changes
-          const updatedComplaints = complaints.map(complaint =>
-              complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
-          );
-          setComplaints(updatedComplaints);
-          setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
-      } catch (error) {
-          console.error("Error updating complaint status:", error);
-      }
-  };
+        try {
+            //console.log(newStatus)
+            //console.log(complaintId)
+            await updateComplaintStatus(complaintId, { status: newStatus });
+            // Update local state to reflect changes
+            const updatedComplaints = complaints.map(complaint =>
+                complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
+            );
+            setComplaints(updatedComplaints);
+            setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
+        } catch (error) {
+            console.error("Error updating complaint status:", error);
+        }
+    };
 
     const toggleComplaintDetails = async (complaintId) => {
-      if (selectedComplaint && selectedComplaint._id === complaintId) {
-          // If the same complaint is selected, hide it
-          setSelectedComplaint(null);
-      } else {
-          // Otherwise, fetch and show the complaint details
-          try {
-              const complaintDetails = await getComplaintById(complaintId);
-              setSelectedComplaint(complaintDetails);
-          } catch (error) {
-              console.error("Error fetching complaint details:", error);
-          }
-      }
-  };
+        if (selectedComplaint && selectedComplaint._id === complaintId) {
+            // If the same complaint is selected, hide it
+            setSelectedComplaint(null);
+        } else {
+            // Otherwise, fetch and show the complaint details
+            try {
+                const complaintDetails = await getComplaintById(complaintId);
+                setSelectedComplaint(complaintDetails);
+            } catch (error) {
+                console.error("Error fetching complaint details:", error);
+            }
+        }
+    };
 
     return (
         <div className="complaints">
-          {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
-          <div className="dashboard__content">
-            {/* <Header setSideBarOpen={setSideBarOpen} /> */}
-            <div className="dashboard__content_content">
-              <h1 className="text-30">Complaints Management</h1>
-    
-              <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
-                <div className="overflowAuto">
-                  <table className="tableTest mb-30">
-                    <thead className="bg-light-1 rounded-12">
-                      <tr>
-                        <th>Complaint ID</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {complaints.map((complaint, i) => (
+            {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
+            <div className="dashboard__content">
+                {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+                <div className="dashboard__content_content">
+                    <h1 className="text-30">Complaints Management</h1>
+
+                    <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
+                        <div className="overflowAuto">
+                            <table className="tableTest mb-30">
+                                <thead className="bg-light-1 rounded-12">
+                                    <tr>
+                                        <th>Complaint ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {complaints.map((complaint, i) => (
                                         <React.Fragment key={complaint._id}>
                                             <tr>
                                                 <td>{complaint._id}</td>
                                                 <td>{complaint.title}</td>
                                                 <td>{complaint.status}</td>
+                                                <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
                                                 <td>
                                                     <button onClick={() => toggleComplaintDetails(complaint._id)}>
                                                         {selectedComplaint && selectedComplaint._id === complaint._id ? 'Hide Details' : 'View Details'}
@@ -125,7 +127,7 @@ const ComplaintsPage = () => {
                                                             <p><strong>Body:</strong> {selectedComplaint.body}</p>
                                                             <p><strong>Date:</strong> {selectedComplaint.Date}</p>
                                                             <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
-                                                            <p><strong>Status:</strong> 
+                                                            <p><strong>Status:</strong>
                                                                 <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
                                                                     <option value="pending">pending</option>
                                                                     <option value="resolved">resolved</option>
@@ -158,14 +160,14 @@ const ComplaintsPage = () => {
                                             )}
                                         </React.Fragment>
                                     ))}
-                    </tbody>
-                  </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      );
+    );
 
 
 
