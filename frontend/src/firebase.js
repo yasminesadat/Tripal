@@ -1,10 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyCY4m7D4cGliaaYSNo9NqcP5SPEQvF1anc",
     authDomain: "tripal-upload-files.firebaseapp.com",
@@ -15,6 +11,8 @@ const firebaseConfig = {
     measurementId: "G-456QK05R2H"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export default app;
+// Initialize Firebase and Storage
+const firebaseInstance = initializeApp(firebaseConfig);
+const storage = getStorage(firebaseInstance);
+
+export { firebaseInstance, storage };
