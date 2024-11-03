@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Tag, Modal } from 'antd';
-import CommentBox from '../common/Comment'
-
-const touristId = '670d4e900cb9ea7937cc9968';
+import { Link } from 'react-router-dom';
+import CommentBox from '../common/CommentBox';
 
 const PaidActivitiesList = ({ activities }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -15,13 +14,16 @@ const PaidActivitiesList = ({ activities }) => {
 
   const handleClose = () => {
     setIsModalVisible(false);
+    setSelectedActivity(null); 
   };
 
   return (
     <div className="list">
       {activities.map((activity) => (
         <div className="list-item" key={activity._id}>
-          <div className="list-item-header">{activity.title}</div>
+            <Link to={`/activity/${activity._id}`} className="list-item-header">
+              {activity.title}
+            </Link>
           <div className="list-item-attributes">
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">Date: {new Date(activity.date).toLocaleDateString()}</div>
@@ -49,9 +51,9 @@ const PaidActivitiesList = ({ activities }) => {
         title="Leave a Comment"
         visible={isModalVisible}
         onCancel={handleClose}
-        footer={null} 
+        footer={null}
       >
-        <CommentBox />
+        <CommentBox activity={selectedActivity} onClose={handleClose} />
       </Modal>
     </div>
   );

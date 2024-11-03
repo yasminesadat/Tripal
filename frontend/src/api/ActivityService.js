@@ -60,7 +60,7 @@ export async function viewPaidActivities() {
     const response = await axios.get("/activities/paid/view");
     return response;
   } catch (error) {
-    console.error("Can't view activities", error);
+      console.error("Can't view activities", error);
     throw error;
   }
 }
@@ -122,7 +122,7 @@ export async function bookActivity(activityId, touristId) {
 
 export async function addActivityComment(activityId, userId, text) {
   try {
-    const response = await axios.post(`/activity/${activityId}/comment`, {
+    const response = await axios.post(`/activity/comment/${activityId}`, {
       userId,
       activityId,
       text,
@@ -135,9 +135,18 @@ export async function addActivityComment(activityId, userId, text) {
 
 export async function getActivityComments(activityId) {
   try {
-    const response = await axios.get(`/activity/${activityId}/comments`);
+    const response = await axios.get(`/activity/comments/${activityId}`);
     return response.data; 
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error retrieving comments');
+  }
+};
+
+export async function getActivityById(activityId) {
+  try {
+    const response = await axios.get(`/activity/${activityId}`);
+    return response.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error retrieving activity');
   }
 };

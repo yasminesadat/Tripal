@@ -187,7 +187,7 @@ const getActivityComments = async (req, res) => {
       .populate('userId', 'userName');
     
     if (!comments)
-      return res.status(400).json({ message: "No comments available" });
+      return res.status(200).json({ message: "No comments available" });
     else
       return res.status(200).json(comments);
   } catch (error) {
@@ -223,8 +223,23 @@ const bookActivity = async (req, res) => {
   }
 };
 
+const getActivityById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activity = await Activity.findById(id);
+    if (!activity) {
+      return res.status(404).json({ message: "Activity not found." });
+    }
+    res.status(200).json(activity);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving activity.", error: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
+  getActivityById,
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,

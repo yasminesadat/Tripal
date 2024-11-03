@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 
 const touristId = '670d4e900cb9ea7937cc9968';
 
-const UpcomingActivitiesList = ({ activities,onBook }) => {
+const UpcomingActivitiesList = ({ activities, onBook }) => {
   return (
     <div className="list">
       {activities.map((activity) => (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tag, Modal } from 'antd';
-import CommentBox from '../common/Comment'
+import CommentBox from '../common/CommentBox'
 
 const touristId = '670d4e900cb9ea7937cc9968';
 
