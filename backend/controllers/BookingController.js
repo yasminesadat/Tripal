@@ -24,10 +24,6 @@ const bookResource = async (req, res) => {
             return res.status(403).json({ error: 'You must be at least 18 years old to book' });
         
     
-        /*if (resource.tourists.includes(touristId)) {
-            return res.status(400).json({ error: `You have already booked this ${resourceType}` });
-        }*/
-    
         if (resourceType === 'itinerary') {
             if (!selectedDate || !selectedTime) {
                 return res.status(400).json({ error: 'Please provide a date and time for booking this itinerary' });

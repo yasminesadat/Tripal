@@ -11,7 +11,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
     const [selectedItinerary, setSelectedItinerary] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
-
+    
     const handleBookClick = (itinerary) => {
         setSelectedItinerary(itinerary);
         setIsModalVisible(true);
@@ -27,8 +27,8 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                 selectedTime 
             });
             setIsModalVisible(false);
-            setSelectedDate(null);
-            setSelectedTime(null);
+            setSelectedDate("");
+            setSelectedTime("");
         } else {
             message.error("Please select both a date and time.");
         }
@@ -39,6 +39,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         setSelectedDate(null);
         setSelectedTime(null);
     };
+
     useEffect(() => {
         const fetchExchangeRate = async () => {
             if (curr) {
@@ -172,7 +173,8 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                     <Select
                         style={{ width: '100%', marginBottom: '1rem' }}
                         placeholder="Select a date"
-                        onChange={setSelectedDate}
+                        onChange={(value) => setSelectedDate(value)}
+                        value={selectedDate || undefined}
                     >
                         {selectedItinerary && selectedItinerary.availableDates.map(date => (
                             <Option key={date} value={date}>
@@ -186,7 +188,8 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                     <Select
                         style={{ width: '100%' }}
                         placeholder="Select a time"
-                        onChange={setSelectedTime}
+                        onChange={(value) => setSelectedTime(value)}
+                        value={selectedTime || undefined}
                     >
                         {selectedItinerary && selectedItinerary.availableTime.map(time => (
                             <Option key={time} value={time}>
