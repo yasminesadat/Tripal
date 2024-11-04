@@ -33,3 +33,4 @@ module.exports = {
 // id: 6727dd439f6dc6c6c9cf5536
 // password: haanseif1234
 // username: HanaMohamedSeif
+// const touristId = "6727dd439f6dc6c6c9cf5536";
