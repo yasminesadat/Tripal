@@ -48,18 +48,28 @@ const AdvertiserActivitiesPage = () => {
   return (
     <div className="advertiser-activities-page">
       <AdvertiserNavBar />
+      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h1 style={{ margin: 0 }}>Your Activities</h1>
+        <h1 class="text-30">Your Activities</h1>
       </div>
-      <div className="list">
+      <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
+      <div class="row y-gap-30">
+      <div class="col-lg-6">
+      <div class="border-1 rounded-12 px-20 py-20">
+        <div class="row x-gap-20 y-gap-20 items-center">
+        <div class="col">
         {activities.map((activity) => (
-          <div className="list-item" key={activity._id}>
-            <div className="list-item-header">{activity.title}</div>
+          <div class="border-1 rounded-12 px-20 py-20" key={activity._id}>
+            <div class="text-18 lh-15 fw-500 mt-5">{activity.title}</div>
+            <div class="d-flex items-center"> <i class="icon-pin mr-5"></i> Location: {activity.location}</div>
+            <div class="text-right md:text-left">
+              <i class="icon-clock mr-5"></i>
+              <div class="text-14">Date: {new Date(activity.date).toLocaleDateString()}</div>
+              <div class="text-14">Time: {activity.time}</div>
+            </div>
+          
             <div className="list-item-attributes">
               <div className="list-item-attribute">{activity.description}</div>
-              <div className="list-item-attribute">Date: {new Date(activity.date).toLocaleDateString()}</div>
-              <div className="list-item-attribute">Time: {activity.time}</div>
-              <div className="list-item-attribute">Location: {activity.location}</div>
               <div className="list-item-attribute">Price: {activity.price}</div>
               <div className="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
               <div className="list-item-attribute">
@@ -73,6 +83,7 @@ const AdvertiserActivitiesPage = () => {
               <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
               <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
 
+              
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                 <Button
                   type="default"
@@ -107,7 +118,13 @@ const AdvertiserActivitiesPage = () => {
             </div>
           </div>
         ))}
+      </div> 
       </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
   );
 };

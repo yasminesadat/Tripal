@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
 import { adminId } from "../../IDs";
+import "../../css/custom.css"
+import "../../css/main.css"
+import "../../css/vendors.css"
+
 
 
 const ComplaintsPage = () => {
@@ -117,10 +121,12 @@ const ComplaintsPage = () => {
                                             <tr>
                                                 <td>{complaint._id}</td>
                                                 <td>{complaint.title}</td>
-                                                <td>{complaint.status}</td>
+                                                <td className={`circle ${complaint.status === 'resolved' ? 'text-purple-1' : 'text-red-2'}`}>
+                                                  {complaint.status}
+                                                </td>
                                                 <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
                                                 <td>
-                                                    <button onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                    <button   onClick={() => toggleComplaintDetails(complaint._id)}>
                                                         {selectedComplaint && selectedComplaint._id === complaint._id ? 'Hide Details' : 'View Details'}
                                                     </button>
                                                 </td>
@@ -128,36 +134,44 @@ const ComplaintsPage = () => {
                                             {selectedComplaint && selectedComplaint._id === complaint._id && (
                                                 <tr>
                                                     <td colSpan="4">
-                                                        <div className="complaint-details">
+                                                        <div class="pl-blog-list__content">
                                                             <h3>Complaint Details</h3>
                                                             <p><strong>Title:</strong> {selectedComplaint.title}</p>
                                                             <p><strong>Body:</strong> {selectedComplaint.body}</p>
                                                             <p><strong>Date:</strong> {(new Date(selectedComplaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</p>
                                                             <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
-                                                            <p><strong>Status:</strong>
+                                                            <p><strong>Status:     </strong>
+                                                            <div class="dropdown -base -price js-dropdown js-form-dd is-active" data-main-value="">
+                                                            <div class="dropdown__button h-50 min-w-auto js-button">
                                                                 <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
                                                                     <option value="pending">pending</option>
                                                                     <option value="resolved">resolved</option>
                                                                 </select>
+                                                            </div> 
+                                                            </div>   
                                                             </p>
                                                             <button onClick={() => handleStatusChange(selectedComplaint._id)}>Update Status</button>
                                                             <h4>Replies</h4>
-                                                            <ul>
+                                                            <ul >
                                                                 {selectedComplaint.replies.map((reply, index) => (
-                                                                    <li key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
+                                                                    <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
                                                                 ))}
                                                             </ul>
 
                                                             {/* Reply Form */}
-                                                            <div className="reply-section">
+                                                            <div>
                                                                 <h4>Reply to Complaint</h4>
-                                                                <form onSubmit={handleReplySubmit}>
-                                                                    <textarea
+                                                                <form onSubmit={handleReplySubmit} >
+                                                                  <div class="row y-gap-30">
+                                                                  <div class="col-12">
+                                                                    <textarea 
                                                                         value={replyMessage}
                                                                         onChange={handleReplyChange}
                                                                         placeholder="Enter your reply here..."
                                                                         required
                                                                     />
+                                                                    </div>
+                                                                    </div>
                                                                     <button type="submit">Send Reply</button>
                                                                 </form>
                                                             </div>
