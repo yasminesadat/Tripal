@@ -5,7 +5,7 @@ import { changeSellerPassword } from "../../api/SellerService";
 import { changeAdvertiserPassword } from "../../api/AdvertiserService";
 import { changeAdminPassword } from "../../api/AdminService";
 import { changeGovernorPassword } from "../../api/GovernorService";
-// import { changeTourGuidePassword } from "../../api/TourGuideService";
+import { changeTourGuidePassword } from "../../api/TourGuideService";
 const ChangePassword = ({ id, userType }) => {
     const [form] = Form.useForm();
     const handleSubmit = async (values) => {
@@ -23,10 +23,10 @@ const ChangePassword = ({ id, userType }) => {
                     message.success("Password changed successfully"); // Notify success
                     break;
 
-                // case 'tour guide':
-                //     await changeTourGuidePassword(id, values.oldPassword, values.newPassword);
-                //     message.success("Password changed successfully"); // Notify success
-                //     break;
+                case 'tour guide':
+                    await changeTourGuidePassword(id, values.oldPassword, values.newPassword);
+                    message.success("Password changed successfully"); // Notify success
+                    break;
 
                 case 'advertiser':
                     await changeAdvertiserPassword(id, values.oldPassword, values.newPassword);
