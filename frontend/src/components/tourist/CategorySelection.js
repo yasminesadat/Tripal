@@ -3,10 +3,10 @@ import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { updateTouristInformation } from "../../api/TouristService";
 import { CloseOutlined } from "@ant-design/icons";
 import { message } from "antd";
-import { useNavigate, useParams } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CategorySelection() {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
   const { touristId } = useParams();
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -16,10 +16,8 @@ export default function CategorySelection() {
       try {
         const response = await ActivityCategoryService.getActivityCategories();
         const fetchedCategories = response; //NOT RESPONSE.DATA
-        console.log("categories before setting:", fetchedCategories);
         if (Array.isArray(fetchedCategories)) {
           setCategories(fetchedCategories);
-          console.log("CAT after settingggggg:", fetchedCategories);
         } else {
           setCategories([]);
         }
@@ -63,7 +61,7 @@ export default function CategorySelection() {
   };
 
   const handleSkip = () => {
-    navigate("/tourist"); // Navigate directly to the tourist page
+    navigate("/tourist");
   };
 
   return (

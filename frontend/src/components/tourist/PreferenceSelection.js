@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getTags } from "../../api/PreferenceTagService";
 import { CloseOutlined } from "@ant-design/icons";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import { updateTouristInformation } from "../../api/TouristService";
 import { message } from "antd";
 export default function PreferenceSelection() {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
   const { touristId } = useParams();
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
