@@ -294,7 +294,9 @@ const SignUpAllUsers = () => {
 
 
                 >
-                  Upload Document
+                  {(role === "seller" || role === "advertiser") && "Upload ID & taxation registery"}
+                  {(role === "tour-guide") && "Upload ID & certificate"}
+
                 </Button>
               )}
 

@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Rate } from "antd"; 
 import { addRating } from "../../api/RatingService"; 
-
+import "../style.css";
 export default function ReviewBox({ id, type }) {
     const [rating, setRating] = useState(0); 
     const [review, setReview] = useState(""); 
