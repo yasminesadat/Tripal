@@ -8,6 +8,7 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
+import { bookResource } from "../../api/BookingService";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -131,13 +132,20 @@ const UpcomingActivitiesPage = () => {
 
   const handleBookActivity = async ({ activityId, touristId }) => {
     try {
-      const response = await bookActivity(activityId, touristId);
-      message.success(response.message);
+      await bookResource('activity', activityId, touristId);
+            message.success("Activity booked successfully!");
     } catch (error) {
-        if (error.response) 
-            message.error(error.response.data.error);       
-        else
-            message.error("Failed to book activity. Please check your network and try again.");   
+      console.log("Error details:", error);
+      
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 400) 
+          message.warning(error.response.data.error);             
+        else 
+          message.error(error.response.data.error);  
+      } else {
+        message.error("Network error. Please try again later.");
+      }
     }
   };
 

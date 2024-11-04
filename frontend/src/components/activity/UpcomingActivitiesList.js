@@ -49,10 +49,10 @@ const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr 
             <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
             <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
           </div>
-          {book &&<button onClick={() => onBook({ activityId: activity._id, touristId })}>
+          {book &&<button onClick={() => onBook({ activityId: activity._id, touristId,resourceType:'activity' })}>
             Book Now
           </button>}
-          {cancel &&<button style={{ background: '#b0091a' }}  onClick={() => onCancel({ activityId: activity._id, touristId })}>
+          {cancel &&<button style={{ background: '#b0091a' }}  onClick={() => onCancel({ activityId: activity._id, touristId, resourceType:'activity' })}>
             Cancel Booking
             </button>}
         </div>
