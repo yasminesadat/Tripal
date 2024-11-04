@@ -65,8 +65,8 @@ const TouristHomePage = () => {
     }
   };
 
-   const handleRedeemClick = async () => {
-    if(profileInformation.currentPoints===0){
+  const handleRedeemClick = async () => {
+    if (profileInformation.currentPoints === 0) {
       toast.error("No points to redeem");
       return;
     }
@@ -76,16 +76,15 @@ const TouristHomePage = () => {
 
   useEffect(() => {
     getUserInformation();
-  });
-
+  }, []);
   return (
     <div>
       <TouristNavBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <h1>Your Profile</h1>
-      {profileInformation.totalPoints !== undefined && (
-        <Badge totalPoints={profileInformation.totalPoints} />
-      )}
+        <h1>Your Profile</h1>
+        {profileInformation.totalPoints !== undefined && (
+          <Badge totalPoints={profileInformation.totalPoints} />
+        )}
       </div>
       <div>
         <ul className="tourist-profile">
