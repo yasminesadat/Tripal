@@ -53,6 +53,13 @@ const ComplaintsPage = () => {
         }
     };
 
+    useEffect(() => {
+      // Set newStatus to the current status of selectedComplaint
+      if (selectedComplaint) {
+          setNewStatus(selectedComplaint.status);
+      }
+    }, [selectedComplaint]);
+
     const handleStatusChange = async (complaintId) => {
         try {
             //console.log(newStatus)
