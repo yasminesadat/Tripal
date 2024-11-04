@@ -11,18 +11,23 @@ export async function createRequest(Body, documentFileObject) {
         // }
 
         // Send the initial request to create the request object
+        console.log("the document is", documentFileObject);
         const response = await axios.post("/request", Body);
         console.log("Created request:", response.data); // Log the created request
         console.log("document", documentFileObject);
-        const storage = getStorage(firebaseInstance); // Correctly getting the storage instance
-        const storageRef = ref(storage, "totallynewName"); // Creating a reference to the file in Firebase Storage
-        console.log("IN service document", documentFileObject);
-        await uploadBytesResumable(storageRef, documentFileObject);
-        const url = await getDownloadURL(storageRef); // Getting the download URL
-        console.log("url", url);
+        if (documentFileObject) {
+            const storage = getStorage(firebaseInstance); // Correctly getting the storage instance
+            const date = new Date().toISOString(); // Gets the current date in ISO format
+            const fileName = `${document.name}_${date}`;
+            const storageRef = ref(storage, fileName); // Creating a reference to the file in Firebase Storage
+            console.log("IN service document", documentFileObject);
+            await uploadBytesResumable(storageRef, documentFileObject);
+            const url = await getDownloadURL(storageRef); // Getting the download URL
+            console.log("url", url);
 
-        console.log("The Firebase service URL is", url);
-        await updateRequest(response.data._id, { "document": url });
+            console.log("The Firebase service URL is", url);
+            await updateRequest(response.data._id, { "document": url });
+        }
     } catch (error) {
         const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
         console.log("ERROR MESSAGE", errorMessage);
