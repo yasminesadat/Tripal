@@ -22,7 +22,7 @@ const bookResource = async (req, res) => {
         
         if (tourist.calculateAge() < 18) 
             return res.status(403).json({ error: 'You must be at least 18 years old to book' });
-        
+
     
         if (resourceType === 'itinerary') {
             if (!selectedDate || !selectedTime) {
@@ -65,12 +65,27 @@ try {
     return res.status(404).json({ error: `${resourceType} not founddd` });
     
 
-    const touristIndex = resource.tourists.findIndex(id => id.toString() === touristId);
-    if (touristIndex === -1) {
-    return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-    }
+    if (resourceType === 'activity') {
+            // For activities, find and remove the tourist from `tourists` array
+            const touristIndex = resource.tourists.findIndex(id => id.toString() === touristId);
+            if (touristIndex === -1) {
+                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+            }
 
-    resource.tourists.splice(touristIndex, 1);
+            resource.tourists.splice(touristIndex, 1);
+
+        } else if (resourceType === 'itinerary') {
+            // For itineraries, find and remove the booking from `bookings` array
+            const bookingIndex = resource.bookings.findIndex(
+                booking => booking.touristId.toString() === touristId
+            );
+            if (bookingIndex === -1) {
+                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+            }            
+            resource.bookings.splice(bookingIndex, 1);
+            resource.markModified('bookings');
+
+        }
     await resource.save();
 
     res.status(200).json({ message: `${resourceType} booking canceled successfully` });
