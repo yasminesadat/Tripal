@@ -76,8 +76,6 @@ const createTourist = async (req, res) => {
   }
 };
 
-
-
 const getTouristInfo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -158,6 +156,7 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 const changePassword = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,6 +1,5 @@
 const tourGuideModel = require('../models/users/TourGuide.js');
 const bcrypt = require('bcrypt');
-const userModel = require('../models/users/User.js')
 
 const createTourGuide = async (req, res) => {
     try {

@@ -11,6 +11,7 @@ const { createItinerary, getItineraries, updateItinerary,
     bookItinerary, getTouristItineraries,cancelBooking } = require('../controllers/ItineraryController');
 
 router.post('/itinerary', createItinerary);
+
 router.get('/itinerary', getItineraries);
 router.put('/itinerary/:id', updateItinerary);
 router.delete('/itinerary/:id', deleteItinerary);

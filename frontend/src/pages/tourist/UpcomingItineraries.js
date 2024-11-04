@@ -123,14 +123,10 @@ const UpcomingItinerariesPage = () => {
     
             if (error.response) {
                 const { status, data } = error.response;
-                if (status === 400) {
-                    message.success(data.message);
-                } else if (status === 404) {
-                    message.error("Itinerary not found.");
-                }
-                 else {
-                    message.error(data.error);
-                }
+                if (status === 400) 
+                    message.success(data.message);             
+                 else 
+                    message.error(data.error);  
             }
         }
     }
