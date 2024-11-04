@@ -81,7 +81,9 @@ const SignUpAllUsers = () => {
   const handleRemove = () => {
     setFormData({ ...formData, document: null });
   };
+
   const handleSubmit = async (values) => {
+    console.log("im submitting with the document", formData.document);
     const formattedDateOfBirth = role === "tourist"
       ? new Date(values.dateOfBirth).toISOString().split("T")[0]
       : values.dateOfBirth;
@@ -149,13 +151,13 @@ const SignUpAllUsers = () => {
           }
         });
       } else if (role === "tourist") {
- 
-          response = await createTourist(newUser);
-          const touristId = response.data.id || response.data._id;
-          console.log (touristId)
-          message.success("Sign up successful!");
-          navigate(`/tourist/select-preferences/${touristId}`);
-        
+
+        response = await createTourist(newUser);
+        const touristId = response.data.id || response.data._id;
+        console.log(touristId)
+        message.success("Sign up successful!");
+        navigate(`/tourist/select-preferences/${touristId}`);
+
       }
 
     } catch (error) {

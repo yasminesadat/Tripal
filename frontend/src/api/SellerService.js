@@ -30,3 +30,16 @@ export const updateSeller = async (id, updatedData) => {
     throw error;
   }
 };
+export async function changeSellerPassword(id, oldPassword, newPassword) {
+  try {
+    const body = {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    }
+    console.log(`/seller-change-pass/${id}`);
+    const response = await axios.put(`http://localhost:5050/api/seller-change-pass/${id}`, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

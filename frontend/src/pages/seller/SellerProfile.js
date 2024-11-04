@@ -5,9 +5,11 @@ import { sellerId } from "../../IDs";
 import { Form, Input, Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./SellerProfile.css";
+import ChangePassword from "../../components/common/ChangePassword";
 
 const SellerProfile = () => {
   const [seller, setSeller] = useState(null);
+  const userType = "seller";
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedSeller, setUpdatedSeller] = useState({
@@ -141,78 +143,79 @@ const SellerProfile = () => {
 
   return (
     <>
-      <SellerNavBar />
-      <div className="seller-profile-container">
-        <h2 className="profile-title">Seller Profile</h2>
+      <div>
+        <SellerNavBar />
+        <div className="seller-profile-container">
+          <h2 className="profile-title">Seller Profile</h2>
 
-        {!isEditing ? (
-          <div className="profile-info">
-            <div className="profile-details">
-              <p>
-                <strong>User Name:</strong> {seller.userName}
-              </p>
-              <p>
-                <strong>Email:</strong> {seller.email}
-              </p>
-              <p>
-                <strong>Name:</strong> {seller.name || "N/A"}
-              </p>
-              <p>
-                <strong>Description:</strong> {seller.description || "N/A"}
-              </p>
-              <Button
-                onClick={() => setIsEditing(true)}
-                type="primary"
-                style={{ width: "100%", marginTop: "16px" }}
-              >
-                Edit Profile
-              </Button>
+          {!isEditing ? (
+            <div className="profile-info">
+              <div className="profile-details">
+                <p>
+                  <strong>User Name:</strong> {seller.userName}
+                </p>
+                <p>
+                  <strong>Email:</strong> {seller.email}
+                </p>
+                <p>
+                  <strong>Name:</strong> {seller.name || "N/A"}
+                </p>
+                <p>
+                  <strong>Description:</strong> {seller.description || "N/A"}
+                </p>
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  type="primary"
+                  style={{ width: "100%", marginTop: "16px" }}
+                >
+                  Edit Profile
+                </Button>
+              </div>
+              {seller.logo && (
+                <img
+                  src={seller.logo}
+                  alt="Seller Logo"
+                  className="seller-logo"
+                />
+              )}{" "}
+              {/* Display logo if present */}
             </div>
-            {seller.logo && (
-              <img
-                src={seller.logo}
-                alt="Seller Logo"
-                className="seller-logo"
-              />
-            )}{" "}
-            {/* Display logo if present */}
-          </div>
-        ) : (
-          <Form
-            layout="vertical"
-            onFinish={handleSubmit}
-            initialValues={updatedSeller}
-          >
-            <Form.Item
-              label="User Name"
-              name="userName"
-              rules={[
-                { required: true, message: "Please input your username!" },
-              ]}
+          ) : (
+            <Form
+              layout="vertical"
+              onFinish={handleSubmit}
+              initialValues={updatedSeller}
             >
-              <Input
+              <Form.Item
+                label="User Name"
                 name="userName"
-                placeholder="Enter your username"
-                value={updatedSeller.userName}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                { required: true, message: "Please input your email!" },
-                { type: "email", message: "Please enter a valid email!" },
-              ]}
-            >
-              <Input
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input
+                  name="userName"
+                  placeholder="Enter your username"
+                  value={updatedSeller.userName}
+                  onChange={handleInputChange}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Email"
                 name="email"
-                placeholder="Enter your email"
-                value={updatedSeller.email}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-            {/* <Form.Item
+                rules={[
+                  { required: true, message: "Please input your email!" },
+                  { type: "email", message: "Please enter a valid email!" },
+                ]}
+              >
+                <Input
+                  name="email"
+                  placeholder="Enter your email"
+                  value={updatedSeller.email}
+                  onChange={handleInputChange}
+                />
+              </Form.Item>
+              {/* <Form.Item
                       label="Password"
                       name="password"
                       rules={[{ required: true, message: 'Please input your password!' }]}
@@ -224,43 +227,43 @@ const SellerProfile = () => {
                         onChange={handleInputChange}
                       />
                     </Form.Item> */}
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
-            >
-              <Input
+              <Form.Item
+                label="Name"
                 name="name"
-                placeholder="Enter your name"
-                value={updatedSeller.name}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[
-                { required: true, message: "Please input your description!" },
-              ]}
-            >
-              <Input.TextArea
+                rules={[{ required: true, message: "Please input your name!" }]}
+              >
+                <Input
+                  name="name"
+                  placeholder="Enter your name"
+                  value={updatedSeller.name}
+                  onChange={handleInputChange}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Description"
                 name="description"
-                placeholder="Enter a brief description"
-                value={updatedSeller.description}
-                onChange={handleInputChange}
-              />
-            </Form.Item>
-            <Form.Item label="Logo" name="logo">
-              <Upload
-                name="logo"
-                listType="picture"
-                accept=".png,.jpeg,.jpg"
-                beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-                onChange={handleLogoChange}
-                onRemove={handleRemove} // Allow removal of the logo
-                fileList={
-                  updatedSeller.logo
-                    ? [
+                rules={[
+                  { required: true, message: "Please input your description!" },
+                ]}
+              >
+                <Input.TextArea
+                  name="description"
+                  placeholder="Enter a brief description"
+                  value={updatedSeller.description}
+                  onChange={handleInputChange}
+                />
+              </Form.Item>
+              <Form.Item label="Logo" name="logo">
+                <Upload
+                  name="logo"
+                  listType="picture"
+                  accept=".png,.jpeg,.jpg"
+                  beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                  onChange={handleLogoChange}
+                  onRemove={handleRemove} // Allow removal of the logo
+                  fileList={
+                    updatedSeller.logo
+                      ? [
                         {
                           uid: "-1",
                           name: "logo.png",
@@ -268,48 +271,50 @@ const SellerProfile = () => {
                           url: updatedSeller.logo,
                         },
                       ]
-                    : []
-                } // Ensure only one file is shown
-              >
-                {!updatedSeller.logo && (
-                  <Button
-                    icon={<UploadOutlined />}
-                    size="small"
-                    type="default"
-                    style={{
-                      whiteSpace: "nowrap",
-                      padding: "0 8px",
-                      width: "auto",
-                    }}
-                  >
-                    Upload Logo
-                  </Button>
-                )}
-              </Upload>
-              {updatedSeller.logo && (
-                <img
-                  src={updatedSeller.logo}
-                  alt="Seller Logo"
-                  className="seller-logo-preview"
-                />
-              )}{" "}
-              {/* Display logo preview if present */}
-            </Form.Item>
-            <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ marginRight: "8px" }}
-                loading={loading}
-              >
-                {buttonText}
-              </Button>
-              <Button type="default" onClick={() => setIsEditing(false)}>
-                Cancel
-              </Button>
-            </Form.Item>
-          </Form>
-        )}
+                      : []
+                  } // Ensure only one file is shown
+                >
+                  {!updatedSeller.logo && (
+                    <Button
+                      icon={<UploadOutlined />}
+                      size="small"
+                      type="default"
+                      style={{
+                        whiteSpace: "nowrap",
+                        padding: "0 8px",
+                        width: "auto",
+                      }}
+                    >
+                      Upload Logo
+                    </Button>
+                  )}
+                </Upload>
+                {updatedSeller.logo && (
+                  <img
+                    src={updatedSeller.logo}
+                    alt="Seller Logo"
+                    className="seller-logo-preview"
+                  />
+                )}{" "}
+                {/* Display logo preview if present */}
+              </Form.Item>
+              <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ marginRight: "8px" }}
+                  loading={loading}
+                >
+                  {buttonText}
+                </Button>
+                <Button type="default" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Form>
+          )}
+        </div>
+        <ChangePassword id={sellerId} userType={userType} />
       </div>
     </>
   );
