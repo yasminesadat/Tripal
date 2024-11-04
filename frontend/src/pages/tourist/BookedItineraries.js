@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ItinerariesList from '../../components/itinerary/UpcomingItinerariesList';
+import UpcomingItinerariesList from '../../components/itinerary/UpcomingItinerariesList';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
  import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
@@ -137,7 +137,7 @@ const ItineraryPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <ItinerariesList itineraries={filteredItineraries} onCancel={handleCancelBooking} cancel={'diana'}/>
+                <UpcomingItinerariesList itineraries={filteredItineraries} onCancel={handleCancelBooking} cancel={'diana'}/>
             </div>
         </div>
     );
