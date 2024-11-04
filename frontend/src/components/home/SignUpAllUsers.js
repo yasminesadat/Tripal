@@ -149,9 +149,13 @@ const SignUpAllUsers = () => {
           }
         });
       } else if (role === "tourist") {
-        response = await createTourist(newUser);
-        message.success("Sign up successful!");
-        navigate("/tourist");
+ 
+          response = await createTourist(newUser);
+          const touristId = response.data.id || response.data._id;
+          console.log (touristId)
+          message.success("Sign up successful!");
+          navigate(`/tourist/select-preferences/${touristId}`);
+        
       }
 
     } catch (error) {
