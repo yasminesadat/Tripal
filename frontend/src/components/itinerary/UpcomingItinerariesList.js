@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from 'antd';
-
-const touristId = "6724842b5831eed787083b57"; //>18 dude
-//const touristId = '6727661b46a8937e2e821782'; //kiddo
+import { touristId, touristId2 } from '../../IDs';
 
 const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP" }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
@@ -31,7 +29,6 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         const convertedPrice = (price * exchangeRate).toFixed(2);
         return `${curr} ${convertedPrice}`; // Format price with currency
     };
-
     return (
         <div className="list">
             {itineraries.map(itinerary => (

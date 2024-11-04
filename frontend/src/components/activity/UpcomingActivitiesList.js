@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Tag } from 'antd';
 import { getConversionRate } from "../../api/ExchangeRatesService";
+import { touristId, touristId2 } from "../../IDs";
 
-const touristId = '670d4e900cb9ea7937cc9968';
 const UpcomingActivitiesList = ({ activities, onBook, curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 

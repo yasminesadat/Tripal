@@ -2,6 +2,7 @@ const sellerId = "67092b1651baf2ce64114a26";
 const tourismGovernerID = "6708508701900d8424372bb6";
 const adminId = "670c3f8b4d912d42ccf5580c";
 const touristId = "6724842b5831eed787083b57"; // DONT DELETE
+const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
 const advertiserID = "6726aaea44ae09c9c4e1f809"; // advertiser profile final NEVER DELETE
 const tourGuideID = "672678ed528c25edc7fc0f55";
 //mimics what will be in token to adjust some component
@@ -17,6 +18,7 @@ module.exports = {
   tourismGovernerID,
   adminId,
   touristId,
+  touristId2,
   advertiserID,
   tourGuideID
 };
