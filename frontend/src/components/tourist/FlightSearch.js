@@ -1,34 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-const FlightSearch = () => {
-  const [flights, setFlights] = useState([]);
-  const [error, setError] = useState(null);
+const FlightResults = () => {
+  const location = useLocation();
+  const flights = location.state?.flights || []; // Get the flights from the passed state
 
-  useEffect(() => {
-    const fetchFlights = async () => {
-      try {
-        const response = await fetch('http://localhost:5050/api/flightSearch');
-        if (!response.ok) {
-          throw new Error('Error fetching flights');
-        }
-        const data = await response.json();
-        setFlights(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchFlights();
-  }, []);
+  const handleBookNow = (flight) => {
+    // Logic for booking the flight goes here
+    alert(`Booking flight with price: ${flight.price.total} ${flight.price.currency}`);
+  };
 
   return (
     <div>
-      <h1>Flight Search Results</h1>
-      {error && <p>{error}</p>}
+      <h1>Available Flights</h1>
       <ul>
-        {flights.map((flight, index) => (
+        {flights.length > 0 ? flights.map((flight, index) => (
           <li key={index}>
-            <p>Total Price: {flight.price.currency} {flight.price.total}</p>
+            <h3>Total Price: {flight.price.currency} {flight.price.total}</h3>
             {flight.itineraries.map((itinerary, idx) => (
               <div key={idx}>
                 {itinerary.segments.map((segment, segmentIndex) => (
@@ -39,11 +27,12 @@ const FlightSearch = () => {
                 ))}
               </div>
             ))}
+            <button onClick={() => handleBookNow(flight)}>Book Now</button>
           </li>
-        ))}
+        )) : <p>No flights available.</p>}
       </ul>
     </div>
   );
 };
 
-export default FlightSearch;
+export default FlightResults;
