@@ -92,7 +92,9 @@ const MyComplaints = () => {
                                         <React.Fragment key={complaint._id}>
                                             <tr>
                                                 <td>{complaint.title}</td>
-                                                <td>{complaint.status}</td>
+                                                <td className={`circle ${complaint.status === 'resolved' ? 'text-purple-1' : 'text-red-2'}`}>
+                                                  {complaint.status}
+                                                </td>
                                                 <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
                                                 <td>
                                                     <button onClick={() => toggleComplaintDetails(complaint._id)}>
@@ -112,7 +114,7 @@ const MyComplaints = () => {
                                                             <h4>Replies</h4>
                                                             <ul>
                                                                 {selectedComplaint.replies.map((reply, index) => (
-                                                                    <li key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
+                                                                    <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
                                                                 ))}
                                                             </ul>
 
