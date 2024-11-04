@@ -38,7 +38,7 @@ const TouristRoutes = [
   {path: "/booked-activities", element: <BookedActivitiesPage />},
 
   { path: "/tourist/book-flight", element: <FlightSearch /> },
-  { path: "/tourist/search-flight", element: <Hero6 /> },
+  { path: "/tourist/search-flight", element: <Hero5 /> },
 ];
 
 export default TouristRoutes;
