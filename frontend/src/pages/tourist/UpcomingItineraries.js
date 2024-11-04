@@ -5,9 +5,9 @@ import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
-import { bookItinerary } from "../../api/TouristService";
 import { message } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
+import { bookResource } from "../../api/BookingService";
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -135,18 +135,25 @@ const ItineraryPage = () => {
     const handleBookTicket = async ({ itineraryId, touristId })  => {
         try {
             console.log('Booking', itineraryId, touristId);
-            await bookItinerary(itineraryId, touristId);
+            await bookResource('itineraries', itineraryId, touristId);
+            
             console.log("This Itinerary has been booked successfully!");
             message.success("Ticket booked successfully!");
+            
         } catch (error) {
             console.log("Error details:", error);
 
             if (error.response) {
                 const { status, data } = error.response;
-                if (status === 400) 
-                    message.success(data.message);             
-                 else 
-                    message.error(data.error);  
+                if (status === 400) {
+                    message.warning(data.message);
+                } else if (status === 404) {
+                    message.error(data.error || data.message);
+                } else {
+                    message.error(data.error); 
+                }
+            } else {
+                message.error("An error occurred. Please try again later.");
             }
         }
     };

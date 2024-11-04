@@ -115,13 +115,18 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
-                        {book&& <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
+                        {book && (
+                            <button onClick={() => onBook({ itineraryId: itinerary._id, touristId, resourceType:'itineraries' })}>
                                 Book Now
-                                </button>}
-                        {console.log(itinerary._id ,"lollll ", touristId)}
-                        {cancel&& <button style={{ background: '#b0091a' }}  onClick={() => onCancel({ itineraryId: itinerary._id, touristId })}>
+                            </button>
+                        )}
+                        {cancel && (
+                            <button 
+                                style={{ background: '#b0091a' }}  
+                                onClick={() => onCancel({ itineraryId: itinerary._id, touristId, resourceType: 'itineraries' })}>
                                 Cancel Booking
-                                </button>}  
+                            </button>
+                        )} 
 
                     </div>
                 </div>
