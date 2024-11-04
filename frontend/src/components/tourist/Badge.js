@@ -20,7 +20,7 @@ const Badge = ({ totalPoints }) => {
   }
 
   return (
-    <div className={`tourCard__badge ${badgeColor}`}>
+    <div className={`tourist__badge ${badgeColor}`}>
         <img src={badgeImage} alt="Badge" className="badge-image" />
         <span className="badge-text">{badgeText}</span>
     </div>

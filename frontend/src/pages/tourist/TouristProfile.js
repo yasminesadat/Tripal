@@ -10,6 +10,9 @@ import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 import Badge from "../../components/tourist/Badge";
+import Currency from "../../components/tourist/Currency";
+
+
 const TouristHomePage = () => {
   const { id } = useParams();
   const [profileInformation, setProfileInformation] = useState({});
@@ -60,13 +63,33 @@ const TouristHomePage = () => {
         job: response.job,
         mobileNumber: response.mobileNumber,
       });
+      sessionStorage.removeItem("currency");
+      sessionStorage.setItem("currency", response.choosenCurrency);
     } catch (error) {
       console.error("Failed to fetch user information:", error);
     }
   };
 
-  const handleRedeemClick = async () => {
-    if (profileInformation.currentPoints === 0) {
+  const handleCurrencyChange = async (currency) => {
+    console.log("Chosen currency updated to:", currency);
+
+    const updatedProfileData = {
+      choosenCurrency: currency,
+    };
+
+    try {
+      await updateTouristInformation(id, updatedProfileData);
+      sessionStorage.removeItem("currency");
+      sessionStorage.setItem("currency", currency);
+      toast.success("currency for viewing prices updated successfully");
+    } catch (error) {
+      console.error("Failed to update user information:", error);
+      toast.error("Error updating currency");
+    }
+  };
+
+   const handleRedeemClick = async () => {
+    if(profileInformation.currentPoints===0){
       toast.error("No points to redeem");
       return;
     }
@@ -76,15 +99,21 @@ const TouristHomePage = () => {
 
   useEffect(() => {
     getUserInformation();
-  }, []);
+  });
+
   return (
     <div>
       <TouristNavBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h1>Your Profile</h1>
+      <h1>Your Profile</h1>
+      <div>
+        {profileInformation.wallet && profileInformation.wallet.currency && (
+          <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange}/>
+        )}
         {profileInformation.totalPoints !== undefined && (
           <Badge totalPoints={profileInformation.totalPoints} />
         )}
+        </div>
       </div>
       <div>
         <ul className="tourist-profile">

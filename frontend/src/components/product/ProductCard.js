@@ -79,7 +79,7 @@ const ProductCard = ({
       }
     >
       <Meta
-        title={`${name} - $${price}`}
+        title={`${name} - ${price}`}
         description={formattedDescription}
         onClick={handleCardClick}
       />

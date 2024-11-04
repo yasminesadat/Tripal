@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.tourCard__badge {
+.tourist__badge {
   margin-left: 20px; 
   margin-right: 20px;
   padding: 10px 20px;
@@ -48,4 +48,82 @@ code {
 
 .rounded-12 {
   border-radius: 12px;
+}
+
+.headerDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.headerDropdown__button {
+  background-color: #f1f0f0;
+  color: rgb(0, 0, 0);
+  border: none; 
+  padding: 10px 10px;
+  cursor: pointer; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50px; 
+  border-radius: 6px;
+  font-size: 15px; 
+  transition: background-color 0.3s ease; 
+}
+
+.headerDropdown__button:hover {
+  background-color: #9d9d9d;
+}
+
+.headerDropdown__content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 2px;
+  z-index: 1000; 
+  animation: fadeIn 0.2s; 
+}
+
+.headerDropdown__content.is-active {
+  display: block; 
+}
+
+.headerDropdown__item {
+  padding: 2px 2px; 
+  transition: background-color 0.2s ease; 
+}
+
+.headerDropdown__item:hover {
+  background-color: #f1f1f1; 
+}
+
+.headerDropdown__item button {
+  background: none;
+  border: none; 
+  cursor: pointer; 
+  width: 100%;
+  text-align: left;
+  font-size: 16px; 
+  color: #000000; 
+}
+
+.headerDropdown__content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  margin-top: 2px;
+  z-index: 1000; 
+  animation: fadeIn 0.2s; 
+
+  max-height: 300px; 
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 6px;
+}
+
+.headerDropdown__content.is-active {
+  display: block; 
 }

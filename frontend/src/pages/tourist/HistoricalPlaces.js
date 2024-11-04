@@ -10,6 +10,15 @@ const HistoricalPlacesPage = () => {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState("EGP"); // Add currency state
+
+  useEffect(() => {
+    // Optionally retrieve currency from sessionStorage
+    const curr = sessionStorage.getItem("currency");
+    if (curr) {
+      setCurrency(curr);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -47,27 +56,27 @@ const HistoricalPlacesPage = () => {
     });
     setFilteredPlaces(results);
   };
-  
+
   const handleFilter = (filters) => {
     const { historicType, historicalTagPeriod } = filters;
 
     if (!historicType && !historicalTagPeriod) {
-        setFilteredPlaces(places);
-        return;
+      setFilteredPlaces(places);
+      return;
     }
 
     const filtered = places.filter((place) => {
       const matchesHistoricType = historicType
         ? place.tags && place.tags.some(tag => tag.name && tag.name.toLowerCase().includes(historicType.toLowerCase()))
         : true;
-  
+
       const matchesHistoricalTag = historicalTagPeriod
         ? place.historicalPeriod && place.historicalPeriod.some(tag => tag.name && tag.name.toLowerCase().includes(historicalTagPeriod.toLowerCase()))
         : true;
-  
+
       return matchesHistoricType && matchesHistoricalTag;
     });
-  
+
     setFilteredPlaces(filtered);
   };
 
@@ -75,15 +84,15 @@ const HistoricalPlacesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
-      <TouristNavBar/>
-      <div class="page-title">Historical Places</div>
+    <div className="page-container">
+      <TouristNavBar />
+      <div className="page-title">Historical Places</div>
       <HistoricalPlacesSearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <HistoricalPlacesFilter onFilter={handleFilter} />
         </div>
-        <HistoricalPlacesList places={filteredPlaces} />
+        <HistoricalPlacesList places={filteredPlaces} curr={currency} /> {/* Pass the currency prop */}
       </div>
     </div>
   );

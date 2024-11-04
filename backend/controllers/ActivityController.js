@@ -211,7 +211,6 @@ const getTouristActivities = async (req, res) => {
   const { touristId } = req.params;
   try {
     const activities = await Activity.find({ tourists: touristId })
-      .populate("advertiser")
       .populate("category")
       .populate("tags")
       //.populate("ratings");
