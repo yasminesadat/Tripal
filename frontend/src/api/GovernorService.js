@@ -10,7 +10,8 @@ export async function changeGovernorPassword(id, oldPassword, newPassword) {
         const response = await axios.put(`/governor-change-pass/${id}`, body);
         return response.data;
     } catch (error) {
-        console.error("error", error);
         throw error;
+
+
     }
 }

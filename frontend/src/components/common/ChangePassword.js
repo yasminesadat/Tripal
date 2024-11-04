@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { changeTouristPassword } from "../../api/TouristService";
-// import { changeSellerPassword } from "../../api/SellerService";
+import { changeSellerPassword } from "../../api/SellerService";
 import { changeAdvertiserPassword } from "../../api/AdvertiserService";
 import { changeAdminPassword } from "../../api/AdminService";
 import { changeGovernorPassword } from "../../api/GovernorService";
@@ -13,6 +13,7 @@ const ChangePassword = ({ id, userType }) => {
             message.error("Passwords don't match");
             return; // Early return to avoid proceeding with the password change
         }
+
 
         console.log(userType);
         try {
@@ -33,7 +34,8 @@ const ChangePassword = ({ id, userType }) => {
                     break;
 
                 case 'governor':
-                    await changeGovernorPassword(id, values.oldPassword, values.newPassword);
+                    const res = await changeGovernorPassword(id, values.oldPassword, values.newPassword);
+                    console.log(res);
                     message.success("Password changed successfully"); // Notify success
                     break;
 
@@ -41,17 +43,17 @@ const ChangePassword = ({ id, userType }) => {
                     await changeAdminPassword(id, values.oldPassword, values.newPassword);
                     message.success("Password changed successfully"); // Notify success
                     break;
-                // case 'seller':
-                //     await changeSellerPassword(id, values.oldPassword, values.newPassword);
-                //     message.success("Password changed successfully"); // Notify success
-                //     break;
+                case 'seller':
+                    await changeSellerPassword(id, values.oldPassword, values.newPassword);
+                    message.success("Password changed successfully"); // Notify success
+                    break;
 
                 default:
                     throw new Error("Invalid user type");
             }
         } catch (error) {
             console.error("Error changing password:", error);
-            message.error("Failed to change password"); // Notify failure
+            message.error(error.response.data.error); // Notify failure
         }
     };
 

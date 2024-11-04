@@ -15,7 +15,9 @@ const changePassword = (userModel) => async (req, res) => {
         // Check if the old password matches
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: "Current password is incorrect" });
+            // return res.status(400).json({ error: "Current password is incorrect" });
+            throw new Error("Old Password is incorrect");
+
         }
 
         // Hash the new password and save it to the user model
