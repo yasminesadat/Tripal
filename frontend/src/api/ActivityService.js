@@ -119,13 +119,3 @@ export async function bookActivity(activityId, touristId) {
     throw error;
   }
 }
-
-export async function getTouristActivities(touristId) {
-  try {
-    const response = await axios.get(`/activities/${touristId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error getting tourist activities:", error);
-    throw error;
-  }
-}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
+import { getTouristActivities } from "../../api/TouristService";
 import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
@@ -7,41 +7,19 @@ import ActivitySort from "../../components/activity/ActivitySort";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
-import { getConversionRate } from "../../api/ExchangeRatesService"; 
+import { touristId } from "../../IDs";
 
-const UpcomingActivitiesPage = () => {
+const BookedActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currency, setCurrency] = useState("EGP");
-  const [exchangeRate, setExchangeRate] = useState(1);
-
-  useEffect(() => {
-    const fetchCurrency = async () => {
-      const curr = sessionStorage.getItem("currency");
-      if (curr) {
-        setCurrency(curr);
-        await fetchExchangeRate(curr);
-      }
-    };
-    fetchCurrency();
-  }, []);
-
-  const fetchExchangeRate = async (curr) => {
-    try {
-      const rate = await getConversionRate(curr);
-      setExchangeRate(rate);
-    } catch (error) {
-      message.error("Failed to fetch exchange rate.");
-    }
-  };
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewUpcomingActivities();
-        const activitiesWithAvgRatings = response.data.map(activity => ({
+        const response = await getTouristActivities(touristId);
+        const activitiesWithAvgRatings = response.map(activity => ({
           ...activity,
           averageRating: calculateAverageRating(activity.ratings),
         }));
@@ -49,7 +27,7 @@ const UpcomingActivitiesPage = () => {
         setActivities(activitiesWithAvgRatings);
         setFilteredActivities(activitiesWithAvgRatings);
       } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
+        setError(err.response?.data?.error || "Error fetching activitiesssss");
       } finally {
         setLoading(false);
       }
@@ -67,7 +45,9 @@ const UpcomingActivitiesPage = () => {
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const results = activities.filter((activity) => {
-      const hasMatchingTitle = activity.title.toLowerCase().includes(lowerCaseSearchTerm);
+      const hasMatchingTitle = activity.title
+        .toLowerCase()
+        .includes(lowerCaseSearchTerm);
       const hasMatchingCategory =
         activity.category &&
         activity.category.Name &&
@@ -75,7 +55,8 @@ const UpcomingActivitiesPage = () => {
       const hasMatchingTags =
         activity.tags &&
         activity.tags.some(
-          (tag) => tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          (tag) =>
+            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
         );
 
       return hasMatchingTitle || hasMatchingCategory || hasMatchingTags;
@@ -88,7 +69,7 @@ const UpcomingActivitiesPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price * exchangeRate; 
+      const activityBudget = activity.price;
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -100,7 +81,7 @@ const UpcomingActivitiesPage = () => {
         (!budgetMax || activityBudget <= budgetMax);
       const isCategoryValid =
         !category ||
-        (activityCategory &&
+        (activityCategory && 
           activityCategory.Name &&
           activityCategory.Name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
@@ -112,53 +93,49 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(filtered);
   };
 
+
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        aValue = a.price * exchangeRate;
-        bValue = b.price * exchangeRate;
+        aValue = a.price;
+        bValue = b.price;
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
 
-      return order === "asc" ? aValue - bValue : bValue - aValue;
+      if (order === "asc") {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
     });
     setFilteredActivities(sortedActivities);
   };
 
-  const handleBookActivity = async ({ activityId, touristId }) => {
-    try {
-      const response = await bookActivity(activityId, touristId);
-      message.success(response.message);
-    } catch (error) {
-        if (error.response) 
-            message.error(error.response.data.error);       
-        else
-            message.error("Failed to book activity. Please check your network and try again.");   
-    }
-  };
+  const handleCancelActivity = async ({ activityId, touristId }) => {
+    };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="page-container">
-      <TouristNavBar onCurrencyChange={setCurrency} />
-      <div className="page-title">Upcoming Activities</div>
+    <div class="page-container">
+      <TouristNavBar />
+      <div class="page-title">Booked Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div className="filter-sort-list">
-        <div className="filter-sort">
+      <div class="filter-sort-list">
+        <div class="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book ={"diana"} />
+        <UpcomingActivitiesList activities={filteredActivities} onCancel ={handleCancelActivity} cancel={"diana"} />
       </div>
       <Footer />
     </div>
   );
 };
 
-export default UpcomingActivitiesPage;
+export default BookedActivitiesPage;

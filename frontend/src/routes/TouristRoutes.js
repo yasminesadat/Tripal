@@ -14,6 +14,7 @@ import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import ItineraryPage from "../pages/tourist/BookedItineraries";
+import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -32,7 +33,7 @@ const TouristRoutes = [
   { path: "/tourist/create-complaint/:id", element: <ComplaintsForm /> },
   { path: "/tourist/view-Complaints/:id", element: <MyComplaints /> },
   { path: "/itineraries/booked-itineraries", element: <ItineraryPage /> },
-
+  {path: "/booked-activities", element: <BookedActivitiesPage />}
 
 ];
 

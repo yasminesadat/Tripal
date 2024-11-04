@@ -7,7 +7,7 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { message } from 'antd';
 import { getTouristItineraries, cancelBooking} from "../../api/TouristService";
 
-const touristId = "6724842b5831eed787083b57";
+import { touristId } from "../../IDs";
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
