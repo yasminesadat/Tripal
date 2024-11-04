@@ -34,3 +34,11 @@ module.exports = {
 // password: haanseif1234
 // username: HanaMohamedSeif
 // const touristId = "6727dd439f6dc6c6c9cf5536";
+
+// current advertiser yasmine pass123  id: 6726aaea44ae09c9c4e1f809
+
+// governor
+// 6728fda84e11d2efa6f13fb7
+//governorChangePassword
+//pass12345
+// const tourismGovernerID = "6728fda84e11d2efa6f13fb7"
