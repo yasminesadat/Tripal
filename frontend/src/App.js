@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import RoutesComponent from "./routes/RoutesComponent";
 import './components/style.css'
+import './components/oldstyle.css'
 
 function App() {
   return (

@@ -6,6 +6,7 @@ import AdminViewProduct from "../pages/admin/AdminViewProduct";
 import AdminViewUsers from "../pages/admin/AdminViewUsers";
 import CreateNewGovernor from "../pages/admin/CreateNewGovernor";
 import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
+import ComplaintsPage from "../pages/admin/Complaints";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
@@ -16,8 +17,7 @@ const adminRoutes = [
   { path: "/admin/delete-user", element: <AdminViewUsers /> },
   { path: "/admin/new-governor", element: <CreateNewGovernor /> },
   { path: "/admin/new-admin", element: <CreateNewAdmin /> },
-
-
+  { path: "/admin/complaints", element: <ComplaintsPage /> },
 
 
 

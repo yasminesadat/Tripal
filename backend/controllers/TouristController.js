@@ -76,8 +76,6 @@ const createTourist = async (req, res) => {
   }
 };
 
-
-
 const getTouristInfo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -158,6 +156,7 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 const changePassword = async (req, res) => {
   try {
     const { id } = req.params;
@@ -177,4 +176,27 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword };
+
+const redeemPoints = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const tourist = await touristModel.findById(id);
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    const newAmount = tourist.wallet.amount + (tourist.currentPoints / 100);
+    tourist.wallet.amount = newAmount;
+    tourist.currentPoints = 0;
+
+    await tourist.save();
+
+    return res.status(200).json("Redemption successful");
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
+module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword,redeemPoints };

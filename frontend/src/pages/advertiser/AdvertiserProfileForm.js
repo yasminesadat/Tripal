@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { createAdvertiser,updateAdvertiser, getAdvertiser } from '../../api/AdvertiserService';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  createAdvertiser,
+  updateAdvertiser,
+} from "../../api/AdvertiserService";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
-import "./advForm.css"; 
-import { useNavigate } from "react-router-dom";
-
+import { Button, message, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import "./advForm.css";
 
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   const { id } = useParams();
   const location = useLocation();
   const advertiser = location.state?.advertiser;
   const navigate = useNavigate();
-
 
   const [formData, setFormData] = useState({
     userName: advertiser?.userName || "",
@@ -20,6 +22,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
     website: advertiser?.website || "",
     hotline: advertiser?.hotline || "",
     companyProfile: {
+      logo: advertiser?.companyProfile?.logo || null,
       companyName: advertiser?.companyProfile?.companyName || "",
       industry: advertiser?.companyProfile?.industry || "",
       description: advertiser?.companyProfile?.description || "",
@@ -37,20 +40,12 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
       certifications: advertiser?.companyProfile?.certifications || [],
       awards: advertiser?.companyProfile?.awards || [],
     },
+    existingImage: advertiser?.companyProfile?.logo || null,
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (isUpdate && id) {
-      // Fetch existing data here
-      getAdvertiser(id).then((data) => {
-        setFormData(data); // Set fetched data to formData
-      });
-    }
-  }, [isUpdate, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,25 +57,25 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
 
       // Check if the value is a valid number
       if (isNaN(numberValue) || numberValue < 0) {
-          setError("Please enter a valid number for Employees.");
-          return;
-      } else {
-          // Clear the error if valid
-          setError("");
-      }
-  }
-  if (name === "companyProfile.foundedYear") {
-    const numberValue = Number(value);
-    const currentYear = new Date().getFullYear();
-
-    if (isNaN(numberValue)) {
-        setError("Please enter a valid year.");
+        setError("Please enter a valid number for Employees.");
         return;
-    } else {
+      } else {
         // Clear the error if valid
         setError("");
+      }
     }
-}
+    if (name === "companyProfile.foundedYear") {
+      const numberValue = Number(value);
+      const currentYear = new Date().getFullYear();
+
+      if (isNaN(numberValue)) {
+        setError("Please enter a valid year.");
+        return;
+      } else {
+        // Clear the error if valid
+        setError("");
+      }
+    }
 
     setFormData((prevData) => {
       let updatedData = { ...prevData };
@@ -101,22 +96,22 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   // Handle dynamic input changes for certifications and awards
   const handleItemChange = (e, index, field, type) => {
     const { value } = e.target;
-  
+
     setFormData((prevData) => {
       const updatedItems = [...prevData.companyProfile[type]];
-  
+
       // Handle 'certifications' case (array of strings)
-      if (type === 'certifications') {
+      if (type === "certifications") {
         updatedItems[index] = value; // Directly update the string value
-  
-      // Handle 'awards' case (array of objects with properties)
-      } else if (type === 'awards') {
-        updatedItems[index] = { 
+
+        // Handle 'awards' case (array of objects with properties)
+      } else if (type === "awards") {
+        updatedItems[index] = {
           ...updatedItems[index], // Spread existing properties
-          [field]: value // Update the specific field (e.g., 'title', 'year', 'issuer')
+          [field]: value, // Update the specific field (e.g., 'title', 'year', 'issuer')
         };
       }
-  
+
       return {
         ...prevData,
         companyProfile: {
@@ -126,53 +121,103 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
       };
     });
   };
-  
 
-// Handle adding a new certification or award
-const handleAddItem = (type) => {
-  setFormData((prevData) => {
-    const updatedItems = [...prevData.companyProfile[type], { title: "" }];
-    return {
-      ...prevData,
-      companyProfile: {
-        ...prevData.companyProfile,
-        [type]: updatedItems,
-      },
+  // Handle adding a new certification or award
+  const handleAddItem = (type) => {
+    setFormData((prevData) => {
+      const updatedItems = [...prevData.companyProfile[type], { title: "" }];
+      return {
+        ...prevData,
+        companyProfile: {
+          ...prevData.companyProfile,
+          [type]: updatedItems,
+        },
+      };
+    });
+  };
+
+  // Handle removing a certification or award
+  const handleRemoveItem = (index, type) => {
+    setFormData((prevData) => {
+      const items = prevData.companyProfile[type] || [];
+
+      // Only proceed if it's a valid array
+      const updatedItems = Array.isArray(items)
+        ? items.filter((_, i) => i !== index)
+        : [];
+      return {
+        ...prevData,
+        companyProfile: {
+          ...prevData.companyProfile,
+          [type]: updatedItems,
+        },
+      };
+    });
+  };
+
+  const handleLogoChange = (info) => {
+    if (info.fileList.length === 0) {
+      setFormData((prevData) => ({
+        ...prevData,
+        // Callback when the file is done being read. Sets the logo on the
+        // company profile to the result of the file read operation.
+        companyProfile: { ...prevData.companyProfile, logo: null },
+      }));
+      return;
+    }
+
+    const file = info.file.originFileObj || info.file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          companyProfile: { ...prevData.companyProfile, logo: reader.result },
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBeforeUpload = (file) => {
+    if (formData.companyProfile.logo) {
+      message.error("Only one logo can be uploaded.");
+      return Upload.LIST_IGNORE;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData((prevData) => ({
+        ...prevData,
+        companyProfile: { ...prevData.companyProfile, logo: reader.result },
+      }));
     };
-  });
-};
+    reader.readAsDataURL(file);
+    return false;
+  };
 
-// Handle removing a certification or award
-const handleRemoveItem = (index, type) => {
-  setFormData((prevData) => {
-    const items = prevData.companyProfile[type] || [];
-
-    // Only proceed if it's a valid array
-    const updatedItems = Array.isArray(items)
-      ? items.filter((_, i) => i !== index)
-      : [];
-    return {
+  const handleRemove = () => {
+    setFormData((prevData) => ({
       ...prevData,
-      companyProfile: {
-        ...prevData.companyProfile,
-        [type]: updatedItems,
-      },
-    };
-  });
-};
-
+      companyProfile: { ...prevData.companyProfile, logo: null },
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (isUpdate) {
         // Call API to update the advertiser
-        await updateAdvertiser(id, formData);
-        navigate(`/advertiser/${id}`)
+        const advertiserData = { ...formData };
+
+        // Only include the logo if it has been changed
+        if (formData.companyProfile.logo === formData.existingImage) {
+          advertiserData.companyProfile.logo = null;
+          advertiserData.existingImage = null;
+        }
+        await updateAdvertiser(id, advertiserData);
+        navigate(`/advertiser/${id}`);
       } else {
-        console.log(formData)
         // Call API to create a new advertiser
         await createAdvertiser(formData);
       }
@@ -188,9 +233,8 @@ const handleRemoveItem = (index, type) => {
 
   return (
     <>
-      {/* Move AdvertiserNavBar outside of the form */}
       <AdvertiserNavBar />
-  
+
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>User Name:</label>
@@ -242,7 +286,7 @@ const handleRemoveItem = (index, type) => {
             placeholder="Enter your hotline number"
           />
         </div>
-  
+
         <div>
           <h3>Company Profile</h3>
           <div className="form-group">
@@ -319,7 +363,7 @@ const handleRemoveItem = (index, type) => {
             />
           </div>
         </div>
-  
+
         <div>
           <h4>Social Media</h4>
           <div className="form-group">
@@ -343,7 +387,7 @@ const handleRemoveItem = (index, type) => {
             />
           </div>
         </div>
-  
+
         {/* Certifications and Awards */}
         <div>
           <h4>Certifications</h4>
@@ -375,61 +419,108 @@ const handleRemoveItem = (index, type) => {
           </button>
         </div>
 
-
-         {/* Awards Section */}
-         <div>
+        {/* Awards Section */}
+        <div>
           <h4>Awards</h4>
           {formData.companyProfile.awards.map((award, index) => (
-            <div key={index}  className="cert-award-container">
+            <div key={index} className="cert-award-container">
               <input
                 type="text"
-                name={`companyProfile.awards[${index}].title`}               
+                name={`companyProfile.awards[${index}].title`}
                 value={award.title}
-                onChange={(e) =>
-                  handleItemChange(e, index, 'title', 'awards') // Specify 'title' for the awards field
-                }
+                onChange={(e) => handleItemChange(e, index, "title", "awards")} // Specify 'title' for the awards field
                 placeholder="Award Title"
               />
               <input
                 type="number"
                 name={`companyProfile.awards[${index}].year`}
-                value={award.year || ''} // Handle undefined case for year
-                onChange={(e) =>
-                  handleItemChange(e, index, 'year', 'awards') // Specify 'year' for the awards field
-                }
+                value={award.year || ""} // Handle undefined case for year
+                onChange={(e) => handleItemChange(e, index, "year", "awards")} // Specify 'year' for the awards field
                 placeholder="Year"
               />
               <input
                 type="text"
                 name={`companyProfile.awards[${index}].issuer`}
-                value={award.issuer || ''} // Handle undefined case for issuer
-                onChange={(e) =>
-                  handleItemChange(e, index, 'issuer', 'awards') // Specify 'issuer' for the awards field
-                }
+                value={award.issuer || ""} // Handle undefined case for issuer
+                onChange={(e) => handleItemChange(e, index, "issuer", "awards")} // Specify 'issuer' for the awards field
                 placeholder="Issuer"
               />
-              <button type="button" className="remove-button" onClick={() => handleRemoveItem(index, 'awards')}>
+              <button
+                type="button"
+                className="remove-button"
+                onClick={() => handleRemoveItem(index, "awards")}
+              >
                 Remove
               </button>
             </div>
           ))}
-          <button type="button" className="add-button" onClick={() => handleAddItem('awards')}>
+          <button
+            type="button"
+            className="add-button"
+            onClick={() => handleAddItem("awards")}
+          >
             Add Award
           </button>
         </div>
 
-  
+        <div className="form-group">
+          <label>Logo:</label>
+          <Upload
+            name="logo"
+            listType="picture"
+            accept=".png,.jpeg,.jpg"
+            beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+            onChange={handleLogoChange}
+            onRemove={handleRemove} // Allow removal of the logo
+            fileList={
+              formData.companyProfile.logo
+                ? [
+                    {
+                      uid: "-1",
+                      name: "logo.png",
+                      status: "done",
+                      url: formData.companyProfile.logo,
+                    },
+                  ]
+                : []
+            } // Ensure only one file is shown
+          >
+            {!formData.companyProfile.logo && (
+              <Button
+                icon={<UploadOutlined />}
+                size="small"
+                type="default"
+                style={{
+                  whiteSpace: "nowrap",
+                  padding: "0 8px",
+                  width: "auto",
+                }}
+              >
+                Upload Logo
+              </Button>
+            )}
+          </Upload>
+          {formData.companyProfile.logo && (
+            <img
+              src={formData.companyProfile.logo}
+              alt="Company Logo"
+              className="company-logo-preview"
+            />
+          )}{" "}
+          {/* Display logo preview if present */}
+        </div>
+
         <div className="button-group">
           <button type="submit" className="submit-button" disabled={loading}>
             {loading ? "Submitting..." : isUpdate ? "Update" : "Submit"}
           </button>
         </div>
-  
+
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}
       </form>
     </>
   );
-  
 };
+
 export default AdvertiserForm;

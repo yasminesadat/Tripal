@@ -2,7 +2,8 @@ import { axios } from "./axios";
 
 export async function createTourist(newUser) {
   try {
-    await axios.post("/createTourist", newUser);
+    const response = await axios.post("/createTourist", newUser);
+    return response;
   } catch (error) {
     const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
     console.log("ERRPR MESSAGE", errorMessage)
@@ -35,7 +36,37 @@ export async function updateTouristInformation(id, body) {
 
 export async function bookItinerary(itineraryId, touristId) {
   try {
-    const response = await axios.post(`/itineraries/${itineraryId}/book`, { touristId });
+    console.log("touristId iam here before failure", touristId);
+    const response = await axios.post(`/itineraries/${itineraryId}/book`,  {touristId });
+    console.log("response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
+export async function redeemPoints(id) {
+  try {
+    const response = await axios.post(`/redeem/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }}
+
+export async function cancelBooking(itineraryId, touristId) {
+  try {
+    const response = await axios.post(`/itineraries/${itineraryId}/cancel`, { touristId });
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
+export async function getTouristItineraries(touristId) {
+  try {
+    const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
     return response.data;
   } catch (error) {
     console.error("error", error);

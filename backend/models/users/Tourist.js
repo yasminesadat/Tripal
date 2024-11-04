@@ -66,5 +66,21 @@ const touristSchema = new Schema({
   }],
 }, { timestamps: true });
 
+touristSchema.methods.calculateAge = function () {
+  const today = new Date();
+  const birthDate = new Date(this.dateOfBirth);
+  let age = today.getFullYear() - birthDate.getFullYear();
+
+  const isBirthdayPassed = 
+      today.getMonth() > birthDate.getMonth() || 
+      (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+  if (!isBirthdayPassed) {
+      age -= 1;
+  }
+  
+  return age;
+};
+
 const Tourist = mongoose.model("Tourist", touristSchema);
 module.exports = Tourist;

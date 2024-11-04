@@ -2,6 +2,7 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
+const touristModel = require('../models/users/Tourist');
 
 const createItinerary = async (req, res) => {
     try {
@@ -62,6 +63,7 @@ const createItinerary = async (req, res) => {
 
 const getItineraries = async (req, res) => {
     const { tourGuideId } = req.query;
+    console.log("this is being used bro");
     try {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
 
@@ -130,7 +132,8 @@ const deleteItinerary = async (req, res) => {
     }
 };
 
-const viewItineraries = async (req, res) => {
+//it should be updated to handle the date (upcoming)
+const viewUpcomingItineraries = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find().populate({
             path: 'activities',
@@ -139,18 +142,44 @@ const viewItineraries = async (req, res) => {
             },
         }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
 
-        const itinerariesWithRatings = itineraries.map(itinerary => {
-            const ratings = itinerary.ratings || [];
-            const averageRating = ratings.length > 0
-                ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-                : 0;
+        // const itinerariesWithRatings = itineraries.map(itinerary => {
+        //     const ratings = itinerary.ratings || [];
+        //     const averageRating = ratings.length > 0
+        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+        //         : 0;
 
-            return {
-                ...itinerary.toObject(),
-                averageRating: averageRating.toFixed(1)
-            };
-        });
-        res.status(200).json(itinerariesWithRatings);
+        //     return {
+        //         ...itinerary.toObject(),
+        //         averageRating: averageRating.toFixed(1)
+        //     };
+        // });
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+const viewPaidItineraries = async (req, res) => {
+    try {
+        const itineraries = await itineraryModel.find().populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
+
+        // const itinerariesWithRatings = itineraries.map(itinerary => {
+        //     const ratings = itinerary.ratings || [];
+        //     const averageRating = ratings.length > 0
+        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
+        //         : 0;
+
+        //     return {
+        //         ...itinerary.toObject(),
+        //         averageRating: averageRating.toFixed(1)
+        //     };
+        // });
+        res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -199,49 +228,28 @@ const getItineraryRatings = async (req, res) => {
     }
 };
 
-const addItineraryComment = async (req, res) => {
-    const { userId, itineraryId, text } = req.body;
-
-    if (!text) {
-        return res.status(400).json({ message: "Please enter a comment." });
-    }
-
-    try {
-        const comment = new ItineraryComment({ userId, itineraryId, text });
-        await comment.save();
-        return res.status(201).json(comment);
-    } catch (error) {
-        return res.status(500).json({ message: "Error saving comment.", error: error.message });
-    }
-};
-
-const getItineraryComments = async (req, res) => {
-    const { itineraryId } = req.params;
-
-    try {
-        const comments = await ItineraryComment.find({ itineraryId })
-            .populate('userId', 'name');
-        return res.status(200).json(comments);
-    } catch (error) {
-        return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
-    }
-};
-
 const bookItinerary = async (req, res) => {
     const { itineraryId } = req.params;
     const { touristId } = req.body;
 
     try {
         const itinerary = await itineraryModel.findById(itineraryId);
-
-        if (!itinerary) {
-            return res.status(404).json({ error: 'Itinerary not found' });
-        }
-
+        console.log(itineraryId);
+        if (!itinerary) 
+            return res.status(404).json({ error: 'Itinerary not found in backend' });
+        
         const alreadyBooked = itinerary.tourists.includes(touristId);
-        if (alreadyBooked) {
+
+        if (alreadyBooked) 
             return res.status(400).json({ message: 'You have already booked this itinerary.' });
-        }
+        console.log("touristId is ", touristId);
+        const tourist = await touristModel.findById(touristId);
+        if (!tourist) 
+            return res.status(404).json({ error: 'Tourist not found'} );
+        
+        if (tourist.calculateAge() < 18) 
+            return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
+        
 
         itinerary.tourists.push(touristId);
         await itinerary.save();
@@ -252,15 +260,51 @@ const bookItinerary = async (req, res) => {
     }
 };
 
+const cancelBooking = async (req, res) => {
+    const { itineraryId } = req.params;
+    const { touristId } = req.body;
+
+    try {
+        const itinerary = await itineraryModel.findById(itineraryId);
+
+        if (!itinerary) 
+            return res.status(404).json({ error: 'Itinerary not found' });
+        
+
+        const touristIndex = itinerary.tourists.findIndex(id => id.toString() === touristId);
+        
+        if (touristIndex === -1) 
+            return res.status(400).json({ message: 'You have no booking reservations for this.' });
+        
+        itinerary.tourists.splice(touristId, 1);
+        await itinerary.save();
+
+        res.status(200).json({ message: 'Itinerary reservation cancelled successfully!', itinerary });
+    } catch (error) {
+        res.status(500).json({ message: 'Error cancelling itinerary reservation', error });
+    }
+};
+
+const getTouristItineraries = async (req, res) => {
+    try {
+        const touristId = req.params.touristId;
+        const itineraries = await itineraryModel.find({ tourists: touristId }).populate('tourGuide activities tourists');
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching itineraries', error });
+    }
+};
+
 module.exports = {
     createItinerary,
     getItineraries,
     updateItinerary,
     deleteItinerary,
-    viewItineraries,
+    viewUpcomingItineraries,
+    viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    addItineraryComment,
-    getItineraryComments,
-    bookItinerary
+    bookItinerary,
+    cancelBooking,
+    getTouristItineraries
 };

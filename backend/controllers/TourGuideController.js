@@ -1,6 +1,5 @@
 const tourGuideModel = require('../models/users/TourGuide.js');
 const bcrypt = require('bcrypt');
-const userModel = require('../models/users/User.js')
 
 const createTourGuide = async (req, res) => {
     try {
@@ -54,7 +53,7 @@ const getTourguideInfo = async (req, res) => {
 const updateTourguideData = async (req, res) => {
     try {
         const { id } = req.params;
-
+        console.log(req.body);
 
 
         const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(

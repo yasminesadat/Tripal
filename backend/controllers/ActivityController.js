@@ -3,8 +3,7 @@ const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/users/Tourist.js");
-
+const Tourist = require("../models/users/Tourist");
 
 const createActivity = async (req, res) => {
   const {
@@ -147,31 +146,19 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
-const addActivityComment = async (req, res) => {
-  const { userId, activityId, text } = req.body;
-
-  if (!text) {
-    return res.status(400).json({ message: "Please enter a comment." });
-  }
-
+//fix this date when there are entries
+const viewPaidActivities = async (req, res) => {
   try {
-    const comment = new ActivityComment({ userId, activityId, text });
-    await comment.save();
-    res.status(201).json(comment);
-  } catch (error) {
-    return res.status(500).json({ message: "An error occurred while saving the comment.", error: error.message });
-  }
-}
+    const currentDate = new Date();
 
-const getActivityComments = async (req, res) => {
-  const { activityId } = req.params;
+    const activities = await Activity.find({ date: { $gte: currentDate } })
+      .populate("category")
+      .populate("tags")
+    // .populate("ratings");
 
-  try {
-    const comments = await ActivityComment.find({ activityId })
-      .populate('userId', 'name');
-    return res.status(200).json(comments);
+    res.status(200).json(activities);
   } catch (error) {
-    return res.status(500).json({ message: "Error retrieving comments.", error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -189,12 +176,15 @@ const bookActivity = async (req, res) => {
       return res.status(400).json({ error: 'Booking is closed for this activity' });
     }
     const tourist = await Tourist.findById(touristId);
-    if (!tourist) {
+    if (!tourist)
       return res.status(404).json({ error: 'Tourist not found' });
-    }
-    if (activity.tourists.includes(touristId)) {
+    
+    if(tourist.calculateAge() < 18) 
+      return res.status(403).json({ error: 'You must be at least 18 years old to book an activity' }); 
+
+    if (activity.tourists.includes(touristId)) 
       return res.status(400).json({ error: 'You have already booked this activity.' });
-    }
+    
     activity.tourists.push(touristId);
     await activity.save();
     res.status(200).json({ message: 'Activity booked successfully' });
@@ -203,14 +193,42 @@ const bookActivity = async (req, res) => {
   }
 };
 
+const getActivityById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activity = await Activity.findById(id);
+    if (!activity) {
+      return res.status(404).json({ message: "Activity not found." });
+    }
+    res.status(200).json(activity);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving activity.", error: error.message });
+
+  }};
+
+const getTouristActivities = async (req, res) => {
+  const { touristId } = req.params;
+  try {
+    const activities = await Activity.find({ tourists: touristId })
+      .populate("advertiser")
+      .populate("category")
+      .populate("tags")
+      //.populate("ratings");
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
+  getActivityById,
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
-  addActivityComment,
   viewUpcomingActivities,
-  addActivityComment,
-  getActivityComments,
+  viewPaidActivities,
   bookActivity,
+  getTouristActivities
 };

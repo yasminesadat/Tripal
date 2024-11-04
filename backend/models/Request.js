@@ -22,7 +22,12 @@ const requestSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "pending"
-    }
+    },
+    document: {
+      type: String,
+      required: false,
+      default: "",
+    },
     // documents: [String], used for the future 
   },
   { timestamps: true }
