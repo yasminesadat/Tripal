@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from 'antd';
 
-const touristId = '670d4e900cb9ea7937cc9968';
+const touristId = "6724842b5831eed787083b57"; //>18 dude
+//const touristId = '6727661b46a8937e2e821782'; //kiddo
 
-const UpcomingItinerariesList = ({ itineraries, onBook, curr = "EGP" }) => {
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP" }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
 
@@ -117,10 +118,14 @@ const UpcomingItinerariesList = ({ itineraries, onBook, curr = "EGP" }) => {
                         <div className="list-item-attribute">
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
-                        <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
-                            Book Now
-                        </button>
-                        {console.log(itinerary._id, " ", touristId)}
+                        {book&& <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
+                                Book Now
+                                </button>}
+                        {console.log(itinerary._id ,"lollll ", touristId)}
+                        {cancel&& <button style={{ background: '#b0091a' }}  onClick={() => onCancel({ itineraryId: itinerary._id, touristId })}>
+                                Cancel Booking
+                                </button>}  
+
                     </div>
                 </div>
             ))}

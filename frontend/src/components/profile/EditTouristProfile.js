@@ -5,10 +5,10 @@ const TouristProfile = ({ tourist }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState({ ...tourist });
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setEditedProfile({ ...editedProfile, [name]: value });
-  // };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProfile({ ...editedProfile, [name]: value });
+  };
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);

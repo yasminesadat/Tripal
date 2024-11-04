@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import AdminNavBar from "../../components/navbar/AdminNavBar";
-import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
-import { adminId } from "../../IDs";
+import { getComplaintsByTourist,getComplaintById,replyToComplaint } from "../../api/ComplaintsService";
+import { touristId } from "../../IDs";
+import { useParams } from "react-router-dom";
 
-
-const ComplaintsPage = () => {
+const MyComplaints = () => {
+    const { id } = useParams();
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
-    const [newStatus, setNewStatus] = useState("");
 
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
-                const response = await getAllComplaints();
+                console.log(id)
+                const response = await getComplaintsByTourist(id);
                 setComplaints(response);
             } catch (error) {
                 console.error("Error fetching complaints:", error);
@@ -21,7 +21,7 @@ const ComplaintsPage = () => {
         };
 
         fetchComplaints();
-    }, []);
+    }, [id]);
 
 
     const handleReplyChange = (event) => {
@@ -38,13 +38,12 @@ const ComplaintsPage = () => {
 
         try {
             //console.log(replyMessage)
-            //console.log("Admin ID:", adminId);  // Ensure this is defined
             await replyToComplaint(selectedComplaint._id, {
                 message: replyMessage,
-                senderId: adminId,
+                senderId: id,
             });
             // Re-fetch the complaints to get updated data
-            const updatedComplaints = await getAllComplaints();
+            const updatedComplaints = await getComplaintsByTourist(id);
             setComplaints(updatedComplaints);
             //setReplyMessage(""); 
             //setSelectedComplaint(null); 
@@ -53,28 +52,6 @@ const ComplaintsPage = () => {
         }
     };
 
-    useEffect(() => {
-      // Set newStatus to the current status of selectedComplaint
-      if (selectedComplaint) {
-          setNewStatus(selectedComplaint.status);
-      }
-    }, [selectedComplaint]);
-
-    const handleStatusChange = async (complaintId) => {
-        try {
-            //console.log(newStatus)
-            //console.log(complaintId)
-            await updateComplaintStatus(complaintId, { status: newStatus });
-            // Update local state to reflect changes
-            const updatedComplaints = complaints.map(complaint =>
-                complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
-            );
-            setComplaints(updatedComplaints);
-            setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
-        } catch (error) {
-            console.error("Error updating complaint status:", error);
-        }
-    };
 
     const toggleComplaintDetails = async (complaintId) => {
         if (selectedComplaint && selectedComplaint._id === complaintId) {
@@ -97,14 +74,13 @@ const ComplaintsPage = () => {
             <div className="dashboard__content">
                 {/* <Header setSideBarOpen={setSideBarOpen} /> */}
                 <div className="dashboard__content_content">
-                    <h1 className="text-30">Complaints Management</h1>
+                    <h1 className="text-30">My Complaints</h1>
 
                     <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
                         <div className="overflowAuto">
                             <table className="tableTest mb-30">
                                 <thead className="bg-light-1 rounded-12">
                                     <tr>
-                                        <th>Complaint ID</th>
                                         <th>Title</th>
                                         <th>Status</th>
                                         <th>Date</th>
@@ -115,7 +91,6 @@ const ComplaintsPage = () => {
                                     {complaints.map((complaint, i) => (
                                         <React.Fragment key={complaint._id}>
                                             <tr>
-                                                <td>{complaint._id}</td>
                                                 <td>{complaint.title}</td>
                                                 <td>{complaint.status}</td>
                                                 <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
@@ -133,14 +108,7 @@ const ComplaintsPage = () => {
                                                             <p><strong>Title:</strong> {selectedComplaint.title}</p>
                                                             <p><strong>Body:</strong> {selectedComplaint.body}</p>
                                                             <p><strong>Date:</strong> {(new Date(selectedComplaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</p>
-                                                            <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
-                                                            <p><strong>Status:</strong>
-                                                                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                                                                    <option value="pending">pending</option>
-                                                                    <option value="resolved">resolved</option>
-                                                                </select>
-                                                            </p>
-                                                            <button onClick={() => handleStatusChange(selectedComplaint._id)}>Update Status</button>
+                                                            <p><strong>Status:</strong> {selectedComplaint.status}</p>
                                                             <h4>Replies</h4>
                                                             <ul>
                                                                 {selectedComplaint.replies.map((reply, index) => (
@@ -180,4 +148,4 @@ const ComplaintsPage = () => {
 
 }
 
-export default ComplaintsPage;
+export default MyComplaints;
