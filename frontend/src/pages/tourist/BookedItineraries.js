@@ -135,7 +135,7 @@ const ItineraryPage = () => {
     
     const handleCancelBooking = async ({ itineraryId, touristId }) => {
         try {
-            await cancelResource('itineraries', itineraryId, touristId);
+            await cancelResource('itinerary', itineraryId, touristId);
             message.success('Booking cancelled successfully');
             
             setItineraries(itineraries.filter(itinerary => itinerary._id !== itineraryId));

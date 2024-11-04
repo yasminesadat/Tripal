@@ -132,10 +132,10 @@ const ItineraryPage = () => {
         setFilteredItineraries(filtered);
     };
 
-    const handleBookTicket = async ({ itineraryId, touristId })  => {
+    const handleBookTicket = async ({ itineraryId, touristId, selectedDate, selectedTime }) => {
         try {
-            console.log('Booking', itineraryId, touristId);
-            await bookResource('itineraries', itineraryId, touristId);
+            console.log('Booking', itineraryId, touristId, selectedDate, selectedTime);
+            await bookResource('itinerary', itineraryId, touristId,  selectedDate,  selectedTime );
             
             console.log("This Itinerary has been booked successfully!");
             message.success("Ticket booked successfully!");
@@ -144,14 +144,7 @@ const ItineraryPage = () => {
             console.log("Error details:", error);
 
             if (error.response) {
-                const { status, data } = error.response;
-                if (status === 400) {
-                    message.warning(data.message);
-                } else if (status === 404) {
-                    message.error(data.error || data.message);
-                } else {
-                    message.error(data.error); 
-                }
+                message.error(error.response.data.error);   
             } else {
                 message.error("An error occurred. Please try again later.");
             }

@@ -3,7 +3,6 @@ const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
 const Rating = require("../models/Rating");
-const Tourist = require("../models/users/Tourist");
 
 const createActivity = async (req, res) => {
   const {
@@ -162,37 +161,6 @@ const viewPaidActivities = async (req, res) => {
   }
 };
 
-const bookActivity = async (req, res) => {
-  const { activityId } = req.params;
-  const { touristId } = req.body;
-  console.log(activityId, touristId)
-  try {
-    const activity = await Activity.findById(activityId);
-    console.log(activity)
-    if (!activity) {
-      return res.status(404).json({ error: 'Activity not found' });
-    }
-    if (activity.isBookingOpen === false) {
-      return res.status(400).json({ error: 'Booking is closed for this activity' });
-    }
-    const tourist = await Tourist.findById(touristId);
-    if (!tourist)
-      return res.status(404).json({ error: 'Tourist not found' });
-    
-    if(tourist.calculateAge() < 18) 
-      return res.status(403).json({ error: 'You must be at least 18 years old to book an activity' }); 
-
-    if (activity.tourists.includes(touristId)) 
-      return res.status(400).json({ error: 'You have already booked this activity.' });
-    
-    activity.tourists.push(touristId);
-    await activity.save();
-    res.status(200).json({ message: 'Activity booked successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const getActivityById = async (req, res) => {
   const { id } = req.params;
 
@@ -228,6 +196,5 @@ module.exports = {
   deleteActivity,
   viewUpcomingActivities,
   viewPaidActivities,
-  bookActivity,
   getTouristActivities
 };

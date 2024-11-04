@@ -231,12 +231,17 @@ const getItineraryRatings = async (req, res) => {
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.params.touristId;
-        const itineraries = await itineraryModel.find({ tourists: touristId }).populate('tourGuide activities tourists');
+        
+        // Find itineraries that include the given touristId in the bookings array
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId })
+            .populate('tourGuide activities bookings.touristId');
+        
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });
     }
 };
+
 
 module.exports = {
     createItinerary,

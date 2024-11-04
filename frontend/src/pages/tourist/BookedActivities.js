@@ -9,6 +9,7 @@ import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { touristId } from "../../IDs";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
+import { cancelResource } from '../../api/BookingService';
 
 const BookedActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -134,8 +135,23 @@ const BookedActivitiesPage = () => {
   };
 
   const handleCancelActivity = async ({ activityId, touristId }) => {
+    try {
+        console.log('Canceling activity', activityId, touristId);
+        await cancelResource('activity', activityId, touristId);
+        console.log("The activity booking has been canceled successfully!");
+        message.success("Activity booking canceled successfully!");
+        setActivities(prevActivities =>
+            prevActivities.filter(activity => activity._id !== activityId)
+          );
+          setFilteredActivities(prevFiltered =>
+            prevFiltered.filter(activity => activity._id !== activityId)
+          );
+    } catch (error) {
+        console.log("Error details:", error);
+        message.error('Failed to cancel booking');
+        
     };
-
+    };  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
