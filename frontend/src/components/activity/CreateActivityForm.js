@@ -115,6 +115,11 @@ const ActivityForm = ({ isUpdate }) => {
   };
 
   return (
+    <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+        <h1 class="text-30">Activity Management</h1>
+      </div>
+    <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
     <Form
       layout="vertical"
       onFinish={handleSubmit}
@@ -240,6 +245,8 @@ const ActivityForm = ({ isUpdate }) => {
 
       </Form.Item>
     </Form>
+    </div>
+    </div>  
   );
 };
 
