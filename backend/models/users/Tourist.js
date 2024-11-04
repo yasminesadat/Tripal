@@ -44,6 +44,11 @@ const touristSchema = new Schema({
       default: "EGP",
     },
   },
+  choosenCurrency: {
+    type: String,
+    required: true,
+    default: "EGP",
+  },
   totalPoints: {
     type: Number,
     default: 0

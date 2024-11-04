@@ -7,12 +7,35 @@ import ActivitySort from "../../components/activity/ActivitySort";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
+import { getConversionRate } from "../../api/ExchangeRatesService"; 
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchCurrency = async () => {
+      const curr = sessionStorage.getItem("currency");
+      if (curr) {
+        setCurrency(curr);
+        await fetchExchangeRate(curr);
+      }
+    };
+    fetchCurrency();
+  }, []);
+
+  const fetchExchangeRate = async (curr) => {
+    try {
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
+    } catch (error) {
+      message.error("Failed to fetch exchange rate.");
+    }
+  };
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -44,9 +67,7 @@ const UpcomingActivitiesPage = () => {
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const results = activities.filter((activity) => {
-      const hasMatchingTitle = activity.title
-        .toLowerCase()
-        .includes(lowerCaseSearchTerm);
+      const hasMatchingTitle = activity.title.toLowerCase().includes(lowerCaseSearchTerm);
       const hasMatchingCategory =
         activity.category &&
         activity.category.Name &&
@@ -54,8 +75,7 @@ const UpcomingActivitiesPage = () => {
       const hasMatchingTags =
         activity.tags &&
         activity.tags.some(
-          (tag) =>
-            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          (tag) => tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
         );
 
       return hasMatchingTitle || hasMatchingCategory || hasMatchingTags;
@@ -68,7 +88,7 @@ const UpcomingActivitiesPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price;
+      const activityBudget = activity.price * exchangeRate; 
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -80,7 +100,7 @@ const UpcomingActivitiesPage = () => {
         (!budgetMax || activityBudget <= budgetMax);
       const isCategoryValid =
         !category ||
-        (activityCategory && 
+        (activityCategory &&
           activityCategory.Name &&
           activityCategory.Name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
@@ -92,65 +112,59 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(filtered);
   };
 
-
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        aValue = a.price;
-        bValue = b.price;
+        aValue = a.price * exchangeRate;
+        bValue = b.price * exchangeRate;
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
 
-      if (order === "asc") {
-        return aValue - bValue;
-      } else {
-        return bValue - aValue;
-      }
+      return order === "asc" ? aValue - bValue : bValue - aValue;
     });
     setFilteredActivities(sortedActivities);
   };
 
   const handleBookActivity = async ({ activityId, touristId }) => {
     try {
-      console.log('Booking', activityId, touristId);
-        const response = await bookActivity(activityId, touristId);
-        message.success(response.message);
+      const response = await bookActivity(activityId, touristId);
+      message.success(response.message);
     } catch (error) {
-        if (error.response) {
-            switch (error.response.status) {
-                case 404:
-                    message.error(error.response.data.error); // Activity or tourist not found
-                    break;
-                case 400:
-                    message.success(error.response.data.error); // Booking closed or already booked
-                    break;
-                default:
-                    message.error("An unexpected error occurred. Please try again."); // General error
-            }
-        } else {
-            message.error("Failed to book activity. Please check your network and try again.");
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            message.error(error.response.data.error);
+            break;
+          case 400:
+            message.success(error.response.data.error);
+            break;
+          default:
+            message.error("An unexpected error occurred. Please try again.");
         }
+      } else {
+        message.error("Failed to book activity. Please check your network and try again.");
+      }
     }
-};
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
-      <TouristNavBar />
-      <div class="page-title">Upcoming Activities</div>
+    <div className="page-container">
+      <TouristNavBar onCurrencyChange={setCurrency} />
+      <div className="page-title">Upcoming Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} onBook ={handleBookActivity} />
+        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} />
       </div>
       <Footer />
     </div>

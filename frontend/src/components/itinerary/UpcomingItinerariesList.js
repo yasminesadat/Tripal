@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { getConversionRate } from "../../api/ExchangeRatesService";
+import { message } from 'antd';
 
 const touristId = '670d4e900cb9ea7937cc9968';
 
-const UpcomingItinerariesList = ({ itineraries,onBook  }) => {    
+const UpcomingItinerariesList = ({ itineraries, onBook, curr = "EGP" }) => {
+    const [exchangeRate, setExchangeRate] = useState(1);
+    const errorDisplayedRef = useRef(false);
+
+    useEffect(() => {
+        const fetchExchangeRate = async () => {
+            if (curr) {
+                try {
+                    const rate = await getConversionRate(curr); // Fetch the exchange rate
+                    setExchangeRate(rate);
+                } catch (error) {
+                    if (!errorDisplayedRef.current) {
+                        message.error("Failed to fetch exchange rate.");
+                        errorDisplayedRef.current = true;
+                    }
+                }
+            }
+        };
+
+        fetchExchangeRate();
+    }, [curr]);
+
+    const formatPrice = (price) => {
+        const convertedPrice = (price * exchangeRate).toFixed(2);
+        return `${curr} ${convertedPrice}`; // Format price with currency
+    };
+
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -61,13 +89,13 @@ const UpcomingItinerariesList = ({ itineraries,onBook  }) => {
                             </div>
                         </div>
                         <div className="list-item-attribute">
-                            <strong>Service Fee:</strong> ${itinerary.serviceFee}
+                            <strong>Service Fee:</strong> {formatPrice(itinerary.serviceFee)}
                         </div>
                         <div className="list-item-attribute">
                             <strong>Language:</strong> {itinerary.language}
                         </div>
                         <div className="list-item-attribute">
-                            <strong>Price:</strong> {itinerary.price}
+                            <strong>Price:</strong> {formatPrice(itinerary.price)}
                         </div>
                         <div className="list-item-attribute">
                             <strong>Available Dates:</strong> 
@@ -90,10 +118,9 @@ const UpcomingItinerariesList = ({ itineraries,onBook  }) => {
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
                         <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
-                                Book Now
-                                </button>
-                        {console.log(itinerary._id ," ", touristId)}
-
+                            Book Now
+                        </button>
+                        {console.log(itinerary._id, " ", touristId)}
                     </div>
                 </div>
             ))}
