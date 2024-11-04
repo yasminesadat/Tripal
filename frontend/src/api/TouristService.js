@@ -11,6 +11,20 @@ export async function createTourist(newUser) {
 
   }
 }
+export async function changeTouristPassword(id, oldPassword, newPassword) {
+  try {
+    const body = {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    }
+    console.log(`/tourist-change-pass/${id}`);
+    const response = await axios.put(`/tourist-change-pass/${id}`, body);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 
 export async function getTouristInformation(id) {
   try {
@@ -40,7 +54,8 @@ export async function redeemPoints(id) {
     return response.data;
   } catch (error) {
     throw error;
-  }}
+  }
+}
 
 export async function getTouristItineraries(touristId) {
   try {

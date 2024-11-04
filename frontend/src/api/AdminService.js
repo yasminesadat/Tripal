@@ -10,7 +10,20 @@ export const getUsers = async () => {
     throw error;
   }
 }
-
+export async function changeAdminPassword(id, oldPassword, newPassword) {
+  try {
+    const body = {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    }
+    console.log(`/admin-change-pass/${id}`);
+    const response = await axios.put(`/admin-change-pass/${id}`, body);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 export const deleteUser = async (id) => {
   try {
     // Use backticks for template literals

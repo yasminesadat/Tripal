@@ -11,10 +11,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 import Badge from "../../components/tourist/Badge";
 import Currency from "../../components/tourist/Currency";
+import ChangePassword from "../../components/common/ChangePassword";
 
 
 const TouristHomePage = () => {
   const { id } = useParams();
+  const userType = "tourist";
   const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
 
@@ -88,8 +90,8 @@ const TouristHomePage = () => {
     }
   };
 
-   const handleRedeemClick = async () => {
-    if(profileInformation.currentPoints===0){
+  const handleRedeemClick = async () => {
+    if (profileInformation.currentPoints === 0) {
       toast.error("No points to redeem");
       return;
     }
@@ -105,14 +107,14 @@ const TouristHomePage = () => {
     <div>
       <TouristNavBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <h1>Your Profile</h1>
-      <div>
-        {profileInformation.wallet && profileInformation.wallet.currency && (
-          <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange}/>
-        )}
-        {profileInformation.totalPoints !== undefined && (
-          <Badge totalPoints={profileInformation.totalPoints} />
-        )}
+        <h1>Your Profile</h1>
+        <div>
+          {profileInformation.wallet && profileInformation.wallet.currency && (
+            <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange} />
+          )}
+          {profileInformation.totalPoints !== undefined && (
+            <Badge totalPoints={profileInformation.totalPoints} />
+          )}
         </div>
       </div>
       <div>
@@ -230,6 +232,7 @@ const TouristHomePage = () => {
 
       {/* Toast container for displaying notifications */}
       <ToastContainer />
+      <ChangePassword id={id} userType={userType} />
     </div>
   );
 };

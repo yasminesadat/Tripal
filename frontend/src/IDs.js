@@ -10,7 +10,6 @@ const tourGuideID = "672678ed528c25edc7fc0f55";
 //change to test different roles in the website
 const currUser = touristId;
 const userRole = "Tourist"; //used to test [Admin, Tourist, Seller]
-
 module.exports = {
   currUser,
   userRole,
@@ -22,3 +21,15 @@ module.exports = {
   advertiserID,
   tourGuideID
 };
+
+
+// accounts for changing password
+// admin
+// username: adminChangePasswordTest
+// password: admin123
+// const adminId = "6728f7c79215d604f2830644"; // for change password
+
+// tourist 
+// id: 6727dd439f6dc6c6c9cf5536
+// password: haanseif1234
+// username: HanaMohamedSeif
