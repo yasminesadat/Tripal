@@ -116,14 +116,14 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
                         {book && (
-                            <button onClick={() => onBook({ itineraryId: itinerary._id, touristId, resourceType:'itineraries' })}>
+                            <button onClick={() => onBook({ itineraryId: itinerary._id, touristId, resourceType:'itinerary' })}>
                                 Book Now
                             </button>
                         )}
                         {cancel && (
                             <button 
                                 style={{ background: '#b0091a' }}  
-                                onClick={() => onCancel({ itineraryId: itinerary._id, touristId, resourceType: 'itineraries' })}>
+                                onClick={() => onCancel({ itineraryId: itinerary._id, touristId, resourceType: 'itinerary' })}>
                                 Cancel Booking
                             </button>
                         )} 

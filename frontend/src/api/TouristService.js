@@ -11,6 +11,7 @@ export async function createTourist(newUser) {
 
   }
 }
+
 export async function changeTouristPassword(id, oldPassword, newPassword) {
   try {
     const body = {
