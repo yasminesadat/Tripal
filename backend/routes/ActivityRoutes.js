@@ -6,8 +6,8 @@ const Activity = require("../models/Activity");
 const ActivityRating = require("../models/ActivityRating");
 
 const { createActivity, getAdvertiserActivities, 
-    updateActivity, deleteActivity, viewUpcomingActivities, addActivityComment, 
-    getActivityComments,bookActivity,getTouristActivities,
+    updateActivity, deleteActivity, viewUpcomingActivities, 
+    bookActivity,getTouristActivities,
     viewPaidActivities } = require('../controllers/ActivityController');
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities);

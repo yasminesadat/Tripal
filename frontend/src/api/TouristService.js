@@ -34,18 +34,6 @@ export async function updateTouristInformation(id, body) {
   }
 }
 
-export async function bookItinerary(itineraryId, touristId) {
-  try {
-    console.log("touristId iam here before failure", touristId);
-    const response = await axios.post(`/itineraries/${itineraryId}/book`,  {touristId });
-    console.log("response:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("error", error);
-    throw error;
-  }
-}
-
 export async function redeemPoints(id) {
   try {
     const response = await axios.post(`/redeem/${id}`);
@@ -54,9 +42,9 @@ export async function redeemPoints(id) {
     throw error;
   }}
 
-export async function cancelBooking(itineraryId, touristId) {
+export async function getTouristItineraries(touristId) {
   try {
-    const response = await axios.post(`/itineraries/${itineraryId}/cancel`, { touristId });
+    const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
     return response.data;
   } catch (error) {
     console.error("error", error);
@@ -64,12 +52,12 @@ export async function cancelBooking(itineraryId, touristId) {
   }
 }
 
-export async function getTouristItineraries(touristId) {
+export async function getTouristActivities(touristId) {
   try {
-    const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
+    const response = await axios.get(`/activities/${touristId}`);
     return response.data;
   } catch (error) {
-    console.error("error", error);
+    console.error("Error getting tourist activities:", error);
     throw error;
   }
 }

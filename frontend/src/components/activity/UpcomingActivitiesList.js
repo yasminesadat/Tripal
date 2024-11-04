@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Tag } from 'antd';
 import { getConversionRate } from "../../api/ExchangeRatesService";
+import { touristId, touristId2 } from "../../IDs";
 
-const touristId = '670d4e900cb9ea7937cc9968';
-const UpcomingActivitiesList = ({ activities, onBook, curr = "EGP" }) => {
+const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
   useEffect(() => {
@@ -49,9 +49,12 @@ const UpcomingActivitiesList = ({ activities, onBook, curr = "EGP" }) => {
             <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
             <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
           </div>
-          <button onClick={() => onBook({ activityId: activity._id, touristId })}>
+          {book &&<button onClick={() => onBook({ activityId: activity._id, touristId })}>
             Book Now
-          </button>
+          </button>}
+          {cancel &&<button style={{ background: '#b0091a' }}  onClick={() => onCancel({ activityId: activity._id, touristId })}>
+            Cancel Booking
+            </button>}
         </div>
       ))}
     </div>
