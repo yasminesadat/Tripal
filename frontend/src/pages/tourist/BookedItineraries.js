@@ -3,12 +3,13 @@ import UpcomingItinerariesList from '../../components/itinerary/UpcomingItinerar
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
  import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
-import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
-import {bookItinerary} from "../../api/TouristService";
 import { message } from 'antd';
+import { getTouristItineraries, cancelBooking} from "../../api/TouristService";
 
-const UpcomingItinerariesPage = () => {
+const touristId = "6724842b5831eed787083b57";
+
+const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const UpcomingItinerariesPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await viewUpcomingItineraries();
+                const response = await getTouristItineraries(touristId);
                 setItineraries(response);
                 setFilteredItineraries(response);
             } catch (err) {
@@ -112,22 +113,14 @@ const UpcomingItinerariesPage = () => {
         setFilteredItineraries(filtered);
     };
     
-    const handleBookTicket = async ({ itineraryId, touristId })  => {
+    const handleCancelBooking = async ({ itineraryId, touristId })  => {
         try {
-            console.log('Booking', itineraryId, touristId);
-            await bookItinerary(itineraryId, touristId);
-            console.log("This Itinerary has been booked successfully!");
-            message.success("Ticket booked successfully!");
-        } catch (error) {
-            console.log("Error details:", error);
-    
-            if (error.response) {
-                const { status, data } = error.response;
-                if (status === 400) 
-                    message.success(data.message);             
-                 else 
-                    message.error(data.error);  
-            }
+            await cancelBooking(itineraryId, touristId);
+            message.success('Booking cancelled successfully');
+            setItineraries(itineraries.filter(itinerary => itinerary._id !== itineraryId));
+            setFilteredItineraries(filteredItineraries.filter(itinerary => itinerary._id !== itineraryId));
+        } catch (err) {
+            message.error('Failed to cancel booking');
         }
     }
 
@@ -135,19 +128,19 @@ const UpcomingItinerariesPage = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div>
+        <div class="page-container">
             <TouristNavBar />
-            <div class="page-title">Upcoming Itineraries</div>
+            <div class="page-title">My Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div class="filter-sort-list">
                 <div class="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <UpcomingItinerariesList itineraries={filteredItineraries} onBook={handleBookTicket} book ={'diana'}/>
+                <UpcomingItinerariesList itineraries={filteredItineraries} onCancel={handleCancelBooking} cancel={'diana'}/>
             </div>
         </div>
     );
 };
 
-export default UpcomingItinerariesPage;
+export default ItineraryPage;
