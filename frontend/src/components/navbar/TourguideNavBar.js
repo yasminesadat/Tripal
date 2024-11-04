@@ -5,9 +5,9 @@ const TourguideNavBar = () => {
   return (
     <nav>
       <div class="nav-bar">
-        <div class="nav-bar-link">
+        {/* <div class="nav-bar-link">
           <Link to="/tourguide/create">Create Profile</Link>
-        </div>
+        </div> */}
         <div class="nav-bar-link">
           <Link to={`/tourguide/update/${tourGuideID}`}>Update Profile</Link>
         </div>
