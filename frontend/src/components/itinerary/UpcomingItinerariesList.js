@@ -1,9 +1,37 @@
-import React from 'react';
-
+import React, { useEffect, useState, useRef } from 'react';
+import { getConversionRate } from "../../api/ExchangeRatesService";
+import { message } from 'antd';
 
 const touristId = "6724842b5831eed787083b57"; //>18 dude
 //const touristId = '6727661b46a8937e2e821782'; //kiddo
-const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel }) => {    
+
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP" }) => {
+    const [exchangeRate, setExchangeRate] = useState(1);
+    const errorDisplayedRef = useRef(false);
+
+    useEffect(() => {
+        const fetchExchangeRate = async () => {
+            if (curr) {
+                try {
+                    const rate = await getConversionRate(curr); // Fetch the exchange rate
+                    setExchangeRate(rate);
+                } catch (error) {
+                    if (!errorDisplayedRef.current) {
+                        message.error("Failed to fetch exchange rate.");
+                        errorDisplayedRef.current = true;
+                    }
+                }
+            }
+        };
+
+        fetchExchangeRate();
+    }, [curr]);
+
+    const formatPrice = (price) => {
+        const convertedPrice = (price * exchangeRate).toFixed(2);
+        return `${curr} ${convertedPrice}`; // Format price with currency
+    };
+
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -62,13 +90,13 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel })
                             </div>
                         </div>
                         <div className="list-item-attribute">
-                            <strong>Service Fee:</strong> ${itinerary.serviceFee}
+                            <strong>Service Fee:</strong> {formatPrice(itinerary.serviceFee)}
                         </div>
                         <div className="list-item-attribute">
                             <strong>Language:</strong> {itinerary.language}
                         </div>
                         <div className="list-item-attribute">
-                            <strong>Price:</strong> {itinerary.price}
+                            <strong>Price:</strong> {formatPrice(itinerary.price)}
                         </div>
                         <div className="list-item-attribute">
                             <strong>Available Dates:</strong> 

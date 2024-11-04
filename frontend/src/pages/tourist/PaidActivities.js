@@ -7,18 +7,40 @@ import ActivitySort from "../../components/activity/ActivitySort";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
+import { getConversionRate } from "../../api/ExchangeRatesService"; 
 
 const PaidActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchCurrency = async () => {
+      const curr = sessionStorage.getItem("currency");
+      if (curr) {
+        setCurrency(curr);
+        await fetchExchangeRate(curr);
+      }
+    };
+    fetchCurrency();
+  }, []);
+
+  const fetchExchangeRate = async (curr) => {
+    try {
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
+    } catch (error) {
+      message.error("Failed to fetch exchange rate.");
+    }
+  };
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const response = await viewPaidActivities();
-
         setActivities(response.data);
         setFilteredActivities(response.data);
       } catch (err) {
@@ -58,7 +80,7 @@ const PaidActivitiesPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price;
+      const activityBudget = activity.price; // This is in original currency
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -82,24 +104,19 @@ const PaidActivitiesPage = () => {
     setFilteredActivities(filtered);
   };
 
-
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        aValue = a.price;
-        bValue = b.price;
+        aValue = a.price * exchangeRate; // Convert to current currency
+        bValue = b.price * exchangeRate; // Convert to current currency
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
 
-      if (order === "asc") {
-        return aValue - bValue;
-      } else {
-        return bValue - aValue;
-      }
+      return order === "asc" ? aValue - bValue : bValue - aValue;
     });
     setFilteredActivities(sortedActivities);
   };
@@ -110,19 +127,18 @@ const PaidActivitiesPage = () => {
   return (
     <div>
       <TouristNavBar />
-      <div class="page-title">Paid Activities</div>
+      <div className="page-title">Paid Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <PaidActivitiesList activities={filteredActivities} />
+        <PaidActivitiesList activities={filteredActivities} curr={currency} />
       </div>
       <Footer />
     </div>
   );
-  
 };
 
 export default PaidActivitiesPage;
