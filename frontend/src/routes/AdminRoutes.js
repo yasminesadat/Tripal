@@ -7,7 +7,7 @@ import AdminViewUsers from "../pages/admin/AdminViewUsers";
 import CreateNewGovernor from "../pages/admin/CreateNewGovernor";
 import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 import ComplaintsPage from "../pages/admin/Complaints";
-
+import AdminChangePassword from "../pages/admin/AdminProfile";
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/activity-categories", element: <ActivityCategoryDetails /> },
@@ -18,6 +18,7 @@ const adminRoutes = [
   { path: "/admin/new-governor", element: <CreateNewGovernor /> },
   { path: "/admin/new-admin", element: <CreateNewAdmin /> },
   { path: "/admin/complaints", element: <ComplaintsPage /> },
+  { path: "/admin/changepassword", element: <AdminChangePassword /> },
 
 
 

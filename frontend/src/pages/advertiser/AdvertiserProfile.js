@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getAdvertiser } from "../../api/AdvertiserService";
 import { useParams, useNavigate } from "react-router-dom";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
+import ChangePassword from "../../components/common/ChangePassword";
 
 const AdvertiserProfile = () => {
+  const userType = "advertiser"
   const { id } = useParams();
   const [advertiser, setAdvertiser] = useState(null);
   const [error, setError] = useState(null);
@@ -186,6 +188,7 @@ const AdvertiserProfile = () => {
         <br />
         <button onClick={handleNavigate}>Edit Profile</button>
       </div>
+      <ChangePassword id={id} userType={userType} />
     </div>
   );
 };
