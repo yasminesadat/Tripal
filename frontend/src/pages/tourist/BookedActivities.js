@@ -8,12 +8,35 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { touristId } from "../../IDs";
+import { getConversionRate } from "../../api/ExchangeRatesService"; 
 
 const BookedActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchCurrency = async () => {
+      const curr = sessionStorage.getItem("currency");
+      if (curr) {
+        setCurrency(curr);
+        await fetchExchangeRate(curr);
+      }
+    };
+    fetchCurrency();
+  }, []);
+
+  const fetchExchangeRate = async (curr) => {
+    try {
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
+    } catch (error) {
+      message.error("Failed to fetch exchange rate.");
+    }
+  };
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -64,12 +87,12 @@ const BookedActivitiesPage = () => {
     setFilteredActivities(results);
   };
 
-  const handleFilter = (filters) => {
+    const handleFilter = (filters) => {
     const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price;
+      const activityBudget = activity.price * exchangeRate; 
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -81,7 +104,7 @@ const BookedActivitiesPage = () => {
         (!budgetMax || activityBudget <= budgetMax);
       const isCategoryValid =
         !category ||
-        (activityCategory && 
+        (activityCategory &&
           activityCategory.Name &&
           activityCategory.Name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
@@ -93,24 +116,19 @@ const BookedActivitiesPage = () => {
     setFilteredActivities(filtered);
   };
 
-
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        aValue = a.price;
-        bValue = b.price;
+        aValue = a.price * exchangeRate;
+        bValue = b.price * exchangeRate;
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
 
-      if (order === "asc") {
-        return aValue - bValue;
-      } else {
-        return bValue - aValue;
-      }
+      return order === "asc" ? aValue - bValue : bValue - aValue;
     });
     setFilteredActivities(sortedActivities);
   };
@@ -131,7 +149,7 @@ const BookedActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} onCancel ={handleCancelActivity} cancel={"diana"} />
+        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onCancel ={handleCancelActivity} cancel={"diana"} />
       </div>
       <Footer />
     </div>
