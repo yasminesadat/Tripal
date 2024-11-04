@@ -60,9 +60,7 @@ const AdvertiserProfile = () => {
     maxWidth: "600px",
     margin: "0 auto",
     padding: "20px",
-    backgroundColor: "#f8f9fa",
     borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     position: "relative", // Added for positioning the logo
   };
 
@@ -126,8 +124,13 @@ const AdvertiserProfile = () => {
   return (
     <div>
       <AdvertiserNavBar />
-      <div style={containerStyle}>
+      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
         <h2>{advertiser.userName}'s Profile</h2>
+      </div>
+      <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
+      <div class="row y-gap-30">
+      <div style={containerStyle}>
         {advertiser.companyProfile?.logo && (
           <img
             src={advertiser.companyProfile.logo}
@@ -140,18 +143,11 @@ const AdvertiserProfile = () => {
             <span style={headerStyle}>{field.label}:</span>
             <br />
             {field.value ? (
-              field.isLink ? (
-                <a
-                  href={field.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="custom-link"
-                >
-                  {field.value}
-                </a>
-              ) : (
-                field.value
-              )
+                field.isLink ? (
+                  <a href={field.value} target="_blank" rel="noopener noreferrer" className="custom-link" >
+                    {field.value}
+                  </a>
+                ) : ( field.value )
             ) : (
               <>
                 <span style={notProvidedStyle}>not provided</span>{" "}
@@ -187,6 +183,9 @@ const AdvertiserProfile = () => {
         </div>
         <br />
         <button onClick={handleNavigate}>Edit Profile</button>
+      </div>
+      </div>
+      </div>
       </div>
       <ChangePassword id={id} userType={userType} />
     </div>

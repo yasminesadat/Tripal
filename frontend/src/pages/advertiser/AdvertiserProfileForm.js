@@ -37,7 +37,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
         linkedin: advertiser?.companyProfile?.socialMedia?.linkedin || "",
         twitter: advertiser?.companyProfile?.socialMedia?.twitter || "",
       },
-      certifications: advertiser?.companyProfile?.certifications || [],
+      certifications: advertiser?.companyProfile?.certifications || [""],
       awards: advertiser?.companyProfile?.awards || [],
     },
     existingImage: advertiser?.companyProfile?.logo || null,
@@ -234,6 +234,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   return (
     <>
       <AdvertiserNavBar />
+      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
 
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -326,6 +327,8 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
               onChange={handleChange}
             />
           </div>
+          {error && <p className="error-message">{error}</p>}
+
           <div className="form-group">
             <label>Employees:</label>
             <input
@@ -395,9 +398,9 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
             <div key={index} className="cert-award-container">
               <input
                 type="text"
-                value={cert}
+                value={cert || ''}
                 onChange={(e) =>
-                  handleItemChange(e, index, "", "certifications")
+                handleItemChange(e, index, "", "certifications")
                 }
                 placeholder="Enter certification"
               />
@@ -516,9 +519,9 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
           </button>
         </div>
 
-        {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}
       </form>
+      </div>
     </>
   );
 };
