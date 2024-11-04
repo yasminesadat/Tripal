@@ -6,7 +6,11 @@ const bodyParser = require("body-parser");
 const colors = require("colors");
 
 require("dotenv").config();
+
+
 const MongoURI = process.env.MONGO_URI;
+
+
 
 //App variables
 const app = express();
@@ -32,9 +36,13 @@ mongoose
       console.log(
         `Listening to requests on http://localhost:${port}`.cyan.underline
       );
+      console.log(process.env.AMADEUS_CLIENT_ID);
+
     });
   })
   .catch((err) => console.log(err));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", routes);
+
+//module.exports = amadeus;

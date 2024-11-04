@@ -4,10 +4,12 @@ const amadeus = new Amadeus({
     clientSecret: process.env.AMADEUS_CLIENT_SECRET,
   });
   
+// const amadeus=require('../App');
 const searchHotels= async (req, res) => {
+  const cityCode = req.query.cityCode;
     try {
       const response = await amadeus.referenceData.locations.hotels.byCity.get({
-        cityCode: 'PAR', // You can replace 'PAR' or make it dynamic based on user input
+        cityCode, // You can replace 'PAR' or make it dynamic based on user input
       });
       res.json(response.data);
     } catch (error) {
