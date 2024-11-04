@@ -132,10 +132,10 @@ const ItineraryPage = () => {
         setFilteredItineraries(filtered);
     };
 
-    const handleBookTicket = async ({ itineraryId, touristId })  => {
+    const handleBookTicket = async ({ itineraryId, touristId, selectedDate, selectedTime }) => {
         try {
-            console.log('Booking', itineraryId, touristId);
-            await bookResource('itinerary', itineraryId, touristId);
+            console.log('Booking', itineraryId, touristId, selectedDate, selectedTime);
+            await bookResource('itinerary', itineraryId, touristId,  selectedDate,  selectedTime );
             
             console.log("This Itinerary has been booked successfully!");
             message.success("Ticket booked successfully!");

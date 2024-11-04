@@ -1,12 +1,44 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message } from 'antd';
+import { message, Modal, Select, Button } from 'antd';
 import { touristId, touristId2 } from '../../IDs';
+const { Option } = Select;
 
 const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP" }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedItinerary, setSelectedItinerary] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
 
+    const handleBookClick = (itinerary) => {
+        setSelectedItinerary(itinerary);
+        setIsModalVisible(true);
+    };
+
+    const handleModalOk = () => {
+        if (selectedDate && selectedTime) {
+            onBook({ 
+                itineraryId: selectedItinerary._id, 
+                touristId, 
+                resourceType: 'itinerary',
+                selectedDate,
+                selectedTime 
+            });
+            setIsModalVisible(false);
+            setSelectedDate(null);
+            setSelectedTime(null);
+        } else {
+            message.error("Please select both a date and time.");
+        }
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+        setSelectedDate(null);
+        setSelectedTime(null);
+    };
     useEffect(() => {
         const fetchExchangeRate = async () => {
             if (curr) {
@@ -116,7 +148,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                             <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                         </div>
                         {book && (
-                            <button onClick={() => onBook({ itineraryId: itinerary._id, touristId, resourceType:'itinerary' })}>
+                            <button onClick={() =>handleBookClick(itinerary) }>
                                 Book Now
                             </button>
                         )}
@@ -129,6 +161,41 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                         )} 
 
                     </div>
+                    <Modal
+                title="Select Date and Time"
+                visible={isModalVisible}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
+            >
+                <div>
+                    <strong>Select Date:</strong>
+                    <Select
+                        style={{ width: '100%', marginBottom: '1rem' }}
+                        placeholder="Select a date"
+                        onChange={setSelectedDate}
+                    >
+                        {selectedItinerary && selectedItinerary.availableDates.map(date => (
+                            <Option key={date} value={date}>
+                                {new Date(date).toLocaleDateString()}
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+                <div>
+                    <strong>Select Time:</strong>
+                    <Select
+                        style={{ width: '100%' }}
+                        placeholder="Select a time"
+                        onChange={setSelectedTime}
+                    >
+                        {selectedItinerary && selectedItinerary.availableTime.map(time => (
+                            <Option key={time} value={time}>
+                                {time}
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+            </Modal>
                 </div>
             ))}
         </div>
