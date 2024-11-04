@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getTags } from "../../api/PreferenceTagService";
 import { CloseOutlined } from "@ant-design/icons";
-
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { updateTouristInformation } from "../../api/TouristService";
+import { message } from "antd";
 export default function PreferenceSelection() {
+  const navigate = useNavigate(); // Initialize navigate
+  const { touristId } = useParams();
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
@@ -39,8 +43,25 @@ export default function PreferenceSelection() {
     );
   };
 
-  const handleNext = () => {
-    console.log("Selected Tags:", selectedTags);
+  const handleNext = async () => {
+    if (selectedTags.length === 0) {
+      message.error ("Please select at least one preference tag before proceeding");
+      
+      return;
+    }
+  
+    try {
+      const body = { tags: selectedTags };
+      await updateTouristInformation(touristId, body);
+      console.log("Preferences saved successfully!");
+      navigate(`/tourist/select-categories/${touristId}`);
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+    }
+  };
+
+  const handleSkip = () => {
+    navigate(`/tourist/select-categories/${touristId}`);
   };
 
   return (
@@ -80,10 +101,18 @@ export default function PreferenceSelection() {
                 <p>No tags available</p>
               )}
             </div>
-
+            <br></br>
             <button onClick={handleNext} className="button -md -dark-1 bg-accent-1 text-white col-12 mt-lg">
               Next
               <i className="icon-arrow-top-right ml-10"></i>
+            </button>
+
+            <button 
+              onClick={handleSkip} 
+              className="skip-button col-12 mt-2" 
+              style={{ color: 'rgba(0, 0, 0, 0.4)', textDecoration: 'underline', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+            >
+              Skip
             </button>
           </div>
         </div>

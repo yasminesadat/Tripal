@@ -2,7 +2,8 @@ import { axios } from "./axios";
 
 export async function createTourist(newUser) {
   try {
-    await axios.post("/createTourist", newUser);
+    const response = await axios.post("/createTourist", newUser);
+    return response;
   } catch (error) {
     const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
     console.log("ERRPR MESSAGE", errorMessage)
