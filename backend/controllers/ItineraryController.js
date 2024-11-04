@@ -63,6 +63,7 @@ const createItinerary = async (req, res) => {
 
 const getItineraries = async (req, res) => {
     const { tourGuideId } = req.query;
+    console.log("this is being used bro");
     try {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
 
@@ -233,18 +234,18 @@ const bookItinerary = async (req, res) => {
 
     try {
         const itinerary = await itineraryModel.findById(itineraryId);
-
+        console.log(itineraryId);
         if (!itinerary) 
-            return res.status(404).json({ error: 'Itinerary not found' });
+            return res.status(404).json({ error: 'Itinerary not found in backend' });
         
         const alreadyBooked = itinerary.tourists.includes(touristId);
 
         if (alreadyBooked) 
             return res.status(400).json({ message: 'You have already booked this itinerary.' });
-        
+        console.log("touristId is ", touristId);
         const tourist = await touristModel.findById(touristId);
         if (!tourist) 
-            return res.status(404).json({ error: 'Tourist not found' });
+            return res.status(404).json({ error: 'Tourist not found'} );
         
         if (tourist.calculateAge() < 18) 
             return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });

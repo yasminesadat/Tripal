@@ -1,8 +1,8 @@
 import React from 'react';
 
-const touristId = '670d4e900cb9ea7937cc9968';
-//const touristId = "6724842b5831eed787083b57"
-//const touristId = '670d4e900cb9ea7937cc9968';
+
+const touristId = "6724842b5831eed787083b57"; //>18 dude
+//const touristId = '6727661b46a8937e2e821782'; //kiddo
 const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel }) => {    
     return (
         <div className="list">
@@ -93,7 +93,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel })
                         {book&& <button onClick={() => onBook({ itineraryId: itinerary._id, touristId })}>
                                 Book Now
                                 </button>}
-                        {console.log(itinerary._id ," ", touristId)}
+                        {console.log(itinerary._id ,"lollll ", touristId)}
                         {cancel&& <button style={{ background: '#b0091a' }}  onClick={() => onCancel({ itineraryId: itinerary._id, touristId })}>
                                 Cancel Booking
                                 </button>}  
