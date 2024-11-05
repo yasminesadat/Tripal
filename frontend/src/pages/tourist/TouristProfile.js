@@ -92,11 +92,15 @@ const TouristHomePage = () => {
 
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
-      toast.error("No points to redeem");
+      toast.warning("No points to redeem");
       return;
     }
-    await redeemPoints(id);
-    toast.success("points updated redeemed successfully");
+    try{
+      await redeemPoints(id);
+      toast.success("points redeemed successfully");
+    }catch(error){
+      toast.error("redemption failed")
+    }
   };
 
   useEffect(() => {
