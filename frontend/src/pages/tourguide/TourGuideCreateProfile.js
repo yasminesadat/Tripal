@@ -1,14 +1,22 @@
-import { React, useState, useEffect } from 'react';
-import { CloseOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, InputNumber, DatePicker, Select } from 'antd';
+import { React, useState, useEffect } from "react";
+import { CloseOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  DatePicker,
+  Select,
+} from "antd";
 
-import { updateProfile, getProfileData } from '../../api/TourGuideService';
+import { updateProfile, getProfileData } from "../../api/TourGuideService";
 import { useParams } from "react-router-dom";
-import { toast } from 'react-toastify';
-import TourguideNavBar from '../../components/navbar/TourguideNavBar';
-import languages from '../../assets/constants/Languages';
-import { nationalities } from '../../assets/Nationalities';
-import moment from 'moment';
+import { toast } from "react-toastify";
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import languages from "../../assets/constants/Languages";
+import { nationalities } from "../../assets/Nationalities";
+import moment from "moment";
 const TourGuideForm = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
@@ -21,7 +29,8 @@ const TourGuideForm = () => {
     languagesSpoken: [],
     education: [],
     previousWork: [],
-    profilePicture: ""
+    profilePicture: "",
+    currProfilePicture: "",
   });
   useEffect(() => {
     const getTourGuideData = async () => {
@@ -31,12 +40,20 @@ const TourGuideForm = () => {
         const data = await profileData.data;
         setLoading(false);
         for (let i = 0; i < data.previousWork.length; i++) {
-          data.previousWork[i].startDate = moment(data.previousWork[i].startDate).isValid() ? moment(data.previousWork[i].startDate) : null;
-          data.previousWork[i].endDate =moment(data.previousWork[i].endDate).isValid() ? moment(data.previousWork[i].endDate) : null;
+          data.previousWork[i].startDate = moment(
+            data.previousWork[i].startDate
+          ).isValid()
+            ? moment(data.previousWork[i].startDate)
+            : null;
+          data.previousWork[i].endDate = moment(
+            data.previousWork[i].endDate
+          ).isValid()
+            ? moment(data.previousWork[i].endDate)
+            : null;
           console.log(data.previousWork[i].startDate);
           console.log(data.previousWork[i].endDate);
-        } 
-  
+        }
+
         setFormData({
           email: data?.email || "",
           name: data?.name || "",
@@ -46,7 +63,8 @@ const TourGuideForm = () => {
           languagesSpoken: data?.languagesSpoken || [],
           education: data?.education || [],
           previousWork: data.previousWork || [],
-          profilePicture: data?.profilePicture || ""
+          profilePicture: data?.profilePicture || "",
+          currProfilePicture: data?.profilePicture || "",
         });
         console.log(data);
       } catch (e) {
@@ -60,16 +78,24 @@ const TourGuideForm = () => {
   const onFinish = async () => {
     try {
       setLoading(true);
-      console.log(formData.previousWork[0].endDate.$d)
+      console.log(formData.previousWork[0].endDate.$d);
       const date = formData.previousWork[0].endDate;
       const isoDate = date.toISOString();
-      formData.previousWork = Object.values(formData.previousWork).filter(item => item !== undefined)
-      formData.education = Object.values(formData.education).filter(item => item !== undefined)
-      const result = await updateProfile(id, { ...formData, previousWork: [...formData.previousWork], education: [...formData.education] });
+      formData.previousWork = Object.values(formData.previousWork).filter(
+        (item) => item !== undefined
+      );
+      formData.education = Object.values(formData.education).filter(
+        (item) => item !== undefined
+      );
+      const result = await updateProfile(id, {
+        ...formData,
+        previousWork: [...formData.previousWork],
+        education: [...formData.education],
+      });
       console.log(result);
       if (result) {
         setLoading(false);
-        toast.success('profile Updated successfully')
+        toast.success("Profile Updated successfully");
         setFormData({
           email: "",
           name: "",
@@ -79,17 +105,15 @@ const TourGuideForm = () => {
           languagesSpoken: [],
           education: [],
           previousWork: [],
-          profilePicture: ""
+          profilePicture: "",
+          currProfilePicture: "",
         });
-
       }
-    }
-    catch (err) {
+    } catch (err) {
       toast.error(err);
       setLoading(false);
     }
-
-  }
+  };
 
   const [form] = Form.useForm();
   useEffect(() => {
@@ -101,8 +125,7 @@ const TourGuideForm = () => {
       nationality: formData.nationality,
       languagesSpoken: formData.languagesSpoken,
       education: formData.education,
-      previousWork: formData.previousWork
-
+      previousWork: formData.previousWork,
     });
     console.log(formData);
   }, [formData, form]);
@@ -116,7 +139,7 @@ const TourGuideForm = () => {
         form={form}
         onFinish={onFinish}
         style={{
-          Width: '100%',
+          Width: "100%",
         }}
         autoComplete="off"
         initialValues={{
@@ -127,71 +150,69 @@ const TourGuideForm = () => {
           nationality: formData.nationality,
           languagesSpoken: formData.languagesSpoken,
           education: formData.education,
-          previousWork: formData.previousWork
-
+          previousWork: formData.previousWork,
         }}
         onValuesChange={(changedValues, allValues) => {
-          console.log("changedValues: ", changedValues)
-          setFormData((oldData) =>
-          ({
-            ...oldData, ...changedValues, education: allValues.education,
+          console.log("changedValues: ", changedValues);
+          setFormData((oldData) => ({
+            ...oldData,
+            ...changedValues,
+            education: allValues.education,
             previousWork: {
               ...allValues.previousWork,
               startDate: allValues?.previousWork?.startDate?.toISOString(),
-              endDate: allValues?.previousWork?.endDate?.toISOString()
-            }
+              endDate: allValues?.previousWork?.endDate?.toISOString(),
+            },
           }));
           console.log("from onvalueChanges", formData);
         }}
       >
         <Form.Item
           label="Email"
-          name='email'
+          name="email"
           rules={[
             {
               required: formData.email === "",
-              type: 'email',
-              message: 'Please enter your email'
+              type: "email",
+              message: "Please enter your email",
             },
           ]}
         >
-          <Input style={{ width: '100%' }}
-            placeholder="Enter your email"
-
-
-          />
+          <Input style={{ width: "100%" }} placeholder="Enter your email" />
         </Form.Item>
 
         <Form.Item
-          name='name'
+          name="name"
           label="Name"
           rules={[
             {
               required: formData.name === "",
-              message: 'Please input your name!',
+              message: "Please input your name!",
             },
           ]}
         >
           <Input
-            type='text'
+            type="text"
             placeholder="Enter your name"
-            style={{ width: '100%' }} />
+            style={{ width: "100%" }}
+          />
         </Form.Item>
 
         <Form.Item
           label="Phone Number"
-          name='mobileNumber'
+          name="mobileNumber"
           rules={[
             {
               required: formData.mobileNumber === "",
-              message: 'Please input your mobile number!',
+              message: "Please input your mobile number!",
             },
           ]}
         >
           <Input
-            type='text'
+            type="text"
             placeholder="Enter your mobile number"
-            style={{ width: '100%' }} />
+            style={{ width: "100%" }}
+          />
         </Form.Item>
         <Form.Item
           label="Years of Experience"
@@ -199,22 +220,25 @@ const TourGuideForm = () => {
           rules={[
             {
               required: formData.yearsOfExperience === 0,
-              message: 'Please input your years of experience!',
+              message: "Please input your years of experience!",
             },
           ]}
         >
           <InputNumber
-            
             placeholder="Enter experience years"
-            style={{ width: '100%' }} />
+            style={{ width: "100%" }}
+          />
         </Form.Item>
-        <Form.Item name='nationality' label="Nationality"
+        <Form.Item
+          name="nationality"
+          label="Nationality"
           rules={[
             {
-              required: formData.nationality === '',
-              message: 'Please select your nationality!',
+              required: formData.nationality === "",
+              message: "Please select your nationality!",
             },
-          ]}>
+          ]}
+        >
           <Select>
             {nationalities.map((nationality) => (
               <Select.Option value={nationality}>{nationality}</Select.Option>
@@ -227,7 +251,7 @@ const TourGuideForm = () => {
           rules={[
             {
               required: formData.languagesSpoken?.length === 0,
-              message: 'Please select your languages!',
+              message: "Please select your languages!",
             },
           ]}
         >
@@ -238,15 +262,14 @@ const TourGuideForm = () => {
               </Option>
             ))}
           </Select>
-
         </Form.Item>
         <Form.List name="education">
           {(fields, { add: addEducation, remove: removeEducation }) => (
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 rowGap: 16,
-                flexDirection: 'column',
+                flexDirection: "column",
               }}
             >
               {fields.map((field) => (
@@ -261,40 +284,54 @@ const TourGuideForm = () => {
                     />
                   }
                 >
-                  <Form.Item label="Degree" name={[field.name, 'degree']}
+                  <Form.Item
+                    label="Degree"
+                    name={[field.name, "degree"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your degree!',
+                        message: "Please enter your degree!",
                       },
-                    ]}>
-                    <Input style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-                  <Form.Item label="Institution" name={[field.name, 'institution']}
+                  <Form.Item
+                    label="Institution"
+                    name={[field.name, "institution"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your institution!',
+                        message: "Please enter your institution!",
                       },
-                    ]}>
-                    <Input style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-                  <Form.Item label="Year Of Completion" name={[field.name, 'yearOfCompletion']}
+                  <Form.Item
+                    label="Year Of Completion"
+                    name={[field.name, "yearOfCompletion"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your Year Of Completion!',
+                        message: "Please enter your Year Of Completion!",
                       },
-                    ]}>
-                    <InputNumber style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <InputNumber
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-
                 </Card>
               ))}
               <Button type="dashed" onClick={() => addEducation()} block>
@@ -307,9 +344,9 @@ const TourGuideForm = () => {
           {(fields, { add: addPrevWork, remove: removePrevWork }) => (
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 rowGap: 16,
-                flexDirection: 'column',
+                flexDirection: "column",
               }}
             >
               {fields.map((field) => (
@@ -324,69 +361,94 @@ const TourGuideForm = () => {
                     />
                   }
                 >
-                  <Form.Item label="Company Name" name={[field.name, 'companyName']}
+                  <Form.Item
+                    label="Company Name"
+                    name={[field.name, "companyName"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your company name!',
+                        message: "Please enter your company name!",
                       },
-                    ]}>
-                    <Input style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-                  <Form.Item label="Position" name={[field.name, 'position']}
+                  <Form.Item
+                    label="Position"
+                    name={[field.name, "position"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your position!',
+                        message: "Please enter your position!",
                       },
-                    ]}>
-                    <Input style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-                  <Form.Item label="Location" name={[field.name, 'location']}
+                  <Form.Item
+                    label="Location"
+                    name={[field.name, "location"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter company location!',
+                        message: "Please enter company location!",
                       },
-                    ]}>
-                    <Input style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-                  <Form.Item label="Start Date" name={[field.name, 'startDate']}
+                  <Form.Item
+                    label="Start Date"
+                    name={[field.name, "startDate"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter working start date !',
+                        message: "Please enter working start date !",
                       },
-                    ]}>
-                    <DatePicker style={{ width: '100%' }} />
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} />
                   </Form.Item>
-                  <Form.Item label="End date" name={[field.name, 'endDate']}
+                  <Form.Item
+                    label="End date"
+                    name={[field.name, "endDate"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter working end date!',
+                        message: "Please enter working end date!",
                       },
-                    ]}>
-                    <DatePicker style={{ width: '100%' }} />
+                    ]}
+                  >
+                    <DatePicker style={{ width: "100%" }} />
                   </Form.Item>
-                  <Form.Item label="Description" name={[field.name, 'description']}
+                  <Form.Item
+                    label="Description"
+                    name={[field.name, "description"]}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter your job description!',
+                        message: "Please enter your job description!",
                       },
-                    ]}>
-                    <Input.TextArea style={{
-                      width: '100%',
-                    }} />
+                    ]}
+                  >
+                    <Input.TextArea
+                      style={{
+                        width: "100%",
+                      }}
+                    />
                   </Form.Item>
-
                 </Card>
               ))}
               <Button type="dashed" onClick={() => addPrevWork()} block>
@@ -396,10 +458,8 @@ const TourGuideForm = () => {
           )}
         </Form.List>
 
-
-        <Form.Item
-        >
-          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Submit
           </Button>
         </Form.Item>
