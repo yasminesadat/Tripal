@@ -36,7 +36,6 @@ mongoose
       console.log(
         `Listening to requests on http://localhost:${port}`.cyan.underline
       );
-      console.log(process.env.AMADEUS_CLIENT_ID);
 
     });
   })
