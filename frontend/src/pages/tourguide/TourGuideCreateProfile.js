@@ -23,6 +23,9 @@ const TourGuideCreateProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [workChanged, setWorkChanged] = useState(false);
+  const [educationChanged, setEducationChanged] = useState(false);
+  const [form] = Form.useForm();
   const [formData, setFormData] = useState({
     initialEmail: "",
     initialName: "",
@@ -43,8 +46,6 @@ const TourGuideCreateProfile = () => {
     previousWork: [],
     profilePicture: "",
   });
-
-  const [form] = Form.useForm();
 
   useEffect(() => {
     const getTourGuideData = async () => {
@@ -75,7 +76,14 @@ const TourGuideCreateProfile = () => {
           initialPreviousWork: data.previousWork || [],
           initialProfilePicture: data.profilePicture || "",
           profilePicture: data.currProfilePicture || "",
-          ...data,
+          email: data.email || "",
+          name: data.name || "",
+          mobileNumber: data.mobileNumber || "",
+          nationality: data.nationality || "",
+          yearsOfExperience: data.yearsOfExperience || 0,
+          languagesSpoken: data.languagesSpoken || [],
+          education: data.education || [],
+          previousWork: data.previousWork || [],
         });
         setLoading(false);
       } catch (error) {
@@ -89,14 +97,14 @@ const TourGuideCreateProfile = () => {
 
   useEffect(() => {
     form.setFieldsValue({
-      email: formData.initialEmail,
-      name: formData.initialName,
-      mobileNumber: formData.initialMobileNumber,
-      yearsOfExperience: formData.initialYearsOfExperience,
-      nationality: formData.initialNationality,
-      languagesSpoken: formData.initialLanguagesSpoken,
-      education: formData.initialEducation,
-      previousWork: formData.initialPreviousWork,
+      email: formData.email,
+      name: formData.name,
+      mobileNumber: formData.mobileNumber,
+      yearsOfExperience: formData.yearsOfExperience,
+      nationality: formData.nationality,
+      languagesSpoken: formData.languagesSpoken,
+      education: formData.education,
+      previousWork: formData.previousWork,
     });
   }, [formData, form]);
 
@@ -108,13 +116,24 @@ const TourGuideCreateProfile = () => {
     const changedFields = {};
     for (const key in formData) {
       if (key.startsWith("initial")) continue;
+      if (key === "previousWork") {
+        if (workChanged) {
+          hasChanges = true;
+          changedFields[key] = formData[key];
+        }
+        continue;
+      }
+      if (key === "education") {
+        if (educationChanged) {
+          hasChanges = true;
+          changedFields[key] = formData[key];
+        }
+        continue;
+      }
       const initialKey = `initial${key.charAt(0).toUpperCase() + key.slice(1)}`;
       if (formData[key] !== formData[initialKey]) {
         hasChanges = true;
         changedFields[key] = formData[key];
-        if (key === "profilePicture")
-          changedFields["initialProfilePicture"] =
-            formData["initialProfilePicture"];
       }
     }
 
@@ -125,6 +144,20 @@ const TourGuideCreateProfile = () => {
       setLoading(false);
       return;
     }
+    // formatting data
+    if (changedFields.previousWork)
+      changedFields.previousWork = Object.values(
+        changedFields.previousWork
+      ).filter((item) => item !== undefined);
+    if (changedFields.education)
+      changedFields.education = Object.values(changedFields.education).filter(
+        (item) => item !== undefined
+      );
+
+    // add old profile picture if there is a new one
+    if (changedFields.profilePicture)
+      changedFields["initialProfilePicture"] =
+        formData["initialProfilePicture"];
 
     try {
       await updateProfile(id, changedFields);
@@ -140,12 +173,22 @@ const TourGuideCreateProfile = () => {
   return (
     <div>
       <TourguideNavBar />
-      <div class="w-1/2 mx-auto mt-2 mb-5 ">
+      <div className="w-1/2 mx-auto mt-2 mb-5 ">
         <Form
           form={form}
           onFinish={handleSubmit}
           style={{ width: "100%" }}
           autoComplete="off"
+          initialValues={{
+            email: formData.email,
+            name: formData.name,
+            mobileNumber: formData.mobileNumber,
+            yearsOfExperience: formData.yearsOfExperience,
+            nationality: formData.nationality,
+            languagesSpoken: formData.languagesSpoken,
+            education: formData.education,
+            previousWork: formData.previousWork,
+          }}
           onValuesChange={(changedValues, allValues) => {
             setFormData((oldData) => ({
               ...oldData,
@@ -157,6 +200,8 @@ const TourGuideCreateProfile = () => {
                 endDate: allValues?.previousWork?.endDate?.toISOString(),
               },
             }));
+            if (changedValues.education) setEducationChanged(true);
+            if (changedValues.previousWork) setWorkChanged(true);
           }}
         >
           <Form.Item
@@ -233,7 +278,9 @@ const TourGuideCreateProfile = () => {
           >
             <Select>
               {nationalities.map((nationality) => (
-                <Select.Option value={nationality}>{nationality}</Select.Option>
+                <Select.Option key={nationality} value={nationality}>
+                  {nationality}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
