@@ -14,11 +14,12 @@ import { fetchProducts } from "../../api/ProductService";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import ProductCard from "./ProductCard";
 import Footer from "../common/Footer";
+import { userRole } from "../../IDs";
 
 const { Search } = Input;
 const { Option } = Select;
 
-const ProductList = ({ curr="EGP" })  => {
+const ProductList = ({ curr = "EGP" }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
@@ -33,7 +34,11 @@ const ProductList = ({ curr="EGP" })  => {
       try {
         const productsData = await fetchProducts();
         if (productsData) {
-          const sortedProducts = productsData.sort((a, b) => b.averageRating - a.averageRating);
+          let filtered = productsData;
+          if (userRole === "Tourist") {
+            filtered = filtered.filter(product => product.isArchived !== true);
+          }
+          const sortedProducts = filtered.sort((a, b) => b.averageRating - a.averageRating);
           setProducts(sortedProducts);
           setFilteredProducts(sortedProducts);
         }
@@ -42,7 +47,7 @@ const ProductList = ({ curr="EGP" })  => {
           message.error(
             "Network Error: Unable to fetch products. Please try again later."
           );
-          errorDisplayedRef.current = true; // Set error displayed to true
+          errorDisplayedRef.current = true; 
         }
       } finally {
         setLoading(false);
@@ -62,7 +67,7 @@ const ProductList = ({ curr="EGP" })  => {
 
     getProducts();
     getExchangeRate();
-  }, [curr]); 
+  }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -75,22 +80,21 @@ const ProductList = ({ curr="EGP" })  => {
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
+    filterProducts(searchValue, value, sortOrder);
   };
 
   const filterProducts = (searchValue, priceRange, sortOrder) => {
     let results = products;
-    
-    if (results) {
-        results = results.filter((product) =>
+
+    if (searchValue) {
+      results = results.filter((product) =>
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       );
     }
-    
+
     results = results.filter((product) => {
-      if (priceRange[1] === 3000) {
-        return formatPrice(product.price) >= priceRange[0];
-      }
-      return formatPrice(product.price) >= priceRange[0] && formatPrice(product.price) <= priceRange[1];
+      const formattedPrice = formatPrice(product.price);
+      return formattedPrice >= priceRange[0] && formattedPrice <= priceRange[1];
     });
 
     results = results.sort((a, b) => {
@@ -104,6 +108,11 @@ const ProductList = ({ curr="EGP" })  => {
     setFilteredProducts(results);
   };
 
+  const formatPrice = (price) => {
+    const convertedPrice = (price * exchangeRate).toFixed(2);
+    return convertedPrice; 
+  };
+
   const handleGoClick = () => {
     filterProducts(searchValue, priceRange, sortOrder);
   };
@@ -114,12 +123,7 @@ const ProductList = ({ curr="EGP" })  => {
     }
     return `${priceRange[0]} - ${priceRange[1]}`;
   };
-
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice; 
-  };
-
+  
   return (
     <>
       <div className="product-list-container">
@@ -184,8 +188,7 @@ const ProductList = ({ curr="EGP" })  => {
               ) : (
                 <div className="productGrid" style={{ marginBottom: "5%" }}>
                   <Row gutter={[16, 32]}>
-                  {filteredProducts &&
-                      filteredProducts.map((product) => (
+                    {filteredProducts.map((product) => (
                       <Col key={product._id} xs={24} sm={12} md={8}>
                         <ProductCard
                           id={product._id}
@@ -197,7 +200,7 @@ const ProductList = ({ curr="EGP" })  => {
                           seller={product.seller.name}
                           quantity={product.quantity}
                           averageRating={product.averageRating}
-                          isArchived = {product.isArchived}
+                          isArchived={product.isArchived}
                         />
                       </Col>
                     ))}

@@ -3,7 +3,7 @@ import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Card, Rate, message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import "./product.css";
-import { currUser } from "../../IDs";
+import { currUser, userRole } from "../../IDs";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
 
 const { Meta } = Card;
@@ -94,13 +94,11 @@ const ProductCard = ({
           />
         </div>
       }
+      onClick={userRole === "Tourist" ? handleCardClick : null} 
       actions={
         currUser === productSeller
           ? [
               <EditOutlined key="edit" onClick={handleEditClick} />,
-              <EllipsisOutlined key="ellipsis" onClick={handleCardClick} />,
-            ]
-          : [
               <span
                 key="archive"
                 onClick={handleArchiveClick}
@@ -110,7 +108,19 @@ const ProductCard = ({
                 {newIsArchived ? "Unarchive" : "Archive"}
               </span>,
             ]
+          : (userRole === "Admin" || userRole === "Seller") ? [
+              <span
+                key="archive"
+                onClick={handleArchiveClick}
+                style={{ cursor: "pointer" }}
+                className="archive-text"
+              >
+                {newIsArchived ? "Unarchive" : "Archive"}
+              </span>,
+            ]
+          : []
       }
+      
     >
       <Meta
         title={`${name} - ${price}`}
