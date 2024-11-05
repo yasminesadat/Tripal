@@ -41,10 +41,6 @@ const itinerarySchema = new mongoose.Schema({
             selectedTime: { type: String },
         },
     ],
-    booked: {
-        type: Boolean,
-        default: false,
-    },
     }, 
     {timestamps: true}
 );

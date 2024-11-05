@@ -13,13 +13,13 @@ const requestAccountDeletion = async (req, res) => {
         }
 
         if (role === "Advertiser") {
-            const hasBookedActivities = await Activity.exists({ advertiser: userId, booked: true });
+            const hasBookedActivities = await Activity.exists({ advertiser: userId, date: { $gt: new Date() }, booked: true });
             if (hasBookedActivities) {
                 return res.status(400).json({ message: "Cannot request deletion. Advertiser has booked activities." });
             }
         } 
         else if (role === "TourGuide") {
-            const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, booked: true });
+            const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
             if (hasBookedItineraries) {
                 return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
             }

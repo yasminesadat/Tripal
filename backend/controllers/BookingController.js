@@ -43,10 +43,11 @@ const bookResource = async (req, res) => {
                 selectedTime,
             });
         } 
-        else
+        else{
             resource.tourists.push(touristId);
+            resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
+        }
         
-        resource.booked = true;
         await resource.save();
     
         res.status(200).json({ message: `${resourceType} booked successfully` });
@@ -72,9 +73,8 @@ try {
             if (touristIndex === -1) {
                 return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
             }
-
             resource.tourists.splice(touristIndex, 1);
-
+            resource.booked = false;
         } else if (resourceType === 'itinerary') {
             // For itineraries, find and remove the booking from `bookings` array
             const bookingIndex = resource.bookings.findIndex(
@@ -85,7 +85,6 @@ try {
             }            
             resource.bookings.splice(bookingIndex, 1);
             resource.markModified('bookings');
-            resource.booked = false;
         }
     await resource.save();
 
