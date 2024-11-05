@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { Form, Input, Button, Select, DatePicker, Radio, message, Upload } from "antd";
 import moment from "moment";
 import { UploadOutlined } from "@ant-design/icons";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import firebaseInstance from '../../firebase';
 // import { createSeller } from "../../api/SellerService";
 // import { createTourGuide } from "../../api/TourGuideService";
 // import { createAdvertiser } from "../../api/AdvertiserService";
 import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
-import { createRequest, acceptRequest } from "../../api/RequestService";
+import { createRequest, SetRequestStatus } from "../../api/RequestService";
 const { Option } = Select;
 
 const SignUpAllUsers = () => {
@@ -40,7 +38,7 @@ const SignUpAllUsers = () => {
   };
   const acceptRequestFE = async (RequestID) => {
     try {
-      const response = await acceptRequest(RequestID);
+      const response = await SetRequestStatus(RequestID, "accepted");
       console.log("Request accepted successfully:", response);
       return response;
     } catch (error) {
