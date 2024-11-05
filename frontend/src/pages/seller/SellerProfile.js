@@ -6,6 +6,7 @@ import { Form, Input, Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./SellerProfile.css";
 import ChangePassword from "../../components/common/ChangePassword";
+import { requestAccountDeletion } from "../../api/DeletionRequestService";
 
 const SellerProfile = () => {
   const [seller, setSeller] = useState(null);
@@ -130,6 +131,15 @@ const SellerProfile = () => {
       setTimeout(() => {
         setButtonText("Save Changes");
       }, 1000);
+    }
+  };
+
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion("Seller", sellerId);
+      message.success(response.message); 
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred."); 
     }
   };
 
@@ -315,6 +325,7 @@ const SellerProfile = () => {
           )}
         </div>
         <ChangePassword id={sellerId} userType={userType} />
+        <button onClick={handleDeletion}>Delete Account</button>
       </div>
     </>
   );
