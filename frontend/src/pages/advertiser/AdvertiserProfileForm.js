@@ -487,7 +487,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
                         uid: "-1",
                         name: "logo.png",
                         status: "done",
-                        url: formData.logo,
+                        url: formData.currentLogo,
                       },
                     ]
                   : []
@@ -512,7 +512,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
               <img
                 src={formData.currentLogo}
                 alt="Company Logo"
-                className="company-logo-preview"
+                className="img-preview"
               />
             )}{" "}
             {/* Display logo preview if present */}
