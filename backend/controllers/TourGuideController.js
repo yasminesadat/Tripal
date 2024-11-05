@@ -52,11 +52,38 @@ const getTourguideInfo = async (req, res) => {
 const updateTourguideData = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(
-      id,
-      { profilePicture, initialPicture, ...req.body },
-      { new: true }
-    );
+    const { currProfilePicture, initialPicture, ...data } = req.body;
+
+    if (initialPicture) {
+      try {
+        const oldPicturePublicId = initialPicture
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+
+        // Delete old picture
+        await cloudinary.uploader.destroy(oldPicturePublicId);
+        data.profilePicture = "";
+      } catch (error) {
+        return res.status(500).json({ error: "Failed to delete old logo" });
+      }
+    }
+
+    if (currProfilePicture) {
+      try {
+        result = await cloudinary.uploader.upload(logo, {
+          folder: "tourGuideProfilePictures",
+        });
+        data.profilePicture = result.secure_url;
+      } catch (error) {
+        return res.status(500).json({ error: "Failed to upload new logo" });
+      }
+    }
+
+    const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
     if (!updatedTourGuide) {
       return res.status(404).json("Tour Guide not found");
