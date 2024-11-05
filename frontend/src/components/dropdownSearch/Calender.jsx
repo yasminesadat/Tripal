@@ -7,12 +7,7 @@ export default function Calender({dates,setDates}) {
   //   new DateObject().setDay(14).add(1, "month"),
   // ]);
 
-  // if (!dates || dates.length === 0) {
-  //   dates=[
-  //     new DateObject().setDay(5),
-  //     new DateObject().setDay(14).add(1, "month")
-  //   ];
-  // }
+ 
   
   return (
     <DatePicker
