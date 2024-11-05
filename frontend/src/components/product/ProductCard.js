@@ -18,7 +18,8 @@ const ProductCard = ({
   quantity,
   picture,
   averageRating,
-  isArchived
+  isArchived,
+  sales,
 }) => {
   const navigate = useNavigate();
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
@@ -34,6 +35,7 @@ const ProductCard = ({
         quantity,
         picture,
         averageRating,
+        sales,
       },
     });
   };

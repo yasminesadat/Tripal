@@ -123,7 +123,7 @@ const ProductList = ({ curr = "EGP" }) => {
     }
     return `${priceRange[0]} - ${priceRange[1]}`;
   };
-  
+
   return (
     <>
       <div className="product-list-container">
@@ -201,6 +201,7 @@ const ProductList = ({ curr = "EGP" }) => {
                           quantity={product.quantity}
                           averageRating={product.averageRating}
                           isArchived={product.isArchived}
+                          sales = {product.sales}
                         />
                       </Col>
                     ))}
