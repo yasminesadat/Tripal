@@ -29,12 +29,12 @@ export const getHotels = async (cityCode) => {
     };
   };
 
-  export const getHotelPrices = async (hotelID,checkInDate,checkOutDate) => {
+  export const getHotelPrices = async (hotelIds,checkInDate,checkOutDate,adults,boardType) => {
     try {
-      console.log("Raw cityCode value:", hotelID); // This should print just "CAI"
+      console.log(hotelIds,checkInDate,checkOutDate,adults,boardType); // This should print just "CAI"
 
       const response = await axios.get(`/getHotelPrices`,{
-        params: { hotelID,checkInDate,checkOutDate }});
+        params: { hotelIds,checkInDate,checkOutDate,adults,boardType }});
       return response.data;
     }
     catch (error) {
@@ -61,7 +61,3 @@ export const getHotels = async (cityCode) => {
   }
 
 
-// import { axios } from "./axios";
-// export const getHotels = async () => {
-//     return axios.get("/searchHotels");
-// }

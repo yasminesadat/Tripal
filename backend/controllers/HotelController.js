@@ -32,15 +32,15 @@ const searchHotels= async (req, res) => {
   }; 
 
   const getHotelPrices= async(req,res)=>{
-    const {hotelID,checkInDate,checkOutDate}=req.query.hotelID;
+    const {hotelIds,checkInDate,checkOutDate,adults,boardType}=req.query;
     try{
       const response = await amadeus.shopping.hotelOffersSearch.get({
-        hotelIds: hotelID,
-        adults: "1",
-        checkInDate,checkOutDate,
-        bestRateOnly:true
-        //checkInDate: "2023-10-10",
-        //checkOutDate: "2023-10-12",
+        hotelIds:hotelIds,
+        adults,
+        checkInDate,
+        checkOutDate,
+        boardType,
+       bestRateOnly:true
       });
       res.json(response.data);
     } catch (error) {

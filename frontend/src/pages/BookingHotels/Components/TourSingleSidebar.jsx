@@ -1,97 +1,124 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import Calender from "../../../components/dropdownSearch/Calender";
+import DatePicker, { DateObject } from "react-multi-date-picker";
 
-import { times } from "./tourSingleContent";
+import { times } from "./tourSingleContent";  // Times is the boardType :) 
 import { getHotelPrices } from "../../../api/HotelService";
 
   
   export default function TourSingleSidebar({ hotelID }) {
-    const [hotelDetails, setHotelDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // State for check-in and check-out dates
-    const [checkInDate, setCheckInDate] = useState(null);
-    const [checkOutDate, setCheckOutDate] = useState(null);
-
-
+    const [dates, setDates] = useState([
+      new DateObject().setDay(5),
+      new DateObject().setDay(14),
+    ]);
     const [adultNumber, setAdultNumber] = useState(0);
-   const [youthNumber, setYouthNumber] = useState(0);
+    const [youthNumber, setYouthNumber] = useState(0);
     const [childrenNumber, setChildrenNumber] = useState(0);
     const [isExtraService, setisExtraService] = useState(false);
     const [isServicePerPerson, setIsServicePerPerson] = useState(false);
     const [extraCharge, setExtraCharge] = useState(0);
-
+    const [singleRoom,setSingleRoom]= useState(0.0);
+    const [doubleRoom,setDoubleRoom]= useState(0.0);
+    const [tripleRoom,setTripleRoom]= useState(0.0);
+    const [selectedTime, setSelectedTime] = useState("ROOM_ONLY");
+    const [activeTimeDD, setActiveTimeDD] = useState(false);
+    
 
     const prices = {
-      adultPrice:94,
-      youthPrice:94,
-      childrenPrice:94,
-      extraService:94,
-      servicePerPerson:94,
+      extraService: 40,
+      servicePerPerson: 40,
     };
 
-    const fetchHotelPrices = async () => {
-        if (!checkInDate || !checkOutDate) return; // Only call API if both dates are selected
+    const fetchHotelPrices = useCallback( async () => {
+        if (!dates || !selectedTime ) return; // Only call API if both dates are selected
+       // console.log("checkin",dates[0].format("YYYY-MM-DD")," checkout",dates[1].format("YYYY-MM-DD"))
         try {
-            const response = await getHotelPrices(hotelID, {
-                checkIn: checkInDate,
-                checkOut: checkOutDate,
-                adults: adultNumber
-            });
-            console.log("Hotel Prices Response:", response);
-            setHotelDetails(response);
-            prices.adultPrice=response.offers[0].price.total;
-            prices.childrenPrice=prices.adultPrice/2;
+                const responseSingle = await getHotelPrices(hotelID, 
+               dates[0].format("YYYY-MM-DD"),
+               dates[1].format("YYYY-MM-DD"),
+                 1,
+                 selectedTime
+            );
+           const price1=responseSingle[0].offers[0].price.variations.average.base;
+            console.log("Single Prices Response:", price1);
+            setSingleRoom( price1);
+          }
+          catch (error) {           
+            console.error("No rooms available for the selected criteria.");
+            setSingleRoom("NA");
+            setError("No rooms available for the selected dates and criteria.");           
+         }
+
+          try{
+
+            const responseDouble = await getHotelPrices(hotelID, 
+               dates[0].format("YYYY-MM-DD"),
+              dates[1].format("YYYY-MM-DD"),
+              2,
+              selectedTime
+          );
+            const price2= responseDouble[0].offers[0].price.variations.average.base
+            console.log("Double Prices Response:", price2);
+            setDoubleRoom(price2);
+          }
+          catch (error) {           
+            console.error("No rooms available for the selected criteria.");
+            setDoubleRoom("NA");
+            setError("No rooms available for the selected dates and criteria.");           
+         }
+
+          try{
+            const responseTriple = await getHotelPrices(hotelID, 
+              dates[0].format("YYYY-MM-DD"),
+              dates[1].format("YYYY-MM-DD"),
+              3,
+              selectedTime
+          );
+            const price3= responseTriple[0].offers[0].price.variations.average.base
+
+            console.log("Triple Prices Response:", price3);
+            setTripleRoom(price3);
+          
 
           }
-         catch (error) {
-            console.error("Error fetching hotel prices:", error);
-            setError("Failed to load hotel prices.");
-        } finally {
+         catch (error) {           
+           console.error("No rooms available for the selected criteria.");
+           setTripleRoom("NA")
+           setError("No rooms available for the selected dates and criteria.");           
+        }
+        
+         finally {
             setLoading(false);
         }
-    };
+    }, [hotelID, dates,selectedTime]);
 
     // useEffect to call fetchHotelPrices when dates change
     useEffect(() => {
         fetchHotelPrices();
-    }, [hotelID, checkInDate, checkOutDate]); // Fetch data when hotelID or dates change
+    }, [hotelID, dates,selectedTime,fetchHotelPrices]); // Fetch data when hotelID or dates change
 
-    // const handleCheckInChange = (date) => {
-    //     setCheckInDate(date); // Assuming date is a valid date string or Date object
-    // };
 
-    // const handleCheckOutChange = (date) => {
-    //     setCheckOutDate(date); // Assuming date is a valid date string or Date object
-    // };
-
-    // // Render loading or error state
-    // if (loading) return <div>Loading...</div>;
-    // if (error) return <div>{error}</div>;
-    
 
  
 
-  useEffect(() => {
-    setExtraCharge(0);
-    if (isExtraService) {
-      setExtraCharge((pre) => pre + prices.extraService);
-    }
-    if (isServicePerPerson) {
-      setExtraCharge((pre) => pre + prices.servicePerPerson);
-    }
-  }, [isExtraService, isServicePerPerson, setExtraCharge]);
+  // useEffect(() => {
+  //   setExtraCharge(0);
+  //   if (isExtraService) {
+  //     setExtraCharge((pre) => pre + prices.extraService);
+  //   }
+  //   if (isServicePerPerson) {
+  //     setExtraCharge((pre) => pre + prices.servicePerPerson);
+  //   }
+  // }, [isExtraService, isServicePerPerson, setExtraCharge]);
 
-  const [selectedTime, setSelectedTime] = useState("");
-  const [activeTimeDD, setActiveTimeDD] = useState(false);
+  
 
   return (
     <div className="tourSingleSidebar">
-      <div className="d-flex items-center">
-        <div>From</div>
-        <div className="text-20 fw-500 ml-10">$1,200</div>
-      </div>
+     
 
       <div className="searchForm -type-1 -sidebar mt-20">
         <div className="searchForm__form">
@@ -104,7 +131,7 @@ import { getHotelPrices } from "../../../api/HotelService";
                 <h5>From</h5>
                 <div>
                   <span className="js-first-date">
-                    <Calender />
+                    <Calender dates={dates} setDates={setDates}/>
                   </span>
                   <span className="js-last-date"></span>
                 </div>
@@ -116,8 +143,7 @@ import { getHotelPrices } from "../../../api/HotelService";
           </div>
 
           <div className="searchFormItem js-select-control js-form-dd">
-            <div
-              className="searchFormItem__button"
+          <div className="searchFormItem__button"
               onClick={() => setActiveTimeDD((pre) => !pre)}
               data-x-click="time"
             >
@@ -125,9 +151,9 @@ import { getHotelPrices } from "../../../api/HotelService";
                 <i className="text-20 icon-clock"></i>
               </div>
               <div className="searchFormItem__content">
-                <h5>Time</h5>
+                <h5>BoardType</h5>
                 <div className="js-select-control-chosen">
-                  {selectedTime ? selectedTime : "Choose time"}
+                  {selectedTime ? selectedTime : "Choose BoardType"}
                 </div>
               </div>
               <div className="searchFormItem__icon_chevron">
@@ -165,20 +191,19 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
       </div>
 
-      <h5 className="text-18 fw-500 mb-20 mt-20">Tickets</h5>
+      <h5 className="text-18 fw-500 mb-20 mt-20">Rooms</h5>
 
       <div>
         <div className="d-flex items-center justify-between">
           <div className="text-14">
-            Adult (18+ years){" "}
+            Single (1 Person) {" "}
             <span className="fw-500">
-              ${(prices.adultPrice * adultNumber).toFixed(2)}
-            </span>
+            { singleRoom && !isNaN(singleRoom) ? `$${(singleRoom * adultNumber).toFixed(2)}` : "NA"}            </span>
           </div>
 
           <div className="d-flex items-center js-counter">
             <button
-              onClick={() => setAdultNumber((pre) => (pre > 1 ? pre - 1 : pre))}
+              onClick={() => setAdultNumber((pre) => (pre > 0 ? pre - 1 : pre))}
               className="button size-30 border-1 rounded-full js-down"
             >
               <i className="icon-minus text-10"></i>
@@ -198,18 +223,18 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
       </div>
 
-      {/* <div className="mt-15">
+      <div className="mt-15">
         <div className="d-flex items-center justify-between">
           <div className="text-14">
-            Youth (13-17 years){" "}
+            Double (2 Persons) {" "}
             <span className="fw-500">
-              ${(prices.youthPrice * youthNumber).toFixed(2)}
+            {doubleRoom && !isNaN(doubleRoom) ? `$${(doubleRoom * youthNumber).toFixed(2)}` : "NA"}           
             </span>
           </div>
 
           <div className="d-flex items-center js-counter">
             <button
-              onClick={() => setYouthNumber((pre) => (pre > 1 ? pre - 1 : pre))}
+              onClick={() => setYouthNumber((pre) => (pre > 0 ? pre - 1 : pre))}
               className="button size-30 border-1 rounded-full js-down"
             >
               <i className="icon-minus text-10"></i>
@@ -227,21 +252,21 @@ import { getHotelPrices } from "../../../api/HotelService";
             </button>
           </div>
         </div>
-      </div> */}
+      </div>
 
       <div className="mt-15">
         <div className="d-flex items-center justify-between">
           <div className="text-14">
-            Children (0-12 years){" "}
+            Triple (3 Persons) {" "}
             <span className="fw-500">
-              ${(prices.childrenPrice * childrenNumber).toFixed(2)}
+            { tripleRoom && !isNaN(tripleRoom) ? `$${(tripleRoom * childrenNumber).toFixed(2)}` : "NA"}            
             </span>
           </div>
 
           <div className="d-flex items-center js-counter">
             <button
               onClick={() =>
-                setChildrenNumber((pre) => (pre > 1 ? pre - 1 : pre))
+                setChildrenNumber((pre) => (pre > 0 ? pre - 1 : pre))
               }
               className="button size-30 border-1 rounded-full js-down"
             >
@@ -262,9 +287,9 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
       </div>
 
-      <h5 className="text-18 fw-500 mb-20 mt-20">Add Extra</h5>
+      {/* <h5 className="text-18 fw-500 mb-20 mt-20">Add Extra</h5> */}
 
-      <div className="d-flex items-center justify-between">
+      {/* <div className="d-flex items-center justify-between">
         <div className="d-flex items-center">
           <div className="form-checkbox">
             <input
@@ -282,8 +307,8 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
 
         <div className="text-14">$40</div>
-      </div>
-
+      </div> */}
+{/* 
       <div className="d-flex justify-between mt-20">
         <div className="d-flex">
           <div className="form-checkbox mt-5">
@@ -309,20 +334,20 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
 
         <div className="text-14">$40</div>
-      </div>
+      </div> */}
 
       <div className="line mt-20 mb-20"></div>
 
       <div className="d-flex items-center justify-between">
         <div className="text-18 fw-500">Total:</div>
         <div className="text-18 fw-500">
-          $
-          {(
-            prices.adultPrice * adultNumber +
-            prices.youthPrice * youthNumber +
-            prices.childrenPrice * childrenNumber +
-            extraCharge * 1
-          ).toFixed(2)}
+        $
+        {(
+          (isNaN(singleRoom) ? 0 : singleRoom) * adultNumber +
+          (isNaN(doubleRoom) ? 0 : doubleRoom) * youthNumber +
+          (isNaN(tripleRoom) ? 0 : tripleRoom) * childrenNumber +
+          (isNaN(extraCharge) ? 0 : extraCharge) * 1
+        ).toFixed(2)}
         </div>
       </div>
 
