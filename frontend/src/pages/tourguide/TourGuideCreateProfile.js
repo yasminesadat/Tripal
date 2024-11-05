@@ -3,6 +3,7 @@ import { getProfileData, updateProfile } from "../../api/TourGuideService";
 import { useParams, useNavigate } from "react-router-dom";
 import languages from "../../assets/constants/Languages";
 import { nationalities } from "../../assets/Nationalities";
+
 import moment from "moment";
 import {
   Form,
@@ -14,8 +15,9 @@ import {
   message,
   Card,
 } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import TourguideNavBar from "../../components/navbar/TourguideNavBar"; // Ensure this import is correct
+import Upload from "antd/es/upload/Upload";
 
 const { Option } = Select;
 
@@ -44,7 +46,7 @@ const TourGuideCreateProfile = () => {
     languagesSpoken: [],
     education: [],
     previousWork: [],
-    profilePicture: "",
+    currProfilePicture: "",
   });
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const TourGuideCreateProfile = () => {
           initialEducation: data.education || [],
           initialPreviousWork: data.previousWork || [],
           initialProfilePicture: data.profilePicture || "",
-          profilePicture: data.currProfilePicture || "",
+          currprofilePicture: data.ProfilePicture || "",
           email: data.email || "",
           name: data.name || "",
           mobileNumber: data.mobileNumber || "",
@@ -107,6 +109,39 @@ const TourGuideCreateProfile = () => {
       previousWork: formData.previousWork,
     });
   }, [formData, form]);
+
+  const handleLogoChange = (info) => {
+    if (info.fileList.length === 0) {
+      setFormData({ ...formData, currProfilePicture: null });
+      return;
+    }
+
+    const file = info.file.originFileObj || info.file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData({ ...formData, currProfilePicture: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBeforeUpload = (file) => {
+    if (formData.currProfilePicture) {
+      message.error("Only one logo can be uploaded.");
+      return Upload.LIST_IGNORE;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData({ ...formData, currProfilePicture: reader.result });
+    };
+    reader.readAsDataURL(file);
+    return false;
+  };
+
+  const handleRemove = () => {
+    setFormData({ ...formData, currProfilePicture: null });
+  };
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -304,6 +339,51 @@ const TourGuideCreateProfile = () => {
                 </Option>
               ))}
             </Select>
+          </Form.Item>
+          <Form.Item label="profilePicture" name="profilePicture">
+            <Upload
+              name="profilePicture"
+              listType="picture"
+              accept=".png,.jpeg,.jpg"
+              beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+              onChange={handleLogoChange}
+              onRemove={handleRemove} // Allow removal of the logo
+              fileList={
+                formData.currProfilePicture
+                  ? [
+                      {
+                        uid: "-1",
+                        name: "profilePicture.png",
+                        status: "done",
+                        url: formData.currProfilePicture,
+                      },
+                    ]
+                  : []
+              } // Ensure only one file is shown
+            >
+              {!formData.currProfilePicture && (
+                <Button
+                  icon={<UploadOutlined />}
+                  size="small"
+                  type="default"
+                  style={{
+                    whiteSpace: "nowrap",
+                    padding: "0 8px",
+                    width: "auto",
+                  }}
+                >
+                  Upload Logo
+                </Button>
+              )}
+            </Upload>
+            {formData.currProfilePicture && (
+              <img
+                src={formData.currProfilePicture}
+                alt="Tour Guide Profile"
+                className="img-preview"
+              />
+            )}{" "}
+            {/* Display logo preview if present */}
           </Form.Item>
           <Form.List name="education">
             {(fields, { add: addEducation, remove: removeEducation }) => (
