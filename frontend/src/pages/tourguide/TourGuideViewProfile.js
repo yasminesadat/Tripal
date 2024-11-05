@@ -1,12 +1,12 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createTourGuide, updateProfile, getProfileData } from "../../api/TourGuideService";
+import { updateProfile, getProfileData } from "../../api/TourGuideService";
 import '../seller/SellerProfile.css';
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
 import { tourGuideID } from "../../IDs";
 import ChangePassword from "../../components/common/ChangePassword";
-
+import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { message } from 'antd'; 
 
 const TourGuideProfile = () => {
   const { id } = useParams();
@@ -35,6 +35,15 @@ const TourGuideProfile = () => {
     fetchUser();
   }, [id]);
 
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion("Tourguide", id);
+      message.success(response.message); 
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred"); 
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -56,7 +65,7 @@ const TourGuideProfile = () => {
         </div>
       </div>
       <ChangePassword id={tourGuideID} userType="tour guide" />
-
+      <button onClick={handleDeletion}>Delete Account</button>
     </div>
   );
 };

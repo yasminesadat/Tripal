@@ -5,6 +5,7 @@ import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/DeletionRequestService";
 import { message } from 'antd'; 
+
 const AdvertiserProfile = () => {
   const userType = "advertiser"
   const { id } = useParams();
@@ -34,9 +35,9 @@ const AdvertiserProfile = () => {
     try {
       const response = await requestAccountDeletion("Advertiser", id);
       message.success("Account deletion request submitted successfully.");
-      message.success(response);
+      message.success(response.message);
     } catch (error) {
-      message.warning(error.response.data.error);
+      message.warning(error.response?.data?.message || "An error occurred");
     }
   };
 
