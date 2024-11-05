@@ -143,6 +143,44 @@ const editProduct = asyncHandler(async (req, res) => {
   res.status(200).json(updatedProduct);
 });
 
+const archiveProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try{
+    const product = await Product.findById(id);
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    product.isArchived = true;
+    await product.save();
+
+    res.status(200).json({ message: "Product archived successfully", product });
+ }
+  catch (error) {
+    console.log(error.message);
+  }
+});
+
+const unArchiveProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try{
+    const product = await Product.findById(id);
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
+
+    product.isArchived = false;
+    await product.save();
+
+    res.status(200).json({ message: "Product unarchived successfully", product });
+ }
+  catch (error) {
+    console.log(error.message);
+  }
+});
+
 
 module.exports = {
   createProduct,
@@ -151,4 +189,6 @@ module.exports = {
   filterProductsByPrice,
   sortProductsByRatings,
   editProduct,
+  archiveProduct,
+  unArchiveProduct,
 };

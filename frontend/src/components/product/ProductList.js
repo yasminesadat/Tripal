@@ -197,6 +197,7 @@ const ProductList = ({ curr="EGP" })  => {
                           seller={product.seller.name}
                           quantity={product.quantity}
                           averageRating={product.averageRating}
+                          isArchived = {product.isArchived}
                         />
                       </Col>
                     ))}
