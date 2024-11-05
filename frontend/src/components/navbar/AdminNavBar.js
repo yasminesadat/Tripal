@@ -29,7 +29,10 @@ const AdminNavBar = () => {
         <div className="nav-bar-link">
           <Link to="/admin/complaints">View Complaints</Link>
         </div>
-       <div className="nav-bar-link">
+        <div class="nav-bar-link">
+          <Link to="/admin/changepassword">Change password</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
       </div>

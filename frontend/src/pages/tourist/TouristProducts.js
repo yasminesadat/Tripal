@@ -1,14 +1,26 @@
-import React from "react";
-import ProductList from "../../components/product/ProductList";
-import TouristNavbar from "../../components/navbar/TouristNavBar";
+import React, { useEffect, useState } from "react";
+import ProductList from "../../components/product/ProductList"; 
+import TouristNavBar from "../../components/navbar/TouristNavBar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const TouristProducts = () => {
+const TouristHomePage = () => {
+  const [currency, setCurrency] = useState("EGP"); 
+
+  useEffect(() => {
+    const curr = sessionStorage.getItem("currency");
+    if (curr) {
+      setCurrency(curr);
+    }
+  }, []);
+
   return (
     <div>
-      <TouristNavbar />
-      <ProductList />
+      <TouristNavBar />
+      <ProductList curr={currency} />
+      <ToastContainer />
     </div>
   );
 };
 
-export default TouristProducts;
+export default TouristHomePage;

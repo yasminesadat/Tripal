@@ -228,72 +228,20 @@ const getItineraryRatings = async (req, res) => {
     }
 };
 
-const bookItinerary = async (req, res) => {
-    const { itineraryId } = req.params;
-    const { touristId } = req.body;
-
-    try {
-        const itinerary = await itineraryModel.findById(itineraryId);
-        console.log(itineraryId);
-        if (!itinerary) 
-            return res.status(404).json({ error: 'Itinerary not found in backend' });
-        
-        const alreadyBooked = itinerary.tourists.includes(touristId);
-
-        if (alreadyBooked) 
-            return res.status(400).json({ message: 'You have already booked this itinerary.' });
-        console.log("touristId is ", touristId);
-        const tourist = await touristModel.findById(touristId);
-        if (!tourist) 
-            return res.status(404).json({ error: 'Tourist not found'} );
-        
-        if (tourist.calculateAge() < 18) 
-            return res.status(403).json({ error: 'Tourists under 18 cannot book an itinerary.' });
-        
-
-        itinerary.tourists.push(touristId);
-        await itinerary.save();
-
-        res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-const cancelBooking = async (req, res) => {
-    const { itineraryId } = req.params;
-    const { touristId } = req.body;
-
-    try {
-        const itinerary = await itineraryModel.findById(itineraryId);
-
-        if (!itinerary) 
-            return res.status(404).json({ error: 'Itinerary not found' });
-        
-
-        const touristIndex = itinerary.tourists.findIndex(id => id.toString() === touristId);
-        
-        if (touristIndex === -1) 
-            return res.status(400).json({ message: 'You have no booking reservations for this.' });
-        
-        itinerary.tourists.splice(touristId, 1);
-        await itinerary.save();
-
-        res.status(200).json({ message: 'Itinerary reservation cancelled successfully!', itinerary });
-    } catch (error) {
-        res.status(500).json({ message: 'Error cancelling itinerary reservation', error });
-    }
-};
-
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.params.touristId;
-        const itineraries = await itineraryModel.find({ tourists: touristId }).populate('tourGuide activities tourists');
+        
+        // Find itineraries that include the given touristId in the bookings array
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId })
+            .populate('tourGuide activities bookings.touristId');
+        
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });
     }
 };
+
 
 module.exports = {
     createItinerary,
@@ -304,7 +252,5 @@ module.exports = {
     viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    bookItinerary,
-    cancelBooking,
     getTouristItineraries
 };

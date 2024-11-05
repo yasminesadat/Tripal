@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createTourGuide, updateProfile, getProfileData } from "../../api/TourGuideService";
-import '../seller/SellerProfile.css'; 
+import '../seller/SellerProfile.css';
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import { tourGuideID } from "../../IDs";
+import ChangePassword from "../../components/common/ChangePassword";
 
 
 const TourGuideProfile = () => {
@@ -43,16 +45,18 @@ const TourGuideProfile = () => {
 
   return (
     <div>
-       <TourguideNavBar/> 
-    <div className="seller-profile-container">
-      <h1 className="profile-title">User Profile</h1>
-      <div className="profile-info">
-      <p><strong>Username:</strong> {user.userName}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Mobile Number:</strong> {user.mobileNumber || 'Not provided'}</p>
-      <p><strong>Experience (Years):</strong> {user.experienceYears}</p>
+      <TourguideNavBar />
+      <div className="seller-profile-container">
+        <h1 className="profile-title">User Profile</h1>
+        <div className="profile-info">
+          <p><strong>Username:</strong> {user.userName}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Mobile Number:</strong> {user.mobileNumber || 'Not provided'}</p>
+          <p><strong>Experience (Years):</strong> {user.experienceYears}</p>
+        </div>
       </div>
-    </div>
+      <ChangePassword id={tourGuideID} userType="tour guide" />
+
     </div>
   );
 };

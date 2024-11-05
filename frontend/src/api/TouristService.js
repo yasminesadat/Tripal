@@ -12,6 +12,21 @@ export async function createTourist(newUser) {
   }
 }
 
+export async function changeTouristPassword(id, oldPassword, newPassword) {
+  try {
+    const body = {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    }
+    console.log(`/tourist-change-pass/${id}`);
+    const response = await axios.put(`/tourist-change-pass/${id}`, body);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
 export async function getTouristInformation(id) {
   try {
     const response = await axios.get(`/getTouristInfo/${id}`);
@@ -34,32 +49,11 @@ export async function updateTouristInformation(id, body) {
   }
 }
 
-export async function bookItinerary(itineraryId, touristId) {
-  try {
-    console.log("touristId iam here before failure", touristId);
-    const response = await axios.post(`/itineraries/${itineraryId}/book`,  {touristId });
-    console.log("response:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("error", error);
-    throw error;
-  }
-}
-
 export async function redeemPoints(id) {
   try {
     const response = await axios.post(`/redeem/${id}`);
     return response.data;
   } catch (error) {
-    throw error;
-  }}
-
-export async function cancelBooking(itineraryId, touristId) {
-  try {
-    const response = await axios.post(`/itineraries/${itineraryId}/cancel`, { touristId });
-    return response.data;
-  } catch (error) {
-    console.error("error", error);
     throw error;
   }
 }
@@ -70,6 +64,16 @@ export async function getTouristItineraries(touristId) {
     return response.data;
   } catch (error) {
     console.error("error", error);
+    throw error;
+  }
+}
+
+export async function getTouristActivities(touristId) {
+  try {
+    const response = await axios.get(`/activities/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tourist activities:", error);
     throw error;
   }
 }

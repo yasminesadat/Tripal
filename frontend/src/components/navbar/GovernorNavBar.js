@@ -17,7 +17,10 @@ const GovernorNavBar = () => {
         {/* <div class="nav-bar-link">
           <Link to="/create-tags">Create Tags</Link>
         </div> */}
-        <div className="nav-bar-link">
+        <div class="nav-bar-link">
+          <Link to="/governor/changepassword">Change password</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
       </div>

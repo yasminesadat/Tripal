@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PaidItinerariesList from '../../components/itinerary/PaidItinerariesList';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
- import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
+import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewPaidItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { message } from 'antd';
 
 const PaidItinerariesPage = () => {
@@ -12,6 +13,25 @@ const PaidItinerariesPage = () => {
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currency, setCurrency] = useState("EGP"); // Add currency state
+    const [exchangeRate, setExchangeRate] = useState(1); // Add exchange rate state
+
+    useEffect(() => {
+        const curr = sessionStorage.getItem("currency");
+        if (curr) {
+            setCurrency(curr);
+            fetchExchangeRate(curr);
+        }
+    }, []);
+
+    const fetchExchangeRate = async (curr) => {
+        try {
+            const rate = await getConversionRate(curr);
+            setExchangeRate(rate);
+        } catch (error) {
+            message.error("Failed to fetch exchange rate.");
+        }
+    };
 
     useEffect(() => {
         const fetchItineraries = async () => {
@@ -49,10 +69,10 @@ const PaidItinerariesPage = () => {
 
         switch (sortOption) {
             case 'priceAsc':
-                sortedItineraries.sort((a, b) => a.price - b.price);
+                sortedItineraries.sort((a, b) => (a.price * exchangeRate) - (b.price * exchangeRate));
                 break;
             case 'priceDesc':
-                sortedItineraries.sort((a, b) => b.price - a.price);
+                sortedItineraries.sort((a, b) => (b.price * exchangeRate) - (a.price * exchangeRate));
                 break;
             case 'ratingAsc':
                 sortedItineraries.sort((a, b) => a.averageRating - b.averageRating);
@@ -69,20 +89,20 @@ const PaidItinerariesPage = () => {
 
     const handleFilter = (filters) => {
         const { startDate, endDate, budgetMin, budgetMax, preferences, language } = filters;
-    
+
         if (!startDate && !endDate && !budgetMin && !budgetMax && !preferences && !language) {
             setFilteredItineraries(itineraries);
             return;
         }
-    
+
         const filtered = itineraries.filter(itinerary => {
             const itineraryDates = itinerary.availableDates.map(date => new Date(date));
-            const itineraryBudget = itinerary.price;
+            const itineraryBudget = itinerary.price * exchangeRate; // Convert budget using exchange rate
             const itineraryLanguage = itinerary.language;
 
             const start = startDate ? new Date(startDate) : null;
             const end = endDate ? new Date(endDate) : null;
-    
+
             const isDateValid = itineraryDates.some(date => {
                 const isWithinStart = !start || date >= start;
                 const isWithinEnd = !end || date <= end;
@@ -93,7 +113,7 @@ const PaidItinerariesPage = () => {
                 (!budgetMin || itineraryBudget >= budgetMin) &&
                 (!budgetMax || itineraryBudget <= budgetMax);
             
-                const isPreferencesValid = !preferences || 
+            const isPreferencesValid = !preferences || 
                 preferences.split(',').some(pref => {
                     const normalizedPref = pref.trim().toLowerCase();
                     return itinerary.activities.some(activity => 
@@ -104,10 +124,10 @@ const PaidItinerariesPage = () => {
             const isLanguageValid = 
                 !language || 
                 (itineraryLanguage && itineraryLanguage.toLowerCase() === language.toLowerCase());
-    
+
             return isDateValid && isBudgetValid && isPreferencesValid && isLanguageValid;
         });
-    
+
         setFilteredItineraries(filtered);
     };
 
@@ -124,7 +144,7 @@ const PaidItinerariesPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <PaidItinerariesList itineraries={filteredItineraries}/>
+                <PaidItinerariesList itineraries={filteredItineraries} curr={currency} />
             </div>
         </div>
     );

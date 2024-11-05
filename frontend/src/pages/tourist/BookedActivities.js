@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
+import { getTouristActivities } from "../../api/TouristService";
 import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
@@ -7,10 +7,11 @@ import ActivitySort from "../../components/activity/ActivitySort";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
+import { touristId } from "../../IDs";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
-import { bookResource } from "../../api/BookingService";
+import { cancelResource } from '../../api/BookingService';
 
-const UpcomingActivitiesPage = () => {
+const BookedActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,8 +42,8 @@ const UpcomingActivitiesPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewUpcomingActivities();
-        const activitiesWithAvgRatings = response.data.map(activity => ({
+        const response = await getTouristActivities(touristId);
+        const activitiesWithAvgRatings = response.map(activity => ({
           ...activity,
           averageRating: calculateAverageRating(activity.ratings),
         }));
@@ -50,7 +51,7 @@ const UpcomingActivitiesPage = () => {
         setActivities(activitiesWithAvgRatings);
         setFilteredActivities(activitiesWithAvgRatings);
       } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
+        setError(err.response?.data?.error || "Error fetching activitiesssss");
       } finally {
         setLoading(false);
       }
@@ -68,7 +69,9 @@ const UpcomingActivitiesPage = () => {
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const results = activities.filter((activity) => {
-      const hasMatchingTitle = activity.title.toLowerCase().includes(lowerCaseSearchTerm);
+      const hasMatchingTitle = activity.title
+        .toLowerCase()
+        .includes(lowerCaseSearchTerm);
       const hasMatchingCategory =
         activity.category &&
         activity.category.Name &&
@@ -76,7 +79,8 @@ const UpcomingActivitiesPage = () => {
       const hasMatchingTags =
         activity.tags &&
         activity.tags.some(
-          (tag) => tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          (tag) =>
+            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
         );
 
       return hasMatchingTitle || hasMatchingCategory || hasMatchingTags;
@@ -84,7 +88,7 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(results);
   };
 
-  const handleFilter = (filters) => {
+    const handleFilter = (filters) => {
     const { startDate, endDate, budgetMin, budgetMax, category, rating } = filters;
 
     const filtered = activities.filter((activity) => {
@@ -130,43 +134,42 @@ const UpcomingActivitiesPage = () => {
     setFilteredActivities(sortedActivities);
   };
 
-  const handleBookActivity = async ({ activityId, touristId }) => {
+  const handleCancelActivity = async ({ activityId, touristId }) => {
     try {
-      await bookResource('activity', activityId, touristId);
-            message.success("Activity booked successfully!");
+        console.log('Canceling activity', activityId, touristId);
+        await cancelResource('activity', activityId, touristId);
+        console.log("The activity booking has been canceled successfully!");
+        message.success("Activity booking canceled successfully!");
+        setActivities(prevActivities =>
+            prevActivities.filter(activity => activity._id !== activityId)
+          );
+          setFilteredActivities(prevFiltered =>
+            prevFiltered.filter(activity => activity._id !== activityId)
+          );
     } catch (error) {
-      console.log("Error details:", error);
-      
-      if (error.response) {
-        const { status } = error.response;
-        if (status === 400) 
-          message.warning(error.response.data.error);             
-        else 
-          message.error(error.response.data.error);  
-      } else {
-        message.error("Network error. Please try again later.");
-      }
-    }
-  };
-
+        console.log("Error details:", error);
+        message.error('Failed to cancel booking');
+        
+    };
+    };  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="page-container">
-      <TouristNavBar onCurrencyChange={setCurrency} />
-      <div className="page-title">Upcoming Activities</div>
+    <div class="page-container">
+      <TouristNavBar />
+      <div class="page-title">Booked Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div className="filter-sort-list">
-        <div className="filter-sort">
+      <div class="filter-sort-list">
+        <div class="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book ={"diana"} />
+        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onCancel ={handleCancelActivity} cancel={"diana"} />
       </div>
       <Footer />
     </div>
   );
 };
 
-export default UpcomingActivitiesPage;
+export default BookedActivitiesPage;

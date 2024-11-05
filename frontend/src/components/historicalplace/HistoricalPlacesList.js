@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getConversionRate } from "../../api/ExchangeRatesService";
+import { message } from 'antd';
 
-const HistoricalPlacesList = ({ places = [] }) => {
+const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      if (curr) {
+        try {
+          const rate = await getConversionRate(curr); 
+          setExchangeRate(rate);
+        } catch (error) {
+          message.error("Failed to fetch exchange rate.");
+        }
+      }
+    };
+
+    fetchExchangeRate();
+  }, [curr]);
+
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2); 
+  };
+
   return (
-    <div className="list" >
+    <div className="list">
       {places.map((place) => (
         <div className="list-item" key={place._id}>
           <div className="list-item-header">{place.name}</div>
@@ -26,8 +49,7 @@ const HistoricalPlacesList = ({ places = [] }) => {
                 {place.openingHours.weekends.closingTime}
               </div>
               <div className="list-item-attribute">
-                Ticket Prices: Foreigner: ${place.ticketPrices.foreigner}, Native: $
-                {place.ticketPrices.native}, Student: ${place.ticketPrices.student}
+                Ticket Prices: Foreigner: {curr} {convertPrice(place.ticketPrices.foreigner)}, Native: {curr} {convertPrice(place.ticketPrices.native)}, Student: {curr} {convertPrice(place.ticketPrices.student)}
               </div>
               <div className="list-item-attribute">
                 Tags:{" "}
