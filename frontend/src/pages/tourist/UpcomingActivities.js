@@ -131,12 +131,12 @@ const UpcomingActivitiesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
+    <div className="page-container">
       <TouristNavBar />
-      <div class="page-title">Upcoming Activities</div>
+      <div className="page-title">Upcoming Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>

@@ -137,10 +137,10 @@ const UpcomingItinerariesPage = () => {
     return (
         <div>
             <TouristNavBar />
-            <div class="page-title">Upcoming Itineraries</div>
+            <div className="page-title">Upcoming Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
-            <div class="filter-sort-list">
-                <div class="filter-sort">
+            <div className="filter-sort-list">
+                <div className="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    

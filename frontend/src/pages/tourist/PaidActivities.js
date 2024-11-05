@@ -110,10 +110,10 @@ const PaidActivitiesPage = () => {
   return (
     <div>
       <TouristNavBar />
-      <div class="page-title">Paid Activities</div>
+      <div className="page-title">Paid Activities</div>
       <ActivitySearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Components/Sidebar.jsx";
 import { speedFeatures } from "./Components/TourFilteringOptions.js";
-import { tourDataTwo } from "./Components/Tour.js";
+import { tourDataTwo } from "./Components/Tours.js";
 import Stars from "./Components/Stars.jsx";
 import Pagination from "./Components/pagination.jsx";
 import image from "./Components/3.png"
 import { useParams } from "react-router-dom";
+//import styles from "../../components/style.module.css";
+
 
 
 import { Link } from "react-router-dom";
@@ -24,17 +26,14 @@ export default function TourList1() {
 
 const fetchTourData = async () => {
     try {
-        console.log("hiiiiiiiiii",cityCode);
+       // console.log("hiiiiiiiiii",cityCode);
       const response = await getHotels(cityCode);
-      console.log("API Response:", response);
+     // console.log("API Response:", response);
   
-     // if (response && response.data){
       const transformedData = response.map((hotel) => ({
         id: hotel.hotelId,
         title: hotel.name,
-        location: `${hotel.iataCode}`, // For example: "PAR, FR"
-       // rating: 4.5, // Default or mock rating, replace with actual data if available
-      //  ratingCount: 120, // Default or mock rating count
+        location: hotel.iataCode, 
         description: "A beautiful hotel in the heart of Paris", 
        price: 100, // Default or mock price
        fromPrice: 120, // Default starting price
@@ -48,14 +47,15 @@ const fetchTourData = async () => {
           name: `Free Cancellation`,
         },
       ],
-        imageSrc: image, // Placeholder image, replace if actual image URLs are available
+        imageSrc: image, 
         // featured: true,
         // badgeText: "Best Seller",
         duration: "1 night", // Default duration
       }));
   
       // Set the transformed data to the component's state
-      setFilteredHotels(transformedData);}
+      setFilteredHotels(transformedData);
+      }
       catch (error) {
       console.error("Error fetching tours:", error);
     }
@@ -248,7 +248,7 @@ const fetchTourData = async () => {
                       </div>
 
                       <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/tour-single-1/${elm.id}`}>
+                        <Link to={`/hotelDetails/${elm.title}/${elm.id}`}>
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
                         </Link>

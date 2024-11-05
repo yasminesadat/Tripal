@@ -128,12 +128,12 @@ const ItineraryPage = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div class="page-container">
+        <div className="page-container">
             <TouristNavBar />
-            <div class="page-title">My Itineraries</div>
+            <div className="page-title">My Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
-            <div class="filter-sort-list">
-                <div class="filter-sort">
+            <div className="filter-sort-list">
+                <div className="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    

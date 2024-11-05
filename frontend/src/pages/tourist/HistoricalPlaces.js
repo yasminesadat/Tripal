@@ -75,12 +75,12 @@ const HistoricalPlacesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
+    <div className="page-container">
       <TouristNavBar/>
-      <div class="page-title">Historical Places</div>
+      <div className="page-title">Historical Places</div>
       <HistoricalPlacesSearch onSearch={handleSearch} />
-      <div class="filter-sort-list">
-        <div class="filter-sort">
+      <div className="filter-sort-list">
+        <div className="filter-sort">
           <HistoricalPlacesFilter onFilter={handleFilter} />
         </div>
         <HistoricalPlacesList places={filteredPlaces} />

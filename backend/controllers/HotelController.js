@@ -17,4 +17,52 @@ const searchHotels= async (req, res) => {
     }
   }; 
 
-module.exports={searchHotels};
+
+  const getHotelDetails= async(req,res)=>{
+    const hotelIds= req.query.hotelID;
+    try {
+      const response = await amadeus.eReputation.hotelSentiments.get({
+        hotelIds,
+      });
+       
+      res.json(response.data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }; 
+
+  const getHotelPrices= async(req,res)=>{
+    const {hotelID,checkInDate,checkOutDate}=req.query.hotelID;
+    try{
+      const response = await amadeus.shopping.hotelOffersSearch.get({
+        hotelIds: hotelID,
+        adults: "1",
+        checkInDate,checkOutDate,
+        bestRateOnly:true
+        //checkInDate: "2023-10-10",
+        //checkOutDate: "2023-10-12",
+      });
+      res.json(response.data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+    
+  };
+
+
+  const getCityCode= async(req,res)=>{
+    const searchinfo=req.query.searchinfo;
+    try{
+      const response = await amadeus.referenceData.locations.cities.get({
+        keyword: searchinfo,
+        max:12
+      });
+      res.json(response.data);
+    }
+    catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
+
+module.exports={searchHotels,getHotelDetails,getHotelPrices,getCityCode};

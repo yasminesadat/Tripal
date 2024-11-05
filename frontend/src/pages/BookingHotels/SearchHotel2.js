@@ -6,12 +6,15 @@ import image from "./Components/bg.svg"
 
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import HeaderSerch from "./Components/SearchEngine";
 
 export default function Hero6() {
   const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [location, setLocation] = useState("");
   const [calender, setCalender] = useState("");
   const [tourType, setTourType] = useState("");
+  const [selected, setSelected] = useState("");
+
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -82,7 +85,7 @@ export default function Hero6() {
                           )
                         }
                       >
-                        <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
+                        {/* <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
                           <i className="text-20 icon-pin"></i>
                         </div>
                         <div className="searchFormItem__content">
@@ -90,15 +93,19 @@ export default function Hero6() {
                           <div className="js-select-control-chosen">
                             {location ? location : "Search destinations"}
                           </div>
-                        </div>
+                        </div> */}
                       </div>
 
+                       <div className="xl:d-none ml-30" >
+                       {/* <h5>Where</h5> */}
+                           <HeaderSerch selected={selected} setSelected={setSelected}/>
+                        </div>
                       <Location
-                        setLocation={setLocation}
+                        setLocation={setSelected}
                         active={currentActiveDD === "location"}
                       />
                     </div>
-{/* 
+
                     <div className="searchFormItem js-select-control js-form-dd js-calendar">
                       <div
                         className="searchFormItem__button"
@@ -123,9 +130,9 @@ export default function Hero6() {
                           </div>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
 
-                    <div className="searchFormItem js-select-control js-form-dd">
+                    {/* <div className="searchFormItem js-select-control js-form-dd">
                       <div
                         className="searchFormItem__button"
                         onClick={() =>
@@ -149,12 +156,12 @@ export default function Hero6() {
                         setTourType={setTourType}
                         active={currentActiveDD === "tourType"}
                       />
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="searchForm__button">
                     <button
-                      onClick={() => navigate(`/hotelList/${location}`)}
+                      onClick={() => navigate(`/hotelList/${selected}`)}
                       className="button -dark-1 size-60 bg-accent-1 rounded-200 text-white"
                     >
                       <i className="icon-search text-16"></i>
