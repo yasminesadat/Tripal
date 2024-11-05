@@ -39,7 +39,7 @@ const SignUpAllUsers = () => {
   const acceptRequestFE = async (RequestID) => {
     try {
       const response = await SetRequestStatus(RequestID, "accepted");
-      console.log("Request accepted successfully:", response);
+      // console.log("Request accepted successfully:", response);
       return response;
     } catch (error) {
       console.error("Error accepting request:", error.message);
@@ -72,7 +72,7 @@ const SignUpAllUsers = () => {
     // reader.readAsDataURL(file.originFileObj);
     // reader.onloadend = () => {
     setFormData({ ...formData, document: file });
-    console.log("FILE DATA", info.file);
+    // console.log("FILE DATA", info.file);
 
   }
 
@@ -81,7 +81,11 @@ const SignUpAllUsers = () => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("im submitting with the document", formData.document);
+    // console.log("im submitting with the document", formData.document);
+    if ((role === "seller" || role === "tour-guide" || role === "advertiser") && !formData.document) {
+      message.error("Please upload the required documents in one pdf.");
+      return; // Stop the submission if the document is missing
+    }
     const formattedDateOfBirth = role === "tourist"
       ? new Date(values.dateOfBirth).toISOString().split("T")[0]
       : values.dateOfBirth;
@@ -141,7 +145,7 @@ const SignUpAllUsers = () => {
           role: "Advertiser",
         }, formData.document);
 
-        console.log("response", response)
+        // console.log("response", response)
         navigate("/seller/pending", {
           state: {
             ...commonUser,
@@ -152,14 +156,14 @@ const SignUpAllUsers = () => {
 
         response = await createTourist(newUser);
         const touristId = response.data.id || response.data._id;
-        console.log(touristId)
+        // console.log(touristId)
         message.success("Sign up successful!");
         navigate(`/tourist/select-preferences/${touristId}`);
 
       }
 
     } catch (error) {
-      console.log('Error object:', error);
+      // console.log('Error object:', error);
       // Check if error response exists and display the error message
 
       message.error(error.message); // Display backend error
@@ -281,6 +285,7 @@ const SignUpAllUsers = () => {
               accept=".pdf"
               beforeUpload={() => false}
               // beforeUpload={handleBeforeUpload}
+              required
               onChange={handleDocumentChange}
               onRemove={handleRemove}
             >
