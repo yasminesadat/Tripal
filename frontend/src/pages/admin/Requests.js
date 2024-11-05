@@ -5,11 +5,12 @@ import { adminId } from "../../IDs";
 import "../../css/custom.css";
 import "../../css/main.css";
 import "../../css/vendors.css";
-import { message } from 'antd';
+import { message, Modal, Button } from 'antd';
 
 const Requests = () => {
     const [requests, setRequests] = useState([]);
     const [selectedDocument, setSelectedDocument] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -68,14 +69,20 @@ const Requests = () => {
             const documentUrl = response.document;
 
             setSelectedDocument(documentUrl);
-            if (!documentUrl)
+            if (!documentUrl) {
                 message.success("No document uploaded!");
-            else
+            } else {
+                setIsModalVisible(true); // Show the modal when a document is loaded
                 message.success("Document loaded successfully!");
+            }
         } catch (error) {
             message.error("Failed to load document!");
             console.error("Error loading document:", error);
         }
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false); // Close the modal
     };
 
     return (
@@ -125,9 +132,18 @@ const Requests = () => {
                         </div>
                     </div>
 
-                    {selectedDocument && (
-                        <div className="document-viewer">
-                            <h2>Document Viewer</h2>
+                    {/* Modal for Document Viewer */}
+                    <Modal
+                        title="Document Viewer"
+                        visible={isModalVisible}
+                        onCancel={handleCancel}
+                        footer={[
+                            <Button key="cancel" onClick={handleCancel}>
+                                Cancel
+                            </Button>,
+                        ]}
+                    >
+                        {selectedDocument && (
                             <iframe
                                 src={selectedDocument}
                                 title="Document Viewer"
@@ -135,8 +151,8 @@ const Requests = () => {
                                 height="500px"
                                 style={{ border: "1px solid #ccc", borderRadius: "8px" }}
                             ></iframe>
-                        </div>
-                    )}
+                        )}
+                    </Modal>
                 </div>
             </div>
         </div>
