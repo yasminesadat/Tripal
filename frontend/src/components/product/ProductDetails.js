@@ -24,7 +24,7 @@ const { Title, Paragraph } = Typography;
 
 const ProductDetails = ({ homeURL, productsURL }) => {
   const location = useLocation();
-  const { id, name, seller, price, description, quantity, picture, averageRating } = location.state; // Use 'id' from location.state
+  const { id, name, seller, price, description, quantity, picture, averageRating, sales } = location.state; // Use 'id' from location.state
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -94,7 +94,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
               <div style={{ minHeight: 280 }}>
                 <Title level={1}>{name}</Title>
                 <Paragraph>
-                  <strong>Price:</strong> ${price}
+                  <strong>Price:</strong> {price}
                 </Paragraph>
                 <Paragraph>
                   <strong>Seller:</strong> {seller}
@@ -103,9 +103,14 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                   <strong>Description:</strong> {description}
                 </Paragraph>
                 {userRole !== "Tourist" && (
-                  <Paragraph>
-                    <strong>Quantity:</strong> {quantity}
-                  </Paragraph>
+                  <div>
+                    <Paragraph>
+                      <strong>Quantity:</strong> {quantity}
+                    </Paragraph>
+                    <Paragraph>
+                      <strong>Sales:</strong> {sales}
+                    </Paragraph>
+                  </div>
                 )}
                 <Paragraph>
                   <strong>Average Rating:</strong>{" "}
