@@ -6,7 +6,7 @@ const TourGuide = require("../models/users/TourGuide");
 const { addRating, getRatings } = require("../controllers/RatingController");
 const TourGuideRating = require("../models/TourGuideRating");
 const { changePassword } = require("../controllers/PasswordController")
-// defining tour-guide routes
+
 router.post("/tourGuide", createTourGuide);
 router.put("/tourGuide/:id", updateTourguideData);
 router.get("/tourGuide/:id", getTourguideInfo);

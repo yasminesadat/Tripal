@@ -22,7 +22,6 @@ const bookResource = async (req, res) => {
         
         if (tourist.calculateAge() < 18) 
             return res.status(403).json({ error: 'You must be at least 18 years old to book' });
-
     
         if (resourceType === 'itinerary') {
             if (!selectedDate || !selectedTime) {
@@ -46,6 +45,8 @@ const bookResource = async (req, res) => {
         } 
         else
             resource.tourists.push(touristId);
+        
+        resource.booked = true;
         await resource.save();
     
         res.status(200).json({ message: `${resourceType} booked successfully` });
@@ -84,7 +85,7 @@ try {
             }            
             resource.bookings.splice(bookingIndex, 1);
             resource.markModified('bookings');
-
+            resource.booked = false;
         }
     await resource.save();
 
