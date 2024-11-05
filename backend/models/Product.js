@@ -35,6 +35,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    sales: {
+      type: Number,
+      default: 0.0,
+    }
   },
   { timestamps: true }
 );
