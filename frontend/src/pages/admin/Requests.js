@@ -102,7 +102,7 @@ const Requests = () => {
                                             <tr>
                                                 <td>{request.userName}</td>
                                                 <td>{request.role}</td>
-                                                <td className={`circle ${request.status === 'accepted' ? 'text-blue-1' : request.status === 'pending' ? 'text-purple-2' : 'text-red-1'}`}>
+                                                <td className={`circle ${request.status === 'accepted' ? 'text-green-2' : request.status === 'pending' ? 'text-blue-1' : 'text-red-2'}`}>
                                                     {request.status}
                                                 </td>
                                                 <td>{new Date(request.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
