@@ -9,6 +9,7 @@ import { message } from 'antd';
 
 const Requests = () => {
     const [requests, setRequests] = useState([]);
+    const [selectedDocument, setSelectedDocument] = useState(null);
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -61,22 +62,19 @@ const Requests = () => {
         }
     };
 
-    const downloadDocument = async (id) => {
+    const viewDocument = async (id) => {
         try {
             const response = await getRequest(id);
             const documentUrl = response.document;
 
-            const link = document.createElement("a");
-            link.href = documentUrl;
-            link.download = "document.pdf";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            message.success("Document downloaded successfully!");
+            setSelectedDocument(documentUrl);
+            if (!selectedDocument)
+                message.success("No document uploaded!");
+            else
+                message.success("Document loaded successfully!");
         } catch (error) {
-            message.error("Failed to download document!");
-            console.error("Error downloading document:", error);
+            message.error("Failed to load document!");
+            console.error("Error loading document:", error);
         }
     };
 
@@ -109,8 +107,8 @@ const Requests = () => {
                                                 </td>
                                                 <td>{new Date(request.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
                                                 <td>
-                                                    <button onClick={() => downloadDocument(request._id)}>
-                                                        Download document
+                                                    <button onClick={() => viewDocument(request._id)}>
+                                                        View Document
                                                     </button>
                                                     <button onClick={() => acceptSelectedRequest(request._id)}>
                                                         Accept
@@ -126,6 +124,19 @@ const Requests = () => {
                             </table>
                         </div>
                     </div>
+
+                    {selectedDocument && (
+                        <div className="document-viewer">
+                            <h2>Document Viewer</h2>
+                            <iframe
+                                src={selectedDocument}
+                                title="Document Viewer"
+                                width="100%"
+                                height="500px"
+                                style={{ border: "1px solid #ccc", borderRadius: "8px" }}
+                            ></iframe>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
