@@ -18,7 +18,8 @@ export async function createRequest(Body, documentFileObject) {
         if (documentFileObject) {
             const storage = getStorage(firebaseInstance); // Correctly getting the storage instance
             const date = new Date().toISOString(); // Gets the current date in ISO format
-            const fileName = `${document.name}_${date}`;
+            const fileName = documentFileObject.name;
+            console.log("IM uploading document", fileName);
             const storageRef = ref(storage, fileName); // Creating a reference to the file in Firebase Storage
             console.log("IN service document", documentFileObject);
             await uploadBytesResumable(storageRef, documentFileObject);
