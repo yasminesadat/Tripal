@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  getTouristInformation,
-  updateTouristInformation,
-  redeemPoints,
-} from "../../api/TouristService";
+import { getTouristInformation, updateTouristInformation, redeemPoints } from "../../api/TouristService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
@@ -12,7 +8,8 @@ import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 import Badge from "../../components/tourist/Badge";
 import Currency from "../../components/tourist/Currency";
 import ChangePassword from "../../components/common/ChangePassword";
-
+import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { message } from 'antd';
 
 const TouristHomePage = () => {
   const { id } = useParams();
@@ -97,6 +94,15 @@ const TouristHomePage = () => {
     }
     await redeemPoints(id);
     toast.success("points updated redeemed successfully");
+  };
+
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion("Tourist", id);
+      message.success(response.message); 
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred."); 
+    }
   };
 
   useEffect(() => {
@@ -224,13 +230,11 @@ const TouristHomePage = () => {
             </p>
           </li>
         </ul>
-
         <button onClick={handleEditClick}>
           {isEditing ? "Save" : "Update"}
         </button>
+        <button onClick={handleDeletion}>Delete Account</button>
       </div>
-
-      {/* Toast container for displaying notifications */}
       <ToastContainer />
       <ChangePassword id={id} userType={userType} />
     </div>
