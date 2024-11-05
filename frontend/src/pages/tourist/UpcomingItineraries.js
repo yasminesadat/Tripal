@@ -5,9 +5,11 @@ import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import GuestNavBar from "../../components/navbar/GuestNavBar";
 import { message } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource } from "../../api/BookingService";
+const touristId = "6724842b5831eed787083b57"; 
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -155,8 +157,8 @@ const ItineraryPage = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="page-container">
-            <TouristNavBar />
+        <div >
+            {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}            
             <div className="page-title">Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
