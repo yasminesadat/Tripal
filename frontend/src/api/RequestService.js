@@ -51,11 +51,10 @@ export async function updateRequest(id, urlObject) {
 }
 
 
-export async function acceptRequest(id) {
+export async function SetRequestStatus(id, statusValue) {
     try {
-        console.log("Accepting request with ID:", id);
 
-        const response = await axios.put(`/request/${id}`, { status: "accepted" });
+        const response = await axios.put(`/request/${id}`, { "status": statusValue });
 
         return response.data;
     } catch (error) {
@@ -67,10 +66,21 @@ export async function acceptRequest(id) {
 }
 
 
+
 export async function getRequest(id) {
     try {
-        console.log("Retrieving request with ID:", id);
         const response = await axios.get(`/request/${id}`);
+        return response.data;
+    } catch (error) {
+        // Check if error.response and error.response.data exist and provide the correct message
+        const errorMessage = error.response?.data?.error || "An error occurred while retrieving the request.";
+        console.log("ERROR MESSAGE", errorMessage);
+        throw new Error(errorMessage);
+    }
+}
+export async function getRequests() {
+    try {
+        const response = await axios.get(`/request`);
         return response.data;
     } catch (error) {
         // Check if error.response and error.response.data exist and provide the correct message
