@@ -27,6 +27,8 @@ const TourGuideCreateProfile = () => {
   const [loading, setLoading] = useState(false);
   const [workChanged, setWorkChanged] = useState(false);
   const [educationChanged, setEducationChanged] = useState(false);
+  const [languagesChanged, setLanguagesChanged] = useState(false);
+
   const [form] = Form.useForm();
   const [formData, setFormData] = useState({
     initialEmail: "",
@@ -34,9 +36,6 @@ const TourGuideCreateProfile = () => {
     initialMobileNumber: "",
     initialNationality: "",
     initialYearsOfExperience: 0,
-    initialLanguagesSpoken: [],
-    initialEducation: [],
-    initialPreviousWork: [],
     initialProfilePicture: "",
     name: "",
     email: "",
@@ -73,11 +72,8 @@ const TourGuideCreateProfile = () => {
           initialMobileNumber: data.mobileNumber || "",
           initialNationality: data.nationality || "",
           initialYearsOfExperience: data.yearsOfExperience || 0,
-          initialLanguagesSpoken: data.languagesSpoken || [],
-          initialEducation: data.education || [],
-          initialPreviousWork: data.previousWork || [],
           initialProfilePicture: data.profilePicture || "",
-          currprofilePicture: data.ProfilePicture || "",
+          currProfilePicture: data.ProfilePicture || "",
           email: data.email || "",
           name: data.name || "",
           mobileNumber: data.mobileNumber || "",
@@ -110,7 +106,7 @@ const TourGuideCreateProfile = () => {
     });
   }, [formData, form]);
 
-  const handleLogoChange = (info) => {
+  const handleImageChange = (info) => {
     if (info.fileList.length === 0) {
       setFormData({ ...formData, currProfilePicture: null });
       return;
@@ -151,6 +147,21 @@ const TourGuideCreateProfile = () => {
     const changedFields = {};
     for (const key in formData) {
       if (key.startsWith("initial")) continue;
+      if (key === "currProfilePicture") {
+        // detect image change
+        if (formData.initialProfilePicture !== formData.currProfilePicture) {
+          hasChanges = true;
+          if (formData.initialProfilePicture !== "")
+            changedFields["initialProfilePicture"] =
+              formData["initialProfilePicture"];
+
+          if (formData.currProfilePicture !== "") {
+            changedFields["currProfilePicture"] =
+              formData["currProfilePicture"];
+          }
+        }
+        continue;
+      }
       if (key === "previousWork") {
         if (workChanged) {
           hasChanges = true;
@@ -160,6 +171,13 @@ const TourGuideCreateProfile = () => {
       }
       if (key === "education") {
         if (educationChanged) {
+          hasChanges = true;
+          changedFields[key] = formData[key];
+        }
+        continue;
+      }
+      if (key === "languagesSpoken") {
+        if (languagesChanged) {
           hasChanges = true;
           changedFields[key] = formData[key];
         }
@@ -188,11 +206,6 @@ const TourGuideCreateProfile = () => {
       changedFields.education = Object.values(changedFields.education).filter(
         (item) => item !== undefined
       );
-
-    // add old profile picture if there is a new one
-    if (changedFields.profilePicture)
-      changedFields["initialProfilePicture"] =
-        formData["initialProfilePicture"];
 
     try {
       await updateProfile(id, changedFields);
@@ -223,6 +236,7 @@ const TourGuideCreateProfile = () => {
             languagesSpoken: formData.languagesSpoken,
             education: formData.education,
             previousWork: formData.previousWork,
+            currProfilePicture: formData.initialProfilePicture,
           }}
           onValuesChange={(changedValues, allValues) => {
             setFormData((oldData) => ({
@@ -237,6 +251,7 @@ const TourGuideCreateProfile = () => {
             }));
             if (changedValues.education) setEducationChanged(true);
             if (changedValues.previousWork) setWorkChanged(true);
+            if (changedValues.languagesSpoken) setLanguagesChanged(true);
           }}
         >
           <Form.Item
@@ -340,13 +355,13 @@ const TourGuideCreateProfile = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="profilePicture" name="profilePicture">
+          <Form.Item label="profilePicture" name="currProfilePicture">
             <Upload
-              name="profilePicture"
+              name="Profile Picture"
               listType="picture"
               accept=".png,.jpeg,.jpg"
               beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-              onChange={handleLogoChange}
+              onChange={handleImageChange}
               onRemove={handleRemove} // Allow removal of the logo
               fileList={
                 formData.currProfilePicture
@@ -372,7 +387,7 @@ const TourGuideCreateProfile = () => {
                     width: "auto",
                   }}
                 >
-                  Upload Logo
+                  Upload Profile Picture
                 </Button>
               )}
             </Upload>
@@ -383,7 +398,7 @@ const TourGuideCreateProfile = () => {
                 className="img-preview"
               />
             )}{" "}
-            {/* Display logo preview if present */}
+            {/* Display image preview if present */}
           </Form.Item>
           <Form.List name="education">
             {(fields, { add: addEducation, remove: removeEducation }) => (

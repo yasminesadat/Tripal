@@ -264,13 +264,13 @@ const SellerProfile = () => {
                   fileList={
                     updatedSeller.logo
                       ? [
-                        {
-                          uid: "-1",
-                          name: "logo.png",
-                          status: "done",
-                          url: updatedSeller.logo,
-                        },
-                      ]
+                          {
+                            uid: "-1",
+                            name: "logo.png",
+                            status: "done",
+                            url: updatedSeller.logo,
+                          },
+                        ]
                       : []
                   } // Ensure only one file is shown
                 >
@@ -298,7 +298,9 @@ const SellerProfile = () => {
                 )}{" "}
                 {/* Display logo preview if present */}
               </Form.Item>
-              <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Form.Item
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="primary"
                   htmlType="submit"
