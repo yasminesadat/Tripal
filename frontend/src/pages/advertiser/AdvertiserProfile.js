@@ -32,13 +32,14 @@ const AdvertiserProfile = () => {
   if (error) return <p>Error: {error.message}</p>;
   if (!advertiser) return <p>Can't find advertiser...</p>;
   const logoStyle = {
-    position: "absolute",
+    //position: "absolute",
     top: "20px",
     right: "20px",
     maxWidth: "100px",
     maxHeight: "100px",
     borderRadius: "5px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    marginRight: "10px"
   };
   const notProvidedStyle = { color: "#6c757d", fontStyle: "italic" };
   const addLinkStyle = {
@@ -125,12 +126,7 @@ const AdvertiserProfile = () => {
     <div>
       <AdvertiserNavBar />
       <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h2>{advertiser.userName}'s Profile</h2>
-      </div>
-      <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
-      <div class="row y-gap-30">
-      <div style={containerStyle}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
         {advertiser.companyProfile?.logo && (
           <img
             src={advertiser.companyProfile.logo}
@@ -138,26 +134,42 @@ const AdvertiserProfile = () => {
             style={logoStyle}
           />
         )}
-        {fields.map((field, index) => (
-          <p key={index}>
-            <span style={headerStyle}>{field.label}:</span>
-            <br />
-            {field.value ? (
+        <h2 style={{ margin: 0 }}>{advertiser.userName}'s Profile</h2>
+      </div>
+
+      <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
+      <div class="row y-gap-30">
+      <div style={containerStyle}>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          {fields.map((field, index) => (
+            <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={headerStyle}>{field.label}:</span>
+              {field.value ? (
                 field.isLink ? (
-                  <a href={field.value} target="_blank" rel="noopener noreferrer" className="custom-link" >
+                  <a
+                    href={field.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="custom-link"
+                  >
                     {field.value}
                   </a>
-                ) : ( field.value )
-            ) : (
-              <>
-                <span style={notProvidedStyle}>not provided</span>{" "}
+                ) : (
+                  field.value
+                )
+              ) : (
+                <span style={notProvidedStyle}>not provided</span>
+              )}
+              {!field.value && (
                 <button style={buttonStyle} onClick={handleNavigate}>
                   Add
                 </button>
-              </>
-            )}
-          </p>
-        ))}
+              )}
+            </div>
+          ))}
+        </div>
+
         <div style={awardItemStyle}>
           <h3 style={headerStyle}>Awards</h3>
           {advertiser.companyProfile?.awards.length > 0 ? (

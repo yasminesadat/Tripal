@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getComplaintsByTourist,getComplaintById,replyToComplaint } from "../../api/ComplaintsService";
 import { touristId } from "../../IDs";
 import { useParams } from "react-router-dom";
+import TouristNavBar from "../../components/navbar/TouristNavBar"
+
 
 const MyComplaints = () => {
     const { id } = useParams();
@@ -70,6 +72,7 @@ const MyComplaints = () => {
 
     return (
         <div className="complaints">
+            <TouristNavBar />
             {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
             <div className="dashboard__content">
                 {/* <Header setSideBarOpen={setSideBarOpen} /> */}
