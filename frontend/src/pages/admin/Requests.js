@@ -68,7 +68,7 @@ const Requests = () => {
             const documentUrl = response.document;
 
             setSelectedDocument(documentUrl);
-            if (!selectedDocument)
+            if (!documentUrl)
                 message.success("No document uploaded!");
             else
                 message.success("Document loaded successfully!");
