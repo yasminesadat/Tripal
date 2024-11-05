@@ -33,8 +33,12 @@ const AdminNavBar = () => {
           <Link to="/admin/changepassword">Change password</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/admin/requests">View Requests</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
+
       </div>
 
     </nav>
