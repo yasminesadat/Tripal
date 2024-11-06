@@ -22,7 +22,7 @@ const FlightResults = () => {
               
               {flight.itineraries.map((itinerary, idx) => (
                 <div key={idx} className="itinerary">
-                  <h4>Itinerary {idx + 1}</h4>
+                  <h4>Flight {idx + 1}</h4>
                   {itinerary.segments.map((segment, segmentIndex) => (
                     <div key={segmentIndex} className="segment">
                       <p><strong>Departure:</strong> {segment.departure.iataCode} at {new Date(segment.departure.at).toLocaleString()}</p>

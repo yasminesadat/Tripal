@@ -10,7 +10,7 @@ export default function Hero5() {
     const [numberOfAdults, setNumberOfAdults] = useState(1);
     const [cabinType, setCabinType] = useState("ECONOMY");
     const navigate = useNavigate();
-  
+
     const dropDownContainer = useRef();
 
     useEffect(() => {
@@ -28,9 +28,23 @@ export default function Hero5() {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(
-                `http://localhost:5050/api/flightSearch?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${numberOfAdults}&max=3&cabin=${cabinType}` // Include cabinType in request
-            );
+            // Build the query string for the flight search
+            const queryParams = new URLSearchParams({
+                originLocationCode,
+                destinationLocationCode,
+                departureDate,
+                adults: numberOfAdults,
+                max: 3,
+                cabin: cabinType
+            });
+
+            // If returnDate exists, add it to the query parameters
+            if (returnDate) {
+                queryParams.append("returnDate", returnDate);
+            }
+
+            // Make the API request with the dynamic query parameters
+            const response = await axios.get(`http://localhost:5050/api/flightSearch?${queryParams.toString()}`);
             console.log("Search Results:", response.data);
             navigate("/tourist/book-flight", { state: { flights: response.data } });
         } catch (error) {
@@ -66,7 +80,6 @@ export default function Hero5() {
                             <div data-aos="fade-up" data-aos-delay="400" className="hero__filter mt-60 md:mt-30">
                                 <div ref={dropDownContainer} className="searchForm -type-1 shadow-1 rounded-200">
                                     <div className="searchForm__form">
-                                     
                                         <div className="searchFormItem">
                                             <input
                                                 type="text"
@@ -77,7 +90,6 @@ export default function Hero5() {
                                             />
                                         </div>
 
-                                  
                                         <div className="searchFormItem">
                                             <input
                                                 type="text"
@@ -88,7 +100,6 @@ export default function Hero5() {
                                             />
                                         </div>
 
-                                 
                                         <div className="searchFormItem">
                                             <input
                                                 type="date"
@@ -99,7 +110,6 @@ export default function Hero5() {
                                             />
                                         </div>
 
-                                  
                                         <div className="searchFormItem">
                                             <input
                                                 type="date"
@@ -110,7 +120,6 @@ export default function Hero5() {
                                             />
                                         </div>
 
-                                   
                                         <div className="searchFormItem">
                                             <input
                                                 type="number"
@@ -122,7 +131,6 @@ export default function Hero5() {
                                             />
                                         </div>
 
-                                      
                                         <div className="searchFormItem">
                                             <select
                                                 value={cabinType}

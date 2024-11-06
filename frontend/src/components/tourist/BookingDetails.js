@@ -4,6 +4,13 @@ import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation } from '../../api/TouristService';
 
+export const parseDuration = (duration) => {
+  const regex = /^PT(\d+H)?(\d+M)?$/;
+  const match = duration.match(regex);
+  const hours = match[1] ? parseInt(match[1].replace('H', '')) : 0;
+  const minutes = match[2] ? parseInt(match[2].replace('M', '')) : 0;
+  return `${hours} hours and ${minutes} minutes`;
+};
 const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,19 +25,17 @@ const BookingDetails = () => {
 
     try {
       const body = {
-        bookedFlights: [
-          {
-            flightNumber: flight.itineraries[0]?.segments[0]?.flight?.number || "N/A",
-            airline: flight.validatingAirlineCodes[0] || "Unknown",
-            departureTime: new Date(flight.itineraries[0]?.segments[0]?.departure?.at),
-            arrivalTime: new Date(flight.itineraries[0]?.segments[flight.itineraries[0]?.segments.length - 1]?.arrival?.at),
-            origin: flight.itineraries[0]?.segments[0]?.departure?.iataCode || "Unknown",
-            destination: flight.itineraries[0]?.segments[flight.itineraries[0]?.segments.length - 1]?.arrival?.iataCode || "Unknown",
-            price: flight.price?.total || "0.00",
-            currency: flight.price?.currency || "USD",
-            bookingDate: new Date(),
-          },
-        ],
+        bookedFlights: flight.itineraries.map((itinerary) => ({
+          flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
+          airline: flight.validatingAirlineCodes[0] || "Unknown",
+          departureTime: new Date(itinerary?.segments[0]?.departure?.at),
+          arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at),
+          origin: itinerary?.segments[0]?.departure?.iataCode || "Unknown",
+          destination: itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode || "Unknown",
+          price: flight.price?.total || "0.00",
+          currency: flight.price?.currency || "USD",
+          bookingDate: new Date(),
+        })),
       };
 
       console.log("Formatted flight data:", body);
@@ -49,11 +54,17 @@ const BookingDetails = () => {
     <div className="booking-summary-container">
       <h1>Booking Summary</h1>
       <div className="flight-details">
-        <p><strong>Flight Number:</strong> {flight.itineraries[0]?.segments[0]?.flight?.number || "N/A"}</p>
-        <p><strong>Airline:</strong> {flight.validatingAirlineCodes ? flight.validatingAirlineCodes[0] : "Unknown"}</p>
-        <p><strong>Departure:</strong> {flight.itineraries[0]?.segments[0]?.departure?.iataCode} at {new Date(flight.itineraries[0]?.segments[0]?.departure?.at).toLocaleString()}</p>
-        <p><strong>Arrival:</strong> {flight.itineraries[0]?.segments[flight.itineraries[0]?.segments.length - 1]?.arrival?.iataCode} at {new Date(flight.itineraries[0]?.segments[flight.itineraries[0]?.segments.length - 1]?.arrival?.at).toLocaleString()}</p>
-        <p><strong>Price:</strong> {flight.price?.currency} {flight.price?.total}</p>
+        {flight.itineraries.map((itinerary, idx) => (
+          <div key={idx} className="itinerary-details">
+            <h3>Flight {idx + 1}</h3>
+            <p><strong>Flight Number:</strong> {`${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`}</p>
+            <p><strong>Airline:</strong> {flight.validatingAirlineCodes ? flight.validatingAirlineCodes[0] : "Unknown"}</p>
+            <p><strong>Departure:</strong> {itinerary?.segments[0]?.departure?.iataCode} at {new Date(itinerary?.segments[0]?.departure?.at).toLocaleString()}</p>
+            <p><strong>Arrival:</strong> {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} at {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}</p>
+            <p><strong>Duration:</strong> {parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}</p>
+            <p><strong>Price:</strong> {flight.price?.currency} {flight.price?.total}</p>
+          </div>
+        ))}
       </div>
 
       <form className="payment-form" onSubmit={handlePaymentSubmit}>
