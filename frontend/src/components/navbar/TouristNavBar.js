@@ -19,17 +19,16 @@ const TouristNavBar = () => {
           <Link to="/booked-activities">Booked Activities</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
-        </div>
-        <div class="nav-bar-link">
           <Link to="/activities-history">Activities History</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/itineraries-history">Itineraries History</Link>
+          <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
         </div>
-
         <div class="nav-bar-link">
           <Link to="/itineraries/booked-itineraries">Booked Itineraries</Link>
+        </div>
+        <div class="nav-bar-link">
+          <Link to="/itineraries-history">Itineraries History</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/historical-places">Historical Places</Link>

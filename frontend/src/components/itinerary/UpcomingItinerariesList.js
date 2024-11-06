@@ -1,27 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message, Modal, Select } from "antd";
+import { message, Modal, Select} from 'antd';
+import { touristId, touristId2 } from '../../IDs';
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { touristId } from "../../IDs";
 const { Option } = Select;
 
-const UpcomingItinerariesList = ({
-  itineraries,
-  onBook,
-  book,
-  onCancel,
-  cancel,
-  curr = "EGP",
-  page,
-}) => {
-  const [exchangeRate, setExchangeRate] = useState(1);
-  const errorDisplayedRef = useRef(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedItinerary, setSelectedItinerary] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const navigate = useNavigate();
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page, isAdmin, isTourguide,onAdminFlag}) => {
+    const [exchangeRate, setExchangeRate] = useState(1);
+    const errorDisplayedRef = useRef(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedItinerary, setSelectedItinerary] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
+    const navigate = useNavigate();
 
   const handleBookClick = (itinerary) => {
     if (!touristId) {
@@ -92,8 +84,8 @@ const UpcomingItinerariesList = ({
         message.error("Failed to copy link");
       });
   };
-
-  const handleShare = (link) => {
+  
+    const handleShare = (link) => {
     if (navigator.share) {
       navigator
         .share({
@@ -108,11 +100,13 @@ const UpcomingItinerariesList = ({
     }
   };
 
-  return (
-    <div className="list">
-      {itineraries.map((itinerary) => (
-        <div className="list-item" key={itinerary._id}>
-          <div
+    return (
+        <div className="list">
+            {itineraries.map(itinerary => (
+                    <div className="list-item">
+                       
+
+<div
             className="list-item-header"
             style={{
               display: "flex",
@@ -121,14 +115,14 @@ const UpcomingItinerariesList = ({
               paddingRight: "2rem",
             }}
           >
-            <div onClick={() => handleNavigate(itinerary._id)}>
-              {itinerary.title}
-            </div>
+           <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
+                            {itinerary.title}
+                        </button>
             <div>
               <CopyOutlined
                 onClick={() =>
                   handleCopyLink(
-                    `${window.location.origin}/itineraries/${itinerary._id}`
+                    `${window.location.origin}/itinerary/${itinerary._id}`
                   )
                 }
                 style={{ marginRight: "10px", cursor: "pointer" }}
@@ -136,139 +130,108 @@ const UpcomingItinerariesList = ({
               <ShareAltOutlined
                 onClick={() =>
                   handleShare(
-                    `${window.location.origin}/itineraries/${itinerary._id}`
+                    `${window.location.origin}/itinerary/${itinerary._id}`
                   )
                 }
                 style={{ cursor: "pointer" }}
               />
             </div>
           </div>
-          <div
-            className="list-item-attributes"
-            onClick={() => handleNavigate(itinerary._id)}
-          >
-            <div className="list-item-attribute">
-              <strong>Description:</strong> {itinerary.description}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Rating:</strong> {itinerary.averageRating || "N/A"}
-            </div>
-            {itinerary.ratings && itinerary.ratings.length > 0 ? (
-              <div className="list-item-attribute">
-                <h3>Ratings & Reviews:</h3>
-                <ul>
-                  {itinerary.ratings.map((rating, index) => (
-                    <li key={index}>
-                      <p>
-                        <strong>Rating:</strong> {rating.rating} / 5
-                      </p>
-                      <p>
-                        <strong>Review:</strong> {rating.review}
-                      </p>
-                      <p>
-                        <strong>By User ID:</strong> {rating.userID}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="list-item-attribute">No ratings yet.</div>
-            )}
-            <div className="list-item-attribute">
-              <strong>Activities:</strong>
-              <div className="list-item-attribute-sublist">
-                {itinerary.activities.map((activity) => (
-                  <div
-                    key={activity._id}
-                    className="list-item-attribute-sublist-component"
-                  >
-                    <strong>Activity:</strong> {activity.title} -{" "}
-                    {activity.description}
-                    <div>
-                      <strong>Tags:</strong>
-                      {activity.tags && activity.tags.length > 0
-                        ? activity.tags.map((tag) => tag.name).join(", ")
-                        : "No tags available"}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="list-item-attribute">
-              <strong>Locations:</strong>{" "}
-              {itinerary.locations.length > 0
-                ? itinerary.locations.join(", ")
-                : "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Timeline:</strong>
-              <div className="list-item-attribute-sublist">
-                {itinerary.timeline.map((entry, index) => (
-                  <div
-                    key={index}
-                    className="list-item-attribute-sublist-component"
-                  >
-                    <strong>Activity:</strong> {entry.activityName},{" "}
-                    <strong>Time:</strong> {entry.time}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="list-item-attribute">
-              <strong>Service Fee:</strong> {formatPrice(itinerary.serviceFee)}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Language:</strong> {itinerary.language}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Price:</strong> {formatPrice(itinerary.price)}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Available Dates:</strong>
-              {itinerary.availableDates.length > 0
-                ? itinerary.availableDates
-                    .map((date) => new Date(date).toLocaleDateString())
-                    .join(", ")
-                : "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Available Times:</strong>
-              {itinerary.availableTime.length > 0
-                ? itinerary.availableTime.join(", ")
-                : "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Accessibility:</strong>
-              {itinerary.accessibility.length > 0
-                ? itinerary.accessibility.join(", ")
-                : "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Pickup Location:</strong> {itinerary.pickupLocation}
-            </div>
-            <div className="list-item-attribute">
-              <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
-            </div>
-            {book && (
-              <button onClick={() => handleBookClick(itinerary)}>
-                Book Now
-              </button>
-            )}
-            {cancel && (
-              <button
-                style={{ background: "#b0091a" }}
-                onClick={() =>
-                  onCancel({
-                    itineraryId: itinerary._id,
-                    touristId,
-                    resourceType: "itinerary",
-                  })
-                }
-              >
-                Cancel Booking
-              </button>
-            )}
+
+                       <div className="list-item-attributes">
+                         {isAdmin&& <button className="list-item-attribute" key={itinerary._id} onClick={()=>onAdminFlag(itinerary._id)}><b>Flag as inappropriate</b></button>}
+                        <div className="list-item-attribute">
+                            <strong>Description:</strong> {itinerary.description}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Rating:</strong> {itinerary.averageRating || 'N/A'}
+                        </div>
+                        {itinerary.ratings && itinerary.ratings.length > 0 ? (
+                            <div className="list-item-attribute">
+                                <h3>Ratings & Reviews:</h3>
+                                <ul>
+                                    {itinerary.ratings.map((rating, index) => (
+                                        <li key={index}>
+                                            <p><strong>Rating:</strong> {rating.rating} / 5</p>
+                                            <p><strong>Review:</strong> {rating.review}</p>
+                                            <p><strong>By User ID:</strong> {rating.userID}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : (
+                            <div className="list-item-attribute">No ratings yet.</div>
+                        )}
+                        <div className="list-item-attribute">
+                            <strong>Activities:</strong>
+                            <div className="list-item-attribute-sublist">
+                                {itinerary.activities.map(activity => (
+                                    <div key={activity._id} className="list-item-attribute-sublist-component">
+                                        <strong>Activity:</strong> {activity.title} - {activity.description}
+                                        <div>
+                                            <strong>Tags:</strong> 
+                                            {activity.tags && activity.tags.length > 0 
+                                                ? activity.tags.map(tag => tag.name).join(', ')
+                                                : 'No tags available'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Locations:</strong> {itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Timeline:</strong>
+                            <div className="list-item-attribute-sublist">
+                                {itinerary.timeline.map((entry, index) => (
+                                    <div key={index} className="list-item-attribute-sublist-component">
+                                        <strong>Activity:</strong> {entry.activityName}, <strong>Time:</strong> {entry.time}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Service Fee:</strong> {formatPrice(itinerary.serviceFee)}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Language:</strong> {itinerary.language}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Price:</strong> {formatPrice(itinerary.price)}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Available Dates:</strong> 
+                            {itinerary.availableDates.length > 0 
+                                ? itinerary.availableDates.map(date => new Date(date).toLocaleDateString()).join(', ') 
+                                : 'N/A'}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Available Times:</strong> 
+                            {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Accessibility:</strong> 
+                            {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Pickup Location:</strong> {itinerary.pickupLocation}
+                        </div>
+                        <div className="list-item-attribute">
+                            <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
+                        </div>
+                        {book && (
+                            <button onClick={() =>handleBookClick(itinerary) }>
+                                Book Now
+                            </button>
+                        )}
+                        {cancel && (
+                            <button 
+                                style={{ background: '#b0091a' }}  
+                                onClick={() => onCancel({ itineraryId: itinerary._id, touristId, resourceType: 'itinerary' })}>
+                                Cancel Booking
+                            </button>
+                        )} 
           </div>
         </div>
       ))}
