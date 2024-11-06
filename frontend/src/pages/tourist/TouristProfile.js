@@ -92,10 +92,10 @@ const TouristHomePage = () => {
       toast.warning("No points to redeem");
       return;
     }
-    try{
+    try {
       await redeemPoints(id);
       toast.success("points redeemed successfully");
-    }catch(error){
+    } catch (error) {
       toast.error("redemption failed")
     }
   };
@@ -103,15 +103,15 @@ const TouristHomePage = () => {
   const handleDeletion = async () => {
     try {
       const response = await requestAccountDeletion("Tourist", id);
-      message.success(response.message); 
+      message.success(response.message);
     } catch (error) {
-      message.warning(error.response?.data?.message || "An error occurred."); 
+      message.warning(error.response?.data?.message || "An error occurred.");
     }
   };
 
   useEffect(() => {
     getUserInformation();
-  });
+  }, []);
 
   return (
     <div>
