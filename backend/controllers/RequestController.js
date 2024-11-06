@@ -119,60 +119,68 @@ const updateRequest = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
-const acceptRequest = async (req, res) => {
+const setRequestState = async (req, res) => {
     const { id } = req.params;
+    const { status } = req.body;
+    console.log("The new status is", status);
 
     try {
-        const updatedRequest = await Request.findByIdAndUpdate(id, { status: "accepted" }, { new: true });
+        // Properly update the status field
+        const updatedRequest = await Request.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
 
         if (!updatedRequest) {
             return res.status(404).json({ error: "Request not found" });
         }
 
-        const role = updatedRequest.role
-        console.log("Role", role);
-        const object = {
-            "userName": updatedRequest.userName,
-            "email": updatedRequest.email,
-            "password": updatedRequest.password
-        }
-        console.log("Data to create with", object);
-        switch (role) {
-            case 'Seller':
-                const seller = await Seller.create(object);
-                userRole = "Seller";
-                await User.create({
-                    userId: seller._id,
-                    userName: seller.userName,
-                    email: seller.email,
-                    role: userRole,
-                });
-                console.log('Handling action for Seller');
-                break;
+        if (status === "accepted") {
+            const role = updatedRequest.role;
+            console.log("Role", role);
+            const object = {
+                "userName": updatedRequest.userName,
+                "email": updatedRequest.email,
+                "password": updatedRequest.password
+            };
+            console.log("Data to create with", object);
 
-            case 'Tour Guide':
-                const tourGuide = await TourGuide.create(object)
-                await User.create({
-                    userId: tourGuide._id,
-                    userName: tourGuide.userName,
-                    email: tourGuide.email,
-                    role: "Tour Guide"
-                });
-                break;
+            // Create the appropriate user based on role
+            switch (role) {
+                case 'Seller':
+                    const seller = await Seller.create(object);
+                    await User.create({
+                        userId: seller._id,
+                        userName: seller.userName,
+                        email: seller.email,
+                        role: "Seller",
+                    });
+                    console.log('Handling action for Seller');
+                    break;
 
-            case 'Advertiser':
-                const advertiser = await Advertiser.create(object)
-                await User.create({
-                    userId: advertiser._id,
-                    userName: advertiser.userName,
-                    email: advertiser.email,
-                    role: "Advertiser"
-                });
-                console.log('Handling action for Advertiser');
+                case 'Tour Guide':
+                    const tourGuide = await TourGuide.create(object);
+                    await User.create({
+                        userId: tourGuide._id,
+                        userName: tourGuide.userName,
+                        email: tourGuide.email,
+                        role: "Tour Guide"
+                    });
+                    console.log('Handling action for Tour Guide');
+                    break;
 
-                break;
-
-
+                case 'Advertiser':
+                    const advertiser = await Advertiser.create(object);
+                    await User.create({
+                        userId: advertiser._id,
+                        userName: advertiser.userName,
+                        email: advertiser.email,
+                        role: "Advertiser"
+                    });
+                    console.log('Handling action for Advertiser');
+                    break;
+            }
         }
 
         return res.status(200).json(updatedRequest);
@@ -187,6 +195,6 @@ module.exports = {
     getRequests,
     deleteRequest,
     getRequestById,
-    acceptRequest,
+    setRequestState,
     updateRequest
 }
