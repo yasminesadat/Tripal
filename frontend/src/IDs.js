@@ -4,7 +4,7 @@ const adminId = "670c3f8b4d912d42ccf5580c";
 const touristId = "6724842b5831eed787083b57"; // DONT DELETE
 const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
 const advertiserID = "6726aaea44ae09c9c4e1f809"; // advertiser profile final NEVER DELETE
-const tourGuideID = "672678ed528c25edc7fc0f55";
+const tourGuideID = "672a8d82506908d56bc9a9d9";
 //mimics what will be in token to adjust some component
 // features based on it
 //change to test different roles in the website

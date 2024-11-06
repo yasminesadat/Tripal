@@ -45,7 +45,7 @@ const readSellerData = asyncHandler(async (req, res) => {
 });
 
 const updateSellerData = asyncHandler(async (req, res) => {
-  const { name, description, logo, initialLogo } = req.body;
+  const { initialLogo, currLogo, ...updateData } = req.body;
   let result;
 
   // Delete old logo if provided
@@ -59,31 +59,22 @@ const updateSellerData = asyncHandler(async (req, res) => {
 
       // Delete old picture
       await cloudinary.uploader.destroy(oldPicturePublicId);
+      updateData.logo = "";
     } catch (error) {
       return res.status(500).json({ error: "Failed to delete old logo" });
     }
   }
 
   // Check if new logo is provided for upload
-  if (logo) {
+  if (currLogo) {
     try {
-      result = await cloudinary.uploader.upload(logo, {
+      result = await cloudinary.uploader.upload(currLogo, {
         folder: "sellerLogos",
       });
+      updateData.logo = result.secure_url;
     } catch (error) {
       return res.status(500).json({ error: "Failed to upload new logo" });
     }
-  }
-
-  const updateData = {
-    name,
-    description,
-  };
-
-  if (result && result.secure_url) {
-    updateData.logo = result.secure_url;
-  } else {
-    updateData.logo = "";
   }
 
   const updatedSeller = await Seller.findByIdAndUpdate(

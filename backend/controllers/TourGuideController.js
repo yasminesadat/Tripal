@@ -1,6 +1,6 @@
 const tourGuideModel = require("../models/users/TourGuide.js");
 const bcrypt = require("bcrypt");
-
+const cloudinary = require("../cloudinary");
 const createTourGuide = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
@@ -52,11 +52,42 @@ const getTourguideInfo = async (req, res) => {
 const updateTourguideData = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(
-      id,
-      { profilePicture, initialPicture, ...req.body },
-      { new: true }
-    );
+    const { currProfilePicture, initialProfilePicture, ...data } = req.body;
+
+    if (initialProfilePicture) {
+      try {
+        const oldPicturePublicId = initialProfilePicture
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+
+        // Delete old picture
+        await cloudinary.uploader.destroy(oldPicturePublicId);
+        data.profilePicture = "";
+      } catch (error) {
+        return res
+          .status(500)
+          .json({ error: "Failed to delete old profile picture" });
+      }
+    }
+
+    if (currProfilePicture) {
+      try {
+        result = await cloudinary.uploader.upload(currProfilePicture, {
+          folder: "tourGuideProfilePictures",
+        });
+        data.profilePicture = result.secure_url;
+      } catch (error) {
+        return res
+          .status(500)
+          .json({ error: "Failed to upload new profile picture" });
+      }
+    }
+
+    const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
     if (!updatedTourGuide) {
       return res.status(404).json("Tour Guide not found");
