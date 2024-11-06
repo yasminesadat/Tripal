@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Tag } from 'antd';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId, touristId2 } from "../../IDs";
 
-const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr = "EGP" }) => {
+const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr = "EGP", page}) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
   useEffect(() => {
@@ -27,13 +27,21 @@ const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr 
     return convertedPrice; 
   };
 
+  const navigate = useNavigate();
+  const handleRedirect = (activityId) => {
+    navigate(`/activity/${activityId}`, { state: { page } });
+  };
+
   return (
     <div className="list">
       {activities.map((activity) => (
         <div className="list-item" key={activity._id}>
-          <Link to={`/activity/${activity._id}`} className="list-item-header">
+          <button
+            onClick={() => handleRedirect(activity._id)}
+            className="list-item-header"
+          >
             {activity.title}
-          </Link>         
+          </button>
           <div className="list-item-attributes">
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">Date: {new Date(activity.date).toLocaleDateString()}</div>

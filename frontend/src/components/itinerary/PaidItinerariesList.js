@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from 'antd';
 
 const touristId = '6724842b5831eed787083b57';
 
-const PaidItinerariesList = ({ itineraries, curr = "EGP" }) => {
+const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchExchangeRate = async () => {
@@ -36,6 +37,10 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP" }) => {
         return `${curr} ${convertedPrice}`;
     };
 
+    const handleNavigate = (itineraryId) => {
+        navigate(`/itinerary/view/${itineraryId}`, { state: { page } });
+    };
+
     return (
         <div className="list">
             {loading ? (
@@ -46,10 +51,10 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP" }) => {
                     const formattedPrice = formatPrice(itinerary.price);
 
                     return (
-                        <div className="list-item" key={itinerary._id}>
-                            <Link to={`/itinerary/view/${itinerary._id}`} className="list-item-header">
+                        <div className="list-item" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
+                            <div className="list-item-header">
                                 {itinerary.title}
-                            </Link>
+                            </div>
                             <div className="list-item-attributes">
                                 <div className="list-item-attribute">
                                     <strong>Description:</strong> {itinerary.description}
@@ -131,7 +136,6 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP" }) => {
                                 <div className="list-item-attribute">
                                     <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
                                 </div>
-                                {console.log(itinerary._id ," ", touristId)}
                             </div>
                         </div>
                     );

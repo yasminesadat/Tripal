@@ -80,7 +80,7 @@ const PaidActivitiesPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price; // This is in original currency
+      const activityBudget = activity.price;
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -134,7 +134,7 @@ const PaidActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <PaidActivitiesList activities={filteredActivities} curr={currency} />
+        <PaidActivitiesList activities={filteredActivities} curr={currency} page={"history"} />
       </div>
       <Footer />
     </div>

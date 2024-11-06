@@ -144,7 +144,7 @@ const PaidItinerariesPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <PaidItinerariesList itineraries={filteredItineraries} curr={currency} />
+                <PaidItinerariesList itineraries={filteredItineraries} curr={currency} page={"history"}/>
             </div>
         </div>
     );
