@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId, touristId2 } from "../../IDs";
 
-const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr = "EGP" }) => {
+const UpcomingActivitiesList = ({ activities, onBook, book, onCancel, cancel, curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
   useEffect(() => {
