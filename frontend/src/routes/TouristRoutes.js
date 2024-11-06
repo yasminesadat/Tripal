@@ -14,7 +14,7 @@ import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
-import Hero5 from "../components/SearchBar";
+import Hero5 from "../components/tourist/SearchBar"
 import FlightSearch from "../components/tourist/FlightSearch";
 import BookingDetails from "../components/tourist/BookingDetails";
 import Invoice from "../components/tourist/Invoice";

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation } from '../../api/TouristService';
-
+import { touristFlight } from '../../IDs';
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -15,7 +15,7 @@ const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-  const touristId = "672aff256aa38ed2c3b51b36";
+  const touristId = touristFlight;
 
   if (!flight) return <p>No flight selected</p>;
 
