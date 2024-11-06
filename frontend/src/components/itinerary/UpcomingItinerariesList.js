@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message, Modal, Select, Button, Tag } from "antd";
-import { touristId } from "../../IDs";
+import { message, Modal, Select } from "antd";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-
+import { touristId } from "../../IDs";
 const { Option } = Select;
 
 const UpcomingItinerariesList = ({
@@ -82,16 +81,72 @@ const UpcomingItinerariesList = ({
   const handleNavigate = (itineraryId) => {
     navigate(`/itinerary/${itineraryId}`, { state: { page } });
   };
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
+
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this itinerary!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+    }
+  };
+
   return (
     <div className="list">
       {itineraries.map((itinerary) => (
-        <div
-          className="list-item"
-          key={itinerary._id}
-          onClick={() => handleNavigate(itinerary._id)}
-        >
-          <div className="list-item-header">{itinerary.title}</div>
-          <div className="list-item-attributes">
+        <div className="list-item" key={itinerary._id}>
+          <div
+            className="list-item-header"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingRight: "2rem",
+            }}
+          >
+            <div onClick={() => handleNavigate(itinerary._id)}>
+              {itinerary.title}
+            </div>
+            <div>
+              <CopyOutlined
+                onClick={() =>
+                  handleCopyLink(
+                    `${window.location.origin}/itineraries/${itinerary._id}`
+                  )
+                }
+                style={{ marginRight: "10px", cursor: "pointer" }}
+              />
+              <ShareAltOutlined
+                onClick={() =>
+                  handleShare(
+                    `${window.location.origin}/itineraries/${itinerary._id}`
+                  )
+                }
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          </div>
+          <div
+            className="list-item-attributes"
+            onClick={() => handleNavigate(itinerary._id)}
+          >
             <div className="list-item-attribute">
               <strong>Description:</strong> {itinerary.description}
             </div>
@@ -215,47 +270,47 @@ const UpcomingItinerariesList = ({
               </button>
             )}
           </div>
-          <Modal
-            title="Select Date and Time"
-            visible={isModalVisible}
-            onOk={handleModalOk}
-            onCancel={handleModalCancel}
-          >
-            <div>
-              <strong>Select Date:</strong>
-              <Select
-                style={{ width: "100%", marginBottom: "1rem" }}
-                placeholder="Select a date"
-                onChange={(value) => setSelectedDate(value)}
-                value={selectedDate || undefined}
-              >
-                {selectedItinerary &&
-                  selectedItinerary.availableDates.map((date) => (
-                    <Option key={date} value={date}>
-                      {new Date(date).toLocaleDateString()}
-                    </Option>
-                  ))}
-              </Select>
-            </div>
-            <div>
-              <strong>Select Time:</strong>
-              <Select
-                style={{ width: "100%" }}
-                placeholder="Select a time"
-                onChange={(value) => setSelectedTime(value)}
-                value={selectedTime || undefined}
-              >
-                {selectedItinerary &&
-                  selectedItinerary.availableTime.map((time) => (
-                    <Option key={time} value={time}>
-                      {time}
-                    </Option>
-                  ))}
-              </Select>
-            </div>
-          </Modal>
         </div>
       ))}
+      <Modal
+        title="Select Date and Time"
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+      >
+        <div>
+          <strong>Select Date:</strong>
+          <Select
+            style={{ width: "100%", marginBottom: "1rem" }}
+            placeholder="Select a date"
+            onChange={(value) => setSelectedDate(value)}
+            value={selectedDate || undefined}
+          >
+            {selectedItinerary &&
+              selectedItinerary.availableDates.map((date) => (
+                <Option key={date} value={date}>
+                  {new Date(date).toLocaleDateString()}
+                </Option>
+              ))}
+          </Select>
+        </div>
+        <div>
+          <strong>Select Time:</strong>
+          <Select
+            style={{ width: "100%" }}
+            placeholder="Select a time"
+            onChange={(value) => setSelectedTime(value)}
+            value={selectedTime || undefined}
+          >
+            {selectedItinerary &&
+              selectedItinerary.availableTime.map((time) => (
+                <Option key={time} value={time}>
+                  {time}
+                </Option>
+              ))}
+          </Select>
+        </div>
+      </Modal>
     </div>
   );
 };

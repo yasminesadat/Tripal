@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from "antd";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { Navigate } from "react-router-dom";
 
 const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
@@ -51,11 +52,42 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
     }
   };
 
+  const handleNavigate = (placeId) => {
+    Navigate(`/itinerary/${placeId}`);
+  };
+
   return (
     <div className="list">
       {places.map((place) => (
         <div className="list-item" key={place._id}>
-          <div className="list-item-header">{place.name}</div>
+          <div
+            className="list-item-header"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div onClick={() => handleNavigate(place._id)}>{place.name}</div>
+            <div>
+              <CopyOutlined
+                onClick={() =>
+                  handleCopyLink(
+                    `${window.location.origin}/historical-places/${place._id}`
+                  )
+                }
+                style={{ marginRight: "10px", cursor: "pointer" }}
+              />
+              <ShareAltOutlined
+                onClick={() =>
+                  handleShare(
+                    `${window.location.origin}/historical-places/${place._id}`
+                  )
+                }
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          </div>
           <div className="list-item-attributes-image">
             <div className="list-item-attribute-img">
               {place.images && place.images.length > 0 && (
@@ -95,24 +127,6 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
                 {place.historicalPeriod && place.historicalPeriod.length > 0
                   ? place.historicalPeriod.map((tag) => tag.name).join(", ")
                   : "N/A"}
-              </div>
-              <div className="list-item-attribute">
-                <CopyOutlined
-                  onClick={() =>
-                    handleCopyLink(
-                      `${window.location.origin}/historical-places/${place._id}`
-                    )
-                  }
-                  style={{ marginRight: "10px", cursor: "pointer" }}
-                />
-                <ShareAltOutlined
-                  onClick={() =>
-                    handleShare(
-                      `${window.location.origin}/historicalplaces/${place._id}`
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                />
               </div>
             </div>
           </div>
