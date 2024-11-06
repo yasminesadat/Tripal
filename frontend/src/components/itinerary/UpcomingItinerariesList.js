@@ -66,7 +66,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
     };
 
     const handleNavigate = (itineraryId) => {
-        navigate(`/itinerary/view/${itineraryId}`, { state: { page } });
+        navigate(`/itinerary/${itineraryId}`, { state: { page } });
     };
     return (
         <div className="list">

@@ -38,7 +38,7 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
     };
 
     const handleNavigate = (itineraryId) => {
-        navigate(`/itinerary/view/${itineraryId}`, { state: { page } });
+        navigate(`/itinerary/${itineraryId}`, { state: { page } });
     };
 
     return (

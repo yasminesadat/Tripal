@@ -28,7 +28,7 @@ const TouristRoutes = [
   { path: "/tourist/select-preferences/:touristId", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories/:touristId", element: <CategorySelection /> },
   { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
-  { path: "/itinerary/view/:itineraryId", element: <ItineraryDetailsPage /> },
+  { path: "/itinerary/:itineraryId", element: <ItineraryDetailsPage /> },
   { path: "/tourist/view-products/product/:id", element: <TouristViewProduct /> },
   { path: "/tourist/create-complaint/:id", element: <ComplaintsForm /> },
   { path: "/tourist/view-Complaints/:id", element: <MyComplaints /> },
