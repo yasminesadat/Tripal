@@ -75,10 +75,10 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
     return (
         <div className="list">
             {itineraries.map(itinerary => (
-                    <div className="list-item" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
-                        <div className="list-item-header">
+                    <div className="list-item">
+                        <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                             {itinerary.title}
-                        </div>
+                        </button>
                         <div className="list-item-attributes">
                         <div className="list-item-attribute">
                             <strong>Description:</strong> {itinerary.description}

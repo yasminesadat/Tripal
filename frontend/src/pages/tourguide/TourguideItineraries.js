@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getItineraries, deleteItinerary } from '../../api/ItineraryService';
+import { getItinerariesByTourGuide, deleteItinerary } from '../../api/ItineraryService';
 import { Empty, message } from "antd";
 import MyItinerariesList from '../../components/itinerary/TourguideItinerariesList.js';
 import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm.js';
@@ -17,7 +17,7 @@ const ItinerariesPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await getItineraries(tourGuideID);
+                const response = await getItinerariesByTourGuide(tourGuideID);
                 setItineraries(response);
             } catch (error) {
                 console.log('Error fetching itineraries', error);
@@ -46,7 +46,7 @@ const ItinerariesPage = () => {
     const handleFormUpdate = (updatedId) => {
         const fetchItineraries = async () => {
             try {
-                const response = await getItineraries(tourGuideID);
+                const response = await getItinerariesByTourGuide(tourGuideID);
                 setItineraries(response);
             } catch (error) {
                 console.log('Error fetching itineraries', error);

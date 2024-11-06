@@ -9,7 +9,7 @@ import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 import ComplaintsPage from "../pages/admin/Complaints";
 import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
-import AdminItinerariesPage from "../pages/admin/AdminItinerariesPage";
+import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
@@ -23,7 +23,7 @@ const adminRoutes = [
   { path: "/admin/complaints", element: <ComplaintsPage /> },
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
-  {path: "/itineraries", element: <AdminItinerariesPage />}
+  {path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />}
 
 
 ];

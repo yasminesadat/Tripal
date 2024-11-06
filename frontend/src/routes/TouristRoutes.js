@@ -3,8 +3,7 @@ import TouristProfile from "../pages/tourist/TouristProfile";
 import UpcomingActivities from "../pages/tourist/UpcomingActivities";
 import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
-import UpcomingItineraries from "../pages/tourist/UpcomingItineraries";
-import PaidItineraries from "../pages/tourist/ItinerariesHistory";
+import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 import TouristProducts from "../pages/tourist/TouristProducts";
 import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 import PreferenceSelection from "../components/tourist/PreferenceSelection";
@@ -13,7 +12,6 @@ import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
-import ItineraryPage from "../pages/tourist/BookedItineraries";
 import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 
@@ -23,7 +21,7 @@ const TouristRoutes = [
   { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   { path: "/tourist-profile/:id", element: <TouristProfile /> },
   { path: "/historical-places", element: <HistoricalPlaces /> },
-  { path: "/upcoming-itineraries", element: <UpcomingItineraries /> },
+  { path: "/upcoming-itineraries", element: <UpcomingItineraries  isTourist={"isTourist"} touristBook={"book"}  /> },
   { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
   { path: "/tourist/select-preferences/:touristId", element: <PreferenceSelection /> },
@@ -33,7 +31,7 @@ const TouristRoutes = [
   { path: "/tourist/view-products/product/:id", element: <TouristViewProduct /> },
   { path: "/tourist/create-complaint/:id", element: <ComplaintsForm /> },
   { path: "/tourist/view-Complaints/:id", element: <MyComplaints /> },
-  { path: "/itineraries/booked-itineraries", element: <ItineraryPage /> },
+  { path: "/itineraries/booked-itineraries", element:<UpcomingItineraries  isTourist={"isTourist"} touristCancel={"cancel"}  /> },
   {path: "/booked-activities", element: <BookedActivitiesPage />}
 
 ];

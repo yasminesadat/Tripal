@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import UpcomingItinerariesList from '../../components/itinerary/UpcomingItinerariesList';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
 import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
@@ -6,19 +7,22 @@ import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import GuestNavBar from "../../components/navbar/GuestNavBar";
+import AdminNavBar from "../../components/navbar/AdminNavBar";  
 import { message } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
-import { bookResource } from "../../api/BookingService";
-const touristId = "6724842b5831eed787083b57"; 
+import { bookResource,cancelResource } from "../../api/BookingService";
+import { touristId } from '../../IDs';
+import { getTouristItineraries } from '../../api/TouristService';
 
-const AdminItinerariesPage = () => {
+
+const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currency, setCurrency] = useState("EGP");
     const [exchangeRate, setExchangeRate] = useState(1); 
-
+    const location = useLocation();
     useEffect(() => {
         const curr = sessionStorage.getItem("currency");
         if (curr) {
@@ -39,7 +43,9 @@ const AdminItinerariesPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await viewUpcomingItineraries();
+                //im rendering part of the page upon the user type if it is an admin or a tourist i want to show every upcoming itinerary but if it a tourist
+                //trying to see their booked itineraries they should only see their booked itineraries
+                const response = touristBook||isAdmin? await viewUpcomingItineraries(): await getTouristItineraries(touristId);
                 setItineraries(response);
                 setFilteredItineraries(response);
             } catch (err) {
@@ -50,7 +56,7 @@ const AdminItinerariesPage = () => {
         };
 
         fetchItineraries();
-    }, []);
+    }, [location]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
@@ -132,23 +138,62 @@ const AdminItinerariesPage = () => {
         setFilteredItineraries(filtered);
     };
 
+    const handleBookTicket = async ({ itineraryId, touristId, selectedDate, selectedTime }) => {
+        try {
+            console.log('Booking', itineraryId, touristId, selectedDate, selectedTime);
+            await bookResource('itinerary', itineraryId, touristId,  selectedDate,  selectedTime );
+            
+            console.log("This Itinerary has been booked successfully!");
+            message.success("Ticket booked successfully!");
+            
+        } catch (error) {
+            console.log("Error details:", error);
+
+            if (error.response) {
+                message.error(error.response.data.error);   
+            } else {
+                message.error("An error occurred. Please try again later.");
+            }
+        }
+    };
+
+    const handleCancelBooking = async ({ itineraryId, touristId }) => {
+        try {
+            await cancelResource('itinerary', itineraryId, touristId);
+            message.success('Booking cancelled successfully');
+            
+            setItineraries(itineraries.filter(itinerary => itinerary._id !== itineraryId));
+            setFilteredItineraries(filteredItineraries.filter(itinerary => itinerary._id !== itineraryId));
+        } catch (err) {
+            message.error('Failed to cancel booking');
+        }
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     return (
         <div >
-            {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}            
-            <div className="page-title">Itineraries</div>
+            {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
+            {isAdmin ? <AdminNavBar /> : null}   
+
+            <div className="page-title">All Upcoming Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
                 <div className="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
-                </div>    
-                <UpcomingItinerariesList itineraries={filteredItineraries} curr={currency} isAdmin={"isAdmin"} page={"upcoming"}/>
+                </div>  
+                {/*in each route im passing the suitable page props to decide what button or what things to show*/}
+                <UpcomingItinerariesList itineraries={filteredItineraries} 
+                curr={currency} onBook={handleBookTicket} 
+                book ={touristBook} flag={isAdmin} cancel={touristCancel}
+                onCancel={handleCancelBooking}
+                page={"upcoming"}/>
+
             </div>
         </div>
     );
 };
 
-export default AdminItinerariesPage;
+export default ItineraryPage;
