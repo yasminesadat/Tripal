@@ -73,7 +73,7 @@ const TourGuideCreateProfile = () => {
           initialNationality: data.nationality || "",
           initialYearsOfExperience: data.yearsOfExperience || 0,
           initialProfilePicture: data.profilePicture || "",
-          currProfilePicture: data.ProfilePicture || "",
+          currProfilePicture: data.profilePicture || "",
           email: data.email || "",
           name: data.name || "",
           mobileNumber: data.mobileNumber || "",
@@ -355,7 +355,7 @@ const TourGuideCreateProfile = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="profilePicture" name="currProfilePicture">
+          <Form.Item label="Profile Picture" name="currProfilePicture">
             <Upload
               name="Profile Picture"
               listType="picture"
@@ -374,7 +374,7 @@ const TourGuideCreateProfile = () => {
                       },
                     ]
                   : []
-              } // Ensure only one file is shown
+              }
             >
               {!formData.currProfilePicture && (
                 <Button

@@ -42,6 +42,7 @@ const TourGuideProfile = () => {
   return (
     <div>
       <TourguideNavBar />
+
       <div className="seller-profile-container">
         <h1 className="profile-title">User Profile</h1>
         <div className="profile-info">
@@ -56,8 +57,17 @@ const TourGuideProfile = () => {
             {user.mobileNumber || "Not provided"}
           </p>
           <p>
-            <strong>Experience (Years):</strong> {user.experienceYears}
+            <strong>Experience (Years):</strong> {user.yearsOfExperience}
           </p>
+          {user.profilePicture ? (
+            <img
+              src={user.profilePicture}
+              alt="Profile"
+              style={{ maxHeight: "100px" }}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <ChangePassword id={tourGuideID} userType="tour guide" />

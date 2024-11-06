@@ -18,7 +18,7 @@ const SellerProfile = () => {
     password: "",
     name: "",
     description: "",
-    logo: "", // Add logo to the state
+    logo: "",
   });
   const [initialLogo, setInitialLogo] = useState(""); // State to store the initial logo
   const [loading, setLoading] = useState(false); // State for loading
@@ -98,12 +98,13 @@ const SellerProfile = () => {
         password: updatedSeller.password,
         name: updatedSeller.name,
         description: updatedSeller.description,
+        logo: initialLogo,
       };
 
       // Only include the logo if it has been changed
       if (updatedSeller.logo !== initialLogo) {
-        sellerData.logo = updatedSeller.logo;
-        sellerData.initialLogo = initialLogo; // Include initialLogo for deletion
+        sellerData.currLogo = updatedSeller.logo;
+        if (sellerData.initialLogo !== "") sellerData.initialLogo = initialLogo; // Include initialLogo for deletion
       }
 
       await updateSeller(sellerId, sellerData);
