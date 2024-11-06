@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { viewPaidActivities } from "../../api/ActivityService";
-import PaidActivitiesList from "../../components/activity/PaidActivitiesList";
+import ActivityHistory from "../../components/activity/ActivityHistory";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
@@ -9,7 +9,7 @@ import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
 
-const PaidActivitiesPage = () => {
+const ActivitiesHistoryPage = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,18 +127,19 @@ const PaidActivitiesPage = () => {
   return (
     <div>
       <TouristNavBar />
-      <div className="page-title">Paid Activities</div>
+      <div className="page-title">My Paid Activities History</div>
+      <div className="list-item-attribute-sublist">Click to View or rate your paid activities history</div>
       <ActivitySearch onSearch={handleSearch} />
       <div className="filter-sort-list">
         <div className="filter-sort">
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <PaidActivitiesList activities={filteredActivities} curr={currency} page={"history"} />
+        <ActivityHistory activities={filteredActivities} curr={currency} page={"history"} />
       </div>
       <Footer />
     </div>
   );
 };
 
-export default PaidActivitiesPage;
+export default ActivitiesHistoryPage;

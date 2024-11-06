@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from 'antd';
 
-const touristId = '6724842b5831eed787083b57';
-
 const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
