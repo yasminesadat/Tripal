@@ -13,7 +13,7 @@ import { getConversionRate } from '../../api/ExchangeRatesService';
 import { bookResource,cancelResource } from "../../api/BookingService";
 import { touristId } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
-import {flagItinerary} from "../../api/AdminService";
+import {flagItinerary, getAdminItineraries} from "../../api/AdminService";
 
 const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
     const [itineraries, setItineraries] = useState([]);
@@ -46,7 +46,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
             try {
                 //im rendering part of the page upon the user type if it is an admin or a tourist i want to show every upcoming itinerary but if it a tourist
                 //trying to see their booked itineraries they should only see their booked itineraries
-                const response = touristBook||isAdmin? await viewUpcomingItineraries(): await getTouristItineraries(touristId);
+                const response = touristBook? await viewUpcomingItineraries(): isAdmin? await getAdminItineraries(): await getTouristItineraries(touristId);
                 setItineraries(response);
                 setFilteredItineraries(response);
             } catch (err) {

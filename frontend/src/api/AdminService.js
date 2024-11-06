@@ -78,3 +78,14 @@ export const flagItinerary = async (itineraryId) => {
     throw error;
   }
 };
+
+export const getAdminItineraries = async () => {
+  try {
+    const response = await axios.get("/admin/itineraries");
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Can't fetch itineraries", error);
+    throw error;
+  }
+};

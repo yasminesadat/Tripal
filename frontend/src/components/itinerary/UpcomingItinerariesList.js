@@ -104,9 +104,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         <div className="list">
             {itineraries.map(itinerary => (
                     <div className="list-item">
-                       
-
-<div
+        <div
             className="list-item-header"
             style={{
               display: "flex",
