@@ -153,10 +153,10 @@ const updateTouristProfile = async (req, res) => {
     if (bookedFlights && Array.isArray(bookedFlights)) {
       touristToBeUpdated.bookedFlights.push(...bookedFlights);
     }
-    // Object.assign(touristToBeUpdated, updateParameters);
+    Object.assign(touristToBeUpdated, updateParameters);
 
-    // // Save the updated document
-    // await touristToBeUpdated.save();
+    // Save the updated document
+    await touristToBeUpdated.save();
 
     return res
       .status(200)
