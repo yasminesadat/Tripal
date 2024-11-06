@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message, Modal, Select, Button } from 'antd';
+import { message, Modal, Select} from 'antd';
 import { touristId, touristId2 } from '../../IDs';
 const { Option } = Select;
 
-const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page}) => {
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page, isAdmin, isTourguide}) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [isModalVisible, setIsModalVisible] = useState(false);

@@ -5,6 +5,7 @@ import MyItinerariesList from '../../components/itinerary/TourguideItinerariesLi
 import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm.js';
 import TourguideNavBar from '../../components/navbar/TourguideNavBar.js';
 import Footer from '../../components/common/Footer.js';
+import {tourGuideID} from "../../IDs";
 
 const tourGuide = "6700780a15fe2c9f96f1a96e"; // Tour guide ID
 
@@ -16,7 +17,7 @@ const ItinerariesPage = () => {
     useEffect(() => {
         const fetchItineraries = async () => {
             try {
-                const response = await getItineraries(tourGuide);
+                const response = await getItineraries(tourGuideID);
                 setItineraries(response);
             } catch (error) {
                 console.log('Error fetching itineraries', error);
@@ -45,7 +46,7 @@ const ItinerariesPage = () => {
     const handleFormUpdate = (updatedId) => {
         const fetchItineraries = async () => {
             try {
-                const response = await getItineraries(tourGuide);
+                const response = await getItineraries(tourGuideID);
                 setItineraries(response);
             } catch (error) {
                 console.log('Error fetching itineraries', error);
