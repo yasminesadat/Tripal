@@ -30,13 +30,16 @@ const createItinerary = async (req, res) => {
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
 
+        //this is for ommitting any past datessss
+        const currentDate = new Date();
+        const futureDates = availableDates.filter(date => new Date(date) >= currentDate);
 
         const resultItinerary = await itineraryModel.create({
             title,
             description,
             tourGuide,
             activities,
-            availableDates,
+            availableDates: futureDates,
             availableTime,
             language,
             accessibility,
@@ -57,7 +60,6 @@ const createItinerary = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     };
-
 };
 
 const getItineraries = async (req, res) => {
