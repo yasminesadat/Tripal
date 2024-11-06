@@ -3,6 +3,8 @@ import { getAdvertiser } from "../../api/AdvertiserService";
 import { useParams, useNavigate } from "react-router-dom";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import ChangePassword from "../../components/common/ChangePassword";
+import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { message } from 'antd'; 
 
 const AdvertiserProfile = () => {
   const userType = "advertiser"
@@ -28,6 +30,17 @@ const AdvertiserProfile = () => {
   const handleNavigate = () => {
     navigate(`/update-advertiser/${id}`, { state: { advertiser } });
   };
+
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion("Advertiser", id);
+      message.success("Account deletion request submitted successfully.");
+      message.success(response.message);
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred");
+    }
+  };
+
 
   if (error) return <p>Error: {error.message}</p>;
   if (!advertiser) return <p>Can't find advertiser...</p>;
@@ -195,6 +208,7 @@ const AdvertiserProfile = () => {
         </div>
         <br />
         <button onClick={handleNavigate}>Edit Profile</button>
+        <button onClick={handleDeletion}>Delete Account</button>
       </div>
       </div>
       </div>

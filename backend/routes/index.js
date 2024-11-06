@@ -17,7 +17,8 @@ const routes = [
   "./AdminRoutes",
   "./ItineraryRoutes",
   "./ComplaintsRoutes",
-  './BookingRoutes'
+  "./BookingRoutes",
+  "./DeletionRequestsRoutes"
 ];
 
 routes.forEach((route) => {

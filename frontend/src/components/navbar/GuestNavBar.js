@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+//that's temporary; only activities-itineraries-places should appear
 const GuestNavBar = () => {
   return (
     <nav>

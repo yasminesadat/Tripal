@@ -15,6 +15,10 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
     const navigate = useNavigate();
 
     const handleBookClick = (itinerary) => {
+        if (!touristId) {
+            message.warning("Please sign up or log in to book an itinerary.");
+            return;
+          }
         setSelectedItinerary(itinerary);
         setIsModalVisible(true);
     };
@@ -46,7 +50,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         const fetchExchangeRate = async () => {
             if (curr) {
                 try {
-                    const rate = await getConversionRate(curr); // Fetch the exchange rate
+                    const rate = await getConversionRate(curr);
                     setExchangeRate(rate);
                 } catch (error) {
                     if (!errorDisplayedRef.current) {
@@ -62,7 +66,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
 
     const formatPrice = (price) => {
         const convertedPrice = (price * exchangeRate).toFixed(2);
-        return `${curr} ${convertedPrice}`; // Format price with currency
+        return `${curr} ${convertedPrice}`;
     };
 
     const handleNavigate = (itineraryId) => {
