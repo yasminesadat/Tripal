@@ -122,7 +122,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
               <CopyOutlined
                 onClick={() =>
                   handleCopyLink(
-                    `${window.location.origin}/itineraries/${itinerary._id}`
+                    `${window.location.origin}/itinerary/${itinerary._id}`
                   )
                 }
                 style={{ marginRight: "10px", cursor: "pointer" }}
@@ -130,7 +130,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
               <ShareAltOutlined
                 onClick={() =>
                   handleShare(
-                    `${window.location.origin}/itineraries/${itinerary._id}`
+                    `${window.location.origin}/itinerary/${itinerary._id}`
                   )
                 }
                 style={{ cursor: "pointer" }}
