@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import ItineraryMainInformation from "./ItineraryMainInformation";
 // import OthersInformation from "./OthersInformation";
 // import Overview from "./Overview";
@@ -10,6 +11,9 @@ import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
 
 export default function ItineraryDetails({ itinerary }) {
+  const location = useLocation();
+  const { page } = location.state || {};
+
   if (!itinerary) return <div>Itinerary not found.</div>;
   const itineraryId = itinerary._id;
 
@@ -63,9 +67,10 @@ export default function ItineraryDetails({ itinerary }) {
               </button> */}
 
               <div className="line mt-60 mb-60"></div>
-
-              <ReviewBox id={itineraryId} type="itinerary" />
-
+              
+              {page === "history" && (
+                <ReviewBox id={itineraryId} type="itinerary" />
+              )}
             </div>
 
             <div className="col-lg-4">

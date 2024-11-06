@@ -156,7 +156,7 @@ const UpcomingActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book ={"diana"} />
+        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"}/>
       </div>
       <Footer />
     </div>

@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message, Modal, Select, Button } from 'antd';
 import { touristId, touristId2 } from '../../IDs';
 const { Option } = Select;
 
-const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP" }) => {
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page}) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedItinerary, setSelectedItinerary] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
-    
+    const navigate = useNavigate();
+
     const handleBookClick = (itinerary) => {
         if (!touristId) {
             message.warning("Please sign up or log in to book an itinerary.");
@@ -66,12 +68,18 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         const convertedPrice = (price * exchangeRate).toFixed(2);
         return `${curr} ${convertedPrice}`;
     };
+
+    const handleNavigate = (itineraryId) => {
+        navigate(`/itinerary/${itineraryId}`, { state: { page } });
+    };
     return (
         <div className="list">
             {itineraries.map(itinerary => (
-                <div className="list-item" key={itinerary._id}>
-                    <div className="list-item-header">{itinerary.title}</div>
-                    <div className="list-item-attributes">
+                    <div className="list-item" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
+                        <div className="list-item-header">
+                            {itinerary.title}
+                        </div>
+                        <div className="list-item-attributes">
                         <div className="list-item-attribute">
                             <strong>Description:</strong> {itinerary.description}
                         </div>
