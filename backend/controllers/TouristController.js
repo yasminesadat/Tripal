@@ -8,7 +8,7 @@ const Request = require('../models/Request.js')
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags=[], categories=[] } = req.body;
+    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags = [], categories = [] } = req.body;
 
     // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
@@ -145,7 +145,6 @@ const updateTouristProfile = async (req, res) => {
       updateParameters,
       { new: true }
     );
-    console.log(touristToBeUpdated);
     if (!touristToBeUpdated) {
       return res.status(404).json("Tourist profile doesnt exist");
     }
@@ -155,7 +154,6 @@ const updateTouristProfile = async (req, res) => {
     }
     Object.assign(touristToBeUpdated, updateParameters);
 
-    // Save the updated document
     await touristToBeUpdated.save();
 
     return res
@@ -210,4 +208,4 @@ const redeemPoints = async (req, res) => {
 };
 
 
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword,redeemPoints };
+module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints };

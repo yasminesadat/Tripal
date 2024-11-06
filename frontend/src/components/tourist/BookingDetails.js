@@ -4,6 +4,7 @@ import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation } from '../../api/TouristService';
 import { touristFlight } from '../../IDs';
+import { touristId } from '../../IDs';
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -15,7 +16,7 @@ const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-  const touristId = touristFlight;
+  // const touristId = touristId;
 
   if (!flight) return <p>No flight selected</p>;
 
