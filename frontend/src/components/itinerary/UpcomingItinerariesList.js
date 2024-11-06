@@ -5,7 +5,7 @@ import { message, Modal, Select} from 'antd';
 import { touristId, touristId2 } from '../../IDs';
 const { Option } = Select;
 
-const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page, isAdmin, isTourguide}) => {
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page, isAdmin, isTourguide,onAdminFlag}) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -72,6 +72,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
     const handleNavigate = (itineraryId) => {
         navigate(`/itinerary/${itineraryId}`, { state: { page } });
     };
+
     return (
         <div className="list">
             {itineraries.map(itinerary => (
@@ -79,7 +80,8 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                         <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                             {itinerary.title}
                         </button>
-                        <div className="list-item-attributes">
+                       <div className="list-item-attributes">
+                         {isAdmin&& <button className="list-item-attribute" key={itinerary._id} onClick={()=>onAdminFlag(itinerary._id)}><b>Flag as inappropriate</b></button>}
                         <div className="list-item-attribute">
                             <strong>Description:</strong> {itinerary.description}
                         </div>

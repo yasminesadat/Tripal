@@ -2,7 +2,6 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
-const touristModel = require('../models/users/Tourist');
 
 const createItinerary = async (req, res) => {
     try {
@@ -219,6 +218,21 @@ const getTouristItineraries = async (req, res) => {
     }
 };
 
+const adminFlagItinerary = async (req, res) => {
+    try{
+        const itinerary= await itineraryModel.findById(req.params.itineraryId);
+        if(!itinerary)
+            return res.status(404).json({error: 'Itinerary not found'});
+        if(itinerary.flagged)
+            return res.status(400).json({error: 'Itinerary already flagged'});
+        itinerary.flagged = true;
+        await itinerary.save();
+        res.status(200).json({message: 'Itinerary flagged successfully'});
+    }
+    catch(error){
+        res.status(400).json({error: error.message});
+    }
+};
 
 module.exports = {
     createItinerary,
@@ -229,5 +243,6 @@ module.exports = {
     viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    getTouristItineraries
+    getTouristItineraries,
+    adminFlagItinerary
 };

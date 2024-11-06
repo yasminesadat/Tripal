@@ -13,7 +13,7 @@ import { getConversionRate } from '../../api/ExchangeRatesService';
 import { bookResource,cancelResource } from "../../api/BookingService";
 import { touristId } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
-
+import {flagItinerary} from "../../api/AdminService";
 
 const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
     const [itineraries, setItineraries] = useState([]);
@@ -23,6 +23,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
     const [currency, setCurrency] = useState("EGP");
     const [exchangeRate, setExchangeRate] = useState(1); 
     const location = useLocation();
+
     useEffect(() => {
         const curr = sessionStorage.getItem("currency");
         if (curr) {
@@ -169,6 +170,16 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
         }
     };
 
+    const handleAdminFlag = async (itineraryId) => {
+        console.log('Flagging itinerary', itineraryId);
+        try {
+            await flagItinerary(itineraryId);
+            message.success('Itinerary flagged successfully');
+        } catch (error) {
+            message.error(error.response.data.error);
+        }
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -187,9 +198,10 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
                 {/*in each route im passing the suitable page props to decide what button or what things to show*/}
                 <UpcomingItinerariesList itineraries={filteredItineraries} 
                 curr={currency} onBook={handleBookTicket} 
-                book ={touristBook} flag={isAdmin} cancel={touristCancel}
+                book ={touristBook} isAdmin={isAdmin} cancel={touristCancel}
                 onCancel={handleCancelBooking}
-                page={"upcoming"}/>
+                page={"upcoming"}
+                onAdminFlag={handleAdminFlag}/>
 
             </div>
         </div>

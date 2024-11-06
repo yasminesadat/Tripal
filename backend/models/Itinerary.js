@@ -41,6 +41,7 @@ const itinerarySchema = new mongoose.Schema({
             selectedTime: { type: String },
         },
     ],
+    flagged: {type: Boolean, default: false},
     }, 
     {timestamps: true}
 );
