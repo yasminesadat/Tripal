@@ -71,7 +71,7 @@
     gap: 0.5rem;
 }
 
-.dropdown, .input-field {
+/* .dropdown, .input-field {
     background-color: #444;
     color: #ccc;
     border: none;
@@ -83,7 +83,7 @@
 .dropdown {
     width: 12%;
     color: #ccc;
-}
+} */
 
 .input-field {
     flex: 1;
