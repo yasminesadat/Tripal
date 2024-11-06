@@ -7,8 +7,8 @@ const ItineraryRating = require("../models/ItineraryRating");
 
 const { createItinerary, getItineraries, updateItinerary, 
     deleteItinerary, getItineraryRatings, 
-     viewUpcomingItineraries,viewPaidItineraries,
-     getTouristItineraries } = require('../controllers/ItineraryController');
+    viewUpcomingItineraries,viewPaidItineraries,
+    getTouristItineraries } = require('../controllers/ItineraryController');
 
 router.post('/itinerary', createItinerary);
 
