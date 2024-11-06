@@ -70,4 +70,4 @@ export async function changeTourGuidePassword(id, oldPassword, newPassword) {
     console.error("error", error);
     throw error;
   }
-};
+}
