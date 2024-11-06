@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message } from 'antd';
+import { message } from "antd";
+import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
@@ -9,7 +10,7 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
     const fetchExchangeRate = async () => {
       if (curr) {
         try {
-          const rate = await getConversionRate(curr); 
+          const rate = await getConversionRate(curr);
           setExchangeRate(rate);
         } catch (error) {
           message.error("Failed to fetch exchange rate.");
@@ -21,7 +22,33 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
   }, [curr]);
 
   const convertPrice = (price) => {
-    return (price * exchangeRate).toFixed(2); 
+    return (price * exchangeRate).toFixed(2);
+  };
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
+
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this historical place!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
+    }
   };
 
   return (
@@ -33,7 +60,7 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
             <div className="list-item-attribute-img">
               {place.images && place.images.length > 0 && (
                 <img
-                  src={place.images[0].url}  
+                  src={place.images[0].url}
                   alt={place.name}
                   style={{ width: "200px" }}
                 />
@@ -41,15 +68,21 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
             </div>
             <div className="list-item-attributes">
               <div className="list-item-attribute">{place.description}</div>
-              <div className="list-item-attribute">Location: {place.location.address}</div>
               <div className="list-item-attribute">
-                Opening Hours: Weekdays {place.openingHours.weekdays.openingTime} -{" "}
+                Location: {place.location.address}
+              </div>
+              <div className="list-item-attribute">
+                Opening Hours: Weekdays{" "}
+                {place.openingHours.weekdays.openingTime} -{" "}
                 {place.openingHours.weekdays.closingTime}, Weekends{" "}
                 {place.openingHours.weekends.openingTime} -{" "}
                 {place.openingHours.weekends.closingTime}
               </div>
               <div className="list-item-attribute">
-                Ticket Prices: Foreigner: {curr} {convertPrice(place.ticketPrices.foreigner)}, Native: {curr} {convertPrice(place.ticketPrices.native)}, Student: {curr} {convertPrice(place.ticketPrices.student)}
+                Ticket Prices: Foreigner: {curr}{" "}
+                {convertPrice(place.ticketPrices.foreigner)}, Native: {curr}{" "}
+                {convertPrice(place.ticketPrices.native)}, Student: {curr}{" "}
+                {convertPrice(place.ticketPrices.student)}
               </div>
               <div className="list-item-attribute">
                 Tags:{" "}
@@ -62,6 +95,24 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
                 {place.historicalPeriod && place.historicalPeriod.length > 0
                   ? place.historicalPeriod.map((tag) => tag.name).join(", ")
                   : "N/A"}
+              </div>
+              <div className="list-item-attribute">
+                <CopyOutlined
+                  onClick={() =>
+                    handleCopyLink(
+                      `${window.location.origin}/historical-places/${place._id}`
+                    )
+                  }
+                  style={{ marginRight: "10px", cursor: "pointer" }}
+                />
+                <ShareAltOutlined
+                  onClick={() =>
+                    handleShare(
+                      `${window.location.origin}/historicalplaces/${place._id}`
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
+                />
               </div>
             </div>
           </div>
