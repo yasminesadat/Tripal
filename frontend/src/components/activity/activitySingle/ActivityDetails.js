@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
 import Overview from "./Overview";
@@ -10,9 +11,13 @@ import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
 
 export default function ActivityDetails({ activity }) {
-  if (!activity) return <div>Activity not found.</div>;
-  const activityId = activity._id;
+  const location = useLocation();
+  const { page } = location.state || {};
+  console.log("Page:", page);
 
+  if (!activity) return <div>Activity not found.</div>;
+  const activityId = activity._id;  
+  
   return (
     <>
       <section className="">
@@ -41,8 +46,12 @@ export default function ActivityDetails({ activity }) {
 
               <div className="line mt-60 mb-60"></div>
 
-              <h2 className="text-30">Availability Calendar</h2>
-              <DateCalender />
+              {page === "upcoming" && (
+                <>
+                  <h2 className="text-30">Availability Calendar</h2>
+                  <DateCalender />
+                </>
+              )}
 
               <div className="line mt-60 mb-60"></div>
 
@@ -54,24 +63,23 @@ export default function ActivityDetails({ activity }) {
 
               <ActivityReviews activityId={activityId} />
 
-              {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
-                See more reviews
-                <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button> */}
-
               <div className="line mt-60 mb-60"></div>
 
-              <ReviewBox id={activityId} type="activities" />
+              {page === "history" && (
+                <ReviewBox id={activityId} type="activities" />
+              )}
 
               <div className="line mt-60 mb-60"></div>
 
             </div>
 
-            <div className="col-lg-4">
-              <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar />
+            {page === "upcoming" && (
+              <div className="col-lg-4">
+                <div className="d-flex justify-end js-pin-content">
+                  <TourSingleSidebar />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

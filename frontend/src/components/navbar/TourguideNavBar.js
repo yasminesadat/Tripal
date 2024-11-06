@@ -5,7 +5,7 @@ const TourguideNavBar = () => {
   return (
     <nav>
       <div className="nav-bar">
-        {/* <div class="nav-bar-link">
+        {/* <div className="nav-bar-link">
           <Link to="/tourguide/create">Create Profile</Link>
         </div> */}
         <div className="nav-bar-link">
@@ -26,7 +26,6 @@ const TourguideNavBar = () => {
         <div className="nav-bar-link">
           <Link to="/">Log out</Link>
         </div>
-
       </div>
     </nav>
   );

@@ -7,11 +7,11 @@ export async function createTourGuide(newUser) {
   } catch (error) {
     throw error;
   }
-};
+}
 
 export const updateProfile = async (id, Data) => {
   try {
-    const response = await axios.put(`/tourGuide/${id}`, Data);
+    const response = await axios.patch(`/tourGuide/${id}`, Data);
     return response;
   } catch (error) {
     console.error("Error updating your profile:", error);
@@ -41,11 +41,15 @@ export const getRatings = async (id) => {
 
 export const addRating = async (tourGuideID, ratingData) => {
   try {
-    const response = await axios.post(`/tourGuide/${tourGuideID}/ratings`, ratingData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+      `/tourGuide/${tourGuideID}/ratings`,
+      ratingData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error adding rating:", error);
@@ -56,9 +60,9 @@ export const addRating = async (tourGuideID, ratingData) => {
 export async function changeTourGuidePassword(id, oldPassword, newPassword) {
   try {
     const body = {
-      "oldPassword": oldPassword,
-      "newPassword": newPassword
-    }
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
     console.log(`/tourGuide-change-pass/${id}`);
     const response = await axios.put(`/tourGuide-change-pass/${id}`, body);
     return response.data;
@@ -66,4 +70,4 @@ export async function changeTourGuidePassword(id, oldPassword, newPassword) {
     console.error("error", error);
     throw error;
   }
-};
+}

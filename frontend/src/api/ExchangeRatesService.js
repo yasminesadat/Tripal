@@ -18,9 +18,7 @@ async function getConversionRate(currency) {
   if (!exchangeRates) {
     await fetchExchangeRates();
   }
-  console.log("exchange rates areee "+ exchangeRates);
   return exchangeRates.conversion_rates[currency];
-  
 }
 
 export { fetchExchangeRates, getConversionRate };

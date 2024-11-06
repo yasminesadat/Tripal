@@ -4,11 +4,13 @@ import UpcomingActivitiesList from "../../components/activity/UpcomingActivities
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
+import GuestNavBar from "../../components/navbar/GuestNavBar";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
 import { bookResource } from "../../api/BookingService";
+import { touristId } from "../../IDs";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -42,13 +44,8 @@ const UpcomingActivitiesPage = () => {
     const fetchActivities = async () => {
       try {
         const response = await viewUpcomingActivities();
-        const activitiesWithAvgRatings = response.data.map(activity => ({
-          ...activity,
-          averageRating: calculateAverageRating(activity.ratings),
-        }));
-
-        setActivities(activitiesWithAvgRatings);
-        setFilteredActivities(activitiesWithAvgRatings);
+        setActivities(response.data);
+        setFilteredActivities(response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Error fetching activities");
       } finally {
@@ -58,12 +55,6 @@ const UpcomingActivitiesPage = () => {
 
     fetchActivities();
   }, []);
-
-  const calculateAverageRating = (ratings) => {
-    if (!ratings || ratings.length === 0) return 0;
-    const total = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return (total / ratings.length).toFixed(1);
-  };
 
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -131,6 +122,10 @@ const UpcomingActivitiesPage = () => {
   };
 
   const handleBookActivity = async ({ activityId, touristId }) => {
+    if (!touristId) {
+      message.warning("Please sign up or log in to book an activity.");
+      return;
+    }
     try {
       await bookResource('activity', activityId, touristId);
             message.success("Activity booked successfully!");
@@ -151,10 +146,9 @@ const UpcomingActivitiesPage = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
   return (
-    <div className="page-container">
-      <TouristNavBar onCurrencyChange={setCurrency} />
+    <div>
+      {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}
       <div className="page-title">Upcoming Activities</div>
       <ActivitySearch onSearch={handleSearch} />
       <div className="filter-sort-list">
@@ -162,7 +156,7 @@ const UpcomingActivitiesPage = () => {
           <ActivityFilter onFilter={handleFilter} />
           <ActivitySort onSort={handleSort} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book ={"diana"} />
+        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"}/>
       </div>
       <Footer />
     </div>

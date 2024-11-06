@@ -2,7 +2,6 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
-const touristModel = require('../models/users/Tourist');
 
 const createItinerary = async (req, res) => {
     try {
@@ -31,13 +30,16 @@ const createItinerary = async (req, res) => {
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
 
+        //this is for ommitting any past datessss
+        const currentDate = new Date();
+        const futureDates = availableDates.filter(date => new Date(date) >= currentDate);
 
         const resultItinerary = await itineraryModel.create({
             title,
             description,
             tourGuide,
             activities,
-            availableDates,
+            availableDates: futureDates,
             availableTime,
             language,
             accessibility,
@@ -58,14 +60,19 @@ const createItinerary = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     };
-
 };
 
 const getItineraries = async (req, res) => {
     const { tourGuideId } = req.query;
     console.log("this is being used bro");
     try {
-        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId });
+        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
+        .populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")
 
         res.status(200).json(itineraries);
     } catch (error) {
@@ -122,6 +129,7 @@ const deleteItinerary = async (req, res) => {
     try {
         const { id } = req.params;//check for this
         const itinerary = await itineraryModel.findById(id);
+        console.log(itinerary);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
@@ -135,24 +143,12 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find().populate({
+        const itineraries = await itineraryModel.find({flagged:false}).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
             },
-        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
-
-        // const itinerariesWithRatings = itineraries.map(itinerary => {
-        //     const ratings = itinerary.ratings || [];
-        //     const averageRating = ratings.length > 0
-        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-        //         : 0;
-
-        //     return {
-        //         ...itinerary.toObject(),
-        //         averageRating: averageRating.toFixed(1)
-        //     };
-        // });
+        }).populate("tags")
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -161,24 +157,13 @@ const viewUpcomingItineraries = async (req, res) => {
 
 const viewPaidItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find().populate({
+        const itineraries = await itineraryModel.find({flagged: false}).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
             },
-        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
+        }).populate("tags")
 
-        // const itinerariesWithRatings = itineraries.map(itinerary => {
-        //     const ratings = itinerary.ratings || [];
-        //     const averageRating = ratings.length > 0
-        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-        //         : 0;
-
-        //     return {
-        //         ...itinerary.toObject(),
-        //         averageRating: averageRating.toFixed(1)
-        //     };
-        // });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -233,8 +218,13 @@ const getTouristItineraries = async (req, res) => {
         const touristId = req.params.touristId;
         
         // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId })
-            .populate('tourGuide activities bookings.touristId');
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId, flagged: false }).populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")
+            .populate('tourGuide bookings.touristId');
         
         res.status(200).json(itineraries);
     } catch (error) {
@@ -242,6 +232,38 @@ const getTouristItineraries = async (req, res) => {
     }
 };
 
+const adminFlagItinerary = async (req, res) => {
+    try{
+        const itinerary= await itineraryModel.findById(req.params.itineraryId);
+        if(!itinerary)
+            return res.status(404).json({error: 'Itinerary not found'});
+        if(itinerary.flagged)
+            return res.status(400).json({error: 'Itinerary already flagged'});
+        itinerary.flagged = true;
+        await itinerary.save();
+        res.status(200).json({message: 'Itinerary flagged successfully'});
+    }
+    catch(error){
+        res.status(400).json({error: error.message});
+    }
+};
+
+const getAllItinerariesForAdmin = async (req, res) => {
+    try {
+        const itineraries = await itineraryModel.find()
+            .populate({
+                path: 'activities',
+                populate: {
+                    path: 'tags',
+                },
+            })
+            .populate("tags");
+
+        res.status(200).json(itineraries);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
 module.exports = {
     createItinerary,
@@ -252,5 +274,7 @@ module.exports = {
     viewPaidItineraries,
     addItineraryRating,
     getItineraryRatings,
-    getTouristItineraries
+    getTouristItineraries,
+    adminFlagItinerary,
+    getAllItinerariesForAdmin
 };

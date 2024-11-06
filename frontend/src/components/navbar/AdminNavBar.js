@@ -11,7 +11,10 @@ const AdminNavBar = () => {
         <div className="nav-bar-link">
           <Link to="/activity-categories">Activity Categories</Link>
         </div>
-        <div className="nav-bar-link">
+        <div class="nav-bar-link">
+          <Link to="/admin/itineraries">Itineraries</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/preference-tags">Preference Tags</Link>
         </div>
         <div className="nav-bar-link">

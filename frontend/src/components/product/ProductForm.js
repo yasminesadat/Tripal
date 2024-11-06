@@ -104,7 +104,7 @@ const ProductForm = () => {
           !product.quantity &&
           product.picture === initialPicture
         ) {
-          message.error(
+          message.warning(
             "At least one field must be edited to update the product."
           );
           return;
