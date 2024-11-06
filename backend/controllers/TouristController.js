@@ -115,10 +115,6 @@ const updateTouristProfile = async (req, res) => {
       updateParameters.categories = categories;
     }
 
-    if (bookedFlights){
-      updateParameters.bookedFlights = bookedFlights;
-    }
-
     if (updateParameters.userName) {
       res.status(400).json({
         status: "error",
@@ -154,7 +150,13 @@ const updateTouristProfile = async (req, res) => {
       return res.status(404).json("Tourist profile doesnt exist");
     }
 
-   
+    if (bookedFlights && Array.isArray(bookedFlights)) {
+      touristToBeUpdated.bookedFlights.push(...bookedFlights);
+    }
+    // Object.assign(touristToBeUpdated, updateParameters);
+
+    // // Save the updated document
+    // await touristToBeUpdated.save();
 
     return res
       .status(200)
