@@ -5,9 +5,11 @@ import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
 import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import GuestNavBar from "../../components/navbar/GuestNavBar";
 import { message } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource } from "../../api/BookingService";
+const touristId = "6724842b5831eed787083b57"; 
 
 const ItineraryPage = () => {
     const [itineraries, setItineraries] = useState([]);
@@ -89,9 +91,9 @@ const ItineraryPage = () => {
     };
 
     const handleFilter = (filters) => {
-        const { startDate, endDate, budgetMin, budgetMax, preferences, language } = filters;
+        const { startDate, endDate, budgetMin, budgetMax, tag, language } = filters;
 
-        if (!startDate && !endDate && !budgetMin && !budgetMax && !preferences && !language) {
+        if (!startDate && !endDate && !budgetMin && !budgetMax && !tag && !language) {
             setFilteredItineraries(itineraries);
             return;
         }
@@ -114,13 +116,11 @@ const ItineraryPage = () => {
                 (!budgetMin || itineraryBudget >= budgetMin) &&
                 (!budgetMax || itineraryBudget <= budgetMax);
             
-            const isPreferencesValid = !preferences || 
-                preferences.split(',').some(pref => {
-                    const normalizedPref = pref.trim().toLowerCase();
-                    return itinerary.activities.some(activity => 
-                        activity.tags.some(tag => tag.name.toLowerCase() === normalizedPref)
-                    );
-                });
+                const isPreferencesValid =
+                !tag ||
+                itinerary.activities.some((activity) =>
+                  activity.tags.some((activityTag) => activityTag.name=== tag)
+                );
             
             const isLanguageValid = 
                 !language || 
@@ -155,8 +155,8 @@ const ItineraryPage = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="page-container">
-            <TouristNavBar />
+        <div >
+            {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}            
             <div className="page-title">Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
@@ -164,7 +164,7 @@ const ItineraryPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <UpcomingItinerariesList itineraries={filteredItineraries} curr={currency} onBook={handleBookTicket} book ={'diana'} />
+                <UpcomingItinerariesList itineraries={filteredItineraries} curr={currency} onBook={handleBookTicket} book ={'diana'} page={"upcoming"}/>
             </div>
         </div>
     );

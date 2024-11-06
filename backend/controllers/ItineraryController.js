@@ -140,19 +140,7 @@ const viewUpcomingItineraries = async (req, res) => {
             populate: {
                 path: 'tags',
             },
-        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
-
-        // const itinerariesWithRatings = itineraries.map(itinerary => {
-        //     const ratings = itinerary.ratings || [];
-        //     const averageRating = ratings.length > 0
-        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-        //         : 0;
-
-        //     return {
-        //         ...itinerary.toObject(),
-        //         averageRating: averageRating.toFixed(1)
-        //     };
-        // });
+        }).populate("tags")
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -166,19 +154,8 @@ const viewPaidItineraries = async (req, res) => {
             populate: {
                 path: 'tags',
             },
-        }).populate("tags")//.populate({ath: 'ratings',populate: { path: 'userID', select: 'name' }});
+        }).populate("tags")
 
-        // const itinerariesWithRatings = itineraries.map(itinerary => {
-        //     const ratings = itinerary.ratings || [];
-        //     const averageRating = ratings.length > 0
-        //         ? ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length
-        //         : 0;
-
-        //     return {
-        //         ...itinerary.toObject(),
-        //         averageRating: averageRating.toFixed(1)
-        //     };
-        // });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });

@@ -4,16 +4,17 @@ import HistoricalPlacesSearch from "../../components/historicalplace/HistoricalP
 import HistoricalPlacesFilter from "../../components/historicalplace/HistoricalPlacesFilter";
 import { getAllHistoricalPlaces } from "../../api/HistoricalPlaceService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import GuestNavBar from "../../components/navbar/GuestNavBar";
+const touristId = "6724842b5831eed787083b57"; 
 
 const HistoricalPlacesPage = () => {
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currency, setCurrency] = useState("EGP"); // Add currency state
+  const [currency, setCurrency] = useState("EGP");
 
   useEffect(() => {
-    // Optionally retrieve currency from sessionStorage
     const curr = sessionStorage.getItem("currency");
     if (curr) {
       setCurrency(curr);
@@ -84,8 +85,8 @@ const HistoricalPlacesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="page-container">
-      <TouristNavBar />
+    <div>
+      {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}
       <div className="page-title">Historical Places</div>
       <HistoricalPlacesSearch onSearch={handleSearch} />
       <div className="filter-sort-list">

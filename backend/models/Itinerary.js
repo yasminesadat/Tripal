@@ -41,7 +41,9 @@ const itinerarySchema = new mongoose.Schema({
             selectedTime: { type: String },
         },
     ],
-}, {timestamps: true});
+    }, 
+    {timestamps: true}
+);
 
 //this hook middleware is used to prevent the deletion of an itinerary that has bookings
 itinerarySchema.pre('findOneAndDelete', async function (next) {

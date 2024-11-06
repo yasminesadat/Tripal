@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import { Tag, message } from "antd";
+import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId } from "../../IDs";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
@@ -11,6 +13,7 @@ const UpcomingActivitiesList = ({
   onCancel,
   cancel,
   curr = "EGP",
+  page,
 }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -60,11 +63,21 @@ const UpcomingActivitiesList = ({
     }
   };
 
+  const navigate = useNavigate();
+  const handleRedirect = (activityId) => {
+    navigate(`/activity/${activityId}`, { state: { page } });
+  };
+
   return (
     <div className="list">
       {activities.map((activity) => (
         <div className="list-item" key={activity._id}>
-          <div className="list-item-header">{activity.title}</div>
+          <button
+            onClick={() => handleRedirect(activity._id)}
+            className="list-item-header"
+          >
+            {activity.title}
+          </button>
           <div className="list-item-attributes">
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">
