@@ -116,7 +116,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
            <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                             {itinerary.title}
                         </button>
-            <div>
+          {!isAdmin&&<div>
               <CopyOutlined
                 onClick={() =>
                   handleCopyLink(
@@ -133,7 +133,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                 }
                 style={{ cursor: "pointer" }}
               />
-            </div>
+            </div>}
           </div>
 
                        <div className="list-item-attributes">
