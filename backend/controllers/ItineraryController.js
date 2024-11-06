@@ -66,7 +66,13 @@ const getItineraries = async (req, res) => {
     const { tourGuideId } = req.query;
     console.log("this is being used bro");
     try {
-        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false });
+        const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
+        .populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")
 
         res.status(200).json(itineraries);
     } catch (error) {
@@ -123,6 +129,7 @@ const deleteItinerary = async (req, res) => {
     try {
         const { id } = req.params;//check for this
         const itinerary = await itineraryModel.findById(id);
+        console.log(itinerary);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
@@ -211,8 +218,13 @@ const getTouristItineraries = async (req, res) => {
         const touristId = req.params.touristId;
         
         // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId, flagged: false })
-            .populate('tourGuide activities bookings.touristId');
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId, flagged: false }).populate({
+            path: 'activities',
+            populate: {
+                path: 'tags',
+            },
+        }).populate("tags")
+            .populate('tourGuide bookings.touristId');
         
         res.status(200).json(itineraries);
     } catch (error) {

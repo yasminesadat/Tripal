@@ -4,9 +4,11 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message, Modal, Select} from 'antd';
 import { touristId, touristId2 } from '../../IDs';
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
+
 const { Option } = Select;
 
-const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP", page, isAdmin, isTourguide,onAdminFlag}) => {
+const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, curr = "EGP",
+     page, isAdmin, isTourguide,onAdminFlag, onItineraryDelete,onItineraryUpdate }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -116,7 +118,7 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
            <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                             {itinerary.title}
                         </button>
-          {!isAdmin&&<div>
+          {!isAdmin&&!isTourguide &&<div>
               <CopyOutlined
                 onClick={() =>
                   handleCopyLink(
@@ -230,6 +232,10 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
                                 Cancel Booking
                             </button>
                         )} 
+                        {isTourguide &&(<div className="list-item-actions">
+                            <button onClick={() => onItineraryUpdate(itinerary._id)}>Edit Details</button>
+                            <button onClick={() => onItineraryDelete(itinerary._id)}>Delete</button>
+                        </div>)}
           </div>
         </div>
       ))}
