@@ -25,11 +25,11 @@ const TouristNavBar = () => {
           <Link to="/activities-history">Activities History</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to="/paid-itineraries">Paid Itineraries</Link>
+          <Link to="/itineraries-history">Itineraries History</Link>
         </div>
 
         <div class="nav-bar-link">
-          <Link to="/itineraries/booked-itineraries">Booked Itineraries </Link>
+          <Link to="/itineraries/booked-itineraries">Booked Itineraries</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/historical-places">Historical Places</Link>

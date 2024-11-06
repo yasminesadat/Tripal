@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from 'antd';
 
-const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
+const ItineraryHistory = ({ itineraries, curr = "EGP", page }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
     const errorDisplayedRef = useRef(false);
     const [loading, setLoading] = useState(true);
@@ -49,10 +49,11 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
                     const formattedPrice = formatPrice(itinerary.price);
 
                     return (
-                        <div className="list-item" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
-                            <div className="list-item-header">
+                        
+                        <div className="list-item">
+                            <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                                 {itinerary.title}
-                            </div>
+                            </button>
                             <div className="list-item-attributes">
                                 <div className="list-item-attribute">
                                     <strong>Description:</strong> {itinerary.description}
@@ -77,25 +78,6 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
                                     <div className="list-item-attribute">No ratings yet.</div>
                                 )}
                                 <div className="list-item-attribute">
-                                    <strong>Activities:</strong>
-                                    <div className="list-item-attribute-sublist">
-                                        {itinerary.activities.map(activity => (
-                                            <div key={activity._id} className="list-item-attribute-sublist-component">
-                                                <strong>Activity:</strong> {activity.title} - {activity.description}
-                                                <div>
-                                                    <strong>Tags:</strong> 
-                                                    {activity.tags && activity.tags.length > 0 
-                                                        ? activity.tags.map(tag => tag.name).join(', ')
-                                                        : 'No tags available'}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="list-item-attribute">
-                                    <strong>Locations:</strong> {itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}
-                                </div>
-                                <div className="list-item-attribute">
                                     <strong>Timeline:</strong>
                                     <div className="list-item-attribute-sublist">
                                         {itinerary.timeline.map((entry, index) => (
@@ -114,26 +96,6 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
                                 <div className="list-item-attribute">
                                     <strong>Price:</strong> {formattedPrice}
                                 </div>
-                                <div className="list-item-attribute">
-                                    <strong>Available Dates:</strong> 
-                                    {itinerary.availableDates.length > 0 
-                                        ? itinerary.availableDates.map(date => new Date(date).toLocaleDateString()).join(', ') 
-                                        : 'N/A'}
-                                </div>
-                                <div className="list-item-attribute">
-                                    <strong>Available Times:</strong> 
-                                    {itinerary.availableTime.length > 0 ? itinerary.availableTime.join(', ') : 'N/A'}
-                                </div>
-                                <div className="list-item-attribute">
-                                    <strong>Accessibility:</strong> 
-                                    {itinerary.accessibility.length > 0 ? itinerary.accessibility.join(', ') : 'N/A'}
-                                </div>
-                                <div className="list-item-attribute">
-                                    <strong>Pickup Location:</strong> {itinerary.pickupLocation}
-                                </div>
-                                <div className="list-item-attribute">
-                                    <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
-                                </div>
                             </div>
                         </div>
                     );
@@ -143,4 +105,4 @@ const PaidItinerariesList = ({ itineraries, curr = "EGP", page }) => {
     );
 };
 
-export default PaidItinerariesList;
+export default ItineraryHistory;

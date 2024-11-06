@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PaidItinerariesList from '../../components/itinerary/PaidItinerariesList';
+import ItineraryHistory from '../../components/itinerary/ItineraryHistory';
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
 import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
@@ -8,7 +8,7 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { message } from 'antd';
 
-const PaidItinerariesPage = () => {
+const ItinerariesHistoryPage = () => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,21 +49,6 @@ const PaidItinerariesPage = () => {
         fetchItineraries();
     }, []);
 
-    const handleSearch = (searchTerm) => {
-        if (!searchTerm) {
-            setFilteredItineraries(itineraries);
-            return;
-        }
-
-        const lowercasedTerm = searchTerm.toLowerCase();
-        const filtered = itineraries.filter(itinerary =>
-            itinerary.title.toLowerCase().includes(lowercasedTerm) ||
-            itinerary.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm))
-        );
-
-        setFilteredItineraries(filtered);
-    };
-
     const handleSort = (sortOption) => {
         let sortedItineraries = [...filteredItineraries];
 
@@ -87,67 +72,24 @@ const PaidItinerariesPage = () => {
         setFilteredItineraries(sortedItineraries);
     };
 
-    const handleFilter = (filters) => {
-        const { startDate, endDate, budgetMin, budgetMax, preferences, language } = filters;
-
-        if (!startDate && !endDate && !budgetMin && !budgetMax && !preferences && !language) {
-            setFilteredItineraries(itineraries);
-            return;
-        }
-
-        const filtered = itineraries.filter(itinerary => {
-            const itineraryDates = itinerary.availableDates.map(date => new Date(date));
-            const itineraryBudget = itinerary.price * exchangeRate; // Convert budget using exchange rate
-            const itineraryLanguage = itinerary.language;
-
-            const start = startDate ? new Date(startDate) : null;
-            const end = endDate ? new Date(endDate) : null;
-
-            const isDateValid = itineraryDates.some(date => {
-                const isWithinStart = !start || date >= start;
-                const isWithinEnd = !end || date <= end;
-                return isWithinStart && isWithinEnd;
-            });
-
-            const isBudgetValid =
-                (!budgetMin || itineraryBudget >= budgetMin) &&
-                (!budgetMax || itineraryBudget <= budgetMax);
-            
-            const isPreferencesValid = !preferences || 
-                preferences.split(',').some(pref => {
-                    const normalizedPref = pref.trim().toLowerCase();
-                    return itinerary.activities.some(activity => 
-                        activity.tags.some(tag => tag.name.toLowerCase() === normalizedPref)
-                    );
-                });
-            
-            const isLanguageValid = 
-                !language || 
-                (itineraryLanguage && itineraryLanguage.toLowerCase() === language.toLowerCase());
-
-            return isDateValid && isBudgetValid && isPreferencesValid && isLanguageValid;
-        });
-
-        setFilteredItineraries(filtered);
-    };
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     return (
         <div>
             <TouristNavBar />
-            <div className="page-title">Paid Itineraries</div>
-            <ItinerarySearch onSearch={handleSearch} />
+            <div className="page-title">My Paid Itineraries History</div>
+            <div className ="list-item">
+                click on an itinerary to view details or to rate them
+            </div>
             <div className="filter-sort-list">
                 <div className="filter-sort">
-                    <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <PaidItinerariesList itineraries={filteredItineraries} curr={currency} page={"history"}/>
+                <ItineraryHistory itineraries={filteredItineraries} curr={currency} page={"history"}/>
             </div>
         </div>
     );
 };
 
-export default PaidItinerariesPage;
+export default ItinerariesHistoryPage;

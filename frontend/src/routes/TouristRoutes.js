@@ -4,7 +4,7 @@ import UpcomingActivities from "../pages/tourist/UpcomingActivities";
 import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 import UpcomingItineraries from "../pages/tourist/UpcomingItineraries";
-import PaidItineraries from "../pages/tourist/PaidItineraries";
+import PaidItineraries from "../pages/tourist/ItinerariesHistory";
 import TouristProducts from "../pages/tourist/TouristProducts";
 import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 import PreferenceSelection from "../components/tourist/PreferenceSelection";
@@ -15,6 +15,7 @@ import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import ItineraryPage from "../pages/tourist/BookedItineraries";
 import BookedActivitiesPage from "../pages/tourist/BookedActivities";
+import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -23,7 +24,7 @@ const TouristRoutes = [
   { path: "/tourist-profile/:id", element: <TouristProfile /> },
   { path: "/historical-places", element: <HistoricalPlaces /> },
   { path: "/upcoming-itineraries", element: <UpcomingItineraries /> },
-  { path: "/paid-itineraries", element: <PaidItineraries /> },
+  { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
   { path: "/tourist/select-preferences/:touristId", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories/:touristId", element: <CategorySelection /> },
