@@ -91,9 +91,9 @@ const ItineraryPage = () => {
     };
 
     const handleFilter = (filters) => {
-        const { startDate, endDate, budgetMin, budgetMax, preferences, language } = filters;
+        const { startDate, endDate, budgetMin, budgetMax, tag, language } = filters;
 
-        if (!startDate && !endDate && !budgetMin && !budgetMax && !preferences && !language) {
+        if (!startDate && !endDate && !budgetMin && !budgetMax && !tag && !language) {
             setFilteredItineraries(itineraries);
             return;
         }
@@ -116,13 +116,11 @@ const ItineraryPage = () => {
                 (!budgetMin || itineraryBudget >= budgetMin) &&
                 (!budgetMax || itineraryBudget <= budgetMax);
             
-            const isPreferencesValid = !preferences || 
-                preferences.split(',').some(pref => {
-                    const normalizedPref = pref.trim().toLowerCase();
-                    return itinerary.activities.some(activity => 
-                        activity.tags.some(tag => tag.name.toLowerCase() === normalizedPref)
-                    );
-                });
+                const isPreferencesValid =
+                !tag ||
+                itinerary.activities.some((activity) =>
+                  activity.tags.some((activityTag) => activityTag.name=== tag)
+                );
             
             const isLanguageValid = 
                 !language || 
