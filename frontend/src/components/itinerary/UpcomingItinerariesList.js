@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message, Modal, Select, Button } from 'antd';
 import { touristId, touristId2 } from '../../IDs';
@@ -66,7 +67,9 @@ const UpcomingItinerariesList = ({ itineraries,onBook, book, onCancel, cancel, c
         <div className="list">
             {itineraries.map(itinerary => (
                 <div className="list-item" key={itinerary._id}>
-                    <div className="list-item-header">{itinerary.title}</div>
+                    <Link to={`/itinerary/view/${itinerary._id}`} className="list-item-header">
+                        {itinerary.title}
+                    </Link>                    
                     <div className="list-item-attributes">
                         <div className="list-item-attribute">
                             <strong>Description:</strong> {itinerary.description}

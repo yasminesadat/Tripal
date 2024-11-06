@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tag } from 'antd';
+import { Link } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId, touristId2 } from "../../IDs";
 
@@ -30,7 +31,9 @@ const UpcomingActivitiesList = ({ activities, onBook,book,onCancel,cancel, curr 
     <div className="list">
       {activities.map((activity) => (
         <div className="list-item" key={activity._id}>
-          <div className="list-item-header">{activity.title}</div>
+          <Link to={`/activity/${activity._id}`} className="list-item-header">
+            {activity.title}
+          </Link>         
           <div className="list-item-attributes">
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">Date: {new Date(activity.date).toLocaleDateString()}</div>
