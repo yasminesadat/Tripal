@@ -16,7 +16,8 @@ import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 import Hero5 from "../components/SearchBar";
 import FlightSearch from "../components/tourist/FlightSearch";
-import Hero6 from "../components/SearchBar";
+import BookingDetails from "../components/tourist/BookingDetails";
+import Invoice from "../components/tourist/Invoice";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -39,6 +40,8 @@ const TouristRoutes = [
 
   { path: "/tourist/book-flight", element: <FlightSearch /> },
   { path: "/tourist/search-flight", element: <Hero5 /> },
+  { path: "/tourist/booking-summary", element: <BookingDetails /> },
+  { path: "/tourist/invoice", element: <Invoice /> },
 ];
 
 export default TouristRoutes;

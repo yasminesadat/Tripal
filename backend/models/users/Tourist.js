@@ -69,6 +69,19 @@ const touristSchema = new Schema({
     ref: "ActivityCategory",
     required: true,
   }],
+  bookedFlights: [
+    {
+      flightNumber: { type: String, required: true},
+      airline: { type: String, required: true},
+      departureTime: { type: Date, required: true},
+      arrivalTime: { type: Date, required: true},
+      origin: { type: String, required: true},
+      destination: { type: String, required: true},
+      price: { type: String, required: true},
+      currency: { type: String, default: "USD"},
+      bookingDate: { type: Date, default: Date.now}
+    }
+  ]
 }, { timestamps: true });
 
 touristSchema.methods.calculateAge = function () {

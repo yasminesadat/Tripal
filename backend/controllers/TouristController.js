@@ -101,10 +101,11 @@ const getTouristInfo = async (req, res) => {
   }
 };
 
+
 const updateTouristProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { tags, categories, ...updateParameters } = req.body;
+    const { tags, categories, bookedFlights, ...updateParameters } = req.body;
 
     if (tags) {
       updateParameters.tags = tags;
@@ -112,6 +113,10 @@ const updateTouristProfile = async (req, res) => {
 
     if (categories) {
       updateParameters.categories = categories;
+    }
+
+    if (bookedFlights){
+      updateParameters.bookedFlights = bookedFlights;
     }
 
     if (updateParameters.userName) {
@@ -149,6 +154,8 @@ const updateTouristProfile = async (req, res) => {
       return res.status(404).json("Tourist profile doesnt exist");
     }
 
+   
+
     return res
       .status(200)
       .json(touristToBeUpdated);
@@ -156,6 +163,8 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
 
 const changePassword = async (req, res) => {
   try {
