@@ -4,18 +4,22 @@ import UpcomingItinerariesList from '../../components/itinerary/UpcomingItinerar
 import ItinerarySearch from '../../components/itinerary/ItinerarySearch';
 import ItineraryFilter from '../../components/itinerary/ItineraryFilter';
 import ItinerarySort from '../../components/itinerary/ItinerarySort';
-import { viewUpcomingItineraries } from "../../api/ItineraryService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import GuestNavBar from "../../components/navbar/GuestNavBar";
 import AdminNavBar from "../../components/navbar/AdminNavBar";  
-import { message } from 'antd';
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import { message,Empty } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource,cancelResource } from "../../api/BookingService";
 import { touristId } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
 import {flagItinerary, getAdminItineraries} from "../../api/AdminService";
+import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries} from '../../api/ItineraryService';
+import {tourGuideID} from "../../IDs";
+import Footer from '../../components/common/Footer';
+import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm';
 
-const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
+const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide}) => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,6 +27,8 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
     const [currency, setCurrency] = useState("EGP");
     const [exchangeRate, setExchangeRate] = useState(1); 
     const location = useLocation();
+    const [selectedItinerary, setSelectedItinerary] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
     useEffect(() => {
         const curr = sessionStorage.getItem("currency");
@@ -46,13 +52,13 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
             try {
                 //im rendering part of the page upon the user type if it is an admin or a tourist i want to show every upcoming itinerary but if it a tourist
                 //trying to see their booked itineraries they should only see their booked itineraries
-                const response = touristBook? await viewUpcomingItineraries(): isAdmin? await getAdminItineraries(): await getTouristItineraries(touristId);
+                const response = touristBook? await viewUpcomingItineraries(): 
+                isAdmin? await getAdminItineraries(): 
+                isTourist?await getTouristItineraries(touristId): await getItinerariesByTourGuide(tourGuideID);
                 setItineraries(response);
                 setFilteredItineraries(response);
             } catch (err) {
                 setError(err.message);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -180,30 +186,79 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel}) => {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    const handleItineraryDelete = async (id) => {
+        try {
+            await deleteItinerary(id);
+            setItineraries(itineraries.filter(itinerary => itinerary._id !== id));
+            message.success('Itinerary deleted successfully');
+        } catch (error) {
+            message.error('Error deleting itinerary');
+        }
+    };
+
+    const handleItineraryUpdate = (id) => {
+        const itineraryToUpdate = itineraries.find(itinerary => itinerary._id === id);
+        setSelectedItinerary(itineraryToUpdate);
+        setIsModalOpen(true);
+    };
+
+    const handleFormUpdate = (updatedId) => {
+        const fetchItineraries = async () => {
+            try {
+                const response = await getItinerariesByTourGuide(tourGuideID);
+                setItineraries(response);
+                setFilteredItineraries(response);
+            } catch (error) {
+                console.log('Error fetching itineraries', error);
+            }
+        };
+
+        fetchItineraries();
+        setSelectedItinerary(null);
+        setIsModalOpen(false);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedItinerary(null);
+    };
 
     return (
         <div >
             {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
             {isAdmin ? <AdminNavBar /> : null}   
+            {isTourguide ? <TourguideNavBar /> : null}
 
             <div className="page-title">All Upcoming Itineraries</div>
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
-                <div className="filter-sort">
+                {!isTourguide &&<div className="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
-                </div>  
+                </div>  }
                 {/*in each route im passing the suitable page props to decide what button or what things to show*/}
+                {itineraries.length === 0 &&  <Empty />}
                 <UpcomingItinerariesList itineraries={filteredItineraries} 
                 curr={currency} onBook={handleBookTicket} 
                 book ={touristBook} isAdmin={isAdmin} cancel={touristCancel}
                 onCancel={handleCancelBooking}
                 page={"upcoming"}
-                onAdminFlag={handleAdminFlag}/>
+                onAdminFlag={handleAdminFlag}
+                onItineraryDelete={handleItineraryDelete}
+                onItineraryUpdate={handleItineraryUpdate}
+                isTourguide={isTourguide}/>
+
+                 {selectedItinerary&&isTourguide && (
+                    <UpdateItineraryForm 
+                        itinerary={selectedItinerary} 
+                        onUpdate={handleFormUpdate} 
+                        isVisible={isModalOpen}
+                        onClose={handleModalClose} 
+                    />
+                )}
 
             </div>
+            <Footer/>
         </div>
     );
 };
