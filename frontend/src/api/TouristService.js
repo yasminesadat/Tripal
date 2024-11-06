@@ -76,4 +76,15 @@ export async function getTouristActivities(touristId) {
     console.error("Error getting tourist activities:", error);
     throw error;
   }
+
+}
+
+export async function getTouristUserName(touristId) {
+  try {
+    const response = await axios.get(`/tourist-name-email/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tourist name and email:", error);
+    throw error;
+  }
 }

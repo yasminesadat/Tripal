@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css';
 import { message } from 'antd';
-import { updateTouristInformation } from '../../api/TouristService';
+import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
 import { touristFlight } from '../../IDs';
 import { touristId } from '../../IDs';
+
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -16,8 +17,22 @@ const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-  // const touristId = touristId;
 
+  const [touristInfo, setTouristInfo] = useState({ userName: '', email: '' });
+
+  useEffect(() => {
+    const fetchTouristInfo = async () => {
+      try {
+        const userInfo = await getTouristUserName(touristId);
+        console.log("userrr", userInfo);
+        setTouristInfo({ userName: userInfo.userName, email: userInfo.email });
+      } catch (error) {
+        console.error("Error fetching tourist information:", error);
+      }
+    };
+
+    fetchTouristInfo();
+  }, []);
   if (!flight) return <p>No flight selected</p>;
 
   const handlePaymentSubmit = async (event) => {
@@ -44,7 +59,7 @@ const BookingDetails = () => {
       const response = await updateTouristInformation(touristId, body);
       console.log("Tourist updated with flight info:", response);
 
-      navigate('/tourist/invoice', { state: { flight } });
+      navigate('/tourist/invoice', { state: { flight, touristInfo } });
     } catch (error) {
       console.error("Error updating tourist information:", error);
       message.error("There was an issue updating your information.");

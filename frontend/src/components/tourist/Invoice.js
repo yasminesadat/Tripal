@@ -13,13 +13,29 @@ const parseDuration = (duration) => {
 const Invoice = () => {
     const location = useLocation();
     const flight = location.state?.flight;
+    const tourist = location.state?.touristInfo;
+    const today = new Date().toLocaleString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+    });
 
     if (!flight) return <p>No flight details available</p>;
 
     const handleDownloadTicket = () => {
         const doc = new jsPDF();
-        let yOffset = 10; // To adjust the vertical position of the text in the PDF
-        
+        let yOffset = 10;
+
+        doc.text(`Tourist Username: ${tourist?.userName || "N/A"}`, 10, yOffset);
+        yOffset += 10;
+        doc.text(`Tourist Email: ${tourist?.email || "N/A"}`, 10, yOffset);
+        yOffset += 20;
+        doc.text(`Date of Booking: ${today}`, 10, yOffset); // Use today's date here
+        yOffset += 20;
         flight.itineraries.forEach((itinerary, idx) => {
             doc.text(`Flight ${idx + 1} - Flight Number: ${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`, 10, yOffset);
             yOffset += 10;
@@ -32,7 +48,7 @@ const Invoice = () => {
             doc.text(`Duration: ${parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}`, 10, yOffset);
             yOffset += 10;
             doc.text(`Price: ${flight.price.currency} ${flight.price.total}`, 10, yOffset);
-            yOffset += 20; // Add space before next flight details
+            yOffset += 20;
         });
 
         doc.save(`FlightTicket_${flight.itineraries[0]?.segments[0]?.carrierCode || "N/A"}${flight.itineraries[0]?.segments[0]?.number || ""}.pdf`);
@@ -41,6 +57,15 @@ const Invoice = () => {
     return (
         <div className="invoice-container">
             <h1>Booking Confirmation</h1>
+
+
+            <div className="tourist-details">
+                <p><strong>Username:</strong> {tourist?.userName || "N/A"}</p>
+                <p><strong>Email:</strong> {tourist?.email || "N/A"}</p>
+                <p><strong>Date of Booking:</strong> {today}</p>
+            </div>
+
+
             <div className="invoice-details">
                 {flight.itineraries.map((itinerary, idx) => (
                     <div key={idx} className="itinerary-details">

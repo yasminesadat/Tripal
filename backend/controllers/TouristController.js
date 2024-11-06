@@ -185,7 +185,25 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+const getTouristNameAndEmail = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const tourist = await touristModel.findById(id).select('userName email');
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    res.json({
+      userName: tourist.userName,
+      email: tourist.email
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 const redeemPoints = async (req, res) => {
   try {
     const { id } = req.params;
@@ -208,4 +226,4 @@ const redeemPoints = async (req, res) => {
 };
 
 
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints };
+module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints, getTouristNameAndEmail };
