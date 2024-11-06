@@ -4,6 +4,7 @@ const validateIDs = require("../middleware/IDMiddleware");
 const { createAdvertiser, readAdvertiser, updateAdvertiser } = require("../controllers/AdvertiserController");
 const Advertiser = require("../models/users/Advertiser")
 const { changePassword } = require('../controllers/PasswordController.js');
+
 router.post("/advertiser", createAdvertiser);
 router.get("/advertiser/:id", readAdvertiser);
 router.put("/advertiser/:id", updateAdvertiser);
