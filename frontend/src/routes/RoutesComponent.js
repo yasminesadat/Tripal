@@ -7,7 +7,7 @@ import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import historicalPlaceRoutes from "./HistoricalPlaceRoutes";
 import governorRoutes from "./GovernorRoutes";
-import hotelRoutes from "./HotelRoutes";
+import guestRoutes from "./GuestRoutes";import hotelRoutes from "./HotelRoutes";
 
 const allRoutes = [
   ...adminRoutes,
@@ -18,6 +18,7 @@ const allRoutes = [
   ...tourguideRoutes,
   ...historicalPlaceRoutes,
   ...governorRoutes,
+  ...guestRoutes,
   ...hotelRoutes
 ]
 

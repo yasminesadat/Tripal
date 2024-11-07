@@ -17,8 +17,9 @@ const routes = [
   "./AdminRoutes",
   "./ItineraryRoutes",
   "./ComplaintsRoutes",
-  // "./BookingRoutes",
+  "./BookingRoutes",
   "./DeletionRequestsRoutes",
+  "./FlightRoutes",
   "./HotelBookingRoutes"
 ];
 

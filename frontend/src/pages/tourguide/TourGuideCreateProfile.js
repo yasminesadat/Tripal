@@ -3,7 +3,7 @@ import { getProfileData, updateProfile } from "../../api/TourGuideService";
 import { useParams, useNavigate } from "react-router-dom";
 import languages from "../../assets/constants/Languages";
 import { nationalities } from "../../assets/Nationalities";
-
+import { tourGuideID } from "../../IDs";
 import moment from "moment";
 import {
   Form,
@@ -22,7 +22,7 @@ import Upload from "antd/es/upload/Upload";
 const { Option } = Select;
 
 const TourGuideCreateProfile = () => {
-  const { id } = useParams();
+  const id = tourGuideID;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [workChanged, setWorkChanged] = useState(false);
@@ -366,13 +366,13 @@ const TourGuideCreateProfile = () => {
               fileList={
                 formData.currProfilePicture
                   ? [
-                      {
-                        uid: "-1",
-                        name: "profilePicture.png",
-                        status: "done",
-                        url: formData.currProfilePicture,
-                      },
-                    ]
+                    {
+                      uid: "-1",
+                      name: "profilePicture.png",
+                      status: "done",
+                      url: formData.currProfilePicture,
+                    },
+                  ]
                   : []
               }
             >

@@ -55,7 +55,7 @@ const touristSchema = new Schema({
   },
   currentPoints: {
     type: Number,
-    default:0
+    default: 0
   },
   tags: [
     {
@@ -69,6 +69,20 @@ const touristSchema = new Schema({
     ref: "ActivityCategory",
     required: true,
   }],
+  bookedFlights: [
+    {
+      _id: false,
+      flightNumber: { type: String, required: true },
+      airline: { type: String, required: true },
+      departureTime: { type: Date, required: true },
+      arrivalTime: { type: Date, required: true },
+      origin: { type: String, required: true },
+      destination: { type: String, required: true },
+      price: { type: String, required: true },
+      currency: { type: String, default: "USD" },
+      bookingDate: { type: Date, default: Date.now }
+    }
+  ]
 }, { timestamps: true });
 
 touristSchema.methods.calculateAge = function () {
@@ -76,14 +90,14 @@ touristSchema.methods.calculateAge = function () {
   const birthDate = new Date(this.dateOfBirth);
   let age = today.getFullYear() - birthDate.getFullYear();
 
-  const isBirthdayPassed = 
-      today.getMonth() > birthDate.getMonth() || 
-      (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+  const isBirthdayPassed =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
 
   if (!isBirthdayPassed) {
-      age -= 1;
+    age -= 1;
   }
-  
+
   return age;
 };
 

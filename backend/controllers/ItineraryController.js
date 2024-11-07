@@ -64,7 +64,6 @@ const createItinerary = async (req, res) => {
 
 const getItineraries = async (req, res) => {
     const { tourGuideId } = req.query;
-    console.log("this is being used bro");
     try {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
         .populate({
@@ -143,7 +142,7 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find({flagged:false}).populate({
+        const itineraries = await itineraryModel.find({flagged:false, isActive:true}).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
@@ -265,6 +264,29 @@ const getAllItinerariesForAdmin = async (req, res) => {
     }
 };
 
+const toggleItineraryStatus = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const itinerary = await itineraryModel.findById(id);
+        if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
+
+        const hasBookings = itinerary.bookings && itinerary.bookings.length > 0;
+
+        if (itinerary.isActive && !hasBookings) {
+            return res.status(400).json({ message: 'Cannot deactivate itinerary without bookings' });
+        }
+
+        itinerary.isActive = !itinerary.isActive;
+        await itinerary.save();
+
+        res.status(200).json({ message: 'Itinerary status updated', itinerary });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating itinerary status', error });
+    }
+};
+
+
 module.exports = {
     createItinerary,
     getItineraries,
@@ -276,5 +298,6 @@ module.exports = {
     getItineraryRatings,
     getTouristItineraries,
     adminFlagItinerary,
-    getAllItinerariesForAdmin
+    getAllItinerariesForAdmin,
+    toggleItineraryStatus
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { viewPaidActivities } from "../../api/ActivityService";
+import { viewHistoryActivities, viewUpcomingActivities } from "../../api/ActivityService";
 import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
 import TouristNavbar from "../../components/navbar/TouristNavBar";
 
@@ -13,7 +13,7 @@ const ActivityDetailsPage = () => {
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                const response = await viewPaidActivities(); 
+                const response = await viewHistoryActivities(); 
                 setActivities(response.data);
             } catch (err) {
                 setError(err.response?.data?.error || "Error fetching activities");
