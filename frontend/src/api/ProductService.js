@@ -31,6 +31,7 @@ export const editProduct = async (id, productData) => {
   }
 };
 
+
 export const getRatings = async (id) => {
   try {
     const response = await axios.get(`/products/${id}/ratings`);
@@ -51,6 +52,32 @@ export const addRating = async (productID, ratingData) => {
     return response.data; 
   } catch (error) {
     console.error("Error adding rating:", error);
+    throw error;
+  }
+};
+
+export const archiveProduct = async (id) => {
+  try {
+    await axios.patch(`/products/${id}/archive`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error archiving product:", error);
+    throw error;
+  }
+};
+
+export const unArchiveProduct = async (id) => {
+  try {
+    await axios.patch(`/products/${id}/unarchive`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error unarchiving product:", error);
     throw error;
   }
 };
