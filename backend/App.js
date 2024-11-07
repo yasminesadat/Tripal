@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const colors = require("colors");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 const MongoURI = process.env.MONGO_URI;
@@ -37,4 +38,6 @@ mongoose
   .catch((err) => console.log(err));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(cookieParser());
 app.use("/", routes);
