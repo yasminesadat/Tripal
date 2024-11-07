@@ -168,10 +168,10 @@ const SignUpAllUsers = () => {
   };
 
   const handleSubmit = async (values) => {
-    if ((role === "seller" || role === "tour-guide" || role === "advertiser") && !formData.document) {
-      message.error("Please upload the required documents in one pdf.");
-      return;
-    }
+    // if ((role === "seller" || role === "tour-guide" || role === "advertiser") && !formData.document) {
+    //   message.error("Please upload the required documents in one pdf.");
+    //   return;
+    // }
     const formattedDateOfBirth = role === "tourist"
       ? new Date(values.dateOfBirth).toISOString().split("T")[0]
       : values.dateOfBirth;
@@ -361,13 +361,14 @@ const SignUpAllUsers = () => {
           </>
         )}
         {role !== "tourist" && (
-          <Form.Item>
+          <Form.Item name="document" rules={[{ required: true, message: "Please upload your required documents" }]}
+          >
             <Upload
-              name="document"
+
               accept=".pdf"
               beforeUpload={() => false}
               // beforeUpload={handleBeforeUpload}
-              required
+              // required
               onChange={handleDocumentChange}
               onRemove={handleRemove}
             >

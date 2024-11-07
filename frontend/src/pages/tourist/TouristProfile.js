@@ -94,6 +94,7 @@ const TouristHomePage = () => {
     }
     try {
       await redeemPoints(id);
+      await getUserInformation();
       toast.success("points redeemed successfully");
     } catch (error) {
       toast.error("redemption failed")
