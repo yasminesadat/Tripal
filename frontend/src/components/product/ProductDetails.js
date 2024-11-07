@@ -166,9 +166,9 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                     }
                     description={
                       <div>
-                        <Rate value={item.rating} disabled allowHalf />
-                        <Paragraph>{item.review}</Paragraph>
-                      </div>
+                      {item.rating !== 0 && <Rate value={item.rating} disabled allowHalf />}
+                      <Paragraph>{item.review}</Paragraph>
+                    </div>
                     }
                   />
                 </List.Item>

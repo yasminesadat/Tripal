@@ -18,28 +18,53 @@ const addRating = (Model, RatingModel, entityIDField) =>
       throw new Error("User not found");
     }
 
-    const newRating = new RatingModel({
-      rating,
+    if(rating !== 0 ){
+      const existingRatings = await RatingModel.find({
+        [entityIDField]: id,
+        userID: userID,
+      });
+      const hasNonZeroRating = existingRatings.some((rating) => rating.rating !== 0);
+      if (hasNonZeroRating) {
+        return res.status(400).json({
+          message: "You can only rate once.",
+        });
+      }
+  }
+    
+    if (rating !== 0) {
+      const newRating = new RatingModel({
+        rating,
+        review,
+        userID,
+        [entityIDField]: id,
+      });
+
+      await newRating.save();
+
+      const allRatings = await RatingModel.find({ [entityIDField]: id });
+      const ratingsAboveZero = allRatings.filter(r => r.rating > 0);
+      const newAverage = ratingsAboveZero.reduce((acc, r) => acc + r.rating, 0) / ratingsAboveZero.length || 0;
+      entity.averageRating = newAverage;
+      await entity.save();
+
+      return res.status(201).json({
+        message: "Rating added successfully",
+        rating: newRating,
+        newAverage: newAverage,
+      });
+    }
+
+    const newReview = new RatingModel({
+      rating: 0, 
       review,
       userID,
       [entityIDField]: id,
     });
 
-    await newRating.save();
-
-    // Calculate new average rating
-    const allRatings = await RatingModel.find({ [entityIDField]: id });
-    const newAverage =
-      allRatings.reduce((acc, r) => acc + r.rating, 0) / allRatings.length || 0;
-
-    entity.averageRating = newAverage;
-
-    await entity.save();
-
-    res.status(201).json({
-      message: "Rating added successfully",
-      rating: newRating,
-      newAverage: newAverage,
+    await newReview.save();
+    return res.status(201).json({
+      message: "Review added successfully without a rating.",
+      review: newReview,
     });
   });
 
