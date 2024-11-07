@@ -14,6 +14,10 @@ import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
+import Hero5 from "../components/tourist/SearchBar"
+import FlightSearch from "../components/tourist/FlightSearch";
+import BookingDetails from "../components/tourist/BookingDetails";
+import Invoice from "../components/tourist/Invoice";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -29,11 +33,16 @@ const TouristRoutes = [
   { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
   { path: "/itinerary/:itineraryId", element: <ItineraryDetailsPage /> },
   { path: "/tourist/view-products/product/:id", element: <TouristViewProduct /> },
+
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   { path: "/tourist/view-Complaints", element: <MyComplaints /> },
   { path: "/itineraries/booked-itineraries", element: <UpcomingItineraries isTourist={"isTourist"} touristCancel={"cancel"} /> },
   { path: "/booked-activities", element: <BookedActivitiesPage /> }
 
+  { path: "/tourist/book-flight", element: <FlightSearch /> },
+  { path: "/tourist/search-flight", element: <Hero5 /> },
+  { path: "/tourist/booking-summary", element: <BookingDetails /> },
+  { path: "/tourist/invoice", element: <Invoice /> },
 ];
 
 export default TouristRoutes;
