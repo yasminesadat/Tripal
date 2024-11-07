@@ -10,6 +10,7 @@ export const getUsers = async () => {
     throw error;
   }
 }
+
 export async function changeAdminPassword(id, oldPassword, newPassword) {
   try {
     const body = {
@@ -24,8 +25,10 @@ export async function changeAdminPassword(id, oldPassword, newPassword) {
     throw error;
   }
 }
+
 export const deleteUser = async (id) => {
   try {
+    // Use backticks for template literals
     const response = await axios.delete(`/admin/user/${id}`);
     return response.data;
   } catch (error) {
@@ -33,7 +36,6 @@ export const deleteUser = async (id) => {
     throw error;
   }
 };
-
 
 export const createAdmin = async (name, password) => {
   const requestBody = {
@@ -66,6 +68,27 @@ export const createGovernor = async (name, password) => {
     throw new Error(errorMessage);
   }
 }
+
+export const flagItinerary = async (itineraryId) => {
+  try {
+    const response = await axios.put(`/admin/flag-itinerary/${itineraryId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error flagging itinerary with id ${itineraryId}`, error);
+    throw error;
+  }
+};
+
+export const getAdminItineraries = async () => {
+  try {
+    const response = await axios.get("/admin/itineraries");
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Can't fetch itineraries", error);
+    throw error;
+  }
+};
 
 export const getPendingDeletionRequests = async () => {
   try {
