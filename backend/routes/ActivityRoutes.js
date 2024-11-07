@@ -8,14 +8,14 @@ const ActivityRating = require("../models/ActivityRating");
 const { createActivity, getAdvertiserActivities, 
     updateActivity, deleteActivity, viewUpcomingActivities, 
     getTouristActivities,
-    viewPaidActivities } = require('../controllers/ActivityController');
+    viewHistoryActivities } = require('../controllers/ActivityController');
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities);
 router.post('/activities', createActivity);
 router.put('/activities/:id', updateActivity);
 router.delete('/activities/:id', deleteActivity);
-router.get('/activities/upcoming/view', viewUpcomingActivities);
-router.get('/activities/paid/view', viewPaidActivities);
+router.get('/activities/upcoming', viewUpcomingActivities);
+router.get('/activities/history', viewHistoryActivities);
 router.post("/activities/:id/ratings", validateIDs(["id", "userID"]), addRating(Activity, ActivityRating, 'activityID'));
 router.get("/activities/:id/ratings", validateIDs(["id"]), getRatings(Activity, ActivityRating, 'activityID'));
 router.get('/activities/:touristId', getTouristActivities);
