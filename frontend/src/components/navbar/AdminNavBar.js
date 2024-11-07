@@ -27,6 +27,9 @@ const AdminNavBar = () => {
           <Link to="/admin/delete-user">Delete User</Link>
         </div>
         <div class="nav-bar-link">
+          <Link to="/deletion-requests">Deletion Requests</Link>
+        </div>
+        <div class="nav-bar-link">
           <Link to="/admin/complaints">View Complaints</Link>
         </div>
         <div class="nav-bar-link">

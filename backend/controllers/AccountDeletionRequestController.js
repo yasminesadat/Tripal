@@ -1,6 +1,7 @@
 const AccountDeletionRequest = require("../models/AccountDeletionRequest");
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary"); 
+const User = require("../models/users/User");
 const Product = require("../models/Product"); 
 
 const requestAccountDeletion = async (req, res) => {
@@ -37,11 +38,11 @@ const requestAccountDeletion = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
-};
+};  
 
 // admin
 const approveDeletionRequest = async (req, res) => {
-  const { requestId } = req.params;
+  const { requestId } = req.params; 
 
   try {
     const deletionRequest = await AccountDeletionRequest.findById(requestId);
@@ -54,6 +55,7 @@ const approveDeletionRequest = async (req, res) => {
     }
 
     const { user: userId, role } = deletionRequest;
+
     if (role === "Advertiser") {
       await Activity.deleteMany({ advertiser: userId });
     } else if (role === "TourGuide") {
@@ -62,12 +64,31 @@ const approveDeletionRequest = async (req, res) => {
       await Product.deleteMany({ seller: userId });
     }
 
+    const user = await User.findById(userId); 
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    
+    await user.deleteOne(); 
+
     deletionRequest.status = "Approved";
     deletionRequest.reviewedDate = new Date();
     await deletionRequest.save();
 
     return res.status(200).json({ message: "Account deletion approved and related data removed." });
 
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+const getDeletionRequests = async (req, res) => {
+  try {
+    const deletionRequests = await AccountDeletionRequest.find({ status: "Pending" })
+
+    return res.status(200).json({ deletionRequests });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -76,4 +97,5 @@ const approveDeletionRequest = async (req, res) => {
 module.exports = {
   requestAccountDeletion,
   approveDeletionRequest,
+  getDeletionRequests
 };

@@ -57,7 +57,6 @@ const UserList = () => {
                 <span><strong>Type:</strong> {user.role}</span>
               </div>
               <button className="delete-button" onClick={() => deleteUsers(user.userId)}>Delete</button>
-
             </li>
           ))}
         </ul>

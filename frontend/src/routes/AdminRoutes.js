@@ -9,6 +9,8 @@ import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 import ComplaintsPage from "../pages/admin/Complaints";
 import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
+import DeletionRequests from "../pages/admin/DeletionRequests";
+
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/activity-categories", element: <ActivityCategoryDetails /> },
@@ -21,7 +23,7 @@ const adminRoutes = [
   { path: "/admin/complaints", element: <ComplaintsPage /> },
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
-
+  { path: "/deletion-requests", element: <DeletionRequests />}
 
 
 
