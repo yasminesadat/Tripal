@@ -9,13 +9,13 @@ const TourguideNavBar = () => {
           <Link to="/tourguide/create">Create Profile</Link>
         </div> */}
         <div className="nav-bar-link">
-          <Link to={`/tourguide/update/${tourGuideID}`}>Update Profile</Link>
+          <Link to={`/tourguide/update`}>Update Profile</Link>
         </div>
         <div className="nav-bar-link">
           <Link to="/tourguide">Home</Link>
         </div>
         <div className="nav-bar-link">
-          <Link to={`/tourguide/${tourGuideID}`}>View profile</Link>
+          <Link to={`/tourguide/profile`}>View profile</Link>
         </div>
         <div className="nav-bar-link">
           <Link to="/create-itinerary">New Itinerary</Link>

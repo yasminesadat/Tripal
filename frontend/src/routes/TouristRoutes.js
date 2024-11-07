@@ -19,9 +19,9 @@ const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
   { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
   { path: "/activities-history", element: <ActivitiesHistoryPage /> },
-  { path: "/tourist-profile/:id", element: <TouristProfile /> },
+  { path: "/tourist/profile", element: <TouristProfile /> },
   { path: "/historical-places", element: <HistoricalPlaces /> },
-  { path: "/upcoming-itineraries", element: <UpcomingItineraries  isTourist={"isTourist"} touristBook={"book"}  /> },
+  { path: "/upcoming-itineraries", element: <UpcomingItineraries isTourist={"isTourist"} touristBook={"book"} /> },
   { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
   { path: "/tourist/select-preferences/:touristId", element: <PreferenceSelection /> },
@@ -29,10 +29,10 @@ const TouristRoutes = [
   { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
   { path: "/itinerary/:itineraryId", element: <ItineraryDetailsPage /> },
   { path: "/tourist/view-products/product/:id", element: <TouristViewProduct /> },
-  { path: "/tourist/create-complaint/:id", element: <ComplaintsForm /> },
-  { path: "/tourist/view-Complaints/:id", element: <MyComplaints /> },
-  { path: "/itineraries/booked-itineraries", element:<UpcomingItineraries  isTourist={"isTourist"} touristCancel={"cancel"}  /> },
-  {path: "/booked-activities", element: <BookedActivitiesPage />}
+  { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
+  { path: "/tourist/view-Complaints", element: <MyComplaints /> },
+  { path: "/itineraries/booked-itineraries", element: <UpcomingItineraries isTourist={"isTourist"} touristCancel={"cancel"} /> },
+  { path: "/booked-activities", element: <BookedActivitiesPage /> }
 
 ];
 

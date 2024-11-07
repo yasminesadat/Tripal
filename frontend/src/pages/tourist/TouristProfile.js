@@ -10,9 +10,9 @@ import Currency from "../../components/tourist/Currency";
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/DeletionRequestService";
 import { message } from 'antd';
-
+import { touristId } from "../../IDs";
 const TouristHomePage = () => {
-  const { id } = useParams();
+  const id = touristId;
   const userType = "tourist";
   const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);

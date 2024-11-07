@@ -4,11 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/DeletionRequestService";
-import { message } from 'antd'; 
-
+import { message } from 'antd';
+import { advertiserID } from "../../IDs";
 const AdvertiserProfile = () => {
   const userType = "advertiser"
-  const { id } = useParams();
+  const id = advertiserID;
   const [advertiser, setAdvertiser] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const AdvertiserProfile = () => {
   }, [id]);
 
   const handleNavigate = () => {
-    navigate(`/update-advertiser/${id}`, { state: { advertiser } });
+    navigate(`/update-advertiser`, { state: { advertiser } });
   };
 
   const handleDeletion = async () => {
@@ -139,79 +139,79 @@ const AdvertiserProfile = () => {
     <div>
       <AdvertiserNavBar />
       <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
-        {advertiser.companyProfile?.logo && (
-          <img
-            src={advertiser.companyProfile.logo}
-            alt="Company Logo"
-            style={logoStyle}
-          />
-        )}
-        <h2 style={{ margin: 0 }}>{advertiser.userName}'s Profile</h2>
-      </div>
-
-      <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
-      <div class="row y-gap-30">
-      <div style={containerStyle}>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          {fields.map((field, index) => (
-            <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={headerStyle}>{field.label}:</span>
-              {field.value ? (
-                field.isLink ? (
-                  <a
-                    href={field.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="custom-link"
-                  >
-                    {field.value}
-                  </a>
-                ) : (
-                  field.value
-                )
-              ) : (
-                <span style={notProvidedStyle}>not provided</span>
-              )}
-              {!field.value && (
-                <button style={buttonStyle} onClick={handleNavigate}>
-                  Add
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div style={awardItemStyle}>
-          <h3 style={headerStyle}>Awards</h3>
-          {advertiser.companyProfile?.awards.length > 0 ? (
-            advertiser.companyProfile.awards.map((award, index) => (
-              <div key={index}>
-                <p>
-                  <span style={headerStyle}>Title:</span> {award.title}
-                  <br />
-                  <span style={headerStyle}>Year:</span> {award.year}
-                  <br />
-                  <span style={headerStyle}>Issuer:</span> {award.issuer}
-                </p>
-              </div>
-            ))
-          ) : (
-            <>
-              <span style={notProvidedStyle}>Awards not provided</span>{" "}
-              <button style={buttonStyle} onClick={handleNavigate}>
-                Add
-              </button>
-            </>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+          {advertiser.companyProfile?.logo && (
+            <img
+              src={advertiser.companyProfile.logo}
+              alt="Company Logo"
+              style={logoStyle}
+            />
           )}
+          <h2 style={{ margin: 0 }}>{advertiser.userName}'s Profile</h2>
         </div>
-        <br />
-        <button onClick={handleNavigate}>Edit Profile</button>
-        <button onClick={handleDeletion}>Delete Account</button>
-      </div>
-      </div>
-      </div>
+
+        <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
+          <div class="row y-gap-30">
+            <div style={containerStyle}>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {fields.map((field, index) => (
+                  <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={headerStyle}>{field.label}:</span>
+                    {field.value ? (
+                      field.isLink ? (
+                        <a
+                          href={field.value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="custom-link"
+                        >
+                          {field.value}
+                        </a>
+                      ) : (
+                        field.value
+                      )
+                    ) : (
+                      <span style={notProvidedStyle}>not provided</span>
+                    )}
+                    {!field.value && (
+                      <button style={buttonStyle} onClick={handleNavigate}>
+                        Add
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div style={awardItemStyle}>
+                <h3 style={headerStyle}>Awards</h3>
+                {advertiser.companyProfile?.awards.length > 0 ? (
+                  advertiser.companyProfile.awards.map((award, index) => (
+                    <div key={index}>
+                      <p>
+                        <span style={headerStyle}>Title:</span> {award.title}
+                        <br />
+                        <span style={headerStyle}>Year:</span> {award.year}
+                        <br />
+                        <span style={headerStyle}>Issuer:</span> {award.issuer}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <span style={notProvidedStyle}>Awards not provided</span>{" "}
+                    <button style={buttonStyle} onClick={handleNavigate}>
+                      Add
+                    </button>
+                  </>
+                )}
+              </div>
+              <br />
+              <button onClick={handleNavigate}>Edit Profile</button>
+              <button onClick={handleDeletion}>Delete Account</button>
+            </div>
+          </div>
+        </div>
       </div>
       <ChangePassword id={id} userType={userType} />
     </div>
