@@ -10,7 +10,7 @@ const TouristNavBar = () => {
           <Link to="/tourist">Home</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/tourist-profile/${touristId}`}>Profile</Link>
+          <Link to={`/tourist/profile`}>Profile</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/upcoming-activities">Upcoming Activities</Link>
@@ -37,10 +37,10 @@ const TouristNavBar = () => {
           <Link to="/tourist/view-products">Products</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/tourist/create-complaint/${touristId}`}>Create Complaint</Link>
+          <Link to={`/tourist/create-complaint`}>Create Complaint</Link>
         </div>
         <div class="nav-bar-link">
-          <Link to={`/tourist/view-Complaints/${touristId}`}>View Complaints</Link>
+          <Link to={`/tourist/view-Complaints`}>View Complaints</Link>
         </div>
         <div class="nav-bar-link">
           <Link to="/">Log out</Link>

@@ -9,17 +9,17 @@ import AdvertiserActivityDetails from "../pages/advertiser/advertiserViewActivit
 
 const advertiserRoutes = [
   { path: "/advertiser", element: <AdvertiserHome /> },
-  { path: "/advertiser/:id", element: <AdvertiserProfile /> },
+  { path: "/advertiser/profile", element: <AdvertiserProfile /> },
   {
-    path: "/update-advertiser/:id",
+    path: "/update-advertiser",
     element: <AdvertiserForm isUpdate={true} />,
   },
   { path: "/create-advertiser", element: <AdvertiserForm isUpdate={false} /> },
   { path: "/create-activity", element: <CreateActivity isUpdate={false} /> },
   { path: "/update-activity/:id", element: <ActivityForm isUpdate={true} /> },
-  { path: "/advertiser/activities/:id", element: <Activities isAdvertiser={true}/> }, 
-  { path: "/delete-activity/:id", element: <Activities isAdvertiser={true}/> },
-  { path: "/advertiser-view-activity/:id", element: <AdvertiserActivityDetails/>}
+  { path: "/advertiser/activities/:id", element: <Activities isAdvertiser={true} /> },
+  { path: "/delete-activity/:id", element: <Activities isAdvertiser={true} /> },
+  { path: "/advertiser-view-activity/:id", element: <AdvertiserActivityDetails /> }
 ];
 
 export default advertiserRoutes;

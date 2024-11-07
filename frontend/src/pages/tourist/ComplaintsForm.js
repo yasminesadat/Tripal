@@ -4,8 +4,9 @@ import { createComplaint } from "../../api/ComplaintsService";
 import { useParams } from "react-router-dom";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
+import { touristId } from "../../IDs";
 const ComplaintsForm = () => {
-    const { id } = useParams();
+    const id = touristId;
     const [loading, setLoading] = useState(false); // State for loading
     const [buttonText, setButtonText] = useState("Submit Complaint");
 

@@ -8,7 +8,7 @@ import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingIt
 const TourguideRoutes = [
     { path: "/tourguide", element: <TourguideHome /> },
     { path: "/tourguide/create", element: <TourGuideForm /> },
-    { path: "/tourguide/:id", element: <TourGuideProfile /> },
+    { path: "/tourguide/profile", element: <TourGuideProfile /> },
     { path: "/tourguide/update/:id", element: <TourGuideForm /> },
     { path: "/tourguide-itineraries", element: <UpcomingItineraries isTourguide={"isTourguide"} /> },
     { path: "/create-itinerary", element: <CreateItinerary /> },

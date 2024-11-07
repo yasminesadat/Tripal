@@ -2,6 +2,7 @@ import { axios } from "./axios";
 
 export async function getAdvertiserActivities(advertiser) {
   try {
+    console.log("THE URL IS ", `/activities/advertiser/${advertiser}`);
     const response = await axios.get(`/activities/advertiser/${advertiser}`);
     return response;
   } catch (error) {
@@ -10,7 +11,7 @@ export async function getAdvertiserActivities(advertiser) {
   }
 }
 
-export async function getActivityById(id){
+export async function getActivityById(id) {
   try {
     const response = await axios.get(`/activity/${id}`);
     return response;
@@ -20,7 +21,7 @@ export async function getActivityById(id){
   }
 }
 
-export async function createActivity() {}
+export async function createActivity() { }
 
 export async function updateActivity(id) {
   // try {
@@ -70,7 +71,7 @@ export async function viewHistoryActivities() {
     const response = await axios.get("/activities/history");
     return response;
   } catch (error) {
-      console.error("Can't view activities", error);
+    console.error("Can't view activities", error);
     throw error;
   }
 }
@@ -112,7 +113,7 @@ export const addRating = async (activityID, ratingData) => {
         "Content-Type": "application/json",
       },
     });
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error adding rating:", error);
     throw error;
