@@ -8,7 +8,7 @@ import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, curr = "EGP",
-  page, isAdmin, isTourguide, onAdminFlag, onItineraryDelete, onItineraryUpdate }) => {
+  page, isAdmin, isTourguide, onAdminFlag, onItineraryDelete, onItineraryUpdate, onToggleStatus }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
   const errorDisplayedRef = useRef(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -102,6 +102,7 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
     }
   };
 
+
   return (
     <div className="list">
       {itineraries.map(itinerary => (
@@ -136,6 +137,14 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
                 style={{ cursor: "pointer" }}
               />
             </div>}
+            {isTourguide && (
+              <button
+                  onClick={() => onToggleStatus(itinerary._id)}
+                  style={{ marginBottom: "10px" }}
+              >
+                  {itinerary.isActive ? "Deactivate" : "Activate"}
+              </button>
+                        )}
           </div>
 
           <div className="list-item-attributes">

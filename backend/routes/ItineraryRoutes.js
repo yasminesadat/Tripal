@@ -7,8 +7,8 @@ const ItineraryRating = require("../models/ItineraryRating");
 
 const { createItinerary, getItineraries, updateItinerary, 
     deleteItinerary, getItineraryRatings, 
-     viewUpcomingItineraries,viewPaidItineraries,
-     getTouristItineraries } = require('../controllers/ItineraryController');
+    viewUpcomingItineraries,viewPaidItineraries,
+    getTouristItineraries, toggleItineraryStatus } = require('../controllers/ItineraryController');
 
 router.post('/itinerary', createItinerary);
 
@@ -22,5 +22,6 @@ router.get('/itineraries/booked-itineraries/:touristId', getTouristItineraries);
 router.post("/itinerary/:id/ratings", validateIDs(["id", "userID"]), addRating(Itinerary, ItineraryRating, 'itineraryID'));
 router.get("/itinerary/:id/ratings", validateIDs(["id"]), getRatings(Itinerary, ItineraryRating, 'itineraryID'));
 router.get('/itineraryRatings/:id', getItineraryRatings);
+router.put('/itinerary/:id/toggleStatus', toggleItineraryStatus);
 
 module.exports = router;
