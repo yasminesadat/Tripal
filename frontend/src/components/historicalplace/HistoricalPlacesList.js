@@ -90,13 +90,13 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
           </div>
           <div className="list-item-attributes-image">
             <div className="list-item-attribute-img">
-              {place.images && place.images.length > 0 && (
+              {/* {place.images && place.images.length > 0 && (
                 <img
                   src={place.images[0].url}
                   alt={place.name}
                   style={{ width: "200px" }}
                 />
-              )}
+              )} */}
             </div>
             <div className="list-item-attributes">
               <div className="list-item-attribute">{place.description}</div>
