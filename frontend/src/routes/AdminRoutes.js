@@ -24,7 +24,7 @@ const adminRoutes = [
   { path: "/admin/complaints", element: <ComplaintsPage /> },
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
-  {path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
+  { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
   { path: "/deletion-requests", element: <DeletionRequests />}
 ];
 

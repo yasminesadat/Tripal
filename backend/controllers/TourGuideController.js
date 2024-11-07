@@ -1,6 +1,7 @@
 const tourGuideModel = require("../models/users/TourGuide.js");
 const bcrypt = require("bcrypt");
 const cloudinary = require("../cloudinary");
+
 const createTourGuide = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
@@ -26,15 +27,12 @@ const createTourGuide = async (req, res) => {
       password: hashedPassword,
     });
     const id = tourGuide._id;
-    // await userModel.create({
-    //     userID: id,
-    //     role: "TourGuide"
-    // })
     res.status(201).json(tourGuide);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
 const getTourguideInfo = async (req, res) => {
   try {
     const tourGuide = await tourGuideModel.findById(req.params.id);

@@ -50,7 +50,7 @@ export default function Currency({ parentClass, userCurrency, onCurrencyChange }
       className={`${parentClass ? parentClass : "headerDropdown js-form-dd"}`}
     >
       <div
-        className="headerDropdown__button"
+        class="dropdown__button h-50 min-w-auto js-button"
         onClick={() => setCurrentDropdown((prev) => (prev === "currency" ? "" : "currency"))}
       >
         {selectedCurrency}
@@ -58,8 +58,7 @@ export default function Currency({ parentClass, userCurrency, onCurrencyChange }
       </div>
 
       <div className={`headerDropdown__content ${currentDropdown === "currency" ? "is-active" : ""}`}>
-        <div className="headerDropdown">
-          <div className="headerDropdown__container">
+          <div class="dropdown -base -price js-dropdown js-form-dd is-active">
             {currencies.map((currencyCode, i) => (
               <div
                 onClick={() => handleCurrencyChange(currencyCode)}
@@ -70,7 +69,6 @@ export default function Currency({ parentClass, userCurrency, onCurrencyChange }
               </div>
             ))}
           </div>
-        </div>
       </div>
     </div>
   );

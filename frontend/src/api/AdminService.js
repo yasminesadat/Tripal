@@ -111,5 +111,3 @@ export const approveDeletionRequest = async (requestId) => {
     throw error;
   }
 };
-
-
