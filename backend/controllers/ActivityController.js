@@ -73,10 +73,8 @@ const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
   try {
     const activites = await Activity.find({ advertiser: id })
-      .populate("advertiser")
-      .populate("category")
-      .populate("tags")
-    // .populate("ratings");
+    .select("title date time location")
+    console.log(activites)
     res.status(200).json(activites);
   } catch (error) {
     res.status(400).json({ error: error.message })
