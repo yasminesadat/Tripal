@@ -35,7 +35,8 @@ export default function Hero5() {
                 departureDate,
                 adults: numberOfAdults,
                 max: 3,
-                cabin: cabinType
+                cabin: cabinType,
+                currencyCode: 'EGP'
             });
 
             // If returnDate exists, add it to the query parameters

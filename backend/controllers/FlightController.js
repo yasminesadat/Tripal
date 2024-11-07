@@ -14,7 +14,8 @@ const getFlights = async (req, res) => {
     adults,
     max = 5,
     nonStop = true,
-    cabin 
+    cabin, 
+    currencyCode = 'EGP'
   } = req.query;
 
   if (!originLocationCode || !destinationLocationCode || !departureDate) {
@@ -31,6 +32,7 @@ const getFlights = async (req, res) => {
       max,
       nonStop,
       travelClass: cabin, 
+      currencyCode
     });
 
     res.json(response.data);
