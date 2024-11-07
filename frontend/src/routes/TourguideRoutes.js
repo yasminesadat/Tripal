@@ -9,7 +9,7 @@ const TourguideRoutes = [
     { path: "/tourguide", element: <TourguideHome /> },
     { path: "/tourguide/create", element: <TourGuideForm /> },
     { path: "/tourguide/profile", element: <TourGuideProfile /> },
-    { path: "/tourguide/update/:id", element: <TourGuideForm /> },
+    { path: "/tourguide/update", element: <TourGuideForm /> },
     { path: "/tourguide-itineraries", element: <UpcomingItineraries isTourguide={"isTourguide"} /> },
     { path: "/create-itinerary", element: <CreateItinerary /> },
 ];

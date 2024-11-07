@@ -37,7 +37,7 @@ const TouristRoutes = [
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   { path: "/tourist/view-Complaints", element: <MyComplaints /> },
   { path: "/itineraries/booked-itineraries", element: <UpcomingItineraries isTourist={"isTourist"} touristCancel={"cancel"} /> },
-  { path: "/booked-activities", element: <BookedActivitiesPage /> }
+  { path: "/booked-activities", element: <BookedActivitiesPage /> },
 
   { path: "/tourist/book-flight", element: <FlightSearch /> },
   { path: "/tourist/search-flight", element: <Hero5 /> },
