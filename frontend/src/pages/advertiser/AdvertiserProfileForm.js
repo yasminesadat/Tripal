@@ -215,7 +215,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
           advertiserData.existingImage = null;
         }
         await updateAdvertiser(id, advertiserData);
-        navigate(`/advertiser/${id}`);
+        navigate(`/advertiser/profile`);
       } else {
         // Call API to create a new advertiser
         await createAdvertiser(formData);

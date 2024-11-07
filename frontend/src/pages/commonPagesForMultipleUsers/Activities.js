@@ -165,31 +165,9 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div>
-<<<<<<< HEAD
-        { isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
-        { isAdvertiser ? <AdvertiserNavBar/> : null }
-        {isTourist && <div className="page-title">Upcoming Activities</div>}
-        
-        { isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
-        
-        { isTourist ? 
-            <div className="filter-sort-list">
-                <div className="filter-sort">
-                    <ActivityFilter onFilter={handleFilter} />
-                    <ActivitySort onSort={handleSort} />
-                </div>
-                <UpcomingActivities activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"}/>
-            </div>
-            :
-            <AdvertiserActivities />
-        }
-        
-        <Footer />
-=======
       {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
       {isAdvertiser ? <AdvertiserNavBar /> : null}
-
-      {isTourist ? <div className="page-title">Upcoming Activities</div> : <div className="page-title">My Activities</div>}
+      {isTourist && <div className="page-title">Upcoming Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
@@ -206,7 +184,6 @@ const Activities = ({ isAdvertiser, isTourist }) => {
       }
 
       <Footer />
->>>>>>> b0a8687 (fixing routes by removing /id and removing useparams and using the id in the IDs file)
     </div>
   );
 };
