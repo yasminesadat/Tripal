@@ -10,6 +10,16 @@ export async function getAdvertiserActivities(advertiser) {
   }
 }
 
+export async function getActivityById(id){
+  try {
+    const response = await axios.get(`/activity/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't get activity details", error);
+    throw error;
+  }
+}
+
 export async function createActivity() {}
 
 export async function updateActivity(id) {

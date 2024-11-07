@@ -163,7 +163,7 @@ const getActivityById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const activity = await Activity.findById(id);
+    const activity = await Activity.findById(id).populate("category").populate("tags");
     if (!activity) {
       return res.status(404).json({ message: "Activity not found." });
     }

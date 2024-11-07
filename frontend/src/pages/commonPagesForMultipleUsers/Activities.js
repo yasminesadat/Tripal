@@ -166,8 +166,7 @@ const Activities = ({isAdvertiser, isTourist}) => {
     <div>
         { isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
         { isAdvertiser ? <AdvertiserNavBar/> : null }
-        
-        { isTourist ? <div className="page-title">Upcoming Activities</div> : <div className="page-title">My Activities</div>}
+        {isTourist && <div className="page-title">Upcoming Activities</div>}
         
         { isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
         
