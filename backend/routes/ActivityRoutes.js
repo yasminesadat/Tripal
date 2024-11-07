@@ -8,9 +8,10 @@ const ActivityRating = require("../models/ActivityRating");
 const { createActivity, getAdvertiserActivities, 
     updateActivity, deleteActivity, viewUpcomingActivities, 
     getTouristActivities,
-    viewHistoryActivities } = require('../controllers/ActivityController');
+    viewHistoryActivities, getActivityById } = require('../controllers/ActivityController');
 
 router.get('/activities/advertiser/:id', getAdvertiserActivities);
+router.get('/activity/:id', getActivityById);
 router.post('/activities', createActivity);
 router.put('/activities/:id', updateActivity);
 router.delete('/activities/:id', deleteActivity);

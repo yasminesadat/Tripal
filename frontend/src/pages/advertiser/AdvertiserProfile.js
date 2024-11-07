@@ -43,7 +43,7 @@ const AdvertiserProfile = () => {
 
 
   if (error) return <p>Error: {error.message}</p>;
-  if (!advertiser) return <p>Can't find advertiser...</p>;
+  if (!advertiser) return <p>Loading...</p>;
   const logoStyle = {
     //position: "absolute",
     top: "20px",
