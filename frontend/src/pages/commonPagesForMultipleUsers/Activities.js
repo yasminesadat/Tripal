@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { viewHistoryActivities } from "../../api/ActivityService";
-import ActivityHistory from "../../components/activity/ActivityHistory";
+import { useParams } from "react-router-dom";  
+import { viewUpcomingActivities, getAdvertiserActivities } from "../../api/ActivityService";
+import UpcomingActivities from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
+import GuestNavBar from "../../components/navbar/GuestNavBar";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
+import { bookResource } from "../../api/BookingService";
+import { touristId } from "../../IDs";
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
+import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 
-const ActivitiesHistoryPage = () => {
+// advertiser activities or tourist upcoming activities 
+const Activities = ({isAdvertiser, isTourist}) => {
+    const { id } = useParams();
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,25 +48,34 @@ const ActivitiesHistoryPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewHistoryActivities();
-        setActivities(response.data);
-        setFilteredActivities(response.data);
+        let response;
+        if (isAdvertiser) {
+          response = await getAdvertiserActivities(id);
+        } else if (isTourist) {
+          response = await viewUpcomingActivities();
+        }
+  
+        console.log(response); 
+  
+        const activitiesData = response?.data || response || [];
+        setActivities(activitiesData);
+        setFilteredActivities(activitiesData);
       } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
+        const errorMessage = err?.response?.data?.error || err?.message || "Error fetching activities";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchActivities();
-  }, []);
+  }, [id, isAdvertiser, isTourist]);
+  
 
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const results = activities.filter((activity) => {
-      const hasMatchingTitle = activity.title
-        .toLowerCase()
-        .includes(lowerCaseSearchTerm);
+      const hasMatchingTitle = activity.title.toLowerCase().includes(lowerCaseSearchTerm);
       const hasMatchingCategory =
         activity.category &&
         activity.category.Name &&
@@ -66,8 +83,7 @@ const ActivitiesHistoryPage = () => {
       const hasMatchingTags =
         activity.tags &&
         activity.tags.some(
-          (tag) =>
-            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          (tag) => tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
         );
 
       return hasMatchingTitle || hasMatchingCategory || hasMatchingTags;
@@ -80,7 +96,7 @@ const ActivitiesHistoryPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price;
+      const activityBudget = activity.price * exchangeRate; 
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -92,7 +108,7 @@ const ActivitiesHistoryPage = () => {
         (!budgetMax || activityBudget <= budgetMax);
       const isCategoryValid =
         !category ||
-        (activityCategory && 
+        (activityCategory &&
           activityCategory.Name &&
           activityCategory.Name.toLowerCase() === category.toLowerCase());
       const isRatingValid =
@@ -109,8 +125,8 @@ const ActivitiesHistoryPage = () => {
       let aValue, bValue;
 
       if (field === "price") {
-        aValue = a.price * exchangeRate; // Convert to current currency
-        bValue = b.price * exchangeRate; // Convert to current currency
+        aValue = a.price * exchangeRate;
+        bValue = b.price * exchangeRate;
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
@@ -121,25 +137,55 @@ const ActivitiesHistoryPage = () => {
     setFilteredActivities(sortedActivities);
   };
 
+  const handleBookActivity = async ({ activityId, touristId }) => {
+    if (!touristId) {
+      message.warning("Please sign up or log in to book an activity.");
+      return;
+    }
+    try {
+      await bookResource('activity', activityId, touristId);
+            message.success("Activity booked successfully!");
+    } catch (error) {
+      console.log("Error details:", error);
+      
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 400) 
+          message.warning(error.response.data.error);             
+        else 
+          message.error(error.response.data.error);  
+      } else {
+        message.error("Network error. Please try again later.");
+      }
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
   return (
     <div>
-      <TouristNavBar />
-      <div className="page-title">My Paid Activities History</div>
-      <div className="list-item-attribute-sublist">Click to View or rate your paid activities history</div>
-      <ActivitySearch onSearch={handleSearch} />
-      <div className="filter-sort-list">
-        <div className="filter-sort">
-          <ActivityFilter onFilter={handleFilter} />
-          <ActivitySort onSort={handleSort} />
-        </div>
-        <ActivityHistory activities={filteredActivities} curr={currency} page={"history"} />
-      </div>
-      <Footer />
+        { isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
+        { isAdvertiser ? <AdvertiserNavBar/> : null }
+        
+        { isTourist ? <div className="page-title">Upcoming Activities</div> : <div className="page-title">My Activities</div>}
+        
+        { isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
+        
+        { isTourist ? 
+            <div className="filter-sort-list">
+                <div className="filter-sort">
+                    <ActivityFilter onFilter={handleFilter} />
+                    <ActivitySort onSort={handleSort} />
+                </div>
+                <UpcomingActivities activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"}/>
+            </div>
+            :
+            <AdvertiserActivities />
+        }
+        
+        <Footer />
     </div>
   );
 };
 
-export default ActivitiesHistoryPage;
+export default Activities;

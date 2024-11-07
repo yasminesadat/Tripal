@@ -144,7 +144,7 @@ const viewUpcomingActivities = async (req, res) => {
 };
 
 //fix this date when there are entries
-const viewPaidActivities = async (req, res) => {
+const viewHistoryActivities = async (req, res) => {
   try {
     const currentDate = new Date();
 
@@ -193,6 +193,6 @@ module.exports = {
   updateActivity,
   deleteActivity,
   viewUpcomingActivities,
-  viewPaidActivities,
+  viewHistoryActivities,
   getTouristActivities
 };

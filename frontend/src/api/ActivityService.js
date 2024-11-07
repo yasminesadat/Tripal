@@ -47,7 +47,7 @@ export async function searchActivities() {
 
 export async function viewUpcomingActivities() {
   try {
-    const response = await axios.get("/activities/upcoming/view");
+    const response = await axios.get("/activities/upcoming");
     return response;
   } catch (error) {
     console.error("Can't view activities", error);
@@ -55,9 +55,9 @@ export async function viewUpcomingActivities() {
   }
 }
 
-export async function viewPaidActivities() {
+export async function viewHistoryActivities() {
   try {
-    const response = await axios.get("/activities/paid/view");
+    const response = await axios.get("/activities/history");
     return response;
   } catch (error) {
       console.error("Can't view activities", error);

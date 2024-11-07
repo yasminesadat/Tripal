@@ -1,6 +1,6 @@
 import TouristHome from "../pages/tourist/TouristHome";
 import TouristProfile from "../pages/tourist/TouristProfile";
-import UpcomingActivities from "../pages/tourist/UpcomingActivities";
+import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
@@ -17,7 +17,7 @@ import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
-  { path: "/upcoming-activities", element: <UpcomingActivities /> },
+  { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
   { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   { path: "/tourist-profile/:id", element: <TouristProfile /> },
   { path: "/historical-places", element: <HistoricalPlaces /> },
