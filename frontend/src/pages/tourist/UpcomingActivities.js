@@ -10,7 +10,7 @@ import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
 import { bookResource } from "../../api/BookingService";
-const touristId = "6724842b5831eed787083b57"; 
+import { touristId } from "../../IDs";
 
 const UpcomingActivitiesPage = () => {
   const [activities, setActivities] = useState([]);

@@ -4,14 +4,14 @@ import { message, Tag, Input, Button } from "antd";
 import  languages  from '../../assets/constants/Languages.js';
 import ActivitySelectionModal from '../activity/ActivitySelectionModal.js';
 import MapPopUp from '../common/MapPopUp.js';
-
+import { tourGuideID } from '../../IDs.js';
 const tagsData = ['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation'];
 
 const ItinerariesForm = () => {
     const [itinerary, setItinerary] = useState({
         title: '',
         description: '',
-        tourGuide: '6700780a15fe2c9f96f1a96e',
+        tourGuide: tourGuideID,
         activities: [],
         serviceFee: 0,
         language: '',

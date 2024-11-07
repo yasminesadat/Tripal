@@ -22,7 +22,7 @@ export async function viewPaidItineraries() {
 }
 
 // for tourguide return all itineraries created by a tourguide 
-export const getItineraries = async (tourGuideId) => {
+export const getItinerariesByTourGuide = async (tourGuideId) => {
   try {
     const response = await axios.get(`/itinerary?tourGuideId=${tourGuideId}`);
     return response.data;
