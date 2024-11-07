@@ -28,7 +28,6 @@ const ActivityForm = ({ isUpdate }) => {
   });
 
 
-  console.log(activityData)
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -103,6 +102,7 @@ const ActivityForm = ({ isUpdate }) => {
           latitude: markerPosition[0], // Send the latitude
           longitude: markerPosition[1], // Send the longitude
         });
+        console.log(activityData.advertiser)
 
         message.success('Activity created successfully!');
         console.log('Activity created:', response.data);

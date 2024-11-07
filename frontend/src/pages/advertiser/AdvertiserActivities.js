@@ -69,7 +69,7 @@ const AdvertiserActivitiesPage = () => {
             </div>
           
             <div className="list-item-attributes">
-              <div className="list-item-attribute">{activity.description}</div>
+              {/* <div className="list-item-attribute">{activity.description}</div>
               <div className="list-item-attribute">Price: {activity.price}</div>
               <div className="list-item-attribute">Category: {activity.category ? activity.category.Name : "N/A"}</div>
               <div className="list-item-attribute">
@@ -81,7 +81,7 @@ const AdvertiserActivitiesPage = () => {
               </div>
               <div className="list-item-attribute">Rating: {activity.averageRating}</div>
               <div className="list-item-attribute">Special Discounts: {activity.specialDiscounts || "N/A"}</div>
-              <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div>
+              <div className="list-item-attribute">Booking Open: {activity.isBookingOpen ? "Yes" : "No"}</div> */}
 
               
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
