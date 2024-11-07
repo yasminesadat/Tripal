@@ -46,7 +46,7 @@ const AdvertiserActivities = () => {
         {activities?.map((activity) => (
           <div class="border-1 rounded-12 px-20 py-20" key={activity._id}>
             <div class="text-18 lh-15 fw-500 mt-5">{activity.title}</div>
-            <div class="d-flex items-center"> <i class="icon-pin mr-5"></i> Location: {activity.location}</div>
+            <div class="d-flex items-center"> <i class="icon-pin mr-5"></i> {activity.location}</div>
             <div class="text-right md:text-left">
               <i class="icon-clock mr-5"></i>
               <div class="text-14">Date: {new Date(activity.date).toLocaleDateString()}</div>
