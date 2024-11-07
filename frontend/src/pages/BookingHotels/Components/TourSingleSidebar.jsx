@@ -7,7 +7,7 @@ import { times } from "./tourSingleContent";  // Times is the boardType :)
 import { getHotelPrices } from "../../../api/HotelService";
 
   
-  export default function TourSingleSidebar({ hotelID }) {
+  export default function TourSingleSidebar({ hotelID,name }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -339,7 +339,7 @@ import { getHotelPrices } from "../../../api/HotelService";
       </div>
 
       <button className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20" >
-        <Link to={`/confirmBooking/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}`}>
+        <Link to={`/confirmBooking/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}`}>
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
      </Link>

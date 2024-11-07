@@ -88,7 +88,7 @@ export default function HotelDetails() {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar hotelID={hotelID} />
+                <TourSingleSidebar hotelID={hotelID} name={name} />
               </div>
             </div>
           </div>
