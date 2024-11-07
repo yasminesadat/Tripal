@@ -85,3 +85,13 @@ export const addRating = async (itineraryID, ratingData) => {
     throw error;
   }
 };
+
+export const toggleItineraryStatus = async (id) => {
+  try {
+    const response = await axios.put(`/itinerary/${id}/toggleStatus`);
+    return response.data;
+  } catch (error) {
+    console.error("Error toggling itinerary status:", error);
+    throw error;
+  }
+};

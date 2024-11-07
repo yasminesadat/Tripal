@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getTouristActivities } from "../../api/TouristService";
-import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
+import UpcomingActivitiesList from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";

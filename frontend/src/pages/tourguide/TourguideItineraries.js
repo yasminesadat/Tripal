@@ -7,8 +7,6 @@ import TourguideNavBar from '../../components/navbar/TourguideNavBar.js';
 import Footer from '../../components/common/Footer.js';
 import {tourGuideID} from "../../IDs";
 
-const tourGuide = "6700780a15fe2c9f96f1a96e"; // Tour guide ID
-
 const ItinerariesPage = () => {
     const [itineraries, setItineraries] = useState([]);
     const [selectedItinerary, setSelectedItinerary] = useState(null);
