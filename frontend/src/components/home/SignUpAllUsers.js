@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { Form, Input, Button, Select, DatePicker, Radio, message, Upload } from "antd";
 import moment from "moment";
 import { UploadOutlined } from "@ant-design/icons";
-// import { createSeller } from "../../api/SellerService";
-// import { createTourGuide } from "../../api/TourGuideService";
-// import { createAdvertiser } from "../../api/AdvertiserService";
 import { createTourist } from "../../api/TouristService";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
@@ -50,29 +47,14 @@ const SignUpAllUsers = () => {
     setRole(e.target.value);
     form.resetFields();
   };
-  // const handleBeforeUpload = (file) => {
-  //   if (formData.document) {
-  //     message.error("Only one document can be uploaded.");
-  //     return Upload.LIST_IGNORE;
-  //   }
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     setFormData({ ...formData, document: reader.result });
-  //   };
-  //   reader.readAsDataURL(file);
-  //   return false;
-  // };
   const handleDocumentChange = (info) => {
     if (info.fileList.length === 0) {
       setFormData({ ...formData, document: null });
       return;
     }
     const file = info.fileList[0].originFileObj;
-    // const reader = new FileReader();
-    // reader.readAsDataURL(file.originFileObj);
-    // reader.onloadend = () => {
+
     setFormData({ ...formData, document: file });
-    // console.log("FILE DATA", info.file);
 
   }
 
@@ -81,10 +63,9 @@ const SignUpAllUsers = () => {
   };
 
   const handleSubmit = async (values) => {
-    // console.log("im submitting with the document", formData.document);
     if ((role === "seller" || role === "tour-guide" || role === "advertiser") && !formData.document) {
       message.error("Please upload the required documents in one pdf.");
-      return; // Stop the submission if the document is missing
+      return;
     }
     const formattedDateOfBirth = role === "tourist"
       ? new Date(values.dateOfBirth).toISOString().split("T")[0]
@@ -113,8 +94,7 @@ const SignUpAllUsers = () => {
     try {
       if (role === "seller") {
 
-        // const newFormData = new FormData();
-        // newFormData.append('document', formData.document); // fileInput is an <input type="file">
+
 
         response = await createRequest({
           ...commonUser,
@@ -145,7 +125,6 @@ const SignUpAllUsers = () => {
           role: "Advertiser",
         }, formData.document);
 
-        // console.log("response", response)
         navigate("/seller/pending", {
           state: {
             ...commonUser,
@@ -156,15 +135,13 @@ const SignUpAllUsers = () => {
 
         response = await createTourist(newUser);
         const touristId = response.data.id || response.data._id;
-        // console.log(touristId)
         message.success("Sign up successful!");
         navigate(`/tourist/select-preferences/${touristId}`);
 
       }
 
     } catch (error) {
-      // console.log('Error object:', error);
-      // Check if error response exists and display the error message
+
 
       message.error(error.message); // Display backend error
 
