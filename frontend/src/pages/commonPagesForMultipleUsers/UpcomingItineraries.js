@@ -62,7 +62,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
         };
 
         fetchItineraries();
-    }, [location]);
+    }, [location,itineraries]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
