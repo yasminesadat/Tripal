@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Select, DatePicker, Radio, message, Upload } from "antd";
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, Select, DatePicker, Radio, message, Upload, Modal } from "antd";
 import moment from "moment";
 import { UploadOutlined } from "@ant-design/icons";
 import { createTourist } from "../../api/TouristService";
@@ -9,6 +9,111 @@ import { createRequest, SetRequestStatus } from "../../api/RequestService";
 const { Option } = Select;
 
 const SignUpAllUsers = () => {
+  const tabs = [
+    {
+      title: (<h2 className="text-20 fw-500">Introduction</h2>),
+      content:
+        (<p className="mt-10" >1.1 Acceptance of Terms
+          By using Tripal, you agree to these terms and conditions.If you do not agree, please do not use our services.
+          <br />
+          1.2 Services Provided
+          Tripal offers an online platform to browse, book, and manage flights, hotel reservations, tours, activities, and itineraries.We act as an intermediary, facilitating bookings and purchases with third - party suppliers.
+          <br />
+          1.3 Eligibility
+          To use our services, you must be at least 18 years of age or of legal age in your jurisdiction to enter into binding contracts.
+          <br />
+          1.4 User Responsibilities
+          You agree to provide accurate, complete, and up- to - date information.You are responsible for ensuring the accuracy of any booking details, including traveler names and contact information.
+        </p>)
+    },
+    {
+      title: (<h2 className="text-20 fw-500">Booking and Reservation Process</h2>),
+      content: (<p className="mt-10" >
+        2.1 Flights, Hotels, and Activities
+        All bookings are subject to availability and confirmation from the relevant third-party provider. Prices may vary based on availability and are not guaranteed until a booking is confirmed.
+        <br />
+        2.2 Payment
+        Full payment or a deposit may be required at the time of booking. Payment policies are specific to each service, as determined by the provider.
+        <br />
+        2.3 Cancellation and Refunds
+        Cancellation policies vary depending on the service and the third-party provider's policies. Please review each provider’s policy before booking. Refunds, if available, will be processed per the provider’s terms, and [Website Name] may charge an additional processing fee.
+      </p>),
+    },
+    {
+      title: (<h2 className="text-20 fw-500">Pricing and Fees</h2>),
+      content:
+        (<p className="mt-10" >
+          3.1 Service Fees
+          Tripal may charge a service fee for booking management, support, or added convenience. Fees will be disclosed prior to finalizing your booking.
+          <br />
+          3.2 Price Changes and Accuracy
+          We strive to provide accurate pricing information. However, Tripal cannot guarantee that prices will be the same at the time of booking, as prices can change due to market demand or provider pricing changes.
+        </p>),
+    },
+    {
+      title: (<h2 className="text-20 fw-500">Privacy</h2>),
+      content: (<p className="mt-10" >
+        4.1 Intellectual Property
+        All content on Tripal, including text, graphics, and logos, is protected by copyright, trademark, and other intellectual property laws. You may not copy, reproduce, or distribute any content without express permission.
+        <br />
+        4.2 User-Generated Content
+        You may submit reviews, comments, and feedback on our site. By submitting content, you grant Tripal a worldwide, royalty-free license to use, display, and distribute this content.
+        <br />
+        4.3 Privacy and Data Protection
+        Our [Privacy Policy](link to privacy policy) governs how we collect, use, and protect your personal data. Please review this policy for more information.
+        <br />
+        4.4 Modifications to Terms
+        Tripal reserves the right to modify these terms at any time. Changes will be posted on this page, and continued use of our services signifies acceptance of any updated terms.
+        <br />
+        4.5 Governing Law and Jurisdiction
+        These terms are governed by the laws of [Your Country/State]. Any disputes arising from these terms shall be resolved in the courts of [Your Jurisdiction].
+      </p>),
+    },
+    {
+      title: (<h2 className="text-20 fw-500">Liability and Disclaimer</h2>),
+      content: (<p className="mt-10" >
+        5.1 Limited Liability
+        Tripal is not liable for any direct, indirect, incidental, or consequential damages resulting from your use of our services, including but not limited to travel interruptions, cancellations, loss of personal items, or changes in booking details.
+        <br />
+        5.2 Disclaimer of Warranties
+        We provide our services "as is" and make no warranties or representations about the accuracy, reliability, or suitability of the information and services offered.
+      </p>),
+    }
+
+  ];
+
+  const [currentTab, setCurrentTab] = useState(0);
+  useEffect(() => {
+    const termsContainer = document.getElementById("termsContainer");
+    if (termsContainer) {
+      termsContainer.style.opacity = 0;
+      setTimeout(() => {
+        termsContainer.style.opacity = 1;
+      }, 300);
+    }
+  }, [currentTab]);
+
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = () => {
+    if (currentTab === 4) {
+      setConfirmLoading(true);
+      setTimeout(() => {
+        setOpen(false);
+        setConfirmLoading(false);
+      }, 2000);
+      handleSubmit();
+    }
+    else {
+      setCurrentTab((oldTab) => oldTab + 1);
+    }
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
   const [requestId, setRequestId] = useState('')
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -153,7 +258,7 @@ const SignUpAllUsers = () => {
   return (
     <div className="signUpUsersForm-container">
       <h2 className="signUpUsersForm-title">Sign Up</h2>
-      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+      <Form form={form} layout="vertical" onFinish={role !== "tourist" ? showModal : handleSubmit}>
         <Form.Item label="Role">
           <Radio.Group onChange={handleRoleChange} value={role}>
             <Radio value="seller">Seller</Radio>
@@ -309,7 +414,57 @@ const SignUpAllUsers = () => {
       </Button>
 
       <br></br> <br></br>
+      <Modal
+        title="Terms and conditions"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        okText={currentTab === tabs.length - 1 ? "Sign Up" : "Accept"}
+      >
+        <section className="layout-pt-md layout-pb-lg">
+          <div className="container">
+            <div className="tabs -terms js-tabs">
+              <div className="row y-gap-30">
+                <div className="col-lg-3">
+                  <div className="tabs__controls row y-gap-10 js-tabs-controls">
+                    {tabs.map((elm, i) => (
+                      <div
+                        key={i}
+                        className="col-12"
+                        onClick={() => setCurrentTab(i)}
+                      >
+                        <button
+                          className={`tabs__button relative pl-20 js-tabs-button ${i === currentTab ? "is-tab-el-active" : ""
+                            } `}
+                          data-tab-target=".-tab-item-1"
+                        >
+                          {elm.title}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
+                <div className="col-lg-9">
+                  <div className="tabs__content">
+                    {tabs.map(
+                      (tab, index) =>
+                        index === currentTab && (
+                          <div key={index} className="tabs__pane is-tab-el-active">
+                            {tab.title}
+                            {tab.content}
+
+                          </div>
+                        )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </Modal>
     </div>
 
   );
