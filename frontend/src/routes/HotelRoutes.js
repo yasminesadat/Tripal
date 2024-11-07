@@ -1,4 +1,6 @@
+import BookingPages from "../pages/BookingHotels/BookingConfirmation";
 import Map from "../pages/BookingHotels/Components/Map";
+import CreditCard from "../pages/BookingHotels/Components/Payment";
 import HeaderSerch from "../pages/BookingHotels/Components/SearchEngine";
 import HotelDetails from "../pages/BookingHotels/HotelDetails";
 import TourList1 from "../pages/BookingHotels/HotelList";
@@ -13,7 +15,10 @@ const hotelRoutes = [
     {path:"/hotelList/:cityCode", element:<TourList1/>},
     {path:"/hotelDetails/:name/:hotelID", element:<HotelDetails/>},
     {path:"/map",element:<Map/>},
-    {path:"/searchEngine",element:<HeaderSerch/>}
+    // {path:"/searchEngine",element:<HeaderSerch/>},
+    {path:"/confirmBooking/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut",element:<BookingPages/>},
+
+    {path:"/payment",element:<CreditCard/>}
   //  <Route path="/map" element={<Map/>} />
 
   

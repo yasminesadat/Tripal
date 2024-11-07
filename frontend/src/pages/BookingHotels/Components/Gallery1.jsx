@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import ImageLightBox from "./ImageLightBox";
+import img1 from "../Components/HotelsImages/hotel7.jpeg";
+import img2 from "../Components/HotelsImages/beach.jpeg";
+import img3 from "../Components/HotelsImages/pool.jpeg";
+import img4 from "../Components/HotelsImages/room.jpeg";
+
 
 const images = [
   {
     id: 1,
-    image: `/img/tourSingle/1/1.png`,
+    image: img1,
   },
   {
     id: 1,
-    image: `/img/tourSingle/1/2.png`,
+    image: img3,
   },
   {
     id: 1,
-    image: `/img/tourSingle/1/3.png`,
+    image: img2,
   },
   {
     id: 1,
-    image: `/img/tourSingle/1/4.png`,
+    image: img4,
   },
 ];
 export default function Gallery1() {
@@ -26,10 +31,10 @@ export default function Gallery1() {
     <>
       <div className="tourSingleGrid -type-1 mt-30">
         <div className="tourSingleGrid__grid mobile-css-slider-2">
-          <img src="/img/tourSingle/1/1.png" alt="image" />
-          <img src="/img/tourSingle/1/2.png" alt="image" />
-          <img src="/img/tourSingle/1/3.png" alt="image" />
-          <img src="/img/tourSingle/1/4.png" alt="image" />
+          <img src={img1} alt="image" />
+          <img src={img2} alt="image" />
+          <img src={img3} alt="image" />
+          <img src={img4} alt="image" />
         </div>
 
         <div className="tourSingleGrid__button">
@@ -45,7 +50,7 @@ export default function Gallery1() {
               See all photos
             </span>
           </div>
-          <a
+          {/* <a
             href="/img/tourSingle/1/2.png"
             className="js-gallery"
             data-gallery="gallery1"
@@ -59,7 +64,7 @@ export default function Gallery1() {
             href="/img/tourSingle/1/4.png"
             className="js-gallery"
             data-gallery="gallery1"
-          ></a>
+          ></a> */}
         </div>
       </div>
       <ImageLightBox

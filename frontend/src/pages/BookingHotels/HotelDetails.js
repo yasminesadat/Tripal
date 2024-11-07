@@ -34,7 +34,7 @@ export default function HotelDetails() {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                {/* <OthersInformation /> */}
+                <OthersInformation />
               </div>
 
               <Overview />
