@@ -22,7 +22,7 @@ import { getHotelPrices } from "../../../api/HotelService";
     const [triplePrice,setTriplePrice]= useState(0.0);
     const [boardType, setBoardType] = useState("ROOM_ONLY");
     const [activeTimeDD, setActiveTimeDD] = useState(false);
-   // const navigate=useNavigate();
+    const numberofdays=(dates[1]-dates[0])/ (1000 * 60 * 60 * 24);
 
     // const handleBookNowClick = () => {
     //   navigate(`/confirmBooking/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${dates[0].format("YYYY-MM-DD")}/${dates[1].format("YYYY-MM-DD")}/${boardType}`);
@@ -43,7 +43,8 @@ import { getHotelPrices } from "../../../api/HotelService";
            const convRate=responseSingle.dictionaries.currencyConversionLookupRates;
            const ratesArray = Object.values(convRate); // Gets an array of currency objects
            const rateValue = ratesArray.length > 0 ? ratesArray[0].rate : 1;
-           setSinglePrice(Math.ceil(price1*rateValue));
+           console.log("rate:",rateValue,"num",numberofdays,"singleprice:",price1)
+           setSinglePrice(Math.ceil(price1*numberofdays*rateValue));
           }
           catch (error) {           
            // console.error("No rooms available for the selected criteria.");
@@ -64,7 +65,8 @@ import { getHotelPrices } from "../../../api/HotelService";
           const convRate2=responseDouble.dictionaries.currencyConversionLookupRates;
           const ratesArray2 = Object.values(convRate2); // Gets an array of currency objects
           const rateValue2 = ratesArray2.length > 0 ? ratesArray2[0].rate : 1;
-          setDoublePrice(Math.ceil(price2*rateValue2));
+          console.log("doubleprice:",price2)
+          setDoublePrice(Math.ceil(price2*numberofdays*rateValue2));
           }
           catch (error) {           
             console.error("No rooms available for the selected criteria.");
@@ -84,10 +86,10 @@ import { getHotelPrices } from "../../../api/HotelService";
           const convRate3=responseTriple.dictionaries.currencyConversionLookupRates;
           const ratesArray3 = Object.values(convRate3); // Gets an array of currency objects
           const rateValue3 = ratesArray3.length > 0 ? ratesArray3[0].rate : 1;
-          setSinglePrice(Math.ceil(price3*rateValue3));
+          setTriplePrice(Math.ceil(price3*rateValue3));
 
             console.log("Triple Prices Response:", price3);
-            setTriplePrice(Math.ceil(price3*rateValue3));
+            setTriplePrice(Math.ceil(price3*numberofdays*rateValue3));
           
 
           }
@@ -111,7 +113,7 @@ import { getHotelPrices } from "../../../api/HotelService";
     const canBook=( (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
         (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
         (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber ).toFixed(2) > 0 ;
-    console.log("can book",canBook);
+   
        
 
  
