@@ -1,11 +1,12 @@
 import { axios } from "./axios";
 
-export async function bookResource(resourceType, resourceId, touristId, selectedDate, selectedTime) {
+export async function bookResource(resourceType, resourceId, touristId, selectedDate, selectedTime,tickets) {
   try {
     const response = await axios.post(`/${resourceType}/${resourceId}/book`, { 
       touristId,
       selectedDate,
-      selectedTime 
+      selectedTime,
+      tickets
     });
     return response.data;
   } catch (error) {

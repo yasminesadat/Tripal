@@ -4,6 +4,7 @@ import { times } from "../../data/tourSingleContent";
 import { touristId } from "../../IDs";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from "antd";
+import { bookResource } from "../../api/BookingService";
 
 export default function TourSingleSidebar({itinerary,activity}) {
 
@@ -41,8 +42,26 @@ const fetchExchangeRate = async (curr) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [activeDateDD, setActiveDateDD] = useState(false);
   
-  const handleBookClick = (itinerary,activity) => {};
+  const handleBookClick = async () => {
+    if (!selectedDate || !selectedTime) {
+      message.error("Please select both a date and time.");
+      return;
+    }
 
+    try {
+      const response = await bookResource(
+        itinerary ? "itinerary" : "activity",
+        itinerary ? itinerary._id : activity._id,
+        touristId,
+        selectedDate,
+        selectedTime,
+        ticketNumber
+      );
+      message.success(response.message);
+    } catch (error) {
+      message.error(error.response?.data?.error || "Booking failed");
+    }
+  };
   return (
     <div className="tourSingleSidebar">
 
@@ -279,7 +298,7 @@ const fetchExchangeRate = async (curr) => {
 
       </div>
 
-      <button onClick={() => handleBookClick(itinerary,activity)}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
+      <button onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
       </button>
