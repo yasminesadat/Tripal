@@ -1,15 +1,45 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css'
+import { useState, useEffect } from 'react';
+
+import { touristId } from '../../IDs';
+import { getConversionRate } from '../../api/ExchangeRatesService';
 const FlightResults = () => {
   const navigate= useNavigate();
   const location = useLocation();
   const flights = location.state?.flights || [];
-  //const touristId = "= import 
+  const [currency, setCurrency] = useState('EGP');
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  useEffect(() => {
+    const fetchCurrency = () => {
+      const curr = sessionStorage.getItem('currency');
+      console.log (sessionStorage)
+      if (curr) {
+        setCurrency(curr);
+        fetchExchangeRate(curr);
+      }
+    };
+    fetchCurrency();
+  }, []);
+
+  const fetchExchangeRate = async (curr) => {
+    try {
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
+    } catch (error) {
+      console.error('Failed to fetch exchange rate:', error);
+    }
+  };
+
   const handleBookNow = (flight) => {
     navigate('/tourist/booking-summary', { state: { flight } });
   };
   
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
 
   return (
     <div className="flight-results-container">
@@ -18,7 +48,9 @@ const FlightResults = () => {
         <ul className="flight-list">
           {flights.map((flight, index) => (
             <li key={index} className="flight-card">
-              <h3 className="flight-price">{flight.price.currency} {flight.price.total}</h3>
+             <h3 className="flight-price">
+                {currency} {convertPrice(flight.price.total)}
+              </h3>
               
               {flight.itineraries.map((itinerary, idx) => (
                 <div key={idx} className="itinerary">
