@@ -147,8 +147,7 @@ const BookedActivitiesPage = () => {
             prevFiltered.filter(activity => activity._id !== activityId)
           );
     } catch (error) {
-        console.log("Error details:", error);
-        message.error('Failed to cancel booking');
+        message.error(error.response.data.error);
         
     };
     };  

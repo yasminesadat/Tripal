@@ -97,6 +97,8 @@ const cancelResource = async (req, res) => {
 const { resourceType, resourceId } = req.params;
 const { touristId } = req.body;
 const model = resourceType === 'activity' ? Activity : itineraryModel;
+const currentTime = new Date();
+
 
 try {
     const resource = await model.findById(resourceId);
@@ -104,16 +106,28 @@ try {
 
     if (!resource) 
     return res.status(404).json({ error: `${resourceType} not founddd` });
-    
 
+    let cancellationDeadline;
     if (resourceType === 'activity') {
-            // For activities, find and remove the tourist from `tourists` array
+      cancellationDeadline = new Date(resource.date);
+    } else if (resourceType === 'itinerary') {
+      const booking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+      if (booking) 
+        cancellationDeadline = new Date(booking.selectedDate);
+      
+    }
+
+    if (cancellationDeadline - currentTime < 48 * 60 * 60 * 1000) {
+        return res.status(400).json({ error: "You can only cancel bookings 48 hours before the event." });
+      }
+    if (resourceType === 'activity') {
             const bookingIndex = resource.bookings.findIndex(
                 booking => booking.touristId.toString() === touristId
             );
-            if (bookingIndex === -1) {
+            
+            if (bookingIndex === -1) 
                 return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-            }            
+                        
     
             if (tourist){
                 tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
