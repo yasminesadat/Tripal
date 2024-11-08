@@ -41,12 +41,12 @@ const fetchExchangeRate = async (curr) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [activeDateDD, setActiveDateDD] = useState(false);
   
-  const handleBookClick = (itinerary) => {};
+  const handleBookClick = (itinerary,activity) => {};
 
   return (
     <div className="tourSingleSidebar">
 
-      <div className="searchForm -type-1 -sidebar mt-20">
+      {itinerary&& (<div className="searchForm -type-1 -sidebar mt-20">
         <div className="searchForm__form">
           {/* <div className="searchFormItem js-select-control js-form-dd js-calendar">
             <div className="searchFormItem__button" data-x-click="calendar">
@@ -167,7 +167,7 @@ const fetchExchangeRate = async (curr) => {
 
           
         </div>
-      </div>
+      </div>)}
 
       <h5 className="text-18 fw-500 mb-20 mt-20">Tickets</h5>
 
@@ -175,10 +175,13 @@ const fetchExchangeRate = async (curr) => {
         <div className="d-flex items-center justify-between">
           <div className="text-14">
             Tickets: {" "}
-            <span className="fw-500">
+            {itinerary&&<span className="fw-500">
               {ticketNumber} x {formatPrice(itinerary.price.toFixed(2))} 
-             
-            </span>
+            </span>}
+
+            {activity&&<span className="fw-500">
+              {ticketNumber} x {formatPrice(activity.price.toFixed(2))} 
+            </span>}
           </div>
 
           <div className="d-flex items-center js-counter">
@@ -255,24 +258,28 @@ const fetchExchangeRate = async (curr) => {
       <div className="line mt-20 mb-20"/>
         
 
-      <div className="text-14 ">
+        {itinerary&&<div className="text-14 ">
         <span className="fw-500">Service Fee:  </span> 
          {(formatPrice(itinerary.serviceFee.toFixed(2)))}
-        </div>
+        </div>}
+
       <div className="d-flex items-center justify-between">
 
-     
-
         <div className="text-18 fw-500">Total:</div>
-        <div className="text-18 fw-500">
+        {itinerary&&<div className="text-18 fw-500">
           {(
             itinerary.price * ticketNumber +
             itinerary.serviceFee
           ).toFixed(2)}
-        </div>
+        </div>}
+
+        {activity&&<div className="text-18 fw-500">
+          {(activity.price * ticketNumber).toFixed(2)}
+        </div>}
+
       </div>
 
-      <button onClick={() => handleBookClick(itinerary)}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
+      <button onClick={() => handleBookClick(itinerary,activity)}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
       </button>

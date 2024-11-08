@@ -36,12 +36,23 @@ const bookResource = async (req, res) => {
             if (!dateIsAvailable || !timeIsAvailable) {
                 return res.status(400).json({ error: 'Selected date or time is not available for this itinerary' });
             }
+            if(resource.bookings.includes(touristId)){
+                resource.bookings.forEach(booking => {
+                    if(booking.touristId === touristId){
+                        booking.selectedDate = selectedDate;
+                        booking.selectedTime = selectedTime;
+                        tickets = booking.tickets+1;
+                    }});
+                }
+            else{
+
             resource.bookings.push({
                 touristId,
                 selectedDate,
                 selectedTime,
                 tickets
             });
+            }
             tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
         } 
         else{
