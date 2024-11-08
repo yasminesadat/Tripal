@@ -74,10 +74,12 @@ const getProducts = asyncHandler(async (req, res) => {
 
     if(page === 1){
       const totalProducts = await Product.countDocuments(filter);
+      const unarchivedFilter = { ...filter, isArchived: false };
+      const totalUnarchivedProducts = await Product.countDocuments(unarchivedFilter);
       res.status(200).json({
       products: products,
       totalPages: Math.ceil(totalProducts / productsPerPage),
-      totalProducts,
+      totalPagesUnarchived: Math.ceil(totalUnarchivedProducts / productsPerPage),
     });
   }
     else{

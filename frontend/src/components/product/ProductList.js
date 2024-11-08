@@ -49,9 +49,13 @@ const ProductList = ({ curr = "EGP" }) => {
           filtered = filtered.filter((product) => product.isArchived !== true);
         }
         if (productsData.totalPages) {
-          setTotalPages(productsData.totalPages);
+          if(userRole === "Tourist"){
+            setTotalPages(productsData.totalPagesUnarchived);
+          }
+          else{          
+            setTotalPages(productsData.totalPages);
+          }
         }
-  
         setProducts(filtered);
         setFilteredProducts(filtered);
         setCurrentPage(page); 
