@@ -47,36 +47,42 @@ const bookResource = async (req, res) => {
             }
             
             tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
-            await tourist.save();
+
+            
         } 
         else{
             resource.tourists.push(touristId);
             resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
+            tourist.wallet.amount -= resource.price;
         }
+        if(tourist.wallet.amount<0)
+            return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
         
+        await tourist.save();
         await resource.save();
 
         let pointsToReceive=0;
-            if(tourist.totalPoints<=100000){
-                pointsToReceive=resource.price*0.5;
-            }else if(tourist.totalPoints<=500000){
-                pointsToReceive=resource.price*1;
-            } else {
-                pointsToReceive=resource.price*1.5;
-            }
 
-            await Tourist.findByIdAndUpdate(
-                touristId,
-                {
-                    $inc: {
-                        totalPoints: pointsToReceive,
-                        currentPoints: pointsToReceive,
-                    },
+        if(tourist.totalPoints<=100000){
+            pointsToReceive=resource.price*0.5;
+        }else if(tourist.totalPoints<=500000){
+            pointsToReceive=resource.price*1;
+        } else {
+            pointsToReceive=resource.price*1.5;
+        }
+
+        await Tourist.findByIdAndUpdate(
+            touristId,
+            {
+                $inc: {
+                    totalPoints: pointsToReceive,
+                    currentPoints: pointsToReceive,
                 },
-                { new: true }
-            );
+            },
+            { new: true }
+        );
     
-        res.status(200).json({ message: `${resourceType} booked successfully` });
+        res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully` });
         } catch (error) {
         res.status(500).json({ error: error.message });
         }
@@ -89,6 +95,8 @@ const model = resourceType === 'activity' ? Activity : itineraryModel;
 
 try {
     const resource = await model.findById(resourceId);
+    const tourist = await Tourist.findById(touristId);
+
     if (!resource) 
     return res.status(404).json({ error: `${resourceType} not founddd` });
     
@@ -101,20 +109,25 @@ try {
             }
             resource.tourists.splice(touristIndex, 1);
             resource.booked = false;
-        } else if (resourceType === 'itinerary') {
-            // For itineraries, find and remove the booking from `bookings` array
-            const bookingIndex = resource.bookings.findIndex(
-                booking => booking.touristId.toString() === touristId
-            );
-            if (bookingIndex === -1) {
-                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-            }            
-            resource.bookings.splice(bookingIndex, 1);
-            resource.markModified('bookings');
-        }
+    } 
+    else if (resourceType === 'itinerary') {
+        
+        const bookingIndex = resource.bookings.findIndex(
+            booking => booking.touristId.toString() === touristId
+        );
+        if (bookingIndex === -1) {
+            return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+        }            
+
+        if (tourist){
+            tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets+resource.serviceFee;
+            await tourist.save();
+        } 
+        resource.bookings.splice(bookingIndex, 1);   
+        resource.markModified('bookings');
+    }
     await resource.save();
 
-    const tourist = await Tourist.findById(touristId);
         if (!tourist) 
             return res.status(404).json({ error: 'Tourist not found' });
 
