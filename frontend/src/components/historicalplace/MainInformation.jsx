@@ -1,6 +1,6 @@
 
 import React from "react";
-// import Stars from "../common/Stars";
+
 import { useParams } from "react-router-dom";
 
 export default function MainInformation({historicalPlace}) {
