@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
+import FlightResults from "./FlightSearch";
 
 const parseDuration = (duration) => {
     const regex = /^PT(\d+H)?(\d+M)?$/;
@@ -11,9 +12,15 @@ const parseDuration = (duration) => {
 };
 
 const Invoice = () => {
+
     const location = useLocation();
     const flight = location.state?.flight;
     const tourist = location.state?.touristInfo;
+    const currency = location.state?.currency;
+    const exchangeRate = location.state?.exchangeRate;
+    const convertPrice = (price) => {
+        return (price * exchangeRate).toFixed(2);
+    };
     const today = new Date().toLocaleString('en-GB', {
         day: 'numeric',
         month: 'long',
@@ -47,7 +54,7 @@ const Invoice = () => {
             yOffset += 10;
             doc.text(`Duration: ${parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}`, 10, yOffset);
             yOffset += 10;
-            doc.text(`Price: ${flight.price.currency} ${flight.price.total}`, 10, yOffset);
+            doc.text(`Price: ${currency} ${convertPrice(flight.price.total)}`, 10, yOffset);
             yOffset += 20;
         });
 
@@ -75,7 +82,7 @@ const Invoice = () => {
                         <p><strong>Departure:</strong> {itinerary?.segments[0]?.departure?.iataCode} at {new Date(itinerary?.segments[0]?.departure?.at).toLocaleString()}</p>
                         <p><strong>Arrival:</strong> {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} at {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}</p>
                         <p><strong>Duration:</strong> {parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}</p>
-                        <p><strong>Price:</strong> {flight.price.currency} {flight.price.total}</p>
+                        <p><strong>Price:</strong> {currency} {convertPrice(flight.price.total)}</p>
                     </div>
                 ))}
             </div>
