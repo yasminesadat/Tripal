@@ -31,7 +31,7 @@ export default function ItineraryMainInformation({ itinerary }) {
                 <div className="d-flex x-gap-5 pr-10">
                   <Stars star={itinerary?.averageRating} font={12} />
                 </div>
-                {itinerary?.averageRating} ({itinerary.bookings.length})
+                {itinerary?.averageRating.toFixed(2)} ({itinerary.bookings.length})
               </div>
             </div>
 

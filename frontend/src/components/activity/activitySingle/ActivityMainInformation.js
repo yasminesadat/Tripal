@@ -32,7 +32,7 @@ export default function ActivityMainInformation({ activity }) {
                 <div className="d-flex x-gap-5 pr-10">
                   <Stars star={activity?.averageRating} font={12} />
                 </div>
-                {activity?.averageRating} ({activity.ratingCount})
+                {activity?.averageRating.toFixed(2)} ({activity.ratingCount})
               </div>
             </div>
 

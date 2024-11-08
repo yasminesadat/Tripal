@@ -116,7 +116,7 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
               paddingRight: "2rem",
             }}
           >
-            <button className="list-item-header">
+            <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)} >
               {itinerary.title}
             </button>
             {!isAdmin && !isTourguide && <div>
