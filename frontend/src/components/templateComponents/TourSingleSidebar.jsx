@@ -43,7 +43,7 @@ const fetchExchangeRate = async (curr) => {
   const [activeDateDD, setActiveDateDD] = useState(false);
   
   const handleBookClick = async () => {
-    if (!selectedDate || !selectedTime) {
+    if (itinerary&&(!selectedDate || !selectedTime)) {
       message.error("Please select both a date and time.");
       return;
     }

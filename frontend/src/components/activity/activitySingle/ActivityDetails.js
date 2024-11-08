@@ -76,7 +76,7 @@ export default function ActivityDetails({ activity }) {
             {page === "upcoming" && (
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
-                  <TourSingleSidebar />
+                  <TourSingleSidebar activity={activity}/>
                 </div>
               </div>
             )}

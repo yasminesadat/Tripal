@@ -51,7 +51,12 @@ const bookResource = async (req, res) => {
             
         } 
         else{
-            resource.tourists.push(touristId);
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+            if (existingBooking) {
+                existingBooking.tickets += 1;
+            } else {
+                resource.bookings.push({ touristId,tickets});
+            }
             resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
             tourist.wallet.amount -= resource.price;
         }
@@ -103,12 +108,19 @@ try {
 
     if (resourceType === 'activity') {
             // For activities, find and remove the tourist from `tourists` array
-            const touristIndex = resource.tourists.findIndex(id => id.toString() === touristId);
-            if (touristIndex === -1) {
+            const bookingIndex = resource.bookings.findIndex(
+                booking => booking.touristId.toString() === touristId
+            );
+            if (bookingIndex === -1) {
                 return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-            }
-            resource.tourists.splice(touristIndex, 1);
-            resource.booked = false;
+            }            
+    
+            if (tourist){
+                tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
+                await tourist.save();
+            } 
+            resource.bookings.splice(bookingIndex, 1);   
+            resource.markModified('bookings');
     } 
     else if (resourceType === 'itinerary') {
         
@@ -151,7 +163,7 @@ try {
         { new: true }
     );
 
-    res.status(200).json({ message: `${resourceType} booking canceled successfully` });
+    res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.` });
 } catch (error) {
     res.status(500).json({ message: 'Error canceling booking', error });
 }

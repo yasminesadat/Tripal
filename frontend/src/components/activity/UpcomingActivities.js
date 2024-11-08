@@ -131,13 +131,7 @@ const UpcomingActivities = ({
           </div>
           {book && (
             <button
-              onClick={() =>
-                onBook({
-                  activityId: activity._id,
-                  touristId,
-                  resourceType: "activity",
-                })
-              }
+            onClick={() => handleRedirect(activity._id)}
             >
               Book Now
             </button>
