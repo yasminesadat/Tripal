@@ -13,7 +13,7 @@ export default function ItineraryMainInformation({ itinerary }) {
               </button>
             </div>
             <div className="col-auto">
-              <button className="button -accent-1 text-14 py-5 px-15 bg-light-1 rounded-200">
+              <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
                 Free cancellation
               </button>
             </div>
@@ -46,7 +46,7 @@ export default function ItineraryMainInformation({ itinerary }) {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <i className="icon-reservation text-16 mr-5"></i>
-                30K+ booked
+                2K+ booked
               </div>
             </div>
           </div>

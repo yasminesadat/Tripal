@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
-import OthersInformation from "./OthersInformation";
-import Overview from "./Overview";
+import OthersInformation from "../../templateComponents/OthersInformation";
+import Overview from "../../templateComponents/Overview";
 import MapComponent from "../../common/MapComponent";
-import Rating from "./Rating";
-import TourSingleSidebar from "./TourSingleSidebar";
-import Gallery1 from "./Gallery1";
-import DateCalender from "./DateCalender";
+import Rating from "../../templateComponents/Rating";
+import TourSingleSidebar from "../../templateComponents/TourSingleSidebar";
+import Gallery1 from "../../templateComponents/Gallery1";
+import DateCalender from "../../templateComponents/DateCalender";
 import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
 
