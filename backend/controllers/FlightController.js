@@ -42,4 +42,19 @@ const getFlights = async (req, res) => {
   }
 };
 
-module.exports = { getFlights };
+
+const getCityCode= async(req,res)=>{
+  const searchinfo=req.query.searchinfo;
+  try{
+    const response = await amadeus.referenceData.locations.cities.get({
+      keyword: searchinfo,
+      max:12
+    });
+    res.json(response.data);
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+module.exports = { getFlights, getCityCode };
