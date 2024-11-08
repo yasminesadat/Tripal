@@ -4,7 +4,6 @@ import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
 import { touristId } from '../../IDs';
-
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -16,7 +15,8 @@ const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-
+  const currency = location.state?.currency;
+  const exchangeRate = location.state?.exchangeRate;
   const [touristInfo, setTouristInfo] = useState({ userName: '', email: '' });
 
   useEffect(() => {
@@ -29,16 +29,18 @@ const BookingDetails = () => {
         console.error("Error fetching tourist information:", error);
       }
     };
-
     fetchTouristInfo();
   }, []);
   if (!flight) return <p>No flight selected</p>;
-
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
   const handlePaymentSubmit = async (event) => {
     event.preventDefault();
     message.success("Payment processed successfully!");
 
     try {
+
       const body = {
         bookedFlights: flight.itineraries.map((itinerary) => ({
           flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
@@ -58,7 +60,7 @@ const BookingDetails = () => {
       const response = await updateTouristInformation(touristId, body);
       console.log("Tourist updated with flight info:", response);
 
-      navigate('/tourist/invoice', { state: { flight, touristInfo } });
+      navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate } });
     } catch (error) {
       console.error("Error updating tourist information:", error);
       message.error("There was an issue updating your information.", error);
@@ -77,7 +79,7 @@ const BookingDetails = () => {
             <p><strong>Departure:</strong> {itinerary?.segments[0]?.departure?.iataCode} at {new Date(itinerary?.segments[0]?.departure?.at).toLocaleString()}</p>
             <p><strong>Arrival:</strong> {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} at {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}</p>
             <p><strong>Duration:</strong> {parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}</p>
-            <p><strong>Price:</strong> {flight.price?.currency} {flight.price?.total}</p>
+            <p><strong>Price:</strong> {currency} {convertPrice(flight.price?.total)}</p>
           </div>
         ))}
       </div>

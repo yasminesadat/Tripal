@@ -7,7 +7,7 @@ import { touristId } from '../../IDs';
 import { getConversionRate } from '../../api/ExchangeRatesService';
 import { message } from 'antd';
 const FlightResults = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const flights = location.state?.flights || [];
   const [currency, setCurrency] = useState('EGP');
@@ -17,7 +17,7 @@ const FlightResults = () => {
   useEffect(() => {
     const fetchCurrency = () => {
       const curr = sessionStorage.getItem('currency');
-      console.log (sessionStorage)
+      console.log(sessionStorage)
       if (curr) {
         setCurrency(curr);
         fetchExchangeRate(curr);
@@ -47,16 +47,16 @@ const FlightResults = () => {
     }
   };
 
-  
+
 
   const handleBookNow = (flight) => {
     if (touristAge >= 18) {
-      navigate('/tourist/booking-summary', { state: { flight } });
+      navigate('/tourist/booking-summary', { state: { flight, currency, exchangeRate } });
     } else {
       message.error('You must be at least 18 years old to book a flight.');
     }
   };
-  
+
   const convertPrice = (price) => {
     return (price * exchangeRate).toFixed(2);
   };
@@ -68,10 +68,10 @@ const FlightResults = () => {
         <ul className="flight-list">
           {flights.map((flight, index) => (
             <li key={index} className="flight-card">
-             <h3 className="flight-price">
+              <h3 className="flight-price">
                 {currency} {convertPrice(flight.price.total)}
               </h3>
-              
+
               {flight.itineraries.map((itinerary, idx) => (
                 <div key={idx} className="itinerary">
                   <h4>Flight {idx + 1}</h4>
@@ -83,7 +83,7 @@ const FlightResults = () => {
                   ))}
                 </div>
               ))}
-              
+
               <button className="book-button" onClick={() => handleBookNow(flight)}>Book Now</button>
             </li>
           ))}
