@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import CreditCard from "./Components/Payment";
 import { useParams } from "react-router-dom";
 import { format } from 'date-fns';
 import img from "./Components/HotelsImages/bookingicon2.png"
+import { hotelTourist } from "../../IDs";
 
 
 export default function BookingPages() {
 
   const [bookingStage, setBookingStage] = useState(2);
+  const [total,setTotal]=useState(0);
   const today=new Date();
-  const {name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut}= useParams();
+  const {hotelID, name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut}= useParams();
+
+  useEffect(() => {
+    const calculatedTotal =  (
+      (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
+      (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
+      (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber )
+     .toFixed(2)
+    setTotal(calculatedTotal); // Update the total
+}, [singleNumber, doubleNumber, tripleNumber, singlePrice, doublePrice, triplePrice]); // Dependencies for re-calculation
 
   
 
@@ -30,7 +41,7 @@ export default function BookingPages() {
         <h2 className="text-30 md:text-24 fw-700 mb-30">How do you want to pay?</h2>
 
         <div className="tabs -pills-3 js-tabs">
-          <CreditCard bookingStage={bookingStage} setBookingStage={setBookingStage}/>
+          <CreditCard bookingStage={bookingStage} setBookingStage={setBookingStage} userid={hotelTourist} hotelid={hotelID} hotelname={name} singleNumber={singleNumber} doubleNumber={doubleNumber} tripleNumber={tripleNumber} total={total} checkIn={checkIn} checkOut={checkOut}/>
 </div>
      </div>
      )
@@ -64,7 +75,7 @@ export default function BookingPages() {
 
                   <div className="col-md-3 col-6">
                     <div>Total</div>
-                    <div className="text-accent-2">${singleNumber*singlePrice + doubleNumber*doublePrice + tripleNumber*triplePrice}</div>
+                    <div className="text-accent-2">EGP {total}</div>
                   </div>
 
                   <div className="col-md-3 col-6">
@@ -204,21 +215,21 @@ export default function BookingPages() {
                  {singleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Single Rooms:</div>
-                    <div className="">{singleNumber} x ${singlePrice} = ${singleNumber*singlePrice}</div>
+                    <div className="">{singleNumber} x EGP {singlePrice} = EGP {singleNumber*singlePrice}</div>
                   </div>
                   }
                   
                   {doubleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Double Rooms:</div>
-                    <div className="">{doubleNumber} x ${doublePrice} = ${doubleNumber*doublePrice}</div>
+                    <div className="">{doubleNumber} x EGP {doublePrice} = EGP {doubleNumber*doublePrice}</div>
                   </div>
                   }
 
                   {tripleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Triple Rooms:</div>
-                    <div className="">{tripleNumber} x ${triplePrice} = ${tripleNumber*triplePrice}</div>
+                    <div className="">{tripleNumber} x EGP {triplePrice} = EGP {tripleNumber*triplePrice}</div>
                   </div>
                   }
 
@@ -236,7 +247,7 @@ export default function BookingPages() {
                 <div className="">
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Total : </div>
-                    <div className="">${singleNumber*singlePrice + doubleNumber*doublePrice + tripleNumber*triplePrice}</div>
+                    <div className="">EGP {total}</div>
                   </div>
 
                 </div>

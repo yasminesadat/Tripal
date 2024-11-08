@@ -1,6 +1,6 @@
 const Amadeus = require('amadeus');
 const hotelBookings = require('../models/BookingHotel');
-const User = require("../models/users/User.js");
+const Tourist = require('../models/users/Tourist.js');
 const amadeus = new Amadeus({
     clientId: process.env.AMADEUS_CLIENT_ID,
     clientSecret: process.env.AMADEUS_CLIENT_SECRET,
@@ -56,9 +56,10 @@ const amadeus = new Amadeus({
         checkInDate,
         checkOutDate,
         boardType,
-       bestRateOnly:true
+       bestRateOnly:true,
+       currency:'EGP'
       });
-      res.json(response.data);
+      res.json(response.result);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -67,23 +68,19 @@ const amadeus = new Amadeus({
 
   const saveBooking= async (req,res)=>{
       try {
-        const { user,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status,created } = req.body;
-    
-        const existingUser = await User.findById(user);
-
-        if (!existingUser) {
+        const { userid,hotelid,hotelname,singleNumber,doubleNumber, tripleNumber,checkIn,checkOut,pricing,status } = req.body;
+        const existingTourist = await Tourist.findById(userid);
+        if (!existingTourist) {
           return res.status(400).json({ error: "UserID doesn't exist!" });
         }
 
-        if (singleRoom==0 && doubleRoom==0 && tripleRoom==0){
-          return res.status(400).json({ error: "Invalid Booking, please choose a room!" });
-
-        }
-
         const newBooking = await hotelBookings.create({
-          user,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status,created
+          user:userid,hotelid,hotelname,singleRoom:singleNumber,doubleRoom:doubleNumber,tripleRoom:tripleNumber,checkIn,checkOut,pricing,status
         });
-    
+
+       existingTourist.bookedHotels.push(newBooking._id);
+       await existingTourist.save();
+
         res.status(201).json(newBooking);
       } catch (error) {
         res.status(404).json({ error: error.message });

@@ -6,7 +6,6 @@ export default function Calender({dates,setDates}) {
   //   new DateObject().setDay(5),
   //   new DateObject().setDay(14).add(1, "month"),
   // ]);
-
  
   
   return (
@@ -20,7 +19,7 @@ export default function Calender({dates,setDates}) {
       range
       // className="yellow"
       rangeHover
-      format="MMMM DD"
+      format="DD MMM YY"
     />
   );
 }

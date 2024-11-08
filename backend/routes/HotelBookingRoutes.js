@@ -6,7 +6,7 @@ router.get("/searchHotels",searchHotels);
 router.get("/getHotelDetails",getHotelDetails);
 router.get("/getHotelPrices", getHotelPrices);
 router.get("/searchCity",getCityCode);
-router.post("/saveBooking",saveBooking)
+router.post("/saveBooking",saveBooking);
 
 
 module.exports = router;

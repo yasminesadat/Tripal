@@ -1,7 +1,24 @@
 import { axios } from "./axios";
+
+export const getCityCode = async (searchinfo) =>{
+  try {
+    // console.log(" searchinfo is", searchinfo); // This should print just "CAI"
+
+    const response = await axios.get(`/searchCity`,{
+      params: {searchinfo }});
+    return response.data;
+  }
+  catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
+    console.log("ERRPR MESSAGE", errorMessage)
+    throw new Error(errorMessage);
+  };
+}
+
+
 export const getHotels = async (cityCode) => {
     try {
-      console.log("Raw cityCode value:", cityCode); // This should print just "CAI"
+      // console.log("Raw cityCode value:", cityCode); // This should print just "CAI"
 
       const response = await axios.get(`/searchHotels`,{
         params: { cityCode }});
@@ -16,7 +33,7 @@ export const getHotels = async (cityCode) => {
 
   export const getHotelDetails = async (hotelID) => {
     try {
-      console.log("Raw cityCode value:", hotelID); // This should print just "CAI"
+      // console.log("Raw cityCode value:", hotelID); // This should print just "CAI"
 
       const response = await axios.get(`/getHotelDetails`,{
         params: { hotelID }});
@@ -31,7 +48,7 @@ export const getHotels = async (cityCode) => {
 
   export const getHotelPrices = async (hotelIds,checkInDate,checkOutDate,adults,boardType) => {
     try {
-      console.log(hotelIds,checkInDate,checkOutDate,adults,boardType); // This should print just "CAI"
+      // console.log(hotelIds,checkInDate,checkOutDate,adults,boardType); // This should print just "CAI"
 
       const response = await axios.get(`/getHotelPrices`,{
         params: { hotelIds,checkInDate,checkOutDate,adults,boardType }});
@@ -44,13 +61,14 @@ export const getHotels = async (cityCode) => {
     };
   };
 
-   
-  export const getCityCode = async (searchinfo) =>{
-    try {
-      console.log(" searchinfo is", searchinfo); // This should print just "CAI"
 
-      const response = await axios.get(`/searchCity`,{
-        params: {searchinfo }});
+  export const saveBooking =async(userid,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status) =>{
+    // console.log("hiii",userid,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status);
+    const requestBody = {
+      userid,hotelid,hotelname,singleNumber: singleRoom,doubleNumber: doubleRoom,tripleNumber: tripleRoom,checkIn,checkOut,pricing,status
+    };
+    try {
+      const response = await axios.post(`/saveBooking`, requestBody);
       return response.data;
     }
     catch (error) {
@@ -59,5 +77,7 @@ export const getHotels = async (cityCode) => {
       throw new Error(errorMessage);
     };
   }
+   
+ 
 
 

@@ -82,7 +82,11 @@ const touristSchema = new Schema({
       currency: { type: String, default: "USD" },
       bookingDate: { type: Date, default: Date.now }
     }
-  ]
+  ],
+  bookedHotels: [{
+    type: Schema.Types.ObjectId
+  }]
+
 }, { timestamps: true });
 
 touristSchema.methods.calculateAge = function () {

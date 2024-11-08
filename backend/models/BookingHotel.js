@@ -16,15 +16,15 @@ const bookingSchema = new mongoose.Schema({
   },
   singleRoom: {
     type: Number,
-    required: false
+    required: true
   },
   doubleRoom: {
     type: Number,
-    required: false
+    required: true
   },
   tripleRoom: {
     type: Number,
-    required: false
+    required: true
   },
   
   
@@ -50,6 +50,6 @@ const bookingSchema = new mongoose.Schema({
  
 });
 
-const hotelBookings = mongoose.model('Booking', bookingSchema);
+const hotelBookings = mongoose.model('HotelBooking', bookingSchema);
 
 module.exports = hotelBookings;

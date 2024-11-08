@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Components/Sidebar.jsx";
 import { speedFeatures } from "./Components/TourFilteringOptions.js";
-import { tourDataTwo } from "./Components/Tours.js";
-import Stars from "./Components/Stars.jsx";
 import Pagination from "./Components/pagination.jsx";
-import image from "./Components/3.png"
+import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg"
+import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg"
+import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg"
+import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg"
+import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg"
+import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg"
+
+
+import  { DateObject } from "react-multi-date-picker";
 import { useParams } from "react-router-dom";
+import dayjs from 'dayjs';
 //import styles from "../../components/style.module.css";
 
 
 
 import { Link } from "react-router-dom";
-import { getHotels } from "../../api/HotelService.js";
+import { getHotelPrices, getHotels } from "../../api/HotelService.js";
 
 
 export default function TourList1() {
@@ -22,15 +29,17 @@ export default function TourList1() {
   const dropDownContainer = useRef();
   const {cityCode}  = useParams();
 
+  const images=[img1,img2,img3,img4,img5,img6]
+
 
 
 const fetchTourData = async () => {
-    try {
+   try {
        // console.log("hiiiiiiiiii",cityCode);
       const response = await getHotels(cityCode);
-     // console.log("API Response:", response);
   
-      const transformedData = response.map((hotel) => ({
+  
+      const transformedData = response.map((hotel,index) => ({
         id: hotel.hotelId,
         title: hotel.name,
         location: hotel.iataCode, 
@@ -39,15 +48,15 @@ const fetchTourData = async () => {
        fromPrice: 120, // Default starting price
        features: [
         {
-          icon: `icon-price-tag`,
-          name: `Best Price Guarantee`,
+          icon:`icon-price-tag`,
+          name: "Best Price Guarantee",
         },
         {
           icon: `icon-check`,
-          name: `Free Cancellation`,
+          name: "Free Cancellation",
         },
       ],
-        imageSrc: image, 
+        imageSrc: images[index % images.length], 
         // featured: true,
         // badgeText: "Best Seller",
         duration: "1 night", // Default duration
@@ -59,8 +68,7 @@ const fetchTourData = async () => {
       catch (error) {
       console.error("Error fetching tours:", error);
     }
-  };
-  
+  }; 
 
  
 
@@ -236,12 +244,12 @@ const fetchTourData = async () => {
                         </div>
 
                         <div className="tourCard__price">
-                          <div>${elm.fromPrice}</div>
+                          <div>EGP {elm.fromPrice}</div>
 
                           <div className="d-flex items-center">
                             From{" "}
                             <span className="text-20 fw-500 ml-5">
-                              ${elm.price}
+                              EGP {elm.price}
                             </span>
                           </div>
                         </div>

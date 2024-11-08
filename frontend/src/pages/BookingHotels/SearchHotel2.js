@@ -7,6 +7,9 @@ import image from "./Components/bg.svg"
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderSerch from "./Components/SearchEngine";
+import  { DateObject } from "react-multi-date-picker";
+
+import { format } from 'date-fns';
 
 export default function Hero6() {
   const [currentActiveDD, setCurrentActiveDD] = useState("");
@@ -14,7 +17,15 @@ export default function Hero6() {
   const [calender, setCalender] = useState("");
   const [tourType, setTourType] = useState("");
   const [selected, setSelected] = useState("");
+  const today = new Date();
+  console.log("today:",today.getDay(),today.getDate())
 
+  const [dates, setDates] = useState([
+    new DateObject().setDay(today.getDate()+1),
+      new DateObject().setDay(today.getDate() + 3),
+  ]);
+
+  
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -122,8 +133,8 @@ export default function Hero6() {
                           <h5>When</h5>
                           <div>
                             <span className="js-first-date">
-                              <Calender
-                                active={currentActiveDD === "calender"}
+                              <Calender dates={dates} setDates={setDates}
+                                // active={currentActiveDD === "calender"}
                               />
                             </span>
                             <span className="js-last-date"></span>
@@ -161,7 +172,7 @@ export default function Hero6() {
 
                   <div className="searchForm__button">
                     <button
-                      onClick={() => navigate(`/hotelList/${selected}`)}
+                      onClick={() => navigate(`/hotelList/${selected}}`)}
                       className="button -dark-1 size-60 bg-accent-1 rounded-200 text-white"
                     >
                       <i className="icon-search text-16"></i>

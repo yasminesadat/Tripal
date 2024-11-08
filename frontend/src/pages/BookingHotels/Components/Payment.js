@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
+import { saveBooking } from "../../../api/HotelService";
 
 // Inline styles for the component
 const styles = {
@@ -22,6 +23,7 @@ const styles = {
         transition: 'all 0.4s linear',
         width: '290px',
         backgroundImage: 'url(./images/6.jpeg)', // Example background image
+      
     },
     rowcc: {
         marginBottom: '15px',
@@ -42,7 +44,7 @@ const styles = {
     },
 };
 
-const CreditCard = ({bookingStage,setBookingStage}) => {
+const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,total,checkIn,checkOut}) => {
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
     const [date, setDate] = useState("");
@@ -91,7 +93,7 @@ const CreditCard = ({bookingStage,setBookingStage}) => {
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
@@ -99,11 +101,17 @@ const CreditCard = ({bookingStage,setBookingStage}) => {
             return;
         }
         // Handle successful submission (e.g., send data to an API)
-        console.log("Payment Information Submitted:", { number, name, date, cvc });
+        // console.log("Payment Information Submitted:",  userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed" );
         setBookingStage(3);
-        setErrors({}); // Clear errors on successful submission
-    };
-
+        try {
+            const responseSingle = await saveBooking(userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed");
+            
+            setErrors({});
+        }
+        catch (error) {           
+            console.error("Failed to save Booking");       
+        }
+    }
     return (
         <div style={styles.appcc}>
             <div className="rccs__card rccs__card--unknown" style={styles.rccsCardcc}>

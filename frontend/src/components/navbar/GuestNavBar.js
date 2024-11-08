@@ -26,6 +26,9 @@ const GuestNavBar = () => {
         <div className="nav-bar-link">
           <Link to="/governor">Governor</Link>
         </div>
+        <div className="nav-bar-link">
+          <Link to="/hotel2">Hotels</Link>
+        </div>
       </div>
     </nav>
   );

@@ -1,8 +1,6 @@
 import React, { useEffect, useState,useCallback } from "react";
 import Calender from "../../../components/dropdownSearch/Calender";
 import  { DateObject } from "react-multi-date-picker";
-import { Link } from 'react-router-dom';
-
 import { times } from "./tourSingleContent";  // Times is the boardType :) 
 import { getHotelPrices } from "../../../api/HotelService";
 
@@ -11,9 +9,10 @@ import { getHotelPrices } from "../../../api/HotelService";
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const today = new Date();
     const [dates, setDates] = useState([
-      new DateObject().setDay(29),
-      new DateObject().setDay(5).add(1,"month"),
+      new DateObject().setDay(today.getDate()+1),
+        new DateObject().setDay(today.getDate() + 3),
     ]);
     const [singleNumber, setSingleNumber] = useState(0);
     const [doubleNumber, setDoubleNumber] = useState(0);
@@ -32,7 +31,7 @@ import { getHotelPrices } from "../../../api/HotelService";
     
     const fetchHotelPrices = useCallback( async () => {
         if (!dates || !boardType ) return; // Only call API if both dates are selected
-       // console.log("checkin",dates[0].format("YYYY-MM-DD")," checkout",dates[1].format("YYYY-MM-DD"))
+      //  console.log("checkin",dates[0].format("YYYY-MM-DD")," checkout",dates[1].format("YYYY-MM-DD"))
         try {
                 const responseSingle = await getHotelPrices(hotelID, 
                dates[0].format("YYYY-MM-DD"),
@@ -40,12 +39,14 @@ import { getHotelPrices } from "../../../api/HotelService";
                  1,
                  boardType
             );
-           const price1=responseSingle[0].offers[0].price.variations.average.base;
-            console.log("Single Prices Response:", price1);
-            setSinglePrice( price1);
+           const price1=responseSingle.data[0].offers[0].price.variations.average.base;
+           const convRate=responseSingle.dictionaries.currencyConversionLookupRates;
+           const ratesArray = Object.values(convRate); // Gets an array of currency objects
+           const rateValue = ratesArray.length > 0 ? ratesArray[0].rate : 1;
+           setSinglePrice(Math.ceil(price1*rateValue));
           }
           catch (error) {           
-            console.error("No rooms available for the selected criteria.");
+           // console.error("No rooms available for the selected criteria.");
             setSinglePrice("NA");
             setError("No rooms available for the selected dates and criteria.");           
          }
@@ -58,9 +59,12 @@ import { getHotelPrices } from "../../../api/HotelService";
               2,
               boardType
           );
-            const price2= responseDouble[0].offers[0].price.variations.average.base
+            const price2= responseDouble[0].offers[0].price.variations.average.base;
+            const convRate2=responseDouble.dictionaries.currencyConversionLookupRates;
+            const ratesArray2 = Object.values(convRate2); // Gets an array of currency objects
+            const rateValue2 = ratesArray2.length > 0 ? ratesArray2[0].rate : 1;
             console.log("Double Prices Response:", price2);
-            setDoublePrice(price2);
+            setDoublePrice(Math.ceil(price2*rateValue2));
           }
           catch (error) {           
             console.error("No rooms available for the selected criteria.");
@@ -75,10 +79,13 @@ import { getHotelPrices } from "../../../api/HotelService";
               3,
               boardType
           );
-            const price3= responseTriple[0].offers[0].price.variations.average.base
+            const price3= responseTriple[0].offers[0].price.variations.average.base;
+            const convRate3=responseTriple.dictionaries.currencyConversionLookupRates;
+            const ratesArray3 = Object.values(convRate3); // Gets an array of currency objects
+            const rateValue3 = ratesArray3.length > 0 ? ratesArray3[0].rate : 1;
 
             console.log("Triple Prices Response:", price3);
-            setTriplePrice(price3);
+            setTriplePrice(Math.ceil(price3*rateValue3));
           
 
           }
@@ -98,7 +105,12 @@ import { getHotelPrices } from "../../../api/HotelService";
         fetchHotelPrices();
     }, [hotelID, dates,boardType,fetchHotelPrices]); // Fetch data when hotelID or dates change
 
-
+     
+    const canBook=( (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
+        (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
+        (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber ).toFixed(2) > 0 ;
+    console.log("can book",canBook);
+       
 
  
 
@@ -186,7 +198,7 @@ import { getHotelPrices } from "../../../api/HotelService";
           <div className="text-14">
             Single (1 Person) {" "}
             <span className="fw-500">
-            { singlePrice && !isNaN(singlePrice) ? `$${(singlePrice * singleNumber).toFixed(2)}` : "NA"}            </span>
+            { singlePrice && !isNaN(singlePrice) ? `EGP ${(singlePrice * singleNumber).toFixed(2)}` : "NA"}            </span>
           </div>
 
           <div className="d-flex items-center js-counter">
@@ -216,7 +228,7 @@ import { getHotelPrices } from "../../../api/HotelService";
           <div className="text-14">
             Double (2 Persons) {" "}
             <span className="fw-500">
-            {doublePrice && !isNaN(doublePrice) ? `$${(doublePrice * doubleNumber).toFixed(2)}` : "NA"}           
+            {doublePrice && !isNaN(doublePrice) ? `EGP ${(doublePrice * doubleNumber).toFixed(2)}` : "NA"}           
             </span>
           </div>
 
@@ -247,7 +259,7 @@ import { getHotelPrices } from "../../../api/HotelService";
           <div className="text-14">
             Triple (3 Persons) {" "}
             <span className="fw-500">
-            { triplePrice && !isNaN(triplePrice) ? `$${(triplePrice * tripleNumber).toFixed(2)}` : "NA"}            
+            { triplePrice && !isNaN(triplePrice) ? `EGP ${(triplePrice * tripleNumber).toFixed(2)}` : "NA"}            
             </span>
           </div>
 
@@ -329,8 +341,8 @@ import { getHotelPrices } from "../../../api/HotelService";
       <div className="d-flex items-center justify-between">
         <div className="text-18 fw-500">Total:</div>
         <div className="text-18 fw-500">
-        $
-        {(
+        EGP  
+        { (
           (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
           (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
           (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber )
@@ -338,12 +350,19 @@ import { getHotelPrices } from "../../../api/HotelService";
         </div>
       </div>
 
-      <button className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20" >
-        <Link to={`/confirmBooking/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}`}>
-        Book Now
-        <i className="icon-arrow-top-right ml-10"></i>
-     </Link>
-      </button>
+      {canBook ? (
+        <button 
+            className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20" 
+            onClick={() => {
+                // Navigate to the confirmation page
+                window.location.href = `/confirmBooking/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}`;
+            }}
+        >
+            Book Now
+            <i className="icon-arrow-top-right ml-10"></i>
+        </button>
+          ) : null} {/* You can also provide an alternative UI when `canBook` is false if needed */}
+
     </div>
   );
 }
