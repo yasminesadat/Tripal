@@ -47,6 +47,7 @@ const bookResource = async (req, res) => {
             }
             
             tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
+            await tourist.save();
         } 
         else{
             resource.tourists.push(touristId);
