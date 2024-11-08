@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import ItineraryMainInformation from "./ItineraryMainInformation";
 import OthersInformation from "../../templateComponents/OthersInformation";
 import Overview from "../../templateComponents/Overview";
-import MapComponent from "../../common/MapComponent";
+import LocationMap from "../../common/MapComponent";
 import TourSingleSidebar from "../../templateComponents/TourSingleSidebar"; 
 import Gallery1 from "../../templateComponents/Gallery1";
 import DateCalender from "../../templateComponents/DateCalender";
@@ -14,6 +15,8 @@ import Roadmap2 from "../../templateComponents/Roadmap2";
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
+  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]); // Default coordinates
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!itinerary) return <div>Itinerary not found.</div>;
   const itineraryId = itinerary._id;
@@ -35,7 +38,7 @@ export default function ItineraryDetails({ itinerary }) {
                 <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.length}  isItinerary={"diana"}/>
               </div>
 
-              <Overview />
+              <Overview itineraryDescription={itinerary.description} serviceFee={ itinerary.serviceFee} accessibility={ itinerary.accessibility}/>
 
               <div className="line mt-60 mb-60"></div>
 
@@ -44,7 +47,11 @@ export default function ItineraryDetails({ itinerary }) {
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <MapComponent />
+                <LocationMap 
+                  markerPosition={markerPosition} 
+                  setMarkerPosition={setMarkerPosition} 
+                  setSelectedLocation={setSelectedLocation} 
+                />
               </div>
 
               <div className="line mt-60 mb-60"></div>

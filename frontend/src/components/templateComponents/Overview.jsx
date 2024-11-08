@@ -1,30 +1,29 @@
 import React from "react";
 
-export default function Overview() {
+
+export default function Overview({serviceFee,accessibility,itineraryDescription,activityDescription}) {
+  const resource = itineraryDescription? 'Itinerary':'Activity';
   return (
     <>
-      <h2 className="text-30">Tour Overview</h2>
+      <h2 className="text-30"> {resource} Overview</h2>
       <p className="mt-20">
-        The Phi Phi archipelago is a must-visit while in Phuket, and this
-        speedboat trip whisks you around the islands in one day. Swim over the
-        coral reefs of Pileh Lagoon, have lunch at Phi Phi Leh, snorkel at
-        Bamboo Island, and visit Monkey Beach and Maya Bay, immortalized in "The
-        Beach." Boat transfers, snacks, buffet lunch, snorkeling equipment, and
-        Phuket hotel pickup and drop-off all included.
+        {itineraryDescription}{activityDescription}
       </p>
 
-      <h3 className="text-20 fw-500 mt-20">Tour Highlights</h3>
+      <h3 className="text-20 fw-500 mt-20">{resource} Highlights</h3>
       <ul className="ulList mt-20">
+      <li>Immerse yourself in the local culture with interactive activities and workshops.</li>
+      {itineraryDescription&&<>  
+      <li>Experience a curated journey designed for all types of travelers.</li>
+      <li>Discover unique landmarks, hidden gems, and cultural treasures along the way.</li>
+      <li>Enjoy the comfort of a personalized tour with a limited number of guests.</li>
+      <li>Learn fascinating stories and historical insights from our expert guides.</li>
+      <li>Capture unforgettable moments at stunning scenic viewpoints.</li>
+      <li>Relish a balanced itinerary that offers both exploration and relaxation.</li>
         <li>
-          Experience the thrill of a speedboat to the stunning Phi Phi Islands
+          <b>Service Fee:</b> {serviceFee}.
         </li>
-        <li>Be amazed by the variety of marine life in the archepelago</li>
-        <li>
-          Enjoy relaxing in paradise with white sand beaches and azure turquoise
-          water
-        </li>
-        <li>Feel the comfort of a tour limited to 35 passengers</li>
-        <li>Catch a glimpse of the wild monkeys around Monkey Beach</li>
+        <li><b>Accessibility available:</b>  {accessibility}.</li></>}
       </ul>
     </>
   );

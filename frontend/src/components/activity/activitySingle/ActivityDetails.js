@@ -35,7 +35,7 @@ export default function ActivityDetails({ activity }) {
                 <OthersInformation />
               </div>
 
-              <Overview />
+              <Overview activityDescription={activity.description} />
 
               <div className="line mt-60 mb-60"></div>
 
