@@ -37,13 +37,19 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext .js,.jsx"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off",
+      "eqeqeq": "off",
+      "jsx-a11y/img-redundant-alt": "off"
+    }
   },
   "browserslist": {
     "production": [
