@@ -1,11 +1,13 @@
 import { useState } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 
-export default function Calender() {
-  const [dates, setDates] = useState([
-    new DateObject().setDay(5),
-    new DateObject().setDay(14).add(1, "month"),
-  ]);
+export default function Calender({dates,setDates}) {
+  // const [dates, setDates] = useState([
+  //   new DateObject().setDay(5),
+  //   new DateObject().setDay(14).add(1, "month"),
+  // ]);
+ 
+  
   return (
     <DatePicker
       inputClass="custom_input-picker"
@@ -17,7 +19,7 @@ export default function Calender() {
       range
       // className="yellow"
       rangeHover
-      format="MMMM DD"
+      format="DD MMM YY"
     />
   );
 }

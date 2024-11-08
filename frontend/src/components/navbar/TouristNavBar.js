@@ -5,8 +5,8 @@ import { touristId } from "../../IDs";
 const TouristNavBar = () => {
   return (
     <nav>
-      <div class="nav-bar">
-        <div class="nav-bar-link">
+      <div className="nav-bar">
+        <div className="nav-bar-link">
           <Link to="/tourist">Home</Link>
         </div>
 
@@ -31,7 +31,7 @@ const TouristNavBar = () => {
         <div class="nav-bar-link">
           <Link to="/historical-places">Historical Places</Link>
         </div>
-        <div class="nav-bar-link">
+        <div className="nav-bar-link">
           <Link to="/tourist/view-products">Products</Link>
         </div>
         <div className="nav-bar-link dropdown">

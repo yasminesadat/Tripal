@@ -8,6 +8,8 @@ import tourguideRoutes from "./TourguideRoutes";
 import historicalPlaceRoutes from "./HistoricalPlaceRoutes";
 import governorRoutes from "./GovernorRoutes";
 import guestRoutes from "./GuestRoutes";
+import hotelRoutes from "./HotelRoutes";
+
 const allRoutes = [
   ...adminRoutes,
   ...touristRoutes,
@@ -17,7 +19,8 @@ const allRoutes = [
   ...tourguideRoutes,
   ...historicalPlaceRoutes,
   ...governorRoutes,
-  ...guestRoutes
+  ...guestRoutes,
+  ...hotelRoutes
 ]
 
 const RoutesComponent = () => (
