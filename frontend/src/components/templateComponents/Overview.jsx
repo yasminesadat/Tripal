@@ -23,7 +23,7 @@ export default function Overview({serviceFee,accessibility,itineraryDescription,
         <li>
           <b>Service Fee:</b> {serviceFee}.
         </li>
-        <li><b>Accessibility available:</b>  {accessibility}.</li></>}
+        <li><b>Accessibility available:</b>  {accessibility.join(', ')}.</li></>}
       </ul>
     </>
   );
