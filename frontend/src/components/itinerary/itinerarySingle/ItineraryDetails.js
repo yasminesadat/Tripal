@@ -43,7 +43,7 @@ export default function ItineraryDetails({ itinerary }) {
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30 mt-60 mb-30">Road Map</h2>
-              <Roadmap2 />  
+              <Roadmap2 timeline={itinerary.timeline}/>  
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">

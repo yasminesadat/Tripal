@@ -17,6 +17,7 @@ const itinerarySchema = new mongoose.Schema({
     timeline: [
         {
             activityName: { type: String}, 
+            content: { type: String},
             time: { type: String},
         },
     ],
