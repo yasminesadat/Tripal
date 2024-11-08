@@ -15,7 +15,7 @@ import Roadmap2 from "../../templateComponents/Roadmap2";
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]); // Default coordinates
+  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
   const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!itinerary) return <div>Itinerary not found.</div>;

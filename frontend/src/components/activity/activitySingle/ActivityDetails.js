@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "../../templateComponents/OthersInformation";
 import Overview from "../../templateComponents/Overview";
@@ -9,11 +10,14 @@ import Gallery1 from "../../templateComponents/Gallery1";
 import DateCalender from "../../templateComponents/DateCalender";
 import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
+import LocationMap from "../../common/MapComponent";
+import { act } from "react-dom/test-utils";
 
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
   const { page } = location.state || {};
-  console.log("Page:", page);
+  const [markerPosition, setMarkerPosition] = useState([activity.latitude, activity.longitude]);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!activity) return <div>Activity not found.</div>;
   const activityId = activity._id;  
@@ -41,7 +45,11 @@ export default function ActivityDetails({ activity }) {
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <MapComponent />
+                <LocationMap 
+                  markerPosition={markerPosition} 
+                  setMarkerPosition={setMarkerPosition} 
+                  setSelectedLocation={setSelectedLocation} 
+                />
               </div>
 
               <div className="line mt-60 mb-60"></div>
