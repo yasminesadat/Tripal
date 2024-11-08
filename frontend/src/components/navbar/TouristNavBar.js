@@ -55,7 +55,7 @@ const TouristNavBar = () => {
         <div className="nav-bar-link dropdown">
           <button className="dropbtn">Hotel & Flights </button>
           <div className="dropdown-content">
-            <Link to="" >Book Hotel</Link>
+            <Link to="/hotel2" >Book Hotel</Link>
             <Link to="/tourist/search-flight" >Book Flights</Link>
             <Link to="">History</Link>
 
