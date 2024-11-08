@@ -32,7 +32,7 @@ export default function ActivityDetails({ activity }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation />
+              <OthersInformation groupSize={activity.bookings.reduce((total, booking) => total + booking.tickets, 0)} />
               </div>
 
               <Overview activityDescription={activity.description} />

@@ -35,7 +35,7 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.length}  isItinerary={"diana"}/>
+                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)}  isItinerary={"diana"}/>
               </div>
 
               <Overview itineraryDescription={itinerary.description} serviceFee={ itinerary.serviceFee} accessibility={ itinerary.accessibility}/>
@@ -56,10 +56,10 @@ export default function ItineraryDetails({ itinerary }) {
 
               <div className="line mt-60 mb-60"></div>
 
-              <h2 className="text-30">Availability Calendar</h2>
+              {/* <h2 className="text-30">Availability Calendar</h2>
               <DateCalender />
 
-              <div className="line mt-60 mb-60"></div>
+              <div className="line mt-60 mb-60"></div> */}
 
               <h2 className="text-30">Customer Reviews</h2>
 
