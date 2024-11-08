@@ -59,12 +59,12 @@ import { getHotelPrices } from "../../../api/HotelService";
               2,
               boardType
           );
-            const price2= responseDouble[0].offers[0].price.variations.average.base;
-            const convRate2=responseDouble.dictionaries.currencyConversionLookupRates;
-            const ratesArray2 = Object.values(convRate2); // Gets an array of currency objects
-            const rateValue2 = ratesArray2.length > 0 ? ratesArray2[0].rate : 1;
-            console.log("Double Prices Response:", price2);
-            setDoublePrice(Math.ceil(price2*rateValue2));
+          console.log("hi2")
+          const price2=responseDouble.data[0].offers[0].price.variations.average.base;
+          const convRate2=responseDouble.dictionaries.currencyConversionLookupRates;
+          const ratesArray2 = Object.values(convRate2); // Gets an array of currency objects
+          const rateValue2 = ratesArray2.length > 0 ? ratesArray2[0].rate : 1;
+          setDoublePrice(Math.ceil(price2*rateValue2));
           }
           catch (error) {           
             console.error("No rooms available for the selected criteria.");
@@ -79,10 +79,12 @@ import { getHotelPrices } from "../../../api/HotelService";
               3,
               boardType
           );
-            const price3= responseTriple[0].offers[0].price.variations.average.base;
-            const convRate3=responseTriple.dictionaries.currencyConversionLookupRates;
-            const ratesArray3 = Object.values(convRate3); // Gets an array of currency objects
-            const rateValue3 = ratesArray3.length > 0 ? ratesArray3[0].rate : 1;
+          console.log("hi3")
+          const price3=responseTriple.data[0].offers[0].price.variations.average.base;
+          const convRate3=responseTriple.dictionaries.currencyConversionLookupRates;
+          const ratesArray3 = Object.values(convRate3); // Gets an array of currency objects
+          const rateValue3 = ratesArray3.length > 0 ? ratesArray3[0].rate : 1;
+          setSinglePrice(Math.ceil(price3*rateValue3));
 
             console.log("Triple Prices Response:", price3);
             setTriplePrice(Math.ceil(price3*rateValue3));

@@ -44,8 +44,8 @@ const fetchTourData = async () => {
         title: hotel.name,
         location: hotel.iataCode, 
         description: "A beautiful hotel in the heart of Paris", 
-       price: 100, // Default or mock price
-       fromPrice: 120, // Default starting price
+       price: 10000, // Default or mock price
+       fromPrice: 15000, // Default starting price
        features: [
         {
           icon:`icon-price-tag`,

@@ -215,21 +215,21 @@ export default function BookingPages() {
                  {singleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Single Rooms:</div>
-                    <div className="">{singleNumber} x EGP {singlePrice} = EGP {singleNumber*singlePrice}</div>
+                    <div className="">{singleNumber} x {singlePrice} = EGP {singleNumber*singlePrice}</div>
                   </div>
                   }
                   
                   {doubleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Double Rooms:</div>
-                    <div className="">{doubleNumber} x EGP {doublePrice} = EGP {doubleNumber*doublePrice}</div>
+                    <div className="">{doubleNumber} x {doublePrice} = EGP {doubleNumber*doublePrice}</div>
                   </div>
                   }
 
                   {tripleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Triple Rooms:</div>
-                    <div className="">{tripleNumber} x EGP {triplePrice} = EGP {tripleNumber*triplePrice}</div>
+                    <div className="">{tripleNumber} x {triplePrice} = EGP {tripleNumber*triplePrice}</div>
                   </div>
                   }
 
