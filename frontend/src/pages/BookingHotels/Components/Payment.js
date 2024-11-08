@@ -190,7 +190,7 @@ const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,singl
                     </div>
                 </div>
 
-                <button type="submit" className="button -md -dark-1 bg-accent-1 text-white" >Submit</button>
+                <button type="submit" className="button -md -dark-1 bg-accent-1 text-white" >Confirm Booking</button>
             </form>
         </div>
     );
