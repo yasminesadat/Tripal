@@ -88,3 +88,14 @@ export async function getTouristUserName(touristId) {
     throw error;
   }
 }
+
+export async function getTouristFlights(touristId) {
+  try {
+    const response = await axios.get(`/tourist/flights/${touristId}`);
+    
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tourists' flights':", error);
+    throw error;
+  }
+}

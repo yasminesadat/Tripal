@@ -225,5 +225,34 @@ const redeemPoints = async (req, res) => {
   }
 };
 
+const getTouristBookedFlights = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints, getTouristNameAndEmail };
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedFlights');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    return res.status(200).json({ bookedFlights: tourist.bookedFlights });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+module.exports = { createTourist,
+                   getTouristInfo,
+                   updateTouristProfile,
+                   changePassword, 
+                   redeemPoints, 
+                   getTouristNameAndEmail,
+                   getTouristBookedFlights };

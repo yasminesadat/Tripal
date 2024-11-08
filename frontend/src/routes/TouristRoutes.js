@@ -18,6 +18,7 @@ import Hero5 from "../components/tourist/SearchBar"
 import FlightSearch from "../components/tourist/FlightSearch";
 import BookingDetails from "../components/tourist/BookingDetails";
 import Invoice from "../components/tourist/Invoice";
+import DbBooking from "../components/tourist/BookingHistory";
 
 const TouristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -43,6 +44,7 @@ const TouristRoutes = [
   { path: "/tourist/search-flight", element: <Hero5 /> },
   { path: "/tourist/booking-summary", element: <BookingDetails /> },
   { path: "/tourist/invoice", element: <Invoice /> },
+  { path: "/tourist/booking-history", element: <DbBooking/> },
 ];
 
 export default TouristRoutes;
