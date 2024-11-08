@@ -77,7 +77,7 @@ export default function ItineraryDetails({ itinerary }) {
               <div className="line mt-60 mb-60"></div>
               
               {page === "history" && (
-                <ReviewBox id={itineraryId} type="itinerary" />
+                <><ReviewBox id={itineraryId} type="itinerary" /><div className="line mt-60 mb-60"></div><ReviewBox id={itineraryId} type="tourGuide" /></>
               )}
             </div>
 
