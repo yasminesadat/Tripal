@@ -1,14 +1,23 @@
 const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-const User = require('../models/users/User.js')
-const Request = require('../models/Request.js')
-
+const User = require("../models/users/User.js");
+const Request = require("../models/Request.js");
 
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags=[], categories=[] } = req.body;
+    const {
+      userName,
+      email,
+      password,
+      mobileNumber,
+      nationality,
+      dateOfBirth,
+      job,
+      tags = [],
+      categories = [],
+    } = req.body;
 
     // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
@@ -23,23 +32,33 @@ const createTourist = async (req, res) => {
     }
     const existingUserNameRequests = await Request.findOne({
       userName,
-      status: { $ne: 'rejected' }
+      status: { $ne: "rejected" },
     });
     if (existingUserNameRequests) {
       return res.status(400).json({
-        error: "Request has been submitted with this username"
+        error: "Request has been submitted with this username",
       });
     }
     //check unique email across all requests
     const existingEmailRequests = await Request.findOne({
       email,
-      status: { $ne: 'rejected' }
+      status: { $ne: "rejected" },
     });
     if (existingEmailRequests) {
-      return res.status(400).json({ error: "Request has been submitted with this email" });
+      return res
+        .status(400)
+        .json({ error: "Request has been submitted with this email" });
     }
     // Validate required fields
-    if (!userName || !email || !password || !mobileNumber || !nationality || !dateOfBirth || !job) {
+    if (
+      !userName ||
+      !email ||
+      !password ||
+      !mobileNumber ||
+      !nationality ||
+      !dateOfBirth ||
+      !job
+    ) {
       return res.status(400).json({ error: "Please add all fields" });
     }
 
@@ -56,8 +75,8 @@ const createTourist = async (req, res) => {
       categories,
       wallet: {
         amount: 0,
-        currency: "EGP"
-      }
+        currency: "EGP",
+      },
     });
 
     const id = tourist._id;
@@ -67,7 +86,7 @@ const createTourist = async (req, res) => {
       userId: id,
       userName: tourist.userName,
       email: tourist.email,
-      role: "Tourist"
+      role: "Tourist",
     });
 
     return res.status(201).json(tourist);
@@ -93,7 +112,6 @@ const getTouristInfo = async (req, res) => {
     if (!touristInformation) {
       return res.status(404).json("Tourist profile doesn't exist");
     }
-
 
     return res.status(200).json(touristInformation);
   } catch (error) {
@@ -144,14 +162,12 @@ const updateTouristProfile = async (req, res) => {
       updateParameters,
       { new: true }
     );
-    console.log(touristToBeUpdated);
+
     if (!touristToBeUpdated) {
       return res.status(404).json("Tourist profile doesnt exist");
     }
 
-    return res
-      .status(200)
-      .json(touristToBeUpdated);
+    return res.status(200).json(touristToBeUpdated);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -160,7 +176,7 @@ const updateTouristProfile = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { oldPassword, newPassword } = req.body
+    const { oldPassword, newPassword } = req.body;
     const hashedOldPassword = await bcrypt.hash(oldPassword, 10);
 
     const tourist = await touristModel.findById(id);
@@ -169,8 +185,8 @@ const changePassword = async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     await updateTouristProfile(id, {
-      "password": hashedNewPassword
-    })
+      password: hashedNewPassword,
+    });
     return res.status(200).json("Successful");
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -186,7 +202,7 @@ const redeemPoints = async (req, res) => {
       return res.status(404).json({ error: "Tourist not found" });
     }
 
-    const newAmount = tourist.wallet.amount + (tourist.currentPoints / 100);
+    const newAmount = tourist.wallet.amount + tourist.currentPoints / 100;
     tourist.wallet.amount = newAmount;
     tourist.currentPoints = 0;
 
@@ -198,5 +214,10 @@ const redeemPoints = async (req, res) => {
   }
 };
 
-
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword,redeemPoints };
+module.exports = {
+  createTourist,
+  getTouristInfo,
+  updateTouristProfile,
+  changePassword,
+  redeemPoints,
+};

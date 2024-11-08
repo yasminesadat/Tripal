@@ -31,15 +31,15 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      const request = Request.findOne({ email });
+      const request = await Request.findOne({ email });
       if (!request) {
-        return res.status(400).json({ message: "Invalid user email" });
+        return res.status(400).json({ message: "Invalid email or password" });
       }
-
-      return res.status(403).json({
-        message:
-          "Your request is currently being processed, Wait for a notification",
-      });
+      if (request.status === "pending")
+        return res.status(403).json({
+          message: "Request is pending",
+        });
+      return res.status(401).json({ message: "Request has been rejected" });
     }
 
     let userSchema;
@@ -67,15 +67,15 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        maxAge: 3600,
+        maxAge: 3600 * 1000,
       });
       res.status(200).json({ token });
     } else {
-      res.status(400).json({ message: "Incorrect password" });
+      res.status(400).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { loginUser };
+module.exports = { loginUser, generateToken };
