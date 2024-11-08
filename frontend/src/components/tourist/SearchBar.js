@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import flightBackground from '../../assets/images/flight background.png';
 import { message } from "antd";
+import dayjs from "dayjs"; // Add dayjs for date comparison
 export default function Hero5() {
     const [originLocationCode, setOriginLocationCode] = useState("");
     const [destinationLocationCode, setDestinationLocationCode] = useState("");
@@ -14,6 +15,8 @@ export default function Hero5() {
     const [destinationSearchData, setDestinationSearchData] = useState([]);
     const [originActive, setOriginActive] = useState(false);
     const [destinationActive, setDestinationActive] = useState(false);
+    const [originInput, setOriginInput] = useState(""); // New state to handle the origin input value
+    const [destinationInput, setDestinationInput] = useState(""); // New state to handle the destination input value
 
     const navigate = useNavigate();
     const originRef = useRef();
@@ -40,7 +43,7 @@ export default function Hero5() {
     };
 
     // Handle input changes with debounce for origin and destination fields
-    const handleInputChange = (e, setSearchData, setActive) => {
+    const handleInputChange = (e, setSearchData, setActive, setInputValue) => {
         const inputValue = e.target.value;
 
         if (debounceTimeout.current) {
@@ -50,10 +53,22 @@ export default function Hero5() {
         debounceTimeout.current = setTimeout(() => {
             fetchCityCode(inputValue, setSearchData);
             setActive(true);
+            setInputValue(inputValue); // Set the input value as the user types
         }, 300);
     };
 
     const handleSearch = async () => {
+        const today = dayjs().format("YYYY-MM-DD");
+
+        if (departureDate && dayjs(departureDate).isBefore(today)) {
+            message.error("Departure date cannot be in the past.");
+            return;
+        }
+
+        if (returnDate && dayjs(returnDate).isBefore(today)) {
+            message.error("Return date cannot be in the past.");
+            return;
+        }
         try {
             const queryParams = new URLSearchParams({
                 originLocationCode,
@@ -118,7 +133,8 @@ export default function Hero5() {
                             id="originLocation"
                             type="text"
                             placeholder="Enter Origin Location"
-                            onChange={(e) => handleInputChange(e, setOriginSearchData, setOriginActive)}
+                            value={originInput} // Set the input field value to originInput state
+                            onChange={(e) => handleInputChange(e, setOriginSearchData, setOriginActive, setOriginInput)}
                             className="input"
                           />
                           {originActive && (
@@ -128,6 +144,7 @@ export default function Hero5() {
                                   key={i}
                                   onClick={() => {
                                     setOriginLocationCode(city.cityCode);
+                                    setOriginInput(city.title); // Update the input with the selected city's name
                                     setOriginActive(false);
                                   }}
                                   className="dropdown-item"
@@ -145,7 +162,8 @@ export default function Hero5() {
                             id="destinationLocation"
                             type="text"
                             placeholder="Enter Destination Location"
-                            onChange={(e) => handleInputChange(e, setDestinationSearchData, setDestinationActive)}
+                            value={destinationInput} // Set the input field value to destinationInput state
+                            onChange={(e) => handleInputChange(e, setDestinationSearchData, setDestinationActive, setDestinationInput)}
                             className="input"
                           />
                           {destinationActive && (
@@ -155,6 +173,7 @@ export default function Hero5() {
                                   key={i}
                                   onClick={() => {
                                     setDestinationLocationCode(city.cityCode);
+                                    setDestinationInput(city.title); // Update the input with the selected city's name
                                     setDestinationActive(false);
                                   }}
                                   className="dropdown-item"
