@@ -1,3 +1,4 @@
+ITINERARIESSS:
 .list {
   margin: 5%;
   display: flex;
@@ -63,8 +64,8 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   border: none;
-  /* background-color: rgb(44, 44, 169); */
-  /* color: white; */
+  background-color: rgb(44, 44, 169);
+  color: white;
   cursor: pointer;
 }
 
