@@ -5,8 +5,7 @@ const activityRatingSchema = new Schema(
   {
     rating: {
       type: Number,
-      required: [true, "Rating value is required"],
-      min: 1,
+      min: 0,
       max: 5,
     },
     review: {

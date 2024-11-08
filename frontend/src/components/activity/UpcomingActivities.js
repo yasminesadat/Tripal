@@ -6,7 +6,7 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId } from "../../IDs";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
-const UpcomingActivitiesList = ({
+const UpcomingActivities = ({
   activities,
   onBook,
   book,
@@ -162,4 +162,4 @@ const UpcomingActivitiesList = ({
   );
 };
 
-export default UpcomingActivitiesList;
+export default UpcomingActivities;

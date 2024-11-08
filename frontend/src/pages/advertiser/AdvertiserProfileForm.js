@@ -8,9 +8,9 @@ import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import { Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./advForm.css";
-
+import { advertiserID } from "../../IDs";
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
-  const { id } = useParams();
+  const id = advertiserID;
   const location = useLocation();
   const advertiser = location.state?.advertiser;
   const navigate = useNavigate();
@@ -215,7 +215,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
           advertiserData.existingImage = null;
         }
         await updateAdvertiser(id, advertiserData);
-        navigate(`/advertiser/${id}`);
+        navigate(`/advertiser/profile`);
       } else {
         // Call API to create a new advertiser
         await createAdvertiser(formData);
@@ -483,13 +483,13 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
               fileList={
                 formData.currentLogo
                   ? [
-                      {
-                        uid: "-1",
-                        name: "logo.png",
-                        status: "done",
-                        url: formData.currentLogo,
-                      },
-                    ]
+                    {
+                      uid: "-1",
+                      name: "logo.png",
+                      status: "done",
+                      url: formData.currentLogo,
+                    },
+                  ]
                   : []
               } // Ensure only one file is shown
             >

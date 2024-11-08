@@ -10,9 +10,9 @@ import Currency from "../../components/tourist/Currency";
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/DeletionRequestService";
 import { message } from 'antd';
-
+import { touristId } from "../../IDs";
 const TouristHomePage = () => {
-  const { id } = useParams();
+  const id = touristId;
   const userType = "tourist";
   const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
@@ -92,10 +92,11 @@ const TouristHomePage = () => {
       toast.warning("No points to redeem");
       return;
     }
-    try{
+    try {
       await redeemPoints(id);
+      await getUserInformation();
       toast.success("points redeemed successfully");
-    }catch(error){
+    } catch (error) {
       toast.error("redemption failed")
     }
   };
@@ -103,15 +104,15 @@ const TouristHomePage = () => {
   const handleDeletion = async () => {
     try {
       const response = await requestAccountDeletion("Tourist", id);
-      message.success(response.message); 
+      message.success(response.message);
     } catch (error) {
-      message.warning(error.response?.data?.message || "An error occurred."); 
+      message.warning(error.response?.data?.message || "An error occurred.");
     }
   };
 
   useEffect(() => {
     getUserInformation();
-  });
+  }, []);
 
   return (
     <div>

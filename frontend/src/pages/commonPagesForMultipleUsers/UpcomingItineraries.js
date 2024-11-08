@@ -14,7 +14,7 @@ import { bookResource,cancelResource } from "../../api/BookingService";
 import { touristId } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
 import {flagItinerary, getAdminItineraries} from "../../api/AdminService";
-import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries} from '../../api/ItineraryService';
+import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries, toggleItineraryStatus} from '../../api/ItineraryService';
 import {tourGuideID} from "../../IDs";
 import Footer from '../../components/common/Footer';
 import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm';
@@ -22,7 +22,6 @@ import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm'
 const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide}) => {
     const [itineraries, setItineraries] = useState([]);
     const [filteredItineraries, setFilteredItineraries] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currency, setCurrency] = useState("EGP");
     const [exchangeRate, setExchangeRate] = useState(1); 
@@ -63,7 +62,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
         };
 
         fetchItineraries();
-    }, [location]);
+    }, [location,itineraries]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
@@ -223,6 +222,22 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
         setSelectedItinerary(null);
     };
 
+    const handleToggleStatus = async (itineraryId, currentStatus) => {
+        const updatedStatus = !currentStatus;
+        try {
+            await toggleItineraryStatus(itineraryId);
+            setItineraries(prevItineraries =>
+                prevItineraries.map(itinerary =>
+                    itinerary._id === itineraryId
+                        ? { ...itinerary, isActive: updatedStatus }
+                        : itinerary
+                )
+            );
+            message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+        } catch (error) {
+            message.error(error.response.data.message);
+        }
+    };
     return (
         <div >
             {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
@@ -246,7 +261,9 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
                 onAdminFlag={handleAdminFlag}
                 onItineraryDelete={handleItineraryDelete}
                 onItineraryUpdate={handleItineraryUpdate}
-                isTourguide={isTourguide}/>
+                isTourguide={isTourguide}
+                onToggleStatus={handleToggleStatus}
+                />
 
                  {selectedItinerary&&isTourguide && (
                     <UpdateItineraryForm 

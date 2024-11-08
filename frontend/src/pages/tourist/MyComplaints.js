@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getComplaintsByTourist,getComplaintById,replyToComplaint } from "../../api/ComplaintsService";
-import { touristId } from "../../IDs";
-import { useParams } from "react-router-dom";
+import { getComplaintsByTourist, getComplaintById, replyToComplaint } from "../../api/ComplaintsService";
 import TouristNavBar from "../../components/navbar/TouristNavBar"
-
+import { touristId } from "../../IDs";
 
 const MyComplaints = () => {
-    const { id } = useParams();
+    const id = touristId;
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
@@ -96,7 +94,7 @@ const MyComplaints = () => {
                                             <tr>
                                                 <td>{complaint.title}</td>
                                                 <td className={`circle ${complaint.status === 'resolved' ? 'text-purple-1' : 'text-red-2'}`}>
-                                                  {complaint.status}
+                                                    {complaint.status}
                                                 </td>
                                                 <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
                                                 <td>

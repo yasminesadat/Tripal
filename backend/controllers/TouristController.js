@@ -8,7 +8,7 @@ const Request = require('../models/Request.js')
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags=[], categories=[] } = req.body;
+    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags = [], categories = [] } = req.body;
 
     // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
@@ -101,10 +101,11 @@ const getTouristInfo = async (req, res) => {
   }
 };
 
+
 const updateTouristProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { tags, categories, ...updateParameters } = req.body;
+    const { tags, categories, bookedFlights, ...updateParameters } = req.body;
 
     if (tags) {
       updateParameters.tags = tags;
@@ -144,10 +145,16 @@ const updateTouristProfile = async (req, res) => {
       updateParameters,
       { new: true }
     );
-    console.log(touristToBeUpdated);
     if (!touristToBeUpdated) {
       return res.status(404).json("Tourist profile doesnt exist");
     }
+
+    if (bookedFlights && Array.isArray(bookedFlights)) {
+      touristToBeUpdated.bookedFlights.push(...bookedFlights);
+    }
+    Object.assign(touristToBeUpdated, updateParameters);
+
+    await touristToBeUpdated.save();
 
     return res
       .status(200)
@@ -156,6 +163,8 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
 
 const changePassword = async (req, res) => {
   try {
@@ -176,7 +185,25 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+const getTouristNameAndEmail = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const tourist = await touristModel.findById(id).select('userName email');
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    res.json({
+      userName: tourist.userName,
+      email: tourist.email
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 const redeemPoints = async (req, res) => {
   try {
     const { id } = req.params;
@@ -199,4 +226,4 @@ const redeemPoints = async (req, res) => {
 };
 
 
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword,redeemPoints };
+module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints, getTouristNameAndEmail };
