@@ -158,7 +158,7 @@ const ItineraryPage = () => {
                     <ItineraryFilter onFilter={handleFilter} />
                     <ItinerarySort onSort={handleSort} />
                 </div>    
-                <UpcomingItinerariesList itineraries={filteredItineraries} onCancel={handleCancelBooking} curr={currency} cancel={'diana'}/>
+                <UpcomingItinerariesList itineraries={filteredItineraries} onCancel={handleCancelBooking} curr={currency} cancel={'diana'} page={'history'}/>
             </div>
         </div>
     );

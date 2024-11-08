@@ -67,7 +67,7 @@ export default function ItineraryDetails({ itinerary }) {
                 <Rating />
               </div>
 
-              <ItineraryReviews itineraryId={itineraryId} />
+              {page === "history" &&  <ItineraryReviews itineraryId={itineraryId} />}
 
             {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
@@ -83,7 +83,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar itinerary={itinerary} />
+                {page=="upcoming"&&<TourSingleSidebar itinerary={itinerary} />}
               </div>
             </div>
           </div>

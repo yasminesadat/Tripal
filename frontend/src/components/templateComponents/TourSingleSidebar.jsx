@@ -127,7 +127,7 @@ const fetchExchangeRate = async (curr) => {
                       className="searchFormItemDropdown__item"
                     >
                       <button className="js-select-control-button">
-                        <span className="js-select-control-choice">{elm}</span>
+                        <span className="js-select-control-choice" >{elm}</span>
                       </button>
                     </div>
                   ))}
