@@ -56,7 +56,7 @@ const TouristNavBar = () => {
           <button className="dropbtn">Hotel & Flights </button>
           <div className="dropdown-content">
             <Link to="" >Book Hotel</Link>
-            <Link to="" >Book Flights</Link>
+            <Link to="/tourist/search-flight" >Book Flights</Link>
             <Link to="">History</Link>
 
           </div>
