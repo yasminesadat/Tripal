@@ -23,7 +23,7 @@ const createItinerary = async (req, res) => {
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
             locations.push(activity.location);
-            timeline.push({ activityName: activity.title, time: activity.time });
+            timeline.push({ activityName: activity.title,content:activity.description, time: activity.time });
             activity.tags.forEach((tag) => tags.add(tag));
         })
         const uniqueTagIds = Array.from(tags);
@@ -46,7 +46,7 @@ const createItinerary = async (req, res) => {
             serviceFee,
             pickupLocation,
             dropoffLocation,
-            tourists: [],
+            bookings: [],
             price,
             ratings,
             locations,

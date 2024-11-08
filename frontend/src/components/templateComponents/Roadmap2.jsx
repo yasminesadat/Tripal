@@ -1,11 +1,11 @@
-import { roadmapData2 } from "../../../data/tourSingleContent";
+import { roadmapData2 } from "../../data/tourSingleContent";
 import React, { useState } from "react";
 
-export default function RoadMap2() {
+export default function RoadMap2({timeline}) {
   const [activeRoadmap, setActiveRoadmap] = useState(2);
   return (
     <div className="roadmap roadMap2">
-      {roadmapData2.map((elm, i) => (
+      {timeline.map((elm, i) => (
         <div key={i} className="roadmap__item">
           {elm.icon ? (
             <div
@@ -25,7 +25,7 @@ export default function RoadMap2() {
               className="roadmap__title "
               onClick={() => setActiveRoadmap((pre) => (pre == i ? -1 : i))}
             >
-              {elm.title}
+              {elm.activityName}
             </div>
             {elm.content && (
               <div

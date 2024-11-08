@@ -52,9 +52,6 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
     }
   };
 
-  const handleNavigate = (placeId) => {
-    Navigate(`/itinerary/${placeId}`);
-  };
 
   return (
     <div className="list">
@@ -68,7 +65,7 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
               alignItems: "center",
             }}
           >
-            <div onClick={() => handleNavigate(place._id)}>{place.name}</div>
+            <div>{place.name}</div>
             <div>
               <CopyOutlined
                 onClick={() =>
