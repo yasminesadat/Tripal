@@ -156,7 +156,7 @@ const BookedActivitiesPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div class="page-container">
+    <div class="page-container2">
       <TouristNavBar />
       <div class="page-title">Booked Activities</div>
       <ActivitySearch onSearch={handleSearch} />
