@@ -116,7 +116,7 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
               paddingRight: "2rem",
             }}
           >
-            <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
+            <button className="list-item-header">
               {itinerary.title}
             </button>
             {!isAdmin && !isTourguide && <div>
@@ -172,22 +172,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
               <div className="list-item-attribute">No ratings yet.</div>
             )}
             <div className="list-item-attribute">
-              <strong>Activities:</strong>
-              <div className="list-item-attribute-sublist">
-                {itinerary.activities.map(activity => (
-                  <div key={activity._id} className="list-item-attribute-sublist-component">
-                    <strong>Activity:</strong> {activity.title} - {activity.description}
-                    <div>
-                      <strong>Tags:</strong>
-                      {activity.tags && activity.tags.length > 0
-                        ? activity.tags.map(tag => tag.name).join(', ')
-                        : 'No tags available'}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="list-item-attribute">
               <strong>Locations:</strong> {itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}
             </div>
             <div className="list-item-attribute">
@@ -199,9 +183,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="list-item-attribute">
-              <strong>Service Fee:</strong> {formatPrice(itinerary.serviceFee)}
             </div>
             <div className="list-item-attribute">
               <strong>Language:</strong> {itinerary.language}
@@ -229,8 +210,9 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
             <div className="list-item-attribute">
               <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
             </div>
+            {/* onClick={() => handleBookClick(itinerary)} */}
             {book && (
-              <button onClick={() => handleBookClick(itinerary)}>
+              <button key={itinerary._id} onClick={() => handleNavigate(itinerary._id)} >
                 Book Now
               </button>
             )}
