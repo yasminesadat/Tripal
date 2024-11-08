@@ -20,11 +20,10 @@ export default function ItineraryMainInformation({ itinerary }) {
           </div>
 
           <h2 className="text-40 sm:text-30 lh-14 mt-20">
-            {itinerary?.description.split(" ").slice(0, 7).join(" ")}
-
-            <br />
-            {itinerary?.title.split(" ").slice(7).join(" ")}
-          </h2>
+          {itinerary?.title} </h2>
+          <h3 className="text-20 sm:text-16 text-light-2 mt-10">
+            {itinerary?.description}
+          </h3>
 
           <div className="row x-gap-20 y-gap-20 items-center pt-20">
             <div className="col-auto">
@@ -54,13 +53,13 @@ export default function ItineraryMainInformation({ itinerary }) {
 
         <div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
-            <a href="#" className="d-flex items-center">
+            <a href="#" className="d-flex items-center" style={{color: 'grey'}}>
               <i className="icon-share flex-center text-16 mr-10"></i>
               Share
             </a>
 
-            <a href="#" className="d-flex items-center">
-              <i className="icon-heart flex-center text-16 mr-10"></i>
+            <a href="#" className="d-flex items-center" style={{color: 'grey'}}>
+              <i className="icon-heart flex-center text-16 mr-10" ></i>
               Wishlist
             </a>
           </div>

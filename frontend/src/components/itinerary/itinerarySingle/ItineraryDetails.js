@@ -32,7 +32,7 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation />
+                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.length} />
               </div>
 
               <Overview />
