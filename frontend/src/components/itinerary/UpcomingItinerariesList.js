@@ -65,7 +65,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
     }
   };
 
-
   return (
     <div className="list">
       {itineraries.map(itinerary => (
@@ -192,45 +191,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
           </div>
         </div>
       ))}
-      {/* <Modal
-        title="Select Date and Time"
-        visible={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      >
-        <div>
-          <strong>Select Date:</strong>
-          <Select
-            style={{ width: "100%", marginBottom: "1rem" }}
-            placeholder="Select a date"
-            onChange={(value) => setSelectedDate(value)}
-            value={selectedDate || undefined}
-          >
-            {selectedItinerary &&
-              selectedItinerary.availableDates.map((date) => (
-                <Option key={date} value={date}>
-                  {new Date(date).toLocaleDateString()}
-                </Option>
-              ))}
-          </Select>
-        </div>
-        <div>
-          <strong>Select Time:</strong>
-          <Select
-            style={{ width: "100%" }}
-            placeholder="Select a time"
-            onChange={(value) => setSelectedTime(value)}
-            value={selectedTime || undefined}
-          >
-            {selectedItinerary &&
-              selectedItinerary.availableTime.map((time) => (
-                <Option key={time} value={time}>
-                  {time}
-                </Option>
-              ))}
-          </Select>
-        </div>
-      </Modal> */}
     </div>
   );
 };
