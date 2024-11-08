@@ -38,6 +38,7 @@ const itinerarySchema = new mongoose.Schema({
     bookings: [
         {
             touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+            tickets: { type: Number, default: 1 },
             selectedDate: { type: Date },
             selectedTime: { type: String },
         },

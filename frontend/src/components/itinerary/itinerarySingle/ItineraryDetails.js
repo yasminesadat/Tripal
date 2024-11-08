@@ -15,7 +15,7 @@ import Roadmap2 from "../../templateComponents/Roadmap2";
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]); // Default coordinates
+  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
   const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!itinerary) return <div>Itinerary not found.</div>;
@@ -35,7 +35,7 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.length}  isItinerary={"diana"}/>
+                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)}  isItinerary={"diana"}/>
               </div>
 
               <Overview itineraryDescription={itinerary.description} serviceFee={ itinerary.serviceFee} accessibility={ itinerary.accessibility}/>
@@ -56,10 +56,10 @@ export default function ItineraryDetails({ itinerary }) {
 
               <div className="line mt-60 mb-60"></div>
 
-              <h2 className="text-30">Availability Calendar</h2>
+              {/* <h2 className="text-30">Availability Calendar</h2>
               <DateCalender />
 
-              <div className="line mt-60 mb-60"></div>
+              <div className="line mt-60 mb-60"></div> */}
 
               <h2 className="text-30">Customer Reviews</h2>
 
@@ -67,12 +67,12 @@ export default function ItineraryDetails({ itinerary }) {
                 <Rating />
               </div>
 
-              <ItineraryReviews itineraryId={itineraryId} />
+              {page === "history" &&  <ItineraryReviews itineraryId={itineraryId} />}
 
-              <button className="button -md -outline-accent-1 text-accent-1 mt-30">
+            {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
                 <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button>
+              </button> */}
 
               <div className="line mt-60 mb-60"></div>
               
@@ -83,7 +83,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar />
+                {page=="upcoming"&&<TourSingleSidebar itinerary={itinerary} />}
               </div>
             </div>
           </div>

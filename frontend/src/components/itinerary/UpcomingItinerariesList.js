@@ -1,53 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message, Modal, Select } from 'antd';
+import { message } from 'antd';
 import { touristId, touristId2 } from '../../IDs';
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-
-const { Option } = Select;
 
 const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, curr = "EGP",
   page, isAdmin, isTourguide, onAdminFlag, onItineraryDelete, onItineraryUpdate, onToggleStatus }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
   const errorDisplayedRef = useRef(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedItinerary, setSelectedItinerary] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
   const navigate = useNavigate();
 
-  const handleBookClick = (itinerary) => {
-    if (!touristId) {
-      message.warning("Please sign up or log in to book an itinerary.");
-      return;
-    }
-    setSelectedItinerary(itinerary);
-    setIsModalVisible(true);
-  };
-
-  const handleModalOk = () => {
-    if (selectedDate && selectedTime) {
-      onBook({
-        itineraryId: selectedItinerary._id,
-        touristId,
-        resourceType: "itinerary",
-        selectedDate,
-        selectedTime,
-      });
-      setIsModalVisible(false);
-      setSelectedDate("");
-      setSelectedTime("");
-    } else {
-      message.error("Please select both a date and time.");
-    }
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
-    setSelectedDate(null);
-    setSelectedTime(null);
-  };
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
@@ -101,7 +64,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
       window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
     }
   };
-
 
   return (
     <div className="list">
@@ -210,7 +172,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
             <div className="list-item-attribute">
               <strong>Dropoff Location:</strong> {itinerary.dropoffLocation}
             </div>
-            {/* onClick={() => handleBookClick(itinerary)} */}
             {book && (
               <button key={itinerary._id} onClick={() => handleNavigate(itinerary._id)} >
                 Book Now
@@ -230,45 +191,6 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
           </div>
         </div>
       ))}
-      <Modal
-        title="Select Date and Time"
-        visible={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      >
-        <div>
-          <strong>Select Date:</strong>
-          <Select
-            style={{ width: "100%", marginBottom: "1rem" }}
-            placeholder="Select a date"
-            onChange={(value) => setSelectedDate(value)}
-            value={selectedDate || undefined}
-          >
-            {selectedItinerary &&
-              selectedItinerary.availableDates.map((date) => (
-                <Option key={date} value={date}>
-                  {new Date(date).toLocaleDateString()}
-                </Option>
-              ))}
-          </Select>
-        </div>
-        <div>
-          <strong>Select Time:</strong>
-          <Select
-            style={{ width: "100%" }}
-            placeholder="Select a time"
-            onChange={(value) => setSelectedTime(value)}
-            value={selectedTime || undefined}
-          >
-            {selectedItinerary &&
-              selectedItinerary.availableTime.map((time) => (
-                <Option key={time} value={time}>
-                  {time}
-                </Option>
-              ))}
-          </Select>
-        </div>
-      </Modal>
     </div>
   );
 };
