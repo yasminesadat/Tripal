@@ -1,3 +1,5 @@
+
+
 import { axios } from "./axios";
 const path='/historicalPlaces/';
 export async function getAllHistoricalPlaces() {
@@ -28,9 +30,9 @@ export const CreateNewHistoricalPlace=async(data)=>{
 }
  
 }
-export const updateHistoricalPlace=(id,data)=>{
+export const updateHistoricalPlace=async(id,data)=>{
   try{
-  const result =axios.put(`/historicalPlaces/${id}`,data)
+  const result =await axios.put(`/historicalPlaces/${id}`,data)
     return result;
   }
   catch(err){
@@ -38,20 +40,20 @@ export const updateHistoricalPlace=(id,data)=>{
   }
 }
 
-export const getHistoricalPlaceDetails=(id)=>{
+export const getHistoricalPlaceDetails= async (id)=>{
   try{
-    const result =axios.get(`/historicalPlaces/${id}`);
-    return result;
+    const result =await axios.get(`/historicalPlaces/${id}`);
+    return result.data;
   }
   catch(err){
     throw err;
   }
 }
-export const deleteHistoricalPlace=(id)=>{
+export const deleteHistoricalPlace=async (id)=>{
 try{
   //historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
-  const result=axios.delete(`/historicalPlaces/${id}/`);
-  return result;
+  const result=await axios.delete(`/historicalPlaces/${id}/`);
+  return result.data;
 }
 catch(e){
   throw e;
