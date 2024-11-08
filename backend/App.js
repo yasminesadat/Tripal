@@ -7,7 +7,11 @@ const colors = require("colors");
 const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
+
+
 const MongoURI = process.env.MONGO_URI;
+
+
 
 //App variables
 const app = express();
@@ -33,6 +37,7 @@ mongoose
       console.log(
         `Listening to requests on http://localhost:${port}`.cyan.underline
       );
+
     });
   })
   .catch((err) => console.log(err));
@@ -41,3 +46,5 @@ app.use(express.json());
 
 app.use(cookieParser());
 app.use("/", routes);
+
+//module.exports = amadeus;

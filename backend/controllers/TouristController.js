@@ -122,7 +122,7 @@ const getTouristInfo = async (req, res) => {
 const updateTouristProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { tags, categories, ...updateParameters } = req.body;
+    const { tags, categories, bookedFlights, ...updateParameters } = req.body;
 
     if (tags) {
       updateParameters.tags = tags;
@@ -162,10 +162,16 @@ const updateTouristProfile = async (req, res) => {
       updateParameters,
       { new: true }
     );
-
     if (!touristToBeUpdated) {
       return res.status(404).json("Tourist profile doesnt exist");
     }
+
+    if (bookedFlights && Array.isArray(bookedFlights)) {
+      touristToBeUpdated.bookedFlights.push(...bookedFlights);
+    }
+    Object.assign(touristToBeUpdated, updateParameters);
+
+    await touristToBeUpdated.save();
 
     return res.status(200).json(touristToBeUpdated);
   } catch (error) {
@@ -192,7 +198,25 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+const getTouristNameAndEmail = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const tourist = await touristModel.findById(id).select("userName email");
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    res.json({
+      userName: tourist.userName,
+      email: tourist.email,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 const redeemPoints = async (req, res) => {
   try {
     const { id } = req.params;
@@ -220,4 +244,5 @@ module.exports = {
   updateTouristProfile,
   changePassword,
   redeemPoints,
+  getTouristNameAndEmail,
 };

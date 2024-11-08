@@ -28,7 +28,6 @@ const ActivityForm = ({ isUpdate }) => {
   });
 
 
-  console.log(activityData)
 
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -94,7 +93,7 @@ const ActivityForm = ({ isUpdate }) => {
           longitude: markerPosition[1], // Send the longitude
         });
         message.success('Activity updated successfully!');
-        setTimeout(() => navigate(`/advertiser-activity/${advertiserID}`), 1000);
+        setTimeout(() => navigate(`/advertiser/activities/${advertiserID}`), 1000);
       }
       else {
         const response = await axios.post('http://localhost:5050/api/activities', {
@@ -103,10 +102,11 @@ const ActivityForm = ({ isUpdate }) => {
           latitude: markerPosition[0], // Send the latitude
           longitude: markerPosition[1], // Send the longitude
         });
+        console.log(activityData.advertiser)
 
         message.success('Activity created successfully!');
         console.log('Activity created:', response.data);
-        setTimeout(() => navigate(`/advertiser-activity/${advertiserID}`), 1000);
+        setTimeout(() => navigate(`/advertiser/activities/${advertiserID}`), 1000);
       }
     } catch (error) {
       console.error('Error creating ACTIVITY:', error);

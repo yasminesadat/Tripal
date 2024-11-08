@@ -9,11 +9,24 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "concurrently": "^9.0.1"
+    "@eslint/js": "^9.14.0",
+    "concurrently": "^9.1.0",
+    "globals": "^15.12.0"
   },
   "dependencies": {
-    "axios": "^1.7.7",
+    "@react-google-maps/api": "^2.20.3",
+    "amadeus": "^11.0.0",
+    "bootstrap": "^5.3.3",
     "cloudinary": "^2.5.0",
-    "express": "^4.21.1"
+    "date-fns": "^4.1.0",
+    "express": "^4.21.1",
+    "firebase": "^11.0.1",
+    "jspdf": "^2.5.2",
+    "react": "^18.3.1",
+    "react-credit-cards": "^0.8.3",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.1",
+    "react-multi-date-picker": "^4.5.2",
+    "styled-components": "^6.1.13"
   }
 }

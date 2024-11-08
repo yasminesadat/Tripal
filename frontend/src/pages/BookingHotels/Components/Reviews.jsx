@@ -1,6 +1,13 @@
-import { reviews } from "../../../data/tourSingleContent";
+import { reviews } from "./tourSingleContent";
 import React from "react";
-import Stars from "../../common/Stars";
+import Stars from "./Stars";
+import img1 from "../Components/HotelsImages/profile.jpeg";
+import img2 from "../Components/HotelsImages/reception.jpeg";
+
+import img3 from "../Components/HotelsImages/review1.jpeg";
+import img4 from "../Components/HotelsImages/review2.jpeg";
+
+
 
 export default function Reviews() {
   return (
@@ -11,7 +18,7 @@ export default function Reviews() {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <div className="size-40 rounded-full">
-                  <img src={elm.avatar} alt="image" className="img-cover" />
+                  <img src={img1} alt="image" className="img-cover" />
                 </div>
 
                 <div className="text-16 fw-500 ml-20">{elm.name}</div>
@@ -33,17 +40,15 @@ export default function Reviews() {
           <p className="mt-10">{elm.desc}</p>
 
           <div className="row x-gap-20 y-gap-20 pt-20">
-            {elm.images.map((elm2, i2) => (
-              <div key={i2} className="col-auto">
-                <div className="size-130">
-                  <img
-                    src={elm2}
-                    alt="image"
-                    className="img-cover rounded-12"
-                  />
+              {[
+                img2,img3,img4
+              ].map((image, index) => (
+                <div key={index} className="col-auto">
+                  <div className="size-130">
+                    <img src={image} alt={`image ${index + 1}`} className="img-cover rounded-12" />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           <div className="d-flex x-gap-30 items-center mt-20">

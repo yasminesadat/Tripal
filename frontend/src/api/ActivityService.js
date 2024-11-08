@@ -2,6 +2,7 @@ import { axios } from "./axios";
 
 export async function getAdvertiserActivities(advertiser) {
   try {
+    console.log("THE URL IS ", `/activities/advertiser/${advertiser}`);
     const response = await axios.get(`/activities/advertiser/${advertiser}`);
     return response;
   } catch (error) {
@@ -10,7 +11,17 @@ export async function getAdvertiserActivities(advertiser) {
   }
 }
 
-export async function createActivity() {}
+export async function getActivityById(id) {
+  try {
+    const response = await axios.get(`/activity/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't get activity details", error);
+    throw error;
+  }
+}
+
+export async function createActivity() { }
 
 export async function updateActivity(id) {
   // try {
@@ -47,7 +58,7 @@ export async function searchActivities() {
 
 export async function viewUpcomingActivities() {
   try {
-    const response = await axios.get("/activities/upcoming/view");
+    const response = await axios.get("/activities/upcoming");
     return response;
   } catch (error) {
     console.error("Can't view activities", error);
@@ -55,12 +66,12 @@ export async function viewUpcomingActivities() {
   }
 }
 
-export async function viewPaidActivities() {
+export async function viewHistoryActivities() {
   try {
-    const response = await axios.get("/activities/paid/view");
+    const response = await axios.get("/activities/history");
     return response;
   } catch (error) {
-      console.error("Can't view activities", error);
+    console.error("Can't view activities", error);
     throw error;
   }
 }
@@ -102,7 +113,7 @@ export const addRating = async (activityID, ratingData) => {
         "Content-Type": "application/json",
       },
     });
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error adding rating:", error);
     throw error;

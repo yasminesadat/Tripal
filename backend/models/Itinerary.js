@@ -17,6 +17,7 @@ const itinerarySchema = new mongoose.Schema({
     timeline: [
         {
             activityName: { type: String}, 
+            content: { type: String},
             time: { type: String},
         },
     ],
@@ -42,6 +43,7 @@ const itinerarySchema = new mongoose.Schema({
         },
     ],
     flagged: {type: Boolean, default: false},
+    isActive: {type: Boolean, default: true},
     }, 
     {timestamps: true}
 );
@@ -49,7 +51,7 @@ const itinerarySchema = new mongoose.Schema({
 //this hook middleware is used to prevent the deletion of an itinerary that has bookings
 itinerarySchema.pre('findOneAndDelete', async function (next) {
     const itinerary = await this.model.findOne(this.getQuery());
-    if (itinerary.tourists.length > 0) {
+    if (itinerary.bookings.length > 0) {
         next(new Error('Cannot delete itinerary with associated tourists.'));
     } else {
         next();

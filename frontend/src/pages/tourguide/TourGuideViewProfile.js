@@ -3,14 +3,13 @@ import { useParams } from 'react-router-dom';
 import { updateProfile, getProfileData } from "../../api/TourGuideService";
 import '../seller/SellerProfile.css';
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
-import { tourGuideID } from "../../IDs";
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/DeletionRequestService";
-import { message } from 'antd'; 
-
+import { message } from 'antd';
+import { tourGuideID } from '../../IDs';
 
 const TourGuideProfile = () => {
-  const { id } = useParams();
+  const id = tourGuideID;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,9 +36,9 @@ const TourGuideProfile = () => {
   const handleDeletion = async () => {
     try {
       const response = await requestAccountDeletion("Tourguide", id);
-      message.success(response.message); 
+      message.success(response.message);
     } catch (error) {
-      message.warning(error.response?.data?.message || "An error occurred"); 
+      message.warning(error.response?.data?.message || "An error occurred");
     }
   };
 

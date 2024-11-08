@@ -73,10 +73,8 @@ const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
   try {
     const activites = await Activity.find({ advertiser: id })
-      .populate("advertiser")
-      .populate("category")
-      .populate("tags")
-    // .populate("ratings");
+    .select("title date time location")
+    console.log(activites)
     res.status(200).json(activites);
   } catch (error) {
     res.status(400).json({ error: error.message })
@@ -146,7 +144,7 @@ const viewUpcomingActivities = async (req, res) => {
 };
 
 //fix this date when there are entries
-const viewPaidActivities = async (req, res) => {
+const viewHistoryActivities = async (req, res) => {
   try {
     const currentDate = new Date();
 
@@ -165,7 +163,7 @@ const getActivityById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const activity = await Activity.findById(id);
+    const activity = await Activity.findById(id).populate("category").populate("tags");
     if (!activity) {
       return res.status(404).json({ message: "Activity not found." });
     }
@@ -195,6 +193,6 @@ module.exports = {
   updateActivity,
   deleteActivity,
   viewUpcomingActivities,
-  viewPaidActivities,
+  viewHistoryActivities,
   getTouristActivities
 };

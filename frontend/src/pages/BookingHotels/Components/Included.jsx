@@ -1,4 +1,4 @@
-import { excluded, included } from "../../../data/tourSingleContent";
+import { excluded, included } from "./tourSingleContent";
 import React from "react";
 
 export default function Included() {

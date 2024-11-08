@@ -1,18 +1,22 @@
 import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import ItineraryMainInformation from "./ItineraryMainInformation";
-// import OthersInformation from "./OthersInformation";
-// import Overview from "./Overview";
-import MapComponent from "../../common/MapComponent";
-// import Rating from "./Rating";
-// import TourSingleSidebar from "./TourSingleSidebar";
-// import Gallery1 from "./Gallery1";
-// import DateCalender from "./DateCalender";
+import OthersInformation from "../../templateComponents/OthersInformation";
+import Overview from "../../templateComponents/Overview";
+import LocationMap from "../../common/MapComponent";
+import TourSingleSidebar from "../../templateComponents/TourSingleSidebar"; 
+import Gallery1 from "../../templateComponents/Gallery1";
+import DateCalender from "../../templateComponents/DateCalender";
+import Rating from "../../templateComponents/Rating";
 import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
+import Roadmap2 from "../../templateComponents/Roadmap2";
 
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
+  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]); // Default coordinates
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!itinerary) return <div>Itinerary not found.</div>;
   const itineraryId = itinerary._id;
@@ -22,7 +26,7 @@ export default function ItineraryDetails({ itinerary }) {
       <section className="">
         <div className="container">
           <ItineraryMainInformation itinerary={itinerary} />
-          {/* <Gallery1 /> */}
+          <Gallery1 />
         </div>
       </section>
 
@@ -31,40 +35,44 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                {/* <OthersInformation /> */}
+                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.length}  isItinerary={"diana"}/>
               </div>
 
-              {/* <Overview /> */}
+              <Overview itineraryDescription={itinerary.description} serviceFee={ itinerary.serviceFee} accessibility={ itinerary.accessibility}/>
 
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30 mt-60 mb-30">Road Map</h2>
-              {/* <Roadmap2 />   */}
+              <Roadmap2 timeline={itinerary.timeline}/>  
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <MapComponent />
+                <LocationMap 
+                  markerPosition={markerPosition} 
+                  setMarkerPosition={setMarkerPosition} 
+                  setSelectedLocation={setSelectedLocation} 
+                />
               </div>
 
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30">Availability Calendar</h2>
-              {/* <DateCalender /> */}
+              <DateCalender />
 
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30">Customer Reviews</h2>
 
               <div className="mt-30">
-                {/* <Rating /> */}
+                <Rating />
               </div>
 
               <ItineraryReviews itineraryId={itineraryId} />
 
-              {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
+              <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
                 <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button> */}
+              </button>
 
               <div className="line mt-60 mb-60"></div>
               
@@ -75,7 +83,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {/* <TourSingleSidebar /> */}
+                <TourSingleSidebar />
               </div>
             </div>
           </div>

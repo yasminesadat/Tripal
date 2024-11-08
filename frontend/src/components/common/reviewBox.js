@@ -2,13 +2,13 @@ import { React, useState } from "react";
 import { Rate } from "antd"; 
 import { addRating } from "../../api/RatingService"; 
 import "../style.css";
+import { touristId } from "../../IDs";
 export default function ReviewBox({ id, type }) {
     const [rating, setRating] = useState(0); 
     const [review, setReview] = useState(""); 
     const [loading, setLoading] = useState(false); 
     const [error, setError] = useState(null); 
-    // hardcoded userID
-    const userID = "6724842b5831eed787083b57"; 
+    const userID = touristId; 
 
     const handlePostReview = async () => {
         setLoading(true);
@@ -28,8 +28,12 @@ export default function ReviewBox({ id, type }) {
             window.location.reload(); 
         } catch (error) {
             console.error("Failed to post review", error);
-            setError("Failed to post review. Please try again later."); 
-        } finally {
+            if (error.response && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Failed to post review. Please try again later.");
+            }} 
+            finally {
             setLoading(false);
         }
     };
@@ -37,13 +41,9 @@ export default function ReviewBox({ id, type }) {
     return (
         <>
             <h2 className="text-30 pt-60" style={{ marginTop: "-5%" }}>Leave a Review</h2>
-            <p className="mt-30">
-                 Required fields are marked <span style={{ color: 'red' }}>*</span>
-            </p>
-
             <div className="contactForm y-gap-30 pt-30">
                 <div className="review-rating">
-                    <span style={{ marginRight: "2%", marginLeft: "0.5%" }}> Rating: <span style={{ color: 'red' }}>*</span> </span>
+                    <span style={{ marginRight: "2%", marginLeft: "0.5%" }}> Rating: </span>
                     <Rate value={rating} onChange={setRating} />
                 </div>
 

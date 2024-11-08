@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { viewPaidActivities } from "../../api/ActivityService";
+import { viewHistoryActivities } from "../../api/ActivityService";
 import ActivityHistory from "../../components/activity/ActivityHistory";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
@@ -40,7 +40,7 @@ const ActivitiesHistoryPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewPaidActivities();
+        const response = await viewHistoryActivities();
         setActivities(response.data);
         setFilteredActivities(response.data);
       } catch (err) {

@@ -1,4 +1,4 @@
-import { roadmapData2 } from "../../../data/tourSingleContent";
+import { roadmapData2 } from "./tourSingleContent";
 import React, { useState } from "react";
 
 export default function RoadMap2() {

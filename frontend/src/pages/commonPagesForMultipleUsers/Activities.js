@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, bookActivity } from "../../api/ActivityService";
-import UpcomingActivitiesList from "../../components/activity/UpcomingActivitiesList";
+import { useParams } from "react-router-dom";
+import { viewUpcomingActivities, getAdvertiserActivities } from "../../api/ActivityService";
+import UpcomingActivities from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
@@ -8,11 +9,15 @@ import GuestNavBar from "../../components/navbar/GuestNavBar";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
-import { getConversionRate } from "../../api/ExchangeRatesService"; 
+import { getConversionRate } from "../../api/ExchangeRatesService";
 import { bookResource } from "../../api/BookingService";
 import { touristId } from "../../IDs";
-
-const UpcomingActivitiesPage = () => {
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
+import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
+import { advertiserID } from "../../IDs";
+// advertiser activities or tourist upcoming activities 
+const Activities = ({ isAdvertiser, isTourist }) => {
+  const id = advertiserID;
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,18 +48,30 @@ const UpcomingActivitiesPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await viewUpcomingActivities();
-        setActivities(response.data);
-        setFilteredActivities(response.data);
+        let response;
+        if (isAdvertiser) {
+          console.log("THE ID IS", id);
+          response = await getAdvertiserActivities(id);
+        } else if (isTourist) {
+          response = await viewUpcomingActivities();
+        }
+
+        console.log(response);
+
+        const activitiesData = response?.data || response || [];
+        setActivities(activitiesData);
+        setFilteredActivities(activitiesData);
       } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
+        const errorMessage = err?.response?.data?.error || err?.message || "Error fetching activities";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
     fetchActivities();
-  }, []);
+  }, [id, isAdvertiser, isTourist]);
+
 
   const handleSearch = (searchTerm) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -80,7 +97,7 @@ const UpcomingActivitiesPage = () => {
 
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
-      const activityBudget = activity.price * exchangeRate; 
+      const activityBudget = activity.price * exchangeRate;
       const activityCategory = activity.category;
       const activityRating = activity.averageRating;
 
@@ -128,16 +145,16 @@ const UpcomingActivitiesPage = () => {
     }
     try {
       await bookResource('activity', activityId, touristId);
-            message.success("Activity booked successfully!");
+      message.success("Activity booked successfully!");
     } catch (error) {
       console.log("Error details:", error);
-      
+
       if (error.response) {
         const { status } = error.response;
-        if (status === 400) 
-          message.warning(error.response.data.error);             
-        else 
-          message.error(error.response.data.error);  
+        if (status === 400)
+          message.warning(error.response.data.error);
+        else
+          message.error(error.response.data.error);
       } else {
         message.error("Network error. Please try again later.");
       }
@@ -148,19 +165,27 @@ const UpcomingActivitiesPage = () => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div>
-      {touristId ? ( <TouristNavBar onCurrencyChange={setCurrency} /> ) : ( <GuestNavBar /> )}
-      <div className="page-title">Upcoming Activities</div>
-      <ActivitySearch onSearch={handleSearch} />
-      <div className="filter-sort-list">
-        <div className="filter-sort">
-          <ActivityFilter onFilter={handleFilter} />
-          <ActivitySort onSort={handleSort} />
+      {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
+      {isAdvertiser ? <AdvertiserNavBar /> : null}
+      {isTourist && <div className="page-title">Upcoming Activities</div>}
+
+      {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
+
+      {isTourist ?
+        <div className="filter-sort-list">
+          <div className="filter-sort">
+            <ActivityFilter onFilter={handleFilter} />
+            <ActivitySort onSort={handleSort} />
+          </div>
+          <UpcomingActivities activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"} />
         </div>
-        <UpcomingActivitiesList activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"}/>
-      </div>
+        :
+        <AdvertiserActivities />
+      }
+
       <Footer />
     </div>
   );
 };
 
-export default UpcomingActivitiesPage;
+export default Activities;

@@ -7,6 +7,8 @@ const {
   filterProductsByPrice,
   sortProductsByRatings,
   editProduct,
+  archiveProduct,
+  unArchiveProduct,
 } = require("../controllers/ProductController");
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController"); 
@@ -21,5 +23,7 @@ router.get("/products/sort", sortProductsByRatings);
 router.patch("/products/:id", validateIDs(["id"]), editProduct);
 router.post("/products/:id/ratings", validateIDs(["id", "userID"]), addRating(Product, ProductRating, 'productID'));
 router.get("/products/:id/ratings", validateIDs(["id"]), getRatings(Product, ProductRating, 'productID'));
+router.patch("/products/:id/archive", validateIDs(["id"]), archiveProduct);
+router.patch("/products/:id/unarchive", validateIDs(["id"]), unArchiveProduct);
 
 module.exports = router;
