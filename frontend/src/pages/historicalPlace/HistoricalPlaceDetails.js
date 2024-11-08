@@ -2,17 +2,8 @@
 import Gallery2 from '../../components/historicalplace/Gallery2';
 import MainInformation from '../../components/historicalplace/MainInformation';
 import OthersInformation from '../../components/historicalplace/OthersInformation';
-// import Included from '../../components/historicalplace/Included';
 import Overview from '../../components/historicalplace/Overview';
-// import RoadMap from '../../components/historicalplace/RoadMap';
-// import Map from '../../components/historicalplace/Map';
-// import DateCalender from '../../components/historicalplace/DateCalender';
-// import Faq from '../../components/historicalplace/Faq';
-// import Rating from '../../components/historicalplace/Rating';
-// import Reviews from '../../components/historicalplace/Reviews';
-// import CommentBox from '../../components/historicalplace/CommentBox';
 import TourSlider from '../../components/historicalplace/TourSlider';
-//import TourSingleSidebar from '../../components/historicalplace/TourSingleSidebar';
 import LocationMap from '../../components/common/MapComponent';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
