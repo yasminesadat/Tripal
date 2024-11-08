@@ -4,7 +4,7 @@ import ItineraryMainInformation from "./ItineraryMainInformation";
 import OthersInformation from "../../templateComponents/OthersInformation";
 import Overview from "../../templateComponents/Overview";
 import LocationMap from "../../common/MapComponent";
-import TourSingleSidebar from "../../templateComponents/TourSingleSidebar"; 
+import TourSingleSidebar from "../../templateComponents/TourSingleSidebar";
 import Gallery1 from "../../templateComponents/Gallery1";
 import DateCalender from "../../templateComponents/DateCalender";
 import Rating from "../../templateComponents/Rating";
@@ -35,22 +35,22 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)}  isItinerary={"diana"}/>
+                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)} isItinerary={"diana"} />
               </div>
 
-              <Overview itineraryDescription={itinerary.description} serviceFee={ itinerary.serviceFee} accessibility={ itinerary.accessibility}/>
+              <Overview itineraryDescription={itinerary.description} serviceFee={itinerary.serviceFee} accessibility={itinerary.accessibility} />
 
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30 mt-60 mb-30">Road Map</h2>
-              <Roadmap2 timeline={itinerary.timeline}/>  
+              <Roadmap2 timeline={itinerary.timeline} />
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <LocationMap 
-                  markerPosition={markerPosition} 
-                  setMarkerPosition={setMarkerPosition} 
-                  setSelectedLocation={setSelectedLocation} 
+                <LocationMap
+                  markerPosition={markerPosition}
+                  setMarkerPosition={setMarkerPosition}
+                  setSelectedLocation={setSelectedLocation}
                 />
               </div>
 
@@ -67,23 +67,23 @@ export default function ItineraryDetails({ itinerary }) {
                 <Rating />
               </div>
 
-              {page === "history" &&  <ItineraryReviews itineraryId={itineraryId} />}
+              {page === "history" && <ItineraryReviews itineraryId={itineraryId} />}
 
-            {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
+              {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
                 <i className="icon-arrow-top-right text-16 ml-10"></i>
               </button> */}
 
               <div className="line mt-60 mb-60"></div>
-              
+
               {page === "history" && (
-                <><ReviewBox id={itineraryId} type="itinerary" /><div className="line mt-60 mb-60"></div><ReviewBox id={itineraryId} type="tourGuide" /></>
+                <><ReviewBox id={itineraryId} type="itinerary" /><div className="line mt-60 mb-60"></div><ReviewBox id={itinerary.tourGuide} type="tourGuide" /></>
               )}
             </div>
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {page=="upcoming"&&<TourSingleSidebar itinerary={itinerary} />}
+                {page == "upcoming" && <TourSingleSidebar itinerary={itinerary} />}
               </div>
             </div>
           </div>
