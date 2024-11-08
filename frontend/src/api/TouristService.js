@@ -99,3 +99,13 @@ export async function getTouristFlights(touristId) {
     throw error;
   }
 }
+
+export async function getTouristAge(touristId) {
+  try {
+    const response = await axios.get(`/tourist/age/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting age", error);
+    throw error;
+  }
+}

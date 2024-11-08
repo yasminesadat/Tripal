@@ -2,15 +2,17 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css'
 import { useState, useEffect } from 'react';
-
+import { getTouristAge } from '../../api/TouristService';
 import { touristId } from '../../IDs';
 import { getConversionRate } from '../../api/ExchangeRatesService';
+import { message } from 'antd';
 const FlightResults = () => {
   const navigate= useNavigate();
   const location = useLocation();
   const flights = location.state?.flights || [];
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
+  const [touristAge, setTouristAge] = useState(null);
 
   useEffect(() => {
     const fetchCurrency = () => {
@@ -22,6 +24,18 @@ const FlightResults = () => {
       }
     };
     fetchCurrency();
+
+    const fetchTouristAge = async () => {
+      try {
+        const data = await getTouristAge(touristId);
+        setTouristAge(data.age);
+      } catch (error) {
+        message.error('Failed to fetch tourist age');
+        console.error(error);
+      }
+    };
+
+    fetchTouristAge();
   }, []);
 
   const fetchExchangeRate = async (curr) => {
@@ -33,8 +47,14 @@ const FlightResults = () => {
     }
   };
 
+  
+
   const handleBookNow = (flight) => {
-    navigate('/tourist/booking-summary', { state: { flight } });
+    if (touristAge >= 18) {
+      navigate('/tourist/booking-summary', { state: { flight } });
+    } else {
+      message.error('You must be at least 18 years old to book a flight.');
+    }
   };
   
   const convertPrice = (price) => {

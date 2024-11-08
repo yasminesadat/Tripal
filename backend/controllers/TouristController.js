@@ -247,6 +247,28 @@ const getTouristBookedFlights = async (req, res) => {
   }
 };
 
+const getTouristAge = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid tourist ID format' });
+    }
+
+    const tourist = await touristModel.findById(id);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    const age = tourist.calculateAge();
+    res.json({ age });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching tourist data', error });
+  }
+};
+
 
 
 module.exports = { createTourist,
@@ -255,4 +277,5 @@ module.exports = { createTourist,
                    changePassword, 
                    redeemPoints, 
                    getTouristNameAndEmail,
-                   getTouristBookedFlights };
+                   getTouristBookedFlights,
+                  getTouristAge };

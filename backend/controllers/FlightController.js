@@ -1,8 +1,10 @@
 const Amadeus = require('amadeus');
 
+require('dotenv').config();
+
 const amadeus = new Amadeus({
-  clientId: 'IuUmwsrhvB57Vp616ZGz7y340TcWXtjQ',
-  clientSecret: 'E9ElYuHHFRSTgjNB',
+  clientId: process.env.clientId,
+  clientSecret: process.env.clientSecret
 });
 
 const getFlights = async (req, res) => {

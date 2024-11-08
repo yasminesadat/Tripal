@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
-import { touristFlight } from '../../IDs';
 import { touristId } from '../../IDs';
 
 export const parseDuration = (duration) => {
