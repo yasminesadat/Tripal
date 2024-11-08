@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './FlightList.css';
 import { message } from 'antd';
 import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
-import { touristFlight } from '../../IDs';
 import { touristId } from '../../IDs';
 
 export const parseDuration = (duration) => {
@@ -49,7 +48,7 @@ const BookingDetails = () => {
           origin: itinerary?.segments[0]?.departure?.iataCode || "Unknown",
           destination: itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode || "Unknown",
           price: flight.price?.total || "0.00",
-          currency: flight.price?.currency || "USD",
+          currency: flight.price?.currency || "EGP",
           bookingDate: new Date(),
         })),
       };
@@ -62,7 +61,7 @@ const BookingDetails = () => {
       navigate('/tourist/invoice', { state: { flight, touristInfo } });
     } catch (error) {
       console.error("Error updating tourist information:", error);
-      message.error("There was an issue updating your information.");
+      message.error("There was an issue updating your information.", error);
     }
   };
 
