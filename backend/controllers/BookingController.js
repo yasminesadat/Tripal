@@ -31,7 +31,6 @@ const bookResource = async (req, res) => {
             const dateIsAvailable = resource.availableDates.some(
                 date => date.toISOString() === new Date(selectedDate).toISOString()
             );
-            console.log(resource.availableTime); 
             const timeIsAvailable = resource.availableTime.includes(selectedTime);
 
             if (!dateIsAvailable || !timeIsAvailable) {
@@ -41,7 +40,9 @@ const bookResource = async (req, res) => {
                 touristId,
                 selectedDate,
                 selectedTime,
+                tickets
             });
+            tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
         } 
         else{
             resource.tourists.push(touristId);

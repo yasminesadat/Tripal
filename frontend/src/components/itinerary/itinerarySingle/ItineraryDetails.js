@@ -69,10 +69,10 @@ export default function ItineraryDetails({ itinerary }) {
 
               <ItineraryReviews itineraryId={itineraryId} />
 
-              <button className="button -md -outline-accent-1 text-accent-1 mt-30">
+            {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
                 <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button>
+              </button> */}
 
               <div className="line mt-60 mb-60"></div>
               
@@ -83,7 +83,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar />
+                <TourSingleSidebar itinerary={itinerary} />
               </div>
             </div>
           </div>
