@@ -109,3 +109,23 @@ export async function getTouristAge(touristId) {
     throw error;
   }
 }
+
+export async function getTouristTags(touristId) {
+  try {
+    const response = await axios.get(`/tourist/preferences/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tags", error);
+    throw error;
+  }
+}
+
+export async function getTouristCategories(touristId) {
+  try {
+    const response = await axios.get(`/tourist/categories/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting categories", error);
+    throw error;
+  }
+}

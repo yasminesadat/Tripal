@@ -11,18 +11,29 @@ import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import { touristId } from "../../IDs";
+import { getTouristTags } from "../../api/TouristService";
+import { getTouristCategories } from "../../api/TouristService";
+import { getTags } from "../../api/PreferenceTagService";
+import ActivityCategoryService from "../../api/ActivityCategoryService";
+import { Select } from 'antd';
 
 const TouristHomePage = () => {
   const id = touristId;
   const userType = "tourist";
   const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [touristTags, setTouristTags] = useState([]);
+  const [touristCategories, setTouristCategories] = useState ([]);
+  const [allTags, setAllTags] = useState ([]);
+  const [allCats, setAllCats] = useState ([]);
 
   const [editedProfile, setEditedProfile] = useState({
     email: "",
     nationality: "",
     job: "",
     mobileNumber: "",
+    tags: [],
+    categories: []
   });
 
   const handleInputChange = (e) => {
@@ -42,6 +53,8 @@ const TouristHomePage = () => {
         const response = await updateTouristInformation(id, editedProfile);
         console.log("Profile updated successfully", response);
         toast.success("Profile updated successfully");
+        await fetchTouristTags();
+      await fetchTouristCategories();
       } catch (error) {
         console.error("Failed to update user information:", error);
         toast.error("Error updating profile");
@@ -53,6 +66,20 @@ const TouristHomePage = () => {
     }
   };
 
+  const handleTagsChange = (value) => {
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      tags: value,
+    }));
+  };
+
+  const handleCategoriesChange = (value) => {
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      categories: value,
+    }));
+  };
+
   const getUserInformation = async () => {
     try {
       const response = await getTouristInformation(id);
@@ -62,6 +89,8 @@ const TouristHomePage = () => {
         nationality: response.nationality,
         job: response.job,
         mobileNumber: response.mobileNumber,
+        tags: response.tags,
+        categories:response.categories
       });
       sessionStorage.removeItem("currency");
       sessionStorage.setItem("currency", response.choosenCurrency);
@@ -69,6 +98,43 @@ const TouristHomePage = () => {
       console.error("Failed to fetch user information:", error);
     }
   };
+
+  const fetchTouristTags = async () => {
+    try {
+      const tags = await getTouristTags(id);
+      setTouristTags(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+  const fetchTouristCategories = async () => {
+    try {
+      const tags = await getTouristCategories(id);
+      setTouristCategories(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+  const fetchAllTags = async () => {
+    try {
+      const tags = await getTags();
+      setAllTags(tags.data);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+  const fetchAllCategories = async () => {
+    try {
+      const tags = await ActivityCategoryService.getActivityCategories();
+      setAllCats(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
 
   const handleCurrencyChange = async (currency) => {
     console.log("Chosen currency updated to:", currency);
@@ -113,7 +179,12 @@ const TouristHomePage = () => {
 
   useEffect(() => {
     getUserInformation();
+    fetchTouristTags();
+    fetchTouristCategories();
+    fetchAllTags();
+    fetchAllCategories();
   }, []);
+  
 
   return (
     <div>
@@ -179,6 +250,58 @@ const TouristHomePage = () => {
                 <input type="text" value={editedProfile.nationality} readOnly />
               )}
             </p>
+            
+            <p>
+            <b>Chosen Preference Tags:</b>
+          </p>
+          
+            {isEditing ? (
+              <Select
+                mode="multiple"
+                value={editedProfile.tags}
+                onChange={handleTagsChange}
+                placeholder="Select tags"
+                style={{ width: '100%' }}
+              >
+                {allTags.map((tag) => (
+                  <Select.Option key={tag._id} value={tag._id}>
+                    {tag.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            ) : (
+              <input
+              type="text"
+              value={touristTags.map((tag) => tag.name).join(", ")}
+              readOnly
+            />
+            )}
+          
+          <p>
+            <b>Chosen Actvity Categories:</b>
+          </p>
+          
+            {isEditing ? (
+              <Select
+                mode="multiple"
+                value={editedProfile.categories}
+                onChange={handleCategoriesChange}
+                placeholder="Select Categories"
+                style={{ width: '100%' }}
+              >
+                {allCats.map((category) => (
+                  <Select.Option key={category._id} value={category._id}>
+                    {category.Name}
+                  </Select.Option>
+                ))}
+              </Select>
+            ) : (
+              <input
+              type="text"
+              value={touristCategories.map((categories) => categories.Name).join(", ")}
+              readOnly
+            />
+            )}
             <p>
               <b>Job:</b>
               <input
@@ -199,6 +322,7 @@ const TouristHomePage = () => {
                 readOnly={!isEditing}
               />
             </p>
+            
             <p>
               <b>Balance:</b>
               {profileInformation.wallet ? (
@@ -234,6 +358,9 @@ const TouristHomePage = () => {
                 <span>No points</span>
               )}
             </p>
+            
+
+
           </li>
         </ul>
         <button onClick={handleEditClick}>

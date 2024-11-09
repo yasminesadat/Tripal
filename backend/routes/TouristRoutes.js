@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Tourist = require("../models/users/Tourist.js");
 const validateIDs = require("../middleware/IDMiddleware");
-const { createTourist, updateTouristProfile, getTouristInfo, redeemPoints, getTouristNameAndEmail, getTouristBookedFlights, getTouristAge,getTouristBookedHotels } = require('../controllers/TouristController.js');
+const { createTourist, updateTouristProfile, getTouristInfo, redeemPoints, getTouristNameAndEmail, getTouristBookedFlights, getTouristAge,getTouristBookedHotels, getTouristPreferences, getTouristCategories } = require('../controllers/TouristController.js');
 const { changePassword } = require('../controllers/PasswordController.js');
 
 router.post("/createTourist", createTourist);
@@ -14,6 +14,8 @@ router.get("/tourist-name-email/:id", validateIDs(["id"]), getTouristNameAndEmai
 router.get ("/tourist/flights/:id", getTouristBookedFlights);
 router.get ("/tourist/age/:id", getTouristAge);
 router.get ("/tourist/bookedHotels/:id", getTouristBookedHotels);
+router.get ("/tourist/preferences/:id", getTouristPreferences);
+router.get ("/tourist/categories/:id", getTouristCategories);
 
 
 module.exports = router;
