@@ -220,7 +220,7 @@ const requestAccountDeletion = async (req, res) => {
   
       switch (role) {
         case "TourGuide":
-          await Itinerary.updateMany( { tourGuide: userId }, { $set: { deactivated: true } });
+          await Itinerary.updateMany( { tourGuide: userId }, { $set: { isActive: true } });
           await Itinerary.deleteMany( { tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
           await TourGuide.findByIdAndDelete(userId)
           break;
