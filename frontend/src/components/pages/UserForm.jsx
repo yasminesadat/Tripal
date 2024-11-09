@@ -11,6 +11,7 @@ import {
   message,
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { login } from "../../api/UserService";
 
 const { Title, Text } = Typography;
 
@@ -18,13 +19,21 @@ export default function UserForm() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const onFinish = (values) => {
+  const onFinish = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      message.success("Logged in successfully!");
-      console.log("Login values: ", values);
-    }, 1000);
+    console.log(form.getFieldValue("email"), form.getFieldValue("password"));
+    const response = await login(
+      form.getFieldValue("email"),
+      form.getFieldValue("password")
+    );
+    setLoading(false);
+    if (response.status == "success") {
+      message.success(response.message);
+    } else if (response.status == "warning") {
+      message.warning(response.message);
+    } else {
+      message.error(response.message);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -82,8 +91,8 @@ export default function UserForm() {
             label="Email Address"
             name="email"
             rules={[
-              { required: true, message: "Please enter your email!" },
-              { type: "email", message: "Please enter a valid email!" },
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Please enter a valid email" },
             ]}
           >
             <Input
@@ -98,10 +107,10 @@ export default function UserForm() {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: "Please enter your password!" },
+              { required: true, message: "Please enter your password" },
               {
                 min: 6,
-                message: "Password must be at least 6 characters!",
+                message: "Password must be at least 6 characters",
               },
             ]}
           >
@@ -141,20 +150,20 @@ export default function UserForm() {
       </Card>
       <style>{`
         .sign-up-link {
-          color: var(--color-stone)!important; 
+          color: var(--color-stone)!important;
           font-weight: bold;
         }
         .sign-up-link:hover {
-          color: var(--color-stone-light)!important; 
+          color: var(--color-stone-light)!important;
           font-weight: bold;
         }
         .custom-button {
           background-color: var(--color-dark-purple) !important;
           border-color: var(--color-dark-purple)!important;
         }
-        .custom-button:hover, 
-        .custom-button.ant-btn:hover, 
-        .custom-button.ant-btn:focus, 
+        .custom-button:hover,
+        .custom-button.ant-btn:hover,
+        .custom-button.ant-btn:focus,
         .custom-button.ant-btn-primary:hover {
           background-color: var(--color-light-purple) !important;
           border-color: var(--color-light-purple) !important;
@@ -172,7 +181,7 @@ export default function UserForm() {
         }
 
         /* Custom hover color for password field */
-        .ant-input-password:hover, 
+        .ant-input-password:hover,
         .ant-input-password:focus,
         .ant-input-password-focused:hover {
           border-color: var(--color-light-purple) !important;

@@ -35,6 +35,9 @@ const loginUser = async (req, res) => {
       if (!request) {
         return res.status(400).json({ message: "Invalid email or password" });
       }
+      if (!(await bcrypt.compare(password, request.password))) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
       if (request.status === "pending")
         return res.status(403).json({
           message: "Request is pending",
@@ -74,7 +77,7 @@ const loginUser = async (req, res) => {
       res.status(400).json({ message: "Invalid email or password" });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
