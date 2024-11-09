@@ -9,6 +9,8 @@ import { Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "./advForm.css";
 import { advertiserID } from "../../IDs";
+
+
 const AdvertiserForm = ({ isUpdate, onSubmit }) => {
   const id = advertiserID;
   const location = useLocation();
@@ -44,8 +46,6 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
     currentLogo: advertiser?.companyProfile?.logo || null,
   });
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -58,23 +58,17 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
 
       // Check if the value is a valid number
       if (isNaN(numberValue) || numberValue < 0) {
-        setError("Please enter a valid number for Employees.");
+        message.error("Please enter a valid number for Employees.")
         return;
-      } else {
-        // Clear the error if valid
-        setError("");
-      }
+      } 
     }
     if (name === "companyProfile.foundedYear") {
       const numberValue = Number(value);
       const currentYear = new Date().getFullYear();
 
       if (isNaN(numberValue)) {
-        setError("Please enter a valid year.");
+        message.error("Please enter a valid year.")
         return;
-      } else {
-        // Clear the error if valid
-        setError("");
       }
     }
 
@@ -215,16 +209,16 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
           advertiserData.existingImage = null;
         }
         await updateAdvertiser(id, advertiserData);
-        navigate(`/advertiser/profile`);
+        setTimeout(() => {
+            navigate(`/advertiser/profile`);
+        }, 1000);
       } else {
         // Call API to create a new advertiser
         await createAdvertiser(formData);
       }
-      setSuccess("Advertiser updated successfully!");
-      setError("");
+      message.success("Advertiser updated successfully!")
     } catch (err) {
-      setError(err.message || "An error occurred while updating.");
-      setSuccess("");
+      message.error("An error occurred while updating.")
     } finally {
       setLoading(false);
     }
@@ -254,16 +248,6 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
               onChange={handleChange}
               required
             />
@@ -328,7 +312,6 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
                 onChange={handleChange}
               />
             </div>
-            {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
               <label>Employees:</label>
@@ -524,7 +507,6 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
             </button>
           </div>
 
-          {success && <p className="success-message">{success}</p>}
         </form>
       </div>
     </>
