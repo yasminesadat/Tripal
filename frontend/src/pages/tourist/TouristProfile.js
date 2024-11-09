@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getTouristInformation, updateTouristInformation, redeemPoints } from "../../api/TouristService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
@@ -16,6 +16,7 @@ import { getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { Select } from 'antd';
+import { Tag } from 'antd';
 
 const TouristHomePage = () => {
   const id = touristId;
@@ -23,10 +24,10 @@ const TouristHomePage = () => {
   const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [touristTags, setTouristTags] = useState([]);
-  const [touristCategories, setTouristCategories] = useState ([]);
-  const [allTags, setAllTags] = useState ([]);
-  const [allCats, setAllCats] = useState ([]);
-  const navigate=useNavigate();
+  const [touristCategories, setTouristCategories] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [allCats, setAllCats] = useState([]);
+  const navigate = useNavigate();
 
 
 
@@ -57,7 +58,7 @@ const TouristHomePage = () => {
         console.log("Profile updated successfully", response);
         toast.success("Profile updated successfully");
         await fetchTouristTags();
-      await fetchTouristCategories();
+        await fetchTouristCategories();
       } catch (error) {
         console.error("Failed to update user information:", error);
         toast.error("Error updating profile");
@@ -93,7 +94,7 @@ const TouristHomePage = () => {
         job: response.job,
         mobileNumber: response.mobileNumber,
         tags: response.tags,
-        categories:response.categories
+        categories: response.categories
       });
       sessionStorage.removeItem("currency");
       sessionStorage.setItem("currency", response.choosenCurrency);
@@ -188,7 +189,7 @@ const TouristHomePage = () => {
     fetchAllTags();
     fetchAllCategories();
   }, []);
-  
+
 
   return (
     <div>
@@ -254,11 +255,11 @@ const TouristHomePage = () => {
                 <input type="text" value={editedProfile.nationality} readOnly />
               )}
             </p>
-            
+
             <p>
-            <b>Chosen Preference Tags:</b>
-          </p>
-          
+              <b>Chosen Preference Tags:</b>
+            </p>
+
             {isEditing ? (
               <Select
                 mode="multiple"
@@ -275,16 +276,16 @@ const TouristHomePage = () => {
               </Select>
             ) : (
               <input
-              type="text"
-              value={touristTags.map((tag) => tag.name).join(", ")}
-              readOnly
-            />
+                type="text"
+                value={touristTags.map((tag) => tag.name).join(", ")}
+                readOnly
+              />
             )}
-          
-          <p>
-            <b>Chosen Actvity Categories:</b>
-          </p>
-          
+
+            <p>
+              <b>Chosen Actvity Categories:</b>
+            </p>
+
             {isEditing ? (
               <Select
                 mode="multiple"
@@ -301,10 +302,10 @@ const TouristHomePage = () => {
               </Select>
             ) : (
               <input
-              type="text"
-              value={touristCategories.map((categories) => categories.Name).join(", ")}
-              readOnly
-            />
+                type="text"
+                value={touristCategories.map((categories) => categories.Name).join(", ")}
+                readOnly
+              />
             )}
             <p>
               <b>Job:</b>
@@ -326,7 +327,7 @@ const TouristHomePage = () => {
                 readOnly={!isEditing}
               />
             </p>
-            
+
             <p>
               <b>Balance:</b>
               {profileInformation.wallet ? (
@@ -362,7 +363,7 @@ const TouristHomePage = () => {
                 <span>No points</span>
               )}
             </p>
-            
+
 
 
           </li>

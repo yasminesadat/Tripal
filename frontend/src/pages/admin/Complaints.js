@@ -3,6 +3,7 @@ import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
 import { adminId } from "../../IDs";
 import { OrderedListOutlined } from '@ant-design/icons';
+import { checkTouristExists } from "../../api/TouristService";
 import { message } from "antd";
 
 const ComplaintsPage = () => {
@@ -14,6 +15,21 @@ const ComplaintsPage = () => {
     const [replyMessage, setReplyMessage] = useState("");
     const [newStatus, setNewStatus] = useState("");
     const [isSorted, setIsSorted] = useState(false);
+    const [userExists, setUserExists] = useState(false);
+
+    useEffect(() => {
+        const fetchUserExistence = async () => {
+            console.log("selected", selectedComplaint);
+            if (selectedComplaint != null) {
+                if (selectedComplaint.issuerId) {
+                    const exists = await checkUserExistence(selectedComplaint.issuerId);
+                    setUserExists(exists);
+                }
+            }
+        };
+
+        fetchUserExistence();
+    }, [selectedComplaint?.issuerId]);
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
@@ -34,6 +50,25 @@ const ComplaintsPage = () => {
         setReplyMessage(event.target.value);
     };
 
+    const checkUserExistence = async (id) => {
+        console.log("The id is ", id);
+        try {
+            const response = await checkTouristExists(id);
+            console.log("msg", response.message);
+            if (response.message === "User exists") {
+
+                return true;
+
+            }
+            else
+                if (response.message === "User not found") {
+                    return false;
+                }
+        }
+        catch (error) {
+            message.error(error);
+        }
+    };
     const handleReplySubmit = async (event) => {
         event.preventDefault();
 
@@ -52,7 +87,7 @@ const ComplaintsPage = () => {
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getAllComplaints();
             setComplaints(updatedComplaints);
-            setReplyMessage(""); 
+            setReplyMessage("");
             //setSelectedComplaint(null); 
             message.success("Reply sent successfully!");
         } catch (error) {
@@ -171,7 +206,8 @@ const ComplaintsPage = () => {
                                                                             <p><strong>Title:</strong> {selectedComplaint.title}</p>
                                                                             <p><strong>Body:</strong> {selectedComplaint.body}</p>
                                                                             <p><strong>Date:</strong> {(new Date(selectedComplaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</p>
-                                                                            <p><strong>Issuer UserName:</strong> {selectedComplaint.issuerUserName}</p>
+                                                                            <p><strong>Issuer UserName:</strong>  {userExists ? selectedComplaint.issuerUserName : "Deleted User"
+                                                                            }</p>
                                                                             <p><strong>Status:</strong>
                                                                                 <div class="dropdown -base -price js-dropdown js-form-dd is-active" data-main-value="">
 
