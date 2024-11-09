@@ -79,19 +79,18 @@ export default function Login() {
  .images-container {
           position: absolute;
           margin-top: 3%;
-          margin-left: 1%;
           width: 50%;
           height: 80%;
           display: grid;
           grid-template-columns: 1fr 1fr;
           grid-template-rows: 1fr 1fr;
-          gap: 1% 30%;
+          gap: 0% 40%;
           justify-items: left;
           align-items: center;
         }
 
         .background-image {
-          width: 70%;
+          width: 80%;
           height: auto;
         }
 

@@ -592,7 +592,7 @@ body {
 select,
 input:not([type="range"]),
 textarea {
-  border: 0;
+  /*border: 0;*/
   outline: none;
   width: 100%;
   background-color: transparent;
