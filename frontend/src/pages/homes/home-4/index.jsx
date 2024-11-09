@@ -6,7 +6,7 @@ import FeaturesOne from "@/components/homes/features/FeaturesOne";
 import Hero4 from "@/components/homes/heros/Hero4";
 import TestimonialsThree from "@/components/homes/testimonials/TestimonialsThree";
 import FeaturedToures from "@/components/homes/tours/FeaturedToures";
-import FooterFour from "@/components/layout/footers/FooterFour";
+import FooterSix from "@/components/layout/footers/FooterSix";
 
 import Header3 from "@/components/layout/header/Header3";
 import React from "react";
@@ -34,7 +34,7 @@ export default function HomePage4() {
         <TestimonialsThree />
         <ArticlesOne />
         <BannerSeven />
-        <FooterFour />
+        <FooterSix />
       </main>
     </>
   );
