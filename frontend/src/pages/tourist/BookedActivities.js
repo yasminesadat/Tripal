@@ -10,6 +10,7 @@ import { message } from "antd";
 import { touristId } from "../../IDs";
 import { getConversionRate } from "../../api/ExchangeRatesService"; 
 import { cancelResource } from '../../api/BookingService';
+import FooterTwo from "../../components/usersFooter/FooterTwo";
 
 const BookedActivitiesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -166,7 +167,7 @@ const BookedActivitiesPage = () => {
         </div>
         <UpcomingActivitiesList activities={filteredActivities} curr={currency} onCancel ={handleCancelActivity} cancel={"diana"} />
       </div>
-      <Footer />
+      <FooterTwo />
     </div>
   );
 };
