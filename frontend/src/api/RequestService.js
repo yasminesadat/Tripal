@@ -91,7 +91,7 @@ export async function getRequests() {
 
 export async function requestAccountDeletion(role, userId) {
     try {
-      const response = await axios.post(`/request-deletion/${role}/${userId}`);
+      const response = await axios.delete(`/request-deletion/${role}/${userId}`);
       return response.data;
     } catch (error) {
       console.error(`Error requesting account deletion for ${role}:`, error);
