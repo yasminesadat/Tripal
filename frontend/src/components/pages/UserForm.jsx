@@ -51,29 +51,23 @@ export default function UserForm() {
           maxWidth: "80%",
         }}
       >
-        <div
-          data-aos="fade-up"
-          data-aos-delay="200"
-          className="hero__subtitle mb-20 md:mb-10"
+        <Title level={3} style={{ textAlign: "center" }}>
+          We're glad to see you again!
+        </Title>
+        <Text
+          type="secondary"
+          style={{
+            display: "block",
+            textAlign: "center",
+            marginBottom: "1rem",
+            color: "black", // Custom color for the "Sign Up" text
+          }}
         >
-          <Title level={3} style={{ textAlign: "center" }}>
-            We're glad to see you again!
-          </Title>
-          <Text
-            type="secondary"
-            style={{
-              display: "block",
-              textAlign: "center",
-              marginBottom: "1rem",
-              color: "black", // Custom color for the "Sign Up" text
-            }}
-          >
-            Don't have an account?{" "}
-            <Link to="/register" className="sign-up-link">
-              Sign Up
-            </Link>
-          </Text>
-        </div>
+          Don't have an account?{" "}
+          <Link to="/register" className="sign-up-link">
+            Sign Up
+          </Link>
+        </Text>
 
         <Form
           form={form}
