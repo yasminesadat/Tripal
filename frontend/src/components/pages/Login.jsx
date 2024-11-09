@@ -14,7 +14,7 @@ export default function Login() {
               </div>
               <div className="mt-5">
                 Don't have an account?{" "}
-                <Link to="/register" className="text-accent-1">
+                <Link to="/register" className="text-stone">
                   Sign Up!
                 </Link>
               </div>
@@ -70,7 +70,7 @@ export default function Login() {
 
               <button
                 type="submit"
-                className="button -md -dark-1 bg-accent-1 text-white col-12 mt-30"
+                className="button -md bg-light-purple text-white col-12 mt-30"
               >
                 Log In
                 <i className="icon-arrow-top-right ml-10"></i>
