@@ -3,9 +3,10 @@ import { getAdvertiser } from "../../api/AdvertiserService";
 import { useParams, useNavigate } from "react-router-dom";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import ChangePassword from "../../components/common/ChangePassword";
-import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import { advertiserID } from "../../IDs";
+
 const AdvertiserProfile = () => {
   const userType = "advertiser"
   const id = advertiserID;

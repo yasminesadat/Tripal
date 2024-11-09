@@ -89,3 +89,25 @@ export const getAdminItineraries = async () => {
     throw error;
   }
 };
+
+export const getPendingDeletionRequests = async () => {
+  try {
+    const response = await axios.get("/deletion-requests"); 
+    console.log(response.data);
+    return response.data;  
+  } catch (error) {
+    console.error("Error fetching pending deletion requests:", error);
+    throw error;
+  }
+};
+
+export const approveDeletionRequest = async (requestId) => {
+  console.log(requestId, "in the service")
+  try {
+    const response = await axios.delete(`/deletion-request/approve/${requestId}`); 
+    return response.data; 
+  } catch (error) {
+    console.error(`Error approving deletion request with ID ${requestId}:`, error);
+    throw error;
+  }
+};

@@ -51,7 +51,6 @@ export async function updateRequest(id, urlObject) {
     }
 }
 
-
 export async function SetRequestStatus(id, statusValue) {
     try {
 
@@ -66,8 +65,6 @@ export async function SetRequestStatus(id, statusValue) {
     }
 }
 
-
-
 export async function getRequest(id) {
     try {
         const response = await axios.get(`/request/${id}`);
@@ -79,6 +76,7 @@ export async function getRequest(id) {
         throw new Error(errorMessage);
     }
 }
+
 export async function getRequests() {
     try {
         const response = await axios.get(`/request`);
@@ -88,5 +86,15 @@ export async function getRequests() {
         const errorMessage = error.response?.data?.error || "An error occurred while retrieving the request.";
         console.log("ERROR MESSAGE", errorMessage);
         throw new Error(errorMessage);
+    }
+}
+
+export async function requestAccountDeletion(role, userId) {
+    try {
+      const response = await axios.post(`/request-deletion/${role}/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error requesting account deletion for ${role}:`, error);
+      throw error;
     }
 }

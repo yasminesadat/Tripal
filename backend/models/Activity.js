@@ -66,13 +66,16 @@ const activitySchema = new Schema(
       type: Boolean,
       default: false,
     },
-
     bookings: [
       {
-          touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
-          tickets: { type: Number, default: 1 },
+        touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+        tickets: { type: Number, default: 1 },
       },
-  ],
+    ],
+    deactivated: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

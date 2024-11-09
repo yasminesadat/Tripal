@@ -9,6 +9,7 @@ import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 import ComplaintsPage from "../pages/admin/Complaints";
 import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
+import DeletionRequests from "../pages/admin/DeletionRequests";
 import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 
 const adminRoutes = [
@@ -23,9 +24,8 @@ const adminRoutes = [
   { path: "/admin/complaints", element: <ComplaintsPage /> },
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
-  {path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />}
-
-
+  { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
+  { path: "/deletion-requests", element: <DeletionRequests />}
 ];
 
 export default adminRoutes;
