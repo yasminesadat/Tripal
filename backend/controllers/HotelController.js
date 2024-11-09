@@ -68,14 +68,15 @@ const amadeus = new Amadeus({
 
   const saveBooking= async (req,res)=>{
       try {
-        const { userid,hotelid,hotelname,singleNumber,doubleNumber, tripleNumber,checkIn,checkOut,pricing,status } = req.body;
+        const { userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber, tripleNumber,checkIn,checkOut,pricing,status } = req.body;
         const existingTourist = await Tourist.findById(userid);
         if (!existingTourist) {
           return res.status(400).json({ error: "UserID doesn't exist!" });
         }
+        console.log("hi2")
 
         const newBooking = await hotelBookings.create({
-          user:userid,hotelid,hotelname,singleRoom:singleNumber,doubleRoom:doubleNumber,tripleRoom:tripleNumber,checkIn,checkOut,pricing,status
+          user:userid,hotelid,hotelname,cityCode,singleRoom:singleNumber,doubleRoom:doubleNumber,tripleRoom:tripleNumber,checkIn,checkOut,pricing,status
         });
 
        existingTourist.bookedHotels.push(newBooking._id);

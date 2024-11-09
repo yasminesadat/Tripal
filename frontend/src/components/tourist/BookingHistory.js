@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getTouristFlights } from "../../api/TouristService";
-//import { getTouristHotels } from "../../api/HotelService"; //from service 
+import { getHotelHistory } from "../../api/HotelService"; //from service 
 import { touristId } from "../../IDs";
+import { hotelHistoryTourist } from "../../IDs";
+import { format } from 'date-fns';
+
 
 const tabs = ["Flights", "Hotels"];
 
@@ -21,24 +24,35 @@ export default function DbBooking() {
       }
     };
 
-    // const fetchBookedHotels = async () => {
-    //   try {
-    //     const response = await getTouristHotels(touristId);
-    //     console.log("Hotels API Response:", response);
-    //     setBookedHotels(response.bookedHotels);
-    //   } catch (error) {
-    //     console.error("Error fetching booked hotels", error);
-    //   }
-    // };
+    const fetchBookedHotels = async () => {
+      try {
+        const response = await getHotelHistory(hotelHistoryTourist);
+        console.log("Hotels API Response:", response);
+        setBookedHotels(response.bookedHotels);
+      } catch (error) {
+        console.error("Error fetching booked hotels", error);
+      }
+    };
 
     fetchBookedFlights();
-    //fetchBookedHotels();
+    fetchBookedHotels();
   }, []);
 
   const getFlightStatus = (arrivalTime) => {
     const now = new Date();
     return new Date(arrivalTime) < now ? "Flight Complete" : "Flight Upcoming";
   };
+
+  const getHotelStatus = (checkout) => {
+    const now = new Date();
+    return new Date(checkout) < now ? "completed" : "confirmed";
+  };
+
+
+
+  
+
+
 
   return (
     <div className="dashboard js-dashboard">
@@ -133,26 +147,26 @@ export default function DbBooking() {
                             <th>Location</th>
                             <th>Check-in Date</th>
                             <th>Check-out Date</th>
-                            <th>Price</th>
+                            <th>Total Price</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            {/* <th>Action</th> */}
                           </tr>
                         </thead>
 
                         <tbody>
                           {bookedHotels.map((hotel, i) => (
                             <tr key={i}>
-                              <td>{hotel.name}</td>
-                              <td>{hotel.location}</td>
-                              <td>{new Date(hotel.checkInDate).toLocaleString()}</td>
-                              <td>{new Date(hotel.checkOutDate).toLocaleString()}</td>
-                              <td>{hotel.pricePerNight} {hotel.currency}</td>
+                              <td>{hotel.hotelname}</td>
+                              <td>{hotel.cityCode}</td>
+                              <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
+                              <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
+                              <td>{hotel.pricing} EGP</td>
                               <td>
-                                <div className={`circle ${hotel.status === "Booked" ? "text-purple-1" : "text-yellow-1"}`}>
-                                  {hotel.status}
+                                <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
+                                {getHotelStatus(hotel.checkOut)}
                                 </div>
-                              </td>
-                              <td>
+                            </td>
+                              {/* <td>
                                 <div className="d-flex items-center">
                                   <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
                                     <i className="icon-pencil text-14"></i>
@@ -161,7 +175,7 @@ export default function DbBooking() {
                                     <i className="icon-delete text-14"></i>
                                   </button>
                                 </div>
-                              </td>
+                              </td> */}
                             </tr>
                           ))}
                         </tbody>

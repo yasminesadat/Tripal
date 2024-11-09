@@ -17,7 +17,7 @@ import { useParams } from "react-router-dom";
 
 
 export default function HotelDetails() {
-    const {name,hotelID}  = useParams();
+    const {cityCode,name,hotelID}  = useParams();
     console.log("1111",name);
 
   return (
@@ -88,7 +88,7 @@ export default function HotelDetails() {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar hotelID={hotelID} name={name} />
+                <TourSingleSidebar cityCode={cityCode} hotelID={hotelID} name={name} />
               </div>
             </div>
           </div>

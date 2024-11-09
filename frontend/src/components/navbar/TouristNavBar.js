@@ -22,8 +22,9 @@ const TouristNavBar = () => {
           <button className="dropbtn">Itineraries</button>
           <div className="dropdown-content">
             <Link to="/itineraries-history">Itineraries History</Link>
-            <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
             <Link to="/itineraries/booked-itineraries">Booked Itineraries</Link>
+            <Link to="/upcoming-itineraries">Upcoming Itineraries</Link>
+
           </div>
         </div>
 
@@ -43,14 +44,7 @@ const TouristNavBar = () => {
           </div>
         </div>
 
-        <div className="nav-bar-link dropdown">
-          <button className="dropbtn">Profile Management</button>
-          <div className="dropdown-content">
-            <Link to={`/tourist/profile`}>Profile</Link>
-            <Link to="/">Log out</Link>
-
-          </div>
-        </div>
+       
 
         <div className="nav-bar-link dropdown">
           <button className="dropbtn">Hotel & Flights </button>
@@ -58,6 +52,15 @@ const TouristNavBar = () => {
             <Link to="/hotel2" >Book Hotel</Link>
             <Link to="/tourist/search-flight" >Book Flights</Link>
             <Link to="/tourist/booking-history">History</Link>
+
+          </div>
+        </div>
+
+        <div className="nav-bar-link dropdown">
+          <button className="dropbtn">Profile Management</button>
+          <div className="dropdown-content">
+            <Link to={`/tourist/profile`}>Profile</Link>
+            <Link to="/">Log out</Link>
 
           </div>
         </div>

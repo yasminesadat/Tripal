@@ -96,15 +96,6 @@ export default function Hero6() {
                           )
                         }
                       >
-                        {/* <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                          <i className="text-20 icon-pin"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>Where</h5>
-                          <div className="js-select-control-chosen">
-                            {location ? location : "Search destinations"}
-                          </div>
-                        </div> */}
                       </div>
 
                        <div className="xl:d-none ml-30" >
@@ -142,37 +133,11 @@ export default function Hero6() {
                         </div>
                       </div>
                     </div>
-
-                    {/* <div className="searchFormItem js-select-control js-form-dd">
-                      <div
-                        className="searchFormItem__button"
-                        onClick={() =>
-                          setCurrentActiveDD((pre) =>
-                            pre === "tourType" ? "" : "tourType",
-                          )
-                        }
-                      >
-                        <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                          <i className="text-20 icon-flag"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>Tour Type</h5>
-                          <div className="js-select-control-chosen">
-                            {tourType ? tourType : "All tour"}
-                          </div>
-                        </div>
-                      </div>
-
-                      <TourType
-                        setTourType={setTourType}
-                        active={currentActiveDD === "tourType"}
-                      />
-                    </div> */}
                   </div>
 
                   <div className="searchForm__button">
                     <button
-                      onClick={() => navigate(`/hotelList/${selected}}`)}
+                      onClick={() => navigate(`/hotelList/${selected}`)}
                       className="button -dark-1 size-60 bg-accent-1 rounded-200 text-white"
                     >
                       <i className="icon-search text-16"></i>

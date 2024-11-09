@@ -256,7 +256,7 @@ const fetchTourData = async () => {
                       </div>
 
                       <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/hotelDetails/${elm.title}/${elm.id}`}>
+                        <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}`}>
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
                         </Link>

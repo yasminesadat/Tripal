@@ -62,10 +62,10 @@ export const getHotels = async (cityCode) => {
   };
 
 
-  export const saveBooking =async(userid,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status) =>{
+  export const saveBooking =async(userid,hotelid,hotelname,cityCode,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status) =>{
     // console.log("hiii",userid,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status);
     const requestBody = {
-      userid,hotelid,hotelname,singleNumber: singleRoom,doubleNumber: doubleRoom,tripleNumber: tripleRoom,checkIn,checkOut,pricing,status
+      userid,hotelid,hotelname,cityCode,singleNumber: singleRoom,doubleNumber: doubleRoom,tripleNumber: tripleRoom,checkIn,checkOut,pricing,status
     };
     try {
       const response = await axios.post(`/saveBooking`, requestBody);
@@ -76,6 +76,17 @@ export const getHotels = async (cityCode) => {
       console.log("ERRPR MESSAGE", errorMessage)
       throw new Error(errorMessage);
     };
+  }
+
+  export async function getHotelHistory(touristId) {
+    try {
+      const response = await axios.get(`/tourist/bookedHotels/${touristId}`);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error getting tourist's hotels':", error);
+      throw error;
+    }
   }
    
  

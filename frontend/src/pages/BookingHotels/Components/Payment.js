@@ -44,7 +44,7 @@ const styles = {
     },
 };
 
-const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,total,checkIn,checkOut}) => {
+const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber,tripleNumber,total,checkIn,checkOut}) => {
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
     const [date, setDate] = useState("");
@@ -104,7 +104,7 @@ const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,singl
         // console.log("Payment Information Submitted:",  userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed" );
         setBookingStage(3);
         try {
-            const responseSingle = await saveBooking(userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed");
+            const responseSingle = await saveBooking(userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed");
             
             setErrors({});
         }
