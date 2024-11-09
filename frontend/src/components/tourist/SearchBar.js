@@ -15,34 +15,38 @@ export default function Hero5() {
     const [destinationSearchData, setDestinationSearchData] = useState([]);
     const [originActive, setOriginActive] = useState(false);
     const [destinationActive, setDestinationActive] = useState(false);
-    const [originInput, setOriginInput] = useState(""); // New state to handle the origin input value
-    const [destinationInput, setDestinationInput] = useState(""); // New state to handle the destination input value
+    const [originInput, setOriginInput] = useState(""); 
+    const [destinationInput, setDestinationInput] = useState(""); 
 
     const navigate = useNavigate();
     const originRef = useRef();
     const destinationRef = useRef();
     const debounceTimeout = useRef(null);
     const dropDownContainer = useRef();
-    // Function to fetch city codes
-    const fetchCityCode = async (searchInfo, setData) => {
-        try {
-            if (searchInfo.length < 3 || searchInfo.length > 10) {
-                setData([]);
-                return;
-            }
-            const response = await axios.get(`http://localhost:5050/api/flightCity?searchinfo=${searchInfo}`);
-            const transformedData = response.data.map((city) => ({
-                cityCode: city.iataCode,
-                title: city.name,
-                location: city.address.countryCode,
-            }));
-            setData(transformedData);
-        } catch (error) {
-            message.error("Error fetching city codes", error);
-        }
-    };
 
-    // Handle input changes with debounce for origin and destination fields
+    const fetchCityCode = async (searchInfo, setData) => {
+      try {
+          if (searchInfo.length < 3 || searchInfo.length > 10) {
+              setData([]);
+              return;
+          }
+          const response = await axios.get(`http://localhost:5050/api/flightCity?searchinfo=${searchInfo}`);
+          
+          // Filter out cities without a valid city code
+          const transformedData = response.data
+              .filter(city => city.iataCode) // Only include cities with a valid iataCode
+              .map((city) => ({
+                  cityCode: city.iataCode,
+                  title: city.name,
+                  location: city.address.countryCode,
+              }));
+          
+          setData(transformedData);
+      } catch (error) {
+          message.error("Error fetching city codes", error);
+      }
+  };
+
     const handleInputChange = (e, setSearchData, setActive, setInputValue) => {
         const inputValue = e.target.value;
 
@@ -53,8 +57,8 @@ export default function Hero5() {
         debounceTimeout.current = setTimeout(() => {
             fetchCityCode(inputValue, setSearchData);
             setActive(true);
-            setInputValue(inputValue); // Set the input value as the user types
-        }, 300);
+            setInputValue(inputValue);
+        }, 50);
     };
 
     const handleSearch = async () => {
