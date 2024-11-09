@@ -33,15 +33,15 @@ const bookResource = async (req, res) => {
             );
             const timeIsAvailable = resource.availableTime.includes(selectedTime);
 
-            if (!dateIsAvailable || !timeIsAvailable) {
+            if (!dateIsAvailable || !timeIsAvailable)
                 return res.status(400).json({ error: 'Selected date or time is not available for this itinerary' });
-            }
+            
             
             const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
             if (existingBooking) {
                 existingBooking.selectedDate = selectedDate;
                 existingBooking.selectedTime = selectedTime;
-                existingBooking.tickets += 1;
+                existingBooking.tickets += tickets;
             } else {
                 resource.bookings.push({ touristId, selectedDate, selectedTime, tickets});
             }
@@ -52,13 +52,14 @@ const bookResource = async (req, res) => {
         } 
         else{
             const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
-            if (existingBooking) {
-                existingBooking.tickets += 1;
-            } else {
+            if (existingBooking) 
+                existingBooking.tickets += tickets;
+            
+            else 
                 resource.bookings.push({ touristId,tickets});
-            }
+            
             resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
-            tourist.wallet.amount -= resource.price;
+            tourist.wallet.amount -= resource.price*tickets;
         }
         if(tourist.wallet.amount<0)
             return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });

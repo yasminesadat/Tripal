@@ -115,7 +115,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                 <Paragraph>
                   <strong>Average Rating:</strong>{" "}
                   <Rate value={averageRating} disabled allowHalf />
-                  <span style={{ marginLeft: "5%" }}>({averageRating})</span>{" "}
+                  <span style={{ marginLeft: "5%" }}>({averageRating.toFixed(2)})</span>{" "}
                 </Paragraph>
               </div>
               <Space style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>

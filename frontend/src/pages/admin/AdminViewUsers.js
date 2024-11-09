@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
 import AdminNavBar from "../../components/navbar/AdminNavBar";
-import './UserList.css'; 
+import './UserList.css';
 import { message } from 'antd'
+import { requestAccountDeletion } from "../../api/RequestService";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -26,9 +27,15 @@ const UserList = () => {
   }, []); // Empty dependency array to run only once
 
   // Function to handle user deletion
-  const deleteUsers = async (id) => {
+  const deleteUsers = async (id, role) => {
     try {
-      const response = await deleteUser(id); // Call API to delete user
+      if (role === "Tourism Governor" || role === "Admin") {
+        const response = await deleteUser(id); // Call API to delete user
+      }
+      else {
+        const response = await requestAccountDeletion(role, id); // Call API to delete user
+
+      }
       const messageText = "User deleted successfully";
       const updatedData = users.filter((item) => item.userId !== id);
       setUsers(updatedData);
@@ -53,10 +60,10 @@ const UserList = () => {
             <li key={user._id} className="user-list-item">
               <div className="user-details">
                 <span><strong>User Name:</strong> {user.userName}</span>
-                <span><strong>ID:</strong> {user._id}</span>
+                <span><strong>ID:</strong> {user.userId}</span>
                 <span><strong>Type:</strong> {user.role}</span>
               </div>
-              <button className="delete-button" onClick={() => deleteUsers(user.userId)}>Delete</button>
+              <button className="delete-button" onClick={() => deleteUsers(user.userId, user.role)}>Delete</button>
             </li>
           ))}
         </ul>

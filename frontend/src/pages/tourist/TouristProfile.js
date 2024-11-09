@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getTouristInformation, updateTouristInformation, redeemPoints } from "../../api/TouristService";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
-import { useParams } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
@@ -26,6 +26,9 @@ const TouristHomePage = () => {
   const [touristCategories, setTouristCategories] = useState ([]);
   const [allTags, setAllTags] = useState ([]);
   const [allCats, setAllCats] = useState ([]);
+  const navigate=useNavigate();
+
+
 
   const [editedProfile, setEditedProfile] = useState({
     email: "",
@@ -172,6 +175,7 @@ const TouristHomePage = () => {
     try {
       const response = await requestAccountDeletion("Tourist", id);
       message.success(response.message);
+      navigate("/");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred.");
     }

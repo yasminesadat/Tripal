@@ -7,7 +7,7 @@ const historicalPlaceRoutes = [
   { path: "/historicalPlace", element: <HistoricalPlaceForm state={false} /> },
   { path: "/historicalPlace/:id", element: <HistoricalPlaceForm state={true} /> },
   { path: "/historicalPlace/tourismGoverner", element: <HistoricalPlacesList /> },
-  { path:"/historicalPlace/details/:id" ,element : <HistoricalPlaceDetails/>}
+  { path:"/historical-places/:id" ,element : <HistoricalPlaceDetails/>}
 ];
 
 export default historicalPlaceRoutes;
