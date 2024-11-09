@@ -64,11 +64,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route index element={<HomePage1 />} />
+            <Route index element={<HomePage5 />} />
             <Route path="/home-2" element={<HomePage2 />} />
             <Route path="/home-3" element={<HomePage3 />} />
             <Route path="/home-4" element={<HomePage4 />} />
-            <Route path="/home-5" element={<HomePage5 />} />
+            <Route path="/home-1" element={<HomePage1 />} />
             <Route path="/home-6" element={<HomePage6 />} />
             <Route path="/home-7" element={<HomePage7 />} />
             <Route path="/home-8" element={<HomePage8 />} />

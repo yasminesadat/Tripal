@@ -50,7 +50,7 @@ export default function Header4() {
 
           <div className="header__logo">
             <Link to="/" className="header__logo">
-              <img src="/img/general/logo-2.svg" alt="logo icon" />
+              <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
 
             <Menu />
