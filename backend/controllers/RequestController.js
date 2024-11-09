@@ -5,6 +5,7 @@ const User = require('../models/users/User.js')
 const Seller = require('../models/users/Seller.js')
 const TourGuide = require('../models/users/TourGuide.js')
 const Advertiser = require('../models/users/Advertiser.js')
+const Tourist = require('../models/users/Tourist.js')
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary"); 
 const Product = require("../models/Product"); 
@@ -219,21 +220,21 @@ const requestAccountDeletion = async (req, res) => {
   
       switch (role) {
         case "TourGuide":
-          await Itinerary.updateMany( { tourGuide: userId }, { $set: { deactivated: true } });
+          await Itinerary.updateMany( { tourGuide: userId }, { $set: { isActive: true } });
           await Itinerary.deleteMany( { tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
-          await TourGuide.findByIdAndDelete(id)
+          await TourGuide.findByIdAndDelete(userId)
           break;
         case "Advertiser":
           await Activity.updateMany( { advertiser: userId }, { $set: { deactivated: true } });
           await Activity.deleteMany( { advertiser: userId, date: { $gt: new Date() } });
-          await Advertiser.findByIdAndDelete(id)
+          await Advertiser.findByIdAndDelete(userId)
           break;
         case "Seller":
           await Product.deleteMany({ seller: userId });
-          await Seller.findByIdAndDelete(id)
+          await Seller.findByIdAndDelete(userId)
           break;
         case "Tourist":
-          await Tourist.findByIdAndDelete(id)
+          await Tourist.findByIdAndDelete(userId)
           break;
         default:
           return res.status(400).json({ message: "Invalid role" });

@@ -35,7 +35,7 @@ const TourGuideProfile = () => {
 
   const handleDeletion = async () => {
     try {
-      const response = await requestAccountDeletion("Tourguide", id);
+      const response = await requestAccountDeletion("TourGuide", id);
       message.success(response.message);
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred");
