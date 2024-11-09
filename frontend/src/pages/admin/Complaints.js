@@ -52,7 +52,7 @@ const ComplaintsPage = () => {
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getAllComplaints();
             setComplaints(updatedComplaints);
-            //setReplyMessage(""); 
+            setReplyMessage(""); 
             //setSelectedComplaint(null); 
             message.success("Reply sent successfully!");
         } catch (error) {
