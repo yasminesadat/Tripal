@@ -110,7 +110,7 @@ const ProductCard = ({
                 {newIsArchived ? "Unarchive" : "Archive"}
               </span>,
             ]
-          : (userRole === "Admin" || userRole === "Seller") ? [
+          : (userRole === "Admin") ? [
               <span
                 key="archive"
                 onClick={handleArchiveClick}
@@ -132,7 +132,7 @@ const ProductCard = ({
       <div style={{ marginTop: "20px", textAlign: "center" }}>
         <Rate value={averageRating} disabled allowHalf />
         <span style={{ marginLeft: "5%", marginBottom: "5%", color: "gray" }}>
-          ({averageRating})
+          ({averageRating.toFixed(2)})
         </span>
       </div>
     </Card>

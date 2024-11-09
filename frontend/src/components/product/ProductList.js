@@ -31,7 +31,7 @@ const ProductList = ({ curr = "EGP" }) => {
   const errorDisplayedRef = useRef(false);
   const [currentPage, setCurrentPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(1); 
-
+  
   const getProducts = async (page = 1) => {
     setLoading(true);
     try {
@@ -40,29 +40,28 @@ const ProductList = ({ curr = "EGP" }) => {
         searchValue,
         priceRange[0],
         priceRange[1],
-        sortOrder      
+        sortOrder ,
+        userRole     
         );
-  
-      if (productsData) {
-        let filtered = productsData.products;
-        if (userRole === "Tourist") {
-          filtered = filtered.filter((product) => product.isArchived !== true);
-        }
-        if (productsData.totalPages) {
-          if(userRole === "Tourist"){
-            setTotalPages(productsData.totalPagesUnarchived);
-          }
-          else{          
-            setTotalPages(productsData.totalPages);
+
+        let filtered;
+        if(userRole === "Tourist"){
+          filtered = productsData.unarchivedProducts;
+          if(productsData.totalPagesUnarchived){
+          setTotalPages(productsData.totalPagesUnarchived);
           }
         }
+        else{
+          filtered = productsData.products;
+          if(productsData.totalPages){
+          setTotalPages(productsData.totalPages);
+          }
+        }
+        
         setProducts(filtered);
         setFilteredProducts(filtered);
         setCurrentPage(page); 
-      } else if (page > 1) {
-        message.info("No more products available.");
-      }
-    } catch (error) {
+      } catch (error) {
       if (!errorDisplayedRef.current) {
         message.error("Network Error: Unable to fetch products. Please try again later.");
         errorDisplayedRef.current = true;
