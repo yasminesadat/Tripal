@@ -8,15 +8,24 @@ export const createProduct = (productData) => {
   });
 };
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortOrder) => {
   try {
-    const response = await axios.get("/products");
+    const response = await axios.get("/products", {
+      params: {
+        page,
+        searchValue,
+        minPrice,
+        maxPrice,
+        sortOrder,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;
   }
 };
+
 
 export const editProduct = async (id, productData) => {
   try {

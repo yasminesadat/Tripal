@@ -14,6 +14,7 @@ import { fetchProducts } from "../../api/ProductService";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import ProductCard from "./ProductCard";
 import Footer from "../common/Footer";
+import Pagination from "../common/Pagination";
 import { userRole } from "../../IDs";
 
 const { Search } = Input;
@@ -28,32 +29,54 @@ const ProductList = ({ curr = "EGP" }) => {
   const [loading, setLoading] = useState(true);
   const [exchangeRate, setExchangeRate] = useState(1);
   const errorDisplayedRef = useRef(false);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
+
+  const getProducts = async (page = 1) => {
+    setLoading(true);
+    try {
+      const productsData = await fetchProducts(
+        page,
+        searchValue,
+        priceRange[0],
+        priceRange[1],
+        sortOrder      
+        );
+  
+      if (productsData) {
+        let filtered = productsData.products;
+        if (userRole === "Tourist") {
+          filtered = filtered.filter((product) => product.isArchived !== true);
+        }
+        if (productsData.totalPages) {
+          if(userRole === "Tourist"){
+            setTotalPages(productsData.totalPagesUnarchived);
+          }
+          else{          
+            setTotalPages(productsData.totalPages);
+          }
+        }
+        setProducts(filtered);
+        setFilteredProducts(filtered);
+        setCurrentPage(page); 
+      } else if (page > 1) {
+        message.info("No more products available.");
+      }
+    } catch (error) {
+      if (!errorDisplayedRef.current) {
+        message.error("Network Error: Unable to fetch products. Please try again later.");
+        errorDisplayedRef.current = true;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const productsData = await fetchProducts();
-        if (productsData) {
-          let filtered = productsData;
-          if (userRole === "Tourist") {
-            filtered = filtered.filter(product => product.isArchived !== true);
-          }
-          const sortedProducts = filtered.sort((a, b) => b.averageRating - a.averageRating);
-          setProducts(sortedProducts);
-          setFilteredProducts(sortedProducts);
-        }
-      } catch (error) {
-        if (!errorDisplayedRef.current) {
-          message.error(
-            "Network Error: Unable to fetch products. Please try again later."
-          );
-          errorDisplayedRef.current = true; 
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+    getProducts(currentPage); 
+  }, [sortOrder]);
 
+  useEffect(() => {
     const getExchangeRate = async () => {
       if (curr) {
         try {
@@ -65,7 +88,6 @@ const ProductList = ({ curr = "EGP" }) => {
       }
     };
 
-    getProducts();
     getExchangeRate();
   }, [curr]);
 
@@ -75,46 +97,19 @@ const ProductList = ({ curr = "EGP" }) => {
 
   const handleSortChange = (value) => {
     setSortOrder(value);
-    filterProducts(searchValue, priceRange, value); 
   };
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
-    filterProducts(searchValue, value, sortOrder);
-  };
-
-  const filterProducts = (searchValue, priceRange, sortOrder) => {
-    let results = products;
-
-    if (searchValue) {
-      results = results.filter((product) =>
-        product.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
-
-    results = results.filter((product) => {
-      const formattedPrice = formatPrice(product.price);
-      return formattedPrice >= priceRange[0] && formattedPrice <= priceRange[1];
-    });
-
-    results = results.sort((a, b) => {
-      if (sortOrder === "asc") {
-        return a.averageRating - b.averageRating;
-      } else {
-        return b.averageRating - a.averageRating;
-      }
-    });
-
-    setFilteredProducts(results);
-  };
-
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice; 
   };
 
   const handleGoClick = () => {
-    filterProducts(searchValue, priceRange, sortOrder);
+    getProducts(1); 
+  };
+  
+  const formatPrice = (price) => {
+    const convertedPrice = (price * exchangeRate).toFixed(2);
+    return convertedPrice;
   };
 
   const formatPriceRange = () => {
@@ -122,6 +117,13 @@ const ProductList = ({ curr = "EGP" }) => {
       return `${priceRange[0]} - ${priceRange[1]} & above`;
     }
     return `${priceRange[0]} - ${priceRange[1]}`;
+  };
+
+  const onPageChange = (page) => {
+    if (page !== currentPage) {
+      getProducts(page);
+      window.scrollTo(0, 0); 
+    }
   };
 
   return (
@@ -149,7 +151,7 @@ const ProductList = ({ curr = "EGP" }) => {
             </Button>
           </div>
           <Select
-            defaultValue="desc"
+            value={sortOrder} 
             style={{ width: "100%" }}
             onChange={handleSortChange}
           >
@@ -201,13 +203,14 @@ const ProductList = ({ curr = "EGP" }) => {
                           quantity={product.quantity}
                           averageRating={product.averageRating}
                           isArchived={product.isArchived}
-                          sales = {product.sales}
+                          sales={product.sales}
                         />
                       </Col>
                     ))}
                   </Row>
                 </div>
               )}
+              <Pagination curr ={currentPage} totalPages ={totalPages} onPageChange={onPageChange} /><br/>
             </>
           )}
         </div>
