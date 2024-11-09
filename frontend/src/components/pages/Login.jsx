@@ -1,77 +1,160 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBCheckbox,
+  MDBIcon,
+} from "mdb-react-ui-kit";
 
 export default function Login() {
   return (
-    <section className="hero">
-      <div className="hero__bg">
-        <img src="/img/hero/5/bg.png" alt="background" />
-      </div>
+    <div className="full-height-container">
+      <MDBContainer fluid className="p-4">
+        <MDBRow>
+          <MDBCol
+            md="6"
+            className="text-center text-md-start d-flex flex-column justify-content-center"
+          >
+            <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+              The best offer <br />
+              <span className="text-primary">for your business</span>
+            </h1>
 
-      <div className="container">
-        <div className="column1"></div>
+            <p className="px-3" style={{ color: "hsl(217, 10%, 50.8%)" }}>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet,
+              itaque accusantium odio, soluta, corrupti aliquam quibusdam
+              tempora at cupiditate quis eum maiores libero veritatis? Dicta
+              facilis sint aliquid ipsum atque?
+            </p>
+          </MDBCol>
 
-        <div className="column2">
-          <div>
-            <img src="/img/hero/3/1.png" alt="image" />
-            <img src="/img/hero/3/3.png" alt="image" />
-            <div />
-            <div className="column3">
-              <img src="/img/hero/3/2.png" alt="image" />
-            </div>
-          </div>
-        </div>
-      </div>
+          <MDBCol md="6">
+            <MDBCard className="my-5">
+              <MDBCardBody className="p-5">
+                <MDBRow>
+                  <MDBCol col="6">
+                    <MDBInput
+                      wrapperClass="mb-4"
+                      label="First name"
+                      id="form1"
+                      type="text"
+                    />
+                  </MDBCol>
 
+                  <MDBCol col="6">
+                    <MDBInput
+                      wrapperClass="mb-4"
+                      label="Last name"
+                      id="form1"
+                      type="text"
+                    />
+                  </MDBCol>
+                </MDBRow>
+
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Email"
+                  id="form1"
+                  type="email"
+                />
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Password"
+                  id="form1"
+                  type="password"
+                />
+
+                <div className="d-flex justify-content-center mb-4">
+                  <MDBCheckbox
+                    name="flexCheck"
+                    value=""
+                    id="flexCheckDefault"
+                    label="Subscribe to our newsletter"
+                  />
+                </div>
+
+                <MDBBtn className="w-100 mb-4" size="md">
+                  sign up
+                </MDBBtn>
+
+                <div className="text-center">
+                  <p>or sign up with:</p>
+
+                  <MDBBtn
+                    tag="a"
+                    color="none"
+                    className="mx-3"
+                    style={{ color: "#1266f1" }}
+                  >
+                    <MDBIcon fab icon="facebook-f" size="sm" />
+                  </MDBBtn>
+
+                  <MDBBtn
+                    tag="a"
+                    color="none"
+                    className="mx-3"
+                    style={{ color: "#1266f1" }}
+                  >
+                    <MDBIcon fab icon="twitter" size="sm" />
+                  </MDBBtn>
+
+                  <MDBBtn
+                    tag="a"
+                    color="none"
+                    className="mx-3"
+                    style={{ color: "#1266f1" }}
+                  >
+                    <MDBIcon fab icon="google" size="sm" />
+                  </MDBBtn>
+
+                  <MDBBtn
+                    tag="a"
+                    color="none"
+                    className="mx-3"
+                    style={{ color: "#1266f1" }}
+                  >
+                    <MDBIcon fab icon="github" size="sm" />
+                  </MDBBtn>
+                </div>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
       <style>{`
-       .hero {
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
+        .full-height-container {
+          height: 100vh; /* Full height of the screen */ !important
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          align-items: center !important;
+          position: relative !important;
+        }
+
+        .column {
+          flex: 1 !important; /* Each column takes equal space */
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
 
         .hero__bg img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          position: absolute;
-          top: 0;
-          left: 0;
-          z-index: -1;
-        }
-
-        .container {
-          display: flex;
-          justify-content: space-between;
-          align-items: stretch; /* Align heights of columns */
-          height: 100%;
-        }
-
-        .column2 {
-          margin-right: 20%; /* Add space between columns */
-        }
-
-        .login-section {
-          z-index: 1;
-          background: rgba(255, 255, 255, 0.8); /* White background with opacity */
-          padding: 20px;
-          border-radius: 8px;
-          transform: translateY(50px); /* Translate down */
-        }
-
-        .hero__image {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          z-index: 1;
-        }
-
-        .hero__image img {
-          margin-bottom: 10px; /* Add some space between images */
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          z-index: -1 !important;
         }
       `}</style>
-    </section>
+    </div>
   );
 }

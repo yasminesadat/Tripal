@@ -9,7 +9,7 @@ import TestimonialsThree from "@/components/homes/testimonials/TestimonialsThree
 import TourTypesTwo from "@/components/homes/tourTypes/TourTypesTwo";
 import FeaturedTrips from "@/components/homes/tours/FeaturedTrips";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header4 from "@/components/layout/header/Header4";
+import Header3 from "@/components/layout/header/Header3";
 import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
@@ -23,7 +23,7 @@ export default function HomePage5() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <Header4 />
+        <Header3 />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />

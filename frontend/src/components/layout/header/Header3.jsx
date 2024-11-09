@@ -13,7 +13,7 @@ export default function Header3() {
   };
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [addClass, setAddClass] = useState(false);
+  const [addClass, setAddClass] = useState(true);
 
   // Add a class to the element when scrolled 50px
   const handleScroll = () => {
