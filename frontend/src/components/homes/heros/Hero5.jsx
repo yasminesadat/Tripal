@@ -44,7 +44,7 @@ export default function Hero5() {
           style={{ height: "100%", width: "auto" }}
           alt="image"
         />
-        <img src="/img/hero/5/1.jpg" alt="image" />
+        <img src="/img/hero/5/wallpaper.jpg" alt="image" />
         <img src="/img/hero/5/mobile.svg" alt="image" />
       </div>
 
@@ -68,7 +68,7 @@ export default function Hero5() {
               >
                 Search Your Next
                 <br className="md:d-none" />
-                <span className="text-accent-2">Holiday</span>
+                <span className="pink">Holiday</span>
               </h1>
 
               <div
@@ -86,7 +86,7 @@ export default function Hero5() {
                         className="searchFormItem__button"
                         onClick={() =>
                           setCurrentActiveDD((pre) =>
-                            pre == "location" ? "" : "location",
+                            pre == "location" ? "" : "location"
                           )
                         }
                       >
@@ -112,7 +112,7 @@ export default function Hero5() {
                         className="searchFormItem__button"
                         onClick={() =>
                           setCurrentActiveDD((pre) =>
-                            pre == "calender" ? "" : "calender",
+                            pre == "calender" ? "" : "calender"
                           )
                         }
                       >
@@ -138,7 +138,7 @@ export default function Hero5() {
                         className="searchFormItem__button"
                         onClick={() =>
                           setCurrentActiveDD((pre) =>
-                            pre == "tourType" ? "" : "tourType",
+                            pre == "tourType" ? "" : "tourType"
                           )
                         }
                       >
@@ -163,7 +163,7 @@ export default function Hero5() {
                   <div className="searchForm__button">
                     <button
                       onClick={() => navigate("/tour-list-3")}
-                      className="button -dark-1 bg-accent-2 rounded-200 text-white"
+                      className="button bg-stone rounded-200 text-white"
                     >
                       <i className="icon-search text-16 mr-10"></i>
                       Search

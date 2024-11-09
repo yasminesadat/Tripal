@@ -105,7 +105,7 @@
   --color-pink: #e0829d;
   --color-stone: #036264;
   --color-stone-light: #5a9ea0;
-  --dark-green: #11302a;
+  --color-dark-green: #11302a;
   --color-white: #ffffff;
   --color-black: #000000;
   --color-border: #dddddd;
@@ -174,8 +174,16 @@
   color: var(--color-stone-light) !important;
 }
 
+.bg-stone {
+  background-color: var(--color-stone) !important;
+}
+
+.bg-stone:hover {
+  background-color: var(--color-dark-green) !important;
+}
+
 .dark-green {
-  color: var(--color-stone-light) !important;
+  color: var(--color-dark-green) !important;
 }
 /*My additions end*/
 
