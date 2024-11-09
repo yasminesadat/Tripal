@@ -21,9 +21,9 @@ export default function UserForm() {
 
   const onFinish = async () => {
     setLoading(true);
-    console.log(form.getFieldValue("email"), form.getFieldValue("password"));
+    console.log(form.getFieldValue("userName"), form.getFieldValue("password"));
     const response = await login(
-      form.getFieldValue("email"),
+      form.getFieldValue("userName"),
       form.getFieldValue("password")
     );
     setLoading(false);
@@ -88,12 +88,9 @@ export default function UserForm() {
         >
           {/* Email Field */}
           <Form.Item
-            label="Email Address"
-            name="email"
-            rules={[
-              { required: true, message: "Please enter your email" },
-              { type: "email", message: "Please enter a valid email" },
-            ]}
+            label="Username"
+            name="userName"
+            rules={[{ required: true, message: "Please enter your username" }]}
           >
             <Input
               placeholder="Email"
@@ -199,7 +196,7 @@ export default function UserForm() {
           border-color: #d9d9d9 !important;  /* Default grey border */
         }
 
-        /* Focused email field should change to light purple */
+        /* Focused userName field should change to light purple */
         .ant-input:focus {
           border-color: var(--color-light-purple) !important;
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;

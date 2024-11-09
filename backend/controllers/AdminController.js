@@ -55,36 +55,6 @@ const addAdmin = async (req, res) => {
   }
 };
 
-const loginAdmin = async (req, res) => {
-  const { userName, password } = req.body;
-
-  if (!userName || !password) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
-  try {
-    const admin = await Admin.findOne({ userName });
-    if (!admin) {
-      return res.status(400).json({ message: "Invalid username or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid username or password" });
-    }
-
-    const token = generateToken(admin._id, "Admin");
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: 3600 * 1000,
-    });
-
-    res.status(200).json({ token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const deleteUser = async (req, res) => {
   console.log("I came here");
   const { id } = req.params; // Assuming you're passing id in the URL params like /deleteUser/:id
@@ -137,4 +107,4 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-module.exports = { addAdmin, deleteUser, getAllUsers, loginAdmin };
+module.exports = { addAdmin, deleteUser, getAllUsers };

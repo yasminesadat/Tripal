@@ -5,7 +5,6 @@ const {
   deleteUser,
   addAdmin,
   getAllUsers,
-  loginAdmin,
 } = require("../controllers/AdminController");
 const { changePassword } = require("../controllers/PasswordController.js");
 const Admin = require("../models/users/Admin.js");
@@ -14,7 +13,6 @@ const {
   getAllItinerariesForAdmin,
 } = require("../controllers/ItineraryController.js");
 
-router.post("/admin/login", loginAdmin);
 router.post("/admin/addAdmin", addAdmin);
 router.delete("/admin/user/:id", deleteUser);
 router.get("/admin/users", getAllUsers);

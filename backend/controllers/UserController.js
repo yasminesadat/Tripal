@@ -1,6 +1,7 @@
 const User = require("../models/users/User"); // Adjust the path as necessary
 const TourGuide = require("../models/users/TourGuide");
 const Advertiser = require("../models/users/Advertiser");
+const Admin = require("../models/users/Admin");
 const Seller = require("../models/users/Seller");
 const Tourist = require("../models/users/Tourist");
 const TourismGovernor = require("../models/users/TourismGovernor");
@@ -21,22 +22,26 @@ const generateToken = (id, role) => {
 };
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { userName, password } = req.body;
 
-  if (!email || !password) {
+  if (!userName || !password) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ userName });
 
     if (!user) {
-      const request = await Request.findOne({ email });
+      const request = await Request.findOne({ userName });
       if (!request) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res
+          .status(400)
+          .json({ message: "Invalid username or password" });
       }
       if (!(await bcrypt.compare(password, request.password))) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res
+          .status(400)
+          .json({ message: "Invalid username or password" });
       }
       if (request.status === "pending")
         return res.status(403).json({
@@ -62,10 +67,13 @@ const loginUser = async (req, res) => {
       case "Tourism Governor":
         userSchema = TourismGovernor;
         break;
+      case "Admin":
+        userSchema = Admin;
+        break;
     }
 
     // Find the user in the relevant schema
-    const roleUser = await userSchema.findOne({ email });
+    const roleUser = await userSchema.findOne({ userName });
     if (roleUser && (await bcrypt.compare(password, roleUser.password))) {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
@@ -74,7 +82,7 @@ const loginUser = async (req, res) => {
       });
       res.status(200).json({ token });
     } else {
-      res.status(400).json({ message: "Invalid email or password" });
+      res.status(400).json({ message: "Invalid username or password" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

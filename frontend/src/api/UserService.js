@@ -1,8 +1,8 @@
 import { axios } from "./axios";
 
-export async function login(email, password) {
+export async function login(userName, password) {
   try {
-    await axios.post("/login", { email, password });
+    await axios.post("/login", { userName, password });
     return { status: "success", message: "Logged in successfully!" };
   } catch (error) {
     console.log(error);
