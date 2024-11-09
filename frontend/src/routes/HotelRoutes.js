@@ -13,10 +13,10 @@ const hotelRoutes = [
     {path:"/hotel2",element:<Hero6/>},
     {path:"/hotelList",element:<TourList1/>},
     {path:"/hotelList/:cityCode", element:<TourList1/>},
-    {path:"/hotelDetails/:name/:hotelID", element:<HotelDetails/>},
+    {path:"/hotelDetails/:cityCode/:name/:hotelID", element:<HotelDetails/>},
     {path:"/map",element:<Map/>},
     // {path:"/searchEngine",element:<HeaderSerch/>},
-    {path:"/confirmBooking/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency",element:<BookingPages/>},
+    {path:"/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate",element:<BookingPages/>},
 
     {path:"/payment",element:<CreditCard/>}
   //  <Route path="/map" element={<Map/>} />

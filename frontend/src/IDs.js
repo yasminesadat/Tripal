@@ -6,7 +6,7 @@ const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
 const advertiserID = "6726aaea44ae09c9c4e1f809"; // advertiser profile final NEVER DELETE
 const tourGuideID = "672a8d82506908d56bc9a9d9";
 const touristFlight = "672aff256aa38ed2c3b51b36"; //TOURIST THAT BOOKS FLIGHTS
-// const hotelTourist="672d644cf0af912964daa4f9"
+const hotelHistoryTourist="672d644cf0af912964daa4f9"
 const hotelTourist="6724842b5831eed787083b57"
 
 //mimics what will be in token to adjust some component
@@ -25,8 +25,8 @@ module.exports = {
   advertiserID,
   tourGuideID,
   touristFlight,
-  hotelTourist
-
+  hotelTourist,
+  hotelHistoryTourist
 };
 
 // accounts for changing password

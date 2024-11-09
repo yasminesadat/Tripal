@@ -2,7 +2,8 @@ const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
-const Request = require('../models/Request.js')
+const Request = require('../models/Request.js');
+const hotelBookings = require("../models/BookingHotel.js");
 
 
 const createTourist = async (req, res) => {
@@ -247,6 +248,43 @@ const getTouristBookedFlights = async (req, res) => {
   }
 };
 
+const getTouristBookedHotels = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedHotels');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+    const bookedHotels=tourist.bookedHotels;
+    if (!bookedHotels){
+      return res.status(400).json({ error: "No Booked Hotels!" });
+
+    }
+    const HotelInfo=[];
+    
+    for(let i=0;i<bookedHotels.length;i++){
+      const hotel = await hotelBookings.findById(bookedHotels[i]._id);
+      if (!hotel){
+        return res.status(404).json({ error: "Can't return hotels history!" });
+      }
+      HotelInfo.push(hotel)
+    }
+
+    return res.status(200).json({ bookedHotels: HotelInfo });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
 const getTouristAge = async (req, res) => {
   try {
     const { id } = req.params;
@@ -278,4 +316,5 @@ module.exports = { createTourist,
                    redeemPoints, 
                    getTouristNameAndEmail,
                    getTouristBookedFlights,
-                  getTouristAge };
+                  getTouristAge,
+                  getTouristBookedHotels };

@@ -3,7 +3,7 @@ import CreditCard from "./Components/Payment";
 import { useParams } from "react-router-dom";
 import { format } from 'date-fns';
 import img from "./Components/HotelsImages/bookingicon2.png"
-import { hotelTourist } from "../../IDs";
+import { hotelHistoryTourist } from "../../IDs";
 
 
 export default function BookingPages() {
@@ -11,7 +11,7 @@ export default function BookingPages() {
   const [bookingStage, setBookingStage] = useState(2);
   const [total,setTotal]=useState(0);
   const today=new Date();
-  const {hotelID, name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut,currency}= useParams();
+  const {cityCode,hotelID, name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut,currency,exchangeRate}= useParams();
 
   useEffect(() => {
     const calculatedTotal =  (
@@ -41,7 +41,7 @@ export default function BookingPages() {
         <h2 className="text-30 md:text-24 fw-700 mb-30">How do you want to pay?</h2>
 
         <div className="tabs -pills-3 js-tabs">
-          <CreditCard bookingStage={bookingStage} setBookingStage={setBookingStage} userid={hotelTourist} hotelid={hotelID} hotelname={name} singleNumber={singleNumber} doubleNumber={doubleNumber} tripleNumber={tripleNumber} total={total} checkIn={checkIn} checkOut={checkOut}/>
+          <CreditCard bookingStage={bookingStage} setBookingStage={setBookingStage} cityCode={cityCode} userid={hotelHistoryTourist} hotelid={hotelID} hotelname={name} singleNumber={singleNumber} doubleNumber={doubleNumber} tripleNumber={tripleNumber} total={total/exchangeRate} checkIn={checkIn} checkOut={checkOut} />
 </div>
      </div>
      )

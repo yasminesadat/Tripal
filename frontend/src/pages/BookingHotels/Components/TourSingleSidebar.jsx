@@ -7,7 +7,7 @@ import { getConversionRate } from "../../../api/ExchangeRatesService";
 // import {getConversionRate} from
 
   
-  export default function TourSingleSidebar({ hotelID,name }) {
+  export default function TourSingleSidebar({cityCode, hotelID,name }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -384,7 +384,7 @@ import { getConversionRate } from "../../../api/ExchangeRatesService";
             className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20" 
             onClick={() => {
                 // Navigate to the confirmation page
-                window.location.href = `/confirmBooking/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}`;
+                window.location.href = `/confirmBooking/${cityCode}/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}/${exchangeRate}`;
             }}
         >
             Book Now
