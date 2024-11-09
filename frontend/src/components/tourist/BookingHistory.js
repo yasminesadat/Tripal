@@ -3,6 +3,8 @@ import { getTouristFlights } from "../../api/TouristService";
 import { getHotelHistory } from "../../api/HotelService"; //from service 
 import { touristId } from "../../IDs";
 import { hotelHistoryTourist } from "../../IDs";
+import { format } from 'date-fns';
+
 
 const tabs = ["Flights", "Hotels"];
 
@@ -40,6 +42,17 @@ export default function DbBooking() {
     const now = new Date();
     return new Date(arrivalTime) < now ? "Flight Complete" : "Flight Upcoming";
   };
+
+  const getHotelStatus = (checkout) => {
+    const now = new Date();
+    return new Date(checkout) < now ? "completed" : "confirmed";
+  };
+
+
+
+  
+
+
 
   return (
     <div className="dashboard js-dashboard">
@@ -145,14 +158,14 @@ export default function DbBooking() {
                             <tr key={i}>
                               <td>{hotel.hotelname}</td>
                               <td>{hotel.cityCode}</td>
-                              <td>{hotel.checkIn}</td>
-                              <td>{hotel.checkOut}</td>
+                              <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
+                              <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
                               <td>{hotel.pricing} EGP</td>
                               <td>
-                                <div className={`circle ${hotel.status === "confirmed" ? "text-purple-1" : "text-yellow-1"}`}>
-                                  {hotel.status}
+                                <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
+                                {getHotelStatus(hotel.checkOut)}
                                 </div>
-                              </td>
+                            </td>
                               {/* <td>
                                 <div className="d-flex items-center">
                                   <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
