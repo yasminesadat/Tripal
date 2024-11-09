@@ -12,7 +12,7 @@ const SellerNavBar = () => {
           <Link to="/create-seller">Create Profile</Link>
         </div> */}
         <div className="nav-bar-link">
-          <Link to="/seller/profile">Edit Profile</Link>
+          <Link to="/seller/profile">Profile</Link>
         </div>
         <div className="nav-bar-link">
           <Link to="/seller/create-product">Create Product</Link>

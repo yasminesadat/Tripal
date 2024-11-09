@@ -8,9 +8,10 @@ import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
 import Badge from "../../components/tourist/Badge";
 import Currency from "../../components/tourist/Currency";
 import ChangePassword from "../../components/common/ChangePassword";
-import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import { touristId } from "../../IDs";
+
 const TouristHomePage = () => {
   const id = touristId;
   const userType = "tourist";

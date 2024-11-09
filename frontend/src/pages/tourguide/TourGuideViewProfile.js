@@ -4,7 +4,7 @@ import { updateProfile, getProfileData } from "../../api/TourGuideService";
 import '../seller/SellerProfile.css';
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
 import ChangePassword from "../../components/common/ChangePassword";
-import { requestAccountDeletion } from "../../api/DeletionRequestService";
+import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import { tourGuideID } from '../../IDs';
 
