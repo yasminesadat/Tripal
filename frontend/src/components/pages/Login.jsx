@@ -7,32 +7,9 @@ import {
   MDBCol,
   MDBCard,
   MDBCardBody,
-  MDBIcon,
 } from "mdb-react-ui-kit";
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailValid, setEmailValid] = useState(true);
-  const [passwordValid, setPasswordValid] = useState(true);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    setEmailValid(value.includes("@") && value.includes("."));
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    setPasswordValid(value.length >= 6);
-  };
-
   return (
     <div className="full-height-container">
       <MDBContainer fluid className="p-4">
@@ -41,6 +18,23 @@ export default function Login() {
             md="6"
             className="text-center text-md-start d-flex flex-column justify-content-center"
           >
+            <div className="images-container">
+              <img
+                src="/img/hero/3/1.png"
+                alt="image"
+                className="background-image"
+              />
+              <img
+                src="/img/hero/3/2.png"
+                alt="image"
+                className="background-image"
+              />
+              <img
+                src="/img/hero/3/3.png"
+                alt="image"
+                className="background-image"
+              />
+            </div>
             <div
               data-aos="fade-up"
               data-aos-delay="200"
@@ -82,50 +76,40 @@ export default function Login() {
           align-items: center !important;
           position: relative !important;
         }
-
-        .password-toggle-icon {
-          position: absolute !important;
-          right: 10px !important;
-          top: 50% !important;
-          transform: translateY(-50%) !important;
-          cursor: pointer !important;
-        }
-
-        .is-invalid {
-          border-color: red;
-        }
-
-        .invalid-feedback {
-          color: red;
-          font-size: 0.875rem;
-          margin-top: 5px;
-        }
-
-        /* Floating Label Styles */
-        .form-input {
-          position: relative;
-        }
-
-        .form-input input {
-          padding-top: 1.25rem;
-        }
-
-        .form-input label {
+ .images-container {
           position: absolute;
-          top: 0.75rem;
-          left: 0.5rem;
-          transition: all 0.2s ease;
-          font-size: 1rem;
-          color: #888;
+          margin-top: 3%;
+          margin-left: 1%;
+          width: 50%;
+          height: 80%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          gap: 1% 30%;
+          justify-items: left;
+          align-items: center;
         }
 
-        .form-input.floating label,
-        .form-input input:focus + label {
-          top: -0.5rem;
-          left: 0.5rem;
-          font-size: 0.75rem;
-          color: #333;
+        .background-image {
+          width: 70%;
+          height: auto;
         }
+
+        .images-container img:nth-child(1) {
+          grid-column: 1 / 2;
+          grid-row: 1 / 2;
+        }
+
+        .images-container img:nth-child(2) {
+          grid-column: 1 / 2;
+          grid-row: 2 / 3;
+        }
+
+        .images-container img:nth-child(3) {
+          grid-column: 2 / 3;
+          grid-row: 1 / 3;
+        }
+
       `}</style>
     </div>
   );
