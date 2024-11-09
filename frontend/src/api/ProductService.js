@@ -8,7 +8,7 @@ export const createProduct = (productData) => {
   });
 };
 
-export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortOrder) => {
+export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortOrder, userRole) => {
   try {
     const response = await axios.get("/products", {
       params: {
@@ -17,6 +17,7 @@ export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortO
         minPrice,
         maxPrice,
         sortOrder,
+        userRole
       },
     });
     return response.data;
