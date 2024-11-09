@@ -68,20 +68,23 @@ const deleteUser = async (req, res) => {
     const role = correspondingUser[0].role;
     console.log("Role is", role);
     switch (role) {
-      case "Tour Guide":
-        await TourGuide.findByIdAndDelete(id)
-        break;
-      case "Advertiser":
-        await Advertiser.findByIdAndDelete(id)
-        break;
-      case "Seller":
-        await Seller.findByIdAndDelete(id)
-        break;
-      case "Tourist":
-        await Tourist.findByIdAndDelete(id)
-        break;
+      // case "Tour Guide":
+      //   await TourGuide.findByIdAndDelete(id)
+      //   break;
+      // case "Advertiser":
+      //   await Advertiser.findByIdAndDelete(id)
+      //   break;
+      // case "Seller":
+      //   await Seller.findByIdAndDelete(id)
+      //   break;
+      // case "Tourist":
+      //   await Tourist.findByIdAndDelete(id)
+      //   break;
       case "Tourism Governor":
         await TourismGovernor.findByIdAndDelete(id)
+        break;
+      case "Admin":
+        await Admin.findByIdAndDelete(id)
         break;
       default:
         return res.status(400).json({ message: "Invalid role" });

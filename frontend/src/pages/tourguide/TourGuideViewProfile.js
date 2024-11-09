@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, usenavigate, useParams } from 'react-router-dom';
 import { updateProfile, getProfileData } from "../../api/TourGuideService";
 import '../seller/SellerProfile.css';
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
@@ -13,6 +13,7 @@ const TourGuideProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,6 +38,7 @@ const TourGuideProfile = () => {
     try {
       const response = await requestAccountDeletion("TourGuide", id);
       message.success(response.message);
+      navigate("/");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred");
     }
