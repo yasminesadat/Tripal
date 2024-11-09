@@ -16,7 +16,7 @@ const hotelRoutes = [
     {path:"/hotelDetails/:name/:hotelID", element:<HotelDetails/>},
     {path:"/map",element:<Map/>},
     // {path:"/searchEngine",element:<HeaderSerch/>},
-    {path:"/confirmBooking/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut",element:<BookingPages/>},
+    {path:"/confirmBooking/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency",element:<BookingPages/>},
 
     {path:"/payment",element:<CreditCard/>}
   //  <Route path="/map" element={<Map/>} />

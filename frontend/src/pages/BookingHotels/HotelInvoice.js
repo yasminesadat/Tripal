@@ -10,7 +10,7 @@ const Invoice = () => {
 
     const handleDownloadTicket = () => {
         const doc = new jsPDF();
-        doc.text(`Flight Number: ${flight.flightNumber || "N/A"}`, 10, 10);
+        doc.text(`Hotel Name: ${flight.flightNumber || "N/A"}`, 10, 10);
         doc.text(`Airline: ${flight.validatingAirlineCodes ? flight.validatingAirlineCodes[0] : "Unknown"}`, 10, 20);
         doc.text(`Departure: ${flight.itineraries[0].segments[0].departure.iataCode} at ${new Date(flight.itineraries[0].segments[0].departure.at).toLocaleString()}`, 10, 30);
         doc.text(`Arrival: ${flight.itineraries[0].segments[flight.itineraries[0].segments.length - 1].arrival.iataCode} at ${new Date(flight.itineraries[0].segments[flight.itineraries[0].segments.length - 1].arrival.at).toLocaleString()}`, 10, 40);

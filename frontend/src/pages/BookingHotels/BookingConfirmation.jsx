@@ -11,7 +11,7 @@ export default function BookingPages() {
   const [bookingStage, setBookingStage] = useState(2);
   const [total,setTotal]=useState(0);
   const today=new Date();
-  const {hotelID, name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut}= useParams();
+  const {hotelID, name,singlePrice,singleNumber,doublePrice,doubleNumber,triplePrice,tripleNumber,boardType,checkIn,checkOut,currency}= useParams();
 
   useEffect(() => {
     const calculatedTotal =  (
@@ -75,7 +75,7 @@ export default function BookingPages() {
 
                   <div className="col-md-3 col-6">
                     <div>Total</div>
-                    <div className="text-accent-2">EGP {total}</div>
+                    <div className="text-accent-2">{currency} {total}</div>
                   </div>
 
                   <div className="col-md-3 col-6">
@@ -215,21 +215,21 @@ export default function BookingPages() {
                  {singleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Single Rooms:</div>
-                    <div className="">{singleNumber} x {singlePrice} = EGP {singleNumber*singlePrice}</div>
+                    <div className="">{singleNumber} x {singlePrice} = {currency} {singleNumber*singlePrice}</div>
                   </div>
                   }
                   
                   {doubleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Double Rooms:</div>
-                    <div className="">{doubleNumber} x {doublePrice} = EGP {doubleNumber*doublePrice}</div>
+                    <div className="">{doubleNumber} x {doublePrice} = {currency} {doubleNumber*doublePrice}</div>
                   </div>
                   }
 
                   {tripleNumber>0 &&
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Triple Rooms:</div>
-                    <div className="">{tripleNumber} x {triplePrice} = EGP {tripleNumber*triplePrice}</div>
+                    <div className="">{tripleNumber} x {triplePrice} = {currency} {tripleNumber*triplePrice}</div>
                   </div>
                   }
 
@@ -247,7 +247,7 @@ export default function BookingPages() {
                 <div className="">
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Total : </div>
-                    <div className="">EGP {total}</div>
+                    <div className="">{currency} {total}</div>
                   </div>
 
                 </div>
