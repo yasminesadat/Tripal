@@ -1,4 +1,4 @@
-import FooterSix from "@/components/layout/footers/FooterSix";
+import FooterThree from "@/components/layout/footers/FooterThree";
 import Header3 from "@/components/layout/header/Header3";
 import Login from "@/components/pages/Login";
 import React from "react";
@@ -16,7 +16,7 @@ export default function LoginPage() {
       <main>
         <Header3 />
         <Login />
-        <FooterSix />
+        <FooterThree />
       </main>
     </>
   );

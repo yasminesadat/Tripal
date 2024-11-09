@@ -17,8 +17,17 @@ export default function FooterThree() {
 
                   <div className="col-auto">
                     <div className="text-20 fw-500">
-                      Speak to our expert at
-                      <span className="text-accent-2">1-800-453-6744</span>
+                      <div>
+                        Speak to our expert at
+                        <span className="text-stone phone-number">
+                          1-800-453-6744
+                        </span>
+                        <style>{`
+                          .phone-number {
+                            margin-left: 8px; /* Adjust the value as needed */
+                          }
+                        `}</style>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -86,7 +95,7 @@ export default function FooterThree() {
         <div className="footer__bottom">
           <div className="row y-gap-5 justify-between items-center">
             <div className="col-auto">
-              <div>© Copyright Viatours {new Date().getFullYear()}</div>
+              <div>© Copyright Tripal {new Date().getFullYear()}</div>
             </div>
 
             <div className="col-auto">

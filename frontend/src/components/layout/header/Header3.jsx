@@ -16,22 +16,22 @@ export default function Header3() {
   const [addClass, setAddClass] = useState(true);
 
   // Add a class to the element when scrolled 50px
-  const handleScroll = () => {
-    if (window.scrollY >= 50) {
-      setAddClass(true);
-    } else {
-      setAddClass(false);
-    }
-  };
+  // const handleScroll = () => {
+  //   if (window.scrollY >= 50) {
+  //     setAddClass(true);
+  //   } else {
+  //     setAddClass(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
 
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   // Cleanup the event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
   return (
     <>
       <header
