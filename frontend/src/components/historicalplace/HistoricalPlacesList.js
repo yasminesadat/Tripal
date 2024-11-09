@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from "antd";
-import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { Navigate } from "react-router-dom";
+import { CopyOutlined, ShareAltOutlined,InfoCircleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchExchangeRate = async () => {
       if (curr) {
@@ -83,6 +83,13 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
                 }
                 style={{ cursor: "pointer" }}
               />
+              <InfoCircleOutlined 
+                                     onClick={() => {
+                                        navigate(`/historical-places/${place._id}`, { state: { places } });
+                                    }}
+
+                                    style={{ color: 'white', marginRight: '10px', cursor: 'pointer' }}
+                                    />
             </div>
           </div>
           <div className="list-item-attributes-image">
