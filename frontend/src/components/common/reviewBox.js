@@ -40,7 +40,7 @@ export default function ReviewBox({ id, type }) {
 
     return (
         <>
-            <h2 className="text-30 pt-60" style={{ marginTop: "-5%" }}>{type==="tourGuide"?" Review the Tourguide":"Review the Event" }</h2>
+            <h2 className="text-30 pt-60" style={{ marginTop: "-5%" }}>{type==="tourGuide"?"Comment on Tourguide":type==="itinerary"?"Comment on Itinerary" : type==="products"?"Review Product" : "Comment on Event"}</h2>
             <div className="contactForm y-gap-30 pt-30">
                 <div className="review-rating">
                     <span style={{ marginRight: "2%", marginLeft: "0.5%" }}> Rating: </span>
@@ -51,7 +51,7 @@ export default function ReviewBox({ id, type }) {
                     <div className="col-12">
                         <div className="form-input">
                             <textarea rows="5" value={review} onChange={(e) => setReview(e.target.value)}></textarea>
-                            <label className="lh-1 text-16 text-light-1">Review</label>
+                            <label className="lh-1 text-16 text-light-1">{type==="products"?"Review":"Comment"}</label>
                         </div>
                     </div>
                 </div>
