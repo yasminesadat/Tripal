@@ -40,7 +40,7 @@ export default function ReviewBox({ id, type }) {
 
     return (
         <>
-            <h2 className="text-30 pt-60" style={{ marginTop: "-5%" }}>Leave a Review</h2>
+            <h2 className="text-30 pt-60" style={{ marginTop: "-5%" }}>{type==="tourGuide"?" Review the Tourguide":"Review the Event" }</h2>
             <div className="contactForm y-gap-30 pt-30">
                 <div className="review-rating">
                     <span style={{ marginRight: "2%", marginLeft: "0.5%" }}> Rating: </span>

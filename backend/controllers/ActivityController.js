@@ -176,10 +176,9 @@ const getActivityById = async (req, res) => {
 const getTouristActivities = async (req, res) => {
   const { touristId } = req.params;
   try {
-    const activities = await Activity.find({ tourists: touristId })
+    const activities = await Activity.find({ "bookings.touristId": touristId })
       .populate("category")
       .populate("tags")
-      //.populate("ratings");
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });

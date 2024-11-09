@@ -81,35 +81,44 @@ const UpcomingActivities = ({
           <div className="list-item-attributes">
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">
-              Date: {new Date(activity.date).toLocaleDateString()}
+              <b>Date:</b> {new Date(activity.date).toLocaleDateString()}
             </div>
-            <div className="list-item-attribute">Time: {activity.time}</div>
+            <div className="list-item-attribute"><b>Time:</b> {activity.time}</div>
             <div className="list-item-attribute">
-              Location: {activity.location}
-            </div>
-            <div className="list-item-attribute">
-              Price: {curr} {formatPrice(activity.price)}
+              <b>Location:</b> {activity.location}
             </div>
             <div className="list-item-attribute">
-              Category: {activity.category ? activity.category.Name : "N/A"}
+              <b>Price:</b> {curr} {formatPrice(activity.price)}
             </div>
             <div className="list-item-attribute">
-              Tags:{" "}
+              <b>Category:</b> {activity.category ? activity.category.Name : "N/A"}
+            </div>
+            <div className="list-item-attribute">
+              <b>Tags:{" "}</b>
               {activity.tags.map((tag) => (
                 <Tag key={tag._id} color="geekblue">
                   {tag.name}
                 </Tag>
               ))}
             </div>
-            <div className="list-item-attribute">
-              Rating: {activity.averageRating}
-            </div>
-            <div className="list-item-attribute">
-              Special Discounts: {activity.specialDiscounts || "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              Booking Open: {activity.isBookingOpen ? "Yes" : "No"}
-            </div>
+            {!cancel && <div className="list-item-attribute">
+              <b>Rating:</b> {activity.averageRating.toFixed(2)}
+            </div>}
+            {!cancel && <div className="list-item-attribute">
+              <b>Special Discounts:</b> {activity.specialDiscounts || "N/A"}
+            </div>}
+            {cancel && (
+                <div className="list-item-attribute">
+                  {
+                    activity.bookings
+                      .filter(booking => booking.touristId === touristId) // Filter by touristId
+                      .map(filteredBooking => (
+                        <p key={filteredBooking._id}><b>Number of Tickets:</b> {filteredBooking.tickets}</p> // Access tickets from the filtered booking
+                      ))
+                  }
+                </div>
+                    )}
+
             <div className="list-item-attribute">
               <CopyOutlined
                 onClick={() =>
@@ -131,13 +140,7 @@ const UpcomingActivities = ({
           </div>
           {book && (
             <button
-              onClick={() =>
-                onBook({
-                  activityId: activity._id,
-                  touristId,
-                  resourceType: "activity",
-                })
-              }
+            onClick={() => handleRedirect(activity._id)}
             >
               Book Now
             </button>

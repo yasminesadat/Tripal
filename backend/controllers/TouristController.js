@@ -2,7 +2,8 @@ const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
-const Request = require('../models/Request.js')
+const Request = require('../models/Request.js');
+const hotelBookings = require("../models/BookingHotel.js");
 
 
 const createTourist = async (req, res) => {
@@ -225,5 +226,95 @@ const redeemPoints = async (req, res) => {
   }
 };
 
+const getTouristBookedFlights = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-module.exports = { createTourist, getTouristInfo, updateTouristProfile, changePassword, redeemPoints, getTouristNameAndEmail };
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedFlights');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    return res.status(200).json({ bookedFlights: tourist.bookedFlights });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+const getTouristBookedHotels = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedHotels');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+    const bookedHotels=tourist.bookedHotels;
+    if (!bookedHotels){
+      return res.status(400).json({ error: "No Booked Hotels!" });
+
+    }
+    const HotelInfo=[];
+    
+    for(let i=0;i<bookedHotels.length;i++){
+      const hotel = await hotelBookings.findById(bookedHotels[i]._id);
+      if (!hotel){
+        return res.status(404).json({ error: "Can't return hotels history!" });
+      }
+      HotelInfo.push(hotel)
+    }
+
+    return res.status(200).json({ bookedHotels: HotelInfo });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+
+const getTouristAge = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid tourist ID format' });
+    }
+
+    const tourist = await touristModel.findById(id);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    const age = tourist.calculateAge();
+    res.json({ age });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching tourist data', error });
+  }
+};
+
+
+
+module.exports = { createTourist,
+                   getTouristInfo,
+                   updateTouristProfile,
+                   changePassword, 
+                   redeemPoints, 
+                   getTouristNameAndEmail,
+                   getTouristBookedFlights,
+                  getTouristAge,
+                  getTouristBookedHotels };

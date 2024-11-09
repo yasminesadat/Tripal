@@ -171,7 +171,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             setItineraries(itineraries.filter(itinerary => itinerary._id !== itineraryId));
             setFilteredItineraries(filteredItineraries.filter(itinerary => itinerary._id !== itineraryId));
         } catch (err) {
-            message.error('Failed to cancel booking');
+            message.error(err.response.data.error);
         }
     };
 

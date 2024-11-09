@@ -4,7 +4,7 @@ const Tourist = require('../models/users/Tourist');
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
-    const { touristId, selectedDate, selectedTime } = req.body;
+    const { touristId, selectedDate, selectedTime,tickets} = req.body;
 
     const model = resourceType === 'activity' ? Activity : itineraryModel;
   
@@ -31,46 +31,63 @@ const bookResource = async (req, res) => {
             const dateIsAvailable = resource.availableDates.some(
                 date => date.toISOString() === new Date(selectedDate).toISOString()
             );
-            console.log(resource.availableTime); 
             const timeIsAvailable = resource.availableTime.includes(selectedTime);
 
             if (!dateIsAvailable || !timeIsAvailable) {
                 return res.status(400).json({ error: 'Selected date or time is not available for this itinerary' });
             }
-            resource.bookings.push({
-                touristId,
-                selectedDate,
-                selectedTime,
-            });
+            
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+            if (existingBooking) {
+                existingBooking.selectedDate = selectedDate;
+                existingBooking.selectedTime = selectedTime;
+                existingBooking.tickets += 1;
+            } else {
+                resource.bookings.push({ touristId, selectedDate, selectedTime, tickets});
+            }
+            
+            tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
+
+            
         } 
         else{
-            resource.tourists.push(touristId);
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+            if (existingBooking) {
+                existingBooking.tickets += 1;
+            } else {
+                resource.bookings.push({ touristId,tickets});
+            }
             resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
+            tourist.wallet.amount -= resource.price;
         }
+        if(tourist.wallet.amount<0)
+            return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
         
+        await tourist.save();
         await resource.save();
 
         let pointsToReceive=0;
-            if(tourist.totalPoints<=100000){
-                pointsToReceive=resource.price*0.5;
-            }else if(tourist.totalPoints<=500000){
-                pointsToReceive=resource.price*1;
-            } else {
-                pointsToReceive=resource.price*1.5;
-            }
 
-            await Tourist.findByIdAndUpdate(
-                touristId,
-                {
-                    $inc: {
-                        totalPoints: pointsToReceive,
-                        currentPoints: pointsToReceive,
-                    },
+        if(tourist.totalPoints<=100000){
+            pointsToReceive=resource.price*0.5;
+        }else if(tourist.totalPoints<=500000){
+            pointsToReceive=resource.price*1;
+        } else {
+            pointsToReceive=resource.price*1.5;
+        }
+
+        await Tourist.findByIdAndUpdate(
+            touristId,
+            {
+                $inc: {
+                    totalPoints: pointsToReceive,
+                    currentPoints: pointsToReceive,
                 },
-                { new: true }
-            );
+            },
+            { new: true }
+        );
     
-        res.status(200).json({ message: `${resourceType} booked successfully` });
+        res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully` });
         } catch (error) {
         res.status(500).json({ error: error.message });
         }
@@ -80,35 +97,63 @@ const cancelResource = async (req, res) => {
 const { resourceType, resourceId } = req.params;
 const { touristId } = req.body;
 const model = resourceType === 'activity' ? Activity : itineraryModel;
+const currentTime = new Date();
+
 
 try {
     const resource = await model.findById(resourceId);
+    const tourist = await Tourist.findById(touristId);
+
     if (!resource) 
     return res.status(404).json({ error: `${resourceType} not founddd` });
-    
 
+    let cancellationDeadline;
     if (resourceType === 'activity') {
-            // For activities, find and remove the tourist from `tourists` array
-            const touristIndex = resource.tourists.findIndex(id => id.toString() === touristId);
-            if (touristIndex === -1) {
-                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-            }
-            resource.tourists.splice(touristIndex, 1);
-            resource.booked = false;
-        } else if (resourceType === 'itinerary') {
-            // For itineraries, find and remove the booking from `bookings` array
+      cancellationDeadline = new Date(resource.date);
+    } else if (resourceType === 'itinerary') {
+      const booking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+      if (booking) 
+        cancellationDeadline = new Date(booking.selectedDate);
+      
+    }
+
+    if (cancellationDeadline - currentTime < 48 * 60 * 60 * 1000) {
+        return res.status(400).json({ error: "You can only cancel bookings 48 hours before the event." });
+      }
+    if (resourceType === 'activity') {
             const bookingIndex = resource.bookings.findIndex(
                 booking => booking.touristId.toString() === touristId
             );
-            if (bookingIndex === -1) {
+            
+            if (bookingIndex === -1) 
                 return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-            }            
-            resource.bookings.splice(bookingIndex, 1);
+                        
+    
+            if (tourist){
+                tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
+                await tourist.save();
+            } 
+            resource.bookings.splice(bookingIndex, 1);   
             resource.markModified('bookings');
-        }
+    } 
+    else if (resourceType === 'itinerary') {
+        
+        const bookingIndex = resource.bookings.findIndex(
+            booking => booking.touristId.toString() === touristId
+        );
+        if (bookingIndex === -1) {
+            return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+        }            
+
+        if (tourist){
+            tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets+resource.serviceFee;
+            await tourist.save();
+        } 
+        resource.bookings.splice(bookingIndex, 1);   
+        resource.markModified('bookings');
+    }
     await resource.save();
 
-    const tourist = await Tourist.findById(touristId);
         if (!tourist) 
             return res.status(404).json({ error: 'Tourist not found' });
 
@@ -132,7 +177,7 @@ try {
         { new: true }
     );
 
-    res.status(200).json({ message: `${resourceType} booking canceled successfully` });
+    res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.` });
 } catch (error) {
     res.status(500).json({ message: 'Error canceling booking', error });
 }

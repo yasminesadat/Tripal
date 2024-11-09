@@ -1,19 +1,23 @@
 import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import ActivityMainInformation from "./ActivityMainInformation";
-import OthersInformation from "./OthersInformation";
-import Overview from "./Overview";
+import OthersInformation from "../../templateComponents/OthersInformation";
+import Overview from "../../templateComponents/Overview";
 import MapComponent from "../../common/MapComponent";
-import Rating from "./Rating";
-import TourSingleSidebar from "./TourSingleSidebar";
-import Gallery1 from "./Gallery1";
-import DateCalender from "./DateCalender";
+import Rating from "../../templateComponents/Rating";
+import TourSingleSidebar from "../../templateComponents/TourSingleSidebar";
+import Gallery1 from "../../templateComponents/Gallery1";
+import DateCalender from "../../templateComponents/DateCalender";
 import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
+import LocationMap from "../../common/MapComponent";
+import { act } from "react-dom/test-utils";
 
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
   const { page } = location.state || {};
-  console.log("Page:", page);
+  const [markerPosition, setMarkerPosition] = useState([activity.latitude, activity.longitude]);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!activity) return <div>Activity not found.</div>;
   const activityId = activity._id;  
@@ -32,16 +36,20 @@ export default function ActivityDetails({ activity }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation />
+              <OthersInformation groupSize={activity.bookings.reduce((total, booking) => total + booking.tickets, 0)} />
               </div>
 
-              <Overview />
+              <Overview activityDescription={activity.description} />
 
               <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <MapComponent />
+                <LocationMap 
+                  markerPosition={markerPosition} 
+                  setMarkerPosition={setMarkerPosition} 
+                  setSelectedLocation={setSelectedLocation} 
+                />
               </div>
 
               <div className="line mt-60 mb-60"></div>
@@ -76,7 +84,7 @@ export default function ActivityDetails({ activity }) {
             {page === "upcoming" && (
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
-                  <TourSingleSidebar />
+                  <TourSingleSidebar activity={activity}/>
                 </div>
               </div>
             )}

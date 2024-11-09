@@ -138,29 +138,6 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     setFilteredActivities(sortedActivities);
   };
 
-  const handleBookActivity = async ({ activityId, touristId }) => {
-    if (!touristId) {
-      message.warning("Please sign up or log in to book an activity.");
-      return;
-    }
-    try {
-      await bookResource('activity', activityId, touristId);
-      message.success("Activity booked successfully!");
-    } catch (error) {
-      console.log("Error details:", error);
-
-      if (error.response) {
-        const { status } = error.response;
-        if (status === 400)
-          message.warning(error.response.data.error);
-        else
-          message.error(error.response.data.error);
-      } else {
-        message.error("Network error. Please try again later.");
-      }
-    }
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
@@ -177,7 +154,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
             <ActivityFilter onFilter={handleFilter} />
             <ActivitySort onSort={handleSort} />
           </div>
-          <UpcomingActivities activities={filteredActivities} curr={currency} onBook={handleBookActivity} book={"diana"} page={"upcoming"} />
+          <UpcomingActivities activities={filteredActivities} curr={currency} book={"diana"} page={"upcoming"} />
         </div>
         :
         <AdvertiserActivities />
