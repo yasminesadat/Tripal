@@ -1,10 +1,10 @@
-const sellerId = "6731210c5c9f25a14ca3d774";
-const tourismGovernerID = "6708508701900d8424372bb6";
-const adminId = "670c3f8b4d912d42ccf5580c";
-const touristId = "6724842b5831eed787083b57"; // DONT DELETE
+const sellerId = "6731210c5c9f25a14ca3d774"; // NEW 
+const tourismGovernerID = "673121604f3b1a3689b48996";
+const adminId = "67311e1f5c9f25a14ca3d72f"; //NEW
+const touristId = "673120284f3b1a3689b48988"; // NEW
 const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
 const advertiserID = "673121105c9f25a14ca3d779"; // NEW 
-const tourGuideID = "672a8d82506908d56bc9a9d9";
+const tourGuideID = "6731210a5c9f25a14ca3d76f";
 
 const touristFlight = "672aff256aa38ed2c3b51b36"; //TOURIST THAT BOOKS FLIGHTS
 const hotelHistoryTourist = "672d644cf0af912964daa4f9"
@@ -13,8 +13,8 @@ const hotelTourist = "6724842b5831eed787083b57"
 //mimics what will be in token to adjust some component
 // features based on it
 //change to test different roles in the website
-const currUser = sellerId;
-const userRole = "Advertiser"; //used to test [Admin, Tourist, Seller, Tour Guide, Advertiser]
+const currUser = touristId;
+const userRole = "Tourist"; //used to test [Admin, Tourist, Seller, Tour Guide, Advertiser]
 module.exports = {
   currUser,
   userRole,

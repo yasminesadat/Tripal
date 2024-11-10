@@ -1,7 +1,7 @@
 
 import React from "react";
 
-export default function OthersInformation({OpeningHours,ticketPrices}) {
+export default function OthersInformation({ OpeningHours, ticketPrices }) {
   return (
     <>
       <div className="col-lg-3 col-6">
@@ -37,7 +37,7 @@ export default function OthersInformation({OpeningHours,ticketPrices}) {
 
           <div className="ml-10">
             <div className="lh-16">Foreigner ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{ticketPrices?.foreigner} $</div>
+            <div className="text-14 text-light-2 lh-16">EGP {ticketPrices?.foreigner} </div>
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function OthersInformation({OpeningHours,ticketPrices}) {
 
           <div className="ml-10">
             <div className="lh-16">Native ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{ticketPrices?.native} $</div>
+            <div className="text-14 text-light-2 lh-16">EGP {ticketPrices?.native} </div>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function OthersInformation({OpeningHours,ticketPrices}) {
 
           <div className="ml-10">
             <div className="lh-16">Student ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{ticketPrices?.student} $</div>
+            <div className="text-14 text-light-2 lh-16">EGP {ticketPrices?.student} </div>
           </div>
         </div>
       </div>

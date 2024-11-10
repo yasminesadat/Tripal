@@ -36,7 +36,7 @@ export default function ActivityMainInformation({ activity }) {
           </div>
 
           <h2 className="text-40 sm:text-30 lh-14 mt-20">
-            {activity?.description.split(" ").slice(0, 7).join(" ")}
+            {activity?.title}
 
             <br />
             {activity?.title.split(" ").slice(7).join(" ")}
