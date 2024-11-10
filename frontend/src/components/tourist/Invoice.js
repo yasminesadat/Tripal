@@ -18,6 +18,9 @@ const Invoice = () => {
     const tourist = location.state?.touristInfo;
     const currency = location.state?.currency;
     const exchangeRate = location.state?.exchangeRate;
+    const isBookedAccepted= location.state?.isBookedAccepted;
+    const isBookedOriginatingTransportation= location.state?.isBookedOriginatingTransportation;
+    const isBookedReturnTransportation= location.state?.isBookedReturnTransportation;
     const convertPrice = (price) => {
         return (price * exchangeRate).toFixed(2);
     };
@@ -32,7 +35,6 @@ const Invoice = () => {
     });
 
     if (!flight) return <p>No flight details available</p>;
-
     const handleDownloadTicket = () => {
         const doc = new jsPDF();
         let yOffset = 10;
@@ -55,6 +57,9 @@ const Invoice = () => {
             doc.text(`Duration: ${parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}`, 10, yOffset);
             yOffset += 10;
             doc.text(`Price: ${currency} ${convertPrice(flight.price.total)}`, 10, yOffset);
+            yOffset += 20;
+            if(isBookedAccepted&&isBookedOriginatingTransportation&&idx==0) doc.text(`+ FREE TRANSPORTATION`, 10, yOffset);
+            if(isBookedAccepted&&isBookedReturnTransportation&&idx==1) doc.text(`+ FREE TRANSPORTATION`, 10, yOffset);
             yOffset += 20;
         });
 
@@ -83,7 +88,10 @@ const Invoice = () => {
                         <p><strong>Arrival:</strong> {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} at {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}</p>
                         <p><strong>Duration:</strong> {parseDuration(itinerary?.segments[0]?.duration || "PT0H0M")}</p>
                         <p><strong>Price:</strong> {currency} {convertPrice(flight.price.total)}</p>
+                        { isBookedAccepted&&isBookedOriginatingTransportation&&idx==0? <p> + FREE TRANSPORTATION</p>:<p></p>}
+                         {isBookedAccepted&&isBookedReturnTransportation&&idx==1? <p> + FREE TRANSPORTATION</p>:<p></p>}
                     </div>
+
                 ))}
             </div>
 

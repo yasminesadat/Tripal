@@ -2,26 +2,14 @@ import { Button, Modal } from 'antd';
 import React, { useEffect, useState } from "react";
 import bg from '../../assets/images/bg.png';
 import front from '../../assets/images/1.png';
-import { getTouristFlights } from '../../api/TouristService';
-import { getHotelHistory } from "../../api/HotelService";
-const hotelTourist = "6724842b5831eed787083b57"
-const TransportationBookingPopUp = ({ setDoneBookTransportation, setBooked }) => {
-  const touristFlight = "672aff256aa38ed2c3b51b36";
-  const hotelHistoryTourist = "672d644cf0af912964daa4f9"
+
+const TransportationBookingPopUp = ({ setDoneBookTransportation, setIsBookedAccepted }) => {
+
   const [open, setOpen] = useState(true);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 1000);
-  };
+  
   const handleCancel = () => {
-    setBooked(false);
+    setIsBookedAccepted(false);
     setOpen(false);
     setDoneBookTransportation(true);
   };
@@ -85,7 +73,7 @@ const TransportationBookingPopUp = ({ setDoneBookTransportation, setBooked }) =>
                           data-aos-delay=""
                           className="button -md -accent-1 bg-white col-12 text-accent-2"
                           onClick={() => {
-                            setBooked(true);
+                            setIsBookedAccepted(true);
                             setOpen(false);
                             setDoneBookTransportation(true);
                           }} // Close the modal on click
