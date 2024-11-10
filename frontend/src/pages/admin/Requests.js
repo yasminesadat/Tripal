@@ -87,6 +87,7 @@ const Requests = () => {
 
     return (
         <div className="complaints">
+            <AdminNavBar />
             <div className="dashboard__content">
                 <div className="dashboard__content_content">
                     <h1 className="text-30">Requests Management</h1>

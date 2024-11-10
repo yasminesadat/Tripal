@@ -160,6 +160,7 @@ const ComplaintsPage = () => {
 
     return (
         <div className="complaints">
+            <AdminNavBar />
             {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
             <div className="dashboard__content">
                 {/* <Header setSideBarOpen={setSideBarOpen} /> */}
