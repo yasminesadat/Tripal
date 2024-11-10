@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
-import { useNavigate, useParams,Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { format } from "date-fns";
 import img from "./Components/HotelsImages/bookingicon2.png";
-import { hotelHistoryTourist } from "../../IDs";
+import { touristId } from "../../IDs";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 
 export default function BookingPages() {
@@ -46,7 +46,7 @@ export default function BookingPages() {
   ]); // Dependencies for re-calculation
 
   return (
-   
+
     <section className="layout-pt-md layout-pb-lg mt-header">
       <div className="container">
         <div className="row">
@@ -63,7 +63,7 @@ export default function BookingPages() {
                       bookingStage={bookingStage}
                       setBookingStage={setBookingStage}
                       cityCode={cityCode}
-                      userid={hotelHistoryTourist}
+                      userid={touristId}
                       hotelid={hotelID}
                       hotelname={name}
                       singleNumber={singleNumber}
@@ -77,7 +77,7 @@ export default function BookingPages() {
                 </div>
               )}
               {bookingStage == 3 && (
-                
+
                 <div>
                   <div className="d-flex flex-column items-center text-center">
                     <div className="size-80 rounded-full flex-center bg-accent-1 text-white">
@@ -198,7 +198,7 @@ export default function BookingPages() {
               </div> */}
                 </div>
               )}
-             
+
             </div>
           </div>
 
