@@ -3,7 +3,7 @@ import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
 import { adminId } from "../../IDs";
 import { OrderedListOutlined } from '@ant-design/icons';
-import { message } from "antd";
+import { message, Dropdown, Menu } from "antd";
 
 const ComplaintsPage = () => {
     const tabs = ["all", "pending", "resolved"];
@@ -13,7 +13,6 @@ const ComplaintsPage = () => {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
     const [newStatus, setNewStatus] = useState("");
-    const [isSorted, setIsSorted] = useState(false);
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
@@ -52,7 +51,7 @@ const ComplaintsPage = () => {
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getAllComplaints();
             setComplaints(updatedComplaints);
-            setReplyMessage(""); 
+            setReplyMessage("");
             //setSelectedComplaint(null); 
             message.success("Reply sent successfully!");
         } catch (error) {
@@ -98,7 +97,30 @@ const ComplaintsPage = () => {
             }
         }
     };
+    const [isSorted, setIsSorted] = useState(false); // initial sorting state (e.g., false for ascending, true for descending)
 
+
+    const items = [
+        {
+            key: '1',
+            label: (
+                <a onClick={() => {
+                    setIsSorted(true);
+                }}>
+                    Ascending
+                </a>
+            ),
+        }, {
+            key: '2',
+            label: (
+                <a onClick={() => {
+                    setIsSorted(false);
+                }}>
+                    Descending
+                </a>
+            ),
+
+        }];
 
     return (
         <div className="complaints">
@@ -110,9 +132,7 @@ const ComplaintsPage = () => {
                     <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
                         <div className="tabs -underline-2 js-tabs">
                             <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
-                                <OrderedListOutlined onClick={() => {
-                                    setIsSorted(!isSorted);
-                                }} style={{ cursor: 'pointer', fontSize: '24px' }} />
+
                                 {tabs.map((tab, i) => (
                                     <div
                                         key={i}
@@ -138,14 +158,16 @@ const ComplaintsPage = () => {
                                                     <th>Complaint ID</th>
                                                     <th>Title</th>
                                                     <th>Status</th>
-                                                    <th>Date</th>
+                                                    <th>Date     <Dropdown menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
+                                                        <OrderedListOutlined style={{ cursor: 'pointer', fontSize: '24px' }} />
+                                                    </Dropdown></th>
                                                     <th>Actions</th>
                                                 </tr>
 
                                             </thead>
 
                                             <tbody>
-                                                {(isSorted ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date)) : complaints)
+                                                {(isSorted ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date)) : complaints.sort((a, b) => new Date(b.date) - new Date(a.date)))
                                                     .filter((complaint) => currentTab === "all" || complaint.status === currentTab)
 
                                                     .map((complaint) => (
