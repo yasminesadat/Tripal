@@ -102,7 +102,6 @@ const getTouristInfo = async (req, res) => {
   }
 };
 
-
 const updateTouristProfile = async (req, res) => {
   try {
     const { id } = req.params;
@@ -165,8 +164,6 @@ const updateTouristProfile = async (req, res) => {
   }
 };
 
-
-
 const changePassword = async (req, res) => {
   try {
     const { id } = req.params;
@@ -186,6 +183,7 @@ const changePassword = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
 const getTouristNameAndEmail = async (req, res) => {
   const { id } = req.params;
 
@@ -205,6 +203,7 @@ const getTouristNameAndEmail = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 const redeemPoints = async (req, res) => {
   try {
     const { id } = req.params;
@@ -284,7 +283,6 @@ const getTouristBookedHotels = async (req, res) => {
   }
 };
 
-
 const getTouristAge = async (req, res) => {
   try {
     const { id } = req.params;
@@ -306,6 +304,7 @@ const getTouristAge = async (req, res) => {
     res.status(500).json({ message: 'Error fetching tourist data', error });
   }
 };
+
 const checkUserExists = async (req, res) => {
   try {
     const { id } = req.params;
@@ -327,7 +326,6 @@ const checkUserExists = async (req, res) => {
     res.status(500).json({ message: 'Error checking user existence', error });
   }
 };
-
 
 const getTouristPreferences = async (req, res) => {
   try {
@@ -362,7 +360,6 @@ const getTouristCategories = async (req, res) => {
     res.status(500).json({ message: "Error fetching tourists' categories" });
   }
 };
-
 
 module.exports = {
   createTourist,
