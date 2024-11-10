@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, getAdvertiserActivities } from "../../api/ActivityService";
+import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "../../api/ActivityService";
 import UpcomingActivities from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
@@ -49,14 +49,14 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     const fetchActivities = async () => {
       try {
         let response;
-        if (isAdvertiser) {
-          console.log("THE ID IS", id);
+        if (isAdvertiser || userRole==='Advertiser') {
           response = await getAdvertiserActivities(id);
         } else if (userRole==='Tourist') {
           response = await viewUpcomingActivities();
         } else if(userRole==='Admin'){
           response = await getAdminActivities();
         }
+        else { response = await getAllActivities(); }
         const activitiesData = response?.data || response || [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData);
