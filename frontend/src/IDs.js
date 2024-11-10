@@ -1,14 +1,14 @@
-const sellerId = "67092b1651baf2ce64114a26";
+const sellerId = "6731210c5c9f25a14ca3d774";
 const tourismGovernerID = "6708508701900d8424372bb6";
 const adminId = "670c3f8b4d912d42ccf5580c";
 const touristId = "6724842b5831eed787083b57"; // DONT DELETE
 const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
-const advertiserID = "6726aaea44ae09c9c4e1f809"; // advertiser profile final NEVER DELETE
+const advertiserID = "673121105c9f25a14ca3d779"; // NEW 
 const tourGuideID = "672a8d82506908d56bc9a9d9";
 
 const touristFlight = "672aff256aa38ed2c3b51b36"; //TOURIST THAT BOOKS FLIGHTS
-const hotelHistoryTourist="672d644cf0af912964daa4f9"
-const hotelTourist="6724842b5831eed787083b57"
+const hotelHistoryTourist = "672d644cf0af912964daa4f9"
+const hotelTourist = "6724842b5831eed787083b57"
 
 //mimics what will be in token to adjust some component
 // features based on it
