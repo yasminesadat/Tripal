@@ -1,4 +1,5 @@
-import React, { useNavigate,useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getSellerDetails, updateSeller } from "../../api/SellerService";
 import SellerNavBar from "../../components/navbar/SellerNavBar";
 import { sellerId } from "../../IDs";
@@ -24,7 +25,7 @@ const SellerProfile = () => {
   const [initialLogo, setInitialLogo] = useState(""); // State to store the initial logo
   const [loading, setLoading] = useState(false); // State for loading
   const [buttonText, setButtonText] = useState("Save Changes");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -140,10 +141,10 @@ const SellerProfile = () => {
   const handleDeletion = async () => {
     try {
       const response = await requestAccountDeletion("Seller", sellerId);
-      message.success(response.message); 
+      message.success(response.message);
       navigate("/");
     } catch (error) {
-      message.warning(error.response?.data?.message || "An error occurred."); 
+      message.warning(error.response?.data?.message || "An error occurred.");
     }
   };
 
@@ -278,13 +279,13 @@ const SellerProfile = () => {
                   fileList={
                     updatedSeller.logo
                       ? [
-                          {
-                            uid: "-1",
-                            name: "logo.png",
-                            status: "done",
-                            url: updatedSeller.logo,
-                          },
-                        ]
+                        {
+                          uid: "-1",
+                          name: "logo.png",
+                          status: "done",
+                          url: updatedSeller.logo,
+                        },
+                      ]
                       : []
                   } // Ensure only one file is shown
                 >

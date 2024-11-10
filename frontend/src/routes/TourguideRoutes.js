@@ -1,4 +1,4 @@
-import TourguideItineraries from "../pages/tourguide/TourguideItineraries";
+import TourguideItineraries from "../pages/tourguide/TourguideItineraries"; //dont delete for god sake
 import TourguideHome from "../pages/tourguide/TourguideHome";
 import TourGuideForm from "../pages/tourguide/TourGuideCreateProfile";
 import TourGuideProfile from '../pages/tourguide/TourGuideViewProfile'

@@ -10,6 +10,8 @@ const FlightResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flights = location.state?.flights || [];
+  const originCityCode = location.state?.originLocationCode;
+  const destCityCode = location.state?.destinationLocationCode;
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
   const [touristAge, setTouristAge] = useState(null);
@@ -51,7 +53,7 @@ const FlightResults = () => {
 
   const handleBookNow = (flight) => {
     if (touristAge >= 18) {
-      navigate('/tourist/booking-summary', { state: { flight, currency, exchangeRate } });
+      navigate('/tourist/booking-summary', { state: { flight, currency, exchangeRate,originCityCode,destCityCode } });
     } else {
       message.error('You must be at least 18 years old to book a flight.');
     }

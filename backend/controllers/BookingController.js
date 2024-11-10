@@ -119,7 +119,7 @@ try {
     }
 
     if (cancellationDeadline - currentTime < 48 * 60 * 60 * 1000) {
-        return res.status(400).json({ error: "You can only cancel bookings 48 hours before the event." });
+        return res.status(400).json({ error: "You cant cancel bookings 48 hours before the event." });
       }
     if (resourceType === 'activity') {
             const bookingIndex = resource.bookings.findIndex(

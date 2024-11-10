@@ -75,7 +75,11 @@ const activitySchema = new Schema(
     deactivated: {
       type: Boolean,
       default: false,
-    }
+    },
+    flagged: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

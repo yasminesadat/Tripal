@@ -3,7 +3,6 @@ import { axios } from "./axios";
 export const getUsers = async () => {
   try {
     const response = await axios.get("/admin/users");
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Can't return users", error);
@@ -82,7 +81,6 @@ export const flagItinerary = async (itineraryId) => {
 export const getAdminItineraries = async () => {
   try {
     const response = await axios.get("/admin/itineraries");
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Can't fetch itineraries", error);
@@ -108,6 +106,26 @@ export const approveDeletionRequest = async (requestId) => {
     return response.data; 
   } catch (error) {
     console.error(`Error approving deletion request with ID ${requestId}:`, error);
+    throw error;
+  }
+};
+
+export const getAdminActivities = async () => {
+  try {
+    const response = await axios.get("/admin/activities");
+    return response.data;
+  } catch (error) {
+    console.error("Can't fetch activities", error);
+    throw error;
+  }
+};
+
+export const flagActivity = async (activityId) => {
+  try {
+    const response = await axios.put(`/admin/flag-activity/${activityId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error flagging activity with id ${activityId}`, error);
     throw error;
   }
 };
