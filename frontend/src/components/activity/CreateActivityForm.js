@@ -4,7 +4,7 @@ import LocationMap from '../common/MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {advertiserID} from "../../IDs";
-
+import AdvertiserNavBar from "../navbar/AdvertiserNavBar";
 const { TextArea } = Input;
 
 const ActivityForm = ({ isUpdate }) => {
@@ -116,6 +116,8 @@ const ActivityForm = ({ isUpdate }) => {
 
   return (
     <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
+      <AdvertiserNavBar /> {/*to be removed just for the ease of navigation*/}
+
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
         <h1 class="text-30">Activity Management</h1>
       </div>

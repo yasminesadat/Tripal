@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
+import { useNavigate } from "react-router-dom";
 import { saveBooking } from "../../../api/HotelService";
 import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "../../../components/tourist/TransportationBooking";
@@ -55,7 +56,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
     const [cvc, setCvc] = useState("");
     const [focus, setFocus] = useState("");
     const [errors, setErrors] = useState({});
-
+    const navigate=useNavigate()
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
 
@@ -138,6 +139,9 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
         } else if (!datePattern.test(date)) {
             newErrors.date = "Invalid expiration date. Format: MM/YY.";
         }
+    //    else if(date<=currentDate){
+    //         newErrors.date = "Expiration date must be in the future.";
+    //     } 
 
         // Validate CVV
         if (!cvc) {
@@ -158,8 +162,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
             setErrors(validationErrors);
             return;
         }
-        // Handle successful submission (e.g., send data to an API)
-        // console.log("Payment Information Submitted:",  userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed" );
+
         setBookingStage(3);
         try {
             const responseSingle = await saveBooking(userid, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, total, "confirmed");
@@ -168,6 +171,10 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
         catch (error) {
             console.error("Failed to save Booking");
         }
+        setTimeout(() => {
+            navigate("/tourist");
+        }, 7000);
+
     }
     return (
         <div style={styles.appcc}>

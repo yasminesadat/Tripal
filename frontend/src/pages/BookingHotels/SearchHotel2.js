@@ -19,7 +19,7 @@ export default function Hero6() {
   const [tourType, setTourType] = useState("");
   const [selected, setSelected] = useState("");
   const today = new Date();
-  console.log("today:",today.getDay(),today.getDate())
+ 
 
   const [dates, setDates] = useState([
     new DateObject().setDay(today.getDate()+1),
@@ -36,7 +36,7 @@ export default function Hero6() {
     else if(!dates){
       message.error("Please enter dates.")
     }
-    else navigate(`/hotelList/${selected}`);
+    else navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
   }
   
   useEffect(() => {

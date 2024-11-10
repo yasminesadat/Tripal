@@ -115,24 +115,25 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
               <strong>Description:</strong> {itinerary.description}
             </div>
             <div className="list-item-attribute">
-              <strong>Rating:</strong> {itinerary.averageRating || 'N/A'}
+              <strong>Rating:</strong> {itinerary.averageRating.toFixed(2) || 'N/A'}
             </div>
-            {itinerary.ratings && itinerary.ratings.length > 0 ? (
-              <div className="list-item-attribute">
-                <h3>Ratings & Reviews:</h3>
-                <ul>
-                  {itinerary.ratings.map((rating, index) => (
-                    <li key={index}>
-                      <p><strong>Rating:</strong> {rating.rating} / 5</p>
-                      <p><strong>Review:</strong> {rating.review}</p>
-                      <p><strong>By User ID:</strong> {rating.userID}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <div className="list-item-attribute">No ratings yet.</div>
-            )}
+            
+            <div className="list-item-attribute">
+                            <strong>Activities:</strong>
+                            <div className="list-item-attribute-sublist">
+                                {itinerary.activities.map(activity => (
+                                    <div key={activity._id} className="list-item-attribute-sublist-component">
+                                        <strong>Activity:</strong> {activity.title} - {activity.description}
+                                        <div>
+                                            <strong>Tags:</strong> 
+                                            {activity.tags && activity.tags.length > 0 
+                                                ? activity.tags.map(tag => tag.name).join(', ')
+                                                : 'No tags available'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
             <div className="list-item-attribute">
               <strong>Locations:</strong> {itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}
             </div>

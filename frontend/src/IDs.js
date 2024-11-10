@@ -14,7 +14,7 @@ const touristFlight = "672aff256aa38ed2c3b51b36"; //TOURIST THAT BOOKS FLIGHTS
 // features based on it
 //change to test different roles in the website
 const currUser = sellerId;
-const userRole = "Tourist"; //used to test [Admin, Tourist, Seller, Tour Guide]
+const userRole = "Advertiser"; //used to test [Admin, Tourist, Seller, Tour Guide, Advertiser]
 module.exports = {
   currUser,
   userRole,

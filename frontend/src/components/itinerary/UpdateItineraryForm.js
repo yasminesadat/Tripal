@@ -81,7 +81,7 @@ const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
             onUpdate(updatedItinerary);
         } catch (error) {
             console.error('Error updating itinerary:', error);
-            message.error('Error updating itinerary');
+            message.error(error.response?.data?.error || 'Failed to update itinerary');
         } finally {
             setConfirmLoading(false);
         }

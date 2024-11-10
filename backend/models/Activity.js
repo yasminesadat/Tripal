@@ -72,10 +72,6 @@ const activitySchema = new Schema(
         tickets: { type: Number, default: 1 },
       },
     ],
-    deactivated: {
-      type: Boolean,
-      default: false,
-    },
     flagged: {
       type: Boolean,
       default: false,

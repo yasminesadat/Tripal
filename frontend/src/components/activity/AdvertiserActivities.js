@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, getActivityById } from "../../api/ActivityService";
-import { Button, notification } from 'antd';
+import { message} from 'antd';
 
 
-const AdvertiserActivities = () => {
-  const { id } = useParams();
-  const [activities, setActivities] = useState([]);
+const AdvertiserActivities = ({activities}) => {
+  //const { id } = useParams();
+  //const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const response = await getAdvertiserActivities(id);
-        setActivities(response.data);
-      } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchActivities = async () => {
+  //     try {
+  //       const response = await getAdvertiserActivities(id);
+  //       setActivities(response.data);
+  //     } catch (err) {
+  //       setError(err.response?.data?.error || "Error fetching activities");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchActivities();
-  }, [id]);
+  //   fetchActivities();
+  // }, [id]);
 
  
   
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
 
    return (
     <div className="advertiser-activities-page">
@@ -69,6 +69,7 @@ const AdvertiserActivities = () => {
                       navigate(`/advertiser-view-activity/${id}`, { state: { activity: response.data } });
                       console.log(response.data)
                     } catch (error) {
+                      message.error(error.response.data.error)
                       console.error("Failed to load activity details:", error);
                     }
                   }}

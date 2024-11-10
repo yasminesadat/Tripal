@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { viewUpcomingActivities, getAdvertiserActivities } from "../../api/ActivityService";
+import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "../../api/ActivityService";
 import UpcomingActivities from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
 import ActivityFilter from "../../components/activity/ActivityFilter";
@@ -49,14 +49,14 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     const fetchActivities = async () => {
       try {
         let response;
-        if (isAdvertiser) {
-          console.log("THE ID IS", id);
-          response = await getAdvertiserActivities(id);
+        if (isAdvertiser && userRole==='Advertiser') {
+          response = await getAdvertiserActivities(advertiserID);
         } else if (userRole==='Tourist') {
           response = await viewUpcomingActivities();
         } else if(userRole==='Admin'){
           response = await getAdminActivities();
         }
+        else { response = await getAllActivities(); }
         const activitiesData = response?.data || response || [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData);
@@ -150,15 +150,17 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
-    <div>
+    <div className="page-container2">
       {userRole==='Admin'&& <AdminNavBar />}
       {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
       {isAdvertiser ? <AdvertiserNavBar /> : null}
-      {isTourist && <div className="page-title">Upcoming Activities</div>}
+      {userRole==='Tourist' && <div className="page-title">Upcoming Activities</div>}
+
+      {userRole==='Admin' && <div className="page-title">View All Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
-      {isTourist||userRole==='Tourist' ||userRole=='Admin' ?
+      {userRole==='Tourist' ||userRole=='Admin' &&
         <div className="filter-sort-list">
           { isTourist&&<div className="filter-sort">
              <ActivityFilter onFilter={handleFilter} />
@@ -170,10 +172,10 @@ const Activities = ({ isAdvertiser, isTourist }) => {
             page={"upcoming"}
             onAdminFlag={handleAdminFlag}
              />
-        </div>
-        :
-        <AdvertiserActivities />
-      }
+        </div>}
+        
+       {userRole==='Advertiser'&& <AdvertiserActivities activities={activities} />}
+      
 
       <Footer />
     </div>
