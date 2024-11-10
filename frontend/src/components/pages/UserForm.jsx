@@ -80,14 +80,14 @@ export default function UserForm() {
           requiredMark={false}
           style={{ width: "100%" }}
         >
-          {/* Email Field */}
+          {/* Username Field */}
           <Form.Item
             label="Username"
             name="userName"
             rules={[{ required: true, message: "Please enter your username" }]}
           >
             <Input
-              placeholder="Email"
+              placeholder="Username"
               size="large"
               style={{ height: "50px", borderColor: "#d9d9d9" }}
             />
@@ -185,12 +185,12 @@ export default function UserForm() {
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
         }
 
-        /* Email input default border color to gray */
+        /* Username input default border color to gray */
         .ant-input {
           border-color: #d9d9d9 !important;  /* Default grey border */
         }
 
-        /* Focused userName field should change to light purple */
+        /* Focused username field should change to light purple */
         .ant-input:focus {
           border-color: var(--color-light-purple) !important;
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;

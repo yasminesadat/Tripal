@@ -55,21 +55,20 @@ export default function Login() {
           </MDBCol>
 
           <MDBCol md="6">
-            <MDBCard className="my-5">
-              <MDBCardBody className="p-5">
-                <MDBRow>
-                  <MDBCol>
-                    <UserForm />
-                  </MDBCol>
-                </MDBRow>
-              </MDBCardBody>
-            </MDBCard>
+            <MDBRow>
+              <MDBCol>
+                <UserForm />
+              </MDBCol>
+            </MDBRow>
           </MDBCol>
         </MDBRow>
       </MDBContainer>
       <style>{`
         .full-height-container {
           height: 100vh !important;
+          margin-top: 2% !important;
+          margin-left: 1% !important;
+          margin-right:-9% !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: center !important;
