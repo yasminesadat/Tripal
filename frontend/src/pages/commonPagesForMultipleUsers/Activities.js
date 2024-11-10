@@ -172,7 +172,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
              />
         </div>
         :
-        <AdvertiserActivities />
+        <AdvertiserActivities activities={activities} />
       }
 
       <Footer />
