@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { saveBooking } from "../../../api/HotelService";
-
+import { getTouristFlights } from '../../../api/TouristService';
+import TransportationBookingPopUp from "../../../components/tourist/TransportationBooking";
+import moment from "moment";
+import { Checkbox } from 'antd';
+const touristFlight = "672fa086f7dec6ce57c404dc";
 // Inline styles for the component
 const styles = {
     appcc: {
@@ -51,7 +55,58 @@ const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,cityC
     const [cvc, setCvc] = useState("");
     const [focus, setFocus] = useState("");
     const [errors, setErrors] = useState({});
+    
+const [touristFlights, setTouristFlights] = useState([]);
+const [doneBookTransportation, setDoneBookTransportation] = useState(false);
+const [isBooked, setBooked] = useState(false);
+useEffect(() => {
+  const getBookedFlights = async () => {
+    try {
+      const flights = await getTouristFlights(touristFlight);
+      console.log("result: ", flights);
+      setTouristFlights(flights.bookedFlights);
+      console.log("cheeckin",checkIn)
+      console.log("cheeckout",checkOut)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  getBookedFlights();
+}, []);
+function showTransportationOffer(){
+  for(let i=0;i< touristFlights.length;i++){
+    const flightDeparture=touristFlights[i].origin;
+    const flightDest = touristFlights[i].destination;
+    let diffInDays=9999;
+    if(cityCode===flightDeparture){
+      const flightDepartureTime = moment(touristFlights[i].departureTime);
+      const hotelCheckOut=moment(checkOut);
+      const diffInMilliseconds = Math.abs(flightDepartureTime - hotelCheckOut);
+      diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+      console.log("hotel cityCode",cityCode);
+      console.log("hotel checkout",hotelCheckOut);
+      console.log("flight dep",flightDepartureTime);
+      console.log("diff in 2nd if",diffInDays);
+    }
+    if(cityCode===flightDest){
+      const flightArrivalTime = moment(touristFlights[i].arrivalTime);
+      const hotelCheckIn=moment(checkIn);
+      const diffInMilliseconds = Math.abs(hotelCheckIn - flightArrivalTime);
+      diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+      console.log("hotel cityCode",cityCode);
+      console.log("hotel checkin",hotelCheckIn);
+      console.log("flight arrival",flightArrivalTime);
+      console.log("diff in 2nd if",diffInDays);
+     
+    }
 
+if (diffInDays <= 1) {
+    console.log("trueee");
+  return true;
+} 
+  }
+ return false;
+};
     const validate = () => {
         const newErrors = {};
         const cardNumberPattern = /^[0-9]{16}$/; // 16 digits
@@ -189,7 +244,10 @@ const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,cityC
                         {errors.cvc && <p style={styles.errorcc}>{errors.cvc}</p>}
                     </div>
                 </div>
-
+               {showTransportationOffer()&&<Checkbox
+          checked={isBooked}
+        >Transportation Booked</Checkbox>}
+        {!doneBookTransportation &&showTransportationOffer()&& <TransportationBookingPopUp setDoneBookTransportation={setDoneBookTransportation} setBooked={setBooked} />}
                 <button type="submit" className="button -md -dark-1 bg-accent-1 text-white" >Confirm Booking</button>
             </form>
         </div>

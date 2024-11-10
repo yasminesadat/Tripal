@@ -28,7 +28,7 @@ export default function TourList1() {
   const [filteredHotels, setFilteredHotels] = useState([]);
   const dropDownContainer = useRef();
   const {cityCode}  = useParams();
-
+  
   const images=[img1,img2,img3,img4,img5,img6]
 
 
