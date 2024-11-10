@@ -11,6 +11,7 @@ import Rating from "../../templateComponents/Rating";
 import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
 import Roadmap2 from "../../templateComponents/Roadmap2";
+import { tourGuideID, userRole } from "../../../IDs";
 
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
@@ -83,7 +84,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {page == "upcoming" && <TourSingleSidebar itinerary={itinerary} />}
+                {page == "upcoming" && userRole==='Tourist'&& <TourSingleSidebar itinerary={itinerary} />}
               </div>
             </div>
           </div>

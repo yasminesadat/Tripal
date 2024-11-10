@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { viewPaidItineraries } from "../../api/ItineraryService";
 import ItineraryDetails from "../../components/itinerary/itinerarySingle/ItineraryDetails";
 import TouristNavbar from "../../components/navbar/TouristNavBar";
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import AdminNavbar from "../../components/navbar/AdminNavBar";
+import { userRole } from "../../IDs";
 
 const ItineraryDetailsPage = () => {
     const { itineraryId } = useParams();
@@ -35,7 +38,9 @@ const ItineraryDetailsPage = () => {
 
     return (
         <div>
-            <TouristNavbar />
+            {userRole==='Tourist'&& <TouristNavbar />}
+            {userRole==='Tour Guide'&& <TourguideNavBar />}
+            {userRole==='Admin'&& <AdminNavbar />}
             <ItineraryDetails itinerary={itinerary} />
         </div>
     );
