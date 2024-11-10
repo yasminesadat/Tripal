@@ -48,7 +48,8 @@ export default function UserForm() {
         style={{
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          maxWidth: "80%",
+          maxWidth: "55%",
+          marginLeft: "10%",
         }}
       >
         <Title level={3} style={{ textAlign: "center" }}>

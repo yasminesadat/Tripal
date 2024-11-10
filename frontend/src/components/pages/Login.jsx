@@ -67,8 +67,8 @@ export default function Login() {
         .full-height-container {
           height: 100vh !important;
           margin-top: 2% !important;
-          margin-left: 1% !important;
-          margin-right:-9% !important;
+          margin-left: 2% !important;
+          margin-right:-15% !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: center !important;
