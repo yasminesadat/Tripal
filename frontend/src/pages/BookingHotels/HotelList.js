@@ -27,7 +27,7 @@ export default function TourList1() {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [filteredHotels, setFilteredHotels] = useState([]);
   const dropDownContainer = useRef();
-  const {cityCode}  = useParams();
+  const {cityCode,dates1,dates2}  = useParams();
   
   const images=[img1,img2,img3,img4,img5,img6]
 
@@ -256,7 +256,7 @@ const fetchTourData = async () => {
                       </div>
 
                       <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}`}>
+                        <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}>
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
                         </Link>

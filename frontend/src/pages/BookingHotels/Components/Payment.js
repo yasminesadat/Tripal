@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
+import { useNavigate } from "react-router-dom";
 import { saveBooking } from "../../../api/HotelService";
 import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "../../../components/tourist/TransportationBooking";
@@ -55,6 +56,8 @@ const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,cityC
     const [cvc, setCvc] = useState("");
     const [focus, setFocus] = useState("");
     const [errors, setErrors] = useState({});
+    const currentDate=new Date();
+    const navigate=useNavigate()
     
 const [touristFlights, setTouristFlights] = useState([]);
 const [doneBookTransportation, setDoneBookTransportation] = useState(false);
@@ -63,10 +66,8 @@ useEffect(() => {
   const getBookedFlights = async () => {
     try {
       const flights = await getTouristFlights(touristFlight);
-      console.log("result: ", flights);
       setTouristFlights(flights.bookedFlights);
-      console.log("cheeckin",checkIn)
-      console.log("cheeckout",checkOut)
+
     } catch (err) {
       console.log(err);
     }
@@ -83,25 +84,25 @@ function showTransportationOffer(){
       const hotelCheckOut=moment(checkOut);
       const diffInMilliseconds = Math.abs(flightDepartureTime - hotelCheckOut);
       diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-      console.log("hotel cityCode",cityCode);
-      console.log("hotel checkout",hotelCheckOut);
-      console.log("flight dep",flightDepartureTime);
-      console.log("diff in 2nd if",diffInDays);
+    //   console.log("hotel cityCode",cityCode);
+    //   console.log("hotel checkout",hotelCheckOut);
+    //   console.log("flight dep",flightDepartureTime);
+    //   console.log("diff in 2nd if",diffInDays);
     }
     if(cityCode===flightDest){
       const flightArrivalTime = moment(touristFlights[i].arrivalTime);
       const hotelCheckIn=moment(checkIn);
       const diffInMilliseconds = Math.abs(hotelCheckIn - flightArrivalTime);
       diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-      console.log("hotel cityCode",cityCode);
-      console.log("hotel checkin",hotelCheckIn);
-      console.log("flight arrival",flightArrivalTime);
-      console.log("diff in 2nd if",diffInDays);
+    //   console.log("hotel cityCode",cityCode);
+    //   console.log("hotel checkin",hotelCheckIn);
+    //   console.log("flight arrival",flightArrivalTime);
+    //   console.log("diff in 2nd if",diffInDays);
      
     }
 
 if (diffInDays <= 1) {
-    console.log("trueee");
+    // console.log("trueee");
   return true;
 } 
   }
@@ -135,6 +136,9 @@ if (diffInDays <= 1) {
         } else if (!datePattern.test(date)) {
             newErrors.date = "Invalid expiration date. Format: MM/YY.";
         }
+        else if(date<=currentDate){
+            newErrors.date = "Expiration date must be in the future.";
+        }
 
         // Validate CVV
         if (!cvc) {
@@ -155,8 +159,7 @@ if (diffInDays <= 1) {
             setErrors(validationErrors);
             return;
         }
-        // Handle successful submission (e.g., send data to an API)
-        // console.log("Payment Information Submitted:",  userid,hotelid,hotelname,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed" );
+
         setBookingStage(3);
         try {
             const responseSingle = await saveBooking(userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed");
@@ -166,6 +169,10 @@ if (diffInDays <= 1) {
         catch (error) {           
             console.error("Failed to save Booking");       
         }
+        setTimeout(() => {
+            navigate("/tourist");
+        }, 7000);
+
     }
     return (
         <div style={styles.appcc}>
