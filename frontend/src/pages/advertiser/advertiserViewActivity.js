@@ -14,7 +14,7 @@ import {  useNavigate } from "react-router-dom";
 import { Button, notification } from "antd";
 import { deleteActivity } from "../../api/ActivityService";
 import {advertiserID} from "../../IDs"
-
+import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar"
 
 export default function AdvertiserActivityDetails() {
   const location = useLocation();
@@ -41,6 +41,7 @@ console.log(advertiserID)
 
   return (
     <div class="dashboard__content_content" >
+      <AdvertiserNavBar /> {/*to be removed just for the ease of navigation*/}
       <section className="">
         <div className="container">
             <h2 className="text-40 sm:text-30 lh-14 mt-20">

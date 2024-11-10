@@ -4,32 +4,32 @@ import { getAdvertiserActivities, getActivityById } from "../../api/ActivityServ
 import { message} from 'antd';
 
 
-const AdvertiserActivities = () => {
-  const { id } = useParams();
-  const [activities, setActivities] = useState([]);
+const AdvertiserActivities = ({activities}) => {
+  //const { id } = useParams();
+  //const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const response = await getAdvertiserActivities(id);
-        setActivities(response.data);
-      } catch (err) {
-        setError(err.response?.data?.error || "Error fetching activities");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchActivities = async () => {
+  //     try {
+  //       const response = await getAdvertiserActivities(id);
+  //       setActivities(response.data);
+  //     } catch (err) {
+  //       setError(err.response?.data?.error || "Error fetching activities");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchActivities();
-  }, [id]);
+  //   fetchActivities();
+  // }, [id]);
 
  
   
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
 
    return (
     <div className="advertiser-activities-page">
