@@ -85,13 +85,13 @@ const updateItinerary = async (req, res) => {
         const { title, description, tourGuide, activities, serviceFee,
             language, availableDates, availableTime, accessibility,
             pickupLocation, dropoffLocation } = req.body;
-
+            
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
 
         if (!fetchedActivities || fetchedActivities.length === 0) {
             return res.status(404).json({ error: 'No activities found' });
         }
-
+     
         let price = Number(serviceFee);
         const locations = [];
         const timeline = [];
@@ -107,6 +107,13 @@ const updateItinerary = async (req, res) => {
         const uniqueTagIds = Array.from(allTags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
+        const itinerary = await itineraryModel.findById(id);
+        const hasBookings = itinerary.bookings.length > 0;
+        const isDatesArrayDifferent = JSON.stringify(itinerary.availableDates) !== JSON.stringify(availableDates);
+
+        if (hasBookings && isDatesArrayDifferent) {
+            return res.status(400).json({ error: 'Cannot update itinerary with bookings if available dates are changed' });
+        }
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
@@ -142,7 +149,11 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find({flagged:false, isActive:true}).populate({
+        const itineraries = await itineraryModel.find({flagged:false, isActive:true,availableDates: {
+            $elemMatch: {
+             $gte: new Date().setHours(0, 0, 0, 0) 
+            }
+        }}).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
