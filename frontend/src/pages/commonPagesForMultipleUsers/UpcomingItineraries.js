@@ -11,7 +11,7 @@ import TourguideNavBar from "../../components/navbar/TourguideNavBar";
 import { message,Empty,Spin } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource,cancelResource } from "../../api/BookingService";
-import { touristId } from '../../IDs';
+import { touristId, userRole } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
 import {flagItinerary, getAdminItineraries} from "../../api/AdminService";
 import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries, toggleItineraryStatus} from '../../api/ItineraryService';
@@ -47,25 +47,25 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
         }
     };
 
+    
+    const fetchItineraries = async () => {
+        try {
+            //im rendering part of the page upon the user type if it is an admin or a tourist i want to show every upcoming itinerary but if it a tourist
+            //trying to see their booked itineraries they should only see their booked itineraries
+            const response = touristBook? await viewUpcomingItineraries(): 
+            isAdmin? await getAdminItineraries(): 
+            isTourist?await getTouristItineraries(touristId): await getItinerariesByTourGuide(tourGuideID);
+            setItineraries(response);
+            setFilteredItineraries(response);
+        } catch (err) {
+            setError(err.message);
+        }finally {
+            setLoading(false);
+        }
+    };     
     useEffect(() => {
-        const fetchItineraries = async () => {
-            try {
-                //im rendering part of the page upon the user type if it is an admin or a tourist i want to show every upcoming itinerary but if it a tourist
-                //trying to see their booked itineraries they should only see their booked itineraries
-                const response = touristBook? await viewUpcomingItineraries(): 
-                isAdmin? await getAdminItineraries(): 
-                isTourist?await getTouristItineraries(touristId): await getItinerariesByTourGuide(tourGuideID);
-                setItineraries(response);
-                setFilteredItineraries(response);
-            } catch (err) {
-                setError(err.message);
-            }finally {
-                setLoading(false);
-            }
-        };
-
         fetchItineraries();
-    }, [location,itineraries]);
+    }, [location]);
 
     const handleSearch = (searchTerm) => {
         if (!searchTerm) {
@@ -237,6 +237,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
                 )
             );
             message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+            fetchItineraries();
         } catch (error) {
             message.error(error.response.data.message);
         }
@@ -248,7 +249,8 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             {isAdmin ? <AdminNavBar /> : null}   
             {isTourguide ? <TourguideNavBar /> : null}
 
-            <div className="page-title">All Upcoming Itineraries</div>
+            <div className="page-title">  All {(userRole === 'Tourist'||userRole==='Admin')&&!touristCancel ? 'Upcoming' : ''} {touristCancel ? 'Booked' : ''} Itineraries
+            </div>
             <Spin spinning={loading} size="large">
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
