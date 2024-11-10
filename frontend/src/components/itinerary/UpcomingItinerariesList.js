@@ -134,6 +134,22 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
               <div className="list-item-attribute">No ratings yet.</div>
             )}
             <div className="list-item-attribute">
+                            <strong>Activities:</strong>
+                            <div className="list-item-attribute-sublist">
+                                {itinerary.activities.map(activity => (
+                                    <div key={activity._id} className="list-item-attribute-sublist-component">
+                                        <strong>Activity:</strong> {activity.title} - {activity.description}
+                                        <div>
+                                            <strong>Tags:</strong> 
+                                            {activity.tags && activity.tags.length > 0 
+                                                ? activity.tags.map(tag => tag.name).join(', ')
+                                                : 'No tags available'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+            <div className="list-item-attribute">
               <strong>Locations:</strong> {itinerary.locations.length > 0 ? itinerary.locations.join(', ') : 'N/A'}
             </div>
             <div className="list-item-attribute">
