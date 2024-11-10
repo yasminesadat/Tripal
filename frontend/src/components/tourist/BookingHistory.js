@@ -25,7 +25,7 @@ export default function DbBooking() {
 
     const fetchBookedHotels = async () => {
       try {
-        const response = await getHotelHistory(hotelHistoryTourist);
+        const response = await getHotelHistory(touristId);
         console.log("Hotels API Response:", response);
         setBookedHotels(response.bookedHotels);
       } catch (error) {
