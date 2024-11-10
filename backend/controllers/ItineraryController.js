@@ -271,12 +271,6 @@ const toggleItineraryStatus = async (req, res) => {
         const itinerary = await itineraryModel.findById(id);
         if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
 
-        const hasBookings = itinerary.bookings && itinerary.bookings.length > 0;
-
-        if (itinerary.isActive && !hasBookings) {
-            return res.status(400).json({ message: 'Cannot deactivate itinerary without bookings' });
-        }
-
         itinerary.isActive = !itinerary.isActive;
         await itinerary.save();
 
