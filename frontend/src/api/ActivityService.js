@@ -19,22 +19,7 @@ export async function getActivityById(id) {
     console.error("Can't get activity details", error);
     throw error;
   }
-}
-
-export async function createActivity() { }
-
-export async function updateActivity(id) {
-  // try {
-  //   debugger
-  //   console.log("trying to update")
-  //   const response = await axios.put(`activities/${id}`);
-  //   console.log("i updated ")
-  //   return response.data; 
-  // } catch (error) {
-  //   console.error('Error updating activity:', error);
-  //   throw error; 
-  // }
-}
+};
 
 export async function deleteActivity(id) {
   try {
@@ -116,6 +101,16 @@ export const addRating = async (activityID, ratingData) => {
     return response.data;
   } catch (error) {
     console.error("Error adding rating:", error);
+    throw error;
+  }
+};
+
+export async function getAllActivities() {
+  try {
+    const response = await axios.get("/all-activities");
+    return response;
+  } catch (error) {
+    console.error("Can't get all activities", error);
     throw error;
   }
 };

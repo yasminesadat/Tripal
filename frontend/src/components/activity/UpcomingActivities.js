@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-
 import { Tag, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId } from "../../IDs";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { userRole } from "../../IDs";
 
 const UpcomingActivities = ({
   activities,
-  onBook,
   book,
   onCancel,
   cancel,
   curr = "EGP",
   page,
+  onAdminFlag,
 }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -78,7 +78,12 @@ const UpcomingActivities = ({
           >
             {activity.title}
           </button>
+          
           <div className="list-item-attributes">
+            
+            {userRole==='Admin' &&<button style={{background:'red', color:'white'}} 
+            onClick={() => onAdminFlag(activity._id)}>Flag as inappropriate</button>}
+
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">
               <b>Date:</b> {new Date(activity.date).toLocaleDateString()}
@@ -119,7 +124,7 @@ const UpcomingActivities = ({
                 </div>
                     )}
 
-            <div className="list-item-attribute">
+            {userRole!=='Admin' &&<div className="list-item-attribute">
               <CopyOutlined
                 onClick={() =>
                   handleCopyLink(
@@ -136,16 +141,17 @@ const UpcomingActivities = ({
                 }
                 style={{ cursor: "pointer" }}
               />
-            </div>
+            </div>}
+
           </div>
-          {book && (
+          {book && userRole==='Tourist'&& (
             <button
             onClick={() => handleRedirect(activity._id)}
             >
               Book Now
             </button>
           )}
-          {cancel && (
+          {cancel && userRole==='Tourist'&& (
             <button
               style={{ background: "#b0091a" }}
               onClick={() =>

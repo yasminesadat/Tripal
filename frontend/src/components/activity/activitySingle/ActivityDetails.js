@@ -11,15 +11,16 @@ import DateCalender from "../../templateComponents/DateCalender";
 import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { act } from "react-dom/test-utils";
+import { userRole } from "../../../IDs";
+import Index from "../../templateComponents/index"
 
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([activity.latitude, activity.longitude]);
+  const [markerPosition, setMarkerPosition] = useState([activity?.latitude|| 35.11, activity?.longitude||35.11]);
   const [selectedLocation, setSelectedLocation] = useState("");
 
-  if (!activity) return <div>Activity not found.</div>;
+  if (!activity) return <div><Index/></div>;
   const activityId = activity._id;  
   
   return (
@@ -81,7 +82,7 @@ export default function ActivityDetails({ activity }) {
 
             </div>
 
-            {page === "upcoming" && (
+            {page === "upcoming" && userRole ==='Tourist'&&(
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
                   <TourSingleSidebar activity={activity}/>
