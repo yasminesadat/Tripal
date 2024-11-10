@@ -152,6 +152,8 @@ const SignUpAllUsers = () => {
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
+    setTermsAndConditionsCheck(false);
+    setCurrentTab(0);
   };
   const handleDocumentChange = (info) => {
     if (info.fileList.length === 0) {
@@ -173,6 +175,7 @@ const SignUpAllUsers = () => {
     }
     else {
       setTermsAndConditionsCheck(false);
+      setCurrentTab(0);
     }
   }
 
