@@ -14,7 +14,7 @@ const hotelTourist="6724842b5831eed787083b57"
 // features based on it
 //change to test different roles in the website
 const currUser = sellerId;
-const userRole = "Tourist"; //used to test [Admin, Tourist, Seller, Tour Guide]
+const userRole = "Advertiser"; //used to test [Admin, Tourist, Seller, Tour Guide, Advertiser]
 module.exports = {
   currUser,
   userRole,
