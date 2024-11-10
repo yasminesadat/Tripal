@@ -49,7 +49,7 @@ const TransportationBookingPopUp = ({ setDoneBookTransportation, setBooked }) =>
                   <h2
                     data-aos="fade-up"
                     data-aos-delay=""
-                    className="text-40 md:text-24 lh-13 text-white"
+                    className="text-47 md:text-28 lh-13 text-white"
                   >
                     Transport from
                     <br className="lg:d-none" />
