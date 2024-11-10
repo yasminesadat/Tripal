@@ -142,7 +142,11 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find({flagged:false, isActive:true}).populate({
+        const itineraries = await itineraryModel.find({flagged:false, isActive:true,availableDates: {
+            $elemMatch: {
+             $gte: new Date().setHours(0, 0, 0, 0) 
+            }
+        }}).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
