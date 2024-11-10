@@ -13,8 +13,8 @@ const hotelTourist="6724842b5831eed787083b57"
 //mimics what will be in token to adjust some component
 // features based on it
 //change to test different roles in the website
-const currUser = advertiserID;
-const userRole = "Advertiser"; //used to test [Admin, Tourist, Seller, Tour Guide]
+const currUser = sellerId;
+const userRole = "Tourist"; //used to test [Admin, Tourist, Seller, Tour Guide]
 module.exports = {
   currUser,
   userRole,
