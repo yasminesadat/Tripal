@@ -11,7 +11,7 @@ import TourguideNavBar from "../../components/navbar/TourguideNavBar";
 import { message,Empty,Spin } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource,cancelResource } from "../../api/BookingService";
-import { touristId } from '../../IDs';
+import { touristId, userRole } from '../../IDs';
 import { getTouristItineraries } from '../../api/TouristService';
 import {flagItinerary, getAdminItineraries} from "../../api/AdminService";
 import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries, toggleItineraryStatus} from '../../api/ItineraryService';
@@ -249,7 +249,8 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             {isAdmin ? <AdminNavBar /> : null}   
             {isTourguide ? <TourguideNavBar /> : null}
 
-            <div className="page-title">All Upcoming Itineraries</div>
+            <div className="page-title">  All {(userRole === 'Tourist'||userRole==='Admin')&&!touristCancel ? 'Upcoming' : ''} {touristCancel ? 'Booked' : ''} Itineraries
+            </div>
             <Spin spinning={loading} size="large">
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
