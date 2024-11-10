@@ -156,6 +156,8 @@ const Activities = ({ isAdvertiser, isTourist }) => {
       {isAdvertiser ? <AdvertiserNavBar /> : null}
       {isTourist && <div className="page-title">Upcoming Activities</div>}
 
+      {userRole==='Admin' && <div className="page-title">View All Activities</div>}
+
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
       {isTourist||userRole==='Tourist' ||userRole=='Admin' ?
