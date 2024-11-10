@@ -177,7 +177,7 @@ const getActivityById = async (req, res) => {
 const getTouristActivities = async (req, res) => {
   const { touristId } = req.params;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, flagged: false })
+    const activities = await Activity.find({ "bookings.touristId": touristId, flagged: false, date: { $gte: new Date() } })
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);

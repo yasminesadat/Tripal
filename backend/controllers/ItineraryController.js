@@ -217,7 +217,7 @@ const getTouristItineraries = async (req, res) => {
         const touristId = req.params.touristId;
         
         // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId, flagged: false }).populate({
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId,'bookings.selectedDate': { $gte: new Date() } , flagged: false }).populate({
             path: 'activities',
             populate: {
                 path: 'tags',
