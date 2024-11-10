@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { viewUpcomingActivities, getAdvertiserActivities } from "../../api/ActivityService";
 import UpcomingActivities from "../../components/activity/UpcomingActivities";
 import ActivitySearch from "../../components/activity/ActivitySearch";
@@ -7,14 +6,15 @@ import ActivityFilter from "../../components/activity/ActivityFilter";
 import ActivitySort from "../../components/activity/ActivitySort";
 import GuestNavBar from "../../components/navbar/GuestNavBar";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
+import AdminNavBar from "../../components/navbar/AdminNavBar";
 import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { bookResource } from "../../api/BookingService";
 import { touristId } from "../../IDs";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
-import { advertiserID } from "../../IDs";
+import { advertiserID,userRole } from "../../IDs";
+import { getAdminActivities } from "../../api/AdminService";
 // advertiser activities or tourist upcoming activities 
 const Activities = ({ isAdvertiser, isTourist }) => {
   const id = advertiserID;
@@ -54,10 +54,9 @@ const Activities = ({ isAdvertiser, isTourist }) => {
           response = await getAdvertiserActivities(id);
         } else if (isTourist) {
           response = await viewUpcomingActivities();
+        } else if(userRole==='Admin'){
+          response = await getAdminActivities();
         }
-
-        console.log(response);
-
         const activitiesData = response?.data || response || [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData);
@@ -142,18 +141,19 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div>
+      {userRole==='Admin'&& <AdminNavBar />}
       {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
       {isAdvertiser ? <AdvertiserNavBar /> : null}
       {isTourist && <div className="page-title">Upcoming Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
-      {isTourist ?
+      {isTourist ||userRole=='Admin' ?
         <div className="filter-sort-list">
-          <div className="filter-sort">
-            <ActivityFilter onFilter={handleFilter} />
+          { isTourist&&<div className="filter-sort">
+             <ActivityFilter onFilter={handleFilter} />
             <ActivitySort onSort={handleSort} />
-          </div>
+          </div>}
           <UpcomingActivities activities={filteredActivities} curr={currency} book={"diana"} page={"upcoming"} />
         </div>
         :

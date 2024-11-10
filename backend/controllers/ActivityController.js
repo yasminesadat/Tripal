@@ -2,7 +2,6 @@ const Activity = require("../models/Activity");
 const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
-const Rating = require("../models/Rating");
 
 const createActivity = async (req, res) => {
   const {
@@ -72,7 +71,7 @@ const createActivity = async (req, res) => {
 const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
   try {
-    const activites = await Activity.find({ advertiser: id })
+    const activites = await Activity.find({ advertiser: id, deactivated: false })
     .select("title date time location")
     console.log(activites)
     res.status(200).json(activites);
@@ -131,8 +130,7 @@ const deleteActivity = async (req, res) => {
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-
-    const activities = await Activity.find({ date: { $gte: currentDate } })
+    const activities = await Activity.find({ date: { $gte: currentDate }, deactivated: false })
       .populate("category")
       .populate("tags")
     // .populate("ratings");
@@ -148,7 +146,7 @@ const viewHistoryActivities = async (req, res) => {
   try {
     const currentDate = new Date();
 
-    const activities = await Activity.find({ date: { $gte: currentDate } })
+    const activities = await Activity.find({ date: { $gte: currentDate }, deactivated:false })
       .populate("category")
       .populate("tags")
     // .populate("ratings");
@@ -164,10 +162,13 @@ const getActivityById = async (req, res) => {
 
   try {
     const activity = await Activity.findById(id).populate("category").populate("tags");
-    if (!activity) {
+    if (!activity) 
       return res.status(404).json({ message: "Activity not found." });
-    }
-    res.status(200).json(activity);
+    
+    if (activity.deactivated) 
+        res.status(404).json({ message: "Activity deactivated." });
+    else
+      res.status(200).json(activity);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving activity.", error: error.message });
 
@@ -176,7 +177,30 @@ const getActivityById = async (req, res) => {
 const getTouristActivities = async (req, res) => {
   const { touristId } = req.params;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId })
+    const activities = await Activity.find({ "bookings.touristId": touristId, deactivated: false })
+      .populate("category")
+      .populate("tags")
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getAllActivitiesForAdmin = async (req, res) => { 
+  try {
+    const currentDate = new Date();
+    const activities = await Activity.find({ date: { $gte: currentDate }})
+      .populate("category")
+      .populate("tags")
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getAllActivities = async (req, res) => {
+  try {
+    const activities = await Activity.find({ deactivated: false })
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);
@@ -193,5 +217,7 @@ module.exports = {
   deleteActivity,
   viewUpcomingActivities,
   viewHistoryActivities,
-  getTouristActivities
+  getTouristActivities,
+  getAllActivitiesForAdmin,
+  getAllActivities
 };

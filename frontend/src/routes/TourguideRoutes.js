@@ -1,4 +1,3 @@
-import TourguideItineraries from "../pages/tourguide/TourguideItineraries";
 import TourguideHome from "../pages/tourguide/TourguideHome";
 import TourGuideForm from "../pages/tourguide/TourGuideCreateProfile";
 import TourGuideProfile from '../pages/tourguide/TourGuideViewProfile'

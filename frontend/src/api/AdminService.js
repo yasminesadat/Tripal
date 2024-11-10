@@ -111,3 +111,14 @@ export const approveDeletionRequest = async (requestId) => {
     throw error;
   }
 };
+
+export const getAdminActivities = async () => {
+  try {
+    const response = await axios.get("/admin/activities");
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Can't fetch activities", error);
+    throw error;
+  }
+};
