@@ -101,7 +101,7 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
             </div>}
             {isTourguide && (
               <button
-                  onClick={() => onToggleStatus(itinerary._id)}
+                  onClick={() => onToggleStatus(itinerary._id,itinerary.isActive)}
                   style={{ marginBottom: "10px" }}
               >
                   {itinerary.isActive ? "Deactivate" : "Activate"}

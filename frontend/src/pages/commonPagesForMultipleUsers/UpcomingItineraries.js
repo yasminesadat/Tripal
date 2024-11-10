@@ -238,6 +238,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             message.error(error.response.data.message);
         }
     };
+    
     return (
         <div >
             {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
