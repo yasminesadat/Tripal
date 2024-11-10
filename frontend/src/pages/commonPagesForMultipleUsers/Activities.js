@@ -14,7 +14,7 @@ import { touristId } from "../../IDs";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 import { advertiserID,userRole } from "../../IDs";
-import { getAdminActivities } from "../../api/AdminService";
+import { getAdminActivities, flagActivity } from "../../api/AdminService";
 // advertiser activities or tourist upcoming activities 
 const Activities = ({ isAdvertiser, isTourist }) => {
   const id = advertiserID;
@@ -52,7 +52,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
         if (isAdvertiser) {
           console.log("THE ID IS", id);
           response = await getAdvertiserActivities(id);
-        } else if (isTourist) {
+        } else if (userRole==='Tourist') {
           response = await viewUpcomingActivities();
         } else if(userRole==='Admin'){
           response = await getAdminActivities();
@@ -137,6 +137,16 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     setFilteredActivities(sortedActivities);
   };
 
+  const handleAdminFlag = async (activityId) => {
+    try{
+      await flagActivity(activityId);
+      message.success("Activity has been flagged successfully");
+    }catch (error) {
+    message.error(error.response?.data?.error || "Failed to flag activity");
+  }
+};
+
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
@@ -148,13 +158,18 @@ const Activities = ({ isAdvertiser, isTourist }) => {
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
-      {isTourist ||userRole=='Admin' ?
+      {isTourist||userRole==='Tourist' ||userRole=='Admin' ?
         <div className="filter-sort-list">
           { isTourist&&<div className="filter-sort">
              <ActivityFilter onFilter={handleFilter} />
             <ActivitySort onSort={handleSort} />
           </div>}
-          <UpcomingActivities activities={filteredActivities} curr={currency} book={"diana"} page={"upcoming"} />
+          <UpcomingActivities activities={filteredActivities}
+           curr={currency}
+            book={"diana"}
+            page={"upcoming"}
+            onAdminFlag={handleAdminFlag}
+             />
         </div>
         :
         <AdvertiserActivities />

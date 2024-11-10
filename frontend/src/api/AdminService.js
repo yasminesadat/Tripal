@@ -122,3 +122,13 @@ export const getAdminActivities = async () => {
     throw error;
   }
 };
+
+export const flagActivity = async (activityId) => {
+  try {
+    const response = await axios.put(`/admin/flag-activity/${activityId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error flagging activity with id ${activityId}`, error);
+    throw error;
+  }
+};

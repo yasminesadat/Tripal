@@ -13,6 +13,7 @@ const UpcomingActivities = ({
   cancel,
   curr = "EGP",
   page,
+  onAdminFlag,
 }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -77,7 +78,12 @@ const UpcomingActivities = ({
           >
             {activity.title}
           </button>
+          
           <div className="list-item-attributes">
+            
+            {userRole==='Admin' &&<button style={{background:'red', color:'white'}} 
+            onClick={() => onAdminFlag(activity._id)}>Flag as inappropriate</button>}
+
             <div className="list-item-attribute">{activity.description}</div>
             <div className="list-item-attribute">
               <b>Date:</b> {new Date(activity.date).toLocaleDateString()}
