@@ -8,7 +8,7 @@ import TouristNavBar from "../../components/navbar/TouristNavBar";
 import GuestNavBar from "../../components/navbar/GuestNavBar";
 import AdminNavBar from "../../components/navbar/AdminNavBar";  
 import TourguideNavBar from "../../components/navbar/TourguideNavBar";
-import { message,Empty } from 'antd';
+import { message,Empty,Spin } from 'antd';
 import { getConversionRate } from '../../api/ExchangeRatesService'; 
 import { bookResource,cancelResource } from "../../api/BookingService";
 import { touristId } from '../../IDs';
@@ -28,6 +28,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
     const location = useLocation();
     const [selectedItinerary, setSelectedItinerary] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const curr = sessionStorage.getItem("currency");
@@ -58,6 +59,8 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
                 setFilteredItineraries(response);
             } catch (err) {
                 setError(err.message);
+            }finally {
+                setLoading(false);
             }
         };
 
@@ -246,6 +249,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             {isTourguide ? <TourguideNavBar /> : null}
 
             <div className="page-title">All Upcoming Itineraries</div>
+            <Spin spinning={loading} size="large">
             <ItinerarySearch onSearch={handleSearch} />
             <div className="filter-sort-list">
                 {!isTourguide &&<div className="filter-sort">
@@ -253,7 +257,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
                     <ItinerarySort onSort={handleSort} />
                 </div>  }
                 {/*in each route im passing the suitable page props to decide what button or what things to show*/}
-                {itineraries.length === 0 &&  <Empty />}
+                {itineraries.length === 0 && !loading&&  <Empty />}
                 <UpcomingItinerariesList itineraries={filteredItineraries} 
                 curr={currency} onBook={handleBookTicket} 
                 book ={touristBook} isAdmin={isAdmin} cancel={touristCancel}
@@ -274,9 +278,11 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
                         onClose={handleModalClose} 
                     />
                 )}
-
+            
             </div>
+            </Spin>
             <Footer/>
+            
         </div>
     );
 };
