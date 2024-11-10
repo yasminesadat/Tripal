@@ -210,7 +210,7 @@ const TourGuideCreateProfile = () => {
     try {
       await updateProfile(id, changedFields);
       message.success("Profile updated successfully!");
-      navigate(`/tourguide/${id}`);
+      navigate(`/tourguide/profile`);
     } catch (error) {
       message.error("Failed to update profile");
     } finally {

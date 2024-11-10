@@ -2,6 +2,7 @@ import Calender from "../../components/dropdownSearch/Calender";
 import Location from "../../components/dropdownSearch/Location";
 import TourType from "../../components/dropdownSearch/TourType";
 import image from "./Components/bg.svg"
+import {message} from 'antd';
 
 
 import { useEffect, useState, useRef } from "react";
@@ -27,6 +28,16 @@ export default function Hero6() {
 
   
   const navigate = useNavigate();
+
+  const validate = ()=>{
+    if(!selected ){
+      message.error("Please search for a city.")
+    }
+    else if(!dates){
+      message.error("Please enter dates.")
+    }
+    else navigate(`/hotelList/${selected}`);
+  }
   
   useEffect(() => {
     setCurrentActiveDD("");
@@ -137,7 +148,7 @@ export default function Hero6() {
 
                   <div className="searchForm__button">
                     <button
-                      onClick={() => {navigate(`/hotelList/${selected}`)}}
+                      onClick={validate}
                       className="button -dark-1 size-60 bg-accent-1 rounded-200 text-white"
                     >
                       <i className="icon-search text-16"></i>

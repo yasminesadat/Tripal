@@ -8,6 +8,6 @@ router.get("/request/:id", getRequestById);
 router.delete("/request/:id", deleteRequest);
 router.put("/request/:id", setRequestState);
 router.put("/requestDocument/:id", updateRequest);
-router.post("/request-deletion/:role/:userId", requestAccountDeletion);
+router.delete("/request-deletion/:role/:userId", requestAccountDeletion);
 
 module.exports = router;

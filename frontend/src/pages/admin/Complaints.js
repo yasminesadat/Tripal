@@ -3,6 +3,7 @@ import AdminNavBar from "../../components/navbar/AdminNavBar";
 import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
 import { adminId } from "../../IDs";
 import { OrderedListOutlined } from '@ant-design/icons';
+import { message } from "antd";
 
 const ComplaintsPage = () => {
     const tabs = ["all", "pending", "resolved"];
@@ -51,10 +52,12 @@ const ComplaintsPage = () => {
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getAllComplaints();
             setComplaints(updatedComplaints);
-            //setReplyMessage(""); 
+            setReplyMessage(""); 
             //setSelectedComplaint(null); 
+            message.success("Reply sent successfully!");
         } catch (error) {
             console.error("Error replying to complaint:", error);
+            message.error("Failed to send reply. Please try again.");
         }
     };
 

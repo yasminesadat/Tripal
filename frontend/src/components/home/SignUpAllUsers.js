@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Select, DatePicker, Radio, message, Upload, Modal } from "antd";
+import { Form, Input, Button, Select, DatePicker, Radio, message, Upload, Modal, Checkbox } from "antd";
 import moment from "moment";
 import { UploadOutlined } from "@ant-design/icons";
 import { createTourist } from "../../api/TouristService";
@@ -105,7 +105,7 @@ const SignUpAllUsers = () => {
         setOpen(false);
         setConfirmLoading(false);
       }, 2000);
-      handleSubmit();
+      setTermsAndConditionsCheck(true);
     }
     else {
       setCurrentTab((oldTab) => oldTab + 1);
@@ -114,6 +114,7 @@ const SignUpAllUsers = () => {
   const handleCancel = () => {
     setOpen(false);
   };
+  const [termsAndConditionsCheck, setTermsAndConditionsCheck] = useState(false);
   const [requestId, setRequestId] = useState('')
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -166,6 +167,14 @@ const SignUpAllUsers = () => {
   const handleRemove = () => {
     setFormData({ ...formData, document: null });
   };
+  const onAcceptTermsAndConditions = () => {
+    if (!termsAndConditionsCheck) {
+      showModal();
+    }
+    else {
+      setTermsAndConditionsCheck(false);
+    }
+  }
 
   const handleSubmit = async (values) => {
     // if ((role === "seller" || role === "tour-guide" || role === "advertiser") && !formData.document) {
@@ -258,7 +267,7 @@ const SignUpAllUsers = () => {
   return (
     <div className="signUpUsersForm-container">
       <h2 className="signUpUsersForm-title">Sign Up</h2>
-      <Form form={form} layout="vertical" onFinish={role !== "tourist" ? showModal : handleSubmit}>
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item label="Role">
           <Radio.Group onChange={handleRoleChange} value={role}>
             <Radio value="seller">Seller</Radio>
@@ -395,7 +404,11 @@ const SignUpAllUsers = () => {
             </Upload>
           </Form.Item>
         )}
-
+        <Form.Item
+          name="TermsAndConditions" rules={[{ required: !termsAndConditionsCheck, message: "Please accept the terms and conditions" }]}
+        >
+          <Checkbox onChange={onAcceptTermsAndConditions} checked={termsAndConditionsCheck}>Accept Terms and Conditions</Checkbox>
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Sign Up
@@ -421,7 +434,7 @@ const SignUpAllUsers = () => {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-        okText={currentTab === tabs.length - 1 ? "Sign Up" : "Accept"}
+        okText={currentTab === tabs.length - 1 ? "Done" : "Accept"}
       >
         <section className="layout-pt-md layout-pb-lg">
           <div className="container">

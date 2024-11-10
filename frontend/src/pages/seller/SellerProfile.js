@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useNavigate,useEffect, useState } from "react";
 import { getSellerDetails, updateSeller } from "../../api/SellerService";
 import SellerNavBar from "../../components/navbar/SellerNavBar";
 import { sellerId } from "../../IDs";
@@ -24,6 +24,8 @@ const SellerProfile = () => {
   const [initialLogo, setInitialLogo] = useState(""); // State to store the initial logo
   const [loading, setLoading] = useState(false); // State for loading
   const [buttonText, setButtonText] = useState("Save Changes");
+  const navigate=useNavigate();
+
 
   useEffect(() => {
     const fetchSellerProfile = async () => {
@@ -139,6 +141,7 @@ const SellerProfile = () => {
     try {
       const response = await requestAccountDeletion("Seller", sellerId);
       message.success(response.message); 
+      navigate("/");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred."); 
     }

@@ -63,13 +63,7 @@ const HistoricalPlacesList = () => {
                                         onClick={() => handleDelete(place._id)}
                                         style={{ color: 'red', cursor: 'pointer' }}
                                     />
-                                    <InfoCircleOutlined 
-                                     onClick={() => {
-                                        navigate(`/historicalPlace/details/${place._id}`, { state: { governerHistoricalPlace } });
-                                    }}
-
-                                    style={{ color: 'white', marginRight: '10px', cursor: 'pointer' }}
-                                    />
+                                    
                                 </div>
                             </div>
                             <div className="list-item-attributes">

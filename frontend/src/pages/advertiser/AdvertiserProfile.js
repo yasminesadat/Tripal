@@ -37,6 +37,7 @@ const AdvertiserProfile = () => {
       const response = await requestAccountDeletion("Advertiser", id);
       message.success("Account deletion request submitted successfully.");
       message.success(response.message);
+      navigate("/");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred");
     }

@@ -307,6 +307,41 @@ const getTouristAge = async (req, res) => {
   }
 };
 
+const getTouristPreferences = async (req, res)=>
+{
+  try {
+    const { id} = req.params
+    const tourist = await touristModel.findById(id)
+      .populate("tags")
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    res.json(tourist.tags);
+  } catch (error) {
+    console.error("Error fetching tourist information:", error);
+    res.status(500).json({ message: "Error fetching tourists' tags" });
+  }
+};
+
+const getTouristCategories = async (req, res)=>
+  {
+    try {
+      const { id} = req.params
+      const tourist = await touristModel.findById(id)
+        .populate("categories")
+  
+      if (!tourist) {
+        return res.status(404).json({ message: "Tourist not found" });
+      }
+  
+      res.json(tourist.categories);
+    } catch (error) {
+      console.error("Error fetching tourist information:", error);
+      res.status(500).json({ message: "Error fetching tourists' categories" });
+    }
+  };
 
 
 module.exports = { createTourist,
@@ -316,5 +351,7 @@ module.exports = { createTourist,
                    redeemPoints, 
                    getTouristNameAndEmail,
                    getTouristBookedFlights,
-                  getTouristAge,
-                  getTouristBookedHotels };
+                   getTouristAge,
+                   getTouristBookedHotels,
+                   getTouristPreferences,
+                   getTouristCategories };
