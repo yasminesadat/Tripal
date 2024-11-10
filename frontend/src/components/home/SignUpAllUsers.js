@@ -250,7 +250,7 @@ const SignUpAllUsers = () => {
         response = await createTourist(newUser);
         const touristId = response.data.id || response.data._id;
         message.success("Sign up successful!");
-        navigate(`/tourist/select-preferences/${touristId}`);
+        navigate(`/tourist/select-preferences/${touristId}`, { state: { touristId } });
 
       }
 

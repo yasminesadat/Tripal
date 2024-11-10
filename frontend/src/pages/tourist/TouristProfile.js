@@ -274,11 +274,15 @@ const TouristHomePage = () => {
                 ))}
               </Select>
             ) : (
-              <input
-              type="text"
-              value={touristTags.map((tag) => tag.name).join(", ")}
-              readOnly
-            />
+              touristTags.length > 0 ? (
+                <input
+                  type="text"
+                  value={touristTags.map((tag) => tag.name).join(", ")}
+                  readOnly
+                />
+              ) : (
+                <span>No chosen preference tags</span>
+              )
             )}
           
           <p>
@@ -300,12 +304,17 @@ const TouristHomePage = () => {
                 ))}
               </Select>
             ) : (
-              <input
-              type="text"
-              value={touristCategories.map((categories) => categories.Name).join(", ")}
-              readOnly
-            />
+              touristCategories.length > 0 ? (
+                <input
+                  type="text"
+                  value={touristCategories.map((category) => category.Name).join(", ")}
+                  readOnly
+                />
+              ) : (
+                <span>No chosen activity categories</span>
+              )
             )}
+
             <p>
               <b>Job:</b>
               <input

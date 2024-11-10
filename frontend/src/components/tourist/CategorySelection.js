@@ -3,11 +3,12 @@ import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { updateTouristInformation } from "../../api/TouristService";
 import { CloseOutlined } from "@ant-design/icons";
 import { message } from "antd";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function CategorySelection() {
+  const location = useLocation();
   const navigate = useNavigate(); 
-  const { touristId } = useParams();
+  const touristId = location.state?.touristId;
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -15,7 +16,7 @@ export default function CategorySelection() {
     const fetchCategories = async () => {
       try {
         const response = await ActivityCategoryService.getActivityCategories();
-        const fetchedCategories = response; //NOT RESPONSE.DATA
+        const fetchedCategories = response; // NOT RESPONSE.DATA
         if (Array.isArray(fetchedCategories)) {
           setCategories(fetchedCategories);
         } else {
@@ -46,8 +47,7 @@ export default function CategorySelection() {
 
   const handleNext = async () => {
     if (selectedCategories.length === 0) {
-      message.error ("Please select at least one category before proceeding");
-      
+      message.error("Please select at least one category before proceeding");
       return;
     }
     try {
@@ -64,6 +64,50 @@ export default function CategorySelection() {
     navigate("/tourist");
   };
 
+  // Inline styles
+  const tagItemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    border: '1px solid transparent',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s, border 0.3s',
+  };
+
+  const tagItemHoverStyle = {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  };
+
+  const tagItemSelectedStyle = {
+    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+    border: '1px solid rgba(0, 123, 255, 0.5)',
+  };
+
+  const selectedTagContainerStyle = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginBottom: '16px',
+  };
+
+  const selectedTagStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#374971', // Background color
+    color: 'white', // Text color
+    borderRadius: '20px', 
+    padding: '5px 10px', 
+    fontSize: '14px', // Font size
+    position: 'relative', // For positioning the close icon
+  };
+
+  const closeIconStyle = {
+    marginLeft: '5px',
+    cursor: 'pointer',
+  };
+
   return (
     <section className="mt-header layout-pt-lg layout-pb-lg">
       <div className="container">
@@ -72,14 +116,15 @@ export default function CategorySelection() {
             <div className="text-center mb-lg">
               <h1 className="text-30">What categories of activities do you prefer?</h1>
             </div>
-            <div className="selected-categories mb-lg">
+            {/* Display selected categories as bubbles */}
+            <div style={selectedTagContainerStyle}>
               {selectedCategories.map((categoryId) => {
                 const category = categories.find((cat) => cat._id === categoryId);
                 return (
                   category && (
-                    <div key={category._id} className="selected-category">
-                      <span> {category.Name}</span>
-                      <CloseOutlined onClick={() => removeCategory(category._id)} />
+                    <div key={category._id} style={selectedTagStyle}>
+                      <span>{category.Name}</span>
+                      <CloseOutlined onClick={() => removeCategory(category._id)} style={closeIconStyle} />
                     </div>
                   )
                 );
@@ -91,17 +136,26 @@ export default function CategorySelection() {
                 categories.map((category) => (
                   <div
                     key={category._id}
-                    className={`tag-item ${selectedCategories.includes(category._id) ? "selected" : ""}`}
+                    style={{
+                      ...tagItemStyle,
+                      ...(selectedCategories.includes(category._id) ? tagItemSelectedStyle : {}),
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = tagItemHoverStyle.backgroundColor;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = selectedCategories.includes(category._id) ? tagItemSelectedStyle.backgroundColor : 'transparent';
+                    }}
                     onClick={() => handleCategoryChange(category._id)}
                   >
-                    <span> {category.Name}</span>
+                    <span>{category.Name}</span>
                   </div>
                 ))
               ) : (
                 <p>No categories available</p>
               )}
             </div>
-            <br></br>
+            <br />
             <button onClick={handleNext} className="button -md -dark-1 bg-accent-1 text-white col-12 mt-lg">
               Next
               <i className="icon-arrow-top-right ml-10"></i>
@@ -114,10 +168,9 @@ export default function CategorySelection() {
             >
               Skip
             </button>
-            </div>
           </div>
         </div>
-    
+      </div>
     </section>
   );
 }
