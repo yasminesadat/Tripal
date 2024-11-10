@@ -71,7 +71,7 @@ const createActivity = async (req, res) => {
 const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
   try {
-    const activites = await Activity.find({ advertiser: id, deactivated: false,flagged:false }) 
+    const activites = await Activity.find({ advertiser: id }) 
     .select("title date time location")
     console.log(activites)
     res.status(200).json(activites);
@@ -163,14 +163,14 @@ const getActivityById = async (req, res) => {
   try {
     const activity = await Activity.findById(id).populate("category").populate("tags");
     if (!activity) 
-      return res.status(404).json({ message: "Activity not found." });
+      return res.status(404).json({ error: "Activity not found." });
     
-    if (activity.deactivated||activity.flagged) 
-        res.status(404).json({ message: "Activity deactivated." });
+    if (activity.flagged) 
+        res.status(404).json({ error: "Activity flagged." });
     else
       res.status(200).json(activity);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving activity.", error: error.message });
+    res.status(500).json({ error: error.message });
 
   }};
 

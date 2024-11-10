@@ -92,7 +92,7 @@ export async function getTouristUserName(touristId) {
 export async function getTouristFlights(touristId) {
   try {
     const response = await axios.get(`/tourist/flights/${touristId}`);
-    
+
     return response.data;
   } catch (error) {
     console.error("Error getting tourists' flights':", error);
@@ -126,6 +126,16 @@ export async function getTouristCategories(touristId) {
     return response.data;
   } catch (error) {
     console.error("Error getting categories", error);
+    throw error;
+  }
+}
+
+export async function checkTouristExists(touristId) {
+  try {
+    const response = await axios.get(`/tourist/exists/${touristId}`);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
     throw error;
   }
 }

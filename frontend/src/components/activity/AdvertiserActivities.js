@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, getActivityById } from "../../api/ActivityService";
-import { Button, notification } from 'antd';
+import { message} from 'antd';
 
 
 const AdvertiserActivities = () => {
@@ -69,6 +69,7 @@ const AdvertiserActivities = () => {
                       navigate(`/advertiser-view-activity/${id}`, { state: { activity: response.data } });
                       console.log(response.data)
                     } catch (error) {
+                      message.error(error.response.data.error)
                       console.error("Failed to load activity details:", error);
                     }
                   }}

@@ -263,16 +263,16 @@ const getTouristBookedHotels = async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-    const bookedHotels=tourist.bookedHotels;
-    if (!bookedHotels){
+    const bookedHotels = tourist.bookedHotels;
+    if (!bookedHotels) {
       return res.status(400).json({ error: "No Booked Hotels!" });
 
     }
-    const HotelInfo=[];
-    
-    for(let i=0;i<bookedHotels.length;i++){
+    const HotelInfo = [];
+
+    for (let i = 0; i < bookedHotels.length; i++) {
       const hotel = await hotelBookings.findById(bookedHotels[i]._id);
-      if (!hotel){
+      if (!hotel) {
         return res.status(404).json({ error: "Can't return hotels history!" });
       }
       HotelInfo.push(hotel)
@@ -306,11 +306,32 @@ const getTouristAge = async (req, res) => {
     res.status(500).json({ message: 'Error fetching tourist data', error });
   }
 };
-
-const getTouristPreferences = async (req, res)=>
-{
+const checkUserExists = async (req, res) => {
   try {
-    const { id} = req.params
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
+
+    const user = await touristModel.findById(id);
+
+    if (!user) {
+      res.json({ message: 'User not found' });
+      return;
+    }
+
+    res.json({ message: 'User exists' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error checking user existence', error });
+  }
+};
+
+
+const getTouristPreferences = async (req, res) => {
+  try {
+    const { id } = req.params
     const tourist = await touristModel.findById(id)
       .populate("tags")
 
@@ -325,33 +346,35 @@ const getTouristPreferences = async (req, res)=>
   }
 };
 
-const getTouristCategories = async (req, res)=>
-  {
-    try {
-      const { id} = req.params
-      const tourist = await touristModel.findById(id)
-        .populate("categories")
-  
-      if (!tourist) {
-        return res.status(404).json({ message: "Tourist not found" });
-      }
-  
-      res.json(tourist.categories);
-    } catch (error) {
-      console.error("Error fetching tourist information:", error);
-      res.status(500).json({ message: "Error fetching tourists' categories" });
+const getTouristCategories = async (req, res) => {
+  try {
+    const { id } = req.params
+    const tourist = await touristModel.findById(id)
+      .populate("categories")
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
     }
-  };
+
+    res.json(tourist.categories);
+  } catch (error) {
+    console.error("Error fetching tourist information:", error);
+    res.status(500).json({ message: "Error fetching tourists' categories" });
+  }
+};
 
 
-module.exports = { createTourist,
-                   getTouristInfo,
-                   updateTouristProfile,
-                   changePassword, 
-                   redeemPoints, 
-                   getTouristNameAndEmail,
-                   getTouristBookedFlights,
-                   getTouristAge,
-                   getTouristBookedHotels,
-                   getTouristPreferences,
-                   getTouristCategories };
+module.exports = {
+  createTourist,
+  getTouristInfo,
+  updateTouristProfile,
+  changePassword,
+  redeemPoints,
+  getTouristNameAndEmail,
+  getTouristBookedFlights,
+  getTouristAge,
+  getTouristBookedHotels,
+  getTouristPreferences,
+  getTouristCategories,
+  checkUserExists
+};
