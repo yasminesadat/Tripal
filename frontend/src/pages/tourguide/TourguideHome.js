@@ -1,6 +1,6 @@
 import React from "react";
-import TourguideNavBar from "../../components/tourguide/TourguideNavBar";
-import Footer from "../../components/Footer";
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import Footer from "../../components/common/Footer";
 
 const TourguideHome = () => {
   return (

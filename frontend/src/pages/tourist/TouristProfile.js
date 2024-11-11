@@ -1,22 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { getTouristInformation, updateTouristInformation } from "../../api/TouristService";
-import TouristNavBar from "../../components/tourist/TouristNavBar";
-import { useParams } from "react-router-dom";
+import { getTouristInformation, updateTouristInformation, redeemPoints } from "../../api/TouristService";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
+import { useNavigate, useParams } from "react-router-dom";
 import { nationalities } from "../../assets/Nationalities";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toastify
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toastify
+import Badge from "../../components/tourist/Badge";
+import Currency from "../../components/tourist/Currency";
+import ChangePassword from "../../components/common/ChangePassword";
+import { requestAccountDeletion } from "../../api/RequestService";
+import { message } from 'antd';
+import { touristId } from "../../IDs";
+import { getTouristTags } from "../../api/TouristService";
+import { getTouristCategories } from "../../api/TouristService";
+import { getTags } from "../../api/PreferenceTagService";
+import ActivityCategoryService from "../../api/ActivityCategoryService";
+import { Select } from 'antd';
+import { Tag } from 'antd';
 
 const TouristHomePage = () => {
-  const { id } = useParams();
-  const [profileInformation, setProfileInformation] = useState([]);
+  const id = touristId;
+  const userType = "tourist";
+  const [profileInformation, setProfileInformation] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [feedback, setFeedback] = useState({ message: "", isSuccess: false });
+  const [touristTags, setTouristTags] = useState([]);
+  const [touristCategories, setTouristCategories] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [allCats, setAllCats] = useState([]);
+  const navigate = useNavigate();
+
+
 
   const [editedProfile, setEditedProfile] = useState({
     email: "",
     nationality: "",
     job: "",
     mobileNumber: "",
+    tags: [],
+    categories: []
   });
 
   const handleInputChange = (e) => {
@@ -36,6 +57,8 @@ const TouristHomePage = () => {
         const response = await updateTouristInformation(id, editedProfile);
         console.log("Profile updated successfully", response);
         toast.success("Profile updated successfully");
+        await fetchTouristTags();
+        await fetchTouristCategories();
       } catch (error) {
         console.error("Failed to update user information:", error);
         toast.error("Error updating profile");
@@ -47,6 +70,20 @@ const TouristHomePage = () => {
     }
   };
 
+  const handleTagsChange = (value) => {
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      tags: value,
+    }));
+  };
+
+  const handleCategoriesChange = (value) => {
+    setEditedProfile((prevState) => ({
+      ...prevState,
+      categories: value,
+    }));
+  };
+
   const getUserInformation = async () => {
     try {
       const response = await getTouristInformation(id);
@@ -56,30 +93,118 @@ const TouristHomePage = () => {
         nationality: response.nationality,
         job: response.job,
         mobileNumber: response.mobileNumber,
+        tags: response.tags,
+        categories: response.categories
       });
+      sessionStorage.removeItem("currency");
+      sessionStorage.setItem("currency", response.choosenCurrency);
     } catch (error) {
       console.error("Failed to fetch user information:", error);
     }
   };
 
-  useEffect(() => {
-    getUserInformation();
-  }, []);
+  const fetchTouristTags = async () => {
+    try {
+      const tags = await getTouristTags(id);
+      setTouristTags(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
 
-  const FeedbackMessage = ({ message, isSuccess }) => {
-    const feedbackStyle = {
-      color: isSuccess ? "green" : "red",
-      margin: "10px 0",
-      fontWeight: "bold",
+  const fetchTouristCategories = async () => {
+    try {
+      const tags = await getTouristCategories(id);
+      setTouristCategories(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+  const fetchAllTags = async () => {
+    try {
+      const tags = await getTags();
+      setAllTags(tags.data);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+  const fetchAllCategories = async () => {
+    try {
+      const tags = await ActivityCategoryService.getActivityCategories();
+      setAllCats(tags);
+    } catch (error) {
+      console.error("Error fetching tourist tags:", error);
+    }
+  };
+
+
+  const handleCurrencyChange = async (currency) => {
+    console.log("Chosen currency updated to:", currency);
+
+    const updatedProfileData = {
+      choosenCurrency: currency,
     };
 
-    return <div style={feedbackStyle}>{message}</div>;
+    try {
+      await updateTouristInformation(id, updatedProfileData);
+      sessionStorage.removeItem("currency");
+      sessionStorage.setItem("currency", currency);
+      toast.success("currency for viewing prices updated successfully");
+    } catch (error) {
+      console.error("Failed to update user information:", error);
+      toast.error("Error updating currency");
+    }
   };
+
+  const handleRedeemClick = async () => {
+    if (profileInformation.currentPoints === 0) {
+      toast.warning("No points to redeem");
+      return;
+    }
+    try {
+      await redeemPoints(id);
+      await getUserInformation();
+      toast.success("points redeemed successfully");
+    } catch (error) {
+      toast.error("redemption failed")
+    }
+  };
+
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion("Tourist", id);
+      message.success(response.message);
+      navigate("/");
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred.");
+    }
+  };
+
+  useEffect(() => {
+    getUserInformation();
+    fetchTouristTags();
+    fetchTouristCategories();
+    fetchAllTags();
+    fetchAllCategories();
+  }, []);
+
 
   return (
     <div>
       <TouristNavBar />
-      <h1>Your Profile</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h1>Your Profile</h1>
+        <div>
+          {profileInformation.wallet && profileInformation.wallet.currency && (
+            <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange} />
+          )}
+          {profileInformation.totalPoints !== undefined && (
+            <Badge totalPoints={profileInformation.totalPoints} />
+          )}
+        </div>
+      </div>
       <div>
         <ul className="tourist-profile">
           <li key={profileInformation._id}>
@@ -106,7 +231,9 @@ const TouristHomePage = () => {
               <input
                 type="text"
                 name="dateOfBirth"
-                value={new Date(profileInformation.dateOfBirth).toLocaleDateString()}
+                value={new Date(
+                  profileInformation.dateOfBirth
+                ).toLocaleDateString()}
                 readOnly
               />
             </p>
@@ -125,13 +252,73 @@ const TouristHomePage = () => {
                   ))}
                 </select>
               ) : (
-                <input
-                  type="text"
-                  value={editedProfile.nationality}
-                  readOnly
-                />
+                <input type="text" value={editedProfile.nationality} readOnly />
               )}
             </p>
+
+            <p>
+              <b>Chosen Preference Tags:</b>
+            </p>
+
+            {isEditing ? (
+              <Select
+                mode="multiple"
+                value={editedProfile.tags}
+                onChange={handleTagsChange}
+                placeholder="Select tags"
+                style={{ width: '100%' }}
+              >
+                {allTags.map((tag) => (
+                  <Select.Option key={tag._id} value={tag._id}>
+                    {tag.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            ) : (
+
+              touristTags.length > 0 ? (
+                <input
+                  type="text"
+                  value={touristTags.map((tag) => tag.name).join(", ")}
+                  readOnly
+                />
+              ) : (
+                <span>No chosen preference tags</span>
+              )
+
+            )}
+
+            <p>
+              <b>Chosen Actvity Categories:</b>
+            </p>
+
+            {isEditing ? (
+              <Select
+                mode="multiple"
+                value={editedProfile.categories}
+                onChange={handleCategoriesChange}
+                placeholder="Select Categories"
+                style={{ width: '100%' }}
+              >
+                {allCats.map((category) => (
+                  <Select.Option key={category._id} value={category._id}>
+                    {category.Name}
+                  </Select.Option>
+                ))}
+              </Select>
+            ) : (
+
+              touristCategories.length > 0 ? (
+                <input
+                  type="text"
+                  value={touristCategories.map((category) => category.Name).join(", ")}
+                  readOnly
+                />
+              ) : (
+                <span>No chosen activity categories</span>
+              )
+            )}
+
             <p>
               <b>Job:</b>
               <input
@@ -152,28 +339,54 @@ const TouristHomePage = () => {
                 readOnly={!isEditing}
               />
             </p>
+
             <p>
               <b>Balance:</b>
-              <input
-                type="text"
-                name="walletBalance"
-                value={profileInformation.walletBalance}
-                readOnly
-              />
+              {profileInformation.wallet ? (
+                <input
+                  type="text"
+                  name="walletBalance"
+                  value={
+                    profileInformation.wallet.amount +
+                    " " +
+                    profileInformation.wallet.currency
+                  }
+                  readOnly
+                />
+              ) : (
+                <span>No wallet information available</span>
+              )}
             </p>
+            <p>
+              <b>Points:</b>
+              {profileInformation.currentPoints !== undefined ? (
+                <>
+                  <input
+                    type="text"
+                    name="currentPoints"
+                    value={profileInformation.currentPoints}
+                    readOnly
+                  />
+                  <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
+                    Redeem points to cash
+                  </button>
+                </>
+              ) : (
+                <span>No points</span>
+              )}
+            </p>
+
+
+
           </li>
         </ul>
-
-        {/* Render the feedback message here
-        <FeedbackMessage message={feedback.message} isSuccess={feedback.isSuccess} /> */}
-
         <button onClick={handleEditClick}>
           {isEditing ? "Save" : "Update"}
         </button>
+        <button onClick={handleDeletion}>Delete Account</button>
       </div>
-
-      {/* Toast container for displaying notifications */}
       <ToastContainer />
+      <ChangePassword id={id} userType={userType} />
     </div>
   );
 };

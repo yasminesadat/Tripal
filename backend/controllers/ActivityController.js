@@ -1,10 +1,7 @@
 const Activity = require("../models/Activity");
-const Advertiser = require("../models/Advertiser");
+const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
-const Rating = require("../models/Rating");
-const Tourist = require("../models/Tourist.js");
-
 
 const createActivity = async (req, res) => {
   const {
@@ -22,7 +19,7 @@ const createActivity = async (req, res) => {
     specialDiscounts,
     isBookingOpen,
   } = req.body;
-  console.log(req.body.category)
+
   try {
     const existingAdvertiser = await Advertiser.findById(advertiser);
     if (!existingAdvertiser) {
@@ -57,8 +54,8 @@ const createActivity = async (req, res) => {
       latitude,
       longitude,
       price,
-      category: category._id, // Use the ObjectId of the category
-      tags: tagIds, // Use ObjectIds for tags
+      category: category._id,
+      tags: tagIds,
       specialDiscounts,
       isBookingOpen,
     });
@@ -74,8 +71,9 @@ const createActivity = async (req, res) => {
 const getAdvertiserActivities = async (req, res) => {
   const { id } = req.params;
   try {
-    const activites = await Activity.find({ advertiser: id })
-      .populate("advertiser").populate("category").populate("tags").populate("ratings");
+    const activites = await Activity.find({ advertiser: id }) 
+    .select("title date time location")
+    console.log(activites)
     res.status(200).json(activites);
   } catch (error) {
     res.status(400).json({ error: error.message })
@@ -95,7 +93,7 @@ const updateActivity = async (req, res) => {
     if (category) {
       const existingCategory = await ActivityCategory.findOne({ Name: category });
       if (existingCategory) {
-        updateParameters.category = existingCategory._id; // Store the ObjectId of the category
+        updateParameters.category = existingCategory._id;
       } else {
         return res.status(404).json({ error: "Category not found" });
       }
@@ -129,48 +127,13 @@ const deleteActivity = async (req, res) => {
   }
 };
 
-const addRating = (async (req, res) => {
-  const { id } = req.params;
-  const { rating, review, userID } = req.body;
-
-  const activity = await Activity.findById(id);
-  if (!activity) {
-    res.status(404);
-    throw new Error("activity not found");
-  }
-
-  const tourist = await Tourist.findById(userID);
-  if (!tourist) {
-    res.status(404);
-    throw new Error("User not found");
-  }
-
-  const newRating = new Rating({
-    rating,
-    review,
-    userID,
-  });
-
-  await newRating.save();
-
-  activity.ratings.push(newRating._id);
-
-  await activity.save();
-
-  res.status(201).json({
-    message: "Rating added successfully",
-    rating: newRating
-  });
-});
-
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-
-    const activities = await Activity.find({ date: { $gte: currentDate } })
+    const activities = await Activity.find({isBookingOpen:true, date: { $gte: currentDate },flagged: false })
       .populate("category")
       .populate("tags")
-      .populate("ratings");
+    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
@@ -178,11 +141,97 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
+//fix this date when there are entries
+const viewHistoryActivities = async (req, res) => {
+  try {
+    const currentDate = new Date();
+
+    const activities = await Activity.find({ date: { $gte: currentDate },flagged:false })
+      .populate("category")
+      .populate("tags")
+    // .populate("ratings");
+
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getActivityById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const activity = await Activity.findById(id).populate("category").populate("tags");
+    if (!activity) 
+      return res.status(404).json({ error: "Activity not found." });
+    
+    if (activity.flagged) 
+        res.status(404).json({ error: "Activity flagged." });
+    else
+      res.status(200).json(activity);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+
+  }};
+
+const getTouristActivities = async (req, res) => {
+  const { touristId } = req.params;
+  try {
+    const activities = await Activity.find({ "bookings.touristId": touristId,isBookingOpen:true, flagged: false, date: { $gte: new Date() } })
+      .populate("category")
+      .populate("tags")
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getAllActivitiesForAdmin = async (req, res) => { 
+  try {
+    const currentDate = new Date();
+    const activities = await Activity.find({ date: { $gte: currentDate }})
+      .populate("category")
+      .populate("tags")
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getAllActivities = async (req, res) => {
+  try {
+    const activities = await Activity.find()
+      .populate("category")
+      .populate("tags")
+    res.status(200).json(activities);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const adminFlagActivity = async (req, res) => {
+  try {
+    const activity = await Activity.findById(req.params.activityId);
+    if (!activity) return res.status(404).json({ error: "Activity not found" });
+    if (activity.flagged) return res.status(400).json({ error: "Activity already flagged" });
+    activity.flagged = true;
+    await activity.save();
+    res.status(200).json({ message: "Activity flagged successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
+  getActivityById,
   getAdvertiserActivities,
   updateActivity,
   deleteActivity,
-  addRating,
   viewUpcomingActivities,
+  viewHistoryActivities,
+  getTouristActivities,
+  getAllActivitiesForAdmin,
+  getAllActivities,
+  adminFlagActivity
 };

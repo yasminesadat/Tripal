@@ -30,11 +30,11 @@ const activitySchema = new Schema(
     },
     latitude: {
       type: Number,
-      required: true, // Make required if you always want to have a latitude
+      required: true, 
     },
     longitude: {
       type: Number,
-      required: true, // Make required if you always want to have a longitude
+      required: true, 
     },
     price: {
       type: Number, required: true ,
@@ -51,17 +51,28 @@ const activitySchema = new Schema(
         default: []
       },
     ],
-    ratings: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Rating",
-        default: []
-      },
-    ],
+    averageRating: {
+      type: Number,
+      default: 0.0,
+    },
     specialDiscounts: {
       type: String,
     },
     isBookingOpen: {
+      type: Boolean,
+      default: false,
+    },
+    booked: {
+      type: Boolean,
+      default: false,
+    },
+    bookings: [
+      {
+        touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+        tickets: { type: Number, default: 1 },
+      },
+    ],
+    flagged: {
       type: Boolean,
       default: false,
     },

@@ -1,11 +1,13 @@
+
 import { React, useEffect, useState } from "react";
 import { tourismGovernerID } from '../../IDs';
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace } from '../../api/HistoricalPlaceService';
-import Maps from '../../components/HistPlaceMap/Maps';
+import Maps from '../../components/historicalplace/Maps';
 import { toast } from 'react-toastify';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined ,InfoCircleOutlined} from '@ant-design/icons';
 import { useParams, Link, useNavigate } from "react-router-dom";
-import GovernorNavBar from "../../components/governor/GovernorNavBar";
+import GovernorNavBar from "../../components/navbar/GovernorNavBar";
+
 const HistoricalPlacesList = () => {
     const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -44,11 +46,11 @@ const HistoricalPlacesList = () => {
     return (
         <div>
             <GovernorNavBar />
-            <div class="list" >
+            <div className="list" >
                 {governerHistoricalPlace.length > 0 ?
                     governerHistoricalPlace.map((place) => (
-                        <div class="list-item" key={place._id}>
-                            <div class="list-item-header">{place.name}
+                        <div className="list-item" key={place._id}>
+                            <div className="list-item-header">{place.name}
                                 <div style={{ display: 'inline-block', marginLeft: 'auto' }}>
                                     <EditOutlined
                                         onClick={() => {
@@ -61,12 +63,13 @@ const HistoricalPlacesList = () => {
                                         onClick={() => handleDelete(place._id)}
                                         style={{ color: 'red', cursor: 'pointer' }}
                                     />
+                                    
                                 </div>
                             </div>
-                            <div class="list-item-attributes">
-                                <div class="list-item-attribute">{place.description}</div>
+                            <div className="list-item-attributes">
+                                <div className="list-item-attribute">{place.description}</div>
                                 {place.images && place.images.length > 0 && (
-                                    <div class="list-item-attribute">
+                                    <div className="list-item-attribute">
                                         <div>Pictures:</div>
                                         {place.images.map((image) => (<img
                                             src={image.url}
@@ -75,25 +78,25 @@ const HistoricalPlacesList = () => {
                                         />))}
                                     </div>
                                 )}
-                                <div class="list-item-attribute">Location: {place.location.address}</div>
+                                <div className="list-item-attribute">Location: {place.location.address}</div>
                                 < Maps selectPosition={{ lat: place.location.coordinates.latitude, lon: place.location.coordinates.longitude }} />
-                                <div class="list-item-attribute">
+                                <div className="list-item-attribute">
                                     Opening Hours: Weekdays {place.openingHours.weekdays.openingTime} -{" "}
                                     {place.openingHours.weekdays.closingTime}, Weekends{" "}
                                     {place.openingHours.weekends.openingTime} -{" "}
                                     {place.openingHours.weekends.closingTime}
                                 </div>
-                                <div class="list-item-attribute">
+                                <div className="list-item-attribute">
                                     Ticket Prices: Foreigner: ${place.ticketPrices.foreigner}, Native: $
                                     {place.ticketPrices.native}, Student: ${place.ticketPrices.student}
                                 </div>
-                                <div class="list-item-attribute">
+                                <div className="list-item-attribute">
                                     Tags:{" "}
                                     {place.tags && place.tags.length > 0
                                         ? place.tags.map((tag) => tag.name).join(", ")
                                         : "N/A"}
                                 </div>
-                                <div class="list-item-attribute">
+                                <div className="list-item-attribute">
                                     Historical periods:{" "}
                                     {place.historicalPeriod && place.historicalPeriod.length > 0
                                         ? place.historicalPeriod.map((period) => period.name).join(", ")

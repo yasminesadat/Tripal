@@ -4,8 +4,7 @@ const ActivityCategoryService = {
   getActivityCategories: async () => {
     try {
       const response = await axios.get(`/activityCategories`);
-      console.log(response.data);
-      return response.data;
+      return response.data || [];
     } catch (error) {
       console.error("Error fetching activity categories:", error);
       throw error;
@@ -25,10 +24,8 @@ const ActivityCategoryService = {
     const requestBody = {
       Name: name,
     };
-    console.log(`/activityCategory`);
     try {
       const response = await axios.post(`/activityCategory`, requestBody);
-      console.log("Response:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error:", error);

@@ -6,6 +6,7 @@ import SellerViewProduct from "../pages/seller/SellerViewProduct";
 import SellerProfile from "../pages/seller/SellerProfile";
 import CreateSeller from "../pages/seller/sellerCreateProfile";
 import PendingPage from "../pages/seller/PendingPage"
+
 const sellerRoutes = [
   { path: "/seller", element: <SellerHome /> },
   { path: "/seller/view-products", element: <SellerProducts /> },

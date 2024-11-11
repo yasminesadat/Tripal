@@ -1,7 +1,7 @@
 import React from 'react';
-import ItineraryForm from "../../components/tourguide/ItineraryForm";
-import TourguideNavBar from "../../components/tourguide/TourguideNavBar";
-import  Footer  from '../../components/Footer';
+import ItineraryForm from "../../components/itinerary/CreateItineraryForm";
+import TourguideNavBar from "../../components/navbar/TourguideNavBar";
+import  Footer  from '../../components/common/Footer';
 
 const CreateItinerary = () => {
   

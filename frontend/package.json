@@ -7,40 +7,53 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.2",
-    "@ant-design/icons": "^5.5.1",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@mui/material": "^6.1.2",
+    "@react-google-maps/api": "^2.20.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "amadeus": "^11.0.0",
     "antd": "^5.21.2",
+    "aos": "^2.3.4",
     "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "date-fns": "^4.1.0",
+    "firebase": "^11.0.1",
     "formik": "^2.4.6",
+    "jspdf": "^2.5.2",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^4.0.0",
     "moment": "^2.30.1",
     "react": "^18.3.1",
+    "react-credit-cards": "^0.8.3",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.1",
     "react-leaflet": "^4.2.1",
-    "react-leaflet": "^4.2.1",
+    "react-modal-video": "^2.0.2",
+    "react-multi-date-picker": "^4.5.2",
     "react-router-dom": "^6.26.2",
     "react-scripts": "^5.0.1",
-    "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.5",
+    "reactjs-popup": "^2.0.6",
+    "swiper": "^11.1.14",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext .js,.jsx"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off",
+      "eqeqeq": "off",
+      "jsx-a11y/img-redundant-alt": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -56,8 +69,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/plugin-transform-private-property-in-object": "^7.25.7",
-    "@types/leaflet": "^1.9.12",
     "@babel/plugin-transform-private-property-in-object": "^7.25.7",
     "@types/leaflet": "^1.9.12"
   }
