@@ -8,7 +8,7 @@ import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "../../../components/tourist/TransportationBooking";
 import moment from "moment";
 import { Checkbox } from 'antd';
-const touristFlight = "672fa086f7dec6ce57c404dc";
+import { touristId } from "../../../IDs";
 // Inline styles for the component
 const styles = {
     appcc: {
@@ -28,7 +28,7 @@ const styles = {
         transition: 'all 0.4s linear',
         width: '290px',
         backgroundImage: 'url(./images/6.jpeg)', // Example background image
-      
+
     },
     rowcc: {
         marginBottom: '15px',
@@ -49,65 +49,68 @@ const styles = {
     },
 };
 
-const CreditCard = ({bookingStage,setBookingStage,userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber,tripleNumber,total,checkIn,checkOut}) => {
+const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
     const [date, setDate] = useState("");
     const [cvc, setCvc] = useState("");
     const [focus, setFocus] = useState("");
     const [errors, setErrors] = useState({});
-    const currentDate=new Date();
     const navigate=useNavigate()
-    
-const [touristFlights, setTouristFlights] = useState([]);
-const [doneBookTransportation, setDoneBookTransportation] = useState(false);
-const [isBooked, setBooked] = useState(false);
-useEffect(() => {
-  const getBookedFlights = async () => {
-    try {
-      const flights = await getTouristFlights(touristFlight);
-      setTouristFlights(flights.bookedFlights);
+    const [touristFlights, setTouristFlights] = useState([]);
+    const [doneBookTransportation, setDoneBookTransportation] = useState(false);
 
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  getBookedFlights();
-}, []);
-function showTransportationOffer(){
-  for(let i=0;i< touristFlights.length;i++){
-    const flightDeparture=touristFlights[i].origin;
-    const flightDest = touristFlights[i].destination;
-    let diffInDays=9999;
-    if(cityCode===flightDeparture){
-      const flightDepartureTime = moment(touristFlights[i].departureTime);
-      const hotelCheckOut=moment(checkOut);
-      const diffInMilliseconds = Math.abs(flightDepartureTime - hotelCheckOut);
-      diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-    //   console.log("hotel cityCode",cityCode);
-    //   console.log("hotel checkout",hotelCheckOut);
-    //   console.log("flight dep",flightDepartureTime);
-    //   console.log("diff in 2nd if",diffInDays);
-    }
-    if(cityCode===flightDest){
-      const flightArrivalTime = moment(touristFlights[i].arrivalTime);
-      const hotelCheckIn=moment(checkIn);
-      const diffInMilliseconds = Math.abs(hotelCheckIn - flightArrivalTime);
-      diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-    //   console.log("hotel cityCode",cityCode);
-    //   console.log("hotel checkin",hotelCheckIn);
-    //   console.log("flight arrival",flightArrivalTime);
-    //   console.log("diff in 2nd if",diffInDays);
-     
-    }
+    useEffect(() => {
+        const getBookedFlights = async () => {
+            try {
+                const flights = await getTouristFlights(touristId);
+                console.log("result: ", flights);
+                setTouristFlights(flights.bookedFlights);
+                console.log("cheeckin", checkIn)
+                console.log("cheeckout", checkOut)
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getBookedFlights();
+    }, []);
+    useEffect(() => {
+        function showTransportationOffer() {
+            for (let i = 0; i < touristFlights.length; i++) {
+                const flightDeparture = touristFlights[i].origin;
+                const flightDest = touristFlights[i].destination;
+                const flightDepartureTime = moment(touristFlights[i].departureTime);
+                const hotelCheckOut = moment(checkOut);
+                const flightArrivalTime = moment(touristFlights[i].arrivalTime);
+                const hotelCheckIn = moment(checkIn);
+                const diffInMilliseconds1 = Math.abs(flightDepartureTime - hotelCheckOut);
+                const diffInDays1 = diffInMilliseconds1 / (1000 * 60 * 60 * 24);
+                const diffInMilliseconds2 = Math.abs(hotelCheckIn - flightArrivalTime);
+                const diffInDays2 = diffInMilliseconds2 / (1000 * 60 * 60 * 24);
+                console.log("diff 1", diffInDays1);
+                console.log("diff 2", diffInDays2);
+                console.log(cityCode);
+                console.log(flightDeparture);
+                console.log(flightDest);
+                if (diffInDays1 <= 1) {
+                        if (cityCode === flightDeparture) {
+                            console.log("truue");
+                        setIsBookedReturnTransportation(true);
+                    }
+                }
+                if (diffInDays2 <= 1) {
+                    if (cityCode === flightDest) {
+                        console.log("truue");
+                        setIsBookedOriginatingTransportation(true);
+                    }
+                }
+            };
 
-if (diffInDays <= 1) {
-    // console.log("trueee");
-  return true;
-} 
-  }
- return false;
-};
+        };
+        if (touristFlights.length > 0) {
+            showTransportationOffer();
+        }
+    }, [checkIn, checkOut, cityCode, isBookedOriginatingTransportation, isBookedReturnTransportation,touristFlights]);
     const validate = () => {
         const newErrors = {};
         const cardNumberPattern = /^[0-9]{16}$/; // 16 digits
@@ -136,9 +139,9 @@ if (diffInDays <= 1) {
         } else if (!datePattern.test(date)) {
             newErrors.date = "Invalid expiration date. Format: MM/YY.";
         }
-        else if(date<=currentDate){
-            newErrors.date = "Expiration date must be in the future.";
-        }
+    //    else if(date<=currentDate){
+    //         newErrors.date = "Expiration date must be in the future.";
+    //     } 
 
         // Validate CVV
         if (!cvc) {
@@ -162,12 +165,11 @@ if (diffInDays <= 1) {
 
         setBookingStage(3);
         try {
-            const responseSingle = await saveBooking(userid,hotelid,hotelname,cityCode,singleNumber,doubleNumber,tripleNumber,checkIn,checkOut,total,"confirmed");
-            
+            const responseSingle = await saveBooking(userid, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, total, "confirmed");
             setErrors({});
         }
-        catch (error) {           
-            console.error("Failed to save Booking");       
+        catch (error) {
+            console.error("Failed to save Booking");
         }
         setTimeout(() => {
             navigate("/tourist");
@@ -251,10 +253,12 @@ if (diffInDays <= 1) {
                         {errors.cvc && <p style={styles.errorcc}>{errors.cvc}</p>}
                     </div>
                 </div>
-               {showTransportationOffer()&&<Checkbox
-          checked={isBooked}
-        >Transportation Booked</Checkbox>}
-        {!doneBookTransportation &&showTransportationOffer()&& <TransportationBookingPopUp setDoneBookTransportation={setDoneBookTransportation} setBooked={setBooked} />}
+                {(isBookedOriginatingTransportation || isBookedReturnTransportation) && <Checkbox
+                    checked={isBookedAccepted} onChange={() => {
+                        setIsBookedAccepted(!isBookedAccepted);
+                    }}
+                >Transportation Booked</Checkbox>}
+                {!doneBookTransportation && (isBookedOriginatingTransportation || isBookedReturnTransportation) && <TransportationBookingPopUp setDoneBookTransportation={setDoneBookTransportation} setIsBookedAccepted={setIsBookedAccepted} />}
                 <button type="submit" className="button -md -dark-1 bg-accent-1 text-white" >Confirm Booking</button>
             </form>
         </div>
