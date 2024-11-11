@@ -2,7 +2,8 @@ import { axios } from "./axios";
 
 export async function login(userName, password) {
   try {
-    await axios.post("/login", { userName, password });
+    const response = await axios.post("/login", { userName, password });
+    localStorage.setItem("token", response.data.token);
     return { status: "success", message: "Logged in successfully!" };
   } catch (error) {
     console.log(error);
@@ -10,7 +11,7 @@ export async function login(userName, password) {
   }
 }
 
-export function handleError(error) {
+function handleError(error) {
   let userFriendlyMessage = {
     status: "error",
     message: "An error occurred. Please try again.",
