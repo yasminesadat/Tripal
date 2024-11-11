@@ -4,6 +4,7 @@ import { getHotelHistory } from "../../api/HotelService"; //from service
 import { touristId } from "../../IDs";
 import { hotelHistoryTourist } from "../../IDs";
 import { format } from 'date-fns';
+import { getConversionRate } from "../../api/ExchangeRatesService";
 import TouristNavBar from "../navbar/TouristNavBar";
 const tabs = ["Flights", "Hotels"];
 
@@ -11,8 +12,21 @@ export default function DbBooking() {
   const [currentTab, setCurrentTab] = useState("Flights");
   const [bookedFlights, setBookedFlights] = useState([]); //stored flights
   const [bookedHotels, setBookedHotels] = useState([]); // state to store bookedHotels
+  const [currency, setCurrency] = useState('EGP');
+  const [exchangeRate, setExchangeRate] = useState(1);
 
   useEffect(() => {
+
+    const fetchCurrency = () => {
+      const curr = sessionStorage.getItem('currency');
+      console.log(sessionStorage)
+      if (curr) {
+        setCurrency(curr);
+        fetchExchangeRate(curr);
+      }
+    };
+    fetchCurrency();
+
     const fetchBookedFlights = async () => {
       try {
         const response = await getTouristFlights(touristId);
@@ -22,6 +36,9 @@ export default function DbBooking() {
         console.error("Error fetching booked flights", error);
       }
     };
+
+
+
 
     const fetchBookedHotels = async () => {
       try {
@@ -37,6 +54,15 @@ export default function DbBooking() {
     fetchBookedHotels();
   }, []);
 
+  
+  const fetchExchangeRate = async (curr) => {
+    try {
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
+    } catch (error) {
+      console.error('Failed to fetch exchange rate:', error);
+    }
+  };
   const getFlightStatus = (arrivalTime) => {
     const now = new Date();
     return new Date(arrivalTime) < now ? "Flight Complete" : "Flight Upcoming";
@@ -47,10 +73,9 @@ export default function DbBooking() {
     return new Date(checkout) < now ? "completed" : "confirmed";
   };
 
-
-
-
-
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
 
 
   return (
@@ -104,7 +129,8 @@ export default function DbBooking() {
                                 <td>{flight.airline}</td>
                                 <td>{flight.origin}</td>
                                 <td>{flight.destination}</td>
-                                <td>{flight.price} {flight.currency}</td>
+                               
+                                <td>{convertPrice(flight.price)} {currency}</td>
                                 <td>{new Date(flight.departureTime).toLocaleString()}</td>
                                 <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
                                 <td>
@@ -161,7 +187,8 @@ export default function DbBooking() {
                                 <td>{hotel.cityCode}</td>
                                 <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
                                 <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
-                                <td>{hotel.pricing} EGP</td>
+                                {/* <td>{hotel.pricing} EGP</td> */}
+                                <td>{convertPrice(hotel.pricing)} {currency}</td>
                                 <td>
                                   <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
                                     {getHotelStatus(hotel.checkOut)}
