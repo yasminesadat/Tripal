@@ -106,7 +106,9 @@ const AdvertiserProfile = () => {
 
   const fields = [
     { label: "Email", value: advertiser.email },
-    { label: "Website", value: advertiser.website },
+    { label: "Website", value: advertiser.website,
+      isLink: true,
+    },
     { label: "Company Name", value: advertiser.companyProfile?.companyName },
     { label: "Industry", value: advertiser.companyProfile?.industry },
     { label: "Description", value: advertiser.companyProfile?.description },

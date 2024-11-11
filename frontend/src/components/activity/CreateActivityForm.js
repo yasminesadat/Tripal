@@ -150,6 +150,7 @@ const ActivityForm = ({ isUpdate }) => {
               name="date"
               value={activityData.date}
               onChange={(e) => handleChange(e.target.name, e.target.value)}
+              min={new Date().toISOString().split("T")[0]} // Sets minimum date to today
               required
             />
           </Form.Item>

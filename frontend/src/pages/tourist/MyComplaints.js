@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getComplaintsByTourist, getComplaintById, replyToComplaint } from "../../api/ComplaintsService";
 import TouristNavBar from "../../components/navbar/TouristNavBar"
 import { touristId } from "../../IDs";
+import { message } from "antd";
+
 
 const MyComplaints = () => {
     const id = touristId;
@@ -45,10 +47,15 @@ const MyComplaints = () => {
             // Re-fetch the complaints to get updated data
             const updatedComplaints = await getComplaintsByTourist(id);
             setComplaints(updatedComplaints);
-            //setReplyMessage(""); 
+            const updatedComplaintDetails = await getComplaintById(selectedComplaint._id);
+            setSelectedComplaint(updatedComplaintDetails);
+
+            setReplyMessage(""); 
             //setSelectedComplaint(null); 
+            message.success("Reply sent successfully!");
         } catch (error) {
             console.error("Error replying to complaint:", error);
+            message.error("Failed to send reply. Please try again.");
         }
     };
 
