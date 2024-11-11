@@ -70,11 +70,11 @@ const bookResource = async (req, res) => {
         let pointsToReceive=0;
 
         if(tourist.totalPoints<=100000){
-            pointsToReceive=resource.price*0.5;
+            pointsToReceive=resource.price*0.5*tickets;
         }else if(tourist.totalPoints<=500000){
-            pointsToReceive=resource.price*1;
+            pointsToReceive=resource.price*1*tickets;
         } else {
-            pointsToReceive=resource.price*1.5;
+            pointsToReceive=resource.price*1.5*tickets;
         }
 
         await Tourist.findByIdAndUpdate(
@@ -165,11 +165,11 @@ try {
 
     let pointsToDecrement=0;
     if(tourist.totalPoints<=100000){
-        pointsToDecrement=resource.price*0.5;
+        pointsToDecrement=resource.price*0.5*tickets;
     }else if(tourist.totalPoints<=500000){
-        pointsToDecrement=resource.price*1;
+        pointsToDecrement=resource.price*1*tickets;
     } else {
-        pointsToDecrement=resource.price*1.5;
+        pointsToDecrement=resource.price*1.5*tickets;
     }
 
     await Tourist.findByIdAndUpdate(

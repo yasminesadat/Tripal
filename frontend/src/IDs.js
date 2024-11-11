@@ -1,14 +1,13 @@
+
 const sellerId = "6731210c5c9f25a14ca3d774"; // NEW 
-const tourismGovernerID = "673121604f3b1a3689b48996";
+const tourismGovernerID = "673121604f3b1a3689b48996"; //NEW
 const adminId = "67311e1f5c9f25a14ca3d72f"; //NEW
 const touristId = "6731273143b77aa2173f2d15"; // NEW
 const touristId2 = "6727661b46a8937e2e821782"; // DONT DELETE age < 18
 const advertiserID = "673121105c9f25a14ca3d779"; // NEW 
 const tourGuideID = "6731210a5c9f25a14ca3d76f";
 
-const touristFlight = "672aff256aa38ed2c3b51b36"; //TOURIST THAT BOOKS FLIGHTS
-const hotelHistoryTourist = "672d644cf0af912964daa4f9"
-const hotelTourist = "6724842b5831eed787083b57"
+
 
 //mimics what will be in token to adjust some component
 // features based on it
@@ -24,38 +23,7 @@ module.exports = {
   touristId,
   touristId2,
   advertiserID,
-  tourGuideID,
-  touristFlight,
-  hotelTourist,
-  hotelHistoryTourist
+  tourGuideID
+ 
 };
 
-// accounts for changing password
-// admin
-// username: adminChangePasswordTest
-// password: admin123
-// const adminId = "6728f7c79215d604f2830644"; // for change password
-
-// tourist
-// id: 6727dd439f6dc6c6c9cf5536
-// password: haanseif1234
-// username: HanaMohamedSeif
-// const touristId = "6727dd439f6dc6c6c9cf5536";
-
-// current advertiser yasmine pass123  id: 6726aaea44ae09c9c4e1f809
-
-// governor
-// 6728fda84e11d2efa6f13fb7
-//governorChangePassword
-//pass123
-// const tourismGovernerID = "6728fda84e11d2efa6f13fb7"
-
-// sellerTestChangePassword ,pw  123456//  id 67290c92ce65725e764ba1dd
-// const sellerId = "67290c92ce65725e764ba1dd";
-
-// User Name: tourGuideNellyKarim
-
-// Email: Nk@gmail.com
-// pw: nk12345
-// id: 67290f5661c3eefb704ffbbb
-// Role: Tour Guide
