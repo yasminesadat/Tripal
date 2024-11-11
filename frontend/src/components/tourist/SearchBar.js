@@ -43,7 +43,8 @@ export default function Hero5() {
 
       setData(transformedData);
     } catch (error) {
-      message.error("Error fetching city codes", error);
+      console.log("Error fetching city codes!")
+      // message.error("Error fetching city codes", error);
     }
   };
 

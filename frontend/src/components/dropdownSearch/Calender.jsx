@@ -7,7 +7,7 @@ export default function Calender({dates,setDates}) {
   //   new DateObject().setDay(14).add(1, "month"),
   // ]);
  
-  
+  // console.log("in calendar",dates)
   return (
     <DatePicker
       inputClass="custom_input-picker"

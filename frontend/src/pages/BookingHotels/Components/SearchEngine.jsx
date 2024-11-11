@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getCityCode } from "../../../api/HotelService";
+import { message } from "antd";
 
 export default function HeaderSerch({ white, selected, setSelected }) {
   const [ddActive, setDdActive] = useState(false);
@@ -30,6 +31,8 @@ export default function HeaderSerch({ white, selected, setSelected }) {
       setDdActive(transformedData.length > 0); // Show dropdown if there are results
     } catch (error) {
       console.error("Error fetching city codes:", error);
+      // message.error("Error fetching city codes.");
+      // console.log("after errorrrrrrrrrrrrrrr")
     }
   };
 
