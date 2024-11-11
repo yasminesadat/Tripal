@@ -12,7 +12,7 @@ const CreateAdmin = () => {
     try {
       const response = await createAdmin(username, password); 
 
-      message.success(`Admin ${response.username} created successfully!`)
+      message.success(`Admin ${response.userName} created successfully!`)
       setUsername('');
       setPassword('');
       console.log(username);

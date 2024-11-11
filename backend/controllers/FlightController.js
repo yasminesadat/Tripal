@@ -14,7 +14,7 @@ const getFlights = async (req, res) => {
     departureDate,
     returnDate,
     adults,
-    max = 5,
+    max = 150,
     nonStop = true,
     cabin, 
     currencyCode = 'EGP'

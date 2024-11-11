@@ -130,6 +130,9 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
                                                 ? activity.tags.map(tag => tag.name).join(', ')
                                                 : 'No tags available'}
                                         </div>
+                                        <div>
+                                        <p>Category: {activity?.category?.Name}</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import { message } from "antd";
-import { CopyOutlined, ShareAltOutlined,InfoCircleOutlined } from "@ant-design/icons";
+import { CopyOutlined, ShareAltOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
@@ -83,13 +83,24 @@ const HistoricalPlacesList = ({ places = [], curr = "EGP" }) => {
                 }
                 style={{ cursor: "pointer" }}
               />
-              <InfoCircleOutlined 
-                                     onClick={() => {
-                                        navigate(`/historical-places/${place._id}`, { state: { places } });
-                                    }}
+              <InfoCircleOutlined
+                onClick={() => {
+                  navigate(`/historical-places/${place._id}`, {
+                    state: {
+                      places,
+                      ticketPrices: {
+                        foreigner: convertPrice(place.ticketPrices.foreigner),
+                        native: convertPrice(place.ticketPrices.native),
+                        student: convertPrice(place.ticketPrices.student)
+                      },
+                      currency: curr
+                    }
+                  });
 
-                                    style={{ color: 'white', marginRight: '10px', cursor: 'pointer' }}
-                                    />
+                }}
+
+                style={{ color: 'white', marginRight: '10px', cursor: 'pointer' }}
+              />
             </div>
           </div>
           <div className="list-item-attributes-image">
