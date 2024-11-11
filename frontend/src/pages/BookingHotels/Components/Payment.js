@@ -9,7 +9,7 @@ import TransportationBookingPopUp from "../../../components/tourist/Transportati
 import moment from "moment";
 import { Checkbox } from 'antd';
 import { touristId } from "../../../IDs";
-import { format,compareAsc } from 'date-fns';
+import { format,compareAsc, parseISO } from 'date-fns';
 
 
 // Inline styles for the component
@@ -148,11 +148,6 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
         } else if (!datePattern.test(date)) {
             newErrors.date = "Invalid expiration date. Format: MM/YY.";
         }
-        else if (compareAsc(date, currentDate)>0){
-            console.log("date",format(date,'MM/yy'));
-            console.log("current",format(currentDate, 'MM/yy'))
-            newErrors.date = "Expiration Date must be in the future";
-        }
 
 
         // Validate CVV
@@ -244,7 +239,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
                             name="expiry"
                             className="form-control"
                             value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            onChange={(e) => setDate((e.target.value))}
                             onFocus={(e) => setFocus(e.target.name)}
                             style={styles.inputcc}
                             required

@@ -7,6 +7,9 @@ import { touristId } from "../../IDs";
 import TouristNavBar from "../../components/navbar/TouristNavBar";
 
 export default function BookingPages() {
+  const [isBookedOriginatingTransportation, setIsBookedOriginatingTransportation] = useState(false);
+  const [isBookedReturnTransportation, setIsBookedReturnTransportation] = useState(false);
+  const [isBookedAccepted, setIsBookedAccepted] = useState(false);
   const [bookingStage, setBookingStage] = useState(2);
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
@@ -72,6 +75,12 @@ export default function BookingPages() {
                       total={total / exchangeRate}
                       checkIn={checkIn}
                       checkOut={checkOut}
+                      setIsBookedOriginatingTransportation={setIsBookedOriginatingTransportation} 
+                      setIsBookedReturnTransportation={setIsBookedReturnTransportation}
+                      setIsBookedAccepted={setIsBookedAccepted}
+                       isBookedOriginatingTransportation={isBookedOriginatingTransportation} 
+                       isBookedReturnTransportation={isBookedReturnTransportation} 
+                       isBookedAccepted={isBookedAccepted}
                     />
                   </div>
                 </div>
@@ -259,6 +268,11 @@ export default function BookingPages() {
                     <div className="fw-500">Board Type:</div>
                     <div className="">{boardType} </div>
                   </div>
+                   
+                  {isBookedAccepted && (isBookedOriginatingTransportation || isBookedReturnTransportation) && <div className="d-flex items-center justify-between">
+                    <div className="fw-500">+ FREE TRANSPORTATION</div>
+                  </div>}
+
                 </div>
 
                 <div className="line mt-20 mb-20"></div>
