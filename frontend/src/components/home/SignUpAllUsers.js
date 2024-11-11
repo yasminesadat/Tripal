@@ -433,7 +433,6 @@ const SignUpAllUsers = () => {
         title="Terms and conditions"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         okText={currentTab === tabs.length - 1 ? "Done" : "Accept"}
       >
