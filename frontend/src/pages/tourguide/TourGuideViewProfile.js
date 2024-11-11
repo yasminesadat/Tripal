@@ -243,9 +243,10 @@ const TourGuideProfile = () => {
                 </div>
               </div>
               <div >
+              <label style={{color:'black'}}className="lh-1 text-16 text-light-1">Description</label>
                   <div className="form-input ">
-                    <textarea value={work.descritpion} readOnly rows="6"/>
-                    <label className="lh-1 text-16 text-light-1">Description</label>
+                    <textarea value={work.description} readOnly rows="6"/>
+                    
                   </div>
                 </div>
             </card>
