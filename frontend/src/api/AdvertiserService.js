@@ -36,6 +36,6 @@ export async function updateAdvertiser(id, updatedUser) {
     const response = await axios.put(`/advertiser/${id}`, updatedUser);
     return response.data;
   } catch (error) {
-    throw error;
+    throw error
   }
 }

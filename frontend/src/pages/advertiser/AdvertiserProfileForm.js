@@ -218,7 +218,7 @@ const AdvertiserForm = ({ isUpdate, onSubmit }) => {
       }
       message.success("Advertiser updated successfully!")
     } catch (err) {
-      message.error("An error occurred while updating.")
+      message.error(err.response.data.error)
     } finally {
       setLoading(false);
     }
