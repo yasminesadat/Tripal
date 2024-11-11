@@ -15,6 +15,7 @@ import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 import { advertiserID, userRole } from "../../IDs";
 import { getAdminActivities, flagActivity } from "../../api/AdminService";
+import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 // advertiser activities or tourist upcoming activities 
 const Activities = ({ isAdvertiser, isTourist }) => {
   const id = advertiserID;
@@ -24,6 +25,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   const [error, setError] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
+  
 
   useEffect(() => {
     const fetchCurrency = async () => {
@@ -137,6 +139,30 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     setFilteredActivities(sortedActivities);
   };
 
+  const handleForYouFilter = async () => {
+    try {
+      const tags = await getTouristTags(touristId);
+      const categories = await getTouristCategories(touristId);
+      
+      const filtered = activities.filter((activity) => {
+        const hasMatchingTag = activity.tags && tags.some((tag) => 
+          activity.tags.some((activityTag) => activityTag.name === tag.name)
+        );
+        
+        const hasMatchingCategory = activity.category && categories.some((category) => 
+          activity.category.Name === category.Name
+        );
+        
+        return hasMatchingTag || hasMatchingCategory;
+      });
+      
+      setFilteredActivities(filtered);
+    } catch (error) {
+      message.error("Failed to fetch 'For You' activities.");
+    }
+  };
+  
+
   const handleAdminFlag = async (activityId) => {
     try {
       await flagActivity(activityId);
@@ -159,6 +185,12 @@ const Activities = ({ isAdvertiser, isTourist }) => {
       {userRole === 'Admin' && <div className="page-title">View All Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
+      {userRole === 'Tourist' && (
+        <button onClick={handleForYouFilter} className="for-you-button">
+          For You
+        </button>
+      )}
+
 
       {(userRole === 'Tourist' || userRole == 'Admin') &&
         <div className="filter-sort-list">

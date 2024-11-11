@@ -18,6 +18,7 @@ import { getItinerariesByTourGuide,deleteItinerary, viewUpcomingItineraries, tog
 import {tourGuideID} from "../../IDs";
 import Footer from '../../components/common/Footer';
 import UpdateItineraryForm from '../../components/itinerary/UpdateItineraryForm';
+import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 
 const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide}) => {
     const [itineraries, setItineraries] = useState([]);
@@ -242,6 +243,32 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             message.error(error.response.data.message);
         }
     };
+
+    const handleForYouFilter = async () => {
+        try {
+          const tags = await getTouristTags(touristId);
+          const categories = await getTouristCategories(touristId);
+      
+          const filteredItineraries = itineraries.filter((itinerary) => {
+            return itinerary.activities.some((activity) => {
+              const hasMatchingTag = activity.tags && tags.some((tag) => 
+                activity.tags.some((activityTag) => activityTag.name === tag.name)
+              );
+      
+              const hasMatchingCategory = activity.category && categories.some((category) => 
+                activity.category.Name === category.Name
+              );
+      
+              return hasMatchingTag || hasMatchingCategory;
+            });
+          });
+      
+          setFilteredItineraries(filteredItineraries);
+        } catch (error) {
+          message.error("Failed to fetch 'For You' itineraries.");
+        }
+      };
+      
     
     return (
         <div >
@@ -253,6 +280,11 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             </div>
             <Spin spinning={loading} size="large">
             <ItinerarySearch onSearch={handleSearch} />
+            {isTourist && (
+                <button onClick={handleForYouFilter} className="for-you-button">
+                For You
+                </button>
+            )}
             <div className="filter-sort-list">
                 {!isTourguide &&<div className="filter-sort">
                     <ItineraryFilter onFilter={handleFilter} />
