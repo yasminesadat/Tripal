@@ -420,19 +420,19 @@ export const destinationCards = [
   },
   {
     id: 3,
-    title: "Phuket",
+    title: "London",
     imgSrc: "/img/destinationCards/4/3.jpg",
     tourCount: 100,
   },
   {
     id: 4,
-    title: "Paris",
+    title: "Finland",
     imgSrc: "/img/destinationCards/4/4.jpg",
     tourCount: 100,
   },
   {
     id: 5,
-    title: "Bangkok",
+    title: "Paris",
     imgSrc: "/img/destinationCards/4/5.jpg",
     tourCount: 100,
   },

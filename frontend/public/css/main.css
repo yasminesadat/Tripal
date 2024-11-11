@@ -592,7 +592,7 @@ body {
 select,
 input:not([type="range"]),
 textarea {
-    /*border: 0;*/
+  /*border: 0;*/
   outline: none;
   width: 100%;
   background-color: transparent;
@@ -3315,7 +3315,7 @@ h6 {
 }
 
 .footer.-type-1 .footerSocials__icons > *:hover {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-pink) !important;
   color: white !important;
 }
 
@@ -5276,6 +5276,10 @@ h6 {
 
 .featureCard.-type-5.-hover-accent-1:hover {
   background-color: var(--color-accent-1);
+}
+
+.featureCard.-type-5.-hover-light-purple:hover {
+  background-color: var(--color-light-purple);
 }
 
 .featureCard.-type-5.-hover-accent-1:hover > * {
@@ -13698,12 +13702,12 @@ table.table-4.-border-bottom tbody > tr {
 }
 
 .toTopButton svg {
-  fill: var(--color-accent-1);
+  fill: var(--color-stone);
   transition: 0.2s;
 }
 
 .toTopButton:hover {
-  background-color: var(--color-accent-1);
+  background-color: var(--color-stone);
 }
 
 .toTopButton:hover svg {

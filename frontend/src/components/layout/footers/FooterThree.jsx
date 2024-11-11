@@ -19,9 +19,7 @@ export default function FooterThree() {
                     <div className="text-20 fw-500">
                       <div>
                         Speak to our expert at
-                        <span className="text-stone phone-number">
-                          1-800-453-6744
-                        </span>
+                        <span className="text-stone phone-number">23215</span>
                         <style>{`
                           .phone-number {
                             margin-left: 8px; /* Adjust the value as needed */
@@ -52,10 +50,10 @@ export default function FooterThree() {
 
                 <div className="y-gap-10 mt-20">
                   <a className="d-block" href="#">
-                    328 Queensberry Street, North Melbourne VIC3051, Australia.
+                    123 Street, Cairo, Egypt
                   </a>
                   <a className="d-block" href="#">
-                    hi@viatours.com
+                    support@tripal.com
                   </a>
                 </div>
               </div>

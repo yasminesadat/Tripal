@@ -36,7 +36,7 @@ export default function TourTypesTwo() {
             <div key={i} className="col-xl-2 col-md-4 col-6">
               <Link
                 to={"/tour-list-1"}
-                className="featureCard -type-5 -hover-accent-2"
+                className="featureCard -type-5 -hover-light-purple"
               >
                 <div className="featureCard__icon">
                   <img src={elm.iconSrc} alt="image" />
