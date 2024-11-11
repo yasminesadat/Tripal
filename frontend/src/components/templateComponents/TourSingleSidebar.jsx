@@ -286,14 +286,14 @@ const fetchExchangeRate = async (curr) => {
 
         <div className="text-18 fw-500">Total:</div>
         {itinerary&&<div className="text-18 fw-500">
-          {(
-            itinerary.price * ticketNumber +
+          {
+            formatPrice((itinerary.price * ticketNumber +
             itinerary.serviceFee
-          ).toFixed(2)}
+          ).toFixed(2))}
         </div>}
 
         {activity&&<div className="text-18 fw-500">
-          {(activity.price * ticketNumber).toFixed(2)}
+          {formatPrice((activity.price * ticketNumber).toFixed(2))}
         </div>}
 
       </div>
