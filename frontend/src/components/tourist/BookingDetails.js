@@ -162,16 +162,37 @@ const BookingDetails = () => {
         <h2>Enter Payment Information</h2>
         <div className="form-group">
           <label>Card Number</label>
-          <input type="text" name="cardNumber" required placeholder="1234 5678 9012 3456" />
+          <input 
+            type="text" 
+            name="cardNumber" 
+            required 
+            placeholder="1234 5678 9012 3456" 
+            pattern="\d{4}\s\d{4}\s\d{4}\s\d{4}" 
+            title="Card number must be in the format 1234 5678 9012 3456"
+          />
         </div>
         <div className="form-group">
-          <label>CVC</label>
-          <input type="text" name="cvc" required placeholder="123" />
-        </div>
+        <label>CVC</label>
+        <input 
+          type="text" 
+          name="cvc" 
+          required 
+          placeholder="123" 
+          pattern="\d{3}" 
+          title="CVC must be a 3-digit number"
+        />
+      </div>
         <div className="form-group">
-          <label>Expiration Date</label>
-          <input type="text" name="expiry" required placeholder="MM/YY" />
-        </div>
+        <label>Expiration Date</label>
+        <input 
+          type="text" 
+          name="expiry" 
+          required 
+          placeholder="MM/YY" 
+          pattern="(0[1-9]|1[0-2])\/\d{2}" 
+          title="Expiration date must be in MM/YY format"
+        />
+      </div>
        {(isBookedOriginatingTransportation||isBookedReturnTransportation)&&<Checkbox
           checked={isBookedAccepted} onChange={()=>{
             setIsBookedAccepted(!isBookedAccepted);

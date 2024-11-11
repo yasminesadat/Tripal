@@ -43,7 +43,7 @@ export default function Hero5() {
 
       setData(transformedData);
     } catch (error) {
-      message.error("Error fetching city codes", error);
+      console.error("Error fetching city codes", error);
     }
   };
 
@@ -79,7 +79,7 @@ export default function Hero5() {
         destinationLocationCode,
         departureDate,
         adults: numberOfAdults,
-        max: 50,
+        max: 150,
         cabin: cabinType,
         currencyCode: 'EGP'
       });
@@ -221,6 +221,7 @@ export default function Hero5() {
                         onChange={(e) => setNumberOfAdults(e.target.value)}
                         className="input"
                         min="1"
+                        style={{ textAlign: 'center' }}
                       />
                     </div>
 
