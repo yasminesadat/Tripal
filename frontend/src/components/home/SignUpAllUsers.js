@@ -100,11 +100,9 @@ const SignUpAllUsers = () => {
   };
   const handleOk = () => {
     if (currentTab === 4) {
-      setConfirmLoading(true);
-      setTimeout(() => {
         setOpen(false);
-        setConfirmLoading(false);
-      }, 2000);
+
+    
       setTermsAndConditionsCheck(true);
     }
     else {
