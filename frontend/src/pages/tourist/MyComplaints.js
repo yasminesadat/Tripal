@@ -122,8 +122,11 @@ const MyComplaints = () => {
                                                             <h4>Replies</h4>
                                                             <ul>
                                                                 {selectedComplaint.replies.map((reply, index) => (
-                                                                    <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
-                                                                ))}
+                                                                    <li className="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>
+                                                                    {reply.message} (from: Anonymous) on {new Intl.DateTimeFormat('en-US', {
+                                                                        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
+                                                                    }).format(new Date(reply.date))}
+                                                                    </li>                                                                ))}
                                                             </ul>
 
                                                             {/* Reply Form */}

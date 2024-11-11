@@ -250,7 +250,7 @@ const ComplaintsPage = () => {
                                                                             <h4>Replies</h4>
                                                                             <ul>
                                                                                 {selectedComplaint.replies.map((reply, index) => (
-                                                                                    <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: {reply.senderId}) on {new Date(reply.date).toLocaleDateString()}</li>
+                                                                                    <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: Admin) on {new Date(reply.date).toLocaleDateString()}</li>
                                                                                 ))}
                                                                             </ul>
 
