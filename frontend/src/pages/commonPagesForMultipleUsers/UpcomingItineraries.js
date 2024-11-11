@@ -280,7 +280,7 @@ const ItineraryPage = ({isAdmin, isTourist,touristBook,touristCancel,isTourguide
             </div>
             <Spin spinning={loading} size="large">
             <ItinerarySearch onSearch={handleSearch} />
-            {isTourist && (
+            {userRole==='Tourist' &&touristBook&& (
                 <button onClick={handleForYouFilter} className="for-you-button">
                 For You
                 </button>
