@@ -130,7 +130,7 @@ const deleteActivity = async (req, res) => {
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-    const activities = await Activity.find({ date: { $gte: currentDate },flagged: false })
+    const activities = await Activity.find({isBookingOpen:true, date: { $gte: currentDate },flagged: false })
       .populate("category")
       .populate("tags")
     // .populate("ratings");
@@ -177,7 +177,7 @@ const getActivityById = async (req, res) => {
 const getTouristActivities = async (req, res) => {
   const { touristId } = req.params;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, flagged: false, date: { $gte: new Date() } })
+    const activities = await Activity.find({ "bookings.touristId": touristId,isBookingOpen:true, flagged: false, date: { $gte: new Date() } })
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);
