@@ -5,6 +5,7 @@ import { getHotelPrices } from "../../../api/HotelService";
 import { getConversionRate } from "../../../api/ExchangeRatesService";
 // import { message } from "antd";
 import { format } from "date-fns";
+import { DateObject } from "react-multi-date-picker";
 
 export default function TourSingleSidebar({
   cityCode,
@@ -22,7 +23,7 @@ export default function TourSingleSidebar({
   //     new DateObject().setDay(today.getDate() + 3),
   // ]);
 
-  const [dates, setDates] = useState([dates1, dates2]);
+  const [dates, setDates] = useState([new Date(format(dates1, "dd MMM yy")), new Date(format(dates2, "dd MMM yy"))]);
   const [singleNumber, setSingleNumber] = useState(0);
   const [doubleNumber, setDoubleNumber] = useState(0);
   const [tripleNumber, setTripleNumber] = useState(0);
@@ -33,8 +34,7 @@ export default function TourSingleSidebar({
   const [activeTimeDD, setActiveTimeDD] = useState(false);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
-  const numberofdays = ( (new Date(format(dates[1], "yyyy-MM-dd")))- (new Date(format(dates[0], "yyyy-MM-dd"))) ) / (1000 * 60 * 60 * 24);
-
+ 
 
 
   const fetchExchangeRate = async (curr) => {
@@ -59,7 +59,10 @@ export default function TourSingleSidebar({
 
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return; // Only call API if both dates are selected
-  
+    // console.log(dates[0])
+    // const numberofdays = ( (new Date(format(dates[1], "yyyy-MM-dd")))- (new Date(format(dates[0], "yyyy-MM-dd"))) ) / (1000 * 60 * 60 * 24);
+    const numberofdays = ( dates[1]-dates[0] ) / (1000 * 60 * 60 * 24);
+
     try {
    
 

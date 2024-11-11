@@ -9,6 +9,8 @@ import TransportationBookingPopUp from "../../../components/tourist/Transportati
 import moment from "moment";
 import { Checkbox } from 'antd';
 import { touristId } from "../../../IDs";
+import { format,compareAsc, parseISO } from 'date-fns';
+
 
 // Inline styles for the component
 const styles = {
@@ -71,10 +73,10 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
             try {
                 const flights = await getTouristFlights(touristId);
 
-                console.log("result: ", flights);
+                // console.log("result: ", flights);
                 setTouristFlights(flights.bookedFlights);
-                console.log("cheeckin", checkIn)
-                console.log("cheeckout", checkOut)
+                // console.log("cheeckin", checkIn)
+                // console.log("cheeckout", checkOut)
             } catch (err) {
                 console.log(err);
             }
@@ -94,20 +96,20 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
                 const diffInDays1 = diffInMilliseconds1 / (1000 * 60 * 60 * 24);
                 const diffInMilliseconds2 = Math.abs(hotelCheckIn - flightArrivalTime);
                 const diffInDays2 = diffInMilliseconds2 / (1000 * 60 * 60 * 24);
-                console.log("diff 1", diffInDays1);
-                console.log("diff 2", diffInDays2);
-                console.log(cityCode);
-                console.log(flightDeparture);
-                console.log(flightDest);
+                // console.log("diff 1", diffInDays1);
+                // console.log("diff 2", diffInDays2);
+                // console.log(cityCode);
+                // console.log(flightDeparture);
+                // console.log(flightDest);
                 if (diffInDays1 <= 1) {
                         if (cityCode === flightDeparture) {
-                            console.log("truue");
+                            // console.log("truue");
                         setIsBookedReturnTransportation(true);
                     }
                 }
                 if (diffInDays2 <= 1) {
                     if (cityCode === flightDest) {
-                        console.log("truue");
+                        // console.log("truue");
                         setIsBookedOriginatingTransportation(true);
                     }
                 }
@@ -237,7 +239,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
                             name="expiry"
                             className="form-control"
                             value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            onChange={(e) => setDate((e.target.value))}
                             onFocus={(e) => setFocus(e.target.name)}
                             style={styles.inputcc}
                             required
