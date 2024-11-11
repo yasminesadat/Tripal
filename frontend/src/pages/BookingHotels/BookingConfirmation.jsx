@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { format } from 'date-fns';
-import img from "./Components/HotelsImages/bookingicon2.png"
+import { format } from "date-fns";
+import img from "./Components/HotelsImages/bookingicon2.png";
 import { touristId } from "../../IDs";
+import TouristNavBar from "../../components/navbar/TouristNavBar";
+
 
 export default function BookingPages() {
   const [bookingStage, setBookingStage] = useState(2);
@@ -35,6 +37,7 @@ export default function BookingPages() {
 
 
             <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
+
 
 
 
@@ -163,14 +166,12 @@ export default function BookingPages() {
                   </div>
                 </div>
               </div> */}
-                    </div>
-                  }
-                  <div className="container d-flex items-center justify-between w-100 mt-60" style={{ maxWidth: '400px' }} >
+                </div>
+              )}
 
-                    {/* <button onClick={()=>setBookingStage(pre=>pre-1)} className={`button -md -dark-1 bg-accent-1 text-white ${bookingStage == 2 ? 'hiddenButtonBooking ButtonBooking' : 'ButtonBooking'} `} >
-                       Previous
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button> */}
+            </div>
+          </div>
+
 
 
                     {/* <button onClick={()=>setBookingStage(pre=>pre+1)} style={{alignSelf:'end'}}  className={`button -md -dark-1 bg-accent-1 text-white ${bookingStage == 3 ? 'hiddenButtonBooking ButtonBooking' : 'ButtonBooking'} `}>

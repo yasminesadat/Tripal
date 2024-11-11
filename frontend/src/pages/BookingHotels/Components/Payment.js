@@ -9,6 +9,7 @@ import TransportationBookingPopUp from "../../../components/tourist/Transportati
 import moment from "moment";
 import { Checkbox } from 'antd';
 import { touristId } from "../../../IDs";
+
 // Inline styles for the component
 const styles = {
     appcc: {
@@ -49,6 +50,8 @@ const styles = {
     },
 };
 
+
+
 const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
@@ -56,14 +59,18 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
     const [cvc, setCvc] = useState("");
     const [focus, setFocus] = useState("");
     const [errors, setErrors] = useState({});
-    const navigate=useNavigate()
+    const currentDate = new Date();
+    const navigate = useNavigate()
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
+   const [isBooked, setBooked] = useState(false);
+
 
     useEffect(() => {
         const getBookedFlights = async () => {
             try {
                 const flights = await getTouristFlights(touristId);
+
                 console.log("result: ", flights);
                 setTouristFlights(flights.bookedFlights);
                 console.log("cheeckin", checkIn)
@@ -139,9 +146,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
         } else if (!datePattern.test(date)) {
             newErrors.date = "Invalid expiration date. Format: MM/YY.";
         }
-    //    else if(date<=currentDate){
-    //         newErrors.date = "Expiration date must be in the future.";
-    //     } 
+
 
         // Validate CVV
         if (!cvc) {
@@ -166,6 +171,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
         setBookingStage(3);
         try {
             const responseSingle = await saveBooking(userid, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, total, "confirmed");
+
             setErrors({});
         }
         catch (error) {
@@ -253,6 +259,7 @@ const CreditCard = ({ bookingStage, setBookingStage, userid, hotelid, hotelname,
                         {errors.cvc && <p style={styles.errorcc}>{errors.cvc}</p>}
                     </div>
                 </div>
+
                 {(isBookedOriginatingTransportation || isBookedReturnTransportation) && <Checkbox
                     checked={isBookedAccepted} onChange={() => {
                         setIsBookedAccepted(!isBookedAccepted);

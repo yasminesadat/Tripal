@@ -12,7 +12,7 @@ import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
 import Roadmap2 from "../../templateComponents/Roadmap2";
 import { tourGuideID, userRole } from "../../../IDs";
-
+import TourGuideReviews from "./TourGuideReviews";
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
@@ -67,8 +67,14 @@ export default function ItineraryDetails({ itinerary }) {
               <div className="mt-30">
                 <Rating />
               </div>
-
+              <br></br>
+              <h2>Itinerary Comments & Ratings </h2>
               {page === "history" && <ItineraryReviews itineraryId={itineraryId} />}
+              <br></br>
+              <h2>Tour Guide Comments & Ratings </h2>
+              <br></br>
+              {page === "history" && <TourGuideReviews id={itinerary.tourGuide} />}
+
 
               {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
                 See more reviews
@@ -84,7 +90,7 @@ export default function ItineraryDetails({ itinerary }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {page == "upcoming" && userRole==='Tourist'&& <TourSingleSidebar itinerary={itinerary} />}
+                {page == "upcoming" && userRole === 'Tourist' && <TourSingleSidebar itinerary={itinerary} />}
               </div>
             </div>
           </div>

@@ -13,7 +13,7 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 import { touristId } from "../../IDs";
 import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
-import { advertiserID,userRole } from "../../IDs";
+import { advertiserID, userRole } from "../../IDs";
 import { getAdminActivities, flagActivity } from "../../api/AdminService";
 // advertiser activities or tourist upcoming activities 
 const Activities = ({ isAdvertiser, isTourist }) => {
@@ -49,11 +49,11 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     const fetchActivities = async () => {
       try {
         let response;
-        if (isAdvertiser && userRole==='Advertiser') {
+        if (isAdvertiser && userRole === 'Advertiser') {
           response = await getAdvertiserActivities(advertiserID);
-        } else if (userRole==='Tourist') {
+        } else if (userRole === 'Tourist') {
           response = await viewUpcomingActivities();
-        } else if(userRole==='Admin'){
+        } else if (userRole === 'Admin') {
           response = await getAdminActivities();
         }
         else { response = await getAllActivities(); }
@@ -138,44 +138,44 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   };
 
   const handleAdminFlag = async (activityId) => {
-    try{
+    try {
       await flagActivity(activityId);
       message.success("Activity has been flagged successfully");
-    }catch (error) {
-    message.error(error.response?.data?.error || "Failed to flag activity");
-  }
-};
+    } catch (error) {
+      message.error(error.response?.data?.error || "Failed to flag activity");
+    }
+  };
 
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
     <div className="page-container2">
-      {userRole==='Admin'&& <AdminNavBar />}
+      {userRole === 'Admin' && <AdminNavBar />}
       {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
       {isAdvertiser ? <AdvertiserNavBar /> : null}
-      {userRole==='Tourist' && <div className="page-title">Upcoming Activities</div>}
+      {userRole === 'Tourist' && <div className="page-title">Upcoming Activities</div>}
 
-      {userRole==='Admin' && <div className="page-title">View All Activities</div>}
+      {userRole === 'Admin' && <div className="page-title">View All Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
 
-      {userRole==='Tourist' ||userRole=='Admin' &&
+      {(userRole === 'Tourist' || userRole == 'Admin') &&
         <div className="filter-sort-list">
-          { isTourist&&<div className="filter-sort">
-             <ActivityFilter onFilter={handleFilter} />
+          {isTourist && <div className="filter-sort">
+            <ActivityFilter onFilter={handleFilter} />
             <ActivitySort onSort={handleSort} />
           </div>}
           <UpcomingActivities activities={filteredActivities}
-           curr={currency}
+            curr={currency}
             book={"diana"}
             page={"upcoming"}
             onAdminFlag={handleAdminFlag}
-             />
+          />
         </div>}
-        
-       {userRole==='Advertiser'&& <AdvertiserActivities activities={activities} />}
-      
+
+      {userRole === 'Advertiser' && <AdvertiserActivities activities={activities} />}
+
 
       <Footer />
     </div>

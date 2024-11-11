@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { getRatings } from "../../../api/RatingService";
-import Stars from "../../common/Stars"; 
+import Stars from "../../common/Stars";
+import {
+  Avatar,
 
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
 const ActivityReviews = ({ activityId }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
@@ -17,8 +28,8 @@ const ActivityReviews = ({ activityId }) => {
           // avatar: rating.userID.avatar, // Make sure your user model has an avatar field
           name: rating.userID.userName || "Unknown User",
           date: new Date(rating.createdAt).toLocaleDateString(),
-          stars: rating.rating, 
-          comment: rating.review || "No review text available", 
+          stars: rating.rating,
+          comment: rating.review || "No review text available",
         }));
         setReviews(transformedReviews);
       } catch (err) {
@@ -45,7 +56,10 @@ const ActivityReviews = ({ activityId }) => {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <div className="size-40 rounded-full">
-                  {/* <img src={elm.avatar} alt="image" className="img-cover" /> */}
+                  <Avatar
+                    style={{ backgroundColor: getRandomColor() }}
+                    icon={<UserOutlined />}
+                  />
                 </div>
                 <div className="text-16 fw-500 ml-20">{elm.name}</div>
               </div>
