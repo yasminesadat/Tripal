@@ -68,9 +68,14 @@ const getItineraries = async (req, res) => {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
         .populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
 
         res.status(200).json(itineraries);
@@ -155,10 +160,15 @@ const viewUpcomingItineraries = async (req, res) => {
             }
         }}).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
-        }).populate("tags")
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
+        }).populate("tags");
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -169,9 +179,14 @@ const viewPaidItineraries = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find({flagged: false}).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
 
         res.status(200).json(itineraries);
@@ -230,9 +245,14 @@ const getTouristItineraries = async (req, res) => {
         // Find itineraries that include the given touristId in the bookings array
         const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId,'bookings.selectedDate': { $gte: new Date() } , flagged: false }).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
             .populate('tourGuide bookings.touristId');
         
@@ -263,9 +283,14 @@ const getAllItinerariesForAdmin = async (req, res) => {
         const itineraries = await itineraryModel.find()
             .populate({
                 path: 'activities',
-                populate: {
-                    path: 'tags',
-                },
+                populate: [
+                    {
+                        path: 'tags',
+                    },
+                    {
+                        path: 'category',
+                    }
+                ]
             })
             .populate("tags");
 

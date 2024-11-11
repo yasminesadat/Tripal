@@ -131,10 +131,7 @@ const UpcomingItinerariesList = ({ itineraries, onBook, book, onCancel, cancel, 
                                                 : 'No tags available'}
                                         </div>
                                         <div>
-                                            <strong>Categories:</strong> 
-                                            {activity.category
-                                                ? activity.category
-                                                : 'No category available'}
+                                        <p>Category: {activity?.category?.Name}</p>
                                         </div>
                                     </div>
                                 ))}
