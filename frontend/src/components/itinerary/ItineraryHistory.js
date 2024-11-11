@@ -61,22 +61,6 @@ const ItineraryHistory = ({ itineraries, curr = "EGP", page }) => {
                                 <div className="list-item-attribute">
                                     <strong>Rating:</strong> {itinerary.averageRating || 'N/A'}
                                 </div>
-                                {itinerary.ratings && itinerary.ratings.length > 0 ? (
-                                    <div className="list-item-attribute">
-                                        <h3>Ratings & Reviews:</h3>
-                                        <ul>
-                                            {itinerary.ratings.map((rating, index) => (
-                                                <li key={index}>
-                                                    <p><strong>Rating:</strong> {rating.rating} / 5</p>
-                                                    <p><strong>Review:</strong> {rating.review}</p>
-                                                    <p><strong>By User ID:</strong> {rating.userID}</p>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ) : (
-                                    <div className="list-item-attribute">No ratings yet.</div>
-                                )}
                                 <div className="list-item-attribute">
                                     <strong>Timeline:</strong>
                                     <div className="list-item-attribute-sublist">
