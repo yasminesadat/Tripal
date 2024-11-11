@@ -12,6 +12,9 @@ import { useLocation } from 'react-router-dom';
 const HistoricalPlaceDetails = () => {
   const location = useLocation();
   const props = location.state?.governerHistoricalPlace;
+  const prices = location.state?.ticketPrices;
+  const currency = location.state?.currency;
+
   console.log(props);
   const { id } = useParams();
   const [address, setAddress] = useState("");
@@ -27,7 +30,7 @@ const HistoricalPlaceDetails = () => {
         if (result) {
           console.log("result: ", result);
           setHistoricalPlace(result);
-          setCoordinates([result?.location?.coordinates?.latitude ,result?.location?.coordinates?.longitude])
+          setCoordinates([result?.location?.coordinates?.latitude, result?.location?.coordinates?.longitude])
           setAddress(result?.location?.address);
         }
         setLoading(false);
@@ -52,7 +55,7 @@ const HistoricalPlaceDetails = () => {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation OpeningHours={historicalPlace.openingHours} ticketPrices={historicalPlace.ticketPrices} />
+                <OthersInformation OpeningHours={historicalPlace.openingHours} ticketPrices={prices} currency={currency} />
               </div>
 
               <Overview Description={historicalPlace?.description} />
@@ -86,7 +89,7 @@ const HistoricalPlaceDetails = () => {
 
               <DateCalender /> */}
 
-               <div className="line mt-60 mb-60"></div>
+              <div className="line mt-60 mb-60"></div>
 
               {/*<h2 className="text-30">FAQ</h2>
 
