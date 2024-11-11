@@ -100,6 +100,7 @@ const { touristId } = req.body;
 const model = resourceType === 'activity' ? Activity : itineraryModel;
 const currentTime = new Date();
 
+var ticketsForPoints;
 
 try {
     const resource = await model.findById(resourceId);
@@ -137,6 +138,7 @@ try {
     
             if (tourist){
                 tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
+                ticketsForPoints=resource.bookings[bookingIndex].tickets;
                 await tourist.save();
             } 
             resource.bookings.splice(bookingIndex, 1);   
@@ -153,6 +155,7 @@ try {
 
         if (tourist){
             tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets+resource.serviceFee;
+            ticketsForPoints=resource.bookings[bookingIndex].tickets;   
             await tourist.save();
         } 
         resource.bookings.splice(bookingIndex, 1);   
@@ -165,11 +168,13 @@ try {
 
     let pointsToDecrement=0;
     if(tourist.totalPoints<=100000){
-        pointsToDecrement=resource.price*0.5*tickets;
+        pointsToDecrement=resource.price*0.5*ticketsForPoints;
+
     }else if(tourist.totalPoints<=500000){
-        pointsToDecrement=resource.price*1*tickets;
+        pointsToDecrement=resource.price*ticketsForPoints;
+
     } else {
-        pointsToDecrement=resource.price*1.5*tickets;
+        pointsToDecrement=resource.price*1.5*ticketsForPoints;
     }
 
     await Tourist.findByIdAndUpdate(
