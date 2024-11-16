@@ -1,13 +1,5 @@
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
 import UserForm from "./UserForm";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-} from "mdb-react-ui-kit";
+import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 export default function Login() {
   return (
@@ -40,26 +32,24 @@ export default function Login() {
               data-aos-delay="200"
               className="hero__subtitle mb-20 md:mb-10"
             >
-              One site, 300,000+ experiences you'll remember
+              One site, 300,000+ experiences you&#39;ll remember
             </div>
 
             <h1 className="hero__title" data-aos="fade-up" data-aos-delay="300">
-              Your Adventure
+              Adventure
               <br className="md:d-none" />
               Travel Experts
               <br className="md:d-none" />
-              In World!
+              In the World!
               <br />
               <img src="/img/hero/3/brush-1.svg" alt="brush stroke" />
             </h1>
           </MDBCol>
 
           <MDBCol md="6">
-            <MDBRow>
-              <MDBCol>
-                <UserForm />
-              </MDBCol>
-            </MDBRow>
+            <MDBCol>
+              <UserForm />
+            </MDBCol>
           </MDBCol>
         </MDBRow>
       </MDBContainer>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Form,
   Input,
@@ -53,7 +53,7 @@ export default function UserForm() {
         }}
       >
         <Title level={3} style={{ textAlign: "center" }}>
-          We're glad to see you again!
+          We&apos;re glad to see you again!
         </Title>
         <Text
           type="secondary"
@@ -64,7 +64,7 @@ export default function UserForm() {
             color: "black", // Custom color for the "Sign Up" text
           }}
         >
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link to="/register" className="sign-up-link">
             Sign Up
           </Link>
@@ -88,9 +88,11 @@ export default function UserForm() {
             rules={[{ required: true, message: "Please enter your username" }]}
           >
             <Input
-              placeholder="Username"
               size="large"
-              style={{ height: "50px", borderColor: "#d9d9d9" }}
+              style={{
+                height: "50px",
+                borderColor: "#d9d9d9",
+              }}
             />
           </Form.Item>
 
@@ -107,7 +109,6 @@ export default function UserForm() {
             ]}
           >
             <Input.Password
-              placeholder="Password"
               size="large"
               style={{ height: "50px" }}
               iconRender={(visible) =>
