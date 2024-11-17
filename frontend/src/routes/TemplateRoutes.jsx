@@ -53,7 +53,7 @@ import NotFoundPage from "../pages/pages/404";
 import ContactPage from "../pages/pages/contact";
 
 const templateRoutes = [
-  { path: "/", element: <HomePage5 /> }, //used
+  { path: "/", element: <HomePage5 /> },
   { path: "/home-5", element: <HomePage1 /> },
   { path: "/home-2", element: <HomePage2 /> },
   { path: "/home-3", element: <HomePage3 /> },
@@ -101,7 +101,7 @@ const templateRoutes = [
   { path: "/about", element: <AboutPage /> },
   { path: "/help-center", element: <HelpCenterPage /> },
   { path: "/terms", element: <TermsPage /> },
-  { path: "/login", element: <LoginPage /> }, //used
+  { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/invoice", element: <InvoicePage /> },
   { path: "/ui-elements", element: <UIElementsPage /> },
