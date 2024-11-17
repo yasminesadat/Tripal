@@ -1,23 +1,15 @@
 const touristModel = require("../models/users/Tourist");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-const User = require("../models/users/User.js");
-const Request = require("../models/Request.js");
+const User = require('../models/users/User.js')
+const Request = require('../models/Request.js');
+const hotelBookings = require("../models/BookingHotel.js");
+
 
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const {
-      userName,
-      email,
-      password,
-      mobileNumber,
-      nationality,
-      dateOfBirth,
-      job,
-      tags = [],
-      categories = [],
-    } = req.body;
+    const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags = [], categories = [] } = req.body;
 
     // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
@@ -32,33 +24,23 @@ const createTourist = async (req, res) => {
     }
     const existingUserNameRequests = await Request.findOne({
       userName,
-      status: { $ne: "rejected" },
+      status: { $ne: 'rejected' }
     });
     if (existingUserNameRequests) {
       return res.status(400).json({
-        error: "Request has been submitted with this username",
+        error: "Request has been submitted with this username"
       });
     }
     //check unique email across all requests
     const existingEmailRequests = await Request.findOne({
       email,
-      status: { $ne: "rejected" },
+      status: { $ne: 'rejected' }
     });
     if (existingEmailRequests) {
-      return res
-        .status(400)
-        .json({ error: "Request has been submitted with this email" });
+      return res.status(400).json({ error: "Request has been submitted with this email" });
     }
     // Validate required fields
-    if (
-      !userName ||
-      !email ||
-      !password ||
-      !mobileNumber ||
-      !nationality ||
-      !dateOfBirth ||
-      !job
-    ) {
+    if (!userName || !email || !password || !mobileNumber || !nationality || !dateOfBirth || !job) {
       return res.status(400).json({ error: "Please add all fields" });
     }
 
@@ -75,8 +57,8 @@ const createTourist = async (req, res) => {
       categories,
       wallet: {
         amount: 0,
-        currency: "EGP",
-      },
+        currency: "EGP"
+      }
     });
 
     const id = tourist._id;
@@ -86,7 +68,7 @@ const createTourist = async (req, res) => {
       userId: id,
       userName: tourist.userName,
       email: tourist.email,
-      role: "Tourist",
+      role: "Tourist"
     });
 
     return res.status(201).json(tourist);
@@ -112,6 +94,7 @@ const getTouristInfo = async (req, res) => {
     if (!touristInformation) {
       return res.status(404).json("Tourist profile doesn't exist");
     }
+
 
     return res.status(200).json(touristInformation);
   } catch (error) {
@@ -173,7 +156,9 @@ const updateTouristProfile = async (req, res) => {
 
     await touristToBeUpdated.save();
 
-    return res.status(200).json(touristToBeUpdated);
+    return res
+      .status(200)
+      .json(touristToBeUpdated);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -182,7 +167,7 @@ const updateTouristProfile = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword } = req.body
     const hashedOldPassword = await bcrypt.hash(oldPassword, 10);
 
     const tourist = await touristModel.findById(id);
@@ -191,32 +176,34 @@ const changePassword = async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     await updateTouristProfile(id, {
-      password: hashedNewPassword,
-    });
+      "password": hashedNewPassword
+    })
     return res.status(200).json("Successful");
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
 };
+
 const getTouristNameAndEmail = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tourist = await touristModel.findById(id).select("userName email");
+    const tourist = await touristModel.findById(id).select('userName email');
 
     if (!tourist) {
-      return res.status(404).json({ error: "Tourist not found" });
+      return res.status(404).json({ error: 'Tourist not found' });
     }
 
     res.json({
       userName: tourist.userName,
-      email: tourist.email,
+      email: tourist.email
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
 const redeemPoints = async (req, res) => {
   try {
     const { id } = req.params;
@@ -226,7 +213,7 @@ const redeemPoints = async (req, res) => {
       return res.status(404).json({ error: "Tourist not found" });
     }
 
-    const newAmount = tourist.wallet.amount + tourist.currentPoints / 100;
+    const newAmount = tourist.wallet.amount + (tourist.currentPoints / 100);
     tourist.wallet.amount = newAmount;
     tourist.currentPoints = 0;
 
@@ -238,6 +225,142 @@ const redeemPoints = async (req, res) => {
   }
 };
 
+const getTouristBookedFlights = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedFlights');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    return res.status(200).json({ bookedFlights: tourist.bookedFlights });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+const getTouristBookedHotels = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid tourist ID",
+      });
+    }
+
+    const tourist = await touristModel.findById(id).select('bookedHotels');
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+    const bookedHotels = tourist.bookedHotels;
+    if (!bookedHotels) {
+      return res.status(400).json({ error: "No Booked Hotels!" });
+
+    }
+    const HotelInfo = [];
+
+    for (let i = 0; i < bookedHotels.length; i++) {
+      const hotel = await hotelBookings.findById(bookedHotels[i]._id);
+      if (!hotel) {
+        return res.status(404).json({ error: "Can't return hotels history!" });
+      }
+      HotelInfo.push(hotel)
+    }
+
+    return res.status(200).json({ bookedHotels: HotelInfo });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+const getTouristAge = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid tourist ID format' });
+    }
+
+    const tourist = await touristModel.findById(id);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    const age = tourist.calculateAge();
+    res.json({ age });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching tourist data', error });
+  }
+};
+
+const checkUserExists = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
+
+    const user = await touristModel.findById(id);
+
+    if (!user) {
+      res.json({ message: 'User not found' });
+      return;
+    }
+
+    res.json({ message: 'User exists' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error checking user existence', error });
+  }
+};
+
+const getTouristPreferences = async (req, res) => {
+  try {
+    const { id } = req.params
+    const tourist = await touristModel.findById(id)
+      .populate("tags")
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    res.json(tourist.tags);
+  } catch (error) {
+    console.error("Error fetching tourist information:", error);
+    res.status(500).json({ message: "Error fetching tourists' tags" });
+  }
+};
+
+const getTouristCategories = async (req, res) => {
+  try {
+    const { id } = req.params
+    const tourist = await touristModel.findById(id)
+      .populate("categories")
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    res.json(tourist.categories);
+  } catch (error) {
+    console.error("Error fetching tourist information:", error);
+    res.status(500).json({ message: "Error fetching tourists' categories" });
+  }
+};
+
 module.exports = {
   createTourist,
   getTouristInfo,
@@ -245,4 +368,10 @@ module.exports = {
   changePassword,
   redeemPoints,
   getTouristNameAndEmail,
+  getTouristBookedFlights,
+  getTouristAge,
+  getTouristBookedHotels,
+  getTouristPreferences,
+  getTouristCategories,
+  checkUserExists
 };

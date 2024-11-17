@@ -1,6 +1,8 @@
 const advertiserModel = require("../models/users/Advertiser.js");
 const bcrypt = require("bcrypt");
 const cloudinary = require("../cloudinary");
+const User = require('../models/users/User.js')
+
 
 const createAdvertiser = async (req, res) => {
   try {
@@ -68,6 +70,11 @@ const updateAdvertiser = async (req, res) => {
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
+    const existingEmail = await User.findOne({ email });
+    // Check if the new email is different from the existing one, and if it already exists
+    if (existingEmail && existingEmail.email !== existingAdvertiser.email) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
 
     let hashedPassword = existingAdvertiser.password; // Keep the current password if not updated
     if (password) {
@@ -118,6 +125,14 @@ const updateAdvertiser = async (req, res) => {
       updateData,
       { new: true, runValidators: true } // Options: return updated document, run validation
     );
+
+    if (email && email !== existingAdvertiser.email) {
+      await User.findOneAndUpdate(
+        { email: existingAdvertiser.email }, // filter to find the document with the current email
+        { email: email }, // Update to the new email
+        { new: true, runValidators: true }
+      );
+    }
 
     if (!updatedAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });

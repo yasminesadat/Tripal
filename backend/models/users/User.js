@@ -14,20 +14,13 @@ const userSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    sparse: true,
+    sparse: true
   },
   role: {
     type: String,
     required: true,
-    enum: [
-      "Tour Guide",
-      "Advertiser",
-      "Seller",
-      "Tourist",
-      "Tourism Governor",
-      "Admin",
-    ],
-  },
+    enum: ["Tour Guide", "Advertiser", "Seller", "Tourist", "Tourism Governor", "Admin"],
+  }
 });
 
 const User = mongoose.model("User", userSchema);

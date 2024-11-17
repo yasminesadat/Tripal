@@ -96,9 +96,7 @@ const getHistoricalPlace = async (req, res) => {
   const id = req.params.id;
   try {
     const result = await HistoricalPlace.findById(id).populate("tags").populate("historicalPeriod");
-    if (result === null) {
-      return res.status(404).json({ msg: "Historical place not found" });
-    }
+    
     return res.status(200).json(result);
   }
   catch (err) {
@@ -245,3 +243,4 @@ module.exports = {
   getTourismGovernerHistoricalPlaces,
   updateHistoricalPlaces
 };
+

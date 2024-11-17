@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const colors = require("colors");
-const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -43,8 +42,6 @@ mongoose
   .catch((err) => console.log(err));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-app.use(cookieParser());
 app.use("/", routes);
 
 //module.exports = amadeus;

@@ -68,9 +68,14 @@ const getItineraries = async (req, res) => {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
         .populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
 
         res.status(200).json(itineraries);
@@ -85,13 +90,13 @@ const updateItinerary = async (req, res) => {
         const { title, description, tourGuide, activities, serviceFee,
             language, availableDates, availableTime, accessibility,
             pickupLocation, dropoffLocation } = req.body;
-
+            
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
 
         if (!fetchedActivities || fetchedActivities.length === 0) {
             return res.status(404).json({ error: 'No activities found' });
         }
-
+     
         let price = Number(serviceFee);
         const locations = [];
         const timeline = [];
@@ -107,6 +112,13 @@ const updateItinerary = async (req, res) => {
         const uniqueTagIds = Array.from(allTags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
+        const itinerary = await itineraryModel.findById(id);
+        const hasBookings = itinerary.bookings.length > 0;
+        const isDatesArrayDifferent = JSON.stringify(itinerary.availableDates) !== JSON.stringify(availableDates);
+
+        if (hasBookings && isDatesArrayDifferent) {
+            return res.status(400).json({ error: 'Cannot update itinerary with bookings if available dates are changed' });
+        }
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
@@ -142,12 +154,21 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find({flagged:false, isActive:true}).populate({
+        const itineraries = await itineraryModel.find({flagged:false, isActive:true,availableDates: {
+            $elemMatch: {
+             $gte: new Date().setHours(0, 0, 0, 0) 
+            }
+        }}).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
-        }).populate("tags")
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
+        }).populate("tags");
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -158,9 +179,14 @@ const viewPaidItineraries = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find({flagged: false}).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
 
         res.status(200).json(itineraries);
@@ -217,11 +243,16 @@ const getTouristItineraries = async (req, res) => {
         const touristId = req.params.touristId;
         
         // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId, flagged: false }).populate({
+        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId,'bookings.selectedDate': { $gte: new Date() } , flagged: false }).populate({
             path: 'activities',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'category',
+                }
+            ]
         }).populate("tags")
             .populate('tourGuide bookings.touristId');
         
@@ -252,9 +283,14 @@ const getAllItinerariesForAdmin = async (req, res) => {
         const itineraries = await itineraryModel.find()
             .populate({
                 path: 'activities',
-                populate: {
-                    path: 'tags',
-                },
+                populate: [
+                    {
+                        path: 'tags',
+                    },
+                    {
+                        path: 'category',
+                    }
+                ]
             })
             .populate("tags");
 
@@ -270,12 +306,6 @@ const toggleItineraryStatus = async (req, res) => {
     try {
         const itinerary = await itineraryModel.findById(id);
         if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
-
-        const hasBookings = itinerary.bookings && itinerary.bookings.length > 0;
-
-        if (itinerary.isActive && !hasBookings) {
-            return res.status(400).json({ message: 'Cannot deactivate itinerary without bookings' });
-        }
 
         itinerary.isActive = !itinerary.isActive;
         await itinerary.save();

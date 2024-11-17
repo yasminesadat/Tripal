@@ -1,8 +1,10 @@
 const Amadeus = require('amadeus');
 
+require('dotenv').config();
+
 const amadeus = new Amadeus({
-  clientId: 'IuUmwsrhvB57Vp616ZGz7y340TcWXtjQ',
-  clientSecret: 'E9ElYuHHFRSTgjNB',
+  clientId: process.env.clientId,
+  clientSecret: process.env.clientSecret
 });
 
 const getFlights = async (req, res) => {
@@ -12,9 +14,10 @@ const getFlights = async (req, res) => {
     departureDate,
     returnDate,
     adults,
-    max = 5,
+    max = 150,
     nonStop = true,
-    cabin 
+    cabin, 
+    currencyCode = 'EGP'
   } = req.query;
 
   if (!originLocationCode || !destinationLocationCode || !departureDate) {
@@ -31,6 +34,7 @@ const getFlights = async (req, res) => {
       max,
       nonStop,
       travelClass: cabin, 
+      currencyCode
     });
 
     res.json(response.data);
@@ -40,4 +44,19 @@ const getFlights = async (req, res) => {
   }
 };
 
-module.exports = { getFlights };
+
+const getCityCode= async(req,res)=>{
+  const searchinfo=req.query.searchinfo;
+  try{
+    const response = await amadeus.referenceData.locations.cities.get({
+      keyword: searchinfo,
+      max:12
+    });
+    res.json(response.data);
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+module.exports = { getFlights, getCityCode };

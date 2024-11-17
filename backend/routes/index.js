@@ -18,10 +18,8 @@ const routes = [
   "./ItineraryRoutes",
   "./ComplaintsRoutes",
   "./BookingRoutes",
-  "./DeletionRequestsRoutes",
-  "./UserRoutes",
   "./FlightRoutes",
-  "./HotelBookingRoutes",
+  "./HotelBookingRoutes"
 ];
 
 routes.forEach((route) => {

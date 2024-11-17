@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { login } from "../../api/UserService";
+import { login } from "../../../api/UserService";
 
 const { Title, Text } = Typography;
 
