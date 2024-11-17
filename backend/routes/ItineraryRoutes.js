@@ -1,27 +1,78 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
 const Itinerary = require("../models/Itinerary");
 const ItineraryRating = require("../models/ItineraryRating");
 
-const { createItinerary, getItineraries, updateItinerary, 
-    deleteItinerary, getItineraryRatings, 
-    viewUpcomingItineraries,viewPaidItineraries,
-    getTouristItineraries, toggleItineraryStatus } = require('../controllers/ItineraryController');
+const {
+  createItinerary,
+  getItineraries,
+  updateItinerary,
+  deleteItinerary,
+  getItineraryRatings,
+  viewUpcomingItineraries,
+  viewPaidItineraries,
+  getTouristItineraries,
+  toggleItineraryStatus,
+} = require("../controllers/ItineraryController");
 
-router.post('/itinerary', createItinerary);
+const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
-router.get('/itinerary', getItineraries);
-router.put('/itinerary/:id', updateItinerary);
-router.delete('/itinerary/:id', deleteItinerary);
-router.get('/itinerary/upcoming/view', viewUpcomingItineraries);
-router.get('/itinerary/paid/view', viewPaidItineraries);
-router.get('/itineraries/booked-itineraries/:touristId', getTouristItineraries);
+router.post(
+  "/itinerary",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  createItinerary
+);
 
-router.post("/itinerary/:id/ratings", validateIDs(["id", "userID"]), addRating(Itinerary, ItineraryRating, 'itineraryID'));
-router.get("/itinerary/:id/ratings", validateIDs(["id"]), getRatings(Itinerary, ItineraryRating, 'itineraryID'));
-router.get('/itineraryRatings/:id', getItineraryRatings);
-router.put('/itinerary/:id/toggleStatus', toggleItineraryStatus);
+router.get("/itinerary", getItineraries);
+router.put(
+  "/itinerary/:id",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  updateItinerary
+);
+router.delete(
+  "/itinerary/:id",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  deleteItinerary
+);
+router.get("/itinerary/upcoming/view", viewUpcomingItineraries);
+router.get(
+  "/itinerary/paid/view",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  viewPaidItineraries
+);
+router.get(
+  "/itineraries/booked-itineraries/:touristId",
+  verifyToken,
+  authorizeRoles("Touriat"),
+  getTouristItineraries
+);
+
+router.post(
+  "/itinerary/:id/ratings",
+  validateIDs(["id", "userID"]),
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addRating(Itinerary, ItineraryRating, "itineraryID")
+);
+
+router.get(
+  "/itinerary/:id/ratings",
+  validateIDs(["id"]),
+  getRatings(Itinerary, ItineraryRating, "itineraryID")
+);
+router.get("/itineraryRatings/:id", validateIDs(["id"]), getItineraryRatings);
+router.put(
+  "/itinerary/:id/toggleStatus",
+  validateIDs(["id"]),
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  toggleItineraryStatus
+);
 
 module.exports = router;

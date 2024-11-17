@@ -6,15 +6,28 @@ const {
   getHistTags,
   getAllHistoricalPeriod,
   getHistPeriodById,
-  getHistTagById
+  getHistTagById,
 } = require("../controllers/HistoricalTagController");
 
-router.post("/typetags", createTypeTags);
-router.post("/periodtags", createPeriodTags);
-router.get("/typetags", getHistTags);
-router.get("/periodtags",getAllHistoricalPeriod);
-router.get("/typetags/:id", getHistTagById);
-router.get("/periodtags/id",getHistPeriodById);
+const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
+router.post(
+  "/typetags",
+  verifyToken,
+  authorizeRoles("Tourism Governor"),
+  createTypeTags
+);
+
+router.post(
+  "/periodtags",
+  verifyToken,
+  authorizeRoles("Tourism Governor"),
+  createPeriodTags
+);
+
+router.get("/typetags", getHistTags);
+router.get("/periodtags", getAllHistoricalPeriod);
+router.get("/typetags/:id", getHistTagById);
+router.get("/periodtags/id", getHistPeriodById);
 
 module.exports = router;

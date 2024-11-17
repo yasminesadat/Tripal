@@ -1,4 +1,4 @@
-const User = require("../models/users/User"); // Adjust the path as necessary
+const User = require("../models/users/User");
 const TourGuide = require("../models/users/TourGuide");
 const Advertiser = require("../models/users/Advertiser");
 const Admin = require("../models/users/Admin");
@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        maxAge: 3600 * 1000,
+        //maxAge: 3600 * 1000,
       });
       res.status(200).json({ token });
     } else {

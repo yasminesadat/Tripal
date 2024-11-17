@@ -3,14 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const colors = require("colors");
 
 require("dotenv").config();
 
-
 const MongoURI = process.env.MONGO_URI;
-
-
 
 //App variables
 const app = express();
@@ -20,6 +18,7 @@ const port = process.env.PORT || "5050";
 const routes = require("./routes/index");
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Increase payload size limit
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -36,7 +35,6 @@ mongoose
       console.log(
         `Listening to requests on http://localhost:${port}`.cyan.underline
       );
-
     });
   })
   .catch((err) => console.log(err));
