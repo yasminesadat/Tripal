@@ -11,7 +11,6 @@ import TestimonialsSix from "@/components/homes/testimonials/TestimonialsSix";
 import Tour2 from "@/components/homes/tours/Tour2";
 import FooterFour from "@/components/layout/footers/FooterFour";
 import Header9 from "@/components/layout/header/Header9";
-import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 

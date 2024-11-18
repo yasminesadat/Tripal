@@ -2,7 +2,6 @@ import HomePage1 from "../pages/homes/home-1";
 import HomePage2 from "../pages/homes/home-2";
 import HomePage3 from "../pages/homes/home-3";
 import HomePage4 from "../pages/homes/home-4";
-import HomePage5 from "../pages/homes/home-5";
 import HomePage6 from "../pages/homes/home-6";
 import HomePage7 from "../pages/homes/home-7";
 import HomePage8 from "../pages/homes/home-8";
@@ -45,7 +44,6 @@ import DestinationsPage from "../pages/pages/destinations";
 import AboutPage from "../pages/pages/about";
 import HelpCenterPage from "../pages/pages/help-center";
 import TermsPage from "../pages/pages/terms";
-import LoginPage from "../pages/pages/login";
 import RegisterPage from "../pages/pages/register";
 import InvoicePage from "../pages/pages/invoice";
 import UIElementsPage from "../pages/pages/ui-elements";
@@ -53,7 +51,6 @@ import NotFoundPage from "../pages/pages/404";
 import ContactPage from "../pages/pages/contact";
 
 const templateRoutes = [
-  { path: "/", element: <HomePage5 /> },
   { path: "/home-5", element: <HomePage1 /> },
   { path: "/home-2", element: <HomePage2 /> },
   { path: "/home-3", element: <HomePage3 /> },
@@ -101,7 +98,6 @@ const templateRoutes = [
   { path: "/about", element: <AboutPage /> },
   { path: "/help-center", element: <HelpCenterPage /> },
   { path: "/terms", element: <TermsPage /> },
-  { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/invoice", element: <InvoicePage /> },
   { path: "/ui-elements", element: <UIElementsPage /> },

@@ -1,5 +1,4 @@
 import { axios } from "./axios";
-import { message } from "antd";
 
 export async function login(userName, password) {
   try {
@@ -54,15 +53,5 @@ function handleError(error) {
 }
 
 export async function getUserData() {
-  try {
-    const response = await axios.get("/user-data");
-    return response.data;
-  } catch (error) {
-    if (error.response.status === 401) {
-      message.error("Session expired. Please login again.");
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 3000); // 3-second delay
-    }
-  }
+  return await axios.get("/user-data");
 }

@@ -93,14 +93,29 @@ const loginUser = async (req, res) => {
 const getUserData = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) {
-    return res.status(401).send("No token found");
+    return res
+      .status(401)
+      .json({ status: "error", message: "No token found." });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).json(decoded);
+    res.status(200).json({
+      status: "success",
+      id: decoded.id,
+      role: decoded.role,
+    });
   } catch (err) {
-    res.status(401).send("Invalid token");
+    if (err.name === "TokenExpiredError") {
+      return res.status(200).json({
+        status: "error",
+        message: "Token expired.",
+      });
+    } else {
+      return res
+        .status(200)
+        .json({ status: "error", message: "Invalid token." });
+    }
   }
 };
 
