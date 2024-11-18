@@ -94,7 +94,7 @@ const getUserData = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) {
     return res
-      .status(401)
+      .status(200)
       .json({ status: "error", message: "No token found." });
   }
 

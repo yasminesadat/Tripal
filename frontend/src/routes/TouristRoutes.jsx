@@ -19,10 +19,11 @@
 // import BookingDetails from "../components/tourist/BookingDetails";
 // import Invoice from "../components/tourist/Invoice";
 // import DbBooking from "../components/tourist/BookingHistory";
-import HomePage10 from "@/pages/homes/home-10";
+
+import HomePage1 from "@/pages/homes/home-1";
 
 const touristRoutes = [
-  { path: "/tourist", element: <HomePage10 /> },
+  { path: "/tourist", element: <HomePage1 /> },
   // { path: "/tourist", element: <TouristHome /> },
   // { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
@@ -50,7 +51,6 @@ const touristRoutes = [
   //   path: "/tourist/view-products/product/:id",
   //   element: <TouristViewProduct />,
   // },
-
   // { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   // { path: "/tourist/view-Complaints", element: <MyComplaints /> },
   // {
@@ -60,7 +60,6 @@ const touristRoutes = [
   //   ),
   // },
   // { path: "/booked-activities", element: <BookedActivitiesPage /> },
-
   // { path: "/tourist/book-flight", element: <FlightSearch /> },
   // { path: "/tourist/search-flight", element: <Hero5 /> },
   // { path: "/tourist/booking-summary", element: <BookingDetails /> },

@@ -3,7 +3,6 @@ import templateRoutes from "./TemplateRoutes";
 import guestRoutes from "./GuestRoutes";
 import touristRoutes from "./TouristRoutes";
 import RoleProtectedRoute from "./RoleProtectedRouteComponent";
-import HomePage10 from "@/pages/homes/home-10";
 
 const RoutesComponent = () => (
   <Routes>

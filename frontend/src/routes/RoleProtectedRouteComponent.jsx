@@ -1,36 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { getUserData } from "../api/UserService";
 import PropTypes from "prop-types";
 import { message } from "antd";
 import NotFoundPage from "@/pages/pages/404";
+import Spinner from "@/components/common/Spinner";
 
 const RoleProtectedRoute = ({ element, requiredRoles }) => {
   const [loading, setLoading] = useState(true);
   const [redirectTo, setRedirectTo] = useState(null);
+  const errorDisplayed = useRef(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await getUserData();
-      if (response.data.status === "success") {
-        if (requiredRoles.includes(response.data.role)) {
-          setRedirectTo(element);
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          if (requiredRoles.includes(response.data.role)) {
+            setRedirectTo(element);
+          } else {
+            setRedirectTo(<NotFoundPage />);
+          }
+        } else if (response.data.message === "Token expired.") {
+          if (!errorDisplayed.current) {
+            message.error("Token expired. Please log in again.");
+            errorDisplayed.current = true;
+          }
+          setRedirectTo(<Navigate to="/login" />);
+        } else {
+          setRedirectTo(<NotFoundPage />);
         }
-      } else if (response.message === "Token expired.") {
-        message.error("Token expired. Please login again.");
+      } catch (error) {
+        if (!errorDisplayed.current) {
+          message.error("An error occurred. Please log in again.");
+          errorDisplayed.current = true;
+        }
         setRedirectTo(<Navigate to="/login" />);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchUserData();
-    setLoading(false);
   }, [requiredRoles, element]);
 
   if (loading) {
     // Render a loading indicator while data is being fetched
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
-  console.log("redirectt", redirectTo);
-  if (!redirectTo) setRedirectTo(<NotFoundPage />);
+
   return redirectTo;
 };
 
