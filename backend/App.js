@@ -14,9 +14,16 @@ const MongoURI = process.env.MONGO_URI;
 const app = express();
 const port = process.env.PORT || "5050";
 
+// Configure CORS
+const corsOptions = {
+  origin: "http://localhost:3000", // Allow requests from this origin
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions));
+
 //Route Imports
 const routes = require("./routes/index");
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

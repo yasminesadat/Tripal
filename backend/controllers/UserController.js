@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const express = require("express");
+const router = express.Router();
 const app = express();
 require("dotenv").config();
 
@@ -78,7 +79,7 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        //maxAge: 3600 * 1000,
+        //maxAge: 3600 * 1000, //changed to session cookie
       });
       res.status(200).json({ token });
     } else {
@@ -89,4 +90,18 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, generateToken };
+const getUserData = async (req, res) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).send("No token found");
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json(decoded);
+  } catch (err) {
+    res.status(401).send("Invalid token");
+  }
+};
+
+module.exports = { loginUser, generateToken, getUserData };

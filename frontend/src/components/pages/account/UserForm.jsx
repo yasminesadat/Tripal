@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { login } from "../../../api/UserService";
+import { getUserData, login } from "../../../api/UserService";
 
 const { Title, Text } = Typography;
 
@@ -34,6 +34,7 @@ export default function UserForm() {
     } else {
       message.error(response.message);
     }
+    getUserData();
   };
 
   const onFinishFailed = (errorInfo) => {
