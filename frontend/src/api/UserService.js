@@ -1,4 +1,5 @@
 import { axios } from "./axios";
+import { message } from "antd";
 
 export async function login(userName, password) {
   try {
@@ -55,40 +56,13 @@ function handleError(error) {
 export async function getUserData() {
   try {
     const response = await axios.get("/user-data");
-    console.log(response);
     return response.data;
   } catch (error) {
-    return handleGetUserDataError(error);
-  }
-}
-
-// Used to handle getUserData errors
-function handleGetUserDataError(error) {
-  let userFriendlyMessage = {
-    status: "error",
-    message: "An error occurred. Please try again.",
-  };
-
-  if (error.response) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
-    switch (error.response.status) {
-      case 401:
-        // Token is expired or invalid, redirect to login page
-        userFriendlyMessage.message = "Session expired. Please log in.";
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 3000); // 3-second delay
-        break;
-      case 500:
-        userFriendlyMessage.message =
-          "Internal server error. Please try again later.";
-        break;
+    if (error.response.status === 401) {
+      message.error("Session expired. Please login again.");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000); // 3-second delay
     }
-  } else if (error.request) {
-    // The request was made but no response was received
-    userFriendlyMessage.message = "Please check your network connection.";
-    userFriendlyMessage.status = "warning";
   }
-  return userFriendlyMessage;
 }

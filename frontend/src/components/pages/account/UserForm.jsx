@@ -11,7 +11,7 @@ import {
   message,
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { getUserData, login } from "../../../api/UserService";
+import { login } from "../../../api/UserService";
 
 const { Title, Text } = Typography;
 
@@ -21,7 +21,6 @@ export default function UserForm() {
 
   const onFinish = async () => {
     setLoading(true);
-    console.log(form.getFieldValue("userName"), form.getFieldValue("password"));
     const response = await login(
       form.getFieldValue("userName"),
       form.getFieldValue("password")
@@ -34,7 +33,6 @@ export default function UserForm() {
     } else {
       message.error(response.message);
     }
-    getUserData();
   };
 
   const onFinishFailed = (errorInfo) => {
