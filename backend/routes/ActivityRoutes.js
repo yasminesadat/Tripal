@@ -20,7 +20,7 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.get(
-  "/activities/advertiser/:id",
+  "/activities/advertiser",
   verifyToken,
   authorizeRoles("Advertiser"),
   getAdvertiserActivities
@@ -59,7 +59,7 @@ router.get(
   getRatings(Activity, ActivityRating, "activityID")
 );
 router.get(
-  "/activities/:touristId",
+  "/activities",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristActivities

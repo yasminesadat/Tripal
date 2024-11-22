@@ -5,7 +5,6 @@ const PreferenceTag = require("../models/PreferenceTag");
 
 const createActivity = async (req, res) => {
   const {
-    advertiser,
     title,
     description,
     date,
@@ -21,12 +20,12 @@ const createActivity = async (req, res) => {
   } = req.body;
 
   try {
-    const existingAdvertiser = await Advertiser.findById(advertiser);
+    const existingAdvertiser = await Advertiser.findById(req.userId);
+    console.log(existingAdvertiser)
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const category = await ActivityCategory.findById({ _id: categoryId });
-    console.log(category)
     // if (!category) {
     //   return res.status(404).json({ error: "Category not found" });
     // }
@@ -69,7 +68,7 @@ const createActivity = async (req, res) => {
 };
 
 const getAdvertiserActivities = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.userId;
   try {
     const activites = await Activity.find({ advertiser: id }) 
     .select("title date time location")
@@ -175,7 +174,7 @@ const getActivityById = async (req, res) => {
   }};
 
 const getTouristActivities = async (req, res) => {
-  const { touristId } = req.params;
+  const { touristId } = req.userId;
   try {
     const activities = await Activity.find({ "bookings.touristId": touristId,isBookingOpen:true, flagged: false, date: { $gte: new Date() } })
       .populate("category")
