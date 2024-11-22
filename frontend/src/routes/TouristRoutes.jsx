@@ -12,6 +12,7 @@
 // import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
+import ComplaintsReplies from "@/pages/tourist/ComplaintsReplies";
 // import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 // import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 // import Hero5 from "../components/tourist/SearchBar";
@@ -26,6 +27,7 @@ const touristRoutes = [
   { path: "/tourist", element: <HomePage1 /> },
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   { path: "/tourist/view-complaints", element: <MyComplaints /> },
+  { path: "/tourist/complaints-replies", element: <ComplaintsReplies /> },
   // { path: "/tourist", element: <TouristHome /> },
   // { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },

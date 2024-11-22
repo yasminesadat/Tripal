@@ -11,9 +11,8 @@ export default function Messages() {
   return (
     <>
       <div
-        className={`dashboard ${
-          sideBarOpen ? "-is-sidebar-visible" : ""
-        } js-dashboard`}
+        className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+          } js-dashboard`}
       >
         <Sidebar setSideBarOpen={setSideBarOpen} />
 
@@ -58,9 +57,8 @@ export default function Messages() {
 
                               {elm.badgeText && (
                                 <div
-                                  className={`size-16 flex-center rounded-full ${
-                                    elm.badgeColor ? elm.badgeColor : ""
-                                  } text-8 text-white`}
+                                  className={`size-16 flex-center rounded-full ${elm.badgeColor ? elm.badgeColor : ""
+                                    } text-8 text-white`}
                                 >
                                   {elm.badgeText}
                                 </div>
