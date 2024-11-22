@@ -3,6 +3,7 @@ import React from "react";
 
 export default function Register() {
   return (
+
     <section className="mt-header layout-pt-lg layout-pb-lg">
       <div className="container">
         <div className="row justify-center">
@@ -62,5 +63,15 @@ export default function Register() {
         </div>
       </div>
     </section>
+
+
   );
 }
+
+
+// --color-dark-purple: #8f5774;
+//   --color-light-purple: #dac4d0;
+//   --color-pink: #e0829d;
+//   --color-stone: #036264;
+//   --color-stone-light: #5a9ea0;
+//   --color-footer: #e5f8f8;

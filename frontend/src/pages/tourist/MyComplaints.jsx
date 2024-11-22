@@ -3,6 +3,8 @@ import { getComplaintsByTourist, getComplaintById, replyToComplaint } from "../.
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+
 const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);

@@ -198,7 +198,6 @@ const setRequestState = async (req, res) => {
 
 const requestAccountDeletion = async (req, res) => {
     const { role, userId } = req.params;  // role Tourist , etc userId is the id from the tourist table 
-
     try {
         const user = await User.findOne({ userId }); // userid references tourist, seller etc 
         if (!user) {
