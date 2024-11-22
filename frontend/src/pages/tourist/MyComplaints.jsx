@@ -9,7 +9,7 @@ const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
@@ -67,6 +67,8 @@ const MyComplaints = () => {
             try {
                 const complaintDetails = await getComplaintById(complaintId);
                 setSelectedComplaint(complaintDetails);
+                console.log("selected is", complaintDetails);
+                navigate("/tourist/complaints-replies", { state: { complaint: complaintDetails } });
             } catch (error) {
                 console.error("Error fetching complaint details:", error);
             }

@@ -1,5 +1,6 @@
 import Messages from "@/components/dasboard/Messages";
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
@@ -9,11 +10,16 @@ const metadata = {
 };
 
 export default function ComplaintsReplies() {
+    const location = useLocation();
+
+    // Extract complaint from location.state
+    const { complaint } = location.state || {};
     return (
+
         <>
             <MetaComponent meta={metadata} />
             <main>
-                <Messages />
+                <Messages complaint={complaint} />
             </main>
         </>
     );
