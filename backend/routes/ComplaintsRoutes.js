@@ -11,14 +11,14 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post(
-  "/complaint/:id",
+  "/complaint",
   verifyToken,
   authorizeRoles("Tourist"),
   createComplaint
 ); //tourist id
 
 router.get(
-  "/complaints/tourist/:id",
+  "/complaints/tourist",
   verifyToken,
   authorizeRoles("Tourist"),
   getComplaintsByTourist
