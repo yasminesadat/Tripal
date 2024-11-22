@@ -3,6 +3,7 @@ import templateRoutes from "./TemplateRoutes";
 import guestRoutes from "./GuestRoutes";
 import touristRoutes from "./TouristRoutes";
 import RoleProtectedRoute from "./RoleProtectedRouteComponent";
+import advertiserRoutes from "./AdvertiserRoutes";
 
 const RoutesComponent = () => (
   <Routes>
@@ -17,6 +18,18 @@ const RoutesComponent = () => (
           <RoleProtectedRoute
             element={route.element}
             requiredRoles={["Tourist"]}
+          />
+        }
+      />
+    ))}
+    {advertiserRoutes.map((route, index) => (
+      <Route
+        key={`advertiser-${index}`}
+        path={route.path}
+        element={
+          <RoleProtectedRoute
+            element={route.element}
+            requiredRoles={["Advertiser"]}
           />
         }
       />
