@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import LocationMap from '../common/MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import {createActivity, updateActivity} from '../../api/ActivityService'
+import { createActivity, updateActivity } from '../../api/ActivityService'
 import ActivityCategoryService from '../../api/ActivityCategoryService'
-import {getTags} from '../../api/PreferenceTagService'
+import { getTags } from '../../api/PreferenceTagService'
 const { TextArea } = Input;
 
 const ActivityForm = ({ isUpdate }) => {
@@ -14,7 +14,7 @@ const ActivityForm = ({ isUpdate }) => {
 
   const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
-    advertiser: existingActivity?.advertiser._id , // Use optional chaining here as well
+    advertiser: existingActivity?.advertiser._id, // Use optional chaining here as well
     title: existingActivity?.title || '',
     description: existingActivity?.description || '',
     date: existingActivity?.date ? new Date(existingActivity.date).toISOString().split('T')[0] : '',
@@ -115,12 +115,12 @@ const ActivityForm = ({ isUpdate }) => {
   };
 
   return (
-    <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
+    <div className="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h1 class="text-30">Activity Management</h1>
+        <h1 className="text-30">Activity Management</h1>
       </div>
-      <div class="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
+      <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
         <Form
           layout="vertical"
           onFinish={handleSubmit}
