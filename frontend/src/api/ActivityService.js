@@ -14,7 +14,7 @@ export async function createActivity(body) {
 export async function updateActivity(id,body) {
   try {
     console.log("ANA FEL UPDATE SERVICE");
-    const response =  await axios.put('/activities/${id}', body)
+    const response =  await axios.put(`/activities/${id}`, body)
     return response;
   } catch (error) {
     console.error("Can't update activity", error);
