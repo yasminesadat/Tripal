@@ -15,15 +15,38 @@ import { touristId, userRole } from "../../IDs";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 import { getAdminActivities, flagActivity } from "../../api/AdminService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
+import { getUserData } from "../../api/UserService";
+
 // advertiser activities or tourist upcoming activities 
-const Activities = ({ isAdvertiser, isTourist }) => {
+const Activities = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
-  
+  const [userRole, setUserRole] = useState(null); 
+  const [userId, setUserId] = useState(null); 
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+          setUserId(response.data.id); 
+        } else {
+          message.error(response.data.message); 
+        }
+      } catch (error) {
+        message.error("Failed to fetch user data.");
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  const isAdvertiser = (userRole==='Advertiser');
+  const isTourist = (userRole==='Tourist');
 
   useEffect(() => {
     const fetchCurrency = async () => {
@@ -175,20 +198,21 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div className="page-container2">
-      {userRole === 'Admin' && <AdminNavBar />}
-      {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
-      {isAdvertiser ? <AdvertiserNavBar /> : null}
+      {/* {userRole === 'Admin' && <AdminNavBar />} */}
+      {/* {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null} */}
+      {/* {isAdvertiser ? <AdvertiserNavBar /> : null} */}
+
       {userRole === 'Tourist' && <div className="page-title">Upcoming Activities</div>}
 
       {userRole === 'Admin' && <div className="page-title">View All Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
+
       {userRole === 'Tourist' && (
         <button onClick={handleForYouFilter} className="for-you-button">
           For You
         </button>
       )}
-
 
       {(userRole === 'Tourist' || userRole == 'Admin') &&
         <div className="filter-sort-list">
@@ -207,7 +231,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
       {userRole === 'Advertiser' && <AdvertiserActivities activities={activities} />}
 
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
