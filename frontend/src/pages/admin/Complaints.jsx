@@ -6,6 +6,7 @@ import { checkTouristExists } from "../../api/TouristService";
 import { message, Dropdown, Menu } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
+import Spinner from "@/components/common/Spinner";
 const ComplaintsPage = () => {
     const tabs = ["all", "pending", "resolved"];
     const navigate = useNavigate();
@@ -19,9 +20,10 @@ const ComplaintsPage = () => {
     const [userExists, setUserExists] = useState(false);
     const [userData, setUserData] = useState("");
     const [userRole, setUserRole] = useState("");
+    const [loading, setLoading] = useState(true); // Track loading state
+
     useEffect(() => {
         const fetchUserExistence = async () => {
-            console.log("selected", selectedComplaint);
             if (selectedComplaint != null) {
                 if (selectedComplaint.issuerId) {
                     const exists = await checkUserExistence(selectedComplaint.issuerId);
@@ -32,25 +34,26 @@ const ComplaintsPage = () => {
 
         fetchUserExistence();
     }, [selectedComplaint?.issuerId]);
-
     useEffect(() => {
         const fetchComplaints = async () => {
             try {
                 const response = await getAllComplaints();
                 const shuffledArray = response.sort(() => Math.random() - 0.5);
                 setComplaints(shuffledArray);
-                console.log(response[0].date);
                 const user = await getUserData();
-                console.log("data is ", user.data);
                 setUserData(user.data.id); // Update state
                 setUserRole(user.data.role);
+
+                setLoading(false); // Set loading to false once data is fetched
             } catch (error) {
                 console.error("Error fetching complaints:", error);
+                setLoading(false); // Set loading to false in case of error
             }
         };
 
         fetchComplaints();
     }, []);
+
 
 
     const checkUserExistence = async (id) => {
@@ -106,7 +109,6 @@ const ComplaintsPage = () => {
         try {
             const complaintDetails = await getComplaintById(complaintId);
             setSelectedComplaint(complaintDetails);
-            console.log("selected is", complaintDetails);
             navigate("/admin/complaints/replies", {
                 state: {
                     complaint: complaintDetails,
@@ -142,7 +144,10 @@ const ComplaintsPage = () => {
             ),
 
         }];
+    if (loading) {
 
+        return <Spinner />; // Show the spinner while loading
+    }
     return (
         <>
             <div className="complaints">

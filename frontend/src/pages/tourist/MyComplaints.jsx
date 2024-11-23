@@ -5,12 +5,13 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
+import Spinner from "@/components/common/Spinner";
 const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
-    const [selectedComplaint, setSelectedComplaint] = useState(null);
-    const [replyMessage, setReplyMessage] = useState("");
     const [userData, setUserData] = useState("");
     const [userRole, setUserRole] = useState("");
+    const [loading, setLoading] = useState(true); // Track loading state
+
     const fetchUserData = async () => {
         try {
 
@@ -30,21 +31,22 @@ const MyComplaints = () => {
         const fetchComplaints = async () => {
             try {
                 const response = await getComplaintsByTourist();
-                setComplaints(response);
+                setComplaints(response); // Set complaints data
 
                 const user = await getUserData();
                 console.log("data is ", user.data);
-                setUserData(user.data.id); // Update state
-                setUserRole(user.data.role);
+                setUserData(user.data.id); // Update user data state
+                setUserRole(user.data.role); // Update user role state
                 console.log("id is ", user.data.id); // Log user ID directly
-
             } catch (error) {
                 console.error("Error fetching complaints:", error);
+            } finally {
+                setLoading(false); // Set loading to false once the async operation is finished
             }
         };
 
         fetchComplaints();
-    }, []);
+    }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
 
 
 
@@ -70,6 +72,10 @@ const MyComplaints = () => {
         }
 
     };
+
+    if (loading) {
+        return <Spinner />; // Show the spinner while loading
+    }
 
     return (
         <>
