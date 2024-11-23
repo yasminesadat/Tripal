@@ -57,7 +57,7 @@ router.get(
 );
 
 router.get(
-  "/itineraries/booked-itineraries/",
+  "/itineraries/booked-itineraries",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristItineraries
