@@ -1,6 +1,7 @@
 import Pagination from "../common/Pagination";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import PropTypes from 'prop-types';
 import { useState } from "react";
 import { messageSanders } from "@/data/dashboard";  // Assuming this has message details
 import { UserOutlined } from '@ant-design/icons';
@@ -117,14 +118,20 @@ export default function Messages({ complaint, user, role }) {
                         {new Date(complaint.date).toLocaleDateString()} {/* Format the date as needed */}
                       </div>
                     </div>
-                    <div className="text-14 text-gray-500">
-                      Issuer ID: {complaint.issuerId}
-                    </div>
+                    {role === "Admin" && (
+                      <>
+                        <div className="text-14 text-gray-500">
+                          Issuer ID: {complaint.issuerId}
+                        </div>
 
-                    {/* Complaint Issuer Username */}
-                    <div className="text-14 text-gray-500">
-                      Issuer: {complaint.issuerUserName}
-                    </div>
+                        {/* Complaint Issuer Username */}
+                        <div className="text-14 text-gray-500">
+                          Issuer: {complaint.issuerUserName}
+                        </div>
+                      </>
+                    )}
+
+
                   </div>
 
                 </div>
@@ -319,3 +326,16 @@ export default function Messages({ complaint, user, role }) {
     </>
   );
 }
+Messages.propTypes = {
+  complaint: PropTypes.shape({
+    replies: PropTypes.array,
+  }),
+  user: PropTypes.object.isRequired,
+  role: PropTypes.string.isRequired,
+};
+
+Messages.defaultProps = {
+  complaint: {},
+  user: {},
+  role: 'Tourist', // Default value for role
+};

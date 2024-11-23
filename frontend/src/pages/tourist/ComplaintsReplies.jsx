@@ -13,7 +13,8 @@ export default function ComplaintsReplies() {
     const location = useLocation();
 
     // Extract complaint from location.state
-    const { complaint, user, role } = location.state || {};
+    const { complaint, user, role } = location.state || { complaint: null, user: null, role: null };
+
 
     return (
 

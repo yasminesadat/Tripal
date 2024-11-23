@@ -18,6 +18,7 @@ const ComplaintsPage = () => {
     const [isSorted, setIsSorted] = useState(false);
     const [userExists, setUserExists] = useState(false);
     const [userData, setUserData] = useState("");
+    const [userRole, setUserRole] = useState("");
     useEffect(() => {
         const fetchUserExistence = async () => {
             console.log("selected", selectedComplaint);
@@ -42,6 +43,7 @@ const ComplaintsPage = () => {
                 const user = await getUserData();
                 console.log("data is ", user.data);
                 setUserData(user.data.id); // Update state
+                setUserRole(user.data.role);
             } catch (error) {
                 console.error("Error fetching complaints:", error);
             }
@@ -108,7 +110,8 @@ const ComplaintsPage = () => {
             navigate("/admin/complaints/replies", {
                 state: {
                     complaint: complaintDetails,
-                    user: userData
+                    user: userData,
+                    role: userRole
                 }
             });
         } catch (error) {
