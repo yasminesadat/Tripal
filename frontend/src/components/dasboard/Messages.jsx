@@ -137,54 +137,60 @@ export default function Messages({ complaint, user }) {
                     </div>
                   </div>
 
-                  {/* Dynamic Mapping of Replies */}
-                  {replies.map((reply, index) => (
-                    <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
-                      <div className="col-lg-6">
-                        <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
-                          {reply.senderId === user && (
-                            <Avatar style={{ backgroundColor: '#8f5774' }} icon={<UserOutlined />} />
-                          )}
-                          {reply.senderId !== user && (
-                            <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
-                          )}
+                  {/* Scrollable Container for Replies */}
+                  <div
+                    className="messages-container"
+                    style={{
+                      maxHeight: '400px',  // You can adjust this based on your design
+                      overflowY: 'auto',    // Allows vertical scrolling
+                      overflowX: 'hidden'
+                    }}
+                  >
+                    {/* Dynamic Mapping of Replies */}
+                    {replies.map((reply, index) => (
+                      <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
+                        <div className="col-lg-6">
+                          <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
+                            {reply.senderId === user && (
+                              <Avatar style={{ backgroundColor: '#8f5774' }} icon={<UserOutlined />} />
+                            )}
+                            {reply.senderId !== user && (
+                              <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
+                            )}
 
-                          <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
-                            {reply.senderId === user ? 'You' : 'Admin'}
-                          </h5>
+                            <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
+                              {reply.senderId === user ? 'You' : 'Admin'}
+                            </h5>
 
-                          <div className="text-14 ml-5">
-                            {new Date(reply.date).toLocaleString('en-US', {
-                              weekday: 'short',  // 'Mon'
-                              month: 'short',    // 'Nov'
-                              day: 'numeric',    // '23'
-                              year: 'numeric',   // '2024'
-                              hour: '2-digit',   // '04'
-                              minute: '2-digit', // '30'
-                              hour12: true,      // Display time in 12-hour format (AM/PM)
-                            })}
+                            <div className="text-14 ml-5">
+                              {new Date(reply.date).toLocaleString('en-US', {
+                                weekday: 'short',  // 'Mon'
+                                month: 'short',    // 'Nov'
+                                day: 'numeric',    // '23'
+                                year: 'numeric',   // '2024'
+                                hour: '2-digit',   // '04'
+                                minute: '2-digit', // '30'
+                                hour12: true,      // Display time in 12-hour format (AM/PM)
+                              })}
+                            </div>
                           </div>
 
-
+                          <div
+                            className={`text-14 rounded-12 py-20 px-30 mt-15 ${reply.senderId === user ? 'bg-accent-1-05' : ''}`}
+                            style={{
+                              backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
+                            }}
+                          >
+                            {reply.message}
+                          </div>
                         </div>
-
-                        <div
-                          className={`text-14 rounded-12 py-20 px-30 mt-15 ${reply.senderId === user ? 'bg-accent-1-05' : ''
-                            }`}
-                          style={{
-                            backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
-                          }}
-                        >
-
-                          {reply.message}
-                        </div>
-
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
 
                   <div className="mt-40 mb-30 border-1-top"></div>
 
+                  {/* Reply Input Section */}
                   <div className="row y-gap-20 justify-between items-center">
                     <div className="custom-row">
                       <input
@@ -201,11 +207,11 @@ export default function Messages({ complaint, user }) {
                         Send Reply
                         <i className="icon-arrow-top-right text-16"></i>
                       </button>
-
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
 
             <div className="text-center pt-30">
