@@ -1,16 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
+import { Tag, message } from "antd";
 import {  getAllActivities } from "../../api/ActivityService";
 import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
 //import TouristNavbar from "../../components/navbar/TouristNavBar";
 //import AdminNavBar from "../../components/navbar/AdminNavBar";
-import { userRole } from "../../IDs";
+// import { userRole } from "../../IDs";
+import { getUserData } from "../../api/UserService";
 
 const ActivityDetailsPage = () => {
     const { activityId } = useParams();
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userRole, setUserRole] = useState(null); 
+    const [userId, setUserId] = useState(null); 
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await getUserData();
+          if (response.data.status === "success") {
+            setUserRole(response.data.role);
+            setUserId(response.data.id); 
+          } else {
+            message.error(response.data.message); 
+          }
+        } catch (error) {
+          message.error("Failed to fetch user data.");
+        }
+      };
+      fetchUserData();
+    }, []);
 
     useEffect(() => {
         const fetchActivities = async () => {
@@ -33,8 +54,8 @@ const ActivityDetailsPage = () => {
     if (!activity) return <div>Activity not found.</div>;
     return (
         <div>
-            {userRole ==='Tourist'&&<TouristNavbar />}
-            {userRole ==='Admin'&&<AdminNavBar />}
+            {/* {userRole ==='Tourist'&&<TouristNavbar />} */}
+            {/* {userRole ==='Admin'&&<AdminNavBar />} */}
             <ActivityDetails activity={activity} />
         </div>
     );

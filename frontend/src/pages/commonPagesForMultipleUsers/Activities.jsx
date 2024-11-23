@@ -10,7 +10,7 @@ import ActivitySort from "../../components/activity/ActivitySort";
 //import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { touristId, userRole } from "../../IDs";
+// import { touristId, touristId } from "../../IDs";
 //import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 import { getAdminActivities, flagActivity } from "../../api/AdminService";
@@ -45,6 +45,7 @@ const Activities = () => {
     fetchUserData();
   }, []);
 
+  // i think checking on the userRole is enough just leaving them rn for dependencies or just use them instead of userRole===blabla
   const isAdvertiser = (userRole==='Advertiser');
   const isTourist = (userRole==='Tourist');
 
@@ -72,7 +73,7 @@ const Activities = () => {
     const fetchActivities = async () => {
       try {
         let response;
-        if (isAdvertiser && userRole === 'Advertiser') {
+        if (userRole === 'Advertiser') {
           response = await getAdvertiserActivities();
         } else if (userRole === 'Tourist') {
           response = await viewUpcomingActivities();
