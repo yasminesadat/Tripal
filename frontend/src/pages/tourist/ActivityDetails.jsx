@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { Tag, message } from "antd";
-import {  getAllActivities } from "../../api/ActivityService";
+import {  getAllActivities } from "@/api/ActivityService";
 import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
 //import TouristNavbar from "../../components/navbar/TouristNavBar";
 //import AdminNavBar from "../../components/navbar/AdminNavBar";
 // import { userRole } from "../../IDs";
-import { getUserData } from "../../api/UserService";
+import { getUserData } from "@/api/UserService";
 
 const ActivityDetailsPage = () => {
     const { activityId } = useParams();

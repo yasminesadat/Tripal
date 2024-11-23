@@ -13,9 +13,9 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 // import { touristId, touristId } from "../../IDs";
 //import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
-import { getAdminActivities, flagActivity } from "../../api/AdminService";
-import { getTouristTags, getTouristCategories } from "../../api/TouristService";
-import { getUserData } from "../../api/UserService";
+import { getAdminActivities, flagActivity } from "@/api/AdminService";
+import { getTouristTags, getTouristCategories } from "@/api/TouristService";
+import { getUserData } from "@/api/UserService";
 
 // advertiser activities or tourist upcoming activities 
 const Activities = () => {
@@ -91,9 +91,8 @@ const Activities = () => {
         setLoading(false);
       }
     };
-
     fetchActivities();
-  }, [id, isAdvertiser, isTourist]);
+  }, [userId, isAdvertiser, isTourist]);
 
 
   const handleSearch = (searchTerm) => {

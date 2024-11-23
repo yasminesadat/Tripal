@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Tag, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { getUserData } from "../../api/UserService";
+import { getUserData } from "@/api/UserService";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 const UpcomingActivities = ({

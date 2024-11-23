@@ -1,6 +1,6 @@
 // import TouristHome from "../pages/tourist/TouristHome";
 // import TouristProfile from "../pages/tourist/TouristProfile";
-// import Activities from "../pages/commonPagesForMultipleUsers/Activities";
+import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 // import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 // import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 // import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
@@ -32,7 +32,7 @@ const touristRoutes = [
   { path: "/tourist/book-flight", element: <FlightSearch /> },
   { path: "/tourist/search-flights", element: <FlightsList /> },
   // { path: "/tourist", element: <TouristHome /> },
-  // { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
+  { path: "/upcoming-activities", element: <Activities /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   // { path: "/tourist/profile", element: <TouristProfile /> },
   // { path: "/historical-places", element: <HistoricalPlaces /> },
