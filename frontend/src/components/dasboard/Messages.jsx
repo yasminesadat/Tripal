@@ -35,9 +35,18 @@ export default function Messages({ complaint, user }) {
         senderId: user,
       });
 
+      const today = new Date();
+      const formattedDate = today.getFullYear() + '-' +
+        (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+        today.getDate().toString().padStart(2, '0') + ' ' +
+        today.getHours().toString().padStart(2, '0') + ':' +
+        today.getMinutes().toString().padStart(2, '0') + ':' +
+        today.getSeconds().toString().padStart(2, '0');
+
       complaint.replies.push({
         message: replyMessage,
         senderId: user,
+        date: formattedDate
       });
 
       setReplyMessage("");
@@ -140,12 +149,23 @@ export default function Messages({ complaint, user }) {
                             <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
                           )}
 
+                          <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
+                            {reply.senderId === user ? 'You' : 'Admin'}
+                          </h5>
+
+                          <div className="text-14 ml-5">
+                            {new Date(reply.date).toLocaleString('en-US', {
+                              weekday: 'short',  // 'Mon'
+                              month: 'short',    // 'Nov'
+                              day: 'numeric',    // '23'
+                              year: 'numeric',   // '2024'
+                              hour: '2-digit',   // '04'
+                              minute: '2-digit', // '30'
+                              hour12: true,      // Display time in 12-hour format (AM/PM)
+                            })}
+                          </div>
 
 
-
-
-                          <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>{reply.userName}</h5>
-                          <div className="text-14 ml-5">{reply.time}</div>
                         </div>
 
                         <div
