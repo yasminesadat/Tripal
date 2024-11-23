@@ -38,8 +38,7 @@ router.post(
   redeemPoints
 );
 router.put(
-  "/tourist-change-pass/:id",
-  validateIDs(["id"]),
+  "/tourist-change-pass",
   verifyToken,
   authorizeRoles("Tourist"),
   changePassword(Tourist)
