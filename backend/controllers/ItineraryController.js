@@ -145,14 +145,14 @@ const updateItinerary = async (req, res) => {
 
 const deleteItinerary = async (req, res) => {
     try {
-        const { id } = req.params;//check for this
+        const { id } = req.params;
         const itinerary = await itineraryModel.findById(id);
         console.log(itinerary);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
         await itineraryModel.findByIdAndDelete(id);
-        res.status(200).json({ message: "deleted yay", itinerary });
+        res.status(200).json({ message: "Itinerary Deleted Successfully", itinerary });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
