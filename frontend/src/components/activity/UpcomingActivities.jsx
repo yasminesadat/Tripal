@@ -86,7 +86,6 @@ const UpcomingActivities = ({
     navigate(`/activity/${activityId}`, { state: { page } });
   };
 
-
   return (
     <div className="list">
       {activities.map((activity) => (

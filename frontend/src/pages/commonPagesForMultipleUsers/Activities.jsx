@@ -183,7 +183,6 @@ const Activities = () => {
     }
   };
   
-
   const handleAdminFlag = async (activityId) => {
     try {
       await flagActivity(activityId);
@@ -192,7 +191,6 @@ const Activities = () => {
       message.error(error.response?.data?.error || "Failed to flag activity");
     }
   };
-
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
