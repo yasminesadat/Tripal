@@ -16,7 +16,7 @@ export default function Messages({ complaint, user, role }) {
   const [replyMessage, setReplyMessage] = useState("");
 
   // Assuming `complaint.replies` holds the messages array
-  const replies = complaint.replies;
+  const replies = complaint?.replies;
   const handleReplyChange = (event) => {
     setReplyMessage(event.target.value);
   };
@@ -69,7 +69,7 @@ export default function Messages({ complaint, user, role }) {
 
           <div className="dashboard__content_content">
             <h1 className="text-30">Complaint Details</h1>
-            <p className="">{complaint.title}</p>
+            <p className="">{complaint?.title}</p>
             <div className="row y-gap-30 pt-60">
               <div className="col-lg-4">
                 <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
@@ -77,12 +77,12 @@ export default function Messages({ complaint, user, role }) {
                   <div className="row y-gap-30 pt-30">
                     {/* Complaint Title */}
                     <div className="col-12">
-                      <h2 className="text-20 font-bold">{complaint.title}</h2>
+                      <h2 className="text-20 font-bold">{complaint?.title}</h2>
                     </div>
 
                     {/* Complaint Body */}
                     <div className="col-12">
-                      <p className="text-16">{complaint.body}</p>
+                      <p className="text-16">{complaint?.body}</p>
                     </div>
 
                     <div className="col-12">
@@ -94,16 +94,16 @@ export default function Messages({ complaint, user, role }) {
                         {/* Status Text with Badge */}
                         <div className="d-flex align-items-center">
                           {/* Status Text with Badge */}
-                          <p className={`text-16 font-bold ${complaint.status === 'resolved' ? 'text-green-500' : 'text-red-500'} mr-10`}>
-                            {complaint.status === 'resolved' ? 'Resolved' : 'Pending'}
+                          <p className={`text-16 font-bold ${complaint?.status === 'resolved' ? 'text-green-500' : 'text-red-500'} mr-10`}>
+                            {complaint?.status === 'resolved' ? 'Resolved' : 'Pending'}
                           </p>
 
                           {/* Status Icon with Space */}
-                          <div className={`status-icon ${complaint.status === 'resolved' ? 'bg-green-500' : 'bg-red-500'}`}>
-                            {complaint.status === 'resolved' ? (
-                              <CheckCircleOutlined style={{ fontSize: '20px', color: complaint.status === 'resolved' ? 'green' : 'red' }} />
+                          <div className={`status-icon ${complaint?.status === 'resolved' ? 'bg-green-500' : 'bg-red-500'}`}>
+                            {complaint?.status === 'resolved' ? (
+                              <CheckCircleOutlined style={{ fontSize: '20px', color: complaint?.status === 'resolved' ? 'green' : 'red' }} />
                             ) : (
-                              <ExclamationCircleOutlined style={{ fontSize: '20px', color: complaint.status === 'resolved' ? 'green' : 'red' }} />
+                              <ExclamationCircleOutlined style={{ fontSize: '20px', color: complaint?.status === 'resolved' ? 'green' : 'red' }} />
                             )}
                           </div>
                         </div>
@@ -115,18 +115,18 @@ export default function Messages({ complaint, user, role }) {
                     {/* Complaint Date */}
                     <div className="col-12">
                       <div className="text-14 text-gray-500">
-                        {new Date(complaint.date).toLocaleDateString()} {/* Format the date as needed */}
+                        {new Date(complaint?.date).toLocaleDateString()} {/* Format the date as needed */}
                       </div>
                     </div>
                     {role === "Admin" && (
                       <>
                         <div className="text-14 text-gray-500">
-                          Issuer ID: {complaint.issuerId}
+                          Issuer ID: {complaint?.issuerId}
                         </div>
 
                         {/* Complaint Issuer Username */}
                         <div className="text-14 text-gray-500">
-                          Issuer: {complaint.issuerUserName}
+                          Issuer: {complaint?.issuerUserName}
                         </div>
                       </>
                     )}
@@ -164,7 +164,7 @@ export default function Messages({ complaint, user, role }) {
                       overflowX: 'hidden',
                     }}
                   >
-                    {replies.length === 0 ? (
+                    {replies?.length === 0 ? (
                       <div className="row pt-20 justify-center text-center">
                         <div className="col-lg-6">
                           <div className="d-flex items-center justify-center">
@@ -183,7 +183,7 @@ export default function Messages({ complaint, user, role }) {
                         </div>
                       </div>
                     ) : (
-                      replies.map((reply, index) => (
+                      replies?.map((reply, index) => (
                         <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
                           <div className="col-lg-6">
                             <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
