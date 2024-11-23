@@ -54,7 +54,6 @@ export async function updateTouristInformation(id, body) {
 
 export async function redeemPoints(id) {
   try {
-    const response = await axios.post(`/redeem/${id}`);
 
     const response = await axios.post(`/redeem`);
 
@@ -67,7 +66,6 @@ export async function redeemPoints(id) {
 export async function getTouristItineraries(touristId) {
   try {
 
-    const response = await axios.get(`/itineraries/booked-itineraries/${touristId}`);
 
     const response = await axios.get(`/itineraries/booked-itineraries`);
 
