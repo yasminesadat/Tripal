@@ -4,9 +4,11 @@ import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToCompl
 import { OrderedListOutlined } from '@ant-design/icons';
 import { checkTouristExists } from "../../api/TouristService";
 import { message, Dropdown, Menu } from "antd";
-
+import { Navigate, useNavigate } from "react-router-dom";
+import { getUserData } from "@/api/UserService";
 const ComplaintsPage = () => {
     const tabs = ["all", "pending", "resolved"];
+    const navigate = useNavigate();
     // const [sideBarOpen, setSideBarOpen] = useState(true);
     const [currentTab, setcurrentTab] = useState("all");
     const [complaints, setComplaints] = useState([]);
@@ -15,7 +17,7 @@ const ComplaintsPage = () => {
     const [newStatus, setNewStatus] = useState("");
     const [isSorted, setIsSorted] = useState(false);
     const [userExists, setUserExists] = useState(false);
-
+    const [userData, setUserData] = useState("");
     useEffect(() => {
         const fetchUserExistence = async () => {
             console.log("selected", selectedComplaint);
@@ -37,6 +39,9 @@ const ComplaintsPage = () => {
                 const shuffledArray = response.sort(() => Math.random() - 0.5);
                 setComplaints(shuffledArray);
                 console.log(response[0].date);
+                const user = await getUserData();
+                console.log("data is ", user.data);
+                setUserData(user.data.id); // Update state
             } catch (error) {
                 console.error("Error fetching complaints:", error);
             }
@@ -45,10 +50,6 @@ const ComplaintsPage = () => {
         fetchComplaints();
     }, []);
 
-
-    const handleReplyChange = (event) => {
-        setReplyMessage(event.target.value);
-    };
 
     const checkUserExistence = async (id) => {
         console.log("The id is ", id);
@@ -69,35 +70,8 @@ const ComplaintsPage = () => {
             message.error(error);
         }
     };
-    const handleReplySubmit = async (event) => {
-        event.preventDefault();
 
-        if (!replyMessage) {
-            alert("Please enter a reply message");
-            return;
-        }
 
-        try {
-            //console.log(replyMessage)
-            //console.log("Admin ID:", adminId);  // Ensure this is defined
-            await replyToComplaint(selectedComplaint._id, {
-                message: replyMessage,
-                senderId: adminId,
-            });
-            // Re-fetch the complaints to get updated data
-            const updatedComplaints = await getAllComplaints();
-            setComplaints(updatedComplaints);
-            const updatedComplaintDetails = await getComplaintById(selectedComplaint._id);
-            setSelectedComplaint(updatedComplaintDetails);
-
-            setReplyMessage("");
-            //setSelectedComplaint(null); 
-            message.success("Reply sent successfully!");
-        } catch (error) {
-            console.error("Error replying to complaint:", error);
-            message.error("Failed to send reply. Please try again.");
-        }
-    };
 
     useEffect(() => {
         // Set newStatus to the current status of selectedComplaint
@@ -116,25 +90,31 @@ const ComplaintsPage = () => {
                 complaint._id === complaintId ? { ...complaint, status: "resolved" } : complaint
             );
             setComplaints(updatedComplaints);
-            setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
+            setSelectedComplaint((prev) => ({ ...prev, status: newStatus }));
+            message.success("Complaint resolved successfully!");
         } catch (error) {
+            message.error("Error updating complaint status");
             console.error("Error updating complaint status:", error);
         }
     };
 
     const toggleComplaintDetails = async (complaintId) => {
-        if (selectedComplaint && selectedComplaint._id === complaintId) {
-            // If the same complaint is selected, hide it
-            setSelectedComplaint(null);
-        } else {
-            // Otherwise, fetch and show the complaint details
-            try {
-                const complaintDetails = await getComplaintById(complaintId);
-                setSelectedComplaint(complaintDetails);
-            } catch (error) {
-                console.error("Error fetching complaint details:", error);
-            }
+
+        // Otherwise, fetch and show the complaint details
+        try {
+            const complaintDetails = await getComplaintById(complaintId);
+            setSelectedComplaint(complaintDetails);
+            console.log("selected is", complaintDetails);
+            navigate("/admin/complaints/replies", {
+                state: {
+                    complaint: complaintDetails,
+                    user: userData
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching complaint details:", error);
         }
+
     };
 
 
@@ -213,68 +193,25 @@ const ComplaintsPage = () => {
                                                         .map((complaint) => (
                                                             <React.Fragment key={complaint._id}>
                                                                 <tr>
-                                                                    <td>{complaint._id}</td>
+                                                                    <td>#{complaint._id.slice(-3)}</td>
+
                                                                     <td>{complaint.title}</td>
-                                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-purple-1' : 'text-red-2'}`}>
+                                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
                                                                         {complaint.status}
-                                                                    </td>                                    <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
+                                                                    </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
                                                                     <td>
-                                                                        <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
-                                                                            View Details
-                                                                        </button>
-                                                                        <button className="custom-button" onClick={() => handleStatusChange(complaint._id)}>Resolve</button>
+                                                                        <div style={{ display: 'flex', gap: '5px' }}>
+                                                                            <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                                                View Details
+                                                                            </button>
+                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
+                                                                                Resolve
+                                                                            </button>
+                                                                        </div>
                                                                     </td>
 
                                                                 </tr>
-                                                                {selectedComplaint && selectedComplaint._id === complaint._id && (
-                                                                    <tr>
-                                                                        <td colSpan="4">
-                                                                            <div className="complaint-details">
-                                                                                <h3>Complaint Details</h3>
-                                                                                <p><strong>Title:</strong> {selectedComplaint.title}</p>
-                                                                                <p><strong>Body:</strong> {selectedComplaint.body}</p>
-                                                                                <p><strong>Date:</strong> {(new Date(selectedComplaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</p>
-                                                                                <p><strong>Issuer UserName:</strong>  {userExists ? selectedComplaint.issuerUserName : "Deleted User"
-                                                                                }</p>
-                                                                                <p><strong>Status:</strong>
-                                                                                    <div class="dropdown -base -price js-dropdown js-form-dd is-active" data-main-value="">
 
-                                                                                        <div class="dropdown__button h-50 min-w-auto js-button">
-                                                                                            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                                                                                                <option value="pending">pending</option>
-                                                                                                <option value="resolved">resolved</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </p>
-
-                                                                                <h4>Replies</h4>
-                                                                                <ul>
-                                                                                    {selectedComplaint.replies.map((reply, index) => (
-                                                                                        <li class="text-14 bg-light-1 rounded-12 py-20 px-30 mt-15" key={index}>{reply.message} (from: {reply.senderId}) on {new Intl.DateTimeFormat('en-US', {
-                                                                                            weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
-                                                                                        }).format(new Date(reply.date))}</li>
-                                                                                    ))}
-                                                                                </ul>
-
-                                                                                {/* Reply Form */}
-                                                                                <div className="reply-section">
-                                                                                    <h4>Reply to Complaint</h4>
-                                                                                    <form onSubmit={handleReplySubmit}>
-                                                                                        <textarea
-                                                                                            value={replyMessage}
-                                                                                            onChange={handleReplyChange}
-                                                                                            placeholder="Enter your reply here..."
-                                                                                            required
-                                                                                        />
-                                                                                        <button type="submit">Send Reply</button>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-
-                                                                    </tr>
-                                                                )}
 
                                                             </React.Fragment>
                                                         ))}
@@ -313,13 +250,14 @@ const ComplaintsPage = () => {
             </div>
             <style>{`
       
+      
       .custom-button {
    background-color: var(--color-dark-purple) !important;
    border: 2px solid var(--color-dark-purple) !important;
    color: #fff !important; /* Text color */
    border-radius: 20px; /* Slightly smaller rounded edges */
    padding: 8px 16px; /* Reduced padding */
-   font-size: 14px; /* Adjusted font size */
+   font-size: 12px; /* Adjusted font size */
    font-weight: 500; /* Medium font weight */
    cursor: pointer; /* Pointer cursor on hover */
    transition: all 0.3s ease; /* Smooth transitions */
@@ -344,7 +282,24 @@ const ComplaintsPage = () => {
    cursor: not-allowed;
    box-shadow: none;
  }
- 
+ .custom-button-green {
+  background-color: var(--color-stone) !important;
+   border: 2px solid var(--color-stone) !important;
+   color: #fff !important; /* Text color */
+   border-radius: 20px; /* Slightly smaller rounded edges */
+   padding: 8px 16px; /* Reduced padding */
+   font-size: 12px; /* Adjusted font size */
+   font-weight: 500; /* Medium font weight */
+   cursor: pointer; /* Pointer cursor on hover */
+   transition: all 0.3s ease; /* Smooth transitions */
+   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.custom-button-green:hover,
+.custom-button-green:focus {
+  background-color: var(--color-stone-light) !important;
+  border-color: var(--color-stone-light) !important;
+}
  
  
       

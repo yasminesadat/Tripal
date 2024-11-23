@@ -19,9 +19,9 @@ export default function ComplaintsReplies() {
 
         <>
             <MetaComponent meta={metadata} />
-            <main>
-                <Messages complaint={complaint} user={user} role={role} />
-            </main>
+            {/* <main> */}
+            <Messages complaint={complaint} user={user} role={role} />
+            {/* </main> */}
         </>
     );
 }

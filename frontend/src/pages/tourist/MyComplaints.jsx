@@ -10,6 +10,7 @@ const MyComplaints = () => {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
     const [userData, setUserData] = useState("");
+    const [userRole, setUserRole] = useState("");
     const fetchUserData = async () => {
         try {
 
@@ -34,6 +35,7 @@ const MyComplaints = () => {
                 const user = await getUserData();
                 console.log("data is ", user.data);
                 setUserData(user.data.id); // Update state
+                setUserRole(user.data.role);
                 console.log("id is ", user.data.id); // Log user ID directly
 
             } catch (error) {
@@ -58,7 +60,8 @@ const MyComplaints = () => {
             navigate("/tourist/complaints-replies", {
                 state: {
                     complaint: complaintDetails,
-                    user: userData
+                    user: userData,
+                    role: userRole
                 }
             });
 
@@ -94,7 +97,7 @@ const MyComplaints = () => {
                                             <React.Fragment key={complaint._id}>
                                                 <tr>
                                                     <td>{complaint.title}</td>
-                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-purple-1' : 'text-red-2'}`}>
+                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
                                                         {complaint.status}
                                                     </td>
                                                     <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>

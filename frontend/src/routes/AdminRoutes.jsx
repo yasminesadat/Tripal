@@ -12,7 +12,7 @@ import ComplaintsPage from "@/pages/admin/Complaints";
 // import DeletionRequests from "../pages/admin/DeletionRequests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 // import Activities from "../pages/commonPagesForMultipleUsers/Activities";
-
+import ComplaintsReplies from "@/pages/admin/ComplaintsReplies";
 const adminRoutes = [
   // { path: "/admin", element: <AdminDashboard /> },
   // { path: "/activity-categories", element: <ActivityCategoryDetails /> },
@@ -23,6 +23,7 @@ const adminRoutes = [
   // { path: "/admin/new-governor", element: <CreateNewGovernor /> },
   // { path: "/admin/new-admin", element: <CreateNewAdmin /> },
   { path: "/admin/complaints", element: <ComplaintsPage /> },
+  { path: "/admin/complaints/replies", element: <ComplaintsReplies /> },
   // { path: "/admin/changepassword", element: <AdminChangePassword /> },
   // { path: "/admin/requests", element: <Requests /> },
   // { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},

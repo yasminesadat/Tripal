@@ -9,7 +9,7 @@ import { getUserData } from "../../api/UserService";
 import { useEffect } from "react";
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { replyToComplaint } from "@/api/ComplaintsService";
-export default function Messages({ complaint, user }) {
+export default function Messages({ complaint, user, role }) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   const [replyMessage, setReplyMessage] = useState("");
@@ -117,6 +117,14 @@ export default function Messages({ complaint, user }) {
                         {new Date(complaint.date).toLocaleDateString()} {/* Format the date as needed */}
                       </div>
                     </div>
+                    <div className="text-14 text-gray-500">
+                      Issuer ID: {complaint.issuerId}
+                    </div>
+
+                    {/* Complaint Issuer Username */}
+                    <div className="text-14 text-gray-500">
+                      Issuer: {complaint.issuerUserName}
+                    </div>
                   </div>
 
                 </div>
@@ -127,10 +135,12 @@ export default function Messages({ complaint, user }) {
                   <div className="row x-gap-10 y-gap-10 justify-between items-center pb-20 border-1-bottom">
                     <div className="col-auto">
                       <div className="d-flex items-center">
-                        <Avatar size={40}>ADMIN</Avatar>
+                        <Avatar size={40}>{role === "Admin" ? "ADMIN" : "TOURIST"}</Avatar>
 
                         <div className="ml-10">
-                          <h5 className="text-15 lh-13 fw-500">Chat with Admin</h5>
+                          <h5 className="text-15 lh-13 fw-500">
+                            Chat with {role === "Admin" ? "Admin" : "Tourist"}
+                          </h5>
                           <div className="text-14 lh-13">Active</div>
                         </div>
                       </div>
@@ -138,55 +148,76 @@ export default function Messages({ complaint, user }) {
                   </div>
 
                   {/* Scrollable Container for Replies */}
+                  {/* Dynamic Mapping of Replies */}
                   <div
                     className="messages-container"
                     style={{
-                      maxHeight: '400px',  // You can adjust this based on your design
-                      overflowY: 'auto',    // Allows vertical scrolling
-                      overflowX: 'hidden'
+                      maxHeight: '400px', // You can adjust this based on your design
+                      overflowY: 'auto', // Allows vertical scrolling
+                      overflowX: 'hidden',
                     }}
                   >
-                    {/* Dynamic Mapping of Replies */}
-                    {replies.map((reply, index) => (
-                      <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
+                    {replies.length === 0 ? (
+                      <div className="row pt-20 justify-center text-center">
                         <div className="col-lg-6">
-                          <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
-                            {reply.senderId === user && (
-                              <Avatar style={{ backgroundColor: '#8f5774' }} icon={<UserOutlined />} />
-                            )}
-                            {reply.senderId !== user && (
-                              <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
-                            )}
-
-                            <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
-                              {reply.senderId === user ? 'You' : 'Admin'}
-                            </h5>
-
-                            <div className="text-14 ml-5">
-                              {new Date(reply.date).toLocaleString('en-US', {
-                                weekday: 'short',  // 'Mon'
-                                month: 'short',    // 'Nov'
-                                day: 'numeric',    // '23'
-                                year: 'numeric',   // '2024'
-                                hour: '2-digit',   // '04'
-                                minute: '2-digit', // '30'
-                                hour12: true,      // Display time in 12-hour format (AM/PM)
-                              })}
-                            </div>
+                          <div className="d-flex items-center justify-center">
+                            <Avatar style={{ backgroundColor: '#e0e0e0' }} icon={<UserOutlined />} />
+                            <h5 className="ml-10 text-15 fw-500">System</h5>
                           </div>
-
                           <div
-                            className={`text-14 rounded-12 py-20 px-30 mt-15 ${reply.senderId === user ? 'bg-accent-1-05' : ''}`}
+                            className="text-14 rounded-12 py-20 px-30 mt-15"
                             style={{
-                              backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
+                              backgroundColor: 'var(--color-light-purple)',
+                              color: '#555', // Text color for the placeholder message
                             }}
                           >
-                            {reply.message}
+                            Start the chat by sending a message.
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ) : (
+                      replies.map((reply, index) => (
+                        <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
+                          <div className="col-lg-6">
+                            <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
+                              {reply.senderId === user && (
+                                <Avatar style={{ backgroundColor: '#8f5774' }} icon={<UserOutlined />} />
+                              )}
+                              {reply.senderId !== user && (
+                                <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
+                              )}
+
+                              <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
+                                {reply.senderId === user ? 'You' : role === "Admin" ? "Admin" : "Tourist"}
+                              </h5>
+
+                              <div className="text-14 ml-5">
+                                {new Date(reply.date).toLocaleString('en-US', {
+                                  weekday: 'short', // 'Mon'
+                                  month: 'short', // 'Nov'
+                                  day: 'numeric', // '23'
+                                  year: 'numeric', // '2024'
+                                  hour: '2-digit', // '04'
+                                  minute: '2-digit', // '30'
+                                  hour12: true, // Display time in 12-hour format (AM/PM)
+                                })}
+                              </div>
+                            </div>
+
+                            <div
+                              className={`text-14 rounded-12 py-20 px-30 mt-15 ${reply.senderId === user ? 'bg-accent-1-05' : ''}`}
+                              style={{
+                                backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
+                              }}
+                            >
+                              {reply.message}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
+
 
                   <div className="mt-40 mb-30 border-1-top"></div>
 
