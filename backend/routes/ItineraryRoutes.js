@@ -7,7 +7,7 @@ const ItineraryRating = require("../models/ItineraryRating");
 
 const {
   createItinerary,
-  getItineraries,
+  getItinerariesForTourguide,
   updateItinerary,
   deleteItinerary,
   getItineraryRatings,
@@ -20,32 +20,39 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post(
-  "/itinerary",
+  "/create-itinerary",
   verifyToken,
   authorizeRoles("Tour Guide"),
   createItinerary
 );
 
-router.get("/itinerary", getItineraries);
+router.get("/my-itineraries",verifyToken,
+  authorizeRoles("Tour Guide"),
+  getItinerariesForTourguide);
+
 router.put(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   updateItinerary
 );
+
 router.delete(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   deleteItinerary
 );
+
 router.get("/itinerary/upcoming/view", viewUpcomingItineraries);
+
 router.get(
   "/itinerary/paid/view",
   verifyToken,
   authorizeRoles("Tourist"),
   viewPaidItineraries
 );
+
 router.get(
   "/itineraries/booked-itineraries/:touristId",
   verifyToken,

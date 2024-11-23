@@ -63,8 +63,8 @@ const createItinerary = async (req, res) => {
     };
 };
 
-const getItineraries = async (req, res) => {
-    const { tourGuideId } = req.query;
+const getItinerariesForTourguide = async (req, res) => {
+    const tourGuideId = req.userId;
     try {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
         .populate({
@@ -81,15 +81,16 @@ const getItineraries = async (req, res) => {
 
         res.status(200).json(itineraries);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error fetching itineraries:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 const updateItinerary = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, tourGuide, activities, serviceFee,
-            language, availableDates, availableTime, accessibility,
+        const { title, description, activities, serviceFee,
+            language, startDate,endDate, accessibility,
             pickupLocation, dropoffLocation } = req.body;
             
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
@@ -99,37 +100,42 @@ const updateItinerary = async (req, res) => {
         }
      
         let price = Number(serviceFee);
-        const locations = [];
+        const location={
+            latitude: fetchedActivities[0].latitude, 
+            longitude: fetchedActivities[0].longitude};
+        
         const timeline = [];
-        const allTags = new Set();
+        const tags = new Set(); //to remove dups
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
-            locations.push(activity.location);
-            timeline.push({ activityName: activity.title, time: activity.time });
-            activity.tags.forEach((tag) => allTags.add(tag));
+            timeline.push({ 
+                activityName: activity.title,
+                content:activity.description, 
+                time: activity.time,
+                date: activity.date});
+            activity.tags.forEach((tag) => tags.add(tag));
         })
 
-        const uniqueTagIds = Array.from(allTags);
+        const uniqueTagIds = Array.from(tags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
+        
+        //leave it like this for now
         const itinerary = await itineraryModel.findById(id);
-        const hasBookings = itinerary.bookings.length > 0;
-        const isDatesArrayDifferent = JSON.stringify(itinerary.availableDates) !== JSON.stringify(availableDates);
-
-        if (hasBookings && isDatesArrayDifferent) {
-            return res.status(400).json({ error: 'Cannot update itinerary with bookings if available dates are changed' });
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        if (itinerary.bookings.length > 0) {
+            return res.status(400).json({ error: 'Cannot update itinerary with bookings' });
         }
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
-            tourGuide, activities, availableDates, availableTime, language,
-            accessibility, pickupLocation, dropoffLocation, price, locations, serviceFee,
+            tourGuide, activities, language,location, startDate,endDate,
+            accessibility, pickupLocation, dropoffLocation, price, serviceFee,
             timeline, tags: uniqueTags
         }, { new: true });
-        if (!updatedItinerary) {
-            return res.status(404).json({ error: 'Itinerary not found' });
-        }
         res.status(200).json(updatedItinerary);
     }
     catch (error) {
@@ -320,7 +326,7 @@ const toggleItineraryStatus = async (req, res) => {
 
 module.exports = {
     createItinerary,
-    getItineraries,
+    getItinerariesForTourguide,
     updateItinerary,
     deleteItinerary,
     viewUpcomingItineraries,
