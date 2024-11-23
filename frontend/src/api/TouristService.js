@@ -95,7 +95,6 @@ export async function getTouristFlights() {
   }
 }
 
-
 export async function getTouristAge() {
   try {
     const response = await axios.get(`/tourist/age`);
