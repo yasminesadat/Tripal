@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const changePassword = (userModel) => async (req, res) => {
     try {
         console.log("IM HERE TRYING TO CHANGE PASSWORD AS A ", userModel);
-        const { id } = req.params;
+        const id = req.userId;
         const { oldPassword, newPassword } = req.body;
 
         // Find the user by ID in the specified model

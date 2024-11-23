@@ -79,7 +79,7 @@ const createTourist = async (req, res) => {
 
 const getTouristInfo = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     // checks if the id is a valid one
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -104,7 +104,7 @@ const getTouristInfo = async (req, res) => {
 
 const updateTouristProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id  = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
 
     if (tags) {
@@ -166,7 +166,7 @@ const updateTouristProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
     const { oldPassword, newPassword } = req.body
     const hashedOldPassword = await bcrypt.hash(oldPassword, 10);
 
@@ -185,7 +185,7 @@ const changePassword = async (req, res) => {
 };
 
 const getTouristNameAndEmail = async (req, res) => {
-  const { id } = req.params;
+  const  id  = req.userId;
 
   try {
     const tourist = await touristModel.findById(id).select('userName email');
@@ -206,7 +206,7 @@ const getTouristNameAndEmail = async (req, res) => {
 
 const redeemPoints = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     const tourist = await touristModel.findById(id);
     if (!tourist) {
@@ -227,7 +227,7 @@ const redeemPoints = async (req, res) => {
 
 const getTouristBookedFlights = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -249,7 +249,7 @@ const getTouristBookedFlights = async (req, res) => {
 
 const getTouristBookedHotels = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -285,7 +285,7 @@ const getTouristBookedHotels = async (req, res) => {
 
 const getTouristAge = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid tourist ID format' });
@@ -307,7 +307,7 @@ const getTouristAge = async (req, res) => {
 
 const checkUserExists = async (req, res) => {
   try {
-    const { id } = req.params;
+    const  id  = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid user ID format' });
@@ -329,7 +329,7 @@ const checkUserExists = async (req, res) => {
 
 const getTouristPreferences = async (req, res) => {
   try {
-    const { id } = req.params
+    const id = req.userId;
     const tourist = await touristModel.findById(id)
       .populate("tags")
 
@@ -346,7 +346,7 @@ const getTouristPreferences = async (req, res) => {
 
 const getTouristCategories = async (req, res) => {
   try {
-    const { id } = req.params
+    const id = req.userId;
     const tourist = await touristModel.findById(id)
       .populate("categories")
 
