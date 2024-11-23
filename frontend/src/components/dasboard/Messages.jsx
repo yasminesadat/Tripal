@@ -24,7 +24,7 @@ export default function Messages({ complaint, user }) {
     event.preventDefault();
 
     if (!replyMessage) {
-      alert("Please enter a reply message");
+      message.warning("Please write a reply!");
       return;
     }
 
