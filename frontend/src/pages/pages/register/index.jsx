@@ -1,5 +1,5 @@
-import FooterOne from "@/components/layout/footers/FooterOne";
-import Header1 from "@/components/layout/header/Header1";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import Header3 from "@/components/layout/header/Header3";
 import Register from "@/components/pages/Register";
 import React from "react";
 
@@ -15,9 +15,9 @@ export default function RegisterPage() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <Header1 />
+        <Header3 />
         <Register />
-        <FooterOne />
+        <FooterThree />
       </main>
     </>
   );

@@ -5,7 +5,7 @@ const Tourist = require('../models/users/Tourist');
 
 const createComplaint = asyncHandler(async (req, res) => {
     const { title, body } = req.body;
-    const { id } = req.params;
+    const id = req.userId;
 
     if (!title) {
         return res.status(400).json({ message: "Complaint title is required" });
@@ -39,8 +39,7 @@ const createComplaint = asyncHandler(async (req, res) => {
 });
 
 const getComplaintsByTourist = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-
+    const id = req.userId;
     try {
         const tourist = await Tourist.findById(id);
         if (!tourist) {
