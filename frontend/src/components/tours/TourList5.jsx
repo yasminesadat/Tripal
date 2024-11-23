@@ -1,4 +1,5 @@
 import { tourDataThree } from "@/data/tours";
+import { fetchProducts } from "../../api/ProductService";
 import React, { useState, useRef, useEffect } from "react";
 import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
@@ -18,8 +19,100 @@ export default function TourList5() {
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
-
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [curentDD, setCurentDD] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const errorDisplayedRef = useRef(false);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
+  
+  const getProducts = async (page = 1) => {
+    setLoading(true);
+    try {
+      const productsData = await fetchProducts(
+        page,
+        searchValue,
+        priceRange[0],
+        priceRange[1],
+        sortOrder ,
+        );
+        
+        let filtered = productsData.products;
+        console.log(filtered);
+        if(productsData.totalPages)
+          setTotalPages(productsData.totalPages);
+
+        setProducts(filtered);
+        setFilteredProducts(filtered);
+        setCurrentPage(page); 
+      } catch (error) {
+      if (!errorDisplayedRef.current) {
+        message.error("Network Error: Unable to fetch products. Please try again later.");
+        errorDisplayedRef.current = true;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getProducts(currentPage); 
+  }, []);
+
+  // useEffect(() => {
+  //   const getExchangeRate = async () => {
+  //     if (curr) {
+  //       try {
+  //         const rate = await getConversionRate(curr);
+  //         setExchangeRate(rate);
+  //       } catch (error) {
+  //         message.error("Failed to fetch exchange rate.");
+  //       }
+  //     }
+  //   };
+
+  //   getExchangeRate();
+  // }, [curr]);
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSortChange = (value) => {
+    setSortOrder(value);
+  };
+
+  const handlePriceChange = (value) => {
+    setPriceRange(value);
+  };
+
+  const handleGoClick = () => {
+    getProducts(1); 
+  };
+  
+  const formatPrice = (price) => {
+    const convertedPrice = (price * exchangeRate).toFixed(2);
+    return convertedPrice;
+  };
+
+  const formatPriceRange = () => {
+    if (priceRange[1] === 3000) {
+      return `${priceRange[0]} - ${priceRange[1]} & above`;
+    }
+    return `${priceRange[0]} - ${priceRange[1]}`;
+  };
+
+  const onPageChange = (page) => {
+    if (page !== currentPage) {
+      getProducts(page);
+      window.scrollTo(0, 0); 
+    }
+  };
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -97,7 +190,7 @@ export default function TourList5() {
                     }}
                     className="dropdown__button h-50 min-w-auto js-button"
                   >
-                    <span className="js-title">Duration</span>
+                    <span className="js-title">Hiiiiii</span>
                     <i className="icon-chevron-down ml-10"></i>
                   </div>
 
@@ -326,16 +419,15 @@ export default function TourList5() {
         </div>
 
         <div className="row y-gap-30 pt-30">
-          {tourDataThree.map((elm, i) => (
-            <div key={i} className="col-lg-3 col-sm-6">
+          {filteredProducts.map((product) => (
+            <div className="col-lg-3 col-sm-6">
               <Link
-                to={`/tour-single-1/${elm.id}`}
                 className="tourCard -type-1 py-10 px-10 border-1 rounded-12  -hover-shadow"
               >
                 <div className="tourCard__header">
                   <div className="tourCard__image ratio ratio-28:20">
                     <img
-                      src={elm.imageSrc}
+                      src={product.picture}
                       alt="image"
                       className="img-ratio rounded-12"
                     />
@@ -348,32 +440,37 @@ export default function TourList5() {
 
                 <div className="tourCard__content px-10 pt-10">
                   <div className="tourCard__location d-flex items-center text-13 text-light-2">
-                    <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                    {elm.location}
+                    <i className="d-flex text-16 text-light-2 mr-5"></i>
+                    {/* {elm.location} */}
                   </div>
 
                   <h3 className="tourCard__title text-16 fw-500 mt-5">
-                    <span>{elm.title}</span>
+                    <span>{product.name}</span>
                   </h3>
+                  
+                  <div className="tourCard__location d-flex items-center text-13 text-light-2">
+                    <i className="d-flex text-16 text-light-2 mr-5"></i>
+                    {product.description}
+                  </div>
 
                   <div className="tourCard__rating d-flex items-center text-13 mt-5">
                     <div className="d-flex x-gap-5">
-                      <Stars star={elm.rating} />
+                      <Stars star={product.averageRating} />
                     </div>
 
                     <span className="text-dark-1 ml-10">
-                      {elm.rating} ({elm.ratingCount})
+                      {/* {elm.rating} ({elm.ratingCount}) */}
                     </span>
                   </div>
 
                   <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
                     <div className="d-flex items-center">
                       <i className="icon-clock text-16 mr-5"></i>
-                      {elm.duration}
+                      {/* {elm.duration} */}
                     </div>
 
                     <div>
-                      From <span className="text-16 fw-500">${elm.price}</span>
+                      From <span className="text-16 fw-500">${product.price}</span>
                     </div>
                   </div>
                 </div>
