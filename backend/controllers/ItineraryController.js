@@ -1,6 +1,7 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const preferenceTagModel = require('../models/PreferenceTag');
+const Admin = require('../models/users/Admin');
 
 const createItinerary = async (req, res) => {
     try {
@@ -209,7 +210,7 @@ const getTouristItineraries = async (req, res) => {
             { 'bookings.touristId': touristId,
             endDate: { $gte: currentDate },
             flagged: false }).populate({
-                
+
             path: 'activities',
             populate: [
                 {
@@ -234,6 +235,11 @@ const getTouristItineraries = async (req, res) => {
 
 const adminFlagItinerary = async (req, res) => {
     try{
+        const adminId = req.userId;
+        const admin = await Admin.findById(adminId);
+        if (!admin) 
+            return res.status(403).json({ message: 'Access denied. Admins only.' });
+         
         const itinerary= await itineraryModel.findById(req.params.itineraryId);
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});

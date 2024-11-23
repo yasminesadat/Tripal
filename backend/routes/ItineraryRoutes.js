@@ -77,8 +77,8 @@ router.get(
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
 
-router.put(
-  "/itinerary/:id/toggleStatus",
+router.patch(
+  "/itinerary/:id/status",
   validateIDs(["id"]),
   verifyToken,
   authorizeRoles("Tour Guide"),
