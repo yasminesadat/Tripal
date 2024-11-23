@@ -7,10 +7,9 @@ const ItineraryRating = require("../models/ItineraryRating");
 
 const {
   createItinerary,
-  getItineraries,
+  getItinerariesForTourguide,
   updateItinerary,
   deleteItinerary,
-  getItineraryRatings,
   viewUpcomingItineraries,
   viewPaidItineraries,
   getTouristItineraries,
@@ -20,36 +19,47 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post(
-  "/itinerary",
+  "/create-itinerary",
   verifyToken,
   authorizeRoles("Tour Guide"),
   createItinerary
 );
 
-router.get("/itinerary", getItineraries);
+router.get("/my-itineraries",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getItinerariesForTourguide);
+
 router.put(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   updateItinerary
 );
+
 router.delete(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   deleteItinerary
 );
-router.get("/itinerary/upcoming/view", viewUpcomingItineraries);
+
+router.get("/itinerary/upcoming/view",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  viewUpcomingItineraries);
+
 router.get(
   "/itinerary/paid/view",
   verifyToken,
   authorizeRoles("Tourist"),
   viewPaidItineraries
 );
+
 router.get(
-  "/itineraries/booked-itineraries/:touristId",
+  "/itineraries/booked-itineraries/",
   verifyToken,
-  authorizeRoles("Touriat"),
+  authorizeRoles("Tourist"),
   getTouristItineraries
 );
 
@@ -66,9 +76,9 @@ router.get(
   validateIDs(["id"]),
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
-router.get("/itineraryRatings/:id", validateIDs(["id"]), getItineraryRatings);
-router.put(
-  "/itinerary/:id/toggleStatus",
+
+router.patch(
+  "/itinerary/:id/status",
   validateIDs(["id"]),
   verifyToken,
   authorizeRoles("Tour Guide"),
