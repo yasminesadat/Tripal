@@ -128,7 +128,6 @@ const MyComplaints = () => {
                                                                         }).format(new Date(reply.date))}</li>
                                                                     ))}
                                                                 </ul>
-
                                                                 {/* Reply Form */}
                                                                 <div className="reply-section">
                                                                     <h4>Reply to Complaint</h4>

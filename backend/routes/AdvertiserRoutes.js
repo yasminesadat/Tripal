@@ -12,13 +12,13 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post("/advertiser", createAdvertiser);
 router.get(
-  "/advertiser/:id",
+  "/advertiser",
   verifyToken,
   authorizeRoles("Admin", "Advertiser"),
   readAdvertiser
 );
 router.put(
-  "/advertiser/:id",
+  "/advertiser",
   verifyToken,
   authorizeRoles("Admin"),
   updateAdvertiser

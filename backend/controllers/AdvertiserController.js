@@ -43,7 +43,7 @@ const createAdvertiser = async (req, res) => {
 };
 const readAdvertiser = async (req, res) => {
   try {
-    const advertiser = await advertiserModel.findById(req.params.id);
+    const advertiser = await advertiserModel.findById(req.userId);
     if (!advertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
@@ -66,7 +66,7 @@ const updateAdvertiser = async (req, res) => {
       currentLogo, //new logo to be uploaded
     } = req.body;
 
-    const existingAdvertiser = await advertiserModel.findById(req.params.id);
+    const existingAdvertiser = await advertiserModel.findById(req.userId);
     if (!existingAdvertiser) {
       return res.status(404).json({ error: "Advertiser not found" });
     }
@@ -121,7 +121,7 @@ const updateAdvertiser = async (req, res) => {
     }
 
     const updatedAdvertiser = await advertiserModel.findByIdAndUpdate(
-      req.params.id,
+      req.userId,
       updateData,
       { new: true, runValidators: true } // Options: return updated document, run validation
     );
