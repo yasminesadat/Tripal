@@ -5,10 +5,10 @@ const preferenceTagModel = require('../models/PreferenceTag');
 
 const createItinerary = async (req, res) => {
     try {
-        const { title, description, tourGuide, activities, serviceFee,
-            language, availableDates, availableTime, accessibility, ratings,
+        const tourGuideId = req.userId;
+        const { title, description, activities, serviceFee,
+            language, startDate,endDate, accessibility,
             pickupLocation, dropoffLocation } = req.body;
-
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
 
         if (!fetchedActivities || fetchedActivities.length === 0) {
@@ -16,31 +16,34 @@ const createItinerary = async (req, res) => {
         }
 
         let price = Number(serviceFee);
-        const locations = []; //gama3ly locations
-        const timeline = []; //name w time
+        const location={
+            latitude: fetchedActivities[0].latitude, 
+            longitude: fetchedActivities[0].longitude};
+        
+        const timeline = [];
         const tags = new Set(); //to remove dups
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
-            locations.push(activity.location);
-            timeline.push({ activityName: activity.title,content:activity.description, time: activity.time });
+            timeline.push({ 
+                activityName: activity.title,
+                content:activity.description, 
+                time: activity.time,
+                date: activity.date});
             activity.tags.forEach((tag) => tags.add(tag));
         })
         const uniqueTagIds = Array.from(tags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
 
-        //this is for ommitting any past datessss
-        const currentDate = new Date();
-        const futureDates = availableDates.filter(date => new Date(date) >= currentDate);
-
         const resultItinerary = await itineraryModel.create({
             title,
             description,
-            tourGuide,
+            tourGuide: tourGuideId,
             activities,
-            availableDates: futureDates,
-            availableTime,
+            location,
+            startDate,
+            endDate,
             language,
             accessibility,
             serviceFee,
@@ -48,8 +51,6 @@ const createItinerary = async (req, res) => {
             dropoffLocation,
             bookings: [],
             price,
-            ratings,
-            locations,
             timeline,
             tags: uniqueTags
         });
