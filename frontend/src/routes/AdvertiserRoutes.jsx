@@ -1,5 +1,5 @@
 // import AdvertiserHome from "../pages/advertiser/AdvertiserHome";
-// import AdvertiserProfile from "../pages/advertiser/AdvertiserProfile";
+ import AdvertiserProfile from "../pages/advertiser/AdvertiserProfile";
 // import AdvertiserForm from "../pages/advertiser/AdvertiserProfileForm";
  import CreateActivity from "../pages/advertiser/CreateActivity";
 //import Activities from "../pages/commonPagesForMultipleUsers/Activities";
@@ -11,7 +11,7 @@ const advertiserRoutes = [
   //{ path: "/advertiser/activities", element: <Activities isAdvertiser={true} /> },
 
   // { path: "/advertiser", element: <AdvertiserHome /> },
-  // { path: "/advertiser/profile", element: <AdvertiserProfile /> },
+   { path: "/advertiser/profile", element: <AdvertiserProfile /> },
   // {
   //   path: "/update-advertiser",
   //   element: <AdvertiserForm isUpdate={true} />,
