@@ -28,7 +28,7 @@ export async function changeTouristPassword(id, oldPassword, newPassword) {
   }
 }
 
-export async function getTouristInformation(id) {
+export async function getTouristInformation() {
   try {
 
     const response = await axios.get(`/getTouristInfo`);

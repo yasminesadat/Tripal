@@ -110,10 +110,10 @@ const ComplaintsPage = () => {
         try {
             //console.log(newStatus)
             //console.log(complaintId)
-            await updateComplaintStatus(complaintId, { status: newStatus });
+            await updateComplaintStatus(complaintId, { status: "resolved" });
             // Update local state to reflect changes
             const updatedComplaints = complaints.map(complaint =>
-                complaint._id === complaintId ? { ...complaint, status: newStatus } : complaint
+                complaint._id === complaintId ? { ...complaint, status: "resolved" } : complaint
             );
             setComplaints(updatedComplaints);
             setSelectedComplaint((prev) => ({ ...prev, status: newStatus })); // Update selected complaint status
@@ -222,6 +222,7 @@ const ComplaintsPage = () => {
                                                                         <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
                                                                             View Details
                                                                         </button>
+                                                                        <button className="custom-button" onClick={() => handleStatusChange(complaint._id)}>Resolve</button>
                                                                     </td>
 
                                                                 </tr>
@@ -246,7 +247,7 @@ const ComplaintsPage = () => {
                                                                                         </div>
                                                                                     </div>
                                                                                 </p>
-                                                                                <button onClick={() => handleStatusChange(selectedComplaint._id)}>Update Status</button>
+
                                                                                 <h4>Replies</h4>
                                                                                 <ul>
                                                                                     {selectedComplaint.replies.map((reply, index) => (
