@@ -20,19 +20,19 @@ const { changePassword } = require("../controllers/PasswordController.js");
 
 router.post("/createTourist", createTourist);
 router.put(
-  "/updateTourist/:id",
+  "/updateTourist",
   verifyToken,
   authorizeRoles("Tourist"),
   updateTouristProfile
 );
 router.get(
-  "/getTouristInfo/:id",
+  "/getTouristInfo",
   verifyToken,
   authorizeRoles("Tourist", "Admin"),
   getTouristInfo
 );
 router.post(
-  "/redeem/:id",
+  "/redeem",
   verifyToken,
   authorizeRoles("Tourist"),
   redeemPoints
@@ -45,42 +45,46 @@ router.put(
   changePassword(Tourist)
 );
 router.get(
-  "/tourist-name-email/:id",
-  validateIDs(["id"]),
+  "/tourist-name-email",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristNameAndEmail
 );
 router.get(
-  "/tourist/flights/:id",
+  "/tourist/flights",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristBookedFlights
 );
 router.get(
-  "/tourist/age/:id",
+  "/tourist/age",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristAge
 );
 router.get(
-  "/tourist/bookedHotels/:id",
+  "/tourist/bookedHotels",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristBookedHotels
 );
 router.get(
-  "/tourist/preferences/:id",
+  "/tourist/preferences",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristPreferences
 );
 router.get(
-  "/tourist/categories/:id",
+  "/tourist/categories",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristCategories
 );
-router.get("/tourist/exists/:id", checkUserExists);
+
+router.get(
+  "/tourist/exists",
+  verifyToken,
+  checkUserExists
+);
 
 module.exports = router;
