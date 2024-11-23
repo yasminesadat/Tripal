@@ -330,7 +330,7 @@ Messages.propTypes = {
   complaint: PropTypes.shape({
     replies: PropTypes.array,
   }),
-  user: PropTypes.object.isRequired,
+  user: PropTypes.string.isRequired,
   role: PropTypes.string.isRequired,
 };
 

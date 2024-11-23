@@ -8,6 +8,7 @@ import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
+    const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [userData, setUserData] = useState("");
     const [userRole, setUserRole] = useState("");
     const [loading, setLoading] = useState(true); // Track loading state
