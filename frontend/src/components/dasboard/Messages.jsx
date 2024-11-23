@@ -175,7 +175,7 @@ export default function Messages({ complaint, user, role }) {
                             className="text-14 rounded-12 py-20 px-30 mt-15"
                             style={{
                               backgroundColor: 'var(--color-light-purple)',
-                              color: '#555', // Text color for the placeholder message
+                              color: '#555',
                             }}
                           >
                             Start the chat by sending a message.
@@ -197,18 +197,6 @@ export default function Messages({ complaint, user, role }) {
                               <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
                                 {reply.senderId === user ? 'You' : role === "Admin" ? "Admin" : "Tourist"}
                               </h5>
-
-                              <div className="text-14 ml-5">
-                                {new Date(reply.date).toLocaleString('en-US', {
-                                  weekday: 'short', // 'Mon'
-                                  month: 'short', // 'Nov'
-                                  day: 'numeric', // '23'
-                                  year: 'numeric', // '2024'
-                                  hour: '2-digit', // '04'
-                                  minute: '2-digit', // '30'
-                                  hour12: true, // Display time in 12-hour format (AM/PM)
-                                })}
-                              </div>
                             </div>
 
                             <div
@@ -217,7 +205,20 @@ export default function Messages({ complaint, user, role }) {
                                 backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
                               }}
                             >
-                              {reply.message}
+                              <div className={`${reply.senderId !== user ? 'text-left' : 'text-left'}`}>
+                                {reply.message}
+                              </div>
+                            </div>
+                            <div className="text-14 mt-2" style={{ color: '#666666', textAlign: reply.senderId !== user ? 'left' : 'right' }}>
+                              {new Date(reply.date).toLocaleString('en-US', {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                              })}
                             </div>
                           </div>
                         </div>
