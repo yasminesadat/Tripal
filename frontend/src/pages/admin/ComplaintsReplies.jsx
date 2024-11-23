@@ -15,14 +15,13 @@ export default function ComplaintsReplies() {
     // Extract complaint from location.state
     const { complaint, user, role } = location.state || { complaint: null, user: null, role: null };
 
-
     return (
 
         <>
             <MetaComponent meta={metadata} />
-            <main>
-                <Messages complaint={complaint} user={user} role={role} />
-            </main>
+            {/* <main> */}
+            <Messages complaint={complaint} user={user} role={role} />
+            {/* </main> */}
         </>
     );
 }
