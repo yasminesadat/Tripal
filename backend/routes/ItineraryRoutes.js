@@ -10,7 +10,6 @@ const {
   getItinerariesForTourguide,
   updateItinerary,
   deleteItinerary,
-  getItineraryRatings,
   viewUpcomingItineraries,
   viewPaidItineraries,
   getTouristItineraries,
@@ -73,7 +72,7 @@ router.get(
   validateIDs(["id"]),
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
-router.get("/itineraryRatings/:id", validateIDs(["id"]), getItineraryRatings);
+
 router.put(
   "/itinerary/:id/toggleStatus",
   validateIDs(["id"]),
