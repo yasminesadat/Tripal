@@ -5,30 +5,28 @@ const itinerarySchema = new mongoose.Schema({
 
     description: {type: String, required: true},
 
-    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide'
-        , required: true},
+    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide', required: true},
 
-    activities:[{type: mongoose.Schema.Types.ObjectId, ref: 'Activity'
-        , required: true}],
-
-    locations:[{type:String}],//kol activity already 3ando location yetmely men activites
-
-    //timeline btetrateb when, kol activity 3ando time attribute
+    activities:[{type: mongoose.Schema.Types.ObjectId, ref: 'Activity', required: true}],
+    location: {
+        latitude: {type: Number, required: true},
+        longitude: {type: Number, required: true},
+    },
     timeline: [
         {
             activityName: { type: String}, 
             content: { type: String},
             time: { type: String},
+            date: { type: Date},
         },
     ],
 
-    //duration for each activity activity 3ando time already
     serviceFee: {type: Number}, 
     language: {type: String, required: true},
-    price:{type: Number}, //activity 3ando price also 3ando special disscpunts
+    price:{type: Number},
 
-    availableDates:[{type: Date, required: true}],
-    availableTime: [{type: String, required: true}],
+    startDate: {type: Date, required: true},
+    endDate: {type: Date, required: true},
 
     accessibility: [{type: String, required: true}],
     pickupLocation: {type: String, required: true},
@@ -39,8 +37,6 @@ const itinerarySchema = new mongoose.Schema({
         {
             touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
             tickets: { type: Number, default: 1 },
-            selectedDate: { type: Date },
-            selectedTime: { type: String },
         },
     ],
     flagged: {type: Boolean, default: false},
