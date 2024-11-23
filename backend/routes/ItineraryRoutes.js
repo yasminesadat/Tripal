@@ -25,7 +25,8 @@ router.post(
   createItinerary
 );
 
-router.get("/my-itineraries",verifyToken,
+router.get("/my-itineraries",
+  verifyToken,
   authorizeRoles("Tour Guide"),
   getItinerariesForTourguide);
 
@@ -43,7 +44,10 @@ router.delete(
   deleteItinerary
 );
 
-router.get("/itinerary/upcoming/view", viewUpcomingItineraries);
+router.get("/itinerary/upcoming/view",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  viewUpcomingItineraries);
 
 router.get(
   "/itinerary/paid/view",
@@ -53,9 +57,9 @@ router.get(
 );
 
 router.get(
-  "/itineraries/booked-itineraries/:touristId",
+  "/itineraries/booked-itineraries/",
   verifyToken,
-  authorizeRoles("Touriat"),
+  authorizeRoles("Tourist"),
   getTouristItineraries
 );
 

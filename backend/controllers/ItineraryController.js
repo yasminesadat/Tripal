@@ -202,10 +202,14 @@ const viewPaidItineraries = async (req, res) => {
 
 const getTouristItineraries = async (req, res) => {
     try {
-        const touristId = req.params.touristId;
-        
-        // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId,'bookings.selectedDate': { $gte: new Date() } , flagged: false }).populate({
+        const touristId = req.userId;
+        const currentDate = new Date();
+
+        const itineraries = await itineraryModel.find(
+            { 'bookings.touristId': touristId,
+            endDate: { $gte: currentDate },
+            flagged: false }).populate({
+                
             path: 'activities',
             populate: [
                 {
@@ -216,7 +220,11 @@ const getTouristItineraries = async (req, res) => {
                 }
             ]
         }).populate("tags")
-            .populate('tourGuide bookings.touristId');
+        .populate('tourGuide bookings.touristId')
+        .select("-bookings"); //exclude bookings from response
+
+        if (!itineraries.length)
+            return res.status(404).json({ message: "No itineraries found for this tourist." });
         
         res.status(200).json(itineraries);
     } catch (error) {
@@ -277,7 +285,6 @@ const toggleItineraryStatus = async (req, res) => {
         res.status(500).json({ message: 'Error updating itinerary status', error });
     }
 };
-
 
 module.exports = {
     createItinerary,
