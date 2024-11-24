@@ -13,7 +13,7 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 // import { touristId, touristId } from "../../IDs";
 //import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
-import { getAdminActivities, flagActivity } from "../../api/AdminService";
+// import { getAdminActivities, flagActivity } from "../../api/AdminService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 import { getUserData } from "../../api/UserService";
 
@@ -25,8 +25,8 @@ const Activities = () => {
   const [error, setError] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
+  const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,9 +34,9 @@ const Activities = () => {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id); 
+          setUserId(response.data.id);
         } else {
-          message.error(response.data.message); 
+          message.error(response.data.message);
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
@@ -46,8 +46,8 @@ const Activities = () => {
   }, []);
 
   // i think checking on the userRole is enough just leaving them rn for dependencies or just use them instead of userRole===blabla
-  const isAdvertiser = (userRole==='Advertiser');
-  const isTourist = (userRole==='Tourist');
+  const isAdvertiser = (userRole === 'Advertiser');
+  const isTourist = (userRole === 'Tourist');
 
   useEffect(() => {
     const fetchCurrency = async () => {
@@ -165,25 +165,25 @@ const Activities = () => {
     try {
       const tags = await getTouristTags(touristId);
       const categories = await getTouristCategories(touristId);
-      
+
       const filtered = activities.filter((activity) => {
-        const hasMatchingTag = activity.tags && tags.some((tag) => 
+        const hasMatchingTag = activity.tags && tags.some((tag) =>
           activity.tags.some((activityTag) => activityTag.name === tag.name)
         );
-        
-        const hasMatchingCategory = activity.category && categories.some((category) => 
+
+        const hasMatchingCategory = activity.category && categories.some((category) =>
           activity.category.Name === category.Name
         );
-        
+
         return hasMatchingTag || hasMatchingCategory;
       });
-      
+
       setFilteredActivities(filtered);
     } catch (error) {
       message.error("Failed to fetch 'For You' activities.");
     }
   };
-  
+
 
   const handleAdminFlag = async (activityId) => {
     try {
