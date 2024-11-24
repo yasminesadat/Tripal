@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { Tag, message } from "antd";
-import {  getAllActivities } from "../../api/ActivityService";
+import FooterOne from "@/components/layout/footers/FooterOne";
+import Header1 from "@/components/layout/header/TouristHeader";
+import PageHeader from "@/components/layout/header/SingleActivityHeader";
+import {  getAllActivities } from "@/api/ActivityService";
 import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
-//import TouristNavbar from "../../components/navbar/TouristNavBar";
-//import AdminNavBar from "../../components/navbar/AdminNavBar";
-// import { userRole } from "../../IDs";
-import { getUserData } from "../../api/UserService";
+import { getUserData } from "@/api/UserService";
 
 const ActivityDetailsPage = () => {
     const { activityId } = useParams();
@@ -52,11 +52,13 @@ const ActivityDetailsPage = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     if (!activity) return <div>Activity not found.</div>;
+
     return (
         <div>
-            {/* {userRole ==='Tourist'&&<TouristNavbar />} */}
-            {/* {userRole ==='Admin'&&<AdminNavBar />} */}
-            <ActivityDetails activity={activity} />
+          <Header1 />
+          <PageHeader activityId={activityId} activityTitle={activity.title} />
+          <ActivityDetails activity={activity} />
+          <FooterOne />
         </div>
     );
 };

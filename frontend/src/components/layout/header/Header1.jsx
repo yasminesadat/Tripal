@@ -80,7 +80,7 @@ export default function Header1() {
           <div className="header__right">
             <Destinations />
             <Activities />
-            <Currency />
+            {/* <Currency /> */}
             <Link to="/register" className="ml-10">
               Sign up
             </Link>

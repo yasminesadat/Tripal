@@ -49,7 +49,6 @@ function handleError(error) {
         break;
     }
   } else if (error.request) {
-    // The request was made but no response was received
     userFriendlyMessage.message = "Please check your network connection.";
     userFriendlyMessage.status = "warning";
   }

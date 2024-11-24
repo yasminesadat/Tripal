@@ -2286,7 +2286,9 @@ h6 {
   box-shadow: 0px 10px 40px 0px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--Border, #e7e6e6);
   padding: 20px 40px;
-  width: 220px;
+  width: 140px;
+  max-height: 300px;
+  overflow-y: auto; 
 }
 
 .headerDropdown .headerDropdown__item {
@@ -14030,4 +14032,37 @@ button.gm-ui-hover-effect::after {
 
 .h-500 {
   height: 500px;
+}
+
+.tourist__badge {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 10px 20px;
+  width: 140px;
+  text-align: center;
+  display: inline-block;
+  border-radius: 12px;
+}
+
+.badge-image {
+  width: 30px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.badge-text {
+  margin-top: -2px;
+  color: #ffffff;
+}
+
+.bronze {
+  background-color: #ce8946;
+}
+
+.silver {
+  background-color: #c0c0c0;
+}
+
+.gold {
+  background-color: #ffd700;
 }

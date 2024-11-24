@@ -1,19 +1,18 @@
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import React, { useState } from "react";
 import ActivityMainInformation from "./ActivityMainInformation";
-import OthersInformation from "../../templateComponents/OthersInformation";
-import Overview from "../../templateComponents/Overview";
+import OthersInformation from "./OthersInformation";
+import Overview from "./Overview";
 import MapComponent from "../../common/MapComponent";
-import Rating from "../../templateComponents/Rating";
-import TourSingleSidebar from "../../templateComponents/TourSingleSidebar";
-import Gallery1 from "../../templateComponents/Gallery1";
-import DateCalender from "../../templateComponents/DateCalender";
-import ReviewBox from "../../common/reviewBox";
+import TourSingleSidebar from "./TourSingleSidebar";
+import Gallery1 from "./Gallery1";
+import DateCalender from "./DateCalender";
+import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-// import { userRole } from "../../../IDs";
-import Index from "../../templateComponents/index"
-import { getUserData } from "../../../api/UserService";
+import { Tag, message } from "antd";
+
+import { getUserData } from "@/api/UserService";
 
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
@@ -73,42 +72,38 @@ export default function ActivityDetails({ activity }) {
                 />
               </div>
 
-              <div className="line mt-60 mb-60"></div>
+              {/* <div className="line mt-60 mb-60"></div> */}
 
-              {page === "upcoming" && (
+              {/* {page === "upcoming" && (
                 <>
                   <h2 className="text-30">Availability Calendar</h2>
                   <DateCalender />
                 </>
-              )}
-
-              <div className="line mt-60 mb-60"></div>
+              )} */}
 
               <h2 className="text-30">Customer Reviews</h2>
 
-              <div className="mt-30">
-                <Rating />
-              </div>
-
               <ActivityReviews activityId={activityId} />
 
-              <div className="line mt-60 mb-60"></div>
-
               {page === "history" && (
-                <ReviewBox id={activityId} type="activities" />
+                <div>
+                  <div className="line mt-60 mb-60"></div>
+                  <ReviewBox id={activityId} type="activities" />
+                </div>
               )}
 
               <div className="line mt-60 mb-60"></div>
 
             </div>
 
-            {page === "upcoming" && userRole ==='Tourist'&&(
+            {page === "upcoming" && userRole ==='Tourist' &&(
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
                   <TourSingleSidebar activity={activity}/>
                 </div>
               </div>
             )}
+            
           </div>
         </div>
       </section>

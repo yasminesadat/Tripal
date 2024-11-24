@@ -14,7 +14,7 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/destinations">Create Itinerary</Link>
+            <Link to="/tourguide/create">Create Itinerary</Link>
           </div>
         </div>
       </div>
