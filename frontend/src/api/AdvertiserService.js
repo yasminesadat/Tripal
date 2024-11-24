@@ -11,6 +11,7 @@ export async function createAdvertiser(newUser) {
 export async function getAdvertiser() {
   try {
     const response = await axios.get(`/advertiser`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching advertiser:', error);

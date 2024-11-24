@@ -19,6 +19,22 @@ export default function UserForm() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
+  const handleLogin = (role) => {
+    if (role === "Admin") {
+      window.location.href = "/admin";
+    } else if (role === "Tourist") {
+      window.location.href = "/tourist";
+    } else if (role === "Advertiser") {
+      window.location.href = "/advertiser";
+    } else if (role === "Tour Guide") {
+      window.location.href = "/tourguide";
+    } else if (role === "Seller") {
+      window.location.href = "/seller";
+    } else if (role === "Tourism Governor") {
+      window.location.href = "/governor";
+    }
+  };
+
   const onFinish = async () => {
     setLoading(true);
     const response = await login(
@@ -28,6 +44,7 @@ export default function UserForm() {
     setLoading(false);
     if (response.status == "success") {
       message.success(response.message);
+      handleLogin(response.role);
     } else if (response.status == "warning") {
       message.warning(response.message);
     } else {

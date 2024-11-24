@@ -94,7 +94,9 @@ export async function requestAccountDeletion() {
       const response = await axios.delete(`/request-deletion`);
       return response.data;
     } catch (error) {
-      console.error(`Error requesting account deletion`, error);
+
+      console.error(`Error requesting account deletion `, error);
+
       throw error;
     }
 }
