@@ -1,6 +1,6 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/TouristHeader";
-import PageHeader from "./ActivitiesHeader";
+import PageHeader from "@/components/layout/header/ActivitiesHeader";
 
 import React, { useEffect, useState } from "react";
 
