@@ -212,9 +212,6 @@ const Revenue = () => {
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                    <i className="icon-delete text-14"></i>
-                                  </button>
                                     </div>
                                 </div>
                             </div>
