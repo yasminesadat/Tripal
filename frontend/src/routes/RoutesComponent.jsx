@@ -9,6 +9,7 @@ import adminRoutes from "./AdminRoutes";
 import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import governorRoutes from "./GovernorRoutes";
+
 const RoutesComponent = () => (
   <Routes>
     {[...guestRoutes, ...templateRoutes].map((route, index) => (
