@@ -13,7 +13,6 @@ import { getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { Select } from 'antd';
-import { Tag } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -187,16 +186,16 @@ export default function Profile() {
               } js-dashboard`}
           >
 
-            {/* {profileInformation.totalPoints !== undefined && (
-          <Badge totalPoints={profileInformation.totalPoints} />
-        )} */}
             <Sidebar setSideBarOpen={setSideBarOpen} />
 
             <div className="dashboard__content">
 
               <div className="dashboard__content_content">
-                <h1 className="text-30">Tourist profile</h1>
-                <p className="">{profileInformation.userName}</p>
+                <h2 >Profile</h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h5 className="">{profileInformation.userName}</h5>
+                  <Badge totalPoints={profileInformation.totalPoints}/>
+                </div>
                 <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
                   <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
 
@@ -208,7 +207,6 @@ export default function Profile() {
                           name="userName"
                           value={profileInformation.userName}
                           readOnly
-
                         />
                         <label className="lh-1 text-16 text-light-1">Username</label>
                       </div>
@@ -220,9 +218,7 @@ export default function Profile() {
                           type="text"
                           name="email"
                           value={editedProfile.email}
-                          onChange={handleInputChange} // Handle input changes
-
-
+                          onChange={handleInputChange} 
                         />
                         <label className="lh-1 text-16 text-light-1">
                           Email
@@ -283,7 +279,7 @@ export default function Profile() {
                           <input
                             type="text"
                             name="currentPoints"
-                            value={profileInformation.currentPoints} // Corrected value assignment
+                            value={profileInformation.currentPoints} 
                             readOnly
                           />
                         ) : (
@@ -292,9 +288,11 @@ export default function Profile() {
                         <label className="lh-1 text-16 text-light-1">Total Points</label>
 
                       </div>
-                      <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
+                      <div className="d-flex justify-end">
+                      <button onClick={handleRedeemClick} className="button -md -dark-1 bg-accent-1 text-white" style={{ marginLeft: '10px' }}>
                         Redeem points to cash
                       </button>
+                      </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-input ">

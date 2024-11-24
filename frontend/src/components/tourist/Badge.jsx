@@ -1,6 +1,3 @@
-import React from 'react';
-import badgeImage from '../../assets/images/badge.png';
-
 const Badge = ({ totalPoints }) => {
   let badgeText = '';
   let badgeColor = '';
@@ -21,7 +18,6 @@ const Badge = ({ totalPoints }) => {
 
   return (
     <div className={`tourist__badge ${badgeColor}`}>
-      <img src={badgeImage} alt="Badge" className="badge-image" />
       <span className="badge-text">{badgeText}</span>
     </div>
   );
