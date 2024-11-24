@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 export default function PageHeader() {
   return (
@@ -8,11 +9,12 @@ export default function PageHeader() {
           <div className="col-auto">
             <div className="breadcrumbs">
               <span className="breadcrumbs__item">
-                <a href="#">Home</a>
+                <Link to="/tourist">Home</Link> 
               </span>
+
               <span>{">"}</span>
               <span className="breadcrumbs__item">
-                <a href="#">Activities</a>
+                <Link to="/upcoming-activities">Activities</Link> 
               </span>
               {/* <span>{">"}</span>
               <span className="breadcrumbs__item">

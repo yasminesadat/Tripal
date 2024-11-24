@@ -36,7 +36,7 @@ export default function RangeSlider({ priceRange, setPriceRange }) {
               value={value}
               onChange={handleChange}
               valueLabelDisplay="auto"
-              max={3000}
+              max={2000000}
               min={0}
               disableSwap
             />

@@ -36,11 +36,18 @@ export default function ActivitiesList({
   const [endDate, setEndDate] = useState(null); 
   const [ratingFilter, setRatingFilter] = useState([]);  
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 2000]); 
+  const [priceRange, setPriceRange] = useState([0, 2000000]); 
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
+  const sortOptions = [
+    { label: "Price: Low to High", field: "price", order: "asc" },
+    { label: "Price: High to Low", field: "price", order: "desc" },
+    { label: "Rating: Low to High", field: "ratings", order: "asc" },
+    { label: "Rating: High to Low", field: "ratings", order: "desc" }
+  ];
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -97,22 +104,18 @@ export default function ActivitiesList({
       // const activityPrice = activity.price * exchangeRate;
       const activityPrice = activity.price;
 
-      // date filter
       const isDateValid =
         !startDate || !endDate ||
         (activityDate >= (new Date(startDate.setHours(0, 0, 0, 0))) &&
           activityDate <= (new Date(endDate.setHours(23, 59, 59, 999))));
   
-      // rating filter
       const isRatingValid =
         ratingFilter.length === 0 || ratingFilter.some((rating) => activityRating >= rating);
   
-      // category filter
       const isCategoryValid =
         selectedCategories.length === 0 ||
         selectedCategories.some((cat) => cat.toLowerCase() === activityCategory);
 
-      // price filter
       const isPriceValid =
         activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
 
@@ -123,26 +126,29 @@ export default function ActivitiesList({
   }, [startDate, endDate, activities, ratingFilter, selectedCategories, priceRange]);
   
   
-  // useEffect(() => {
-  //   console.log("Filtered Activities: ", filteredActivities);
-  // }, [filteredActivities]);
+  useEffect(() => {
+    console.log("Filtered Activities: ", filteredActivities);
+  }, [filteredActivities]);
 
-  // const handleSort = (field, order) => {
-  //   const sortedActivities = [...activities].sort((a, b) => {
-  //     let aValue, bValue;
+  const handleSort = (field, order) => {
+    const sortedActivities = [...filteredActivities].sort((a, b) => {
+      let aValue, bValue;
   
-  //     if (field === "price") {
-  //       aValue = a.price * exchangeRate;
-  //       bValue = b.price * exchangeRate;
-  //     } else if (field === "ratings") {
-  //       aValue = a.averageRating;
-  //       bValue = b.averageRating;
-  //     }
+      if (field === "price") {
+        // aValue = a.price * exchangeRate;
+        // bValue = b.price * exchangeRate;
+        aValue = a.price;
+        bValue = b.price;
+
+      } else if (field === "ratings") {
+        aValue = a.averageRating;
+        bValue = b.averageRating;
+      }
   
-  //     return order === "asc" ? aValue - bValue : bValue - aValue;
-  //   });
-  //   setFilteredActivities(sortedActivities);
-  // };
+      return order === "asc" ? aValue - bValue : bValue - aValue;
+    });
+    setFilteredActivities(sortedActivities);
+  };
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -233,17 +239,18 @@ export default function ActivitiesList({
                   </div>
 
                   <div className="dropdown__menu js-menu-items">
-                    {speedFeatures.map((elm, i) => (
+                    {sortOptions.map((elm, i) => (
                       <div
                         onClick={() => {
-                          setSortOption((pre) => (pre == elm ? "" : elm));
-                          setDdActives(false);
+                          setSortOption(elm.label); 
+                          handleSort(elm.field, elm.order); 
+                          setDdActives(false); 
                         }}
                         key={i}
                         className="dropdown__item"
                         data-value="fast"
                       >
-                        {elm}
+                        {elm.label}
                       </div>
                     ))}
                   </div>
@@ -267,6 +274,7 @@ export default function ActivitiesList({
                         </div>
                       )}
 
+                      {/* can be used in the for you  */}
                       {elm.featured && (
                         <div className="tourCard__badge">
                           <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
@@ -294,12 +302,12 @@ export default function ActivitiesList({
 
                       <div className="d-flex items-center mt-5">
                         <div className="d-flex items-center x-gap-5">
-                          <Stars star={elm.rating} font={12} />
+                          <Stars star={elm.averageRating} font={12} />
                         </div>
 
                         <div className="text-14 ml-10">
                           <span className="fw-500">{elm.averageRating.toFixed(2)}</span> 
-                          {/* ({elm.ratingCount}) */}
+                          ({elm.totalRatings})
                         </div>
                       </div>
 
