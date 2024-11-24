@@ -142,11 +142,11 @@ export default function Messages({ complaint, user, role }) {
                   <div className="row x-gap-10 y-gap-10 justify-between items-center pb-20 border-1-bottom">
                     <div className="col-auto">
                       <div className="d-flex items-center">
-                        <Avatar size={40}>{role === "Admin" ? "ADMIN" : "TOURIST"}</Avatar>
+                        <Avatar size={40}>{role === "Admin" ? "TOURIST" : "ADMIN"}</Avatar>
 
                         <div className="ml-10">
                           <h5 className="text-15 lh-13 fw-500">
-                            Chat with {role === "Admin" ? "Admin" : "Tourist"}
+                            Chat with {role === "Admin" ? "Tourist" : "Admin"}
                           </h5>
                           <div className="text-14 lh-13">Active</div>
                         </div>
