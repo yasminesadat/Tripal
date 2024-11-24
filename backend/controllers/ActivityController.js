@@ -117,7 +117,6 @@ const viewUpcomingActivities = async (req, res) => {
     const activities = await Activity.find({ isBookingOpen: true, date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
@@ -133,7 +132,6 @@ const viewHistoryActivities = async (req, res) => {
     const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
