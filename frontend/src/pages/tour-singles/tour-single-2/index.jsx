@@ -25,8 +25,6 @@ export default function TourSinglePage2() {
 
       <main>
         <Header1 />
-        <PageHeader />
-
         <SingleTwo tour={tour} />
         <TourSlider />
         <FooterOne />
