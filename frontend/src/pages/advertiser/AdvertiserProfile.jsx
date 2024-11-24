@@ -194,50 +194,50 @@ export default function AdvertiserProfile() {
 
   
 
-//   const handleLogoChange = (info) => {
-//     if (info.fileList.length === 0) {
-//       setFormData((prevData) => ({
-//         ...prevData,
-//         currentLogo: null,
-//       }));
-//       return;
-//     }
+  const handleLogoChange = (info) => {
+    if (info.fileList.length === 0) {
+      setFormData((prevData) => ({
+        ...prevData,
+        currentLogo: null,
+      }));
+      return;
+    }
 
-//     const file = info.file.originFileObj || info.file;
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = () => {
-//         setFormData((prevData) => ({
-//           ...prevData,
-//           currentLogo: reader.result,
-//         }));
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
+    const file = info.file.originFileObj || info.file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          currentLogo: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-//   const handleBeforeUpload = (file) => {
-//     if (formData.currentLogo) {
-//       message.error("Only one logo can be uploaded.");
-//       return Upload.LIST_IGNORE;
-//     }
-//     const reader = new FileReader();
-//     reader.onload = () => {
-//       setFormData((prevData) => ({
-//         ...prevData,
-//         currentLogo: reader.result,
-//       }));
-//     };
-//     reader.readAsDataURL(file);
-//     return false;
-//   };
+  const handleBeforeUpload = (file) => {
+    if (formData.currentLogo) {
+      message.error("Only one logo can be uploaded.");
+      return Upload.LIST_IGNORE;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData((prevData) => ({
+        ...prevData,
+        currentLogo: reader.result,
+      }));
+    };
+    reader.readAsDataURL(file);
+    return false;
+  };
 
-//   const handleRemove = () => {
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       currentLogo: null,
-//     }));
-//   };
+  const handleRemove = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      currentLogo: null,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -383,9 +383,11 @@ export default function AdvertiserProfile() {
                         }`}
                       >
                         <div className="contactForm row y-gap-30">
-                          <div className="col-12">
-                            
 
+
+{/* logo */}
+
+                          <div className="col-12">
                           {advertiser?.companyProfile.logo ? (
                                 <div className="col-auto  ">
                                   <div className="relative">
@@ -395,9 +397,7 @@ export default function AdvertiserProfile() {
                                       className="size-200 rounded-12 object-cover"
                                     />
                                     <button
-                                      onClick={() => {
-                                        setImage2("");
-                                      }}
+                                      onClick={handleRemove}
                                       className="absoluteIcon1 button -dark-1"
                                     >
                                       <i className="icon-delete text-18"></i>
@@ -416,23 +416,37 @@ export default function AdvertiserProfile() {
                                     />
 
                                     <div className="text-16 fw-500 text-accent-1 mt-10">
-                                      Upload Images
+                                      Upload Logo
                                     </div>
                                   </label>
                                   <input
-                                    // onChange={(e) =>
-                                    //   handleImageChange(e, setImage2)
-                                    // }
                                     accept="image/*"
                                     id="imageInp2"
                                     type="file"
                                     style={{ display: "none" }}
+                                    //accept=".png,.jpeg,.jpg"
+                                    beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                                    onChange={handleLogoChange}
+                                    // fileList={
+                                    //   formData.currentLogo
+                                    //     ? [
+                                    //       {
+                                    //         uid: "-1",
+                                    //         name: "logo.png",
+                                    //         status: "done",
+                                    //         url: formData.currentLogo,
+                                    //       },
+                                    //     ]
+                                    //     : []
+                                    // }
                                   />
                                 </div>
                               )}
-
-
                           </div>
+
+
+{/* end logo */}
+
                             <div className="col-12">
                                 <div className="form-input">
                                     <input
@@ -447,11 +461,7 @@ export default function AdvertiserProfile() {
                                     {General[0]?.label }
                                     </label>
                                 </div>
-                            {/* {!General[0]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                             <div className="col-12">
@@ -468,11 +478,7 @@ export default function AdvertiserProfile() {
                                 {General[1]?.label}
                                 </label>
                             </div>
-                            {/* {!General[1]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                           
                             </div>
 
                             <div className="col-12">
@@ -489,11 +495,7 @@ export default function AdvertiserProfile() {
                                 {General[2]?.label}
                                 </label>
                             </div>
-                            {/* {!General[2]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                             <div className="col-12">
@@ -509,11 +511,7 @@ export default function AdvertiserProfile() {
                                 {General[3]?.label}
                                 </label>
                             </div>
-                            {/* {!General[3]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                             <div className="col-12">
@@ -529,11 +527,7 @@ export default function AdvertiserProfile() {
                                 {General[4]?.label}
                                 </label>
                             </div>
-                            {/* {!General[4]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                           
                             </div>
 
                             <div className="mt-30">
@@ -692,11 +686,7 @@ export default function AdvertiserProfile() {
                                     {Location[0]?.label }
                                     </label>
                                 </div>
-                            {/* {!Location[0]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
                             <div className="col-12">
                                 <div className="form-input">
@@ -712,11 +702,7 @@ export default function AdvertiserProfile() {
                                     {Location[1]?.label }
                                     </label>
                                 </div>
-                            {/* {!Location[1]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                           
                             </div>
                             <div className="col-12">
                                 <div className="form-input">
@@ -732,11 +718,7 @@ export default function AdvertiserProfile() {
                                     {Location[2]?.label }
                                     </label>
                                 </div>
-                            {/* {!Location[2]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
                             
                         </div>
@@ -768,11 +750,7 @@ export default function AdvertiserProfile() {
                                     {Contact[0]?.label }
                                     </label>
                                 </div>
-                            {/* {!Contact[0]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
 
@@ -789,11 +767,7 @@ export default function AdvertiserProfile() {
                                     {Contact[1]?.label }
                                     </label>
                                 </div>
-                            {/* {!Contact[1]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                             <div className="col-12">
@@ -809,11 +783,7 @@ export default function AdvertiserProfile() {
                                     {Contact[2]?.label }
                                     </label>
                                 </div>
-                            {/* {!Contact[2]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                             <div className="col-12">
@@ -829,11 +799,7 @@ export default function AdvertiserProfile() {
                                     {Contact[3]?.label }
                                     </label>
                                 </div>
-                            {/* {!Contact[3]?.value && (
-                                <button style={buttonStyle} onClick={handleNavigate}>
-                                Add
-                                </button>
-                            )} */}
+                            
                             </div>
 
                         </div>
