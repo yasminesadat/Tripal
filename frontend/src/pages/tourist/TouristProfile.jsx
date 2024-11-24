@@ -177,8 +177,8 @@ export default function Profile() {
         className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
           } js-dashboard`}
       >
-        {/* 
-        {profileInformation.totalPoints !== undefined && (
+
+        {/* {profileInformation.totalPoints !== undefined && (
           <Badge totalPoints={profileInformation.totalPoints} />
         )} */}
         <Sidebar setSideBarOpen={setSideBarOpen} />
