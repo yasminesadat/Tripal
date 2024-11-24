@@ -195,7 +195,7 @@ export default function Messages({ complaint, user, role }) {
                               )}
 
                               <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
-                                {reply.senderId === user ? 'You' : role === "Admin" ? "Admin" : "Tourist"}
+                                {reply.senderId === user ? 'You' : role === "Admin" ? "Tourist" : "Admin"}
                               </h5>
                             </div>
 
