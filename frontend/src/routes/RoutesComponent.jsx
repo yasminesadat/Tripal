@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
+import RoleProtectedRoute from "./RoleProtectedRouteComponent";
+
 import templateRoutes from "./TemplateRoutes";
 import guestRoutes from "./GuestRoutes";
 import touristRoutes from "./TouristRoutes";
-import RoleProtectedRoute from "./RoleProtectedRouteComponent";
 import advertiserRoutes from "./AdvertiserRoutes";
 import adminRoutes from "./AdminRoutes";
+import sellerRoutes from "./SellerRoutes";
 const RoutesComponent = () => (
   <Routes>
     {[...guestRoutes, ...templateRoutes].map((route, index) => (
@@ -42,6 +44,18 @@ const RoutesComponent = () => (
           <RoleProtectedRoute
             element={route.element}
             requiredRoles={["Admin"]}
+          />
+        }
+      />
+    ))}
+    {sellerRoutes.map((route, index) => (
+      <Route
+        key={`seller-${index}`}
+        path={route.path}
+        element={
+          <RoleProtectedRoute
+            element={route.element}
+            requiredRoles={["Seller"]}
           />
         }
       />

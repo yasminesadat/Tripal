@@ -26,6 +26,12 @@ export default function UserForm() {
       window.location.href = "/tourist";
     } else if (role === "Advertiser") {
       window.location.href = "/advertiser";
+    } else if (role === "TourGuide") {
+      window.location.href = "/tourguide";
+    } else if (role === "Seller") {
+      window.location.href = "/seller";
+    } else if (role === "Tourism Governor") {
+      window.location.href = "/tourismgovernor";
     }
   };
 
