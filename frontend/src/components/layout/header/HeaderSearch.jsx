@@ -45,7 +45,7 @@ export default function HeaderSearch({ white, onSearch }) {
         ref={inputRef}
         onClick={() => setDdActive((prev) => !prev)}
         type="text"
-        placeholder="Search activities' titles or categories"
+        placeholder="Search activities' titles, categories, or tags"
         className={`js-search ${white ? "text-white" : ""}`}
       />
     </div>
