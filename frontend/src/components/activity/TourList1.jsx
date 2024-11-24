@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import { speedFeatures } from "@/data/tourFilteringOptions";
-import { tourDataTwo } from "@/data/tours";
 import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
 import { Link } from "react-router-dom";
@@ -26,6 +25,10 @@ export default function TourList1({
 
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
+  
+  const [startDate, setStartDate] = useState(null); 
+  const [endDate, setEndDate] = useState(null); 
+  const [filteredActivities, setFilteredActivities] = useState(activities);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,6 +46,36 @@ export default function TourList1({
     };
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const filtered = activities.filter((activity) => {
+        const activityDate = new Date(activity.date); 
+        return activityDate >= startDate && activityDate <= endDate;
+      });
+      setFilteredActivities(filtered);
+    } else {
+      setFilteredActivities(activities); 
+    }
+  }, [startDate, endDate, activities]); 
+
+  // const handleSort = (field, order) => {
+  //   const sortedActivities = [...activities].sort((a, b) => {
+  //     let aValue, bValue;
+  
+  //     if (field === "price") {
+  //       aValue = a.price * exchangeRate;
+  //       bValue = b.price * exchangeRate;
+  //     } else if (field === "ratings") {
+  //       aValue = a.averageRating;
+  //       bValue = b.averageRating;
+  //     }
+  
+  //     return order === "asc" ? aValue - bValue : bValue - aValue;
+  //   });
+  //   setFilteredActivities(sortedActivities);
+  // };
+
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -87,7 +120,7 @@ export default function TourList1({
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 >
                   <div className="pt-20">
-                    <Sidebar />
+                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
                   </div>
                 </div>
               </div>
@@ -113,7 +146,7 @@ export default function TourList1({
                   >
                     <span>Sort by: </span>
                     <span className="js-title">
-                      {sortOption ? sortOption : "Featured"}
+                      {sortOption ? sortOption : ""}
                     </span>
                     <i className="icon-chevron-down"></i>
                   </div>

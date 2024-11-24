@@ -1,22 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Sidebar from "./Sidebar";
+import { speedFeatures } from "./tourFilteringOptions";
+import Stars from "../common/Stars";
+import Pagination from "../common/Pagination";
+import { Link } from "react-router-dom";
 import { Tag, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { getConversionRate } from "../../api/ExchangeRatesService";
-import { getUserData } from "@/api/UserService";
-import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
+// import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
-const UpcomingActivities = ({
-  activities,
+import { getUserData } from "@/api/UserService";
+import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
+import AdvertiserActivities from "@/components/activity/AdvertiserActivities";
+import { getAdminActivities, flagActivity } from "@/api/AdminService";
+
+export default function ActivitiesList({
+  // activities,
   book,
   onCancel,
   cancel,
   curr = "EGP",
   page,
-  onAdminFlag,
-}) => {
-  const [exchangeRate, setExchangeRate] = useState(1);
+  onAdminFlag
+}) {
+  const [sortOption, setSortOption] = useState("");
+  const [ddActives, setDdActives] = useState(false);
+  const [sidebarActive, setSidebarActive] = useState(false);
+  const dropDownContainer = useRef();
+
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
+  const [activities, setActivities] = useState([]);
+
+  const [startDate, setStartDate] = useState(null); 
+  const [endDate, setEndDate] = useState(null); 
+  const [filteredActivities, setFilteredActivities] = useState(activities);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,157 +55,270 @@ const UpcomingActivities = ({
   }, []);
 
   useEffect(() => {
-    const fetchExchangeRate = async () => {
-      if (curr) {
-        try {
-          const rate = await getConversionRate(curr);
-          setExchangeRate(rate);
-        } catch (error) {
-          console.error("Failed to fetch exchange rate.");
+    const fetchActivities = async () => {
+      setLoading(true);
+      try {
+        let response;
+        if (userRole === "Advertiser") {
+          response = await getAdvertiserActivities();
+        } else if (userRole === "Tourist") {
+          response = await viewUpcomingActivities();
+        } else if (userRole === "Admin") {
+          response = await getAdminActivities();
+        } else {
+          response = await getAllActivities();
         }
+        const activitiesData = Array.isArray(response?.data) ? response?.data : [];
+        console.log(activitiesData)
+        setActivities(activitiesData);
+        setFilteredActivities(activitiesData); 
+      } catch (err) {
+        const errorMessage = err?.response?.data?.error || err?.message || "Error fetching activities";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchExchangeRate();
-  }, [curr]);
-
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice;
-  };
-
-  const handleCopyLink = (link) => {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        message.success("Link copied to clipboard!");
-      })
-      .catch((error) => {
-        message.error("Failed to copy link");
-      });
-  };
-
-  const handleShare = (link) => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: "Check out this activity!",
-          url: link,
-        })
-        .catch((error) => {
-          message.error("Failed to share");
-        });
-    } else {
-      window.location.href = `mailto:?subject=Check out this activity!&body=Check out this link: ${link}`;
+    if (userRole) {
+      fetchActivities();
     }
-  };
+  }, [userRole]);  
 
-  const navigate = useNavigate();
-  const handleRedirect = (activityId) => {
-    navigate(`/activity/${activityId}`, { state: { page } });
-  };
+  useEffect(() => {
+    if (startDate && endDate) {
+      const normalizedStartDate = new Date(startDate.setHours(0, 0, 0, 0));  // Set start date to 00:00:00
+      const normalizedEndDate = new Date(endDate.setHours(23, 59, 59, 999));  // Set end date to 23:59:59
+  
+      // Filter activities based on normalized start and end dates
+      const filtered = activities.filter((activity) => {
+        const activityDate = new Date(activity.date);  // Convert activity date to Date object
+        return activityDate >= normalizedStartDate && activityDate <= normalizedEndDate;
+      });
+      setFilteredActivities(filtered);
+    } else {
+      setFilteredActivities(activities); // If no start or end date is selected, show all activities
+    }
+  }, [startDate, endDate, activities]);  
+
+  // useEffect(() => {
+  //   console.log("Filtered Activities: ", filteredActivities);
+  // }, [filteredActivities]);
+
+  // const handleSort = (field, order) => {
+  //   const sortedActivities = [...activities].sort((a, b) => {
+  //     let aValue, bValue;
+  
+  //     if (field === "price") {
+  //       aValue = a.price * exchangeRate;
+  //       bValue = b.price * exchangeRate;
+  //     } else if (field === "ratings") {
+  //       aValue = a.averageRating;
+  //       bValue = b.averageRating;
+  //     }
+  
+  //     return order === "asc" ? aValue - bValue : bValue - aValue;
+  //   });
+  //   setFilteredActivities(sortedActivities);
+  // };
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (
+        dropDownContainer.current &&
+        !dropDownContainer.current.contains(event.target)
+      ) {
+        setDdActives(false);
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   return (
-    <div className="list">
-      {activities.map((activity) => (
-        <div className="list-item" key={activity._id}>
-          <button
-            onClick={() => handleRedirect(activity._id)}
-            className="list-item-header"
-          >
-            {activity.title}
-          </button>
-          
-          <div className="list-item-attributes">
-            
-            {userRole==='Admin' &&<button style={{background:'red', color:'white'}} 
-            onClick={() => onAdminFlag(activity._id)}>Flag as inappropriate</button>}
+    <section className="layout-pb-xl">
+      <div className="container">
+        <div className="row">
+          <div className="col-xl-3 col-lg-4">
+            <div className="lg:d-none">
+            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
+            </div>
 
-            <div className="list-item-attribute">{activity.description}</div>
-            <div className="list-item-attribute">
-              <b>Date:</b> {new Date(activity.date).toLocaleDateString()}
+            <div className="accordion d-none mb-30 lg:d-flex js-accordion">
+              <div
+                className={`accordion__item col-12 ${
+                  sidebarActive ? "is-active" : ""
+                } `}
+              >
+                <button
+                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
+                  onClick={() => setSidebarActive((pre) => !pre)}
+                >
+                  <i className="icon-sort-down mr-10 text-16"></i>
+                  Filter
+                </button>
+
+                <div
+                  className="accordion__content"
+                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
+                >
+                  <div className="pt-20">
+                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="list-item-attribute"><b>Time:</b> {activity.time}</div>
-            <div className="list-item-attribute">
-              <b>Location:</b> {activity.location}
+          </div>
+
+          <div className="col-xl-9 col-lg-8">
+            <div className="row y-gap-5 justify-between">
+              <div className="col-auto">
+                <div>1362 results</div>
+              </div>
+
+              <div ref={dropDownContainer} className="col-auto">
+                <div
+                  className={`dropdown -type-2 js-dropdown js-form-dd ${
+                    ddActives ? "is-active" : ""
+                  } `}
+                  data-main-value=""
+                >
+                  <div
+                    className="dropdown__button js-button"
+                    onClick={() => setDdActives((pre) => !pre)}
+                  >
+                    <span>Sort by: </span>
+                    <span className="js-title">
+                      {sortOption ? sortOption : ""}
+                    </span>
+                    <i className="icon-chevron-down"></i>
+                  </div>
+
+                  <div className="dropdown__menu js-menu-items">
+                    {speedFeatures.map((elm, i) => (
+                      <div
+                        onClick={() => {
+                          setSortOption((pre) => (pre == elm ? "" : elm));
+                          setDdActives(false);
+                        }}
+                        key={i}
+                        className="dropdown__item"
+                        data-value="fast"
+                      >
+                        {elm}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="list-item-attribute">
-              <b>Price:</b> {curr} {formatPrice(activity.price)}
-            </div>
-            <div className="list-item-attribute">
-              <b>Category:</b> {activity.category ? activity.category.Name : "N/A"}
-            </div>
-            <div className="list-item-attribute">
-              <b>Tags:{" "}</b>
-              {activity.tags.map((tag) => (
-                <Tag key={tag._id} color="geekblue">
-                  {tag.name}
-                </Tag>
+
+            <div className="row y-gap-30 pt-30">
+              {filteredActivities?.map((elm, i) => (
+                <div className="col-12" key={i}>
+                  <div className="tourCard -type-2">
+                    <div className="tourCard__image">
+                      <img src="/img/activities/touristsGroup1.jpg" alt="image" />
+
+                      {elm.badgeText && (
+                        <div className="tourCard__badge">
+                          <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
+                            {/* {elm.badgeText} */}
+                            {elm.specialDiscounts}
+                          </div>
+                        </div>
+                      )}
+
+                      {elm.featured && (
+                        <div className="tourCard__badge">
+                          <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
+                            FEATURED
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
+                          <i className="icon-heart text-15"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="tourCard__content">
+                      <div className="tourCard__location">
+                        <i className="icon-pin"></i>
+                        {elm.location}
+                      </div>
+
+                      <h3 className="tourCard__title mt-5">
+                        <span>{elm.title}</span>
+                      </h3>
+
+                      <div className="d-flex items-center mt-5">
+                        <div className="d-flex items-center x-gap-5">
+                          <Stars star={elm.rating} font={12} />
+                        </div>
+
+                        <div className="text-14 ml-10">
+                          <span className="fw-500">{elm.averageRating.toFixed(2)}</span> 
+                          {/* ({elm.ratingCount}) */}
+                        </div>
+                      </div>
+
+                      <p className="tourCard__text mt-5">{elm.description}</p>
+
+                      <div className="row x-gap-20 y-gap-5 pt-30">
+                        {elm.tags?.map((elm2, i2) => (
+                          <div key={i2} className="col-auto">
+                            <div className="text-14 text-accent-1">
+                              {/* <i className={`${elm2.icon} mr-10`}></i> */}
+                              {elm2.name}                          
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="tourCard__info">
+                      <div>
+                        <div className="d-flex items-center text-14">
+                          <i className="icon-clock mr-10"></i>
+                          {elm.time}
+                        </div>
+
+                        <div className="tourCard__price">
+                        {elm.price}
+                          <div className="d-flex items-center">
+                            <span className="text-20 fw-500 ml-5">
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button className="button -outline-accent-1 text-accent-1">
+                        <Link to={`/activity-details/${elm.id}`}>
+                          View Details
+                          <i className="icon-arrow-top-right ml-10"></i>
+                        </Link>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
-            {!cancel && <div className="list-item-attribute">
-              <b>Rating:</b> {activity.averageRating.toFixed(2)}
-            </div>}
-            {!cancel && <div className="list-item-attribute">
-              <b>Special Discounts:</b> {activity.specialDiscounts || "N/A"}
-            </div>}
-            {cancel && (
-                <div className="list-item-attribute">
-                  {
-                    activity.bookings
-                      .filter(booking => booking.userId === userId) 
-                      .map(filteredBooking => (
-                        <p key={filteredBooking._id}><b>Number of Tickets:</b> {filteredBooking.tickets}</p> // Access tickets from the filtered booking
-                      ))
-                  }
-                </div>
-                    )}
 
-            {userRole!=='Admin' &&<div className="list-item-attribute">
-              <CopyOutlined
-                onClick={() =>
-                  handleCopyLink(
-                    `${window.location.origin}/activities/${activity._id}`
-                  )
-                }
-                style={{ marginRight: "10px", cursor: "pointer" }}
-              />
-              <ShareAltOutlined
-                onClick={() =>
-                  handleShare(
-                    `${window.location.origin}/activities/${activity._id}`
-                  )
-                }
-                style={{ cursor: "pointer" }}
-              />
-            </div>}
+            <div className="d-flex justify-center flex-column mt-60">
+              <Pagination />
 
+              <div className="text-14 text-center mt-20">
+                Showing results 1-30 of 1,415
+              </div>
+            </div>
           </div>
-          {book && userRole==='Tourist'&& (
-            <button
-            onClick={() => handleRedirect(activity._id)}
-            >
-              Book Now
-            </button>
-          )}
-          {cancel && userRole==='Tourist'&& (
-            <button
-              style={{ background: "#b0091a" }}
-              onClick={() =>
-                onCancel({
-                  activityId: activity._id,
-                  userId,
-                  resourceType: "activity",
-                })
-              }
-            >
-              Cancel Booking
-            </button>
-          )}
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
-};
-
-export default UpcomingActivities;
+}

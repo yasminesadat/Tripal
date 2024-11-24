@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Calender from "../common/dropdownSearch/Calender";
+import Calendar from "./Calendar.jsx";
+
 import {
   durations,
   languages,
@@ -10,7 +11,7 @@ import {
 import RangeSlider from "../common/RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar() {
+export default function Sidebar({ setStartDate, setEndDate }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
   return (
     <div className="sidebar -type-1 rounded-12">
@@ -26,7 +27,7 @@ export default function Sidebar() {
                     <i className="icon-calendar text-20 mr-15"></i>
                     <div>
                       <span className="js-first-date">
-                        <Calender />
+                        <Calendar setStartDate={setStartDate} setEndDate={setEndDate} />
                       </span>
                       <span className="js-last-date"></span>
                     </div>
