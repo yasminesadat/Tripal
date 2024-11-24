@@ -20,7 +20,7 @@ router.get(
 router.put(
   "/advertiser",
   verifyToken,
-  authorizeRoles("Admin"),
+  authorizeRoles("Admin", "Advertiser"),
   updateAdvertiser
 );
 router.put(

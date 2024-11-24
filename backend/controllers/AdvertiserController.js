@@ -71,8 +71,11 @@ const updateAdvertiser = async (req, res) => {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const existingEmail = await User.findOne({ email });
+    console.log("EMAILLLLLLLLLLLL                     ",email);
     // Check if the new email is different from the existing one, and if it already exists
     if (existingEmail && existingEmail.email !== existingAdvertiser.email) {
+      console.log("EMAAILL" , existingEmail)
+      console.log(existingAdvertiser)
       return res.status(400).json({ error: "Email already exists" });
     }
 
