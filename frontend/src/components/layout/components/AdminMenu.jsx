@@ -2,8 +2,6 @@ import { categories, users } from "@/data/adminMenu";
 
 import { Link, useLocation } from "react-router-dom";
 
-import React from "react";
-
 export default function Menu() {
   const { pathname } = useLocation();
   return (

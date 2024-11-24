@@ -24,6 +24,8 @@ export default function UserForm() {
       window.location.href = "/admin";
     } else if (role === "Tourist") {
       window.location.href = "/tourist";
+    } else if (role === "Advertiser") {
+      window.location.href = "/advertiser";
     }
   };
 
