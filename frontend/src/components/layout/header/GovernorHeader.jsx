@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Menu from "../components/GovernorMenu";
 import { profile } from "@/data/governorMenu";
-
 import { Link, useNavigate } from "react-router-dom";
-
+import { message } from "antd";
+import { logout } from "@/api/UserService";
 export default function GovernorHeader() {
   const navigate = useNavigate();
 
@@ -26,6 +26,15 @@ export default function GovernorHeader() {
   const handleMouseEnter = () => {
     clearTimeout(closeTimeout);
     setDropdownOpen(true);
+  };
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.status === "success") {
+      window.location.href = "/login";
+    } else {
+      message.error(result.message);
+    }
   };
 
   return (
@@ -91,7 +100,11 @@ export default function GovernorHeader() {
                 <ul>
                   {profile.map((item) => (
                     <li key={item.id}>
-                      <a href={item.href}>{item.title}</a>
+                      {item.title === "Log Out" ? (
+                        <a onClick={handleLogout}>{item.title}</a>
+                      ) : (
+                        <a href={item.href}>{item.title}</a>
+                      )}
                     </li>
                   ))}
                 </ul>

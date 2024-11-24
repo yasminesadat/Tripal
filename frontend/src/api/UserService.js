@@ -59,3 +59,22 @@ function handleError(error) {
 export async function getUserData() {
   return await axios.get("/user-data");
 }
+
+export async function logout() {
+  try {
+    const response = await axios.post("/logout");
+    if (response.status === 200) {
+      return { status: "success" };
+    } else {
+      return {
+        status: "error",
+        message: "Failed to log out. Please try again.",
+      };
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: "An error occurred during logout. Please try again later.",
+    };
+  }
+}

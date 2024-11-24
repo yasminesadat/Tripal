@@ -3,6 +3,8 @@ import Menu from "../components/TouristMenu";
 import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
+import { logout } from "@/api/UserService";
+import { message } from "antd";
 
 export default function SellerHeader() {
   const navigate = useNavigate();
@@ -21,6 +23,15 @@ export default function SellerHeader() {
     closeTimeout = setTimeout(() => {
       setDropdownOpen(false);
     }, 200);
+  };
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.status === "success") {
+      window.location.href = "/login";
+    } else {
+      message.error(result.message);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -98,7 +109,11 @@ export default function SellerHeader() {
                 <ul>
                   {profile.map((item) => (
                     <li key={item.id}>
-                      <a href={item.href}>{item.title}</a>
+                      {item.title === "Log Out" ? (
+                        <a onClick={handleLogout}>{item.title}</a>
+                      ) : (
+                        <a href={item.href}>{item.title}</a>
+                      )}
                     </li>
                   ))}
                 </ul>
