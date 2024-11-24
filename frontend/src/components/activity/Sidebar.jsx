@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Calendar from "./Calendar.jsx";
 
+import ActivityCategoryService from '@/api/ActivityCategoryService'
+
 import {
   durations,
   languages,
@@ -11,9 +13,15 @@ import {
 import RangeSlider from "../common/RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
+export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
+
   const [selectedRatings, setSelectedRatings] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(""); 
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setRatingFilter(selectedRatings); 
@@ -31,6 +39,25 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
     setRatingFilter(selectedRatings); 
   }, [selectedRatings, setRatingFilter]);
   
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await ActivityCategoryService.getActivityCategories();
+        setCategories(response);
+      } catch (err) {
+        setError("Error fetching categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setCategoryFilter(category); 
+  }, [category, setCategoryFilter]);
+
 
   return (
     <div className="sidebar -type-1 rounded-12">
@@ -76,7 +103,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
                   )
                 }
               >
-                <h5 className="text-18 fw-500">Tour Type</h5>
+                <h5 className="text-18 fw-500">Category</h5>
 
                 <div className="accordion__icon flex-center">
                   <i className="icon-chevron-down"></i>
@@ -92,7 +119,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
               >
                 <div className="pt-15">
                   <div className="d-flex flex-column y-gap-15">
-                    {toursTypes.map((elm, i) => (
+                    {categories.map((elm, i) => (
                       <div key={i}>
                         <div className="d-flex items-center">
                           <div className="form-checkbox ">
@@ -104,18 +131,19 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
                             </div>
                           </div>
 
-                          <div className="lh-11 ml-10">{elm}</div>
+                          <div className="lh-11 ml-10">{elm.Name}</div>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <a
+                  {/* <a
                     href="#"
                     className="d-flex text-15 fw-500 text-accent-2 mt-15"
                   >
                     See More
-                  </a>
+                  </a> */}
+                  
                 </div>
               </div>
             </div>
