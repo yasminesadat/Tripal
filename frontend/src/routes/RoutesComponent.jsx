@@ -7,6 +7,7 @@ import touristRoutes from "./TouristRoutes";
 import advertiserRoutes from "./AdvertiserRoutes";
 import adminRoutes from "./AdminRoutes";
 import sellerRoutes from "./SellerRoutes";
+import tourguideRoutes from "./TourguideRoutes";
 const RoutesComponent = () => (
   <Routes>
     {[...guestRoutes, ...templateRoutes].map((route, index) => (
@@ -56,6 +57,18 @@ const RoutesComponent = () => (
           <RoleProtectedRoute
             element={route.element}
             requiredRoles={["Seller"]}
+          />
+        }
+      />
+    ))}
+    {tourguideRoutes.map((route, index) => (
+      <Route
+        key={`tourguide-${index}`}
+        path={route.path}
+        element={
+          <RoleProtectedRoute
+            element={route.element}
+            requiredRoles={["Tour Guide"]}
           />
         }
       />
