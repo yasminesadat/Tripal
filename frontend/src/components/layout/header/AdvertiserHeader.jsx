@@ -4,7 +4,7 @@ import { profile } from "@/data/advertiserMenu";
 
 import { Link, useNavigate } from "react-router-dom";
 
-export default function AdminHeader() {
+export default function AdvertiserHeader() {
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {

@@ -31,7 +31,7 @@ export default function UserForm() {
     } else if (role === "Seller") {
       window.location.href = "/seller";
     } else if (role === "Tourism Governor") {
-      window.location.href = "/tourismgovernor";
+      window.location.href = "/governor";
     }
   };
 

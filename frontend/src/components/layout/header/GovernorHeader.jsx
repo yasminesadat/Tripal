@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Menu from "../components/TourGuideMenu";
-import { profile } from "@/data/tourGuideMenu";
+import Menu from "../components/GovernorMenu";
+import { profile } from "@/data/governorMenu";
 
 import { Link, useNavigate } from "react-router-dom";
 
-export default function TourGuideHeader() {
+export default function GovernorHeader() {
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {
