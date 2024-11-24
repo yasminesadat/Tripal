@@ -177,10 +177,10 @@ export default function Profile() {
         className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
           } js-dashboard`}
       >
-
+        {/* 
         {profileInformation.totalPoints !== undefined && (
           <Badge totalPoints={profileInformation.totalPoints} />
-        )}
+        )} */}
         <Sidebar setSideBarOpen={setSideBarOpen} />
 
         <div className="dashboard__content">
@@ -355,6 +355,7 @@ export default function Profile() {
                     Save Changes
                     <i className="icon-arrow-top-right text-16 ml-10"></i>
                   </button>
+                  <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
                 </div>
               </div>
             </div>
@@ -398,10 +399,12 @@ export default function Profile() {
 
                 <div className="row">
                   <div className="col-12">
+
                     <button className="button -md -dark-1 bg-accent-1 text-white">
                       Save Changes
                       <i className="icon-arrow-top-right text-16 ml-10"></i>
                     </button>
+
                   </div>
                 </div>
               </div>
