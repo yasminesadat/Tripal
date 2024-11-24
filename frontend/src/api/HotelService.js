@@ -12,7 +12,7 @@ export const getCityCode = async (searchinfo) =>{
     const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
     console.log("ERRPR MESSAGE", errorMessage)
     throw new Error(errorMessage);
-  };
+  }
 }
 
 
@@ -28,7 +28,7 @@ export const getHotels = async (cityCode) => {
       const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
       console.log("ERRPR MESSAGE", errorMessage)
       throw new Error(errorMessage);
-    };
+    }
   };
 
   export const getHotelDetails = async (hotelID) => {
@@ -43,7 +43,7 @@ export const getHotels = async (cityCode) => {
       const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
       console.log("ERRPR MESSAGE", errorMessage)
       throw new Error(errorMessage);
-    };
+    }
   };
 
   export const getHotelPrices = async (hotelIds,checkInDate,checkOutDate,adults,boardType) => {
@@ -58,7 +58,7 @@ export const getHotels = async (cityCode) => {
       const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
       console.log("ERRPR MESSAGE", errorMessage)
       throw new Error(errorMessage);
-    };
+    }
   };
 
 
@@ -75,12 +75,12 @@ export const getHotels = async (cityCode) => {
       const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
       console.log("ERRPR MESSAGE", errorMessage)
       throw new Error(errorMessage);
-    };
+    }
   }
 
-  export async function getHotelHistory(touristId) {
+  export async function getHotelHistory() {
     try {
-      const response = await axios.get(`/tourist/bookedHotels/${touristId}`);
+      const response = await axios.get(`/tourist/bookedHotels`);
       
       return response.data;
     } catch (error) {

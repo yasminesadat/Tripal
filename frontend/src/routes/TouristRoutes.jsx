@@ -19,15 +19,13 @@ import FlightSearch from "../pages/tourist/SearchBar";
 // import Hero5 from "../components/tourist/SearchBar";
 // import BookingDetails from "../components/tourist/BookingDetails";
 // import Invoice from "../components/tourist/Invoice";
-// import DbBooking from "../components/tourist/BookingHistory";
+import DbBooking from "@/pages/tourist/BookingHistory";
 
 import TouristHome from "@/pages/tourist/TouristHome";
 import FlightsList from "@/pages/tourist/FlightsList";
 //Hotels:
 
 import BookingPages from "../pages/BookingHotels/BookingConfirmation";
-// import Map from "../pages/BookingHotels/Components/Map";
-// import CreditCard from "../pages/BookingHotels/Components/Payment";
 import HotelDetails from "../pages/BookingHotels/HotelDetails";
 import TourList1 from "../pages/BookingHotels/HotelList";
 import Hero6 from "../pages/BookingHotels/SearchHotel2";
@@ -83,18 +81,15 @@ const touristRoutes = [
   // { path: "/tourist/search-flight", element: <Hero5 /> },
   // { path: "/tourist/booking-summary", element: <BookingDetails /> },
   // { path: "/tourist/invoice", element: <Invoice /> },
-  // { path: "/tourist/booking-history", element: <DbBooking /> },
+  { path: "/tourist/booking-history", element: <DbBooking /> },
 
 
 
   {path:"/hotel2",element:<Hero6/>},
-  // {path:"/hotelList",element:<TourList1/>},
   {path:"/hotelList/:cityCode/:dates1/:dates2", element:<TourList1/>},
   {path:"/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2", element:<HotelDetails/>},
-  // {path:"/map",element:<Map/>},
   {path:"/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate",element:<BookingPages/>},
 
-  // {path:"/payment",element:<CreditCard/>}
 ];
 
 export default touristRoutes;
