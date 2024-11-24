@@ -14,6 +14,12 @@ import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { Select } from 'antd';
 import { Tag } from 'antd';
+import MetaComponent from "@/components/common/MetaComponent";
+import TouristHeader from "@/components/layout/header/TouristHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
+const metadata = {
+  title: "Home || Tripal - Travel Agency",
+};
 export default function Profile() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
@@ -170,249 +176,257 @@ export default function Profile() {
   };
   return (
     <>
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
 
-      <div
-        className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
-          } js-dashboard`}
-      >
 
-        {/* {profileInformation.totalPoints !== undefined && (
+          <div
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+              } js-dashboard`}
+          >
+
+            {/* {profileInformation.totalPoints !== undefined && (
           <Badge totalPoints={profileInformation.totalPoints} />
         )} */}
-        <Sidebar setSideBarOpen={setSideBarOpen} />
+            <Sidebar setSideBarOpen={setSideBarOpen} />
 
-        <div className="dashboard__content">
+            <div className="dashboard__content">
 
-          <div className="dashboard__content_content">
-            <h1 className="text-30">Tourist profile</h1>
-            <p className="">{profileInformation.userName}</p>
-            <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
-              <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
+              <div className="dashboard__content_content">
+                <h1 className="text-30">Tourist profile</h1>
+                <p className="">{profileInformation.userName}</p>
+                <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
+                  <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
 
-              <div className="contactForm row y-gap-30">
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="userName"
-                      value={profileInformation.userName}
-                      readOnly
+                  <div className="contactForm row y-gap-30">
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="userName"
+                          value={profileInformation.userName}
+                          readOnly
 
-                    />
-                    <label className="lh-1 text-16 text-light-1">Username</label>
+                        />
+                        <label className="lh-1 text-16 text-light-1">Username</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="email"
+                          value={editedProfile.email}
+                          onChange={handleInputChange} // Handle input changes
+
+
+                        />
+                        <label className="lh-1 text-16 text-light-1">
+                          Email
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="dateOfBirth"
+                          value={new Date(
+                            profileInformation.dateOfBirth
+                          ).toLocaleDateString()}
+                          readOnly
+
+                        />
+                        <label className="lh-1 text-16 text-light-1">Date of Birth</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="mobileNumber"
+                          value={editedProfile.mobileNumber}
+                          onChange={handleInputChange}
+                        />
+                        <label className="lh-1 text-16 text-light-1">Phone Number</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        {profileInformation.wallet ? (
+                          <input
+                            type="text"
+                            name="walletBalance"
+                            value={
+                              profileInformation.wallet.amount +
+                              " " +
+                              profileInformation.wallet.currency
+                            }
+                            readOnly
+                          />
+                        ) : (
+                          <span>No wallet information available</span>
+                        )}
+                        <label className="lh-1 text-16 text-light-1">Wallet</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input">
+                        {profileInformation.currentPoints !== undefined ? (
+                          <input
+                            type="text"
+                            name="currentPoints"
+                            value={profileInformation.currentPoints} // Corrected value assignment
+                            readOnly
+                          />
+                        ) : (
+                          <span>No points information available</span>
+                        )}
+                        <label className="lh-1 text-16 text-light-1">Total Points</label>
+
+                      </div>
+                      <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
+                        Redeem points to cash
+                      </button>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="job"
+                          value={editedProfile.job}
+                          onChange={handleInputChange}
+
+                        />
+                        <label className="lh-1 text-16 text-light-1">Job</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input ">
+                        <input
+                          type="text"
+                          name="nationality"
+                          value={editedProfile.nationality}
+                          onChange={handleInputChange}
+
+                        />
+                        <label className="lh-1 text-16 text-light-1">Nationality</label>
+                      </div>
+                    </div>
+
+                    <p>
+                      <b>Chosen Preference Tags:</b>
+                    </p>
+
+                    <Select
+                      mode="multiple"
+                      value={editedProfile.tags}
+                      onChange={handleTagsChange}
+                      placeholder="Select tags"
+                      style={{ width: '100%' }}
+                    >
+                      {allTags.map((tag) => (
+                        <Select.Option key={tag._id} value={tag._id}>
+                          {tag.name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                    <p>
+                      <b>Chosen Activity Categories:</b>
+                    </p>
+
+                    <Select
+                      mode="multiple"
+                      value={editedProfile.categories}
+                      onChange={handleCategoriesChange}
+                      placeholder="Select Categories"
+                      style={{ width: '100%' }}
+                    >
+                      {allCats.map((category) => (
+                        <Select.Option key={category._id} value={category._id}>
+                          {category.Name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+
+
+
+                    <div className="col-12">
+                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
+                        Save Changes
+                        <i className="icon-arrow-top-right text-16 ml-10"></i>
+                      </button>
+                      <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="email"
-                      value={editedProfile.email}
-                      onChange={handleInputChange} // Handle input changes
+                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
+                  <h5 className="text-20 fw-500 mb-30">Change Password</h5>
 
+                  <div className="contactForm y-gap-30">
+                    <div className="row y-gap-30">
+                      <div className="col-md-6">
+                        <div className="form-input ">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            Old password
+                          </label>
+                        </div>
+                      </div>
+                    </div>
 
-                    />
-                    <label className="lh-1 text-16 text-light-1">
-                      Email
-                    </label>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-input ">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            New password
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-input ">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            Confirm new password
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-12">
+
+                        <button className="button -md -dark-1 bg-accent-1 text-white">
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="dateOfBirth"
-                      value={new Date(
-                        profileInformation.dateOfBirth
-                      ).toLocaleDateString()}
-                      readOnly
-
-                    />
-                    <label className="lh-1 text-16 text-light-1">Date of Birth</label>
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="mobileNumber"
-                      value={editedProfile.mobileNumber}
-                      onChange={handleInputChange}
-                    />
-                    <label className="lh-1 text-16 text-light-1">Phone Number</label>
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    {profileInformation.wallet ? (
-                      <input
-                        type="text"
-                        name="walletBalance"
-                        value={
-                          profileInformation.wallet.amount +
-                          " " +
-                          profileInformation.wallet.currency
-                        }
-                        readOnly
-                      />
-                    ) : (
-                      <span>No wallet information available</span>
-                    )}
-                    <label className="lh-1 text-16 text-light-1">Wallet</label>
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="form-input">
-                    {profileInformation.currentPoints !== undefined ? (
-                      <input
-                        type="text"
-                        name="currentPoints"
-                        value={profileInformation.currentPoints} // Corrected value assignment
-                        readOnly
-                      />
-                    ) : (
-                      <span>No points information available</span>
-                    )}
-                    <label className="lh-1 text-16 text-light-1">Total Points</label>
-
-                  </div>
-                  <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
-                    Redeem points to cash
-                  </button>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="job"
-                      value={editedProfile.job}
-                      onChange={handleInputChange}
-
-                    />
-                    <label className="lh-1 text-16 text-light-1">Job</label>
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="form-input ">
-                    <input
-                      type="text"
-                      name="nationality"
-                      value={editedProfile.nationality}
-                      onChange={handleInputChange}
-
-                    />
-                    <label className="lh-1 text-16 text-light-1">Nationality</label>
-                  </div>
-                </div>
-
-                <p>
-                  <b>Chosen Preference Tags:</b>
-                </p>
-
-                <Select
-                  mode="multiple"
-                  value={editedProfile.tags}
-                  onChange={handleTagsChange}
-                  placeholder="Select tags"
-                  style={{ width: '100%' }}
-                >
-                  {allTags.map((tag) => (
-                    <Select.Option key={tag._id} value={tag._id}>
-                      {tag.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-                <p>
-                  <b>Chosen Activity Categories:</b>
-                </p>
-
-                <Select
-                  mode="multiple"
-                  value={editedProfile.categories}
-                  onChange={handleCategoriesChange}
-                  placeholder="Select Categories"
-                  style={{ width: '100%' }}
-                >
-                  {allCats.map((category) => (
-                    <Select.Option key={category._id} value={category._id}>
-                      {category.Name}
-                    </Select.Option>
-                  ))}
-                </Select>
-
-
-
-                <div className="col-12">
-                  <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                    Save Changes
-                    <i className="icon-arrow-top-right text-16 ml-10"></i>
-                  </button>
-                  <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
+                <div className="text-center pt-30">
+                  © Copyright Tripal {new Date().getFullYear()}
                 </div>
               </div>
-            </div>
-
-            <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
-              <h5 className="text-20 fw-500 mb-30">Change Password</h5>
-
-              <div className="contactForm y-gap-30">
-                <div className="row y-gap-30">
-                  <div className="col-md-6">
-                    <div className="form-input ">
-                      <input type="text" required />
-                      <label className="lh-1 text-16 text-light-1">
-                        Old password
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="form-input ">
-                      <input type="text" required />
-                      <label className="lh-1 text-16 text-light-1">
-                        New password
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="form-input ">
-                      <input type="text" required />
-                      <label className="lh-1 text-16 text-light-1">
-                        Confirm new password
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12">
-
-                    <button className="button -md -dark-1 bg-accent-1 text-white">
-                      Save Changes
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
             </div>
           </div>
-        </div>
+        </main>
+        <FooterThree />
       </div>
       <style>
         {`
