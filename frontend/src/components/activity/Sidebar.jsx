@@ -18,7 +18,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
 
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(""); 
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,9 +55,20 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   }, []);
 
   useEffect(() => {
-    setCategoryFilter(category); 
-  }, [category, setCategoryFilter]);
+    setCategoryFilter(selectedCategories);
+  }, [selectedCategories, setCategoryFilter]);
 
+  const handleCheckboxChange = (categoryName) => {
+    setSelectedCategories((prevSelected) => {
+      if (prevSelected.includes(categoryName)) {
+        // Remove from selected
+        return prevSelected.filter((cat) => cat !== categoryName);
+      } else {
+        // Add to selected
+        return [...prevSelected, categoryName];
+      }
+    });
+  };
 
   return (
     <div className="sidebar -type-1 rounded-12">
@@ -123,7 +134,12 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                       <div key={i}>
                         <div className="d-flex items-center">
                           <div className="form-checkbox ">
-                            <input type="checkbox" name="name" />
+                            <input 
+                              type="checkbox" 
+                              name="name" 
+                              checked={selectedCategories.includes(elm.Name)} 
+                              onChange={() => handleCheckboxChange(elm.Name)}
+                            />
                             <div className="form-checkbox__mark">
                               <div className="form-checkbox__icon">
                                 <img src="/img/icons/check.svg" alt="icon" />
@@ -143,7 +159,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                   >
                     See More
                   </a> */}
-                  
+
                 </div>
               </div>
             </div>

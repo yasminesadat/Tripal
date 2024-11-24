@@ -35,7 +35,7 @@ export default function ActivitiesList({
   const [startDate, setStartDate] = useState(null); 
   const [endDate, setEndDate] = useState(null); 
   const [ratingFilter, setRatingFilter] = useState([]);  
-  const [categoryFilter, setCategoryFilter] = useState(""); // Category filter state
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,27 +92,28 @@ export default function ActivitiesList({
     const filtered = activities.filter((activity) => {
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
-      const activityCategory = activity.category; 
+      const activityCategory = activity.category.Name.toLowerCase(); 
   
-      // Date Filter
+      // date filter
       const isDateValid =
         !startDate || !endDate ||
         (activityDate >= (new Date(startDate.setHours(0, 0, 0, 0))) &&
           activityDate <= (new Date(endDate.setHours(23, 59, 59, 999))));
   
-      // Rating Filter
+      // rating filter
       const isRatingValid =
         ratingFilter.length === 0 || ratingFilter.some((rating) => activityRating >= rating);
   
-      // Category Filter
-      const isCategoryValid = !categoryFilter || activityCategory === categoryFilter;
-  
-      // Combine all filters
+      // category filter
+      const isCategoryValid =
+        selectedCategories.length === 0 ||
+        selectedCategories.some((cat) => cat.toLowerCase() === activityCategory);
+
       return isDateValid && isRatingValid && isCategoryValid;
     });
   
     setFilteredActivities(filtered);
-  }, [startDate, endDate, activities, ratingFilter, categoryFilter]);
+  }, [startDate, endDate, activities, ratingFilter, selectedCategories]);
   
   
   // useEffect(() => {
@@ -157,7 +158,7 @@ export default function ActivitiesList({
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setCategoryFilter} />
+            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setSelectedCategories} />
             </div>
 
             <div className="accordion d-none mb-30 lg:d-flex js-accordion">
@@ -179,7 +180,7 @@ export default function ActivitiesList({
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 >
                   <div className="pt-20">
-                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setCategoryFilter} />
+                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setSelectedCategories} />
                   </div>
                 </div>
               </div>
