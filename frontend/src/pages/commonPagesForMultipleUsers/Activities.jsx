@@ -93,7 +93,7 @@ const Activities = () => {
     };
 
     fetchActivities();
-  }, [id, isAdvertiser, isTourist]);
+  }, [isAdvertiser, isTourist]);
 
 
   const handleSearch = (searchTerm) => {
