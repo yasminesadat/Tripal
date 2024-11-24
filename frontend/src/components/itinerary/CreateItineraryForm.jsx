@@ -24,8 +24,26 @@ export default function CreateItineraryForm() {
 
     const handleDateChange = (dates) => {
     if (dates && dates.length === 2) {
-        const startDate = dates[0].startOf("day");
-        const endDate = dates[1].startOf("day");
+        var startDate = dates[0].startOf("day");
+        if(startDate.isBefore(new Date(), "day")) {
+            message.error("Start date cannot be in the past.");
+            dates = null;
+            startDate = null;
+            return;
+        }
+        var endDate = dates[1].startOf("day");
+        if(endDate.isBefore(startDate, "day")) {
+            message.error("End date cannot be before start date.");
+            dates = null;
+            endDate = null;
+            return;
+        }
+        if(endDate.isBefore(new Date(), "day")) {
+            message.error("End date cannot be in the past.");
+            dates = null;
+            endDate = null;
+            return;
+        }
         const duration = endDate.diff(startDate, "days") + 1;
         setNumDays(duration);
     } else 
@@ -38,11 +56,9 @@ export default function CreateItineraryForm() {
 
     const onFinish = (values) => {
         console.log("Form Values: ", values);
-        message.success("Itinerary created successfully!");
     };
 
     const onFinishFailed = (errorInfo) => {
-        message.error("Please complete all required fields.");
         console.log("Form Errors: ", errorInfo);
     };
 
@@ -60,10 +76,17 @@ export default function CreateItineraryForm() {
             pickupLocation: pickupLocation,
             dropoffLocation: dropoffLocation,
         };
-
+        if(values.availableDate[0].isBefore(new Date(), "day") || values.availableDate[1].isBefore(new Date(), "day")){
+            return message.error("Please enter future dates for the itinerary.");
+        }
+        if(!selectedActivities || selectedActivities.length === 0){
+            return message.error("Please select activities for the itinerary.");
+        }
         try {
+            
             setLoading(true);
             await createItinerary(itineraryData);
+            message.success("Itinerary created successfully!");
             form.resetFields();
             setSelectedActivities([]);
         } catch (error) {
