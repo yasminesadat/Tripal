@@ -78,7 +78,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   return (
     <div className="sidebar -type-1 rounded-12">
       <div className="sidebar__header bg-accent-1">
-        <div className="text-15 text-white fw-500">When are you traveling?</div>
+        <div className="text-15 text-white fw-500">When are you free?</div>
 
         <div className="mt-10">
           <div className="searchForm -type-1 -col-1 -narrow">
@@ -213,118 +213,6 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
         <div className="sidebar__item">
           <div className="accordion -simple-2 js-accordion">
             <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("duration") ? "is-active" : ""
-              } `}
-            >
-              <div
-                className="accordion__button d-flex items-center justify-between"
-                onClick={() =>
-                  setDdActives((pre) =>
-                    pre.includes("duration")
-                      ? [...pre.filter((elm) => elm != "duration")]
-                      : [...pre, "duration"],
-                  )
-                }
-              >
-                <h5 className="text-18 fw-500">Duration</h5>
-
-                <div className="accordion__icon flex-center">
-                  <i className="icon-chevron-down"></i>
-                  <i className="icon-chevron-down"></i>
-                </div>
-              </div>
-
-              <div
-                className="accordion__content"
-                style={
-                  ddActives.includes("duration") ? { maxHeight: "300px" } : {}
-                }
-              >
-                <div className="pt-15">
-                  <div className="d-flex flex-column y-gap-15">
-                    {durations.map((elm, i) => (
-                      <div key={i}>
-                        <div className="d-flex items-center">
-                          <div className="form-checkbox ">
-                            <input type="checkbox" name="name" />
-                            <div className="form-checkbox__mark">
-                              <div className="form-checkbox__icon">
-                                <img src="/img/icons/check.svg" alt="icon" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lh-11 ml-10">{elm}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="sidebar__item">
-          <div className="accordion -simple-2 js-accordion">
-            <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("language") ? "is-active" : ""
-              } `}
-            >
-              <div
-                className="accordion__button d-flex items-center justify-between"
-                onClick={() =>
-                  setDdActives((pre) =>
-                    pre.includes("language")
-                      ? [...pre.filter((elm) => elm != "language")]
-                      : [...pre, "language"],
-                  )
-                }
-              >
-                <h5 className="text-18 fw-500">Language</h5>
-
-                <div className="accordion__icon flex-center">
-                  <i className="icon-chevron-down"></i>
-                  <i className="icon-chevron-down"></i>
-                </div>
-              </div>
-
-              <div
-                className="accordion__content"
-                style={
-                  ddActives.includes("language") ? { maxHeight: "300px" } : {}
-                }
-              >
-                <div className="pt-15">
-                  <div className="d-flex flex-column y-gap-15">
-                    {languages.map((elm, i) => (
-                      <div key={i}>
-                        <div className="d-flex items-center">
-                          <div className="form-checkbox ">
-                            <input type="checkbox" name="name" />
-                            <div className="form-checkbox__mark">
-                              <div className="form-checkbox__icon">
-                                <img src="/img/icons/check.svg" alt="icon" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lh-11 ml-10">{elm}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="sidebar__item">
-          <div className="accordion -simple-2 js-accordion">
-            <div
               className={`accordion__item js-accordion-item-active ${ddActives.includes("rating") ? "is-active" : ""}`}
             >
               <div
@@ -362,62 +250,6 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                         </div>
                         <div className="d-flex x-gap-5 ml-10">
                           <Stars star={elm} font={13} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="sidebar__item">
-          <div className="accordion -simple-2 js-accordion">
-            <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("features") ? "is-active" : ""
-              } `}
-            >
-              <div
-                className="accordion__button d-flex items-center justify-between"
-                onClick={() =>
-                  setDdActives((pre) =>
-                    pre.includes("features")
-                      ? [...pre.filter((elm) => elm != "features")]
-                      : [...pre, "features"],
-                  )
-                }
-              >
-                <h5 className="text-18 fw-500">Specials</h5>
-
-                <div className="accordion__icon flex-center">
-                  <i className="icon-chevron-down"></i>
-                  <i className="icon-chevron-down"></i>
-                </div>
-              </div>
-
-              <div
-                className="accordion__content"
-                style={
-                  ddActives.includes("features") ? { maxHeight: "300px" } : {}
-                }
-              >
-                <div className="pt-15">
-                  <div className="d-flex flex-column y-gap-15">
-                    {features.map((elm, i) => (
-                      <div key={i}>
-                        <div className="d-flex items-center">
-                          <div className="form-checkbox ">
-                            <input type="checkbox" name="name" />
-                            <div className="form-checkbox__mark">
-                              <div className="form-checkbox__icon">
-                                <img src="/img/icons/check.svg" alt="icon" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lh-11 ml-10">{elm}</div>
                         </div>
                       </div>
                     ))}
