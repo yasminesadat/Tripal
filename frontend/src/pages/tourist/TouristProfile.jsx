@@ -128,15 +128,15 @@ export default function Profile() {
 
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
-      toast.warning("No points to redeem");
+      message.warning("No points to redeem");
       return;
     }
     try {
       await redeemPoints();
       await getUserInformation();
-      toast.success("points redeemed successfully");
+      message.success("points redeemed successfully");
     } catch (error) {
-      toast.error("redemption failed")
+      message.error("redemption failed")
     }
   };
 
