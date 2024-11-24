@@ -73,7 +73,7 @@ export default function Header3() {
 
           <div className="header__right">
             <div className="ml-30">
-              <Currency />
+              {/* <Currency /> */}
             </div>
 
             <Link to="/help-center" className="ml-20">

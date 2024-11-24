@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "react-scripts start"
+
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -21,6 +23,7 @@
     "firebase": "^11.0.2",
     "jwt-decode": "^4.0.0",
     "leaflet-geosearch": "^4.0.0",
+    "lucide-react": "^0.460.0",
     "mdb-react-ui-kit": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -29,6 +32,7 @@
     "react-modal-video": "^2.0.1",
     "react-multi-date-picker": "^4.4.1",
     "react-router-dom": "^6.19.0",
+    "react-scripts": "^5.0.1",
     "react-spinners": "^0.14.1",
     "recharts": "^2.10.0",
     "swiper": "^11.0.4"

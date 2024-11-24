@@ -1,13 +1,14 @@
 import Messages from "@/components/dasboard/Messages";
 import React from "react";
 import { useLocation } from "react-router-dom";
-
+import FooterThree from "@/components/layout/footers/FooterThree";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import MetaComponent from "@/components/common/MetaComponent";
 import { useState } from "react";
 const metadata = {
-    title: "Dashboard-messages || ViaTour - Travel & Tour Reactjs Template",
-    description: "ViaTour - Travel & Tour Reactjs Template",
+    title: "Home || Tripal - Travel Agency",
 };
+
 
 export default function ComplaintsReplies() {
     const location = useLocation();
@@ -20,9 +21,13 @@ export default function ComplaintsReplies() {
 
         <>
             <MetaComponent meta={metadata} />
-            <main>
-                <Messages complaint={complaint} user={user} role={role} />
-            </main>
+            <div className="page-wrapper">
+                <TouristHeader />
+                <main className="page-content">
+                    <Messages complaint={complaint} user={user} role={role} />
+                </main>
+                <FooterThree />
+            </div>
         </>
     );
 }

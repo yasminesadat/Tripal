@@ -25,9 +25,9 @@ export default function Activities() {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id); 
+          setUserId(response.data.id);
         } else {
-          message.error(response.data.message); 
+          message.error(response.data.message);
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
