@@ -11,18 +11,38 @@ import DateCalender from "../../templateComponents/DateCalender";
 import ReviewBox from "../../common/reviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { userRole } from "../../../IDs";
+// import { userRole } from "../../../IDs";
 import Index from "../../templateComponents/index"
+import { getUserData } from "../../../api/UserService";
 
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
   const { page } = location.state || {};
   const [markerPosition, setMarkerPosition] = useState([activity?.latitude|| 35.11, activity?.longitude||35.11]);
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [userRole, setUserRole] = useState(null); 
+  const [userId, setUserId] = useState(null); 
 
   if (!activity) return <div><Index/></div>;
   const activityId = activity._id;  
   
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+          setUserId(response.data.id); 
+        } else {
+          message.error(response.data.message); 
+        }
+      } catch (error) {
+        message.error("Failed to fetch user data.");
+      }
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <section className="">

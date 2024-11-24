@@ -1,3 +1,4 @@
+
 //import Sidebar from "./Sidebar";
 import Header from "../../components/dasboard/Header";
 import Map from "../../components/pages/contact/Map";
@@ -34,6 +35,7 @@ export default function AdvertiserProfile() {
     }
   };
 
+
   useEffect(() => {
     const fetchAdvertiser = async () => {
       try {
@@ -44,11 +46,14 @@ export default function AdvertiserProfile() {
       } catch (error) {
         setError(error);
         console.error("Error fetching advertiser:", error); // This should log if there's an error
+
       }
     };
 
     fetchAdvertiser();
+
   }, []);
+
 
   const handleDeletion = async () => {
     try {
@@ -61,16 +66,15 @@ export default function AdvertiserProfile() {
     }
   };
 
+
   console.log(advertiser)
   const General = advertiser
   ? [
-
     { label: "Company Name", value: advertiser.companyProfile?.companyName },
     { label: "Industry", value: advertiser.companyProfile?.industry },
     { label: "Description", value: advertiser.companyProfile?.description },
     { label: "Founded Year", value: advertiser.companyProfile?.foundedYear },
-    { label: "Employees", value: advertiser.companyProfile?.employees },
-    
+    { label: "Employees", value: advertiser.companyProfile?.employees },   
     {
       label: "Certifications",
       value: advertiser.companyProfile?.certifications?.join(", "),
@@ -575,10 +579,13 @@ export default function AdvertiserProfile() {
 
             <div className="text-center pt-30">
               © Copyright Tripal {new Date().getFullYear()}
+
             </div>
           </div>
         </div>
       </div>
+
     </>
   );
 }
+
