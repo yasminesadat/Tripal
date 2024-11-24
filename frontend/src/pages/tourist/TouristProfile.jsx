@@ -274,26 +274,27 @@ export default function Profile() {
                     </div>
 
                     <div className="col-md-6">
-                      <div className="form-input">
-                        {profileInformation.currentPoints !== undefined ? (
+                      <div className="d-flex justify-between">
+                        <div className="form-input" style={{ flex: 1.5, marginRight: '5px'  }}>
                           <input
                             type="text"
                             name="currentPoints"
-                            value={profileInformation.currentPoints} 
+                            value={profileInformation.currentPoints}
                             readOnly
                           />
-                        ) : (
-                          <span>No points information available</span>
-                        )}
-                        <label className="lh-1 text-16 text-light-1">Total Points</label>
-
-                      </div>
-                      <div className="d-flex justify-end">
-                      <button onClick={handleRedeemClick} className="button -md -dark-1 bg-accent-1 text-white" style={{ marginLeft: '10px' }}>
-                        Redeem points to cash
-                      </button>
+                          <label className="lh-1 text-16 text-light-1">Total Points</label>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <button
+                            onClick={handleRedeemClick}
+                            className="button -md -dark-1 bg-accent-1 text-white"
+                          >
+                            Redeem points to cash
+                          </button>
+                        </div>
                       </div>
                     </div>
+
                     <div className="col-md-6">
                       <div className="form-input ">
                         <input
