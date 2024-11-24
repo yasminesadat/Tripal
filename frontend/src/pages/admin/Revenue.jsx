@@ -6,6 +6,8 @@ import { checkTouristExists } from "../../api/TouristService";
 import { message, Dropdown, Menu } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
 import {getAllActivities}from "@/api/ActivityService";
+import { getAllItineraries } from "@/api/ItineraryService";
+//fadel get all products
 import Spinner from "@/components/common/Spinner";
 const Revenue = () => {
     const tabs = ["Itineraries", "Activities", "Products"];

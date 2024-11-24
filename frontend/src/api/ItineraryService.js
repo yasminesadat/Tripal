@@ -32,6 +32,16 @@ export const getItinerariesByTourGuide = async () => {
   }
 };
 
+export const getAllItineraries = async () => {
+  try {
+    const response = await axios.get("/itinerary");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching itineraries", error);
+    throw error;
+  }
+};
+
 export const createItinerary = async (itinerary) => {
   try {
     const response = await axios.post("/create-itinerary",itinerary);
