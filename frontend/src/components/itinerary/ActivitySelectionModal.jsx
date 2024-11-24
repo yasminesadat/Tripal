@@ -59,6 +59,7 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
                             <div>
                                 <strong>{activity.title}</strong>
                                 <div>{`Price: ${activity.price}`}</div>
+                                <div>{`Time: ${activity.time} `}</div>
                             </div>
                         </Checkbox>
                     </List.Item>
