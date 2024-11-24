@@ -7,42 +7,60 @@ export const sidebarItems = [
   },
   {
     id: 2,
-    href: "/db-booking",
+    href: "/admin/complaints",
     iconClass: "icon-calendar text-26",
-    label: "My Booking",
+    label: "Complaints",
   },
   {
     id: 3,
     href: "/db-listing",
     iconClass: "icon-menu text-26",
-    label: "My Listings",
+    label: "Add Admin",
   },
   {
     id: 4,
     href: "/db-add-tour",
     iconClass: "icon-clipboard text-26",
-    label: "Add Tour",
+    label: "Add Governor",
   },
   {
-    id: 5,
-    href: "/db-favorites",
-    iconClass: "icon-heart text-26",
-    label: "My Favorites",
+    id: 53,
+    href: "/contact",
+    iconClass: "icon-delete text-26",  // Example icon class
+    label: "Delete Users",
   },
   {
     id: 6,
     href: "/db-messages",
     iconClass: "icon-message text-26",
-    label: "Messages",
+    label: "Manage Requests",
   },
   {
     id: 7,
     href: "/db-profile",
     iconClass: "icon-account text-26",
-    label: "My Profile",
+    label: "Activity Categories",
   },
-  { id: 8, href: "/", iconClass: "icon-logout text-26", label: "Logout" },
+  {
+    id: 8,
+    href: "/",
+    iconClass: "icon-logout text-26",
+    label: "Logout"
+  },
+
+
+  {
+    id: 11,
+    href: "/change-password",
+    iconClass: "icon-lock text-26",  // Example icon class
+    label: "Change Password",
+  },
+
+
+
+
 ];
+
 
 export const states = [
   {

@@ -8,10 +8,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 const ComplaintsPage = () => {
-    const tabs = ["all", "pending", "resolved"];
+    const tabs = ["All", "Pending", "Resolved"];
     const navigate = useNavigate();
     // const [sideBarOpen, setSideBarOpen] = useState(true);
-    const [currentTab, setcurrentTab] = useState("all");
+    const [currentTab, setcurrentTab] = useState("All");
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
@@ -195,34 +195,41 @@ const ComplaintsPage = () => {
                                                 </thead>
 
                                                 <tbody>
-                                                    {(isSorted ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date)) : complaints.sort((a, b) => new Date(b.date) - new Date(a.date)))
-                                                        .filter((complaint) => currentTab === "all" || complaint.status === currentTab)
-
-                                                        .map((complaint) => (
-                                                            <React.Fragment key={complaint._id}>
-                                                                <tr>
-                                                                    <td>#{complaint._id.slice(-3)}</td>
-
-                                                                    <td>{complaint.title}</td>
-                                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
-                                                                        {complaint.status}
-                                                                    </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
-                                                                    <td>
-                                                                        <div style={{ display: 'flex', gap: '5px' }}>
-                                                                            <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
-                                                                                View Details
-                                                                            </button>
-                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
-                                                                                Resolve
-                                                                            </button>
-                                                                        </div>
-                                                                    </td>
-
-                                                                </tr>
+                                                    {
+                                                        (isSorted
+                                                            ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date))
+                                                            : complaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                                                        )
+                                                            .filter((complaint) =>
+                                                                currentTab === "All" || complaint.status.toLowerCase() === currentTab.toLowerCase()
+                                                            )
 
 
-                                                            </React.Fragment>
-                                                        ))}
+                                                            .map((complaint) => (
+                                                                <React.Fragment key={complaint._id}>
+                                                                    <tr>
+                                                                        <td>#{complaint._id.slice(-3)}</td>
+
+                                                                        <td>{complaint.title}</td>
+                                                                        <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
+                                                                            {complaint.status}
+                                                                        </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
+                                                                        <td>
+                                                                            <div style={{ display: 'flex', gap: '5px' }}>
+                                                                                <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                                                    View Details
+                                                                                </button>
+                                                                                <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
+                                                                                    Resolve
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+
+                                                                    </tr>
+
+
+                                                                </React.Fragment>
+                                                            ))}
 
                                                     {/* <td>
                                 <div className="d-flex items-center">
