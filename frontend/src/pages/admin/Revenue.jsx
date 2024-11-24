@@ -5,14 +5,13 @@ import { OrderedListOutlined } from '@ant-design/icons';
 import { checkTouristExists } from "../../api/TouristService";
 import { message, Dropdown, Menu } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
-import { getUserData } from "@/api/UserService";
+import {getAllActivities}from "@/api/ActivityService";
 import Spinner from "@/components/common/Spinner";
-import ActivityFilter from "@/components/activity/ActivityFilter";
 const Revenue = () => {
-    const tabs = ["all", "pending", "resolved"];
+    const tabs = ["Itineraries", "Activities", "Products"];
     const navigate = useNavigate();
     // const [sideBarOpen, setSideBarOpen] = useState(true);
-    const [currentTab, setcurrentTab] = useState("all");
+    const [currentTab, setcurrentTab] = useState("Itineraries");
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
@@ -147,18 +146,14 @@ const Revenue = () => {
         }];
     if (loading) {
 
-        return <Spinner />; // Show the spinner while loading
+        return <Spinner />; 
     }
     return (
         <>
-            <div className="complaints">
-                {/* <AdminNavBar /> */}
-                {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
-                <ActivityFilter/>
+            <div className="revenue">
                 <div className="dashboard__content">
-                    {/* <Header setSideBarOpen={setSideBarOpen} /> */}
                     <div className="dashboard__content_content">
-                        <h1 className="text-30">Complaints Management</h1>
+                        <h1 className="text-30">Revenue Management</h1>
                         <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
                             <div className="tabs -underline-2 js-tabs">
                                 <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
@@ -209,52 +204,16 @@ const Revenue = () => {
                                                                     <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
                                                                         {complaint.status}
                                                                     </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
-                                                                    <td>
-                                                                        <div style={{ display: 'flex', gap: '5px' }}>
-                                                                            <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
-                                                                                View Details
-                                                                            </button>
-                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
-                                                                                Resolve
-                                                                            </button>
-                                                                        </div>
-                                                                    </td>
-
                                                                 </tr>
-
-
                                                             </React.Fragment>
                                                         ))}
-
-                                                    {/* <td>
-                                <div className="d-flex items-center">
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                    <i className="icon-pencil text-14"></i>
-                                  </button>
-
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                    <i className="icon-delete text-14"></i>
-                                  </button>
-                                </div>
-                              </td> */}
-
                                                 </tbody>
                                             </table>
                                         </div>
-
-                                        {/* <Pagination /> */}
-
-                                        {/* <div className="text-14 text-center mt-20">
-                    Showing results 1-30 of 1,415
-                  </div> */}
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* <div className="text-center pt-30">
-            © Copyright Viatours {new Date().getFullYear()}
-          </div> */}
                     </div>
                 </div>
             </div>
