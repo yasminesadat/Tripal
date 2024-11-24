@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import img from "./Components/HotelsImages/bookingicon2.png";
-import { touristId } from "../../IDs";
-import TouristNavBar from "../../components/navbar/TouristNavBar";
 
 export default function BookingPages() {
   const [isBookedOriginatingTransportation, setIsBookedOriginatingTransportation] = useState(false);
@@ -12,7 +10,6 @@ export default function BookingPages() {
   const [isBookedAccepted, setIsBookedAccepted] = useState(false);
   const [bookingStage, setBookingStage] = useState(2);
   const [total, setTotal] = useState(0);
-  const navigate = useNavigate();
 
   const today = new Date();
   const {
@@ -66,7 +63,6 @@ export default function BookingPages() {
                       bookingStage={bookingStage}
                       setBookingStage={setBookingStage}
                       cityCode={cityCode}
-                      userid={touristId}
                       hotelid={hotelID}
                       hotelname={name}
                       singleNumber={singleNumber}
