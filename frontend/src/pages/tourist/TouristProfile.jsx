@@ -20,7 +20,6 @@ export default function Profile() {
 
 
   const [profileInformation, setProfileInformation] = useState({});
-  const [isEditing, setIsEditing] = useState(false);
   const [touristTags, setTouristTags] = useState([]);
   const [touristCategories, setTouristCategories] = useState([]);
   const [allTags, setAllTags] = useState([]);
@@ -45,25 +44,18 @@ export default function Profile() {
   };
 
   const handleEditClick = async () => {
-    if (isEditing) {
-      // Save and call the API
-      setIsEditing(false);
-      console.log("New value", editedProfile);
-      try {
-        const response = await updateTouristInformation(id, editedProfile);
-        console.log("Profile updated successfully", response);
-        toast.success("Profile updated successfully");
-        await fetchTouristTags();
-        await fetchTouristCategories();
-      } catch (error) {
-        console.error("Failed to update user information:", error);
-        toast.error("Error updating profile");
-      }
-    } else {
-      // Clicking on edit
-      setIsEditing(true);
-      console.log("Editing mode enabled");
+
+
+    try {
+      const response = await updateTouristInformation(editedProfile);
+      message.success("Profile updated successfully");
+      await fetchTouristTags();
+      await fetchTouristCategories();
+    } catch (error) {
+      console.error("Failed to update user information:", error);
+      message.error("Failed to update profile");
     }
+
   };
   const handleTagsChange = (value) => {
     setEditedProfile((prevState) => ({
@@ -205,7 +197,7 @@ export default function Profile() {
                     <input
                       type="text"
                       name="userName"
-                      value={editedProfile.userName}
+                      value={profileInformation.userName}
                       readOnly
 
                     />
@@ -235,7 +227,7 @@ export default function Profile() {
                       type="text"
                       name="dateOfBirth"
                       value={new Date(
-                        editedProfile.dateOfBirth
+                        profileInformation.dateOfBirth
                       ).toLocaleDateString()}
                       readOnly
 
@@ -359,7 +351,7 @@ export default function Profile() {
 
 
                 <div className="col-12">
-                  <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
+                  <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
                     Save Changes
                     <i className="icon-arrow-top-right text-16 ml-10"></i>
                   </button>
