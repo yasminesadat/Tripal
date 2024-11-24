@@ -17,9 +17,6 @@ import { Select } from 'antd';
 import { Tag } from 'antd';
 export default function Profile() {
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("/img/dashboard/addtour/1.jpg");
-
 
 
   const [profileInformation, setProfileInformation] = useState({});
@@ -101,7 +98,7 @@ export default function Profile() {
   };
   const fetchTouristTags = async () => {
     try {
-      const tags = await getTouristTags(id);
+      const tags = await getTouristTags();
       setTouristTags(tags);
     } catch (error) {
       console.error("Error fetching tourist tags:", error);
@@ -110,7 +107,7 @@ export default function Profile() {
 
   const fetchTouristCategories = async () => {
     try {
-      const tags = await getTouristCategories(id);
+      const tags = await getTouristCategories();
       setTouristCategories(tags);
     } catch (error) {
       console.error("Error fetching tourist tags:", error);
@@ -136,23 +133,6 @@ export default function Profile() {
   };
 
 
-  const handleCurrencyChange = async (currency) => {
-    console.log("Chosen currency updated to:", currency);
-
-    const updatedProfileData = {
-      choosenCurrency: currency,
-    };
-
-    try {
-      await updateTouristInformation(id, updatedProfileData);
-      sessionStorage.removeItem("currency");
-      sessionStorage.setItem("currency", currency);
-      toast.success("currency for viewing prices updated successfully");
-    } catch (error) {
-      console.error("Failed to update user information:", error);
-      toast.error("Error updating currency");
-    }
-  };
 
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
@@ -160,7 +140,7 @@ export default function Profile() {
       return;
     }
     try {
-      await redeemPoints(id);
+      await redeemPoints();
       await getUserInformation();
       toast.success("points redeemed successfully");
     } catch (error) {
@@ -306,7 +286,11 @@ export default function Profile() {
                       <span>No points information available</span>
                     )}
                     <label className="lh-1 text-16 text-light-1">Total Points</label>
+
                   </div>
+                  <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
+                    Redeem points to cash
+                  </button>
                 </div>
                 <div className="col-md-6">
                   <div className="form-input ">
