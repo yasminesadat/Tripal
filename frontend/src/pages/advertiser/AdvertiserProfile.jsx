@@ -108,42 +108,38 @@ export default function AdvertiserProfile() {
   };
 
   // Handle dynamic input changes for certifications and awards
-  const handleCertificateChange = (index, value) => {
-    setAdvertiser((prevAdvertiser) => {
-      const updatedCertificates = [...prevAdvertiser.companyProfile.certifications];
-      updatedCertificates[index] = value;
-      
+  const handleItemChange = (e, index, field, type) => {
+    const { value } = e.target;
+  
+    setFormData((prevData) => {
+      const updatedItems = [...prevData.companyProfile[type]];
+  
+      if (type === "certifications") {
+        // Directly update the certification value
+        updatedItems[index] = value || "";
+      } else if (type === "awards") {
+        // Update the specific field for awards (e.g., title, year, issuer)
+        updatedItems[index] = {
+          ...updatedItems[index],  // Preserve the other fields
+          [field]: value || "",    // Update the specific field (title, issuer, etc.)
+        };
+      }
+  
       return {
-        ...prevAdvertiser,
+        ...prevData,
         companyProfile: {
-          ...prevAdvertiser.companyProfile,
-          certifications: updatedCertificates,
+          ...prevData.companyProfile,
+          [type]: updatedItems, // Update the certifications or awards
         },
       };
     });
   };
-  const handleAwardChange = (index, field, value) => {
-    setAdvertiser((prevAdvertiser) => {
-      const updatedAwards = [...prevAdvertiser.companyProfile.awards];
-      updatedAwards[index] = {
-        ...updatedAwards[index],
-        [field]: value,  // Dynamically update the field (title, issuer, or year)
-      };
-      
-      return {
-        ...prevAdvertiser,
-        companyProfile: {
-          ...prevAdvertiser.companyProfile,
-          awards: updatedAwards,
-        },
-      };
-    });
-  };
-    
+  
+  
 
   // Handle adding a new certification or award
   const handleAddCertificate = () => {
-    setAdvertiser((prevAdvertiser) => {
+    setFormData((prevAdvertiser) => {
       const updatedCertificates = [
         ...prevAdvertiser.companyProfile.certifications,
         "", // Add an empty string for the new certificate
@@ -160,7 +156,7 @@ export default function AdvertiserProfile() {
   };
   
   const handleAddAward = () => {
-    setAdvertiser((prevAdvertiser) => {
+    setFormData((prevAdvertiser) => {
       const updatedAwards = [
         ...prevAdvertiser.companyProfile.awards,
         { title: "", issuer: "", year: "" }, // Add an empty award object
@@ -178,37 +174,24 @@ export default function AdvertiserProfile() {
   
 
   // Handle removing a certification or award
-  const handleDeleteCertificate = (index) => {
-    setAdvertiser((prevAdvertiser) => {
-      const updatedCertificates = prevAdvertiser.companyProfile.certifications.filter(
-        (_, i) => i !== index
-      );
-      
+  const handleRemoveItem = (index, type) => {
+    setFormData((prevData) => {
+      const items = prevData.companyProfile[type] || [];
+
+      // Only proceed if it's a valid array
+      const updatedItems = Array.isArray(items)
+        ? items.filter((_, i) => i !== index)
+        : [];
       return {
-        ...prevAdvertiser,
+        ...prevData,
         companyProfile: {
-          ...prevAdvertiser.companyProfile,
-          certifications: updatedCertificates,
+          ...prevData.companyProfile,
+          [type]: updatedItems,
         },
       };
     });
   };
-  
-  const handleDeleteAward = (index) => {
-    setAdvertiser((prevAdvertiser) => {
-      const updatedAwards = prevAdvertiser.companyProfile.awards.filter(
-        (_, i) => i !== index
-      );
-      
-      return {
-        ...prevAdvertiser,
-        companyProfile: {
-          ...prevAdvertiser.companyProfile,
-          awards: updatedAwards,
-        },
-      };
-    });
-  };
+
   
 
 //   const handleLogoChange = (info) => {
@@ -289,7 +272,7 @@ export default function AdvertiserProfile() {
     { label: "Employees", value: advertiser.companyProfile?.employees|| "" },   
     {
       label: "Certifications",
-      value: advertiser.companyProfile?.certifications?.join(", ") || [],
+      value: formData.companyProfile?.certifications?.join(", ") || [],
     },
     
   ]  : [] ;
@@ -563,8 +546,8 @@ export default function AdvertiserProfile() {
                                     <div className="form-input">
                                         <input
                                         type="text"
-                                        value={certificate || ""}
-                                        onChange={(e) => handleCertificateChange(index, e.target.value)} // Update handler
+                                        value={certificate ?? ""}
+                                        onChange={(e) => handleItemChange(e, index, "", "certifications")} // Update handler
                                         
                                         />
                                         <label className="lh-1 text-16 text-light-1">Certificate</label>
@@ -573,7 +556,7 @@ export default function AdvertiserProfile() {
                                     <div className="col-lg-2">
                                     <button
                                         className="text-18 ml-20"
-                                        onClick={() => handleDeleteCertificate(index)} // Delete handler
+                                        onClick={() =>handleRemoveItem(index, "certifications")} // Delete handler
                                     >
                                         <i className="icon-delete"></i>
                                     </button>
@@ -582,7 +565,7 @@ export default function AdvertiserProfile() {
                                 ))
                             ) : (
                                 <div>
-                                <span className="text-16 text-light-1">No certificates provided</span>
+                                <span className="text-16">No certificates provided</span>
                                 </div>
                             )}
 
@@ -604,16 +587,16 @@ export default function AdvertiserProfile() {
                             <div className="mt-30">
                             <h3 className="text-18 fw-500 mb-20">Awards</h3>
 
-                            {advertiser?.companyProfile?.awards.length > 0 ? (
-                                advertiser?.companyProfile.awards.map((award, index) => (
+                            {formData?.companyProfile?.awards.length > 0 ? (
+                                formData?.companyProfile.awards.map((award, index) => (
                                 <div key={index} className="contactForm row y-gap-30 items-center">
                                     <div className="col-lg-4">
                                     <div className="form-input">
                                     <input
                                         type="text"
-                                        value={award.title || ""}
+                                        value={award.title ?? ""}
                                         onChange={(e) =>
-                                            handleAwardChange(index, "title", e.target.value) // Update the title
+                                          handleItemChange(e, index, "title", "awards") // Update the title
                                         }
                                         required
                                         />               
@@ -625,9 +608,9 @@ export default function AdvertiserProfile() {
                                     <div className="form-input">
                                     <input
                                             type="text"
-                                            value={award.issuer || ""}
+                                            value={award.issuer ?? ""}
                                             onChange={(e) =>
-                                                handleAwardChange(index, "issuer", e.target.value) // Update the issuer
+                                              handleItemChange(e, index, "issuer", "awards") // Update the issuer
                                             }
                                             required
                                             />
@@ -640,16 +623,16 @@ export default function AdvertiserProfile() {
                                         <div className="form-input">
                                         <input
                                             type="text"
-                                            value={award.year || ""}
+                                            value={award.year ?? ""}
                                             onChange={(e) =>
-                                                handleAwardChange(index, "year", e.target.value) // Update the year
+                                              handleItemChange(e, index, "year", "awards") // Update the year
                                             }
                                             required
                                             />
                                         <label className="lh-1 text-16 text-light-1">Year</label>
                                         </div>
 
-                                        <button className="text-18 ml-20" onClick={() => handleDeleteAward(index)}>
+                                        <button className="text-18 ml-20" onClick={() => handleRemoveItem(index, "awards")}>
                                         <i className="icon-delete"></i>
                                         </button>
                                     </div>
@@ -658,7 +641,7 @@ export default function AdvertiserProfile() {
                                 ))
                             ) : (
                                 <div>
-                                <span className="text-16 text-light-1">Awards not provided</span>
+                                <span className="text-16 ">Awards not provided</span>
 
                                 </div>
                             )}
