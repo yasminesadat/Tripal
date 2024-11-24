@@ -50,14 +50,14 @@ router.patch(
   "/products/:id/archive",
   validateIDs(["id"]),
   verifyToken,
-  authorizeRoles("Seller"),
+  authorizeRoles("Admin","Seller"),
   archiveProduct
 );
 router.patch(
   "/products/:id/unarchive",
   validateIDs(["id"]),
   verifyToken,
-  authorizeRoles("Seller"),
+  authorizeRoles("Admin","Seller"),
   unArchiveProduct
 );
 

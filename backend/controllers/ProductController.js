@@ -41,8 +41,8 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getProducts = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const productsPerPage = 6;
-  const { searchValue = "", minPrice, maxPrice, sortOrder, userRole="Tourist" } = req.query;
+  const productsPerPage = 8;
+  const { searchValue = "", minPrice, maxPrice, sortOrder, userRole } = req.query;
 
   const filter = {};
   if (searchValue) {
