@@ -14,6 +14,7 @@ const {
   viewPaidItineraries,
   getTouristItineraries,
   toggleItineraryStatus,
+  getAllItinerariesForAdmin,
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
@@ -76,6 +77,14 @@ router.get(
   validateIDs(["id"]),
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
+
+router.get(
+  "/itinerary",
+  verifyToken,
+  authorizeRoles("Admin"),
+  getAllItinerariesForAdmin,
+);
+
 
 router.patch(
   "/itinerary/:id/status",
