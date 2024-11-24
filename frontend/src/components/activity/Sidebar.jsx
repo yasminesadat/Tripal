@@ -10,15 +10,16 @@ import {
   features,
   rating,
 } from "@/data/tourFilteringOptions";
-import RangeSlider from "../common/RangeSlider";
+import RangeSlider from "./RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter }) {
+export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceRangeState, setPriceRangeState] = useState([0, 10000]); 
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,14 +62,18 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   const handleCheckboxChange = (categoryName) => {
     setSelectedCategories((prevSelected) => {
       if (prevSelected.includes(categoryName)) {
-        // Remove from selected
         return prevSelected.filter((cat) => cat !== categoryName);
       } else {
-        // Add to selected
         return [...prevSelected, categoryName];
       }
     });
   };
+
+  const handlePriceRangeChange = (newRange) => {
+    setPriceRangeState(newRange);
+    setPriceRange(newRange);
+  };
+
 
   return (
     <div className="sidebar -type-1 rounded-12">
@@ -183,7 +188,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                   )
                 }
               >
-                <h5 className="text-18 fw-500">Filter Price</h5>
+                <h5 className="text-18 fw-500">Price</h5>
 
                 <div className="accordion__icon flex-center">
                   <i className="icon-chevron-down"></i>
@@ -198,7 +203,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                 }
               >
                 <div className="pt-15">
-                  <RangeSlider />
+                  <RangeSlider priceRange={priceRangeState} setPriceRange={handlePriceRangeChange} />
                 </div>
               </div>
             </div>

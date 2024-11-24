@@ -36,6 +36,7 @@ export default function ActivitiesList({
   const [endDate, setEndDate] = useState(null); 
   const [ratingFilter, setRatingFilter] = useState([]);  
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 2000]); 
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -93,7 +94,9 @@ export default function ActivitiesList({
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase(); 
-  
+      // const activityPrice = activity.price * exchangeRate;
+      const activityPrice = activity.price;
+
       // date filter
       const isDateValid =
         !startDate || !endDate ||
@@ -109,11 +112,15 @@ export default function ActivitiesList({
         selectedCategories.length === 0 ||
         selectedCategories.some((cat) => cat.toLowerCase() === activityCategory);
 
-      return isDateValid && isRatingValid && isCategoryValid;
+      // price filter
+      const isPriceValid =
+        activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
+
+      return isDateValid && isRatingValid && isCategoryValid && isPriceValid;
     });
   
     setFilteredActivities(filtered);
-  }, [startDate, endDate, activities, ratingFilter, selectedCategories]);
+  }, [startDate, endDate, activities, ratingFilter, selectedCategories, priceRange]);
   
   
   // useEffect(() => {
@@ -158,7 +165,14 @@ export default function ActivitiesList({
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setSelectedCategories} />
+              <Sidebar 
+                setStartDate={setStartDate} 
+                setEndDate={setEndDate} 
+                setRatingFilter={setRatingFilter} 
+                setCategoryFilter={setSelectedCategories} 
+                priceRange={priceRange} 
+                setPriceRange={setPriceRange} 
+              />
             </div>
 
             <div className="accordion d-none mb-30 lg:d-flex js-accordion">
@@ -180,7 +194,14 @@ export default function ActivitiesList({
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 >
                   <div className="pt-20">
-                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter} setCategoryFilter={setSelectedCategories} />
+                    <Sidebar 
+                      setStartDate={setStartDate} 
+                      setEndDate={setEndDate} 
+                      setRatingFilter={setRatingFilter} 
+                      setCategoryFilter={setSelectedCategories} 
+                      priceRange={priceRange} 
+                      setPriceRange={setPriceRange} 
+                    />
                   </div>
                 </div>
               </div>
