@@ -12,6 +12,13 @@ const historicalPlaceRouter = express.Router();
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
+historicalPlaceRouter.get(
+  "/historicalPlaces/tourismGoverner",
+  verifyToken,
+  authorizeRoles("Tourism Governor"),
+  getTourismGovernerHistoricalPlaces
+);
+
 // historicalPlaceRouter.get(
 //   path + "/create", historicalPlaceController.historical_place_create_get);
 historicalPlaceRouter.get("/historicalPlaces/", getAllHistoricalPlaces);
@@ -29,11 +36,6 @@ historicalPlaceRouter.put(
   authorizeRoles("Tourism Governor"),
   updateHistoricalPlaces
 );
-historicalPlaceRouter.get(
-  "/historicalPlaces/tourismGoverner/:id",
-  verifyToken,
-  authorizeRoles("Tourism Governor"),
-  getTourismGovernerHistoricalPlaces
-);
+
 
 module.exports = historicalPlaceRouter;

@@ -1,7 +1,7 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
 import PageHeader from "@/components/tours/PageHeader";
-import TourList1 from "@/components/tours/TourList1";
+import HistoricalPlacesList from "@/components/tours/HistoricalPlacesList";
 import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
@@ -18,7 +18,7 @@ export default function TourListPage1() {
       <main>
         <Header1 />
         <PageHeader />
-        <TourList1 />
+        <HistoricalPlacesList />
         <FooterOne />
       </main>
     </>
