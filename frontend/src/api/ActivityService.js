@@ -111,7 +111,7 @@ export const getRatings = async (id) => {
     console.error("Error fetching ratings:", error);
     throw error;
   }
-};
+}
 
 export const addRating = async (activityID, ratingData) => {
   try {
@@ -125,7 +125,7 @@ export const addRating = async (activityID, ratingData) => {
     console.error("Error adding rating:", error);
     throw error;
   }
-};
+}
 
 export async function getAllActivities() {
   try {
@@ -135,4 +135,4 @@ export async function getAllActivities() {
     console.error("Can't get all activities", error);
     throw error;
   }
-};
+}

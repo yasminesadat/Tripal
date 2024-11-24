@@ -74,7 +74,7 @@ export default function Header4() {
 
           <div className="header__right">
             <div className="ml-30 dnStiky ">
-              <Currency />
+              {/* <Currency /> */}
             </div>
 
             <Link to="/help-center" className="text-white ml-20">
