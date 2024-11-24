@@ -5,7 +5,6 @@ import { getTouristInformation, updateTouristInformation, redeemPoints } from ".
 import { useNavigate, useParams } from "react-router-dom";
 import { nationalities } from "@/assets/Nationalities";
 import Badge from "@/components/tourist/Badge";
-import Currency from "../../components/tourist/Currency";
 // import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
@@ -82,8 +81,7 @@ export default function Profile() {
         tags: response.tags,
         categories: response.categories
       });
-      sessionStorage.removeItem("currency");
-      sessionStorage.setItem("currency", response.choosenCurrency);
+
     } catch (error) {
       console.error("Failed to fetch user information:", error);
     }
