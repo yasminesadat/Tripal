@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Tag, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { touristId } from "../../IDs";
+import { getUserData } from "../../api/UserService";
 import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { userRole } from "../../IDs";
 
 const UpcomingActivities = ({
   activities,
@@ -16,6 +15,25 @@ const UpcomingActivities = ({
   onAdminFlag,
 }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
+  const [userRole, setUserRole] = useState(null); 
+  const [userId, setUserId] = useState(null); 
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+          setUserId(response.data.id); 
+        } else {
+          message.error(response.data.message); 
+        }
+      } catch (error) {
+        message.error("Failed to fetch user data.");
+      }
+    };
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
@@ -68,6 +86,7 @@ const UpcomingActivities = ({
     navigate(`/activity/${activityId}`, { state: { page } });
   };
 
+
   return (
     <div className="list">
       {activities.map((activity) => (
@@ -116,7 +135,7 @@ const UpcomingActivities = ({
                 <div className="list-item-attribute">
                   {
                     activity.bookings
-                      .filter(booking => booking.touristId === touristId) // Filter by touristId
+                      .filter(booking => booking.userId === userId) 
                       .map(filteredBooking => (
                         <p key={filteredBooking._id}><b>Number of Tickets:</b> {filteredBooking.tickets}</p> // Access tickets from the filtered booking
                       ))
@@ -157,7 +176,7 @@ const UpcomingActivities = ({
               onClick={() =>
                 onCancel({
                   activityId: activity._id,
-                  touristId,
+                  userId,
                   resourceType: "activity",
                 })
               }

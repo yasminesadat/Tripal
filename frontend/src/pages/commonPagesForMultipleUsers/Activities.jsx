@@ -10,20 +10,44 @@ import ActivitySort from "../../components/activity/ActivitySort";
 //import Footer from "../../components/common/Footer";
 import { message } from "antd";
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { touristId, userRole } from "../../IDs";
+// import { touristId, touristId } from "../../IDs";
 //import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
 import AdvertiserActivities from "../../components/activity/AdvertiserActivities";
 import { getAdminActivities, flagActivity } from "../../api/AdminService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
+import { getUserData } from "../../api/UserService";
+
 // advertiser activities or tourist upcoming activities 
-const Activities = ({ isAdvertiser, isTourist }) => {
+const Activities = () => {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
-  
+  const [userRole, setUserRole] = useState(null); 
+  const [userId, setUserId] = useState(null); 
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+          setUserId(response.data.id); 
+        } else {
+          message.error(response.data.message); 
+        }
+      } catch (error) {
+        message.error("Failed to fetch user data.");
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  // i think checking on the userRole is enough just leaving them rn for dependencies or just use them instead of userRole===blabla
+  const isAdvertiser = (userRole==='Advertiser');
+  const isTourist = (userRole==='Tourist');
 
   useEffect(() => {
     const fetchCurrency = async () => {
@@ -49,7 +73,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
     const fetchActivities = async () => {
       try {
         let response;
-        if (isAdvertiser && userRole === 'Advertiser') {
+        if (userRole === 'Advertiser') {
           response = await getAdvertiserActivities();
         } else if (userRole === 'Tourist') {
           response = await viewUpcomingActivities();
@@ -175,20 +199,21 @@ const Activities = ({ isAdvertiser, isTourist }) => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div className="page-container2">
-      {userRole === 'Admin' && <AdminNavBar />}
-      {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null}
-      {isAdvertiser ? <AdvertiserNavBar /> : null}
+      {/* {userRole === 'Admin' && <AdminNavBar />} */}
+      {/* {isTourist ? (touristId ? <TouristNavBar onCurrencyChange={setCurrency} /> : <GuestNavBar />) : null} */}
+      {/* {isAdvertiser ? <AdvertiserNavBar /> : null} */}
+
       {userRole === 'Tourist' && <div className="page-title">Upcoming Activities</div>}
 
       {userRole === 'Admin' && <div className="page-title">View All Activities</div>}
 
       {isTourist ? <ActivitySearch onSearch={handleSearch} /> : null}
+
       {userRole === 'Tourist' && (
         <button onClick={handleForYouFilter} className="for-you-button">
           For You
         </button>
       )}
-
 
       {(userRole === 'Tourist' || userRole == 'Admin') &&
         <div className="filter-sort-list">
@@ -207,7 +232,7 @@ const Activities = ({ isAdvertiser, isTourist }) => {
       {userRole === 'Advertiser' && <AdvertiserActivities activities={activities} />}
 
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
