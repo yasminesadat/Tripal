@@ -58,7 +58,6 @@ const updateAdvertiser = async (req, res) => {
     const {
       userName,
       email,
-      password,
       website,
       hotline,
       companyProfile,
@@ -71,20 +70,22 @@ const updateAdvertiser = async (req, res) => {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const existingEmail = await User.findOne({ email });
+    console.log("EMAILLLLLLLLLLLL                     ",email);
     // Check if the new email is different from the existing one, and if it already exists
     if (existingEmail && existingEmail.email !== existingAdvertiser.email) {
+      console.log("EMAAILL" , existingEmail)
+      console.log(existingAdvertiser)
       return res.status(400).json({ error: "Email already exists" });
     }
 
-    let hashedPassword = existingAdvertiser.password; // Keep the current password if not updated
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
-    }
+    // let hashedPassword = existingAdvertiser.password; // Keep the current password if not updated
+    // if (password) {
+    //   hashedPassword = await bcrypt.hash(password, 10);
+    // }
 
     const updateData = {
       userName,
       email,
-      password: hashedPassword,
       website,
       hotline,
       companyProfile,

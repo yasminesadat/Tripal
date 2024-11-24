@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import { getComplaintsByTourist, getComplaintById, replyToComplaint } from "../../api/ComplaintsService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
+import MetaComponent from "@/components/common/MetaComponent";
+
+const metadata = {
+    title: "Home || Tripal - Travel Agency",
+};
 const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -80,49 +86,60 @@ const MyComplaints = () => {
 
     return (
         <>
-            <div className="complaints">
-                {/* <TouristNavBar /> */}
-                {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
-                <div className="dashboard__content">
-                    {/* <Header setSideBarOpen={setSideBarOpen} /> */}
-                    <div className="dashboard__content_content">
-                        <h1 className="text-30">My Complaints</h1>
 
-                        <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
-                            <div className="overflowAuto">
-                                <table className="tableTest mb-30">
-                                    <thead className="bg-light-1 rounded-12">
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {complaints.map((complaint, i) => (
-                                            <React.Fragment key={complaint._id}>
+            <MetaComponent meta={metadata} />
+            <div className="page-wrapper">
+                <TouristHeader />
+                <main className="page-content">
+
+
+
+                    <div className="complaints">
+                        {/* <TouristNavBar /> */}
+                        {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
+                        <div className="dashboard__content">
+                            {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+                            <div className="dashboard__content_content">
+                                <h1 className="text-30">My Complaints</h1>
+
+                                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
+                                    <div className="overflowAuto">
+                                        <table className="tableTest mb-30">
+                                            <thead className="bg-light-1 rounded-12">
                                                 <tr>
-                                                    <td>{complaint.title}</td>
-                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
-                                                        {complaint.status}
-                                                    </td>
-                                                    <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
-                                                    <td>
-                                                        <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
-                                                            View Details
-                                                        </button>
-                                                    </td>
+                                                    <th>Title</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                    <th>Actions</th>
                                                 </tr>
+                                            </thead>
+                                            <tbody>
+                                                {complaints.map((complaint, i) => (
+                                                    <React.Fragment key={complaint._id}>
+                                                        <tr>
+                                                            <td>{complaint.title}</td>
+                                                            <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
+                                                                {complaint.status}
+                                                            </td>
+                                                            <td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
+                                                            <td>
+                                                                <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
 
-                                            </React.Fragment>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                    </React.Fragment>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </main>
                 <FooterThree />
             </div>
             <style>{`

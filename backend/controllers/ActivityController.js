@@ -52,10 +52,11 @@ const createActivity = async (req, res) => {
 };
 
 const getAdvertiserActivities = async (req, res) => {
-  const { id } = req.userId;
+  const id = req.userId;
+  console.log("curr advertiser is", id);
   try {
-    const activites = await Activity.find({ advertiser: id }) 
-    .select("title date time location")
+    const activites = await Activity.find({ advertiser: id })
+      .select("title date time location")
     console.log(activites)
     res.status(200).json(activites);
   } catch (error) {
@@ -113,7 +114,7 @@ const deleteActivity = async (req, res) => {
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-    const activities = await Activity.find({isBookingOpen:true, date: { $gte: currentDate },flagged: false })
+    const activities = await Activity.find({ isBookingOpen: true, date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
     // .populate("ratings");
@@ -129,7 +130,7 @@ const viewHistoryActivities = async (req, res) => {
   try {
     const currentDate = new Date();
 
-    const activities = await Activity.find({ date: { $gte: currentDate },flagged:false })
+    const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
     // .populate("ratings");
@@ -145,22 +146,23 @@ const getActivityById = async (req, res) => {
 
   try {
     const activity = await Activity.findById(id).populate("category").populate("tags");
-    if (!activity) 
+    if (!activity)
       return res.status(404).json({ error: "Activity not found." });
-    
-    if (activity.flagged) 
-        res.status(404).json({ error: "Activity flagged." });
+
+    if (activity.flagged)
+      res.status(404).json({ error: "Activity flagged." });
     else
       res.status(200).json(activity);
   } catch (error) {
     res.status(500).json({ error: error.message });
 
-  }};
+  }
+};
 
 const getTouristActivities = async (req, res) => {
   const { touristId } = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId,isBookingOpen:true, flagged: false, date: { $gte: new Date() } })
+    const activities = await Activity.find({ "bookings.touristId": touristId, isBookingOpen: true, flagged: false, date: { $gte: new Date() } })
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);
@@ -169,10 +171,10 @@ const getTouristActivities = async (req, res) => {
   }
 };
 
-const getAllActivitiesForAdmin = async (req, res) => { 
+const getAllActivitiesForAdmin = async (req, res) => {
   try {
     const currentDate = new Date();
-    const activities = await Activity.find({ date: { $gte: currentDate }})
+    const activities = await Activity.find({ date: { $gte: currentDate } })
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);
