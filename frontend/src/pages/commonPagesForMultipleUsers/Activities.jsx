@@ -1,7 +1,7 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
-import Header1 from "@/components/layout/header/Header1";
-import PageHeader from "@/components/tours/PageHeader";
-// import TourList1 from "@/components/tours/TourList1";
+import Header1 from "@/components/layout/header/TouristHeader";
+import PageHeader from "./ActivitiesHeader";
+
 import React, { useEffect, useState } from "react";
 
 import ActivitiesList from  "@/components/activity/UpcomingActivities"
