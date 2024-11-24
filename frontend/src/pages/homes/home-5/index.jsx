@@ -12,6 +12,7 @@ import Header3 from "@/components/layout/header/Header3";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
+import AdminHeader from "@/components/layout/header/AdminHeader";
 const metadata = {
   title: "Home || Tripal - Travel Agency",
 };
@@ -21,7 +22,7 @@ export default function HomePage5() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <Header3 />
+        <AdminHeader />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />
