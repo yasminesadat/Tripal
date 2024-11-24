@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "./Calendar.jsx";
 
 import {
@@ -11,8 +11,27 @@ import {
 import RangeSlider from "../common/RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate }) {
+export default function Sidebar({ setStartDate, setEndDate, setRatingFilter }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+
+  useEffect(() => {
+    setRatingFilter(selectedRatings); 
+  }, [selectedRatings, setRatingFilter]);
+
+  const handleRatingChange = (ratingValue) => {
+    setSelectedRatings((prevRatings) =>
+      prevRatings.includes(ratingValue)
+        ? prevRatings.filter((rating) => rating !== ratingValue)
+        : [...prevRatings, ratingValue]
+    );
+  };
+  
+  useEffect(() => {
+    setRatingFilter(selectedRatings); 
+  }, [selectedRatings, setRatingFilter]);
+  
+
   return (
     <div className="sidebar -type-1 rounded-12">
       <div className="sidebar__header bg-accent-1">
@@ -257,17 +276,13 @@ export default function Sidebar({ setStartDate, setEndDate }) {
         <div className="sidebar__item">
           <div className="accordion -simple-2 js-accordion">
             <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("rating") ? "is-active" : ""
-              } `}
+              className={`accordion__item js-accordion-item-active ${ddActives.includes("rating") ? "is-active" : ""}`}
             >
               <div
                 className="accordion__button d-flex items-center justify-between"
                 onClick={() =>
                   setDdActives((pre) =>
-                    pre.includes("rating")
-                      ? [...pre.filter((elm) => elm != "rating")]
-                      : [...pre, "rating"],
+                    pre.includes("rating") ? [...pre.filter((elm) => elm != "rating")] : [...pre, "rating"]
                   )
                 }
               >
@@ -279,18 +294,17 @@ export default function Sidebar({ setStartDate, setEndDate }) {
                 </div>
               </div>
 
-              <div
-                className="accordion__content"
-                style={
-                  ddActives.includes("rating") ? { maxHeight: "300px" } : {}
-                }
-              >
+              <div className="accordion__content" style={ddActives.includes("rating") ? { maxHeight: "300px" } : {}}>
                 <div className="pt-15">
                   <div className="d-flex flex-column y-gap-15">
                     {rating.map((elm, i) => (
                       <div key={i} className="d-flex">
                         <div className="form-checkbox">
-                          <input type="checkbox" name="rating" />
+                          <input
+                            type="checkbox"
+                            checked={selectedRatings.includes(elm)} // Check if the rating is selected
+                            onChange={() => handleRatingChange(elm)} // Update the selected ratings on change
+                          />
                           <div className="form-checkbox__mark">
                             <div className="form-checkbox__icon">
                               <img src="/img/icons/check.svg" alt="icon" />

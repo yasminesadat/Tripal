@@ -28,11 +28,13 @@ export default function ActivitiesList({
 
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
+
   const [activities, setActivities] = useState([]);
+  const [filteredActivities, setFilteredActivities] = useState(activities);
 
   const [startDate, setStartDate] = useState(null); 
   const [endDate, setEndDate] = useState(null); 
-  const [filteredActivities, setFilteredActivities] = useState(activities);
+  const [ratingFilter, setRatingFilter] = useState([]);  
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,21 +88,25 @@ export default function ActivitiesList({
   }, [userRole]);  
 
   useEffect(() => {
-    if (startDate && endDate) {
-      const normalizedStartDate = new Date(startDate.setHours(0, 0, 0, 0));  // Set start date to 00:00:00
-      const normalizedEndDate = new Date(endDate.setHours(23, 59, 59, 999));  // Set end date to 23:59:59
+    const filtered = activities.filter((activity) => {
+      const activityDate = new Date(activity.date);
+      const activityRating = activity.averageRating;
+      
+      // Date filter
+      const isDateValid =
+        !startDate || !endDate ||
+        (activityDate >= (new Date(startDate.setHours(0, 0, 0, 0))) && activityDate <= (new Date(endDate.setHours(23, 59, 59, 999))));
   
-      // Filter activities based on normalized start and end dates
-      const filtered = activities.filter((activity) => {
-        const activityDate = new Date(activity.date);  // Convert activity date to Date object
-        return activityDate >= normalizedStartDate && activityDate <= normalizedEndDate;
-      });
-      setFilteredActivities(filtered);
-    } else {
-      setFilteredActivities(activities); // If no start or end date is selected, show all activities
-    }
-  }, [startDate, endDate, activities]);  
-
+      // Rating filter: if ratings are selected, check if the activity's rating matches any of the selected values
+      const isRatingValid =
+        ratingFilter.length === 0 || ratingFilter.some((rating) => activityRating >= rating);
+  
+      return isDateValid && isRatingValid;
+    });
+  
+    setFilteredActivities(filtered);
+  }, [startDate, endDate, activities, ratingFilter]);
+  
   // useEffect(() => {
   //   console.log("Filtered Activities: ", filteredActivities);
   // }, [filteredActivities]);
@@ -143,7 +149,7 @@ export default function ActivitiesList({
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
+            <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter}/>
             </div>
 
             <div className="accordion d-none mb-30 lg:d-flex js-accordion">
@@ -165,7 +171,7 @@ export default function ActivitiesList({
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 >
                   <div className="pt-20">
-                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
+                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} setRatingFilter={setRatingFilter}/>
                   </div>
                 </div>
               </div>
