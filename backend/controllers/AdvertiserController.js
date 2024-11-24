@@ -58,7 +58,6 @@ const updateAdvertiser = async (req, res) => {
     const {
       userName,
       email,
-      password,
       website,
       hotline,
       companyProfile,
@@ -79,15 +78,14 @@ const updateAdvertiser = async (req, res) => {
       return res.status(400).json({ error: "Email already exists" });
     }
 
-    let hashedPassword = existingAdvertiser.password; // Keep the current password if not updated
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
-    }
+    // let hashedPassword = existingAdvertiser.password; // Keep the current password if not updated
+    // if (password) {
+    //   hashedPassword = await bcrypt.hash(password, 10);
+    // }
 
     const updateData = {
       userName,
       email,
-      password: hashedPassword,
       website,
       hotline,
       companyProfile,
