@@ -10,7 +10,7 @@ export default function Sidebar({ setSideBarOpen }) {
       <div className="dashboard__sidebar_header">
         <span
           onClick={() => setSideBarOpen(false)}
-          class="text-white closeSidebar"
+          className="text-white closeSidebar"
         >
           &times;
         </span>
@@ -70,9 +70,8 @@ export default function Sidebar({ setSideBarOpen }) {
         {sidebarItems.map((elm, i) => (
           <div
             key={i}
-            className={`sidebar__item ${
-              pathname == elm.href ? "-is-active" : ""
-            } `}
+            className={`sidebar__item ${pathname == elm.href ? "-is-active" : ""
+              } `}
           >
             <Link to={elm.href}>
               <i className={elm.iconClass}></i>

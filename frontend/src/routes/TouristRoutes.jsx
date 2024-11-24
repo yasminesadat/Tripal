@@ -21,11 +21,11 @@ import FlightSearch from "../pages/tourist/SearchBar";
 // import Invoice from "../components/tourist/Invoice";
 // import DbBooking from "../components/tourist/BookingHistory";
 
-import HomePage1 from "@/pages/homes/home-1";
+import TouristHome from "@/pages/tourist/TouristHome";
 import FlightsList from "@/pages/tourist/FlightsList";
 
 const touristRoutes = [
-  { path: "/tourist", element: <HomePage1 /> },
+  { path: "/tourist", element: <TouristHome /> },
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   { path: "/tourist/view-complaints", element: <MyComplaints /> },
   { path: "/tourist/complaints-replies", element: <ComplaintsReplies /> },

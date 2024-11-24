@@ -6,20 +6,16 @@ export async function createTourist(newUser) {
     return response;
   } catch (error) {
     const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
-    console.log("ERRPR MESSAGE", errorMessage)
     throw new Error(errorMessage);
-
   }
 }
 
-export async function changeTouristPassword(id, oldPassword, newPassword) {
+export async function changeTouristPassword(oldPassword, newPassword) {
   try {
     const body = {
       "oldPassword": oldPassword,
       "newPassword": newPassword
     }
-    console.log(`/tourist-change-pass/${id}`);
-
     const response = await axios.put(`/tourist-change-pass`, body);
     return response.data;
   } catch (error) {
@@ -28,7 +24,7 @@ export async function changeTouristPassword(id, oldPassword, newPassword) {
   }
 }
 
-export async function getTouristInformation(id) {
+export async function getTouristInformation() {
   try {
 
     const response = await axios.get(`/getTouristInfo`);
@@ -39,12 +35,9 @@ export async function getTouristInformation(id) {
   }
 }
 
-export async function updateTouristInformation(id, body) {
+export async function updateTouristInformation(body) {
   try {
-    console.log("the body ", body)
-
     const response = await axios.put(`/updateTourist`, body);
-    console.log("after update", response.data)
     return response.data;
   } catch (error) {
     console.error("error", error);
@@ -52,23 +45,9 @@ export async function updateTouristInformation(id, body) {
   }
 }
 
-export async function redeemPoints(id) {
+export async function redeemPoints() {
   try {
-
     const response = await axios.post(`/redeem`);
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function getTouristItineraries(touristId) {
-  try {
-
-
-    const response = await axios.get(`/itineraries/booked-itineraries`);
-
     return response.data;
   } catch (error) {
     console.error("error", error);
@@ -76,21 +55,28 @@ export async function getTouristItineraries(touristId) {
   }
 }
 
-export async function getTouristActivities(touristId) {
+export async function getTouristItineraries() {
   try {
+    const response = await axios.get(`/itineraries/booked-itineraries`);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 
+export async function getTouristActivities() {
+  try {
     const response = await axios.get(`/activities`);
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
     throw error;
   }
-
 }
 
-export async function getTouristUserName(touristId) {
+export async function getTouristUserName() {
   try {
-
     const response = await axios.get(`/tourist-name-email`);
     return response.data;
   } catch (error) {
@@ -99,12 +85,9 @@ export async function getTouristUserName(touristId) {
   }
 }
 
-export async function getTouristFlights(touristId) {
+export async function getTouristFlights() {
   try {
-
     const response = await axios.get(`/tourist/flights`);
-
-
     return response.data;
   } catch (error) {
     console.error("Error getting tourists' flights':", error);
@@ -112,11 +95,9 @@ export async function getTouristFlights(touristId) {
   }
 }
 
-
 export async function getTouristAge() {
   try {
     const response = await axios.get(`/tourist/age`);
-
     return response.data;
   } catch (error) {
     console.error("Error getting age", error);
@@ -124,9 +105,8 @@ export async function getTouristAge() {
   }
 }
 
-export async function getTouristTags(touristId) {
+export async function getTouristTags() {
   try {
-
     const response = await axios.get(`/tourist/preferences`);
     return response.data;
   } catch (error) {
@@ -135,9 +115,8 @@ export async function getTouristTags(touristId) {
   }
 }
 
-export async function getTouristCategories(touristId) {
+export async function getTouristCategories() {
   try {
-
     const response = await axios.get(`/tourist/categories`);
     return response.data;
   } catch (error) {
@@ -146,9 +125,8 @@ export async function getTouristCategories(touristId) {
   }
 }
 
-export async function checkTouristExists(touristId) {
+export async function checkTouristExists() {
   try {
-
     const response = await axios.get(`/tourist/exists`);
     return response.data;
   } catch (error) {
