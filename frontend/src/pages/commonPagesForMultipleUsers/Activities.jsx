@@ -18,6 +18,7 @@ const metadata = {
 export default function Activities() {
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
+  const [searchTerm, setSearchTerm] = useState(""); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,13 +37,17 @@ export default function Activities() {
     fetchUserData();
   }, []);
 
+  const handleSearch = (term) => {
+    setSearchTerm(term); 
+  };
+
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
         <Header1 />
-        <PageHeader />
-        <ActivitiesList page={"upcoming"} />
+        <PageHeader onSearch={handleSearch} />
+        <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
         <FooterOne />
       </main>
     </>

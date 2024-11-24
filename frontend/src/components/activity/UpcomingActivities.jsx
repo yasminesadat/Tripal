@@ -14,7 +14,7 @@ import AdvertiserActivities from "@/components/activity/AdvertiserActivities";
 import { getAdminActivities, flagActivity } from "@/api/AdminService";
 
 export default function ActivitiesList({
-  // activities,
+  searchTerm,
   book,
   onCancel,
   cancel,
@@ -45,6 +45,7 @@ export default function ActivitiesList({
   const [currentPage, setCurrentPage] = useState(1);
   const activitiesPerPage = 2; 
 
+  console.log(searchTerm)
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
@@ -123,11 +124,16 @@ export default function ActivitiesList({
       const isPriceValid =
         activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
 
-      return isDateValid && isRatingValid && isCategoryValid && isPriceValid;
+      const isSearchValid =
+        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.category.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        activity.tags.some(tag => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+      return isDateValid && isRatingValid && isCategoryValid && isPriceValid && isSearchValid;
     });
   
     setFilteredActivities(filtered);
-  }, [startDate, endDate, activities, ratingFilter, selectedCategories, priceRange]);
+  }, [startDate, endDate, activities, ratingFilter, selectedCategories, priceRange, searchTerm]);
   
   
   useEffect(() => {
@@ -362,12 +368,8 @@ export default function ActivitiesList({
                         className="button -outline-accent-1 text-accent-1"                         
                         onClick={() => handleRedirect(elm._id)}
                       >
-
-                        {/* <Link to={`/activity/${elm._id}`}> */}
-                          View Details
-                          {/* <i className="icon-arrow-top-right ml-10"></i> */}
-                        {/* </Link> */}
-
+                        View Details
+                        <i className="icon-arrow-top-right ml-10"></i>
                       </button>
                     </div>
                   </div>

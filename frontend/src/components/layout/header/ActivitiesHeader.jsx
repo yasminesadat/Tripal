@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import HeaderSearch from "./HeaderSearch";
 
-export default function PageHeader() {
+export default function PageHeader({onSearch}) {
   return (
     <section className="pageHeader -type-3">
       <div className="container">
@@ -21,7 +22,7 @@ export default function PageHeader() {
 
           <div className="col-auto">
             <div className="pageHeader__subtitle">
-              {/* THE 10 BEST Phuket Tours & Excursions */}
+              <HeaderSearch onSearch={onSearch}/>
             </div>
           </div>
         </div>
