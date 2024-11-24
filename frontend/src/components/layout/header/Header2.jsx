@@ -51,7 +51,7 @@ export default function Header2() {
 
           <div className="header__right xl:d-none">
             <div className="ml-30">
-              <Currency />
+              {/* <Currency /> */}
             </div>
 
             <Link to="/help-center" className="">
