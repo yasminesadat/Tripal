@@ -3,7 +3,7 @@ import { Rate } from "antd";
 import { addRating } from "../../api/RatingService"; 
 // import "../style.css";
 // import { touristId } from "../../IDs";
-import { getUserData } from "../../../api/UserService";
+import { getUserData } from "@/api/UserService";
 
 export default function ReviewBox({ id, type }) {
     const [rating, setRating] = useState(0); 

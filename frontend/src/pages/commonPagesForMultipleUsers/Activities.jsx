@@ -42,7 +42,7 @@ export default function Activities() {
       <main>
         <Header1 />
         <PageHeader />
-        <ActivitiesList />
+        <ActivitiesList page={"upcoming"} />
         <FooterOne />
       </main>
     </>

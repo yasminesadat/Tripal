@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { speedFeatures } from "./tourFilteringOptions";
 import Stars from "../common/Stars";
@@ -176,6 +177,11 @@ export default function ActivitiesList({
   const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
   const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
 
+  const navigate = useNavigate();
+  const handleRedirect = (activityId) => {
+    navigate(`/activity/${activityId}`, { state: { page } });
+  };
+
   return (
     <section className="layout-pb-xl">
       <div className="container">
@@ -352,11 +358,16 @@ export default function ActivitiesList({
                         </div>
                       </div>
 
-                      <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/activity-details/${elm.id}`}>
+                      <button 
+                        className="button -outline-accent-1 text-accent-1"                         
+                        onClick={() => handleRedirect(elm._id)}
+                      >
+
+                        {/* <Link to={`/activity/${elm._id}`}> */}
                           View Details
-                          <i className="icon-arrow-top-right ml-10"></i>
-                        </Link>
+                          {/* <i className="icon-arrow-top-right ml-10"></i> */}
+                        {/* </Link> */}
+
                       </button>
                     </div>
                   </div>
