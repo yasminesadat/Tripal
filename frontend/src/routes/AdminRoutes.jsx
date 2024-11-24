@@ -1,4 +1,4 @@
-// import AdminDashboard from "../pages/admin/AdminHome";
+import AdminDashboard from "../pages/admin/AdminHome";
 // import ActivityCategoryDetails from "../pages/admin/ActivityCategoryDetails";
 // import TagManager from "../pages/admin/PreferenceTags";
 // import AdminProducts from "../pages/admin/AdminProducts";
@@ -7,14 +7,15 @@
 // import CreateNewGovernor from "../pages/admin/CreateNewGovernor";
 // import CreateNewAdmin from "../pages/admin/CreateNewAdmin";
 import ComplaintsPage from "@/pages/admin/Complaints";
+import ComplaintsReplies from "@/pages/admin/ComplaintsReplies";
 // import AdminChangePassword from "../pages/admin/AdminProfile";
 // import Requests from "../pages/admin/Requests";
 // import DeletionRequests from "../pages/admin/DeletionRequests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 // import Activities from "../pages/commonPagesForMultipleUsers/Activities";
-import ComplaintsReplies from "@/pages/admin/ComplaintsReplies";
+
 const adminRoutes = [
-  // { path: "/admin", element: <AdminDashboard /> },
+  { path: "/admin", element: <AdminDashboard /> },
   // { path: "/activity-categories", element: <ActivityCategoryDetails /> },
   // { path: "/preference-tags", element: <TagManager /> },
   // { path: "/admin/view-products", element: <AdminProducts /> },

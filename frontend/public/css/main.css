@@ -1,3 +1,20 @@
+/*FIXED CONTAINER*/
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  margin-top: 5%;
+  min-height: 100vh;
+}
+/**/
+
 .ratio {
   position: relative;
   display: block;

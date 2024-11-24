@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
         httpOnly: true,
         //maxAge: 3600 * 1000, //changed to session cookie
       });
-      res.status(200).json({ token });
+      res.status(200).json({ role: user.role });
     } else {
       res.status(400).json({ message: "Invalid username or password" });
     }
@@ -119,4 +119,14 @@ const getUserData = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, generateToken, getUserData };
+const logoutUser = (req, res) => {
+  try {
+    res.clearCookie("jwt");
+
+    return res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    return res.status(500);
+  }
+};
+
+module.exports = { loginUser, logoutUser, getUserData };
