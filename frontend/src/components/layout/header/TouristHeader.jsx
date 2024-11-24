@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Menu from "../components/TouristMenu";
 import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "@/api/UserService";
 import { message } from "antd";
+import {updateTouristInformation, getTouristInformation} from '@/api/TouristService';
 
-export default function SellerHeader() {
+export default function TouristHeader() {
+  const [profileInformation, setProfileInformation] = useState({});
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
-
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -38,6 +39,38 @@ export default function SellerHeader() {
     clearTimeout(closeTimeout);
     setDropdownOpen(true);
   };
+
+  const handleCurrencyChange = async (currency) => {
+
+    const updatedProfileData = {
+      choosenCurrency: currency,
+    };
+
+    try {
+      await updateTouristInformation(updatedProfileData);
+      // sessionStorage.removeItem("currency");
+      // sessionStorage.setItem("currency", currency);
+      
+    } catch (error) {
+      message.error("Failed to update user information:", error);
+    }
+  };
+
+  useEffect(() => {
+    const getUserInformation = async () => {
+      try {
+        const response = await getTouristInformation();
+        setProfileInformation(response);
+        // sessionStorage.removeItem("currency");
+        // sessionStorage.setItem("currency", response.choosenCurrency);
+      } catch (error) {
+        message.error("Failed to fetch user information:", error);
+      }
+    };
+  
+    getUserInformation();
+  }, []);
+
 
   return (
     <>
@@ -80,7 +113,7 @@ export default function SellerHeader() {
 
           <div className="header__right">
             <div className="ml-15">
-              <Currency />
+              <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange}/>
             </div>
             <Link to="/" className="ml-20">
               {/*/includes itineraries, activities, flights,and hotels - both history and upcoming bookings*/}
