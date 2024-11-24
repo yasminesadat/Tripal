@@ -7,7 +7,7 @@ import MapComponent from "../../common/MapComponent";
 import TourSingleSidebar from "./TourSingleSidebar";
 import Gallery1 from "./Gallery1";
 import DateCalender from "./DateCalender";
-import ReviewBox from "../../common/reviewBox";
+import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
 import { Tag, message } from "antd";
