@@ -205,7 +205,8 @@ export default function Profile() {
                     <input
                       type="text"
                       name="userName"
-                      value={profileInformation.userName}
+                      value={editedProfile.userName}
+                      readOnly
 
                     />
                     <label className="lh-1 text-16 text-light-1">Username</label>
@@ -220,6 +221,7 @@ export default function Profile() {
                       value={editedProfile.email}
                       onChange={handleInputChange} // Handle input changes
 
+
                     />
                     <label className="lh-1 text-16 text-light-1">
                       Email
@@ -233,8 +235,9 @@ export default function Profile() {
                       type="text"
                       name="dateOfBirth"
                       value={new Date(
-                        profileInformation.dateOfBirth
+                        editedProfile.dateOfBirth
                       ).toLocaleDateString()}
+                      readOnly
 
                     />
                     <label className="lh-1 text-16 text-light-1">Date of Birth</label>
