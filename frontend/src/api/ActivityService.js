@@ -3,7 +3,6 @@ import { axios } from "./axios";
 
 export async function createActivity(body) {
   try {
-    console.log("ANA FEL CREATE SERVICE");
     const response =  await axios.post('/activities', body)
     return response;
   } catch (error) {
@@ -13,7 +12,6 @@ export async function createActivity(body) {
 }
 export async function updateActivity(id,body) {
   try {
-    console.log("ANA FEL UPDATE SERVICE");
     const response =  await axios.put(`/activities/${id}`, body)
     return response;
   } catch (error) {
@@ -24,7 +22,6 @@ export async function updateActivity(id,body) {
 
 export async function getAdvertiserActivities() {
   try {
-    console.log("THE URL IS ", `/activities/advertiser`);
     const response = await axios.get(`/activities/advertiser`);
     return response;
   } catch (error) {
@@ -41,7 +38,7 @@ export async function getActivityById(id) {
     console.error("Can't get activity details", error);
     throw error;
   }
-};
+}
 
 export async function deleteActivity(id) {
   try {
@@ -79,26 +76,6 @@ export async function viewHistoryActivities() {
     return response;
   } catch (error) {
     console.error("Can't view activities", error);
-    throw error;
-  }
-}
-
-export async function filterUpcomingActivities() {
-  try {
-    const response = await axios.get("/activities/filter");
-    return response;
-  } catch (error) {
-    console.error("Can't filter activities", error);
-    throw error;
-  }
-}
-
-export async function sortUpcomingActivities() {
-  try {
-    const response = await axios.get("/activities/sort");
-    return response;
-  } catch (error) {
-    console.error("Can't sort activities", error);
     throw error;
   }
 }

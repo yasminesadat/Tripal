@@ -77,7 +77,11 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/admin/complaints">View Complaints</Link>
+            <Link to="/contact">Complaints</Link>
+          </div>
+
+          <div className="desktopNav__item">
+            <Link to="/revenue">Revenue</Link>
           </div>
         </div>
       </div>
