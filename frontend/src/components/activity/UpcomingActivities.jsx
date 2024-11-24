@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import { speedFeatures } from "./tourFilteringOptions";
 import Stars from "../common/Stars";
-import Pagination from "../common/Pagination";
+import Pagination from "./Pagination";
 import { Link } from "react-router-dom";
 import { Tag, message } from "antd";
 // import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
@@ -41,6 +41,9 @@ export default function ActivitiesList({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  const [currentPage, setCurrentPage] = useState(1);
+  const activitiesPerPage = 2; 
+
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
@@ -165,6 +168,14 @@ export default function ActivitiesList({
     };
   }, []);
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
+
   return (
     <section className="layout-pb-xl">
       <div className="container">
@@ -217,7 +228,7 @@ export default function ActivitiesList({
           <div className="col-xl-9 col-lg-8">
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
-                <div>1362 results</div>
+                <div>{filteredActivities?.length} results</div>
               </div>
 
               <div ref={dropDownContainer} className="col-auto">
@@ -259,7 +270,7 @@ export default function ActivitiesList({
             </div>
 
             <div className="row y-gap-30 pt-30">
-              {filteredActivities?.map((elm, i) => (
+              {currentActivities?.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -354,11 +365,14 @@ export default function ActivitiesList({
             </div>
 
             <div className="d-flex justify-center flex-column mt-60">
-              <Pagination />
-
-              <div className="text-14 text-center mt-20">
-                Showing results 1-30 of 1,415
-              </div>
+              {filteredActivities?.length > activitiesPerPage && (
+                <Pagination
+                  totalItems={filteredActivities.length}
+                  itemsPerPage={activitiesPerPage}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -16,10 +16,6 @@ export default function PageHeader() {
               <span className="breadcrumbs__item">
                 <Link to="/upcoming-activities">Activities</Link> 
               </span>
-              {/* <span>{">"}</span>
-              <span className="breadcrumbs__item">
-                <a href="#">Phuket</a>
-              </span> */}
             </div>
           </div>
 
