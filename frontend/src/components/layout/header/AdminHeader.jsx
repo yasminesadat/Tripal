@@ -2,11 +2,10 @@ import { useState } from "react";
 import Menu from "../components/AdminMenu";
 import { profile } from "@/data/adminMenu";
 
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Header3() {
+export default function AdminHeader() {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
@@ -15,6 +14,19 @@ export default function Header3() {
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  let closeTimeout;
+
+  const handleMouseLeave = () => {
+    closeTimeout = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 200);
+  };
+
+  const handleMouseEnter = () => {
+    clearTimeout(closeTimeout);
+    setDropdownOpen(true);
+  };
 
   return (
     <>
@@ -62,7 +74,8 @@ export default function Header3() {
             </Link>
             <button
               onClick={() => setMobileMenuOpen(true)}
-              onMouseEnter={() => setDropdownOpen(true)}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
               className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
                 dropdownOpen ? "hovered" : ""
               }`}
@@ -72,7 +85,8 @@ export default function Header3() {
             {dropdownOpen && (
               <div
                 className="dropdown-menu"
-                onMouseLeave={() => setDropdownOpen(false)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <ul>
                   {profile.map((item) => (

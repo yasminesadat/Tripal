@@ -19,6 +19,14 @@ export default function UserForm() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
+  const handleLogin = (role) => {
+    if (role === "Admin") {
+      window.location.href = "/admin";
+    } else if (role === "Tourist") {
+      window.location.href = "/tourist";
+    }
+  };
+
   const onFinish = async () => {
     setLoading(true);
     const response = await login(
@@ -28,6 +36,7 @@ export default function UserForm() {
     setLoading(false);
     if (response.status == "success") {
       message.success(response.message);
+      handleLogin(response.role);
     } else if (response.status == "warning") {
       message.warning(response.message);
     } else {
