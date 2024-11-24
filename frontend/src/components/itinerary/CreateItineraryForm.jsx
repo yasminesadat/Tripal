@@ -160,11 +160,16 @@ export default function CreateItineraryForm() {
                       name="availableDate"
                       rules={[{ required: true, message: "Please select the available dates" }]}
                     >
-                      <RangePicker style={{ width: "100%" }} size="large" onChange={handleDateChange}/>
+                      <RangePicker style={{ width: "100%"}} size="large" onChange={handleDateChange}/>
                     </Form.Item>
 
                     <Form.Item>
-                    <Button onClick={() => setIsModalVisible(true)}>
+                    <Button style={{
+                        color: "black",
+                        borderColor: '',
+                        ':hover': { borderColor: "#5a9ea0" },
+                        ':select': { borderColor: "#5a9ea0" },
+                    }}onClick={() => setIsModalVisible(true)}>
                         Select Activities ({numDays} Days)
                     </Button>
                     <ActivitySelectionModal
@@ -195,7 +200,11 @@ export default function CreateItineraryForm() {
                           name="language"
                           rules={[{ required: true, message: "Please select a language" }]}
                         >
-                          <Select placeholder="Select language" size="large">
+                          <Select placeholder="Select language" size="large" style={{
+                            borderColor: "#e0829d",
+                            ':hover': { borderColor: "#e0829d" },
+                            ':focus': { borderColor: "#e0829d" },
+                        }}>
                             {languages.map((language) => (
                               <Option key={language} value={language}>
                                 {language}
@@ -214,9 +223,14 @@ export default function CreateItineraryForm() {
                     >
                       <Select
                         mode="tags"
-                        style={{ width: "100%" }}
                         placeholder="Enter tags and press Enter"
-                        size="large">
+                        size="large"
+                        style={{
+                            width: "100%",
+                            borderColor: "#5a9ea0",
+                            ':hover': { borderColor: "#5a9ea0" },
+                            ':focus': { borderColor: "#5a9ea0" },
+                        }}>
                         {AccessibilityTags.map((accessibility) => (
                             <Option key={accessibility} value={accessibility}>
                               {accessibility}
@@ -315,7 +329,23 @@ export default function CreateItineraryForm() {
             grid-column: 1 / 2;
             grid-row: 2 / 3;
           }
-  
+
+                    /* Apply border color globally for hover and focus states */
+            .ant-input:hover, .ant-input:focus, 
+            .ant-select-selector:hover, .ant-select-selector:focus, 
+            .ant-picker:hover, .ant-picker:focus {
+                border-color: #5a9ea0 !important;
+                box-shadow: none !important; /* Optional: Disable default shadow */
+            }
+
+            /* For error state (red border), you can override this too */
+            .ant-input-status-error:hover, .ant-input-status-error:focus,
+            .ant-select-selector-status-error:hover, .ant-select-selector-status-error:focus,
+            .ant-picker-status-error:hover, .ant-picker-status-error:focus {
+                border-color: #5a9ea0 !important;
+            }
+
+            
           .images-container img:nth-child(3) {
             grid-column: 2 / 3;
             grid-row: 1 / 3;

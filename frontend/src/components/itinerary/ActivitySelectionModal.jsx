@@ -46,6 +46,7 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
             visible={isVisible}
             onCancel={onClose}
             onOk={handleOk}
+            okButtonProps={{ disabled: selectedActivities.length === 0, style: { backgroundColor: '#036264', borderColor: '#036264' } }}
         >
             <List
                 dataSource={activities}
