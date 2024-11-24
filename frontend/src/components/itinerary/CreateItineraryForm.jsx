@@ -5,19 +5,22 @@ import LocationMap from '../common/MapComponent';
 import languages  from '../../assets/constants/Languages';
 import AccessibilityTags from '../../assets/constants/AccessibiltyTags';
 import ActivitySelectionModal from '../itinerary/ActivitySelectionModal';
+import { createItinerary } from '../../api/ItineraryService';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default function CreateItineraryForm() {
-    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); //(London)
-    const [selectedLocation, setSelectedLocation] = useState('');
+    const [pickupLocation, setPickUpLocation] = useState(null);
+    const [dropoffLocation, setDropOffLocation] = useState(null);
+    const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
+    const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
     const [selectedActivities, setSelectedActivities] = useState([]);
     const [numDays, setNumDays] = useState(0); // Store the number of days
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
+    const [form] = Form.useForm();
 
     const handleDateChange = (dates) => {
     if (dates && dates.length === 2) {
@@ -43,6 +46,32 @@ export default function CreateItineraryForm() {
         console.log("Form Errors: ", errorInfo);
     };
 
+    const handleSubmit = async () => {
+        const values = await form.validateFields();
+        const itineraryData = {
+            title: values.title,
+            description: values.description,
+            serviceFee: values.serviceFee,
+            language: values.language,
+            accessibility: values.accessibility,
+            startDate: values.availableDate[0],
+            endDate: values.availableDate[1],
+            activities: selectedActivities.map(activity => activity._id),
+            pickupLocation: pickupLocation,
+            dropoffLocation: dropoffLocation,
+        };
+
+        try {
+            setLoading(true);
+            await createItinerary(itineraryData);
+            form.resetFields();
+            setSelectedActivities([]);
+        } catch (error) {
+            message.error('Failed to create itinerary.');
+        }finally{
+            setLoading(false);
+        }
+    };
     return (
       <div className="full-height-container">
         <MDBContainer fluid className="p-2">
@@ -143,7 +172,7 @@ export default function CreateItineraryForm() {
                         onClose={() => setIsModalVisible(false)}
                         onSelectActivities={handleSelectActivities}
                         preSelectedActivities={selectedActivities}
-                        maxActivities={numDays} // Pass the max activities based on the duration
+                        maxActivities={numDays}
                     />
                     </Form.Item>
 
@@ -155,7 +184,7 @@ export default function CreateItineraryForm() {
                           name="serviceFee"
                           rules={[{ required: true, message: "Please enter the service fee" }]}
                         >
-                          <Input prefix="$" size="large" />
+                          <Input prefix="$" size="large" placeholder="0"/>
                         </Form.Item>
                       </Col>
             
@@ -198,27 +227,28 @@ export default function CreateItineraryForm() {
 
                     {/* Locations */}
                     <Form.Item
-                      label="Pick up Location"
-                      name="pickup location"
-                      rules={[{ required: true, message: "Please add at least one location" }]}
+                      label="Pickup Location"
+                      name="pickupLocation"
+                      rules={[{ required: !pickupLocation, message: "Please enter a Pickup Location" }]}
                     >
-                      <LocationMap
-                        markerPosition={markerPosition}
-                        setMarkerPosition={setMarkerPosition}
-                        setSelectedLocation={setSelectedLocation}
-                        />
-                    </Form.Item>
+                    <LocationMap
+                        markerPosition={pickupMarkerPosition}
+                        setMarkerPosition={setPickUpMarkerPosition}
+                        setSelectedLocation={setPickUpLocation}
+                        selectedLocation = {pickupLocation}
+                    /></Form.Item>
                     <Form.Item
-                      label="Drop off Location"
-                      name="dropoff location"
-                      rules={[{ required: true, message: "Please add at least one location" }]}
+                      label="Drop Off Location"
+                      name="dropoffLocation"
+                      rules={[{ required: !dropoffLocation, message: "Please enter a Drop off Location" }]}
                     >
-                      <LocationMap
-                        markerPosition={markerPosition}
-                        setMarkerPosition={setMarkerPosition}
-                        setSelectedLocation={setSelectedLocation}
-                        />
-                    </Form.Item>
+                    <LocationMap
+                        markerPosition={dropoffMarkerPosition}
+                        setMarkerPosition={setDropOffMarkerPosition}
+                        setSelectedLocation={setDropOffLocation}
+                        selectedLocation = {dropoffLocation}
+                    /></Form.Item>
+
 
                     {/* Submit Button */}
                     <Form.Item>
@@ -228,6 +258,7 @@ export default function CreateItineraryForm() {
                         loading={loading}
                         className="custom-button"
                         style={{ width: "100%", height: "50px" }}
+                        onClick={handleSubmit}
                       >
                         Create Itinerary
                       </Button>
@@ -303,7 +334,7 @@ export default function CreateItineraryForm() {
             text-align: center;
             margin-bottom: 20px;
           }
-  
+           
           .form-submit-button {
             width: 100%;
             background-color: #ff5722;
