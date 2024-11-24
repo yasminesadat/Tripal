@@ -12,6 +12,5 @@ export const users = [
 export const profile = [
   { id: 61, title: "My Profile", href: "/profile" },
   { id: 62, title: "Change Password", href: "/change-password" },
-  { id: 63, title: "Help", href: "/help" },
-  { id: 64, title: "Log Out", href: "/logout" },
+  { id: 63, title: "Log Out", href: "/logout" },
 ];

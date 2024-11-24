@@ -12,8 +12,9 @@ export default function Header3() {
     navigate(pageName);
   };
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [addClass, setAddClass] = useState(true);
+  const [, setMobileMenuOpen] = useState(false);
+  const [addClass] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <>
@@ -59,16 +60,63 @@ export default function Header3() {
               {/*/help-center*/}
               Help
             </Link>
-
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
+              onMouseEnter={() => setDropdownOpen(true)}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
+                dropdownOpen ? "hovered" : ""
+              }`}
             >
               <i className="icon-person text-18"></i>
             </button>
+            {dropdownOpen && (
+              <div
+                className="dropdown-menu"
+                onMouseLeave={() => setDropdownOpen(false)}
+              >
+                <ul>
+                  {profile.map((item) => (
+                    <li key={item.id}>
+                      <a href={item.href}>{item.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </header>
+      <style>{`
+        .button.hovered {
+          background-color: var(--color-dark-1) !important;
+          color: white !important;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          top: 90%;
+          left: 87%;
+          background-color: white;
+          border: 1px solid #ccc;
+          border-radius: 10px; /* Added border-radius for rounded corners */
+          z-index: 1000;
+        }
+
+        .dropdown-menu ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .dropdown-menu li {
+          padding: 10px 20px;
+          cursor: pointer;
+        }
+
+        .dropdown-menu a {
+          text-decoration: none;
+          color: inherit;
+        }`}</style>
     </>
   );
 }
