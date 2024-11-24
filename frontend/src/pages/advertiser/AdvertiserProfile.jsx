@@ -282,32 +282,32 @@ export default function AdvertiserProfile() {
 //   console.log(advertiser)
   const General = advertiser
   ? [
-    { label: "Company Name", value: advertiser.companyProfile?.companyName },
-    { label: "Industry", value: advertiser.companyProfile?.industry },
-    { label: "Description", value: advertiser.companyProfile?.description },
-    { label: "Founded Year", value: advertiser.companyProfile?.foundedYear },
-    { label: "Employees", value: advertiser.companyProfile?.employees },   
+    { label: "Company Name", value: advertiser.companyProfile?.companyName || ""},
+    { label: "Industry", value: advertiser.companyProfile?.industry || "" },
+    { label: "Description", value: advertiser.companyProfile?.description || ""},
+    { label: "Founded Year", value: advertiser.companyProfile?.foundedYear|| "" },
+    { label: "Employees", value: advertiser.companyProfile?.employees|| "" },   
     {
       label: "Certifications",
-      value: advertiser.companyProfile?.certifications?.join(", "),
+      value: advertiser.companyProfile?.certifications?.join(", ") || [],
     },
     
   ]  : [] ;
 
   const Contact= advertiser
   ?[
-    { label: "Email", value: advertiser.email },
-    { label: "Website", value: advertiser.website,
+    { label: "Email", value: advertiser.email || ""},
+    { label: "Website", value: advertiser.website || "",
       isLink: true,
     },
     {
         label: "LinkedIn",
-        value: advertiser.companyProfile?.socialMedia?.linkedin,
+        value: advertiser.companyProfile?.socialMedia?.linkedin || "",
         isLink: true,
       },
       {
         label: "Twitter",
-        value: advertiser.companyProfile?.socialMedia?.twitter,
+        value: advertiser.companyProfile?.socialMedia?.twitter || "",
         isLink: true,
       },
   ] : [];
@@ -316,12 +316,12 @@ export default function AdvertiserProfile() {
   ? [
       {
         label: "Address",
-        value: advertiser.companyProfile?.headquarters?.address,
+        value: advertiser.companyProfile?.headquarters?.address || "",
       },
-      { label: "City", value: advertiser.companyProfile?.headquarters?.city },
+      { label: "City", value: advertiser.companyProfile?.headquarters?.city|| "" },
       {
         label: "Country",
-        value: advertiser.companyProfile?.headquarters?.country,
+        value: advertiser.companyProfile?.headquarters?.country|| "",
       },
       
   ]: [];
@@ -454,6 +454,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.companyName"
+                                    value={formData?.companyProfile?.companyName}
                                     defaultValue={General[0]?.value || ""}
                                     required
                                     onChange={handleChange}
@@ -473,6 +475,8 @@ export default function AdvertiserProfile() {
                             <div className="form-input">
                                 <input
                                 type="text"
+                                name="companyProfile.industry"
+                                 value={formData?.companyProfile?.industry}
                                 defaultValue={General[1]?.value || ""}
                                 required
                                 onChange={handleChange}
@@ -492,6 +496,8 @@ export default function AdvertiserProfile() {
                             <div className="form-input">
                                 <input
                                 type="text"
+                                name="companyProfile.description"
+                                value={formData?.companyProfile?.description}
                                 defaultValue={General[2]?.value || ""}
                                 required
                                 onChange={handleChange}
@@ -511,6 +517,8 @@ export default function AdvertiserProfile() {
                             <div className="form-input">
                                 <input
                                 type="text"
+                                name="companyProfile.foundedYear"
+                                value={formData?.companyProfile?.foundedYear}
                                 defaultValue={General[3]?.value || ""}
                                 onChange={handleChange}
                                 />
@@ -529,7 +537,8 @@ export default function AdvertiserProfile() {
                             <div className="form-input">
                                 <input
                                 type="text"
-                                value={formData.companyProfile?.employees}
+                                name="companyProfile.employees"
+                                value={formData?.companyProfile?.employees}
                                 defaultValue={General[4]?.value || ""}
                                 onChange={handleChange}
                                 />
@@ -548,7 +557,7 @@ export default function AdvertiserProfile() {
                             <h3 className="text-18 fw-500 mb-20">Certificates</h3>
 
                             {General[5]?.value?.length > 0 ? (
-                                General[5]?.value.split(", ").map((certificate, index) => ( // Split string back into array
+                                General[5]?.value?.split(", ").map((certificate, index) => ( // Split string back into array
                                 <div key={index} className="contactForm row y-gap-30 items-center">
                                     <div className="col-lg-10">
                                     <div className="form-input">
@@ -690,6 +699,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.headquarters.address"
+                                    value={formData?.companyProfile?.headquarters?.address}
                                     defaultValue={Location[0]?.value || ""}
                                     required
                                     onChange={handleChange}
@@ -708,6 +719,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.headquarters.city"
+                                     value={formData?.companyProfile?.headquarters?.city}
                                     defaultValue={Location[1]?.value || ""}
                                     required
                                     onChange={handleChange}
@@ -726,6 +739,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.headquarters.country"
+                                    value={formData?.companyProfile?.headquarters?.country}
                                     defaultValue={Location[2]?.value || ""}
                                     required
                                     onChange={handleChange}
@@ -760,6 +775,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="email"
+                                    value={formData?.email}
                                     defaultValue={Contact[0]?.value || ""}
                                     required
                                     onChange={handleChange}
@@ -780,6 +797,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="website"
+                                    value={formData?.website}
                                     defaultValue={Contact[1]?.value || ""}
                                     onChange={handleChange}
                                     />
@@ -798,6 +817,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.socialMedia.linkedin"
+                                    value={formData?.companyProfile?.socialMedia.linkedin}
                                     defaultValue={Contact[2]?.value || ""}
                                     onChange={handleChange}
                                     />
@@ -816,6 +837,8 @@ export default function AdvertiserProfile() {
                                 <div className="form-input">
                                     <input
                                     type="text"
+                                    name="companyProfile.socialMedia.twitter"
+                                    value={formData?.companyProfile?.socialMedia.twitter}
                                     defaultValue={Contact[3]?.value || ""}
                                     onChange={handleChange}
                                     />
