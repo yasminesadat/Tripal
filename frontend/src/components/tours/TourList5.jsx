@@ -1,8 +1,11 @@
 import { tourDataThree } from "@/data/tours";
-import { fetchProducts } from "../../api/ProductService";
+import { fetchProducts, archiveProduct, unArchiveProduct} from "../../api/ProductService";
+import {getUserData} from "../../api/UserService";
 import React, { useState, useRef, useEffect } from "react";
 import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
+import Spinner from "../common/Spinner"; 
+import ProductCard from "./ProductCard";
 import {
   durations,
   features,
@@ -11,8 +14,8 @@ import {
   speedFeatures,
 } from "@/data/tourFilteringOptions";
 import RangeSlider from "../common/RangeSlider";
-
 import { Link } from "react-router-dom";
+import { Card, Rate, message } from "antd"; 
 
 export default function TourList5() {
   const [sortOption, setSortOption] = useState("");
@@ -30,6 +33,10 @@ export default function TourList5() {
   const errorDisplayedRef = useRef(false);
   const [currentPage, setCurrentPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(1); 
+  const [userRole, setUserRole] = useState("");
+  const [userId, setUserId] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [newIsArchived, setNewIsArchived] = useState(false);
   
   const getProducts = async (page = 1) => {
     setLoading(true);
@@ -40,8 +47,8 @@ export default function TourList5() {
         priceRange[0],
         priceRange[1],
         sortOrder ,
+        userRole
         );
-        
         let filtered = productsData.products;
         console.log(filtered);
         if(productsData.totalPages)
@@ -61,8 +68,26 @@ export default function TourList5() {
   };
 
   useEffect(() => {
-    getProducts(currentPage); 
-  }, []);
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData();
+        setUserRole(userData.data.role); 
+        setUserId(userData.data.id);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
+  
+  useEffect(() => {
+    if (userRole) {
+      console.log('User role:', userRole);
+      getProducts(currentPage); 
+    }
+  }, [userRole]); 
+  
 
   // useEffect(() => {
   //   const getExchangeRate = async () => {
@@ -110,9 +135,14 @@ export default function TourList5() {
   const onPageChange = (page) => {
     if (page !== currentPage) {
       getProducts(page);
-      window.scrollTo(0, 0); 
     }
   };
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+  
+  
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -417,75 +447,36 @@ export default function TourList5() {
             </div>
           </div>
         </div>
-
-        <div className="row y-gap-30 pt-30">
-          {filteredProducts.map((product) => (
-            <div className="col-lg-3 col-sm-6">
-              <Link
-                className="tourCard -type-1 py-10 px-10 border-1 rounded-12  -hover-shadow"
-              >
-                <div className="tourCard__header">
-                  <div className="tourCard__image ratio ratio-28:20">
-                    <img
-                      src={product.picture}
-                      alt="image"
-                      className="img-ratio rounded-12"
-                    />
-                  </div>
-
-                  <button className="tourCard__favorite">
-                    <i className="icon-heart"></i>
-                  </button>
-                </div>
-
-                <div className="tourCard__content px-10 pt-10">
-                  <div className="tourCard__location d-flex items-center text-13 text-light-2">
-                    <i className="d-flex text-16 text-light-2 mr-5"></i>
-                    {/* {elm.location} */}
-                  </div>
-
-                  <h3 className="tourCard__title text-16 fw-500 mt-5">
-                    <span>{product.name}</span>
-                  </h3>
-                  
-                  <div className="tourCard__location d-flex items-center text-13 text-light-2">
-                    <i className="d-flex text-16 text-light-2 mr-5"></i>
-                    {product.description}
-                  </div>
-
-                  <div className="tourCard__rating d-flex items-center text-13 mt-5">
-                    <div className="d-flex x-gap-5">
-                      <Stars star={product.averageRating} />
-                    </div>
-
-                    <span className="text-dark-1 ml-10">
-                      {/* {elm.rating} ({elm.ratingCount}) */}
-                    </span>
-                  </div>
-
-                  <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
-                    <div className="d-flex items-center">
-                      <i className="icon-clock text-16 mr-5"></i>
-                      {/* {elm.duration} */}
-                    </div>
-
-                    <div>
-                      From <span className="text-16 fw-500">${product.price}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+        {loading ? ( <Spinner/>) :
+        (<>
+          <div className="row y-gap-30 pt-30">
+            {filteredProducts.map((product) => (
+                <ProductCard 
+                id={product._id}
+                productSeller={product.seller._id}
+                name={product.name}
+                description={product.description}
+                price={product.price}
+                picture={product.picture}
+                seller={product.seller.name}
+                quantity={product.quantity}
+                averageRating={product.averageRating}
+                isArchived={product.isArchived}
+                sales={product.sales}
+                userRole = {userRole} 
+                userId = {userId}/>
+              ))}
         </div>
 
-        <div className="d-flex justify-center flex-column mt-60">
-          <Pagination />
+          <div className="d-flex justify-center flex-column mt-60">
+          <Pagination curr ={currentPage} totalPages ={totalPages} onPageChange={onPageChange} /><br/>
 
-          <div className="text-14 text-center mt-20">
-            Showing results 1-30 of 1,415
+            {/* <div className="text-14 text-center mt-20">
+              Showing results 1-30 of 1,415
+            </div> */}
           </div>
-        </div>
+        </>
+        )}
       </div>
     </section>
   );
