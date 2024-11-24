@@ -178,9 +178,9 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
         catch (error) {
             console.error("Failed to save Booking");
         }
-        setTimeout(() => {
-            navigate("/tourist");
-        }, 7000);
+        // setTimeout(() => {
+        //     navigate("/tourist");
+        // }, 7000);
 
     }
     return (

@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Components/Sidebar.jsx";
 import { speedFeatures } from "./Components/TourFilteringOptions.jsx";
 import Pagination from "./Components/pagination.jsx";
+import MetaComponent from "@/components/common/MetaComponent";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg"
 import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg"
 import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg"
@@ -91,8 +94,17 @@ const fetchTourData = async () => {
     };
   }, []);
 
+  const metadata = {
+    title: "Home || Tripal - Travel Agency",
+};
+
   return (
-    <section className="layout-pb-xl">
+    <>
+    <MetaComponent meta={metadata} />
+    <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
+        <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
           <div className="col-xl-3 col-lg-4">
@@ -275,6 +287,9 @@ const fetchTourData = async () => {
           </div>
         </div>
       </div>
-    </section>
+    </section>        </main>
+        <FooterThree />
+    </div>
+</>
   );
 }

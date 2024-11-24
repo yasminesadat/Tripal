@@ -1,7 +1,10 @@
 import Calender from "../../components/dropdownSearch/Calender";
 import Location from "../../components/dropdownSearch/Location";
-import image from "./Components/bg.svg"
+import image from "./Components/bg.svg";
+import MetaComponent from "@/components/common/MetaComponent";
+import FooterThree from "@/components/layout/footers/FooterThree";
 import {message} from 'antd';
+import TouristHeader from "@/components/layout/header/TouristHeader";
 
 
 import { useEffect, useState, useRef } from "react";
@@ -58,9 +61,17 @@ export default function Hero6() {
       document.removeEventListener("click", handleClick);
     };
   }, []);
+  const metadata = {
+    title: "Home || Tripal - Travel Agency",
+};
 
   return (
-    <section className="hero -type-6">
+    <>
+    <MetaComponent meta={metadata} />
+    <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
+        <section className="hero -type-6" style={{ paddingBottom: '500px' }}>
       <div className="hero__bg">
         <img src={image} alt="background" />
       </div>
@@ -159,5 +170,9 @@ export default function Hero6() {
         </div>
       </div>
     </section>
+    <FooterThree/>
+        </main>
+    </div>
+</>
   );
 }

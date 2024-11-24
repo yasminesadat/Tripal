@@ -3,8 +3,14 @@ import CreditCard from "./Components/Payment";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import img from "./Components/HotelsImages/bookingicon2.png";
+import MetaComponent from "@/components/common/MetaComponent";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 
 export default function BookingPages() {
+  const metadata = {
+    title: "Home || Tripal - Travel Agency",
+};
   const [isBookedOriginatingTransportation, setIsBookedOriginatingTransportation] = useState(false);
   const [isBookedReturnTransportation, setIsBookedReturnTransportation] = useState(false);
   const [isBookedAccepted, setIsBookedAccepted] = useState(false);
@@ -47,7 +53,12 @@ export default function BookingPages() {
 
   return (
 
-    <section className="layout-pt-md layout-pb-lg mt-header">
+    <>
+    <MetaComponent meta={metadata} />
+    <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
+        <section className="layout-pt-md layout-pb-lg mt-header">
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
@@ -311,7 +322,10 @@ export default function BookingPages() {
           </div>
         </div>
       </div>
-    </section>
+    </section>        </main>
+        <FooterThree />
+    </div>
+</>
 
   );
 }

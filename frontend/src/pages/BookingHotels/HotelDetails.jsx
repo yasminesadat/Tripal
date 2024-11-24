@@ -12,6 +12,9 @@ import DateCalender from "./Components/DateCalendar";
 import RoadMap2 from "./Components/Roadmap2";
 import CommentBox from "./Components/CommentBox";
 import { useParams } from "react-router-dom";
+import MetaComponent from "@/components/common/MetaComponent";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 
 
 
@@ -19,8 +22,17 @@ export default function HotelDetails() {
     const {cityCode,name,hotelID,dates1,dates2}  = useParams();
     console.log("1111",name);
 
+    const metadata = {
+      title: "Home || Tripal - Travel Agency",
+  };
+
   return (
     <>
+    <MetaComponent meta={metadata} />
+    <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
+        <>
       <section>
                 <div className="container">
                     <MainInformation name={name} /> {/* Pass hotelID as a prop */}
@@ -93,6 +105,9 @@ export default function HotelDetails() {
           </div>
         </div>
       </section>
-    </>
+    </>        </main>
+        <FooterThree />
+    </div>
+</>
   );
 }
