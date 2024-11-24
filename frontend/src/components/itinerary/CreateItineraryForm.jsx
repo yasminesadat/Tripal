@@ -1,29 +1,48 @@
 import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 import { useState } from "react";
 import { Form, Input, Button, Card, Row, Col, DatePicker, Select, Typography, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import LocationMap from '../common/MapComponent';
 import languages  from '../../assets/constants/Languages';
 import AccessibilityTags from '../../assets/constants/AccessibiltyTags';
+import ActivitySelectionModal from '../itinerary/ActivitySelectionModal';
+
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default function CreateItineraryForm() {
-const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); // Default position (London)
-  const [selectedLocation, setSelectedLocation] = useState('');
+    const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+    const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); //(London)
+    const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedActivities, setSelectedActivities] = useState([]);
+    const [numDays, setNumDays] = useState(0); // Store the number of days
+    const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
 
-  const onFinish = (values) => {
-    console.log("Form Values: ", values);
-    message.success("Itinerary created successfully!");
-  };
+    const handleDateChange = (dates) => {
+    if (dates && dates.length === 2) {
+        const startDate = dates[0].startOf("day");
+        const endDate = dates[1].startOf("day");
+        const duration = endDate.diff(startDate, "days") + 1;
+        setNumDays(duration);
+    } else 
+        setNumDays(0);
+    };
 
-  const onFinishFailed = (errorInfo) => {
-    message.error("Please complete all required fields.");
-    console.log("Form Errors: ", errorInfo);
-  };
+    const handleSelectActivities = (activities) => {
+        setSelectedActivities(activities);
+    };
+
+    const onFinish = (values) => {
+        console.log("Form Values: ", values);
+        message.success("Itinerary created successfully!");
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        message.error("Please complete all required fields.");
+        console.log("Form Errors: ", errorInfo);
+    };
+
     return (
       <div className="full-height-container">
         <MDBContainer fluid className="p-2">
@@ -112,9 +131,22 @@ const [form] = Form.useForm();
                       name="availableDate"
                       rules={[{ required: true, message: "Please select the available dates" }]}
                     >
-                      <RangePicker style={{ width: "100%" }} size="large" />
+                      <RangePicker style={{ width: "100%" }} size="large" onChange={handleDateChange}/>
                     </Form.Item>
-            
+
+                    <Form.Item>
+                    <Button onClick={() => setIsModalVisible(true)}>
+                        Select Activities ({numDays} Days)
+                    </Button>
+                    <ActivitySelectionModal
+                        isVisible={isModalVisible}
+                        onClose={() => setIsModalVisible(false)}
+                        onSelectActivities={handleSelectActivities}
+                        preSelectedActivities={selectedActivities}
+                        maxActivities={numDays} // Pass the max activities based on the duration
+                    />
+                    </Form.Item>
+
                     {/* Service Fee */}
                     <Row gutter={16}>
                       <Col span={12}>
