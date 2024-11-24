@@ -77,7 +77,7 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/contact">View Complaints</Link>
+            <Link to="/admin/complaints">View Complaints</Link>
           </div>
         </div>
       </div>

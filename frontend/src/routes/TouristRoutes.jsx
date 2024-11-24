@@ -1,5 +1,5 @@
 // import TouristHome from "../pages/tourist/TouristHome";
-// import TouristProfile from "../pages/tourist/TouristProfile";
+import TouristProfile from "../pages/tourist/TouristProfile";
 // import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 // import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 // import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
@@ -34,7 +34,7 @@ const touristRoutes = [
   // { path: "/tourist", element: <TouristHome /> },
   // { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
-  // { path: "/tourist/profile", element: <TouristProfile /> },
+  { path: "/tourist/profile", element: <TouristProfile /> },
   // { path: "/historical-places", element: <HistoricalPlaces /> },
   // {
   //   path: "/upcoming-itineraries",
