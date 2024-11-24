@@ -33,8 +33,8 @@ export default function HeaderSearch({ white, onSearch }) {
   // Handle the input change and trigger the onSearch prop
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setSelected(value); // Update local state
-    onSearch(value); // Send the search term to the parent component
+    setSelected(value); 
+    onSearch(value); 
   };
 
   return (
@@ -45,7 +45,7 @@ export default function HeaderSearch({ white, onSearch }) {
         ref={inputRef}
         onClick={() => setDdActive((prev) => !prev)}
         type="text"
-        placeholder="Search destinations or activities"
+        placeholder="Search activities' titles or categories"
         className={`js-search ${white ? "text-white" : ""}`}
       />
     </div>
