@@ -16,6 +16,8 @@ import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import ComplaintsReplies from "@/pages/tourist/ComplaintsReplies";
 import FlightSearch from "../pages/tourist/SearchBar";
+import Cart from "@/pages/tourist/Cart";
+import WishList from "@/pages/tourist/WishList";
 // import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 // import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 // import Hero5 from "../components/tourist/SearchBar";
@@ -37,6 +39,8 @@ const touristRoutes = [
   { path: "/upcoming-activities", element: <Activities /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   { path: "/tourist/profile", element: <TouristProfile /> },
+  { path: "/cart", element: <Cart /> },
+  { path: "/wishlist", element: <WishList /> },
   // { path: "/historical-places", element: <HistoricalPlaces /> },
   // {
   //   path: "/upcoming-itineraries",
