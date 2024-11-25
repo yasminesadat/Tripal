@@ -1,68 +1,83 @@
+import React from 'react';
+import {
+  LayoutDashboard,
+  AlertCircle,
+  UserPlus,
+  Users,
+  UserMinus,
+  MessagesSquare,
+  TagsIcon,
+  KeyRound,
+  Heart,
+  LineChart,
+  LogOut
+} from 'lucide-react';
+
 export const sidebarItems = [
   {
     id: 1,
     href: "/admin",
-    iconClass: "icon-dashboard text-26",
+    icon: <LayoutDashboard size={26} />,
     label: "Dashboard",
   },
   {
     id: 2,
     href: "/admin/complaints",
-    iconClass: "icon-calendar text-26",
+    icon: <AlertCircle size={26} />,
     label: "Complaints",
   },
   {
     id: 3,
     href: "/admin/new-admin",
-    iconClass: "icon-menu text-26",
+    icon: <UserPlus size={26} />,
     label: "Add Admin",
   },
   {
     id: 4,
     href: "/admin/new-governor",
-    iconClass: "icon-clipboard text-26",
+    icon: <Users size={26} />,
     label: "Add Governor",
   },
   {
     id: 53,
     href: "/admin/delete-user",
-    iconClass: "icon-delete text-26",  // Example icon class
+    icon: <UserMinus size={26} />,
     label: "Delete Users",
   },
   {
     id: 6,
     href: "/admin/requests",
-    iconClass: "icon-message text-26",
+    icon: <MessagesSquare size={26} />,
     label: "Manage Requests",
   },
   {
     id: 7,
     href: "/activity-categories",
-    iconClass: "icon-account text-26",
+    icon: <TagsIcon size={26} />,
     label: "Activity Categories",
   },
   {
     id: 11,
     href: "/admin/changepassword",
-    iconClass: "icon-lock text-26",  // Example icon class
+    icon: <KeyRound size={26} />,
     label: "Change Password",
   },
   {
     id: 12,
     href: "/preference-tags",
-    iconClass: "icon-heart text-26",
+    icon: <Heart size={26} />,
     label: "Preference Tags",
   },
   {
     id: 13,
-    href:"/revenue",
-    iconClass:"icon-payment text-26",
+    href: "/revenue",
+    icon: <LineChart size={26} />,
     label: "Revenue",
   },
   {
     id: 8,
     href: "/",
-    iconClass: "icon-logout text-26",
+    icon: <LogOut size={26} />,
     label: "Logout"
   },
 ];
