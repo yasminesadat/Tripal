@@ -53,11 +53,12 @@ const UserList = () => {
         const styles = {
             'Admin': { backgroundColor: '#fee2e2', color: '#991b1b' }, // Light red background, dark red text
             'Tourism Governor': { backgroundColor: '#e0e7ff', color: '#3730a3' }, // Light blue background, dark blue text
-            'User': { backgroundColor: '#dbeafe', color: '#1e40af' }, // Lighter blue background, navy text
+            'Tourist': { backgroundColor: '#dbeafe', color: '#1e40af' }, // Lighter blue background, navy text
             'Advertiser': { backgroundColor: '#fef3c7', color: '#92400e' }, // Light yellow background, amber text
             'Seller': { backgroundColor: '#f0fdfa', color: '#064e3b' }, // Mint green background, emerald text
             'Tour Guide': { backgroundColor: '#ede9fe', color: '#5b21b6' } // Lavender background, deep purple text
         };
+
 
         return styles[role] || { backgroundColor: '#f3f4f6', color: '#374151' };
     };
