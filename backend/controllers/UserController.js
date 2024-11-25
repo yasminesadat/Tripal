@@ -79,7 +79,7 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        //maxAge: 3600 * 1000, //changed to session cookie
+        maxAge: 3600 * 1000, //changed to session cookie
       });
       res.status(200).json({ role: user.role });
     } else {

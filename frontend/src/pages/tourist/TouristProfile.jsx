@@ -16,6 +16,7 @@ import { Select } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
+import Spinner from "@/components/common/Spinner"; 
 const metadata = {
   title: "Home || Tripal - Travel Agency",
 };
@@ -28,6 +29,7 @@ export default function Profile() {
   const [touristCategories, setTouristCategories] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [allCats, setAllCats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const [editedProfile, setEditedProfile] = useState({
@@ -86,9 +88,10 @@ export default function Profile() {
         tags: response.tags,
         categories: response.categories
       });
-
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch user information:", error);
+      setLoading(false);
     }
   };
   const fetchTouristTags = async () => {
@@ -171,6 +174,9 @@ export default function Profile() {
       reader.readAsDataURL(file);
     }
   };
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <>
       <MetaComponent meta={metadata} />

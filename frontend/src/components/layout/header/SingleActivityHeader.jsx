@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-export default function PageHeader({ activityId, activityTitle }) {
+export default function PageHeader({ activityId, activityTitle, touist }) {
   return (
     <section className="pageHeader -type-3">
       <div className="container">

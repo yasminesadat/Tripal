@@ -13,7 +13,7 @@ import Revenue from "@/pages/admin/Revenue";
 import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
-// import Activities from "../pages/commonPagesForMultipleUsers/Activities";
+import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
@@ -32,7 +32,8 @@ const adminRoutes = [
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
   // { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
-  // {path: "/admin/activities", element: <Activities />},
+  {path: "/admin/activities", element: <Activities />},
+
 ];
 
 export default adminRoutes;

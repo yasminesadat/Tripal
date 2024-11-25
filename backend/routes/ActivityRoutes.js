@@ -64,5 +64,6 @@ router.get(
   authorizeRoles("Tourist"),
   getTouristActivities
 );
-router.get("/all-activities", getAllActivities);
+router.get("/all-activities",verifyToken,authorizeRoles("Admin"), getAllActivities);
+
 module.exports = router;
