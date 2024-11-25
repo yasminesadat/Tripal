@@ -2,7 +2,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/ActivitiesHeader";
 
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import ActivitiesList from "@/components/activity/UpcomingActivities";
 import { message } from "antd";
@@ -20,7 +20,7 @@ const metadata = {
 
 export default function Activities() {
   const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
+  //const [userId, setUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
@@ -30,7 +30,7 @@ export default function Activities() {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id);
+          //setUserId(response.data.id);
         } else {
           message.error(response.data.message);
         }
