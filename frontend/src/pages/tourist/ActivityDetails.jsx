@@ -65,6 +65,15 @@ const ActivityDetailsPage = () => {
     <>
       <MetaComponent meta={metadata} />
       <main>
+        {userRole!=="Tourist" && userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && 
+          <>
+            <GuestHeader /> 
+            <PageHeader activityId={activityId} activityTitle={activity.title} />
+            <ActivityDetails activity={activity} />
+            <FooterThree />
+          </>
+        }
+
         {userRole === "Admin" && (
           <div
             className={`dashboard ${

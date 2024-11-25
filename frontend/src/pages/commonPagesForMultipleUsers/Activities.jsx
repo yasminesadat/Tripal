@@ -49,6 +49,19 @@ export default function Activities() {
     <>
       <MetaComponent meta={metadata} />
       <main>
+        {userRole!=="Tourist" && userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && 
+          <>
+            <GuestHeader /> 
+            <PageHeader
+                onSearch={handleSearch}
+                title="Explore all upcoming activities"
+                tourist={true}
+              />
+              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+              <FooterThree />
+          </>
+        }
+
         {userRole === "Admin" && (
           <div
             className={`dashboard ${
@@ -72,7 +85,7 @@ export default function Activities() {
 
         {userRole === "Tourist" && (
           <>
-             <Header1 />
+            <Header1 />
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
@@ -81,9 +94,7 @@ export default function Activities() {
             <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
-        )}
-
-        
+        )}        
       </main>
     </>
   );
