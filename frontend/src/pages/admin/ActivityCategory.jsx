@@ -297,6 +297,7 @@ const ActivityCategoryDetails = () => {
                             onOk={() => handleUpdate(updateCategoryID, updateCategoryName)}
                             onCancel={() => setIsModalVisible(false)}
                             okButtonProps={{ style: styles.button }}
+                            cancelButtonProps={{ style: { display: 'none' } }}
                         >
                             <Input
                                 value={updateCategoryName}
