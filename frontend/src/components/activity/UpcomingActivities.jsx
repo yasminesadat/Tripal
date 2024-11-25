@@ -251,7 +251,13 @@ export default function ActivitiesList({
           <div className={`col-xl-${userRole === 'Admin' ? '12' : '9'} col-lg-${userRole === 'Admin' ? '12' : '8'}`}>
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
-                <div>{filteredActivities?.length} results</div>
+                <div>
+                  {loading ? (
+                    <span>Loading results...</span>
+                  ) : (
+                    <span>{filteredActivities?.length} results</span>  
+                  )}
+                </div>
               </div>
   
               <div ref={dropDownContainer} className="col-auto">
