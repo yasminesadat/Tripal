@@ -9,12 +9,26 @@ import adminRoutes from "./AdminRoutes";
 import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import governorRoutes from "./GovernorRoutes";
+import commonRoutes from "./CommonRoute"; 
 
 const RoutesComponent = () => (
   <Routes>
     {[...guestRoutes, ...templateRoutes].map((route, index) => (
       <Route key={index} path={route.path} element={route.element} />
     ))}
+    {commonRoutes.map((route, index) => (
+      <Route
+        key={`common-${index}`}
+        path={route.path}
+        element={
+          <RoleProtectedRoute
+            element={route.element}
+            requiredRoles={["Tourist", "Advertiser", "Admin"]}
+          />
+        }
+      />
+    ))}
+  
     {touristRoutes.map((route, index) => (
       <Route
         key={`tourist-${index}`}
