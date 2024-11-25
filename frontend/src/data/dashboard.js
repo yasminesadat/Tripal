@@ -58,7 +58,7 @@ export const sidebarItems = [
   },
   {
     id: 12,
-    href: "/",
+    href: "/preference-tags",
     iconClass: "icon-account text-26",
     label: "Preference Tags",
   },
