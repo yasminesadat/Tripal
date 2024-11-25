@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { speedFeatures } from "./tourFilteringOptions";
@@ -44,7 +44,6 @@ export default function ActivitiesList({
   const [currentPage, setCurrentPage] = useState(1);
   const activitiesPerPage = 2; 
 
-  console.log(searchTerm)
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
@@ -172,6 +171,13 @@ export default function ActivitiesList({
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+  };
+
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + '...';
   };
 
   const indexOfLastActivity = currentPage * activitiesPerPage;
@@ -333,8 +339,8 @@ export default function ActivitiesList({
                         </div>
                       </div>
   
-                      <p className="tourCard__text mt-5">{elm.description}</p>
-  
+                      <p className="tourCard__text mt-5">{truncateText(elm.description, 150)}</p>
+
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">

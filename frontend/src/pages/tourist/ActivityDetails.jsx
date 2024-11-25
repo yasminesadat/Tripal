@@ -16,6 +16,7 @@ const metadata = {
   title: "Activity Details || Tripal",
   description: "Activity Details || Tripal",
 };
+import NotFoundPage from "@/pages/pages/404";
 
 const ActivityDetailsPage = () => {
   const { activityId } = useParams();
@@ -58,7 +59,7 @@ const ActivityDetailsPage = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div><NotFoundPage/></div>;
   if (!activity) return <div>Activity not found.</div>;
 
   return (
@@ -94,8 +95,8 @@ const ActivityDetailsPage = () => {
 
         {userRole === "Tourist" && (
           <>
-             <Header1 />
-            <PageHeader activityId={activityId} activityTitle={activity.title} />
+            <Header1 />
+            <PageHeader activityId={activityId} activityTitle={activity.title} tourist={'ana t3ebt'} />
             <ActivityDetails activity={activity} />
             <FooterThree />
           </>
