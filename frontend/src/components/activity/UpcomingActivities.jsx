@@ -9,7 +9,7 @@ import { Tag, message } from "antd";
 // import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 import { getUserData } from "@/api/UserService";
-import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
+import { viewUpcomingActivities, getAllActivities } from "@/api/ActivityService";
 import { getAdminActivities, flagActivity } from "@/api/AdminService";
 
 export default function ActivitiesList({
@@ -74,9 +74,7 @@ export default function ActivitiesList({
       setLoading(true);
       try {
         let response;
-        if (userRole === "Advertiser") {
-          response = await getAdvertiserActivities();
-        } else if (userRole === "Tourist") {
+        if (userRole === "Tourist") {
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
@@ -135,7 +133,6 @@ export default function ActivitiesList({
   
   
   useEffect(() => {
-    console.log("Filtered Activities: ", filteredActivities);
   }, [filteredActivities]);
 
   const handleSort = (field, order) => {

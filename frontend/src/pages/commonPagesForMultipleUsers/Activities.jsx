@@ -9,12 +9,13 @@ import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
+import GuestHeader from "@/components/layout/header/GuestHeader";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Activities || Tripal - Travel Agency",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Activities || Tripal",
+  description: "Activities || Tripal",
 };
 
 export default function Activities() {
@@ -69,9 +70,10 @@ export default function Activities() {
           </div>
         )}
 
-        {userRole === "Tourist" && (
+        {userRole === "Tourist" || userRole === "Guest" && (
           <>
-            <Header1 />
+            {userRole === "Tourist" && <Header1 />}
+            {userRole === "Guest" && <GuestHeader />}
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
