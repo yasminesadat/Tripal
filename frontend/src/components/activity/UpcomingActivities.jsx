@@ -174,6 +174,13 @@ export default function ActivitiesList({
     setCurrentPage(newPage);
   };
 
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + '...';
+  };
+
   const indexOfLastActivity = currentPage * activitiesPerPage;
   const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
   const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
@@ -333,8 +340,8 @@ export default function ActivitiesList({
                         </div>
                       </div>
   
-                      <p className="tourCard__text mt-5">{elm.description}</p>
-  
+                      <p className="tourCard__text mt-5">{truncateText(elm.description, 150)}</p>
+
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
