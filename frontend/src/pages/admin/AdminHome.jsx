@@ -56,7 +56,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="text-center pt-30">
-              © Copyright Viatours {new Date().getFullYear()}
+            © Copyright Tripal {new Date().getFullYear()}
             </div>
           </div>
         </div>

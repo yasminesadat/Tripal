@@ -171,8 +171,8 @@ const getTouristActivities = async (req, res) => {
 
 const getAllActivitiesForAdmin = async (req, res) => {
   try {
-    const currentDate = new Date();
-    const activities = await Activity.find({ date: { $gte: currentDate } })
+    console.log("here for admin");
+    const activities = await Activity.find()
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);

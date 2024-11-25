@@ -57,6 +57,13 @@ export const sidebarItems = [
     label: "Activity Categories",
   },
   {
+    id: 9,
+    href: "/admin/activities",
+    iconClass: "icon-heart text-26",
+    label: "All Activities",
+
+  },
+  {
     id: 11,
     href: "/admin/changepassword",
     icon: <KeyRound size={26} />,
