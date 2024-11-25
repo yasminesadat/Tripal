@@ -52,7 +52,7 @@ export const sidebarItems = [
 
   {
     id: 11,
-    href: "/",
+    href: "/admin/changepassword",
     iconClass: "icon-lock text-26",  // Example icon class
     label: "Change Password",
   },

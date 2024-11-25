@@ -10,7 +10,7 @@ import ComplaintsPage from "@/pages/admin/Complaints";
 import ComplaintsReplies from "@/pages/admin/ComplaintsReplies";
 import TagManager from "@/pages/admin/PreferenceTags";
 import Revenue from "@/pages/admin/Revenue";
-// import AdminChangePassword from "../pages/admin/AdminProfile";
+import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
 // import DeletionRequests from "../pages/admin/DeletionRequests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
@@ -19,7 +19,7 @@ import Requests from "../pages/admin/Requests";
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/activity-categories", element: <ActivityCategoryDetails /> },
-  { path: "/preference-tags", element: <TagManager/> },
+  { path: "/preference-tags", element: <TagManager /> },
   // { path: "/preference-tags", element: <TagManager /> },
   // { path: "/admin/view-products", element: <AdminProducts /> },
   // { path: "/admin/view-products/product/:id", element: <AdminViewProduct /> },
@@ -30,7 +30,7 @@ const adminRoutes = [
   { path: "/admin/complaints/replies", element: <ComplaintsReplies /> },
   { path: "/revenue", element: <Revenue /> },
 
-  // { path: "/admin/changepassword", element: <AdminChangePassword /> },
+  { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
   // { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
   // {path: "/admin/activities", element: <Activities />},
