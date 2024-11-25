@@ -9,6 +9,8 @@ import { useParams, useNavigate } from "react-router-dom";
 //import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { Button, message, Upload } from "antd";
+import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
+
 
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
@@ -312,7 +314,7 @@ export default function AdvertiserProfile() {
   return (
     <>
       <div>
-
+      <AdvertiserHeader />
       <style>
       {`
           .contactForm .form-input {
@@ -347,8 +349,9 @@ export default function AdvertiserProfile() {
           }
         `}
       </style>
-        <div className="dashboard__content">
-          {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+ 
+        <div className="dashboard__content" style={{ marginTop: "70px" }}>
+
 
           <div className="dashboard__content_content">
             <h1 className="text-30">Profile</h1>
