@@ -4,7 +4,6 @@ import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function GuestHeader() {
-  //const [profileInformation, setProfileInformation] = useState({});
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {

@@ -24,7 +24,7 @@ export default function Menu() {
             <Link to="/destinations">Historical Places</Link>
           </div>
 
-          <div className="desktopNav__item">
+          {/* <div className="desktopNav__item">
             <Link to="/destinations">Products</Link>
           </div>
 
@@ -52,8 +52,8 @@ export default function Menu() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </div> 
+          </div> */}
         </div>
       </div>
     </>

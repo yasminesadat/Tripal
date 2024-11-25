@@ -10,6 +10,7 @@ import { getUserData } from "@/api/UserService";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 import MetaComponent from "@/components/common/MetaComponent";
+import GuestHeader from "@/components/layout/header/GuestHeader";
 
 const metadata = {
   title: "Activity Details || Tripal",
@@ -82,9 +83,10 @@ const ActivityDetailsPage = () => {
           </div>
         )}
 
-        {userRole === "Tourist" && (
+        {userRole === "Tourist" || userRole === "Guest" && (
           <>
-            <Header1 />
+            {userRole === "Tourist" && <Header1 />}
+            {userRole === "Guest" && <GuestHeader />}
             <PageHeader activityId={activityId} activityTitle={activity.title} />
             <ActivityDetails activity={activity} />
             <FooterThree />
