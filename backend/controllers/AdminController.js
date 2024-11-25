@@ -7,6 +7,7 @@ const Tourist = require("../models/users/Tourist.js");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
 const User = require("../models/users/User.js");
 const Request = require('../models/Request.js')
+const PromoCode = require("../models/PromoCode.js")
 
 const addAdmin = async (req, res) => {
   try {
@@ -109,6 +110,23 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const createPromoCode = async (req, res) => {
+  try {
+    const { name, discountPercentage } = req.body;
+
+    const newPromoCode = new PromoCode({
+      name,
+      discountPercentage
+    });
+
+    await newPromoCode.save();
 
 
-module.exports = { addAdmin, deleteUser, getAllUsers };
+    res.status(201).json({ promoCode: newPromoCode });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode };
