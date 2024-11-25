@@ -18,11 +18,7 @@ import { changeTouristPassword } from '../../api/TouristService';
 import { getUserData } from '@/api/UserService';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; // Add this import
 
-import { Select } from 'antd';
-import MetaComponent from "@/components/common/MetaComponent";
-import TouristHeader from "@/components/layout/header/TouristHeader";
-import FooterThree from "@/components/layout/footers/FooterThree";
-import Spinner from "@/components/common/Spinner"; 
+import Spinner from "@/components/common/Spinner";
 
 const metadata = {
   title: "Profile || Tripal - Travel Agency",
@@ -143,7 +139,7 @@ export default function Profile() {
     nationality: "",
     job: "",
     mobileNumber: "",
-    
+
     tags: [],
     categories: []
   });
@@ -298,9 +294,21 @@ export default function Profile() {
   }, []);
 
 
+
+  const handleImageChange = (event, func) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        func(reader.result);
+      };
       reader.readAsDataURL(file);
     }
   };
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (loading) {
     return <Spinner />;
   }
