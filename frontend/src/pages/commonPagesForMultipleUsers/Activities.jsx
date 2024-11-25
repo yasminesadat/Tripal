@@ -2,7 +2,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/ActivitiesHeader";
 
-import  { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import ActivitiesList from "@/components/activity/UpcomingActivities";
 import { message } from "antd";
@@ -23,6 +23,7 @@ export default function Activities() {
   //const [userId, setUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const errorDisplayed = useRef(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,12 +31,19 @@ export default function Activities() {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          //setUserId(response.data.id);
+        } else if (response.data.message === "No token found.") {
+          setUserRole("Guest");
         } else {
-          message.error(response.data.message);
+          if (!errorDisplayed.current) {
+            message.error(response.data.message);
+            errorDisplayed.current = true;
+          }
         }
       } catch (error) {
-        message.error("Failed to fetch user data.");
+        if (!errorDisplayed.current) {
+          message.error("Failed to fetch user data.");
+          errorDisplayed.current = true;
+        }
       }
     };
     fetchUserData();
@@ -49,18 +57,22 @@ export default function Activities() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        {userRole!=="Tourist" && userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && 
-          <>
-            <GuestHeader /> 
-            <PageHeader
+        {userRole !== "Tourist" &&
+          userRole !== "Admin" &&
+          userRole !== "Advertiser" &&
+          userRole !== "TourGuide" &&
+          userRole !== "TourismGovernor" && (
+            <>
+              <GuestHeader />
+              <PageHeader
                 onSearch={handleSearch}
                 title="Explore all upcoming activities"
                 tourist={true}
-            />
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
-            <FooterThree />
-          </>
-        }
+              />
+              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+              <FooterThree />
+            </>
+          )}
 
         {userRole === "Admin" && (
           <div
@@ -71,10 +83,7 @@ export default function Activities() {
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
-              <PageHeader
-                onSearch={handleSearch}
-                title="View all activities"
-              />
+              <PageHeader onSearch={handleSearch} title="View all activities" />
               <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
@@ -94,7 +103,7 @@ export default function Activities() {
             <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
-        )}        
+        )}
       </main>
     </>
   );
