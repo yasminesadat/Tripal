@@ -62,6 +62,7 @@ const ActivityDetailsPage = () => {
 
   return (
     <>
+      <MetaComponent meta={metadata} />
       <main>
         {userRole === "Admin" && (
           <div
@@ -92,21 +93,6 @@ const ActivityDetailsPage = () => {
       </main>
     </>
   );
-    return (
-        <div>
-          <MetaComponent meta={metadata} />
-
-          {userRole === "Tourist" && (
-            <>
-              <Header1 />
-            </>
-          )}
-          {/* another header for guest */}          
-          <PageHeader activityId={activityId} activityTitle={activity.title} />
-          <ActivityDetails activity={activity} />
-          <FooterOne />
-        </div>
-    );
 };
 
 export default ActivityDetailsPage;
