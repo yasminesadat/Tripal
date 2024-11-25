@@ -13,6 +13,12 @@ import { requestAccountDeletion } from "../../api/RequestService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
+import { changeTouristPassword } from '../../api/TouristService';
+import { getUserData } from '@/api/UserService';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; // Add this import
+
+
+
 
 const StyledMultiSelect = ({ value, onChange, options, label }) => {
   return (
@@ -74,14 +80,53 @@ const metadata = {
 };
 
 export default function Profile() {
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getUserData();
+        setUserData(user.data.id);
+        setUserRole(user.data.role);
+        console.log("id is ", user.data.id);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  const [userData, setUserData] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [profileInformation, setProfileInformation] = useState({});
   const [touristTags, setTouristTags] = useState([]);
   const [touristCategories, setTouristCategories] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [allCats, setAllCats] = useState([]);
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false
+  });
+  const togglePasswordVisibility = (field) => {
+    setShowPassword(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
   const navigate = useNavigate();
-
+  const [PasswordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  })
+  const handlePasswordInput = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
   const [editedProfile, setEditedProfile] = useState({
     email: "",
     nationality: "",
@@ -99,6 +144,33 @@ export default function Profile() {
     }));
   };
 
+  const handleChangePassword = async () => {
+    try {
+      if (PasswordForm.newPassword.length < 6) {
+        message.error("Password must be at least 6 characters long");
+        return;
+      }
+      if (PasswordForm.newPassword !== PasswordForm.confirmPassword) {
+        message.error("Passwords don't match");
+        return;
+      }
+
+      console.log("user", userData);
+      console.log("old pass, new pass", PasswordForm.oldPassword, PasswordForm.newPassword);
+      await changeTouristPassword(userData, PasswordForm.oldPassword, PasswordForm.newPassword);
+      message.success("Password changed successfully");
+
+      setPasswordForm({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+
+    } catch (error) {
+      message.error(error.response?.data?.message || "Failed to change password");
+      console.error("Password change error:", error);
+    }
+  };
   const handleEditClick = async () => {
     try {
       const response = await updateTouristInformation(editedProfile);
@@ -375,11 +447,53 @@ export default function Profile() {
                   <h5 className="text-20 fw-500 mb-30">Change Password</h5>
 
                   <div className="contactForm y-gap-30">
+
+
                     <div className="row y-gap-30">
                       <div className="col-md-6">
                         <div className="form-input">
-                          <input type="text" required />
+                          <input
+                            type={showPassword.oldPassword ? "text" : "password"}
+                            name="oldPassword"
+                            value={PasswordForm.oldPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
                           <label className="lh-1 text-16 text-light-1">Old password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('oldPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.oldPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
+                          <style jsx>{`
+        .form-input {
+          position: relative;
+        }
+        .password-toggle {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--color-stone);
+          z-index: 2;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .password-toggle:hover {
+          color: var(--color-stone-light);
+        }
+        .form-input input {
+          padding-right: 40px;
+        }
+      `}</style>
                         </div>
                       </div>
                     </div>
@@ -387,8 +501,22 @@ export default function Profile() {
                     <div className="row">
                       <div className="col-md-6">
                         <div className="form-input">
-                          <input type="text" required />
+                          <input
+                            type={showPassword.newPassword ? "text" : "password"}
+                            name="newPassword"
+                            value={PasswordForm.newPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
                           <label className="lh-1 text-16 text-light-1">New password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('newPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.newPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -396,15 +524,29 @@ export default function Profile() {
                     <div className="row">
                       <div className="col-md-6">
                         <div className="form-input">
-                          <input type="text" required />
+                          <input
+                            type={showPassword.confirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            value={PasswordForm.confirmPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
                           <label className="lh-1 text-16 text-light-1">Confirm new password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('confirmPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.confirmPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
                         </div>
                       </div>
                     </div>
 
                     <div className="row">
                       <div className="col-12">
-                        <button className="button -md -dark-1">
+                        <button className="button -md -dark-1" onClick={handleChangePassword}>
                           Save Changes
                           <i className="icon-arrow-top-right text-16 ml-10"></i>
                         </button>
