@@ -4,7 +4,7 @@ import { Tag, message } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleActivityHeader";
-import { getAllActivities } from "@/api/ActivityService";
+import { getActivityById } from "@/api/ActivityService";
 import ActivityDetails from "@/components/activity/activitySingle/ActivityDetails";
 import { getUserData } from "@/api/UserService";
 import Sidebar from "@/components/dasboard/Sidebar";
@@ -12,7 +12,7 @@ import Header from "@/components/dasboard/Header";
 
 const ActivityDetailsPage = () => {
   const { activityId } = useParams();
-  const [activities, setActivities] = useState([]);
+  const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
@@ -39,8 +39,8 @@ const ActivityDetailsPage = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await getAllActivities();
-        setActivities(response.data);
+        const response = await getActivityById(activityId);
+        setActivity(response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Error fetching activities");
       } finally {
@@ -49,8 +49,6 @@ const ActivityDetailsPage = () => {
     };
     fetchActivities();
   }, []);
-
-  const activity = activities?.find((activity) => activity._id === activityId);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
