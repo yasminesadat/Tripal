@@ -75,6 +75,7 @@ export default function Activities() {
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
+              tourist={true}
             />
             <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
