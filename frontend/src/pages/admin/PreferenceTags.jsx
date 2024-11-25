@@ -3,10 +3,10 @@ import { List, Button, Modal, Input } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import {
-  createTag,
-  getTags,
-  updateTag,
-  deleteTag,
+    createTag,
+    getTags,
+    updateTag,
+    deleteTag,
 } from "../../api/PreferenceTagService";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
@@ -270,7 +270,7 @@ const TagManager = () => {
                                                     style={styles.deleteButton}
                                                     onClick={() => deletePreferenceTag(
                                                         tag._id,
-                                 tag.name
+                                                        tag.name
                                                     )}
                                                 >
                                                     Delete
@@ -294,8 +294,9 @@ const TagManager = () => {
                             title={<span style={styles.modal.title}>Update Tag</span>}
                             open={isModalVisible}
                             onOk={() => handleUpdate(updateTagID, updateTagName)}
-                            onCancel={() => setIsModalVisible(false)}
                             okButtonProps={{ style: styles.button }}
+                            onCancel={() => setIsModalVisible(false)}
+                            cancelButtonProps={{ style: { display: 'none' } }}
                         >
                             <Input
                                 value={updateTagName}
