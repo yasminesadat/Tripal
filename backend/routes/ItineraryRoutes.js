@@ -78,13 +78,7 @@ router.get(
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
 
-router.get(
-  "/itinerary",
-  verifyToken,
-  authorizeRoles("Admin"),
-  getAllItinerariesForAdmin,
-);
-
+router.get("/itinerary",verifyToken,authorizeRoles("Admin"),getAllItinerariesForAdmin,);
 
 router.patch(
   "/itinerary/:id/status",

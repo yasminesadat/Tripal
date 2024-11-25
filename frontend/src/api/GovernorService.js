@@ -1,6 +1,7 @@
 import { axios } from "./axios";
 
 export async function changeGovernorPassword(id, oldPassword, newPassword) {
+    // eslint-disable-next-line no-useless-catch
     try {
         const body = {
             "oldPassword": oldPassword,
@@ -11,7 +12,5 @@ export async function changeGovernorPassword(id, oldPassword, newPassword) {
         return response.data;
     } catch (error) {
         throw error;
-
-
     }
 }
