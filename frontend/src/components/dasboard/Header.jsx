@@ -13,5 +13,7 @@ export default function Header({ setSideBarOpen }) {
 
       </div>
     </div >
+
   );
 }
+

@@ -6,7 +6,6 @@ import ActivityCategoryApi from "../../api/ActivityCategoryService";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
-
 const ActivityCategoryDetails = () => {
     const [nameValue, setNameValue] = useState("");
     const [data, setData] = useState([]);

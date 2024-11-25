@@ -1,10 +1,10 @@
 import { sidebarItems } from "@/data/dashboard";
 import { Link, useLocation } from "react-router-dom";
-
 import React from "react";
 
 export default function Sidebar({ setSideBarOpen }) {
   const { pathname } = useLocation();
+
   return (
     <div className="dashboard__sidebar js-dashboard-sidebar">
       <div className="dashboard__sidebar_header">
@@ -20,15 +20,14 @@ export default function Sidebar({ setSideBarOpen }) {
       </div>
 
       <div className="sidebar -dashboard">
-        {sidebarItems.map((elm, i) => (
+        {sidebarItems.map((item) => (
           <div
-            key={i}
-            className={`sidebar__item ${pathname == elm.href ? "-is-active" : ""
-              } `}
+            key={item.id}
+            className={`sidebar__item ${pathname === item.href ? "-is-active" : ""}`}
           >
-            <Link to={elm.href}>
-              <i className={elm.iconClass}></i>
-              <span className="ml-10">{elm.label}</span>
+            <Link to={item.href}>
+              {item.icon}
+              <span className="ml-10">{item.label}</span>
             </Link>
           </div>
         ))}
