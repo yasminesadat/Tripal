@@ -91,7 +91,7 @@ export const getAdminItineraries = async () => {
 export const getAdminActivities = async () => {
   try {
     const response = await axios.get("/admin/activities");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Can't fetch activities", error);
     throw error;

@@ -6,7 +6,7 @@ export default function Sidebar({ setSideBarOpen }) {
   const { pathname } = useLocation();
 
   return (
-    <div className="dashboard__sidebar js-dashboard-sidebar">
+    <div className="dashboard__sidebar js-dashboard-sidebar" style={{ height: '100vh', overflowY: 'auto' }}>
       <div className="dashboard__sidebar_header">
         <span
           onClick={() => setSideBarOpen(false)}
