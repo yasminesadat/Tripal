@@ -83,10 +83,9 @@ const ActivityDetailsPage = () => {
           </div>
         )}
 
-        {userRole === "Tourist" || userRole === "Guest" && (
+        {userRole === "Tourist" && (
           <>
-            {userRole === "Tourist" && <Header1 />}
-            {userRole === "Guest" && <GuestHeader />}
+             <Header1 />
             <PageHeader activityId={activityId} activityTitle={activity.title} />
             <ActivityDetails activity={activity} />
             <FooterThree />

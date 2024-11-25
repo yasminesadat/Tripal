@@ -70,10 +70,9 @@ export default function Activities() {
           </div>
         )}
 
-        {userRole === "Tourist" || userRole === "Guest" && (
+        {userRole === "Tourist" && (
           <>
-            {userRole === "Tourist" && <Header1 />}
-            {userRole === "Guest" && <GuestHeader />}
+             <Header1 />
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
@@ -83,6 +82,8 @@ export default function Activities() {
             <FooterThree />
           </>
         )}
+
+        
       </main>
     </>
   );
