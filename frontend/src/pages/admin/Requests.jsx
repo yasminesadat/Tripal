@@ -177,14 +177,46 @@ const Requests = () => {
                                                         </span>
                                                     </td>
                                                     <td style={{ padding: '1rem' }}>
-                                                        {new Date(request.createdAt).toLocaleDateString('en-US', { 
-                                                            year: 'numeric', 
-                                                            month: 'long', 
-                                                            day: 'numeric' 
+                                                        {new Date(request.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric'
                                                         })}
                                                     </td>
                                                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                                                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+
+                                                            {request.status === 'pending' &&
+                                                                <button
+                                                                    onClick={() => handleRequestAction(request._id, 'accepted')}
+                                                                    style={{
+                                                                        backgroundColor: '#dcfce7',
+                                                                        color: '#166534',
+                                                                        padding: '0.5rem 1rem',
+                                                                        borderRadius: '6px',
+                                                                        border: 'none',
+                                                                        cursor: 'pointer'
+                                                                    }}
+                                                                >
+                                                                    Accept
+                                                                </button>
+                                                            }
+                                                            {request.status === 'pending' &&
+                                                                <button
+                                                                    onClick={() => handleRequestAction(request._id, 'rejected')}
+                                                                    style={{
+                                                                        backgroundColor: '#fee2e2',
+                                                                        color: '#991b1b',
+                                                                        padding: '0.5rem 1rem',
+                                                                        borderRadius: '6px',
+                                                                        border: 'none',
+                                                                        cursor: 'pointer'
+                                                                    }}
+                                                                >
+                                                                    Reject
+                                                                </button>
+
+                                                            }
                                                             <button
                                                                 onClick={() => viewDocument(request._id)}
                                                                 style={{
@@ -198,32 +230,7 @@ const Requests = () => {
                                                             >
                                                                 View Document
                                                             </button>
-                                                            <button
-                                                                onClick={() => handleRequestAction(request._id, 'accepted')}
-                                                                style={{
-                                                                    backgroundColor: '#dcfce7',
-                                                                    color: '#166534',
-                                                                    padding: '0.5rem 1rem',
-                                                                    borderRadius: '6px',
-                                                                    border: 'none',
-                                                                    cursor: 'pointer'
-                                                                }}
-                                                            >
-                                                                Accept
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleRequestAction(request._id, 'rejected')}
-                                                                style={{
-                                                                    backgroundColor: '#fee2e2',
-                                                                    color: '#991b1b',
-                                                                    padding: '0.5rem 1rem',
-                                                                    borderRadius: '6px',
-                                                                    border: 'none',
-                                                                    cursor: 'pointer'
-                                                                }}
-                                                            >
-                                                                Reject
-                                                            </button>
+
                                                         </div>
                                                     </td>
                                                 </tr>
