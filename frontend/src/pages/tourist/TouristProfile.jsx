@@ -127,8 +127,6 @@ export default function Profile() {
     }
   };
 
-
-
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
       message.warning("No points to redeem");
@@ -255,7 +253,6 @@ export default function Profile() {
 
                     <div className="col-md-6">
                       <div className="form-input ">
-                        {profileInformation.wallet ? (
                           <input
                             type="text"
                             name="walletBalance"
@@ -266,9 +263,6 @@ export default function Profile() {
                             }
                             readOnly
                           />
-                        ) : (
-                          <span>No wallet information available</span>
-                        )}
                         <label className="lh-1 text-16 text-light-1">Wallet</label>
                       </div>
                     </div>
@@ -322,7 +316,7 @@ export default function Profile() {
                     </div>
 
                     <p>
-                      <b>Chosen Preference Tags:</b>
+                      <b>Preference Tags:</b>
                     </p>
 
                     <Select
@@ -339,7 +333,7 @@ export default function Profile() {
                       ))}
                     </Select>
                     <p>
-                      <b>Chosen Activity Categories:</b>
+                      <b>Activity Categories:</b>
                     </p>
 
                     <Select
