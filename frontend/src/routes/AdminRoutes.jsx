@@ -12,7 +12,6 @@ import TagManager from "@/pages/admin/PreferenceTags";
 import Revenue from "@/pages/admin/Revenue";
 import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
-// import DeletionRequests from "../pages/admin/DeletionRequests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 // import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 
@@ -34,7 +33,6 @@ const adminRoutes = [
   { path: "/admin/requests", element: <Requests /> },
   // { path: "/admin/itineraries", element: <ItineraryPage isAdmin={"isAdmin"} />},
   // {path: "/admin/activities", element: <Activities />},
-  // { path: "/deletion-requests", element: <DeletionRequests />}
 ];
 
 export default adminRoutes;

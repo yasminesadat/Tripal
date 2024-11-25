@@ -56,7 +56,7 @@ const addAdmin = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   console.log("I came here")
-  const { id } = req.params; // Assuming you're passing id in the URL params like /deleteUser/:id
+  const { id } = req.params; // THIS ID IS ALRIGHT HERE KEEP 
 
   try {
     const correspondingUser = await User.find({ userId: id }) // Ensure to await the promise
