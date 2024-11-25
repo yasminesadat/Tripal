@@ -55,7 +55,7 @@ export default function TourGuideHeader() {
           </div>
 
           <div className="header__logo">
-            <Link to="/" className="header__logo">
+            <Link to="/tourguide" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
 
