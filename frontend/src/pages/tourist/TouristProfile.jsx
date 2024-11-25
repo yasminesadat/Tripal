@@ -131,8 +131,8 @@ export default function Profile() {
   };
 
   const handleRedeemClick = async () => {
-    if (profileInformation.currentPoints === 0) {
-      message.warning("No points to redeem");
+    if (profileInformation.currentPoints < 10000) {
+      message.warning("No enough points to redeem");
       return;
     }
     try {
