@@ -10,7 +10,6 @@ import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 // import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 // import PreferenceSelection from "../components/tourist/PreferenceSelection";
 // import CategorySelection from "../components/tourist/CategorySelection";
-import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 // import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";

@@ -18,7 +18,7 @@ router.delete(
 
 router.get("/admin/users", verifyToken, authorizeRoles("Admin"), getAllUsers);
 
-router.put(
+router.patch(
   "/admin-change-pass/:id",
   validateIDs(["id"]),
   verifyToken,
@@ -26,7 +26,7 @@ router.put(
   changePassword(Admin)
 );
 
-router.patch(
+router.put(
   "/admin/flag-itinerary/:itineraryId",
   verifyToken,
   authorizeRoles("Admin"),

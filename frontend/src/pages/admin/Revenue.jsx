@@ -60,7 +60,7 @@ const Revenue = () => {
                     <tbody>
                         {itineraries.map((itinerary) => (
                             <tr key={itinerary.id}>
-                                <td>#{itinerary._id}</td>
+                                <td>#{itinerary._id.slice(-3)}</td>
                                 <td>{itinerary.title}</td>
                                 <td>{new Date(itinerary.startDate).toLocaleDateString()}</td>
                                 <td style={{ paddingLeft: '50px' }}>{itinerary.bookings.length}</td>

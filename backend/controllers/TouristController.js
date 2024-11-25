@@ -212,10 +212,10 @@ const redeemPoints = async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-
-    const newAmount = tourist.wallet.amount + (tourist.currentPoints / 100);
-    tourist.wallet.amount = newAmount;
-    tourist.currentPoints = 0;
+    
+    const amount=tourist.currentPoints-(tourist.currentPoints%10000);
+    tourist.wallet.amount = tourist.wallet.amount + amount*100;
+    tourist.currentPoints = tourist.currentPoints%10000;
 
     await tourist.save();
 

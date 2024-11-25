@@ -100,7 +100,7 @@ export const getAdminActivities = async () => {
 
 export const flagActivity = async (activityId) => {
   try {
-    const response = await axios.put(`/admin/flag-activity/${activityId}`);
+    const response = await axios.patch(`/admin/flag-activity/${activityId}`);
     return response.data;
   } catch (error) {
     console.error(`Error flagging activity with id ${activityId}`, error);
