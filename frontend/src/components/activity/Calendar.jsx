@@ -12,7 +12,9 @@ export default function Calendar({ setStartDate, setEndDate }) {
     if (selectedDates.length === 2) {
       setStartDate(selectedDates[0].toDate()); 
       setEndDate(selectedDates[1].toDate());   
-    }
+      console.log("Start Date: ", selectedDates[0].toDate());
+      console.log("End Date: ", selectedDates[1].toDate());
+    } 
   };
 
   return (
@@ -25,7 +27,7 @@ export default function Calendar({ setStartDate, setEndDate }) {
       offsetY={10}
       range
       rangeHover
-      format="MMMM DD"
+      format="YYYY-MM-DD"
     />
   );
 }

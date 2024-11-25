@@ -13,7 +13,6 @@ import { getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { Select } from 'antd';
-import { Tag } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -128,8 +127,6 @@ export default function Profile() {
     }
   };
 
-
-
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
       message.warning("No points to redeem");
@@ -187,16 +184,16 @@ export default function Profile() {
               } js-dashboard`}
           >
 
-            {/* {profileInformation.totalPoints !== undefined && (
-          <Badge totalPoints={profileInformation.totalPoints} />
-        )} */}
             <Sidebar setSideBarOpen={setSideBarOpen} />
 
             <div className="dashboard__content">
 
               <div className="dashboard__content_content">
-                <h1 className="text-30">Tourist profile</h1>
-                <p className="">{profileInformation.userName}</p>
+                <h2 >Profile</h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h5 className="">{profileInformation.userName}</h5>
+                  <Badge totalPoints={profileInformation.totalPoints}/>
+                </div>
                 <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
                   <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
 
@@ -208,7 +205,6 @@ export default function Profile() {
                           name="userName"
                           value={profileInformation.userName}
                           readOnly
-
                         />
                         <label className="lh-1 text-16 text-light-1">Username</label>
                       </div>
@@ -220,9 +216,7 @@ export default function Profile() {
                           type="text"
                           name="email"
                           value={editedProfile.email}
-                          onChange={handleInputChange} // Handle input changes
-
-
+                          onChange={handleInputChange} 
                         />
                         <label className="lh-1 text-16 text-light-1">
                           Email
@@ -277,25 +271,29 @@ export default function Profile() {
                       </div>
                     </div>
 
+
                     <div className="col-md-6">
-                      <div className="form-input">
-                        {profileInformation.currentPoints !== undefined ? (
+                      <div className="d-flex justify-between">
+                        <div className="form-input" style={{ flex: 2.35, marginRight: '5px'  }}>
                           <input
                             type="text"
                             name="currentPoints"
-                            value={profileInformation.currentPoints} // Corrected value assignment
+                            value={profileInformation.currentPoints}
                             readOnly
                           />
-                        ) : (
-                          <span>No points information available</span>
-                        )}
-                        <label className="lh-1 text-16 text-light-1">Total Points</label>
-
+                          <label className="lh-1 text-16 text-light-1">Points</label>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <button
+                            onClick={handleRedeemClick}
+                            className="button -md -dark-1 bg-accent-1 text-white"
+                          >
+                            Redeem Points
+                          </button>
+                        </div>
                       </div>
-                      <button onClick={handleRedeemClick} style={{ marginLeft: '10px' }}>
-                        Redeem points to cash
-                      </button>
                     </div>
+
                     <div className="col-md-6">
                       <div className="form-input ">
                         <input
@@ -323,7 +321,7 @@ export default function Profile() {
                     </div>
 
                     <p>
-                      <b>Chosen Preference Tags:</b>
+                      <b>Preference Tags:</b>
                     </p>
 
                     <Select
@@ -340,7 +338,7 @@ export default function Profile() {
                       ))}
                     </Select>
                     <p>
-                      <b>Chosen Activity Categories:</b>
+                      <b>Activity Categories:</b>
                     </p>
 
                     <Select
@@ -360,11 +358,16 @@ export default function Profile() {
 
 
                     <div className="col-12">
-                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                        Save Changes
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
-                      <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
+                      <div className="d-flex justify-between mt-30">
+                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white ml-20">
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                        <button className="button -md -dark-1 bg-accent-1 text-white mr-20" onClick={handleDeletion}>
+                          Delete Account 
+                          <i className="icon-delete text-20"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

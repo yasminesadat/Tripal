@@ -31,7 +31,8 @@ const itinerarySchema = new mongoose.Schema({
     accessibility: [{type: String, required: true}],
     pickupLocation: {type: String, required: true},
     dropoffLocation: {type: String, required: true},
-    averageRating: {type: Number,default: 0.0,},    
+    averageRating: {type: Number,default: 0.0,},  
+    totalRatings: { type: Number, default: 0 } ,  
     tags:[{type:String}],
     bookings: [
         {

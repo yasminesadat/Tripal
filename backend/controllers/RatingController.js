@@ -45,6 +45,8 @@ const addRating = (Model, RatingModel, entityIDField) =>
 
       const allRatings = await RatingModel.find({ [entityIDField]: id });
       const ratingsAboveZero = allRatings.filter((r) => r.rating > 0);
+      // it's not appearing right
+      entity.totalRatings = allRatings.length;
       const newAverage =
         ratingsAboveZero.reduce((acc, r) => acc + r.rating, 0) /
           ratingsAboveZero.length || 0;

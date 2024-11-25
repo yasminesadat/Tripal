@@ -1,6 +1,8 @@
 // import TouristHome from "../pages/tourist/TouristHome";
 import TouristProfile from "../pages/tourist/TouristProfile";
 // import Activities from "../pages/commonPagesForMultipleUsers/Activities";
+// import TouristProfile from "../pages/tourist/TouristProfile";
+import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 // import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 // import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
 // import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
@@ -8,12 +10,14 @@ import TouristProfile from "../pages/tourist/TouristProfile";
 // import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 // import PreferenceSelection from "../components/tourist/PreferenceSelection";
 // import CategorySelection from "../components/tourist/CategorySelection";
-// import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
+import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 // import ItineraryDetailsPage from "../pages/tourist/ItineraryDetails";
 import ComplaintsForm from "../pages/tourist/ComplaintsForm";
 import MyComplaints from "../pages/tourist/MyComplaints";
 import ComplaintsReplies from "@/pages/tourist/ComplaintsReplies";
 import FlightSearch from "../pages/tourist/SearchBar";
+import Cart from "@/pages/tourist/Cart";
+import WishList from "@/pages/tourist/WishList";
 // import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 // import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
 // import Hero5 from "../components/tourist/SearchBar";
@@ -32,9 +36,11 @@ const touristRoutes = [
   { path: "/tourist/book-flight", element: <FlightSearch /> },
   { path: "/tourist/search-flights", element: <FlightsList /> },
   // { path: "/tourist", element: <TouristHome /> },
-  // { path: "/upcoming-activities", element: <Activities isTourist={true} /> },
+  { path: "/upcoming-activities", element: <Activities /> },
   // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   { path: "/tourist/profile", element: <TouristProfile /> },
+  { path: "/cart", element: <Cart /> },
+  { path: "/wishlist", element: <WishList /> },
   // { path: "/historical-places", element: <HistoricalPlaces /> },
   // {
   //   path: "/upcoming-itineraries",
@@ -52,7 +58,7 @@ const touristRoutes = [
   //   path: "/tourist/select-categories/:touristId",
   //   element: <CategorySelection />,
   // },
-  // { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
+  { path: "/activity/:activityId", element: <ActivityDetailsPage /> },
   // { path: "/itinerary/:itineraryId", element: <ItineraryDetailsPage /> },
   // {
   //   path: "/tourist/view-products/product/:id",

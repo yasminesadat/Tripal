@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { speedFeatures } from "./tourFilteringOptions";
+import { speedFeatures } from "@/data/tourFilteringOptions";
 import Stars from "../common/Stars";
-import Pagination from "./Pagination";
+import Pagination from "../common/Pagination";
 import { Link } from "react-router-dom";
 import { Tag, message } from "antd";
 // import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 import { getUserData } from "@/api/UserService";
-import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
-import AdvertiserActivities from "@/components/activity/AdvertiserActivities";
-import { getAdminActivities, flagActivity } from "@/api/AdminService";
 
-export default function ActivitiesList({
-  searchTerm,
+export default function TourList1({
+  activities,
   book,
   onCancel,
   cancel,
@@ -29,30 +25,11 @@ export default function ActivitiesList({
 
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
-
-  const [activities, setActivities] = useState([]);
-  const [filteredActivities, setFilteredActivities] = useState(activities);
-
+  
   const [startDate, setStartDate] = useState(null); 
   const [endDate, setEndDate] = useState(null); 
-  const [ratingFilter, setRatingFilter] = useState([]);  
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 2000000]); 
+  const [filteredActivities, setFilteredActivities] = useState(activities);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const activitiesPerPage = 2; 
-
-  console.log(searchTerm)
-  const sortOptions = [
-    { label: "Price: Low to High", field: "price", order: "asc" },
-    { label: "Price: High to Low", field: "price", order: "desc" },
-    { label: "Rating: Low to High", field: "ratings", order: "asc" },
-    { label: "Rating: High to Low", field: "ratings", order: "desc" }
-  ];
-  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -71,94 +48,33 @@ export default function ActivitiesList({
   }, []);
 
   useEffect(() => {
-    const fetchActivities = async () => {
-      setLoading(true);
-      try {
-        let response;
-        if (userRole === "Advertiser") {
-          response = await getAdvertiserActivities();
-        } else if (userRole === "Tourist") {
-          response = await viewUpcomingActivities();
-        } else if (userRole === "Admin") {
-          response = await getAdminActivities();
-        } else {
-          response = await getAllActivities();
-        }
-        const activitiesData = Array.isArray(response?.data) ? response?.data : [];
-        console.log(activitiesData)
-        setActivities(activitiesData);
-        setFilteredActivities(activitiesData); 
-      } catch (err) {
-        const errorMessage = err?.response?.data?.error || err?.message || "Error fetching activities";
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userRole) {
-      fetchActivities();
+    if (startDate && endDate) {
+      const filtered = activities.filter((activity) => {
+        const activityDate = new Date(activity.date); 
+        return activityDate >= startDate && activityDate <= endDate;
+      });
+      setFilteredActivities(filtered);
+    } else {
+      setFilteredActivities(activities); 
     }
-  }, [userRole]);  
+  }, [startDate, endDate, activities]); 
 
-  useEffect(() => {
-    const filtered = activities.filter((activity) => {
-      const activityDate = new Date(activity.date);
-      const activityRating = activity.averageRating;
-      const activityCategory = activity.category.Name.toLowerCase(); 
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
-
-      const isDateValid =
-        !startDate || !endDate ||
-        (activityDate >= (new Date(startDate.setHours(0, 0, 0, 0))) &&
-          activityDate <= (new Date(endDate.setHours(23, 59, 59, 999))));
+  // const handleSort = (field, order) => {
+  //   const sortedActivities = [...activities].sort((a, b) => {
+  //     let aValue, bValue;
   
-      const isRatingValid =
-        ratingFilter.length === 0 || ratingFilter.some((rating) => activityRating >= rating);
+  //     if (field === "price") {
+  //       aValue = a.price * exchangeRate;
+  //       bValue = b.price * exchangeRate;
+  //     } else if (field === "ratings") {
+  //       aValue = a.averageRating;
+  //       bValue = b.averageRating;
+  //     }
   
-      const isCategoryValid =
-        selectedCategories.length === 0 ||
-        selectedCategories.some((cat) => cat.toLowerCase() === activityCategory);
-
-      const isPriceValid =
-        activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
-
-      const isSearchValid =
-        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.category.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.tags.some(tag => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  
-      return isDateValid && isRatingValid && isCategoryValid && isPriceValid && isSearchValid;
-    });
-  
-    setFilteredActivities(filtered);
-  }, [startDate, endDate, activities, ratingFilter, selectedCategories, priceRange, searchTerm]);
-  
-  
-  useEffect(() => {
-    console.log("Filtered Activities: ", filteredActivities);
-  }, [filteredActivities]);
-
-  const handleSort = (field, order) => {
-    const sortedActivities = [...filteredActivities].sort((a, b) => {
-      let aValue, bValue;
-  
-      if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
-        aValue = a.price;
-        bValue = b.price;
-
-      } else if (field === "ratings") {
-        aValue = a.averageRating;
-        bValue = b.averageRating;
-      }
-  
-      return order === "asc" ? aValue - bValue : bValue - aValue;
-    });
-    setFilteredActivities(sortedActivities);
-  };
+  //     return order === "asc" ? aValue - bValue : bValue - aValue;
+  //   });
+  //   setFilteredActivities(sortedActivities);
+  // };
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -169,39 +85,20 @@ export default function ActivitiesList({
         setDdActives(false);
       }
     };
+
     document.addEventListener("click", handleClick);
+
     return () => {
       document.removeEventListener("click", handleClick);
     };
   }, []);
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-
-  const indexOfLastActivity = currentPage * activitiesPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
-  const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
-
-  const navigate = useNavigate();
-  const handleRedirect = (activityId) => {
-    navigate(`/activity/${activityId}`, { state: { page } });
-  };
-
   return (
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-              <Sidebar 
-                setStartDate={setStartDate} 
-                setEndDate={setEndDate} 
-                setRatingFilter={setRatingFilter} 
-                setCategoryFilter={setSelectedCategories} 
-                priceRange={priceRange} 
-                setPriceRange={setPriceRange} 
-              />
+              <Sidebar />
             </div>
 
             <div className="accordion d-none mb-30 lg:d-flex js-accordion">
@@ -223,14 +120,7 @@ export default function ActivitiesList({
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 >
                   <div className="pt-20">
-                    <Sidebar 
-                      setStartDate={setStartDate} 
-                      setEndDate={setEndDate} 
-                      setRatingFilter={setRatingFilter} 
-                      setCategoryFilter={setSelectedCategories} 
-                      priceRange={priceRange} 
-                      setPriceRange={setPriceRange} 
-                    />
+                    <Sidebar setStartDate={setStartDate} setEndDate={setEndDate} />
                   </div>
                 </div>
               </div>
@@ -240,7 +130,7 @@ export default function ActivitiesList({
           <div className="col-xl-9 col-lg-8">
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
-                <div>{filteredActivities?.length} results</div>
+                <div>1362 results</div>
               </div>
 
               <div ref={dropDownContainer} className="col-auto">
@@ -262,18 +152,17 @@ export default function ActivitiesList({
                   </div>
 
                   <div className="dropdown__menu js-menu-items">
-                    {sortOptions.map((elm, i) => (
+                    {speedFeatures.map((elm, i) => (
                       <div
                         onClick={() => {
-                          setSortOption(elm.label); 
-                          handleSort(elm.field, elm.order); 
-                          setDdActives(false); 
+                          setSortOption((pre) => (pre == elm ? "" : elm));
+                          setDdActives(false);
                         }}
                         key={i}
                         className="dropdown__item"
                         data-value="fast"
                       >
-                        {elm.label}
+                        {elm}
                       </div>
                     ))}
                   </div>
@@ -282,7 +171,7 @@ export default function ActivitiesList({
             </div>
 
             <div className="row y-gap-30 pt-30">
-              {currentActivities?.map((elm, i) => (
+              {activities?.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -297,7 +186,6 @@ export default function ActivitiesList({
                         </div>
                       )}
 
-                      {/* can be used in the for you  */}
                       {elm.featured && (
                         <div className="tourCard__badge">
                           <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
@@ -325,12 +213,12 @@ export default function ActivitiesList({
 
                       <div className="d-flex items-center mt-5">
                         <div className="d-flex items-center x-gap-5">
-                          <Stars star={elm.averageRating} font={12} />
+                          <Stars star={elm.rating} font={12} />
                         </div>
 
                         <div className="text-14 ml-10">
                           <span className="fw-500">{elm.averageRating.toFixed(2)}</span> 
-                          ({elm.totalRatings})
+                          {/* ({elm.ratingCount}) */}
                         </div>
                       </div>
 
@@ -364,12 +252,11 @@ export default function ActivitiesList({
                         </div>
                       </div>
 
-                      <button 
-                        className="button -outline-accent-1 text-accent-1"                         
-                        onClick={() => handleRedirect(elm._id)}
-                      >
-                        View Details
-                        <i className="icon-arrow-top-right ml-10"></i>
+                      <button className="button -outline-accent-1 text-accent-1">
+                        <Link to={`/activity-details/${elm.id}`}>
+                          View Details
+                          <i className="icon-arrow-top-right ml-10"></i>
+                        </Link>
                       </button>
                     </div>
                   </div>
@@ -378,14 +265,11 @@ export default function ActivitiesList({
             </div>
 
             <div className="d-flex justify-center flex-column mt-60">
-              {filteredActivities?.length > activitiesPerPage && (
-                <Pagination
-                  totalItems={filteredActivities.length}
-                  itemsPerPage={activitiesPerPage}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              )}
+              <Pagination />
+
+              <div className="text-14 text-center mt-20">
+                Showing results 1-30 of 1,415
+              </div>
             </div>
           </div>
         </div>

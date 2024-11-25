@@ -51,6 +51,10 @@ const activitySchema = new Schema(
         default: []
       },
     ],
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
     averageRating: {
       type: Number,
       default: 0.0,

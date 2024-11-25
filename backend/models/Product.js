@@ -31,6 +31,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0.0,
     },
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
     isArchived: {
       type: Boolean,
       default: false,

@@ -26,22 +26,6 @@ const createActivity = async (req, res) => {
       return res.status(404).json({ error: "Advertiser not found" });
     }
     const category = await ActivityCategory.findById({ _id: categoryId });
-    // if (!category) {
-    //   return res.status(404).json({ error: "Category not found" });
-    // }
-    // console.log("Tag names being searched:", tagNames);
-
-    // const existingTags = await PreferenceTag.find({ _id: { $in: tagIds } });
-    // console.log(existingTags)
-    // if (!existingTags || existingTags.length === 0) {
-    //   return res.status(404).json({ error: "Tags not found" });
-
-    // }
-    // console.log(existingTags)
-    // const ratings = await Rating.find({ _id: { $in: ratingIds } });
-    // if (!ratings || ratings.length === 0) {
-    //   return res.status(404).json({ error: "Ratings not found" });
-    // }
 
     const newActivity = new Activity({
       advertiser: existingAdvertiser._id,
@@ -133,7 +117,6 @@ const viewUpcomingActivities = async (req, res) => {
     const activities = await Activity.find({ isBookingOpen: true, date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
@@ -149,7 +132,6 @@ const viewHistoryActivities = async (req, res) => {
     const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-    // .populate("ratings");
 
     res.status(200).json(activities);
   } catch (error) {
