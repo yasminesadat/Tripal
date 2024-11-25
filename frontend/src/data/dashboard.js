@@ -31,7 +31,7 @@ export const sidebarItems = [
   },
   {
     id: 6,
-    href: "/db-messages",
+    href: "/admin/requests",
     iconClass: "icon-message text-26",
     label: "Manage Requests",
   },
