@@ -25,7 +25,7 @@ export const sidebarItems = [
   },
   {
     id: 53,
-    href: "/",
+    href: "/admin/delete-user",
     iconClass: "icon-delete text-26",  // Example icon class
     label: "Delete Users",
   },
