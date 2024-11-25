@@ -2,50 +2,55 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, getActivityById } from "../../api/ActivityService";
 import { message} from 'antd';
+import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 
 
-const AdvertiserActivities = ({activities}) => {
-  //const { id } = useParams();
-  //const [activities, setActivities] = useState([]);
+const AdvertiserActivities = () => {
+  const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchActivities = async () => {
-  //     try {
-  //       const response = await getAdvertiserActivities(id);
-  //       setActivities(response.data);
-  //     } catch (err) {
-  //       setError(err.response?.data?.error || "Error fetching activities");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await getAdvertiserActivities();
+        setActivities(response.data);
+      } catch (err) {
+        setError(err.response?.data?.error || "Error fetching activities");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchActivities();
-  // }, [id]);
+    fetchActivities();
+  }, []);
 
  
   
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
 
-   return (
+  return (
     <div className="advertiser-activities-page">
-      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
+        <AdvertiserHeader />
+      <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0', marginTop: "70px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
         <h1 class="text-30">Your Activities</h1>
       </div>
       <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
-      <div class="row y-gap-30">
-      <div class="border-1 rounded-12 px-20 py-20">
+      <div class="row y-gap-30 pt-30">
         <div class="row x-gap-20 y-gap-20 items-center">
-        <div class="col">
         {activities?.map((activity) => (
-         <div class="col-lg-6">
-          <div class="border-1 rounded-12 px-20 py-20" key={activity._id}>
-            <div class="row x-gap-20 y-gap-20 items-center">
+         <div data-anim-child="slide-up delay-3" class="col-lg-3 col-sm-6 is-in-view">
+          <div class="tourCard -type-1 border-1 rounded-12 px-20 py-20 -hover-shadow" key={activity._id}>
+            <div class="row x-gap-20 y-gap-20 items-center" style={{
+                      height: "250px",
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}>
             <div class="col">
               
                 <div class="text-18 lh-15 fw-500 mt-5">{activity.title}</div>
@@ -80,8 +85,6 @@ const AdvertiserActivities = ({activities}) => {
           </div>
           </div>
         ))}
-      </div> 
-      </div>
       </div>
 
     </div>
