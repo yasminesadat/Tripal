@@ -14,7 +14,6 @@ import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
 // import ItineraryPage from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 import Activities from "../pages/commonPagesForMultipleUsers/Activities";
-import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
