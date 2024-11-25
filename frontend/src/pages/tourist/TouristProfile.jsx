@@ -127,8 +127,6 @@ export default function Profile() {
     }
   };
 
-
-
   const handleRedeemClick = async () => {
     if (profileInformation.currentPoints === 0) {
       message.warning("No points to redeem");
@@ -273,27 +271,29 @@ export default function Profile() {
                       </div>
                     </div>
 
+
                     <div className="col-md-6">
-                      <div className="form-input">
-                        {profileInformation.currentPoints !== undefined ? (
+                      <div className="d-flex justify-between">
+                        <div className="form-input" style={{ flex: 2.35, marginRight: '5px'  }}>
                           <input
                             type="text"
                             name="currentPoints"
-                            value={profileInformation.currentPoints} 
+                            value={profileInformation.currentPoints}
                             readOnly
                           />
-                        ) : (
-                          <span>No points information available</span>
-                        )}
-                        <label className="lh-1 text-16 text-light-1">Total Points</label>
-
-                      </div>
-                      <div className="d-flex justify-end">
-                      <button onClick={handleRedeemClick} className="button -md -dark-1 bg-accent-1 text-white" style={{ marginLeft: '10px' }}>
-                        Redeem points to cash
-                      </button>
+                          <label className="lh-1 text-16 text-light-1">Points</label>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <button
+                            onClick={handleRedeemClick}
+                            className="button -md -dark-1 bg-accent-1 text-white"
+                          >
+                            Redeem Points
+                          </button>
+                        </div>
                       </div>
                     </div>
+
                     <div className="col-md-6">
                       <div className="form-input ">
                         <input
@@ -321,7 +321,7 @@ export default function Profile() {
                     </div>
 
                     <p>
-                      <b>Chosen Preference Tags:</b>
+                      <b>Preference Tags:</b>
                     </p>
 
                     <Select
@@ -338,7 +338,7 @@ export default function Profile() {
                       ))}
                     </Select>
                     <p>
-                      <b>Chosen Activity Categories:</b>
+                      <b>Activity Categories:</b>
                     </p>
 
                     <Select
@@ -358,11 +358,16 @@ export default function Profile() {
 
 
                     <div className="col-12">
-                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                        Save Changes
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
-                      <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
+                      <div className="d-flex justify-between mt-30">
+                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white ml-20">
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                        <button className="button -md -dark-1 bg-accent-1 text-white mr-20" onClick={handleDeletion}>
+                          Delete Account 
+                          <i className="icon-delete text-20"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
