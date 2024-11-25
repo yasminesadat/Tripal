@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-export default function PageHeader({ activityId, activityTitle, touist }) {
+export default function PageHeader({ activityId, activityTitle, tourist }) {
   return (
     <section className="pageHeader -type-3">
       <div className="container">
@@ -9,13 +9,15 @@ export default function PageHeader({ activityId, activityTitle, touist }) {
           <div className="col-auto">
             <div className="breadcrumbs">
               <span className="breadcrumbs__item">
-                <Link to="/tourist">Home</Link> 
+               {tourist&& <Link to="/tourist">Home</Link> }
+                {!tourist&& <Link to="/admin">Home</Link> }
               </span>
-              <span>{">"}</span>
+              <span>{"> "}</span>
               <span className="breadcrumbs__item">
-                <Link to="/upcoming-activities">Activities</Link> 
+            {tourist&&    <Link to="/upcoming-activities">Activities</Link> }
+             {!tourist  && <Link to="/admin/activities">Activities</Link> }
               </span>
-              <span>{">"}</span>
+              <span>{"> "}</span>
               <span className="breadcrumbs__item">
                 <Link to={`/activity/${activityId}`}>{activityTitle}</Link> 
               </span>
@@ -23,9 +25,6 @@ export default function PageHeader({ activityId, activityTitle, touist }) {
           </div>
 
           <div className="col-auto">
-            <div className="pageHeader__subtitle">
-              {/* THE 10 BEST Phuket Tours & Excursions */}
-            </div>
           </div>
         </div>
       </div>

@@ -94,8 +94,8 @@ const ActivityDetailsPage = () => {
 
         {userRole === "Tourist" && (
           <>
-             <Header1 />
-            <PageHeader activityId={activityId} activityTitle={activity.title} />
+            <Header1 />
+            <PageHeader activityId={activityId} activityTitle={activity.title} tourist={'ana t3ebt'} />
             <ActivityDetails activity={activity} />
             <FooterThree />
           </>
