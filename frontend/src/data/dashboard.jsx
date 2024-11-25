@@ -10,7 +10,8 @@ import {
   KeyRound,
   Heart,
   LineChart,
-  LogOut
+  LogOut,
+  Martini
 } from 'lucide-react';
 
 export const sidebarItems = [
@@ -59,7 +60,7 @@ export const sidebarItems = [
   {
     id: 9,
     href: "/admin/activities",
-    iconClass: "icon-heart text-26",
+    icon: <Martini size={26} />,
     label: "All Activities",
 
   },

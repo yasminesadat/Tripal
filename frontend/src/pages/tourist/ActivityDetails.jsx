@@ -1,66 +1,93 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { Tag, message } from "antd";
-import FooterOne from "@/components/layout/footers/FooterOne";
+import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleActivityHeader";
-import {  getAllActivities } from "@/api/ActivityService";
-import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
+import { getAllActivities } from "@/api/ActivityService";
+import ActivityDetails from "@/components/activity/activitySingle/ActivityDetails";
 import { getUserData } from "@/api/UserService";
+import Sidebar from "@/components/dasboard/Sidebar";
+import Header from "@/components/dasboard/Header";
 
 const ActivityDetailsPage = () => {
-    const { activityId } = useParams();
-    const [activities, setActivities] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [userRole, setUserRole] = useState(null); 
-    const [userId, setUserId] = useState(null); 
-  
-    useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const response = await getUserData();
-          if (response.data.status === "success") {
-            setUserRole(response.data.role);
-            setUserId(response.data.id); 
-          } else {
-            message.error(response.data.message); 
-          }
-        } catch (error) {
-          message.error("Failed to fetch user data.");
+  const { activityId } = useParams();
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+          setUserId(response.data.id);
+        } else {
+          message.error(response.data.message);
         }
-      };
-      fetchUserData();
-    }, []);
+      } catch (error) {
+        message.error("Failed to fetch user data.");
+      }
+    };
+    fetchUserData();
+  }, []);
 
-    useEffect(() => {
-        const fetchActivities = async () => {
-            try {
-                const response = await getAllActivities();
-                setActivities(response.data);
-            } catch (err) {
-                setError(err.response?.data?.error || "Error fetching activities");
-            } finally {
-                setLoading(false);
-            }
-        };
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await getAllActivities();
+        setActivities(response.data);
+      } catch (err) {
+        setError(err.response?.data?.error || "Error fetching activities");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActivities();
+  }, []);
 
-        fetchActivities();
-    }, []);
+  const activity = activities?.find((activity) => activity._id === activityId);
 
-    const activity = activities?.find(activity => activity._id === activityId);
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-    if (!activity) return <div>Activity not found.</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!activity) return <div>Activity not found.</div>;
 
-    return (
-        <div>
-          <Header1 />
-          <PageHeader activityId={activityId} activityTitle={activity.title} />
-          <ActivityDetails activity={activity} />
-          <FooterOne />
-        </div>
-    );
+  return (
+    <>
+      <main>
+        {userRole === "Admin" && (
+          <div
+            className={`dashboard ${
+              sideBarOpen ? "-is-sidebar-visible" : ""
+            } js-dashboard`}
+          >
+            <Sidebar setSideBarOpen={setSideBarOpen} />
+            <div className="dashboard__content">
+              <Header setSideBarOpen={setSideBarOpen} />
+              <PageHeader activityId={activityId} activityTitle={activity.title} />
+              <ActivityDetails activity={activity} />
+              <div className="text-center pt-30">
+                © Copyright Tripal {new Date().getFullYear()}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {userRole === "Tourist" && (
+          <>
+            <Header1 />
+            <PageHeader activityId={activityId} activityTitle={activity.title} />
+            <ActivityDetails activity={activity} />
+            <FooterThree />
+          </>
+        )}
+      </main>
+    </>
+  );
 };
 
 export default ActivityDetailsPage;

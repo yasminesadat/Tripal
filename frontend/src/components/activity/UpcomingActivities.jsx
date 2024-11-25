@@ -10,7 +10,6 @@ import { Tag, message } from "antd";
 
 import { getUserData } from "@/api/UserService";
 import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
-import AdvertiserActivities from "@/components/activity/AdvertiserActivities";
 import { getAdminActivities, flagActivity } from "@/api/AdminService";
 
 export default function ActivitiesList({
