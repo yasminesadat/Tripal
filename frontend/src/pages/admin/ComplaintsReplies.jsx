@@ -24,20 +24,22 @@ export default function ComplaintsReplies() {
             <div
                 className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
             >
-
-                <Sidebar setSideBarOpen={setSideBarOpen} />
                 <div className="dashboard__content">
+                    <Sidebar setSideBarOpen={setSideBarOpen} />
+
 
 
                     <Header setSideBarOpen={setSideBarOpen} />
 
                     <MetaComponent meta={metadata} />
 
-
                     <Messages complaint={complaint} user={user} role={role} />
 
+
                 </div>
+
             </div>
+
             {/* </main> */}
         </>
     );
