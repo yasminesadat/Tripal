@@ -56,7 +56,7 @@ export default function AdvertiserHeader() {
           </div>
 
           <div className="header__logo">
-            <Link to="/" className="header__logo">
+            <Link to="/advertiser" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
 

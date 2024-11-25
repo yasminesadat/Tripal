@@ -72,15 +72,6 @@ export default function ActivityDetails({ activity }) {
                 />
               </div>
 
-              {/* <div className="line mt-60 mb-60"></div> */}
-
-              {/* {page === "upcoming" && (
-                <>
-                  <h2 className="text-30">Availability Calendar</h2>
-                  <DateCalender />
-                </>
-              )} */}
-
               <h2 className="text-30">Customer Reviews</h2>
 
               <ActivityReviews activityId={activityId} />

@@ -257,19 +257,12 @@ const adminFlagItinerary = async (req, res) => {
 const getAllItinerariesForAdmin = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find()
-            .populate({
-                path: 'activities',
-                populate: [
-                    {
-                        path: 'tags',
-                    },
-                    {
-                        path: 'category',
-                    }
-                ]
-            })
-            .populate("tags");
-
+            // .populate({
+            //     path: 'activities',
+            //     populate: [{path: 'tags'},{path: 'category', }]
+            // })
+            // .populate("tags");
+            console.log("backend"+itineraries)
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });

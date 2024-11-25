@@ -13,11 +13,20 @@ import { requestAccountDeletion } from "../../api/RequestService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
+
 import { changeTouristPassword } from '../../api/TouristService';
 import { getUserData } from '@/api/UserService';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; // Add this import
 
+import { Select } from 'antd';
+import MetaComponent from "@/components/common/MetaComponent";
+import TouristHeader from "@/components/layout/header/TouristHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import Spinner from "@/components/common/Spinner"; 
 
+const metadata = {
+  title: "Profile || Tripal - Travel Agency",
+};
 
 
 const StyledMultiSelect = ({ value, onChange, options, label }) => {
@@ -75,9 +84,8 @@ const StyledNationalitySelect = ({ value, onChange, options }) => {
   );
 };
 
-const metadata = {
-  title: "Profile || Tripal - Travel Agency",
-};
+
+
 
 export default function Profile() {
 
@@ -103,6 +111,7 @@ export default function Profile() {
   const [touristCategories, setTouristCategories] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [allCats, setAllCats] = useState([]);
+
   const [showPassword, setShowPassword] = useState({
     oldPassword: false,
     newPassword: false,
@@ -114,6 +123,8 @@ export default function Profile() {
       [field]: !prev[field]
     }));
   };
+
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [PasswordForm, setPasswordForm] = useState({
     oldPassword: "",
@@ -132,6 +143,7 @@ export default function Profile() {
     nationality: "",
     job: "",
     mobileNumber: "",
+    
     tags: [],
     categories: []
   });
@@ -209,8 +221,11 @@ export default function Profile() {
         tags: response.tags,
         categories: response.categories
       });
+
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch user information:", error);
+      setLoading(false);
     }
   };
 
@@ -251,8 +266,8 @@ export default function Profile() {
   };
 
   const handleRedeemClick = async () => {
-    if (profileInformation.currentPoints === 0) {
-      message.warning("No points to redeem");
+    if (profileInformation.currentPoints < 10000) {
+      message.warning("No enough points to redeem");
       return;
     }
     try {
@@ -281,6 +296,14 @@ export default function Profile() {
     fetchAllTags();
     fetchAllCategories();
   }, []);
+
+
+      reader.readAsDataURL(file);
+    }
+  };
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
