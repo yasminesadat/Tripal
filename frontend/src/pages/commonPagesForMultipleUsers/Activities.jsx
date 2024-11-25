@@ -57,22 +57,18 @@ export default function Activities() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        {userRole !== "Tourist" &&
-          userRole !== "Admin" &&
-          userRole !== "Advertiser" &&
-          userRole !== "TourGuide" &&
-          userRole !== "TourismGovernor" && (
-            <>
-              <GuestHeader />
-              <PageHeader
-                onSearch={handleSearch}
-                title="Explore all upcoming activities"
-                tourist={true}
-              />
-              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
-              <FooterThree />
-            </>
-          )}
+        {userRole === "Guest" && (
+          <>
+            <GuestHeader />
+            <PageHeader
+              onSearch={handleSearch}
+              title="Explore all upcoming activities"
+              tourist={true}
+            />
+            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <FooterThree />
+          </>
+        )}
 
         {userRole === "Admin" && (
           <div

@@ -85,17 +85,11 @@ export default function ActivitiesList({
       setLoading(true);
       try {
         let response;
-        if (
-          userRole === "Tourist" ||
-          (userRole !== "Admin" &&
-            userRole !== "Advertiser" &&
-            userRole !== "TourGuide" &&
-            userRole !== "TourismGovernor" &&
-            userRole !== "Tourist")
-        ) {
+        if (userRole === "Tourist" || userRole === "Guest") {
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
+          console.log(userRole)
         }
         // else {
         //   response = await getAllActivities();
@@ -116,9 +110,9 @@ export default function ActivitiesList({
       }
     };
 
-    // if (userRole) {
-    fetchActivities();
-    // }
+    if (userRole) {
+      fetchActivities();
+    }
   }, [userRole]);
 
   useEffect(() => {
@@ -237,19 +231,14 @@ export default function ActivitiesList({
       navigate(`/activity/${activityId}`, { state: { page } });
     else navigate(`/activities/${activityId}`, { state: { page } });
   };
-  console.log(filteredActivities);
+
   return (
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
           {userRole !== "Admin" && (
             <div className="col-xl-3 col-lg-4">
-              {(userRole === "Tourist" ||
-                (userRole !== "Admin" &&
-                  userRole !== "Advertiser" &&
-                  userRole !== "TourGuide" &&
-                  userRole !== "TourismGovernor" &&
-                  userRole !== "Tourist")) && (
+              {(userRole === "Tourist" || userRole === "Guest") && (
                 <>
                   <div className="lg:d-none">
                     <Sidebar

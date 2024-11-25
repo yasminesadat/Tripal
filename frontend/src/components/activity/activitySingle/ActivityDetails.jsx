@@ -30,6 +30,7 @@ export default function ActivityDetails({ activity }) {
           setUserId(response.data.id); 
         } else {
           message.error(response.data.message); 
+          setUserRole("Guest");
         }
       } catch (error) {
         message.error("Failed to fetch user data.");

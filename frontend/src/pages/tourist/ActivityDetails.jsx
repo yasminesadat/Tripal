@@ -36,6 +36,7 @@ const ActivityDetailsPage = () => {
           setUserId(response.data.id);
         } else {
           message.error(response.data.message);
+          setUserRole("Guest");
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
@@ -66,7 +67,7 @@ const ActivityDetailsPage = () => {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        {userRole!=="Tourist" && userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && 
+        {userRole === "Guest" && 
           <>
             <GuestHeader /> 
             <PageHeader activityId={activityId} activityTitle={activity.title} />
