@@ -359,11 +359,16 @@ export default function Profile() {
 
 
                     <div className="col-12">
-                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                        Save Changes
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
-                      <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={handleDeletion}>Delete Account</button>
+                      <div className="d-flex justify-between mt-30">
+                      <button onClick={handleEditClick} className="button -md -dark-1 bg-accent-1 text-white ml-20">
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                        <button className="button -md -dark-1 bg-accent-1 text-white mr-20" onClick={handleDeletion}>
+                          Delete Account 
+                          <i className="icon-delete text-20"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
