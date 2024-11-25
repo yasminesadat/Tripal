@@ -1,7 +1,7 @@
 export const sidebarItems = [
   {
     id: 1,
-    href: "/db-main",
+    href: "/admin",
     iconClass: "icon-dashboard text-26",
     label: "Dashboard",
   },
@@ -13,19 +13,19 @@ export const sidebarItems = [
   },
   {
     id: 3,
-    href: "/db-listing",
+    href: "/",
     iconClass: "icon-menu text-26",
     label: "Add Admin",
   },
   {
     id: 4,
-    href: "/db-add-tour",
+    href: "/",
     iconClass: "icon-clipboard text-26",
     label: "Add Governor",
   },
   {
     id: 53,
-    href: "/contact",
+    href: "/",
     iconClass: "icon-delete text-26",  // Example icon class
     label: "Delete Users",
   },
@@ -37,10 +37,11 @@ export const sidebarItems = [
   },
   {
     id: 7,
-    href: "/db-profile",
+    href: "/activity-categories",
     iconClass: "icon-account text-26",
     label: "Activity Categories",
   },
+
   {
     id: 8,
     href: "/",
@@ -51,9 +52,15 @@ export const sidebarItems = [
 
   {
     id: 11,
-    href: "/change-password",
+    href: "/",
     iconClass: "icon-lock text-26",  // Example icon class
     label: "Change Password",
+  },
+  {
+    id: 12,
+    href: "/",
+    iconClass: "icon-account text-26",
+    label: "Preference Tags",
   },
 
 
