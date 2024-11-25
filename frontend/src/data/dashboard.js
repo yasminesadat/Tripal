@@ -41,15 +41,6 @@ export const sidebarItems = [
     iconClass: "icon-account text-26",
     label: "Activity Categories",
   },
-
-  {
-    id: 8,
-    href: "/",
-    iconClass: "icon-logout text-26",
-    label: "Logout"
-  },
-
-
   {
     id: 11,
     href: "/admin/changepassword",
@@ -59,13 +50,21 @@ export const sidebarItems = [
   {
     id: 12,
     href: "/preference-tags",
-    iconClass: "icon-account text-26",
+    iconClass: "icon-heart text-26",
     label: "Preference Tags",
   },
-
-
-
-
+  {
+    id: 13,
+    href:"/revenue",
+    iconClass:"icon-payment text-26",
+    label: "Revenue",
+  },
+  {
+    id: 8,
+    href: "/",
+    iconClass: "icon-logout text-26",
+    label: "Logout"
+  },
 ];
 
 
