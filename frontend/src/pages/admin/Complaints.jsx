@@ -231,9 +231,11 @@ const ComplaintsPage = () => {
                                                                                         <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
                                                                                             View Details
                                                                                         </button>
-                                                                                        <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
-                                                                                            Resolve
-                                                                                        </button>
+                                                                                        {complaint.status === "pending" &&
+                                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
+                                                                                                Resolve
+                                                                                            </button>
+                                                                                        }
                                                                                     </div>
                                                                                 </td>
 
