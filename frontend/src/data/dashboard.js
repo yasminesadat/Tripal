@@ -13,13 +13,13 @@ export const sidebarItems = [
   },
   {
     id: 3,
-    href: "/",
+    href: "/admin/new-admin",
     iconClass: "icon-menu text-26",
     label: "Add Admin",
   },
   {
     id: 4,
-    href: "/",
+    href: "/admin/new-governor",
     iconClass: "icon-clipboard text-26",
     label: "Add Governor",
   },
