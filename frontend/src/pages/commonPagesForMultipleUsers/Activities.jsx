@@ -56,9 +56,9 @@ export default function Activities() {
                 onSearch={handleSearch}
                 title="Explore all upcoming activities"
                 tourist={true}
-              />
-              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
-              <FooterThree />
+            />
+            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <FooterThree />
           </>
         }
 

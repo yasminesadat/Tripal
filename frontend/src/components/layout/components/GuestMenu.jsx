@@ -1,9 +1,6 @@
-import { hotelsandflights } from "@/data/guestMenu";
-
 import { Link, useLocation } from "react-router-dom";
 
 export default function Menu() {
-  const { pathname } = useLocation();
   return (
     <>
       <div className="xl:d-none ">
@@ -13,7 +10,7 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/upcoming-activities">Activities</Link>
+            <Link to="/upcomingactivities">Activities</Link>
           </div>
 
           <div className="desktopNav__item">

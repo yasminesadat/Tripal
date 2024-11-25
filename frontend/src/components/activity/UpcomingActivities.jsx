@@ -74,13 +74,14 @@ export default function ActivitiesList({
       setLoading(true);
       try {
         let response;
-        if (userRole === "Tourist") {
+        if (userRole === 'Tourist' || (userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && userRole !=="Tourist")){
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
-        } else {
-          response = await getAllActivities();
-        }
+        } 
+        // else {
+        //   response = await getAllActivities();
+        // }
         const activitiesData = Array.isArray(response?.data) ? response?.data : [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData); 
@@ -182,14 +183,14 @@ export default function ActivitiesList({
   const handleRedirect = (activityId) => {
     navigate(`/activity/${activityId}`, { state: { page } });
   };
-
+  console.log(filteredActivities)
   return (
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
           {userRole !== 'Admin' && (
             <div className="col-xl-3 col-lg-4">
-              {userRole === 'Tourist' && (
+              {(userRole === 'Tourist' || (userRole!=="Admin" && userRole!=="Advertiser" && userRole!=="TourGuide" && userRole!=="TourismGovernor" && userRole !=="Tourist")) && (
                 <>
                   <div className="lg:d-none">
                     <Sidebar 
