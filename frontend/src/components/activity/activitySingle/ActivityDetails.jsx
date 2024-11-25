@@ -3,10 +3,8 @@ import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
 import Overview from "./Overview";
-import MapComponent from "../../common/MapComponent";
 import TourSingleSidebar from "./TourSingleSidebar";
 import Gallery1 from "./Gallery1";
-import DateCalender from "./DateCalender";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
@@ -17,8 +15,7 @@ import { getUserData } from "@/api/UserService";
 export default function ActivityDetails({ activity }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([activity?.latitude|| 35.11, activity?.longitude||35.11]);
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const markerPosition = [activity?.latitude|| 35.11, activity?.longitude||35.11];
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
 
@@ -67,8 +64,6 @@ export default function ActivityDetails({ activity }) {
               <div className="mapTourSingle">
                 <LocationMap 
                   markerPosition={markerPosition} 
-                  setMarkerPosition={setMarkerPosition} 
-                  setSelectedLocation={setSelectedLocation} 
                 />
               </div>
 

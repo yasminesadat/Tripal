@@ -44,7 +44,6 @@ export default function ActivitiesList({
   const [currentPage, setCurrentPage] = useState(1);
   const activitiesPerPage = 2; 
 
-  console.log(searchTerm)
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
