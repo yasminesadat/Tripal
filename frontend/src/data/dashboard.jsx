@@ -1,48 +1,87 @@
+import React from 'react';
+import {
+  LayoutDashboard,
+  AlertCircle,
+  UserPlus,
+  Users,
+  UserMinus,
+  MessagesSquare,
+  TagsIcon,
+  KeyRound,
+  Heart,
+  LineChart,
+  LogOut
+} from 'lucide-react';
+
 export const sidebarItems = [
   {
     id: 1,
-    href: "/db-main",
-    iconClass: "icon-dashboard text-26",
+    href: "/admin",
+    icon: <LayoutDashboard size={26} />,
     label: "Dashboard",
   },
   {
     id: 2,
-    href: "/db-booking",
-    iconClass: "icon-calendar text-26",
-    label: "My Booking",
+    href: "/admin/complaints",
+    icon: <AlertCircle size={26} />,
+    label: "Complaints",
   },
   {
     id: 3,
-    href: "/db-listing",
-    iconClass: "icon-menu text-26",
-    label: "My Listings",
+    href: "/admin/new-admin",
+    icon: <UserPlus size={26} />,
+    label: "Add Admin",
   },
   {
     id: 4,
-    href: "/db-add-tour",
-    iconClass: "icon-clipboard text-26",
-    label: "Add Tour",
+    href: "/admin/new-governor",
+    icon: <Users size={26} />,
+    label: "Add Governor",
   },
   {
-    id: 5,
-    href: "/db-favorites",
-    iconClass: "icon-heart text-26",
-    label: "My Favorites",
+    id: 53,
+    href: "/admin/delete-user",
+    icon: <UserMinus size={26} />,
+    label: "Delete Users",
   },
   {
     id: 6,
-    href: "/db-messages",
-    iconClass: "icon-message text-26",
-    label: "Messages",
+    href: "/admin/requests",
+    icon: <MessagesSquare size={26} />,
+    label: "Manage Requests",
   },
   {
     id: 7,
-    href: "/db-profile",
-    iconClass: "icon-account text-26",
-    label: "My Profile",
+    href: "/activity-categories",
+    icon: <TagsIcon size={26} />,
+    label: "Activity Categories",
   },
-  { id: 8, href: "/", iconClass: "icon-logout text-26", label: "Logout" },
+  {
+    id: 11,
+    href: "/admin/changepassword",
+    icon: <KeyRound size={26} />,
+    label: "Change Password",
+  },
+  {
+    id: 12,
+    href: "/preference-tags",
+    icon: <Heart size={26} />,
+    label: "Preference Tags",
+  },
+  {
+    id: 13,
+    href: "/revenue",
+    icon: <LineChart size={26} />,
+    label: "Revenue",
+  },
+  {
+    id: 8,
+    href: "/",
+    icon: <LogOut size={26} />,
+    label: "Logout"
+  },
 ];
+
 
 export const states = [
   {
