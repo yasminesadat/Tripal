@@ -9,7 +9,6 @@ import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
 import { Tag, message } from "antd";
-
 import { getUserData } from "@/api/UserService";
 
 export default function ActivityDetails({ activity }) {
@@ -43,7 +42,7 @@ export default function ActivityDetails({ activity }) {
     <>
       <section className="">
         <div className="container">
-          <ActivityMainInformation activity={activity} />
+          <ActivityMainInformation activity={activity} role ={userRole}/>
           <Gallery1 />
         </div>
       </section>
