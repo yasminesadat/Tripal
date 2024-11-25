@@ -93,9 +93,9 @@ export default function ActivitiesList({
       }
     };
 
-    if (userRole) {
+    // if (userRole) {
       fetchActivities();
-    }
+    // }
   }, [userRole]);  
 
   useEffect(() => {
@@ -181,7 +181,10 @@ export default function ActivitiesList({
 
   const navigate = useNavigate();
   const handleRedirect = (activityId) => {
-    navigate(`/activity/${activityId}`, { state: { page } });
+    if (userRole === "Tourist")
+      navigate(`/activity/${activityId}`, { state: { page } });
+    else 
+      navigate(`/activities/${activityId}`, { state: { page } });
   };
   console.log(filteredActivities)
   return (
