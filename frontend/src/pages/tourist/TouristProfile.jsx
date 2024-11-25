@@ -253,6 +253,7 @@ export default function Profile() {
 
                     <div className="col-md-6">
                       <div className="form-input ">
+                        {profileInformation.wallet ? (
                           <input
                             type="text"
                             name="walletBalance"
@@ -263,9 +264,13 @@ export default function Profile() {
                             }
                             readOnly
                           />
+                        ) : (
+                          <span>No wallet information available</span>
+                        )}
                         <label className="lh-1 text-16 text-light-1">Wallet</label>
                       </div>
                     </div>
+
 
                     <div className="col-md-6">
                       <div className="d-flex justify-between">
