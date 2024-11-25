@@ -11,8 +11,8 @@ import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Tour-list-1 || ViaTour - Travel & Tour Reactjs Template",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Activities || Tripal",
+  description: "Activities || Tripal",
 };
 
 export default function Activities() {
@@ -45,7 +45,12 @@ export default function Activities() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <Header1 />
+        {userRole === "Tourist" && (
+          <>
+            <Header1 />
+          </>
+        )}
+        {/* another header for guest */}
         <PageHeader onSearch={handleSearch} />
         <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
         <FooterOne />

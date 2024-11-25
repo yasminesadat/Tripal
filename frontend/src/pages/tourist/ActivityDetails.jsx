@@ -7,6 +7,12 @@ import PageHeader from "@/components/layout/header/SingleActivityHeader";
 import {  getAllActivities } from "@/api/ActivityService";
 import ActivityDetails from "../../components/activity/activitySingle/ActivityDetails";
 import { getUserData } from "@/api/UserService";
+import MetaComponent from "@/components/common/MetaComponent";
+
+const metadata = {
+  title: "Activity Details || Tripal",
+  description: "Activity Details || Tripal",
+};
 
 const ActivityDetailsPage = () => {
     const { activityId } = useParams();
@@ -55,7 +61,14 @@ const ActivityDetailsPage = () => {
 
     return (
         <div>
-          <Header1 />
+          <MetaComponent meta={metadata} />
+
+          {userRole === "Tourist" && (
+            <>
+              <Header1 />
+            </>
+          )}
+          {/* another header for guest */}          
           <PageHeader activityId={activityId} activityTitle={activity.title} />
           <ActivityDetails activity={activity} />
           <FooterOne />
