@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Plane } from 'lucide-react';
+import { Plane, Clock, Calendar } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getTouristAge } from '../../api/TouristService';
 import { getConversionRate } from '../../api/ExchangeRatesService';
 import { message } from 'antd';
+import MetaComponent from "@/components/common/MetaComponent";
+import TouristHeader from "../../components/layout/header/TouristHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
+
+const metadata = {
+  title: "Flight Results | Tripal",
+};
 
 const FlightResults = () => {
   const navigate = useNavigate();
@@ -14,6 +21,7 @@ const FlightResults = () => {
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
   const [touristAge, setTouristAge] = useState(null);
+  const [selectedClass, setSelectedClass] = useState('economy');
 
   useEffect(() => {
     const fetchCurrency = () => {
@@ -71,250 +79,306 @@ const FlightResults = () => {
     });
   };
 
+  const parseDuration = (duration) => {
+    const regex = /^PT(\d+H)?(\d+M)?$/;
+    const match = duration.match(regex);
+    const hours = match[1] ? parseInt(match[1].replace('H', '')) : 0;
+    const minutes = match[2] ? parseInt(match[2].replace('M', '')) : 0;
+    return `${hours}h ${minutes}m`;
+  };
+
+  // Rotate plane icon calculation
+  const calculatePlaneRotation = (departure, arrival) => {
+    const departLat = departure.lat || 0;
+    const departLon = departure.lon || 0;
+    const arrivalLat = arrival.lat || 0;
+    const arrivalLon = arrival.lon || 0;
+
+    const angle = Math.atan2(arrivalLat - departLat, arrivalLon - departLon) * (180 / Math.PI);
+    return angle;
+  };
+
   const convertPrice = (price) => {
     return (price * exchangeRate).toFixed(2);
+  };
+
+  // Mock data for amenities based on selected class
+  const classAmenities = {
+    economy: [
+      { icon: <Plane size={18} />, label: 'Wi-Fi' },
+      { icon: <Plane size={18} />, label: 'Snacks' },
+    ],
+    business: [
+      { icon: <Plane size={18} />, label: 'Lounge Access' },
+      { icon: <Plane size={18} />, label: 'Premium Meals' },
+    ],
+    first: [
+      { icon: <Plane size={18} />, label: 'Private Suite' },
+      { icon: <Plane size={18} />, label: 'Fine Dining' },
+    ]
   };
 
   return (
     <>
       <style>{`
-        body {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          background: #f5f5f5;
+        .flight-container {
+          max-width: 1400px;
+          margin: 20px auto;
+          padding: 20px 40px;
         }
 
-        .container {
-          max-width: 85%; /* Reduced max width for smaller layout */
-          margin: auto;
-          padding: 1.5rem;
+        .flights-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 32px;
+          padding: 20px;
         }
 
-        .row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem; /* Added gap for spacing between cards */
-        }
-
-        .col-12 {
-          width: 100%;
-        }
-
-        .tourCard {
-          border: 0.1rem solid #ddd;
-          border-radius: 0.75rem;
-          padding: 1rem; /* Reduced padding */
-          box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        .ticket {
           background: white;
-          margin-bottom: 1rem;
-          max-width: 80rem; /* Restricts card width */
+          border-radius: 16px;
+          overflow: hidden;
+          height: fit-content;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          border: 1px solid #E2E8F0;
+          transition: transform 0.2s ease;
         }
 
-        .tourCard__content {
+        .ticket:hover {
+          transform: translateY(-4px);
+        }
+
+        .ticket-header {
+          background: #dac4d0;
+          padding: 24px 32px;
+          color: white;
           display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
+          justify-content: space-between;
+          align-items: center;
         }
 
-        .tourCard__title {
-          font-size: 1.5rem; /* Smaller font size */
-          color: #2d3748;
-          margin-bottom: 1rem;
+        .ticket-header h3 {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 600;
+        }
+
+        .ticket-header span {
+          font-size: 16px;
+        }
+
+        .flight-segment {
+          padding: 32px;
         }
 
         .flight-details {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 1rem; /* Reduced spacing between elements */
-          padding: 0.5rem 0;
+          margin-bottom: 24px;
         }
 
-        .station-info {
-          text-align: center;
-          flex: 1;
+        .city-info {
+          text-align: left;
         }
 
-        .station-code {
-          font-size: 1.8rem;
-          font-weight: 600;
-          color: #2d3748;
-          margin-bottom: 0.25rem;
+        .city-code {
+          font-size: 32px;
+          font-weight: 700;
+          color: #1E293B;
+          margin-bottom: 8px;
         }
 
-        .station-time {
-          font-size: 1.2rem;
-          color: #4a5568;
+        .flight-time {
+          color: #64748B;
+          font-size: 18px;
+          margin-bottom: 4px;
         }
 
-        .station-date {
-          font-size: 1rem;
-          color: #718096;
+        .flight-date {
+          color: #94A3B8;
+          font-size: 16px;
         }
 
         .flight-path {
-          flex: 2;
+          flex: 1;
+          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          position: relative;
-          padding: 0 1rem;
+          padding: 0 32px;
         }
 
-        .flight-path-line {
-          height: 0.1rem;
-          background: #e2e8f0;
+        .path-line {
+          height: 2px;
+          background: #E2E8F0;
           width: 100%;
           position: absolute;
         }
 
-        .layover-info {
-          margin: 0.75rem 0;
-          font-size: 1rem;
-          color: #718096;
+        .plane-icon {
+          color: #0D9488;
+          position: relative;
+          transform: rotate(45deg);
+        }
+
+        .flight-info {
+          display: flex;
+          gap: 32px;
+          color: #64748B;
+          font-size: 16px;
+          padding-top: 24px;
+          border-top: 1px solid #E2E8F0;
+        }
+
+        .info-item {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 12px;
         }
 
-        .layover-dot {
-          width: 0.5rem;
-          height: 0.5rem;
-          background: #ed8936;
-          border-radius: 50%;
-        }
-
-        .tourCard__info {
+        .ticket-footer {
+          padding: 24px 32px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-top: 1.5rem;
-          padding-top: 1rem;
-          border-top: 0.1rem solid #e2e8f0;
+          border-top: 1px solid #E2E8F0;
         }
 
-        .tourCard__price {
-          display: flex;
-          align-items: baseline;
-          gap: 0.25rem;
-          font-size: 1.5rem;
-          color: #2d3748;
+        .price-label {
+          color: #64748B;
+          font-size: 16px;
+          margin-bottom: 1px;
         }
 
-        .button {
-          padding: 0.75rem 1.5rem;
-          border: 0.2rem solid #5a9ea0;
-          border-radius: 0.5rem;
-          background: #5a9ea0;
-          cursor: pointer;
+        .price-amount {
+          font-size: 25px;
+          font-weight: 700;
+          color: #1E293B;
+        }
+
+        .currency {
+          color: #64748B;
+          font-size: 20px;
+          margin-right: 6px;
+        }
+
+        .book-button {
+          background: #8f5774;
           color: white;
-          transition: 0.3s;
-          font-size: 1rem;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 10px;
+          font-size: 16px;
           font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: background 0.2s ease;
         }
 
-        .button:hover {
-          background: #11302a;
-          color: white;
-          transform: translateY(-0.1rem);
+        .book-button:hover {
+          background: #dac4d0;
+        }
+
+        @media (max-width: 1400px) {
+          .flights-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          
+          .flight-container {
+            padding: 20px;
+          }
+        }
+
+        @media (max-width: 900px) {
+          .flights-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .flight-container {
+            padding: 16px;
+          }
+          
+          .ticket {
+            max-width: 100%;
+          }
         }
       `}</style>
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
+        <TouristHeader />
+        <main className="page-content">
+          <div className="flight-container">
+            <div className="flights-grid">
+              {flights.length > 0 ? (
+                flights.map((flight, index) => (
+                  <div className="ticket" key={index}>
+                    <div className="ticket-header">
+                      <h3>Flight Ticket</h3>
+                      <span>{selectedClass.charAt(0).toUpperCase() + selectedClass.slice(1)} Class</span>
+                    </div>
 
-      <section>
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <h2 style={{ fontSize: '2.5rem', marginBottom: '2rem', color: '#2d3748' }}>
-                {flights.length} flight(s) found
-              </h2>
-
-              <div className="flights-list">
-                {flights.length > 0 ? (
-                  flights.map((flight, index) => (
-                    <div className="col-12" key={index}>
-                      <div className="tourCard">
-                        <div className="tourCard__content">
-                          <h3 className="tourCard__title">
-                            Flight {index + 1}
-                          </h3>
-
-                          {flight.itineraries.map((itinerary, i) => (
-                            <div key={i}>
-                              {itinerary.segments.map((segment, segmentIndex) => (
-                                <div key={segmentIndex}>
-                                  <div className="flight-details">
-                                    {/* Departure */}
-                                    <div className="station-info">
-                                      <div className="station-code">
-                                        {segment.departure.iataCode}
-                                      </div>
-                                      <div className="station-time">
-                                        {formatTime(segment.departure.at)}
-                                      </div>
-                                      <div className="station-date">
-                                        {formatDate(segment.departure.at)}
-                                      </div>
-                                    </div>
-
-                                    {/* Flight path */}
-                                    <div className="flight-path">
-                                      <div className="flight-path-line" />
-                                      <Plane className="text-blue-500 rotate-90 transform -translate-y-1" size={32} />
-                                    </div>
-
-                                    {/* Arrival */}
-                                    <div className="station-info">
-                                      <div className="station-code">
-                                        {segment.arrival.iataCode}
-                                      </div>
-                                      <div className="station-time">
-                                        {formatTime(segment.arrival.at)}
-                                      </div>
-                                      <div className="station-date">
-                                        {formatDate(segment.arrival.at)}
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {segmentIndex < itinerary.segments.length - 1 && (
-                                    <div className="layover-info">
-                                      <div className="layover-dot" />
-                                      <span>
-                                        {Math.round((new Date(itinerary.segments[segmentIndex + 1].departure.at) - new Date(segment.arrival.at)) / 1000 / 60)}m layover in {segment.arrival.iataCode}
-                                      </span>
-                                </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          ))}
-
-                          <div className="tourCard__info">
-                            <div className="tourCard__price">
-                              <span>{currency}</span>
-                              <span>{convertPrice(flight.price.total)}</span>
+                    {flight.itineraries.flatMap((itinerary, itineraryIndex) =>
+                      itinerary.segments.map((segment, segmentIndex) => (
+                        <div className="flight-segment" key={`${itineraryIndex}-${segmentIndex}`}>
+                          <div className="flight-details">
+                            <div className="city-info">
+                              <div className="city-code">{segment.departure.iataCode}</div>
+                              <div className="flight-time">{formatTime(segment.departure.at)}</div>
+                              <div className="flight-date">{formatDate(segment.departure.at)}</div>
                             </div>
 
-                            <button
-                              className="button"
-                              onClick={() => handleBookNow(flight)}
-                            >
-                              Book Now
-                            </button>
+                            <div className="flight-path">
+                              <div className="path-line"></div>
+                              <Plane className="plane-icon" size={28} />
+                            </div>
+
+                            <div className="city-info">
+                              <div className="city-code">{segment.arrival.iataCode}</div>
+                              <div className="flight-time">{formatTime(segment.arrival.at)}</div>
+                              <div className="flight-date">{formatDate(segment.arrival.at)}</div>
+                            </div>
+                          </div>
+
+                          <div className="flight-info">
+                            <div className="info-item">
+                              <Clock size={20} />
+                              <span>Duration: {parseDuration(segment.duration)}</span>
+                            </div>
+                            <div className="info-item">
+                              <Calendar size={20} />
+                              <span>{itineraryIndex === 0 ? 'Outbound' : 'Return'}</span>
+                            </div>
                           </div>
                         </div>
+                      ))
+                    )}
+
+                    <div className="ticket-footer">
+                      <div>
+                        <div className="price-label">Total Price</div>
+                        <div className="price-amount">
+                          <span className="currency">{currency}</span>
+                          {convertPrice(flight.price.total)}
+                        </div>
                       </div>
+                      <button className="book-button" onClick={() => handleBookNow(flight)}>
+                        Book Now
+                        <Plane size={20} />
+                      </button>
                     </div>
-                  ))
-                ) : (
-                  <p style={{ fontSize: '1.5rem', color: '#718096' }}>No flights available.</p>
-                )}
-              </div>
+                  </div>
+                ))
+              ) : (
+                <p style={{ fontSize: '1.2rem', color: '#718096', gridColumn: '1 / -1' }}>No flights available.</p>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </main>
+        <FooterThree />
+      </div>
     </>
   );
 };
