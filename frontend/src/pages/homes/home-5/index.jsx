@@ -13,7 +13,7 @@ import GuestHeader from "@/components/layout/header/GuestHeader";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Home || Tripal - Travel Agency",
+  title: "Home || Tripal",
 };
 
 export default function HomePage5() {

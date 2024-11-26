@@ -11,8 +11,8 @@ import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Activities || Tripal - Travel Agency",
-  description: "ViaTour - Travel & Tour Reactjs Template",
+  title: "Itineraries || Tripal",
+  description: "Itineraries || Tripal",
 };
 
 export default function Activities() {

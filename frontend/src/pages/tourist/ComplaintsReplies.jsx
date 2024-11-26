@@ -6,7 +6,7 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 import MetaComponent from "@/components/common/MetaComponent";
 import { useState } from "react";
 const metadata = {
-    title: "Home || Tripal - Travel Agency",
+    title: "Customer Support || Tripal",
 };
 
 

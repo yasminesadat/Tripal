@@ -4,7 +4,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Home || Tripal - Travel Agency",
+  title: "Home || Tripal",
 };
 
 const GovernorHome = () => {

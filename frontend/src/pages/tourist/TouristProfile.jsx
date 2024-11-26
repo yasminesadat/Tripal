@@ -21,7 +21,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; // Add th
 import Spinner from "@/components/common/Spinner";
 
 const metadata = {
-  title: "Profile || Tripal - Travel Agency",
+  title: "Profile || Tripal",
 };
 
 
