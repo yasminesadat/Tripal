@@ -64,7 +64,7 @@ export default function Messages({ complaint, user, role }) {
       >
         <Sidebar setSideBarOpen={setSideBarOpen} />
 
-        <div className="dashboard__content">
+        <div>
           {/* <Header setSideBarOpen={setSideBarOpen} /> */}
 
           <div className="dashboard__content_content">
@@ -281,7 +281,7 @@ export default function Messages({ complaint, user, role }) {
   justify-content: space-between;
   align-items: center;
   gap: 20px; /* 20px gap between items */
-  width: 70%; /* Full width of the container */
+  width: 60%; /* Full width of the container */
   padding: 20px; /* Add padding to make the div bigger */
   background-color: #f9f9f9; /* Optional: background color to make the div more noticeable */
 }

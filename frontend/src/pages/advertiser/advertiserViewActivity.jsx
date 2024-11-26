@@ -13,6 +13,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, notification } from "antd";
 import { deleteActivity } from "../../api/ActivityService";
+import { DollarOutlined ,TagOutlined,PartitionOutlined ,WalletOutlined,PercentageOutlined } from '@ant-design/icons';
+import AdvertiserGallery from "../../components/tourSingle/Galleries/AdvertiserGallery";
+import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
+
 
 export default function AdvertiserActivityDetails() {
   const location = useLocation();
@@ -38,8 +42,11 @@ export default function AdvertiserActivityDetails() {
 
   return (
     <div>
-      <div class="dashboard__content_content" >
+            <AdvertiserHeader />
 
+      <div class="dashboard__content_content" style={{ marginTop: "70px" }}>
+
+       <AdvertiserGallery />
         <section className="">
           <div className="container">
             <h2 className="text-40 sm:text-30 lh-14 mt-20">
@@ -49,33 +56,30 @@ export default function AdvertiserActivityDetails() {
               {activity?.title.split(" ").slice(7).join(" ")}
             </h2>
 
-            <div className="row x-gap-20 y-gap-20 items-center pt-20">
-
-              <div className="col-auto">
-                <div className="d-flex items-center">
-                  <i className="icon-pin text-16 mr-5"></i>
-                  {activity?.location}
-                </div>
-              </div>
-              <div class="text-right md:text-left">
-                <i class="icon-clock mr-5"></i>
-                <div class="text-14">Date: {new Date(activity.date).toLocaleDateString()}</div>
-                <div class="text-14">Time: {activity.time}</div>
-              </div>
-
+            <div className="d-flex justify-content-between">
+            <div className="d-flex align-items-center">
+              <i className="icon-pin mr-5"></i>
+              <div className="text-20"> {activity?.location}</div>
             </div>
+            <div className="d-flex align-items-center">
+              <i className="icon-clock mr-5"></i>
+              <div className="text-20">Date: {new Date(activity.date).toLocaleDateString()}</div>
+              <div className="text-20">Time: {activity.time}</div>
+            </div>
+          </div>
+
           </div>
         </section>
 
         <section className="layout-pt-md js-pin-container">
           <div className="container">
             <div className="row y-gap-30 justify-between">
-              <div className="col-lg-8">
+              <div className="col-lg-12">
                 <div className="row y-gap-20 justify-between items-center layout-pb-md">
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
-                        <i className="text-20 icon-money"></i>
+                        <DollarOutlined />
                       </div>
                       <div className="ml-10">
                         <div className="lh-16">Price</div>
@@ -86,7 +90,7 @@ export default function AdvertiserActivityDetails() {
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
-                        <i className="text-20 icon-tag"></i>
+                      <TagOutlined />
                       </div>
                       <div className="ml-10">
                         <div className="lh-16">Tags</div>
@@ -103,7 +107,7 @@ export default function AdvertiserActivityDetails() {
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
-                        <i className="text-20 icon-category"></i>
+                      <PartitionOutlined />
                       </div>
                       <div className="ml-10">
                         <div className="lh-16">Category</div>
@@ -116,7 +120,7 @@ export default function AdvertiserActivityDetails() {
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
-                        <i className="text-20 icon-ticket"></i>
+                      <WalletOutlined />
                       </div>
                       <div className="ml-10">
                         <div className="lh-16">Booking Status</div>
@@ -129,7 +133,7 @@ export default function AdvertiserActivityDetails() {
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
-                        <i className="text-20 icon-ticket"></i>
+                      <PercentageOutlined />
                       </div>
                       <div className="ml-10">
                         <div className="lh-16">Discounts</div>

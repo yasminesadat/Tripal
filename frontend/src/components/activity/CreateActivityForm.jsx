@@ -5,6 +5,8 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { createActivity, updateActivity } from '../../api/ActivityService'
 import ActivityCategoryService from '../../api/ActivityCategoryService'
 import { getTags } from '../../api/PreferenceTagService'
+import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
+
 const { TextArea } = Input;
 
 const ActivityForm = ({ isUpdate }) => {
@@ -115,16 +117,52 @@ const ActivityForm = ({ isUpdate }) => {
   };
 
   return (
-    <div className="dashboard__content_content" style={{ backgroundColor: '#f0f0f0' }}>
-
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+    <div className="dashboard__content_content" style={{ backgroundColor: '#f0f0f0', marginTop: "70px" }} >
+         <MDBContainer fluid className="p-2">
+         <MDBRow>
+          <MDBCol
+              md="3"
+              className="text-center text-md-start d-flex flex-column align-items-center"
+            >
+              <div className="images-container">
+                <img
+                  src="/img/hero/3/1.png"
+                  alt="image"
+                  className="background-image"
+                />
+                <div
+                data-aos="fade-up"
+                data-aos-delay="200"
+                className="hero__subtitle mb-20 md:mb-10"
+              >
+                Plan Your Dream Activity with Ease
+              </div>
+  
+              <h1 className="hero__title" data-aos="fade-up" data-aos-delay="300">
+                Create
+                <br className="md:d-none" />
+                Memorable
+                <br className="md:d-none" />
+                Adventures!
+                <br />
+              </h1>
+                <img
+                  src="/img/hero/3/2.png"
+                  alt="image"
+                  className="background-image"
+                />
+              </div>
+              
+            </MDBCol>
+            <MDBCol className="text-center text-md-start d-flex flex-column align-items-center px-2"  md="6">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px", marginRight: '-270px' }}>
         <h1 className="text-30">Activity Management</h1>
       </div>
-      <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
+      <div className="rounded-12 bg-white shadow-2 px-20 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30" style={{ marginRight: '-270px' }}>
         <Form
           layout="vertical"
           onFinish={handleSubmit}
-          style={{ maxWidth: '600px', margin: 'auto', padding: '20px', border: '1px solid #f0f0f0', borderRadius: '10px' }}
+          style={{ width: '100%', margin: '20px auto 90px 0',  border: '1px solid #f0f0f0', borderRadius: '10px' }}
         >
           <Form.Item label="Title" required>
             <Input
@@ -248,6 +286,9 @@ const ActivityForm = ({ isUpdate }) => {
           </Form.Item>
         </Form>
       </div>
+      </MDBCol>
+      </MDBRow>
+        </MDBContainer>
     </div>
   );
 };

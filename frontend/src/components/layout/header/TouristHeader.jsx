@@ -5,7 +5,10 @@ import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "@/api/UserService";
 import { message } from "antd";
-import {updateTouristInformation, getTouristInformation} from '@/api/TouristService';
+import {
+  updateTouristInformation,
+  getTouristInformation,
+} from "@/api/TouristService";
 
 export default function TouristHeader() {
   const [profileInformation, setProfileInformation] = useState({});
@@ -41,7 +44,6 @@ export default function TouristHeader() {
   };
 
   const handleCurrencyChange = async (currency) => {
-
     const updatedProfileData = {
       choosenCurrency: currency,
     };
@@ -50,7 +52,6 @@ export default function TouristHeader() {
       await updateTouristInformation(updatedProfileData);
       // sessionStorage.removeItem("currency");
       // sessionStorage.setItem("currency", currency);
-      
     } catch (error) {
       message.error("Failed to update user information:", error);
     }
@@ -67,10 +68,9 @@ export default function TouristHeader() {
         message.error("Failed to fetch user information:", error);
       }
     };
-  
+
     getUserInformation();
   }, []);
-
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function TouristHeader() {
           </div>
 
           <div className="header__logo">
-            <Link to="/" className="header__logo">
+            <Link to="/tourist" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
 
@@ -113,7 +113,10 @@ export default function TouristHeader() {
 
           <div className="header__right">
             <div className="ml-15">
-              <Currency userCurrency={profileInformation.choosenCurrency} onCurrencyChange={handleCurrencyChange}/>
+              <Currency
+                userCurrency={profileInformation.choosenCurrency}
+                onCurrencyChange={handleCurrencyChange}
+              />
             </div>
             <Link to="/tourist/booking-history" className="ml-20">
               {/*/includes itineraries, activities, flights,and hotels - both history and upcoming bookings*/}

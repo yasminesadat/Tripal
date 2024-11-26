@@ -1,40 +1,28 @@
 import { useState } from "react";
-import Menu from "../components/GovernorMenu";
-import { profile } from "@/data/governorMenu";
+import Menu from "../components/GuestMenu";
+import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
-import { logout } from "@/api/UserService";
-export default function GovernorHeader() {
+
+export default function GuestHeader() {
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
-
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  let closeTimeout;
-
-  const handleMouseLeave = () => {
-    closeTimeout = setTimeout(() => {
-      setDropdownOpen(false);
-    }, 200);
-  };
-
-  const handleMouseEnter = () => {
-    clearTimeout(closeTimeout);
-    setDropdownOpen(true);
-  };
-
-  const handleLogout = async () => {
-    const result = await logout();
-    if (result.status === "success") {
-      window.location.href = "/login";
-    } else {
-      message.error(result.message);
-    }
+  const handleCurrencyChange = async (currency) => {
+    // const updatedProfileData = {
+    //   choosenCurrency: currency,
+    // };
+    // try {
+    //   await updateTouristInformation(updatedProfileData);
+    //   // sessionStorage.removeItem("currency");
+    //   // sessionStorage.setItem("currency", currency);
+    // } catch (error) {
+    //   message.error("Failed to update user information:", error);
+    // }
   };
 
   return (
@@ -53,7 +41,7 @@ export default function GovernorHeader() {
           </div>
 
           <div className="header__logo">
-            <Link to="/governor" className="header__logo">
+            <Link to="/" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
 
@@ -77,39 +65,17 @@ export default function GovernorHeader() {
           </div>
 
           <div className="header__right">
-            <Link to="/" className="ml-20">
-              {/*/help-center*/}
-              Help
+            <Currency />
+            <Link to="/register" className="ml-10">
+              Sign up
             </Link>
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+
+            <Link
+              to="/login"
+              className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
             >
-              <i className="icon-person text-18"></i>
-            </button>
-            {dropdownOpen && (
-              <div
-                className="dropdown-menu"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <ul>
-                  {profile.map((item) => (
-                    <li key={item.id}>
-                      {item.title === "Log Out" ? (
-                        <a onClick={handleLogout}>{item.title}</a>
-                      ) : (
-                        <a href={item.href}>{item.title}</a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              Log in
+            </Link>
           </div>
         </div>
       </header>

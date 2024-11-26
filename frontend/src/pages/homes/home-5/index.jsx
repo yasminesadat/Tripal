@@ -8,12 +8,12 @@ import TestimonialsFour from "@/components/homes/testimonials/TestimonialsFour";
 import TourTypesTwo from "@/components/homes/tourTypes/TourTypesTwo";
 import FeaturedTrips from "@/components/homes/tours/FeaturedTrips";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header3 from "@/components/layout/header/Header3";
+import GuestHeader from "@/components/layout/header/GuestHeader";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title: "Home || Tripal - Travel Agency",
+  title: "Home || Tripal",
 };
 
 export default function HomePage5() {
@@ -21,7 +21,7 @@ export default function HomePage5() {
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <Header3 />
+        <GuestHeader />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />

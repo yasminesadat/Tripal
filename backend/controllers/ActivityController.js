@@ -147,8 +147,8 @@ const getActivityById = async (req, res) => {
     if (!activity)
       return res.status(404).json({ error: "Activity not found." });
 
-    if (activity.flagged)
-      res.status(404).json({ error: "Activity flagged." });
+    // if (activity.flagged)
+    //   res.status(404).json({ error: "Activity flagged." });
     else
       res.status(200).json(activity);
   } catch (error) {
@@ -171,8 +171,8 @@ const getTouristActivities = async (req, res) => {
 
 const getAllActivitiesForAdmin = async (req, res) => {
   try {
-    const currentDate = new Date();
-    const activities = await Activity.find({ date: { $gte: currentDate } })
+    console.log("here for admin");
+    const activities = await Activity.find()
       .populate("category")
       .populate("tags")
     res.status(200).json(activities);
@@ -196,8 +196,7 @@ const adminFlagActivity = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.activityId);
     if (!activity) return res.status(404).json({ error: "Activity not found" });
-    if (activity.flagged) return res.status(400).json({ error: "Activity already flagged" });
-    activity.flagged = true;
+    activity.flagged = !activity.flagged;
     await activity.save();
     res.status(200).json({ message: "Activity flagged successfully" });
   } catch (error) {

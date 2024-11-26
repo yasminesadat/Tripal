@@ -10,7 +10,7 @@ import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-    title: "Home || Tripal - Travel Agency",
+    title: "Complaints || Tripal",
 };
 const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
