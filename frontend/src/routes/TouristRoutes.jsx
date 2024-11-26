@@ -26,6 +26,8 @@ import DbBooking from "@/pages/tourist/BookingHistory";
 
 import TouristHome from "@/pages/tourist/TouristHome";
 import FlightsList from "@/pages/tourist/FlightsList";
+import FlightBookingDetails from "@/pages/tourist/FlightBookingDetails";
+import FlightInvoice from "@/pages/tourist/FlightInvoice";
 //Hotels:
 
 import BookingPages from "../pages/BookingHotels/BookingConfirmation";
@@ -49,6 +51,8 @@ const touristRoutes = [
   { path: "/tourist/profile", element: <TouristProfile /> },
   { path: "/cart", element: <Cart /> },
   { path: "/wishlist", element: <WishList /> },
+  { path: "/tourist/booking-summary", element: <FlightBookingDetails /> },
+  { path: "/tourist/invoice", element: <FlightInvoice/>}
   // { path: "/historical-places", element: <HistoricalPlaces /> },
   // {
   //   path: "/upcoming-itineraries",
