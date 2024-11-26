@@ -309,22 +309,58 @@ const FlightBookingDetails = () => {
               </div>
 
               <div className="d-flex items-center justify-between">
-                <div className="fw-500">Promo Applied</div>
-                <div>-50.00</div>
+                  <div className="fw-500">Promo Applied</div>
+                  <div>-50.00</div>
+                </div>
+
+                <div className="line mt-20 mb-20"></div>
+
+                <div className="d-flex items-center justify-between">
+                  <div className="fw-500 text-18">Total</div>
+                  <div className="fw-500 text-18">
+                    {currency} {convertPrice(flight.price?.total + 50)}
+                  </div>
+                </div>
               </div>
 
-              <div className="line mt-20 mb-20"></div>
+              {/* Promo Code Section */}
+              <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
+                <h2 className="text-20 fw-500">Do you have a promo code?</h2>
 
-              <div className="d-flex items-center justify-between">
-                <div className="fw-500 text-18">Total</div>
-                <div className="fw-500 text-18">
-                  {currency} {convertPrice(flight.price?.total + 50)}
+                <div className="contactForm mt-25">
+                  <div className="form-input ">
+                    <input type="text" required />
+                    <label className="lh-1 text-16 text-light-1">
+                      Promo code
+                    </label>
+                  </div>
                 </div>
+
+                <button 
+                        type="submit" 
+                        className="button -md text-white mt-30 w-100"
+                        onClick={handlePaymentSubmit}
+                        style={{
+                          backgroundColor: '#8f5774',
+                          border: '2px solid #8f5774',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#dac4d0';
+                          e.currentTarget.style.color = '#8f5774';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = '#8f5774';
+                          e.currentTarget.style.color = 'white';
+                        }}
+                      >
+                      Apply
+                      <i className="icon-arrow-top-right text-16 ml-10"></i>
+                    </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </section>
       
       <FooterThree />
