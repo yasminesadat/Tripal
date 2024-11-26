@@ -309,8 +309,8 @@ const FlightBookingDetails = () => {
               </div>
 
               <div className="d-flex items-center justify-between">
-                <div className="fw-500">Taxes & Fees</div>
-                <div>$50.00</div>
+                <div className="fw-500">Promo Applied</div>
+                <div>-50.00</div>
               </div>
 
               <div className="line mt-20 mb-20"></div>
