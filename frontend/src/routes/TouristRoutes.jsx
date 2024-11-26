@@ -88,7 +88,7 @@ const touristRoutes = [
   // { path: "/tourist/search-flight", element: <Hero5 /> },
   // { path: "/tourist/booking-summary", element: <BookingDetails /> },
   // { path: "/tourist/invoice", element: <Invoice /> },
-  { path: "/tourist/booking-history", element: <DbBooking /> },
+  ,{ path: "/tourist/booking-history", element: <DbBooking /> },
 
 
 
