@@ -232,6 +232,15 @@ export default function ActivitiesList({
     else navigate(`/activities/${activityId}`, { state: { page } });
   };
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const day = d.getDate().toString().padStart(2, '0');  
+    const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+    const year = d.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <section className="layout-pb-xl">
       <div className="container">
@@ -398,7 +407,7 @@ export default function ActivitiesList({
                       </div>
 
                       <p className="tourCard__text mt-5">
-                        {truncateText(elm.description, 150)}
+                        {truncateText(elm.description, 50)}
                       </p>
 
                       <div className="row x-gap-20 y-gap-5 pt-30">
@@ -415,12 +424,16 @@ export default function ActivitiesList({
                     <div className="tourCard__info">
                       <div>
                         <div className="d-flex items-center text-14">
+                          <i className="icon-calendar mr-10"></i> 
+                          {formatDate(elm.date)}
+                        </div>
+                        <div className="d-flex items-center text-14">
                           <i className="icon-clock mr-10"></i>
                           {elm.time}
                         </div>
 
                         <div className="tourCard__price">
-                          Price: {elm.price}
+                          {elm.price}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
