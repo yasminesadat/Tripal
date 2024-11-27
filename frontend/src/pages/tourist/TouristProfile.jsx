@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect } from "react";
 import { Select, message } from 'antd';
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,7 @@ import ActivityCategoryService from "../../api/ActivityCategoryService";
 
 import { changeTouristPassword } from '../../api/TouristService';
 import { getUserData } from '@/api/UserService';
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; // Add this import
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; 
 
 import Spinner from "@/components/common/Spinner";
 
@@ -181,7 +180,7 @@ export default function Profile() {
   };
   const handleEditClick = async () => {
     try {
-      const response = await updateTouristInformation(editedProfile);
+      await updateTouristInformation(editedProfile);
       message.success("Profile updated successfully");
       await fetchTouristTags();
       await fetchTouristCategories();
@@ -408,10 +407,7 @@ export default function Profile() {
                           />
                           <label className="lh-1 text-16 text-light-1">Points</label>
                         </div>
-                        <button
-                          onClick={handleRedeemClick}
-                          className="button -md -dark-1"
-                        >
+                        <button onClick={handleRedeemClick} className="button -md -dark-1 " style={{ marginTop: '0.75rem' }}>
                           Redeem Points
                         </button>
                       </div>
