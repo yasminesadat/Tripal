@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
 const Request = require('../models/Request.js');
 const hotelBookings = require("../models/BookingHotel.js");
+const activityModel= require("../models/Activity.js");
+const itineraryModel= require("../models/Itinerary.js");
 
 
 const createTourist = async (req, res) => {
@@ -361,6 +363,88 @@ const getTouristCategories = async (req, res) => {
   }
 };
 
+const bookmarkEvent = async (req, res) => {
+  const touristId = req.userId;
+  const { eventId, eventType } = req.body; // eventType can be activity or itinerary
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    let event;
+    if (eventType === 'activity') {
+      event = await activityModel.findById(eventId);
+    } else if (eventType === 'itinerary') {
+      event = await itineraryModel.findById(eventId);
+    } else {
+      return res.status(400).json({ error: 'Invalid event type' });
+    }
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Add the event to the tourist's bookmarked list (depending on event type)
+    const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
+    if (!tourist[bookmarkArray].includes(eventId)) {   //prevents adding the same event more than once but should i handle removing bookmarked events?
+      tourist[bookmarkArray].push(eventId);
+      await tourist.save();
+    }                           //if bookmarkArray is 'bookmarkedActivities' yeb2a tourist['bookmarkedActivities'] will be accessed
+
+    // Add the tourist to the event's bookmarked list
+    if (!event.bookmarked.includes(touristId)) {
+      event.bookmarked.push(touristId);
+      await event.save();
+    }
+
+    res.status(200).json({ message: 'Event bookmarked successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// const removeBookmarkEvent = async (req, res) => {
+//   const touristId = req.userId;
+//   const { eventId, eventType } = req.body;
+
+//   try {
+//     const tourist = await touristModel.findById(touristId);
+//     if (!tourist) {
+//       return res.status(404).json({ error: 'Tourist not found' });
+//     }
+
+//     let event;
+//     if (eventType === 'activity') {
+//       event = await activityModel.findById(eventId);
+//     } else if (eventType === 'itinerary') {
+//       event = await itineraryModel.findById(eventId);
+//     }
+
+//     if (!event) {
+//       return res.status(404).json({ error: 'Event not found' });
+//     }
+
+//     // Remove event from tourist's bookmarked list
+//     const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
+//     tourist[bookmarkArray] = tourist[bookmarkArray].filter(id => id.toString() !== eventId.toString());
+//     await tourist.save();
+
+//     // Remove tourist from the event's bookmarked list
+//     event.bookmarked = event.bookmarked.filter(id => id.toString() !== touristId.toString());
+//     await event.save();
+
+//     res.status(200).json({ message: 'Bookmark removed successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// };
+
+
+
 module.exports = {
   createTourist,
   getTouristInfo,
@@ -373,5 +457,6 @@ module.exports = {
   getTouristBookedHotels,
   getTouristPreferences,
   getTouristCategories,
-  checkUserExists
+  checkUserExists,
+  bookmarkEvent
 };

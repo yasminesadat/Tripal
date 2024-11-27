@@ -93,7 +93,9 @@ const touristSchema = new Schema({
   wishlist:[{
     type: Schema.Types.ObjectId,
     ref: "Product",
-  }]
+  }],
+  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
+  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary" }],
 
 }, { timestamps: true });
 
