@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import Calendar from "./Calendar.jsx";
-
-import ActivityCategoryService from '@/api/ActivityCategoryService'
-
+import Calendar from "@/components/activity/Calendar";
 import {
   durations,
   languages,
@@ -10,15 +7,13 @@ import {
   features,
   rating,
 } from "@/data/tourFilteringOptions";
-import RangeSlider from "./RangeSlider";
+import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter, priceRange, setPriceRange }) {
+export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRangeState, setPriceRangeState] = useState([0, 2000000]); 
 
   const [loading, setLoading] = useState(true);
@@ -40,34 +35,6 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
     setRatingFilter(selectedRatings); 
   }, [selectedRatings, setRatingFilter]);
   
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await ActivityCategoryService.getActivityCategories();
-        setCategories(response);
-      } catch (err) {
-        setError("Error fetching categories");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    setCategoryFilter(selectedCategories);
-  }, [selectedCategories, setCategoryFilter]);
-
-  const handleCheckboxChange = (categoryName) => {
-    setSelectedCategories((prevSelected) => {
-      if (prevSelected.includes(categoryName)) {
-        return prevSelected.filter((cat) => cat !== categoryName);
-      } else {
-        return [...prevSelected, categoryName];
-      }
-    });
-  };
 
   const handlePriceRangeChange = (newRange) => {
     setPriceRangeState(newRange);
@@ -134,36 +101,8 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
               >
                 <div className="pt-15">
                   <div className="d-flex flex-column y-gap-15">
-                    {categories.map((elm, i) => (
-                      <div key={i}>
-                        <div className="d-flex items-center">
-                          <div className="form-checkbox ">
-                            <input 
-                              type="checkbox" 
-                              name="name" 
-                              checked={selectedCategories.includes(elm.Name)} 
-                              onChange={() => handleCheckboxChange(elm.Name)}
-                            />
-                            <div className="form-checkbox__mark">
-                              <div className="form-checkbox__icon">
-                                <img src="/img/icons/check.svg" alt="icon" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lh-11 ml-10">{elm.Name}</div>
-                        </div>
-                      </div>
-                    ))}
+                   
                   </div>
-
-                  {/* <a
-                    href="#"
-                    className="d-flex text-15 fw-500 text-accent-2 mt-15"
-                  >
-                    See More
-                  </a> */}
-
                 </div>
               </div>
             </div>

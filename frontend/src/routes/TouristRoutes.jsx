@@ -1,11 +1,8 @@
-// import TouristHome from "../pages/tourist/TouristHome";
 import TouristProfile from "../pages/tourist/TouristProfile";
-// import Activities from "../pages/commonPagesForMultipleUsers/Activities";
-// import TouristProfile from "../pages/tourist/TouristProfile";
 import Activities from "../pages/commonPagesForMultipleUsers/Activities";
+import Itineraries from "../pages/commonPagesForMultipleUsers/Itineraries";
 // import ActivitiesHistoryPage from "../pages/tourist/ActivitiesHistory";
 // import HistoricalPlaces from "../pages/tourist/HistoricalPlaces";
-// import UpcomingItineraries from "../pages/commonPagesForMultipleUsers/UpcomingItineraries";
 // import TouristProducts from "../pages/tourist/TouristProducts";
 // import TouristViewProduct from "../pages/tourist/TouristViewProduct";
 // import PreferenceSelection from "../components/tourist/PreferenceSelection";
@@ -19,8 +16,6 @@ import Cart from "@/pages/tourist/Cart";
 import WishList from "@/pages/tourist/WishList";
 // import BookedActivitiesPage from "../pages/tourist/BookedActivities";
 // import ItinerariesHistoryPage from "../pages/tourist/ItinerariesHistory";
-// import Hero5 from "../components/tourist/SearchBar";
-// import BookingDetails from "../components/tourist/BookingDetails";
 // import Invoice from "../components/tourist/Invoice";
 import DbBooking from "@/pages/tourist/BookingHistory";
 
@@ -36,9 +31,6 @@ import TourList1 from "../pages/BookingHotels/HotelList";
 import Hero6 from "../pages/BookingHotels/SearchHotel2";
 
 
-
-
-
 const touristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
@@ -52,14 +44,9 @@ const touristRoutes = [
   { path: "/cart", element: <Cart /> },
   { path: "/wishlist", element: <WishList /> },
   { path: "/tourist/booking-summary", element: <FlightBookingDetails /> },
-  { path: "/tourist/invoice", element: <FlightInvoice/>}
+  { path: "/tourist/invoice", element: <FlightInvoice/>},
+  { path: "/upcoming-itineraries",element: <Itineraries />},
   // { path: "/historical-places", element: <HistoricalPlaces /> },
-  // {
-  //   path: "/upcoming-itineraries",
-  //   element: (
-  //     <UpcomingItineraries isTourist={"isTourist"} touristBook={"book"} />
-  //   ),
-  // },
   // { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   // { path: "/tourist/view-products", element: <TouristProducts /> },
   // {
@@ -88,15 +75,11 @@ const touristRoutes = [
   // { path: "/tourist/search-flight", element: <Hero5 /> },
   // { path: "/tourist/booking-summary", element: <BookingDetails /> },
   // { path: "/tourist/invoice", element: <Invoice /> },
-  ,{ path: "/tourist/booking-history", element: <DbBooking /> },
-
-
-
+  { path: "/tourist/booking-history", element: <DbBooking /> },
   {path:"/hotel2",element:<Hero6/>},
   {path:"/hotelList/:cityCode/:dates1/:dates2", element:<TourList1/>},
   {path:"/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2", element:<HotelDetails/>},
   {path:"/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate",element:<BookingPages/>},
-
 ];
 
 export default touristRoutes;

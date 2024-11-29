@@ -4,7 +4,7 @@ import { Form, Input, Button, Card, Row, Col, DatePicker, Select, Typography, me
 import LocationMap from '../common/MapComponent';
 import languages  from '../../assets/constants/Languages';
 import AccessibilityTags from '../../assets/constants/AccessibiltyTags';
-import ActivitySelectionModal from '../itinerary/ActivitySelectionModal';
+import ActivitySelectionModal from './ActivitySelectionModal';
 import { createItinerary } from '../../api/ItineraryService';
 
 const { Title } = Typography;

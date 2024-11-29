@@ -1,16 +1,13 @@
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/ActivitiesHeader";
-
 import { useEffect, useRef, useState } from "react";
-
 import ActivitiesList from "@/components/activity/UpcomingActivities";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 import GuestHeader from "@/components/layout/header/GuestHeader";
-
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {

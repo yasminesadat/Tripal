@@ -4,7 +4,7 @@ const Tourist = require('../models/users/Tourist');
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
-    const { touristId, selectedDate, selectedTime,tickets} = req.body;
+    const { touristId,tickets} = req.body;
 
     const model = resourceType === 'activity' ? Activity : itineraryModel;
   
@@ -24,28 +24,14 @@ const bookResource = async (req, res) => {
             return res.status(403).json({ error: 'You must be at least 18 years old to book' });
     
         if (resourceType === 'itinerary') {
-            if (!selectedDate || !selectedTime) {
-                return res.status(400).json({ error: 'Please provide a date and time for booking this itinerary' });
-            }
-
-            const dateIsAvailable = resource.availableDates.some(
-                date => date.toISOString() === new Date(selectedDate).toISOString()
-            );
-            const timeIsAvailable = resource.availableTime.includes(selectedTime);
-
-            if (!dateIsAvailable || !timeIsAvailable)
-                return res.status(400).json({ error: 'Selected date or time is not available for this itinerary' });
-            
-            
+                 
             const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
             if (existingBooking) {
-                existingBooking.selectedDate = selectedDate;
-                existingBooking.selectedTime = selectedTime;
                 existingBooking.tickets += tickets;
             } else {
-                resource.bookings.push({ touristId, selectedDate, selectedTime, tickets});
+                resource.bookings.push({ touristId, tickets});
             }
-            
+
             tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
 
             
@@ -58,7 +44,6 @@ const bookResource = async (req, res) => {
             else 
                 resource.bookings.push({ touristId,tickets});
             
-            resource.booked = true; // i added an attribute in activity to check whether this activity has been booked
             tourist.wallet.amount -= resource.price*tickets;
         }
         if(tourist.wallet.amount<0)
@@ -113,12 +98,8 @@ try {
     if (resourceType === 'activity') {
       cancellationDeadline = new Date(resource.date);
     } else if (resourceType === 'itinerary') {
-      const booking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
-      if (booking) 
-        cancellationDeadline = new Date(booking.selectedDate);
-      
+        cancellationDeadline = new Date(resource.startDate);
     }
-
     cancellationDeadline.setHours(0, 0, 0, 0);
     currentTime.setHours(0, 0, 0, 0);
 
