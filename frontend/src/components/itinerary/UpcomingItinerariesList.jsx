@@ -410,7 +410,7 @@ export default function ItinerariesList({
                           {formatDate(elm.endDate)}
                         </div>
                         <div className="tourCard__price">
-                          {elm.price}
+                          Price: {elm.price}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>

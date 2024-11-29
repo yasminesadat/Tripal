@@ -16,7 +16,7 @@ import Index from './Index'
 export default function ItineraryDetails({ itinerary, userRole }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
+  const markerPosition = [itinerary.location?.latitude|| 35.11, itinerary.location?.longitude||35.11];
   const [selectedLocation, setSelectedLocation] = useState("");
 
   if (!itinerary) return <div><Index/></div>;
