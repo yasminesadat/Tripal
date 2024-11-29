@@ -4,7 +4,6 @@ import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "@/components/activity/Pagination";
 import {message } from "antd";
-
 import { getUserData } from "@/api/UserService";
 import { viewUpcomingItineraries } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
@@ -48,6 +47,7 @@ export default function ItinerariesList({
   const errorDisplayed = useRef(false);
   //#endregion
 
+//#region useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -194,13 +194,6 @@ export default function ItinerariesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastItinerary = currentPage * itinerariesPerPage;
-  const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
-  const currentItineraries = filteredItineraries.slice(
-    indexOfFirstItinerary,
-    indexOfLastItinerary
-  );
-
   const navigate = useNavigate();
   const handleRedirect = (itineraryId) => {
     if (userRole === "Tourist"|| userRole === "Admin")
@@ -216,6 +209,16 @@ export default function ItinerariesList({
   
     return `${day}/${month}/${year}`;
   };
+//#endregion
+  
+const indexOfLastItinerary = currentPage * itinerariesPerPage;
+const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
+const currentItineraries = filteredItineraries.slice(
+    indexOfFirstItinerary,
+    indexOfLastItinerary
+);
+
+
 
   return (
     <section className="layout-pb-xl">
