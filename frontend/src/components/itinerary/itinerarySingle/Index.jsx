@@ -1,4 +1,5 @@
-import FooterTwo from "../usersFooter/FooterTwo";
+import FooterThree from "@/components/layout/footers/FooterThree";
+
 const metadata = {
   title: "Not found || ViaTour - Travel & Tour Reactjs Template",
   description: "ViaTour - Travel & Tour Reactjs Template",
@@ -42,7 +43,7 @@ export default function NotFoundPage() {
             </div>
           </div>
         </section>
-        <FooterTwo />
+        <FooterThree />
       </main>
     </>
   );

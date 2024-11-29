@@ -1,4 +1,3 @@
-import React from "react";
 import Stars from "../../common/Stars";
 import { message } from "antd";
 
@@ -56,7 +55,7 @@ export default function ItineraryMainInformation({ itinerary }) {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <i className="icon-pin text-16 mr-5"></i>
-                {itinerary?.locations[0].split(",")[0]}
+                {/* {itinerary?.locations[0].split(",")[0]} */}
               </div>
             </div>
 
@@ -76,7 +75,7 @@ export default function ItineraryMainInformation({ itinerary }) {
               style={{ color: "grey" }}
               onClick={() =>
                 handleShare(
-                  `${window.location.origin}/itineraries/${itinerary._id}`
+                  `${window.location.origin}/itinerary/${itinerary._id}`
                 )
               }
             >

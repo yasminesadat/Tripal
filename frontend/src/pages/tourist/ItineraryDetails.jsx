@@ -14,7 +14,7 @@ import Header from "@/components/dasboard/Header";
 import MetaComponent from "@/components/common/MetaComponent";
 import NotFoundPage from "@/pages/pages/404";
 import Spinner from "@/components/common/Spinner";
-import Index from "@components/itinerary/itinerarySingle/index";
+import Index from './Index'
 
 const metadata = {
   title: "Itinerary Details || Tripal Travel",
@@ -37,7 +37,7 @@ const ItineraryDetailsPage = () => {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id);
+          //setUserId(response.data.id);
         } else {
           message.error(response.data.message);
           setUserRole("Guest");
@@ -75,7 +75,7 @@ const ItineraryDetailsPage = () => {
           <>
             <GuestHeader /> 
             <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title} />
-            <ItineraryDetails itinerary={itinerary} />
+            <ItineraryDetails itinerary={itinerary} userRole={userRole} />
             <FooterThree />
           </>
         }
@@ -90,7 +90,7 @@ const ItineraryDetailsPage = () => {
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
               <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title} userRole={userRole} />
-              <ItineraryDetails itinerary={itinerary} />
+              <ItineraryDetails itinerary={itinerary} userRole={userRole} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -102,7 +102,7 @@ const ItineraryDetailsPage = () => {
           <>
             <Header1 />
             <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  userRole={userRole}/>
-            <ItineraryDetails itinerary={itinerary} />
+            <ItineraryDetails itinerary={itinerary} userRole={userRole}/>
             <FooterThree />
           </>
         )}
@@ -111,7 +111,7 @@ const ItineraryDetailsPage = () => {
           <>
             <TourGuideHeader />
             <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  userRole={userRole}/>
-            <ItineraryDetails itinerary={itinerary} />
+            <ItineraryDetails itinerary={itinerary} userRole={userRole} />
             <FooterThree />
           </>
         )}

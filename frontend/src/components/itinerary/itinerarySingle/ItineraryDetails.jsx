@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 import  { useState } from "react";
 import ItineraryMainInformation from "./ItineraryMainInformation";
-import OthersInformation from "@activity/activitySingle/OthersInformation";
-import Overview from "@activity/activitySingle/OthersInformation";
+import OthersInformation from "@/components/activity/activitySingle/OthersInformation";
+import Overview from "@/components/activity/activitySingle/Overview";
 import LocationMap from "../../common/MapComponent";
-import TourSingleSidebar from "@activity/activitySingle/OthersInformation";
-import Gallery1 from "@activity/activitySingle/OthersInformation";
+import TourSingleSidebar from "@/components/activity/activitySingle/TourSingleSidebar";
+import Gallery1 from "@/components/activity/activitySingle/Gallery1";
 import Rating from "./Rating";
 import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
@@ -13,7 +13,7 @@ import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";
 import Index from './Index'
 
-export default function ItineraryDetails({ itinerary }) {
+export default function ItineraryDetails({ itinerary, userRole }) {
   const location = useLocation();
   const { page } = location.state || {};
   const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
@@ -36,7 +36,7 @@ export default function ItineraryDetails({ itinerary }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)} isItinerary={"diana"} />
+                <OthersInformation duration={itinerary.endDate-itinerary.startDate} language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)} isItinerary={"diana"} />
               </div>
 
               <Overview itineraryDescription={itinerary.description} serviceFee={itinerary.serviceFee} accessibility={itinerary.accessibility} />
@@ -50,8 +50,7 @@ export default function ItineraryDetails({ itinerary }) {
               <div className="mapTourSingle">
                 <LocationMap
                   markerPosition={markerPosition}
-                  setMarkerPosition={setMarkerPosition}
-                  setSelectedLocation={setSelectedLocation}
+                 
                 />
               </div>
 

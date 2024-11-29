@@ -6,7 +6,7 @@ import Header from "@/components/dasboard/Header";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 import PageHeader from "@/components/layout/header/ItinerariesHeader";
 import  { useEffect, useState, useRef } from "react";
-import ActivitiesList from  "@/components/activity/UpcomingActivities"
+import ItinerariesList from "@/components/itinerary/UpcomingItinerariesList";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
@@ -59,7 +59,7 @@ export default function Activities() {
           <>
             <GuestHeader />
             <PageHeader onSearch={handleSearch} title="Explore all upcoming itineraries" userRole={userRole}/>
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
         )}
@@ -74,7 +74,7 @@ export default function Activities() {
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
               <PageHeader onSearch={handleSearch} title="View all itineraries" userRole={userRole} />
-              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+              <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -85,7 +85,7 @@ export default function Activities() {
           <>
             <Header1 />
             <PageHeader onSearch={handleSearch} title="Explore all upcoming itineraries" userRole={userRole}/>
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
         )}
@@ -93,7 +93,7 @@ export default function Activities() {
           <>
             <TourGuideHeader />
             <PageHeader onSearch={handleSearch} title="View all itineraries" userRole={userRole}/>
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
         )}

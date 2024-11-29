@@ -1,4 +1,4 @@
-import { overallRatingData } from "../../data/tourSingleContent";
+import { overallRatingData } from "../../../data/tourSingleContent";
 
 export default function Rating() {
   return (

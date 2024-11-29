@@ -4,7 +4,7 @@ import { axios } from "./axios";
 export async function viewUpcomingItineraries() {
   try {
     const response = await axios.get("/itinerary/upcoming/view");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Can't fetch itineraries", error);
     throw error;
@@ -109,7 +109,7 @@ export const toggleItineraryStatus = async (id) => {
 export const getItineraryById = async (id) => {
   try {
     const response = await axios.get(`/itinerary/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error(`Error fetching itinerary with id ${id}`, error);
     throw error;
