@@ -6,7 +6,7 @@ const Request = require('../models/Request.js');
 const hotelBookings = require("../models/BookingHotel.js");
 const activityModel= require("../models/Activity.js");
 const itineraryModel= require("../models/Itinerary.js");
-
+const productModel= require("../models/Product.js");
 
 const createTourist = async (req, res) => {
   try {
@@ -436,7 +436,6 @@ const getBookmarkedEvents = async (req, res) => {
   }
 };
 
-
 // const removeBookmarkEvent = async (req, res) => {
 //   const touristId = req.userId;
 //   const { eventId, eventType } = req.body;
@@ -474,7 +473,57 @@ const getBookmarkedEvents = async (req, res) => {
 //   }
 // };
 
+const saveProduct = async (req, res) => {
+  const touristId = req.userId;
+  const { productId } = req.body; 
 
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    let product = await productModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (!tourist.wishlist.includes(product)) {   
+      tourist.wishlist.push(product);
+      await tourist.save();
+    }
+
+    res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const getWishList = async (req, res) => {
+  const touristId = req.userId; 
+
+  try {
+    const tourist = await touristModel.findById(touristId)
+      .populate("wishlist")
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    const wishlist = [
+      ...tourist.wishlist.map(product => ({
+        ...product.toObject(),
+      })),
+    ];
+
+    res.json(wishlist);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 module.exports = {
   createTourist,
@@ -491,4 +540,6 @@ module.exports = {
   checkUserExists,
   bookmarkEvent,
   getBookmarkedEvents,
+  saveProduct,
+  getWishList
 };

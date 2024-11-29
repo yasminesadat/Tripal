@@ -17,6 +17,8 @@ const {
   checkUserExists,
   bookmarkEvent,
   getBookmarkedEvents,
+  saveProduct,
+  getWishList
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -102,5 +104,18 @@ router.get(
   getBookmarkedEvents
 );
 
+router.post(
+  "/tourist/save-product",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  saveProduct
+);
+
+router.get(
+  "/tourist/wishlist",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getWishList
+);
 
 module.exports = router;

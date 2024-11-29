@@ -118,10 +118,6 @@ export default function TouristHeader() {
                 onCurrencyChange={handleCurrencyChange}
               />
             </div>
-            <Link to="/tourist/booking-history" className="ml-20">
-              {/*/includes itineraries, activities, flights,and hotels - both history and upcoming bookings*/}
-              My Bookings
-            </Link>
             <Link to="/" className="ml-20">
               {/*/help-center*/}
               Help
