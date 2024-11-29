@@ -55,13 +55,13 @@ export default function ActivityMainInformation({ activity, role }) {
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-            <div className="col-auto">
-              <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
+          <div className="col-auto">
+              <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
             </div>
             <div className="col-auto">
-              <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
+              <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Free cancellation
               </button>
             </div>
@@ -166,7 +166,18 @@ export default function ActivityMainInformation({ activity, role }) {
             outline: none;
             box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.5);
           }
-        `}
+          .button-custom {
+            background-color: var(--color-stone-light);
+            color: white; 
+            border: 1px solid var(--color-stone-light);
+            transition: background-color 0.3s, color 0.3s;
+          }
+
+          .button-custom:hover {
+            background-color: var(--color-stone);
+            border: 1px solid var(--color-stone);
+            color: white;`
+        }
       </style>
     </>
   );
