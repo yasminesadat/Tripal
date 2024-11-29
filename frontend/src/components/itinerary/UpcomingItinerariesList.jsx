@@ -77,11 +77,9 @@ export default function ItinerariesList({
     const fetchItineraries = async () => {
       setLoading(true);
       try {
-        console.log(userRole)
         let response;
         if (userRole === "Tourist" || userRole === "Guest") {
           response = await viewUpcomingItineraries();
-          console.log(response)
         } else if (userRole === "Admin") {
           response = await getAdminItineraries();
         }
@@ -203,10 +201,6 @@ export default function ItinerariesList({
     indexOfFirstItinerary,
     indexOfLastItinerary
   );
-  console.log("Current Page:", currentPage);
-console.log("Total Items:", filteredItineraries.length);
-console.log("Items Per Page:", itinerariesPerPage);
-
 
   const navigate = useNavigate();
   const handleRedirect = (itineraryId) => {
