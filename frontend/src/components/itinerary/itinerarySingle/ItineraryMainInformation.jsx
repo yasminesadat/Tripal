@@ -1,10 +1,10 @@
 import Spinner from "@/components/common/Spinner";
 import Stars from "../../common/Stars";
 import { message } from "antd";
-import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck } from 'lucide-react';
+import { Flag, Pencil, CircleX, ShieldMinus, ShieldCheck } from 'lucide-react';
 import { flagItinerary } from "@/api/AdminService";
-import { deleteItinerary, getItinerariesByTourGuide, toggleItineraryStatus,updateItinerary } from "@/api/ItineraryService";
-import  { useState, useEffect } from "react";
+import { deleteItinerary, getItinerariesByTourGuide, toggleItineraryStatus, updateItinerary } from "@/api/ItineraryService";
+import { useState, useEffect } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import UpdateItineraryModal from "../UpdateItineraryForm";
@@ -41,32 +41,32 @@ const handleFlag = (id) => {
 export default function ItineraryMainInformation({
   itinerary: initialItinerary,
   userRole,
-   }) {
+}) {
 
-    //#region 1. Variables
-    const [itinerary, setItinerary] = useState(initialItinerary);
-    const [loading, setLoading] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [itineraryToDelete, setItineraryToDelete] = useState(null);
-    const [itineraries, setItineraries] = useState([]);
-    const [modalVisible2, setModalVisible2] = useState(false);
-    const [itineraryToEdit, setItineraryToEdit] = useState(null);
-    const navigate = useNavigate();
-    //#endregion
+  //#region 1. Variables
+  const [itinerary, setItinerary] = useState(initialItinerary);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [itineraryToDelete, setItineraryToDelete] = useState(null);
+  const [itineraries, setItineraries] = useState([]);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [itineraryToEdit, setItineraryToEdit] = useState(null);
+  const navigate = useNavigate();
+  //#endregion
 
-    //#region 2. event handlers
+  //#region 2. event handlers
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
     setLoading(true);
     try {
-        await toggleItineraryStatus(itineraryId);
-        setItinerary((prevItinerary) => ({
-          ...prevItinerary,
-          isActive: updatedStatus,
-        }));
-        message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+      await toggleItineraryStatus(itineraryId);
+      setItinerary((prevItinerary) => ({
+        ...prevItinerary,
+        isActive: updatedStatus,
+      }));
+      message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
     } catch (error) {
-        message.error(error.response.data.message);
+      message.error(error.response.data.message);
     }
     finally {
       setLoading(false);
@@ -123,10 +123,10 @@ export default function ItineraryMainInformation({
   const handleSaveChanges = async (updatedItinerary) => {
     setModalVisible2(false);
     try {
-      const response = await updateItinerary(itinerary._id,updatedItinerary);
+      const response = await updateItinerary(itinerary._id, updatedItinerary);
       if (response.ok) {
         fetchItineraries();
-      } 
+      }
       message.success("Itinerary updated successfully!");
 
     } catch (error) {
@@ -134,15 +134,15 @@ export default function ItineraryMainInformation({
     }
   };
   //#endregion
-  
-  if (loading || !itinerary) return <div><Spinner/></div>; 
+
+  if (loading || !itinerary) return <div><Spinner /></div>;
 
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-          <div className="col-auto">
+            <div className="col-auto">
               <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
@@ -188,7 +188,7 @@ export default function ItineraryMainInformation({
                 style={{ color: "grey" }}
                 onClick={() =>
                   handleShare(
-                    `${window.location.origin}/itinerary/${itinerary._id}`
+                    `${window.location.origin}/itineraries/${itinerary._id}`
                   )
                 }
               >
@@ -213,23 +213,23 @@ export default function ItineraryMainInformation({
                   onEditItinerary(itinerary._id)
                 }
               >
-                <Pencil size={16} className="mr-10" color='#8f5774'/>
+                <Pencil size={16} className="mr-10" color='#8f5774' />
                 Edit Details
               </button>
-              
+
               <button
                 className="action-button deactivate"
                 style={{ color: "grey" }}
                 onClick={() =>
-                  handleDeactivateItinerary(itinerary._id,itinerary.isActive)
+                  handleDeactivateItinerary(itinerary._id, itinerary.isActive)
                 }
               >
-               {!itinerary.isActive? 
-               <ShieldCheck size={16} className="mr-10" color="#5a9ea0" />:
-                <ShieldMinus size={16} color="#05073c" className="mr-10" />}
-                {itinerary.isActive ? 
-                "Deactivate" :
-                 "Activate"}
+                {!itinerary.isActive ?
+                  <ShieldCheck size={16} className="mr-10" color="#5a9ea0" /> :
+                  <ShieldMinus size={16} color="#05073c" className="mr-10" />}
+                {itinerary.isActive ?
+                  "Deactivate" :
+                  "Activate"}
               </button>
 
               <button
@@ -247,33 +247,33 @@ export default function ItineraryMainInformation({
         )}
 
         <AreYouSure
-        visible={modalVisible}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        message="Are you sure you want to delete this itinerary?"
-      />
-    {itineraryToEdit && (
-        <UpdateItineraryModal
-          visible={modalVisible2}
-          itinerary={itineraryToEdit}
-          onCancel={() => setModalVisible2(false)}
-          onUpdate={handleSaveChanges}
+          visible={modalVisible}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          message="Are you sure you want to delete this itinerary?"
         />
-      )}
+        {itineraryToEdit && (
+          <UpdateItineraryModal
+            visible={modalVisible2}
+            itinerary={itineraryToEdit}
+            onCancel={() => setModalVisible2(false)}
+            onUpdate={handleSaveChanges}
+          />
+        )}
         {userRole === "Admin" && (
           <div className="col-auto">
             <button
               className="flag-button"
               onClick={() => handleFlag(itinerary._id)}
             >
-              <Flag size={16} className="mr-10"/>
+              <Flag size={16} className="mr-10" />
               Flag
             </button>
           </div>
         )}
       </div>
       <style>
-      {`
+        {`
         .action-button {
           display: flex;
           align-items: center;
@@ -342,7 +342,7 @@ export default function ItineraryMainInformation({
           color: white;
         }
       `}
-    </style>
+      </style>
     </>
   );
 }
