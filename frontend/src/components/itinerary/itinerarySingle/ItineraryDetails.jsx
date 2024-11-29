@@ -16,8 +16,13 @@ import Index from './Index'
 export default function ItineraryDetails({ itinerary, userRole }) {
   const location = useLocation();
   const { page } = location.state || {};
-  const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
+  const markerPosition = [itinerary.location?.latitude|| 35.11, itinerary.location?.longitude||35.11];
   const [selectedLocation, setSelectedLocation] = useState("");
+  const startDate = new Date(itinerary.startDate);
+  const endDate = new Date(itinerary.endDate);
+  const durationInMilliseconds = endDate - startDate;
+  const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+
 
   if (!itinerary) return <div><Index/></div>;
   const itineraryId = itinerary._id;
@@ -36,7 +41,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation duration={itinerary.endDate-itinerary.startDate} language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)} isItinerary={"diana"} />
+                <OthersInformation duration={durationInDays} language={itinerary.language} groupSize={itinerary.bookings.reduce((total, booking) => total + booking.tickets, 0)} isItinerary={"diana"} />
               </div>
 
               <Overview itineraryDescription={itinerary.description} serviceFee={itinerary.serviceFee} accessibility={itinerary.accessibility} />
@@ -50,6 +55,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
               <div className="mapTourSingle">
                 <LocationMap
                   markerPosition={markerPosition}
+                  search={"dont search bro"}
                  
                 />
               </div>

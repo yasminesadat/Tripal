@@ -15,7 +15,14 @@ const handleShare = (link) => {
     window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
   }
 };
+const formatDate = (date) => {
+  const d = new Date(date);
+  const day = d.getDate().toString().padStart(2, '0');  
+  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const year = d.getFullYear();
 
+  return `${day}/${month}/${year}`;
+};
 export default function ItineraryMainInformation({ itinerary }) {
   return (
     <>
@@ -60,9 +67,9 @@ export default function ItineraryMainInformation({ itinerary }) {
             </div>
 
             <div className="col-auto">
-              <div className="d-flex items-center">
-                <i className="icon-reservation text-16 mr-5"></i>
-                20K+ booked
+                <div className="d-flex items-center">
+                <i className="icon-calendar mr-10"></i> 
+                {formatDate(itinerary?.startDate)}
               </div>
             </div>
           </div>
