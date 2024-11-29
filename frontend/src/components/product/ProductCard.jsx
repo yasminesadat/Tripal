@@ -35,6 +35,7 @@ const ProductCard = ({
         picture,
         averageRating,
         sales,
+        userRole
       },
     });
   };
@@ -47,6 +48,7 @@ const ProductCard = ({
         initialDescription: description,
         initialQuantity: quantity,
         initialPicture: picture,
+        userId: userId,
       },
     });
   };
