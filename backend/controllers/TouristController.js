@@ -410,7 +410,7 @@ const getBookmarkedEvents = async (req, res) => {
   const touristId = req.userId; // Get the logged-in tourist's ID
 
   try {
-    const tourist = await Tourist.findById(touristId)
+    const tourist = await touristModel.findById(touristId)
       .populate("bookmarkedActivities")
       .populate("bookmarkedItineraries");
 
