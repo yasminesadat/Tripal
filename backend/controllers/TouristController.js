@@ -489,10 +489,12 @@ const saveProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    if (!tourist.wishlist.includes(product)) {   
-      tourist.wishlist.push(product);
-      await tourist.save();
+    if (tourist.wishlist.includes(productId)) {
+      return res.status(400).json({ message: 'You already have this product in your wishlist' });
     }
+
+    tourist.wishlist.push(productId);
+    await tourist.save();
 
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {

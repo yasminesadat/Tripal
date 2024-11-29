@@ -98,12 +98,10 @@ const ProductCard = ({
       message.success("Product added to wishlist!");
       setIsSaved(true); 
     } catch (error) {
-      console.error("Error saving product:", error);
-      message.error("Failed to add product to wishlist");
+      const errorMessage = error?.response?.data?.message || "An unexpected error occurred";      
+      message.error(errorMessage);
     }
   };
-
-  console.log()
 
   return (
     <div className="col-lg-3 col-sm-6">
