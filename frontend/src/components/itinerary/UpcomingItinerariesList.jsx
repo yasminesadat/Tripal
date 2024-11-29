@@ -11,7 +11,6 @@ import { getAdminItineraries} from "@/api/AdminService";
 
 export default function ItinerariesList({
   searchTerm,
-  book,
   onCancel,
   cancel,
   curr = "EGP",
@@ -125,10 +124,10 @@ export default function ItinerariesList({
 
       const isSearchValid =
          itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) 
-         //||
-        // itinerary.tags.some((tag) =>
-        //   tag.name.toLowerCase().includes(searchTerm.toLowerCase())
-        // );
+         ||
+        itinerary.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
       return (
         isDateValid &&
@@ -359,11 +358,6 @@ export default function ItinerariesList({
                     </div>
 
                     <div className="tourCard__content">
-                      <div className="tourCard__location">
-                        <i className="icon-pin"></i>
-                        {/* {elm.location} */}
-                      </div>
-
                       <h3 className="tourCard__title mt-5">
                         <span>{elm.title}</span>
                       </h3>
@@ -384,15 +378,15 @@ export default function ItinerariesList({
                       <p className="tourCard__text mt-5">
                         {truncateText(elm.description, 50)}
                       </p>
-
+                     { console.log(elm.tags)}
                       <div className="row x-gap-20 y-gap-5 pt-30">
-                        {/* {elm.tags?.map((elm2, i2) => (
+                        {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
                             <div className="text-14 text-accent-1">
-                              {elm2.name}
+                              {elm2}
                             </div>
                           </div>
-                        ))} */}
+                        ))}
                       </div>
                     </div>
 
