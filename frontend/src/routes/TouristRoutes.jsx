@@ -41,7 +41,6 @@ const touristRoutes = [
   { path: "/tourist/book-flight", element: <FlightSearch /> },
   { path: "/tourist/search-flights", element: <FlightsList /> },
   { path: "/upcoming-activities", element: <Activities /> },
-  // { path: "/activities-history", element: <ActivitiesHistoryPage /> },
   { path: "/tourist/profile", element: <TouristProfile /> },
   { path: "/cart", element: <Cart /> },
   { path: "/wishlist", element: <WishList /> },
@@ -50,7 +49,6 @@ const touristRoutes = [
   { path: "/upcoming-itineraries",element: <Itineraries />},
   { path: "/bookmarked-events",element: <BookmarkedEvents />},
   // { path: "/historical-places", element: <HistoricalPlaces /> },
-  // { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
   // {
   //   path: "/tourist/select-preferences/:touristId",

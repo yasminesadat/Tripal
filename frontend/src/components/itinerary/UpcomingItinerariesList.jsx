@@ -7,7 +7,7 @@ import {message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
- 
+
 export default function ItinerariesList({
   searchTerm,
   onCancel,
