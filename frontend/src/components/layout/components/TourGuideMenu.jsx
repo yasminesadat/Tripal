@@ -10,7 +10,7 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/destinations">My Itineraries</Link>
+            <Link to="/my-itineraries">My Itineraries</Link>
           </div>
 
           <div className="desktopNav__item">

@@ -92,7 +92,7 @@ export default function Activities() {
         {userRole === "Tour Guide" && (
           <>
             <TourGuideHeader />
-            <PageHeader onSearch={handleSearch} title="View all itineraries" userRole={userRole}/>
+            <PageHeader onSearch={handleSearch} title="Manage My Itineraries" userRole={userRole}/>
             <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>
