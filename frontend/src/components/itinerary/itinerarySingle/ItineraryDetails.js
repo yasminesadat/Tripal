@@ -1,24 +1,25 @@
 import { useLocation } from "react-router-dom";
-import React, { useState } from "react";
+import  { useState } from "react";
 import ItineraryMainInformation from "./ItineraryMainInformation";
-import OthersInformation from "../../templateComponents/OthersInformation";
-import Overview from "../../templateComponents/Overview";
+import OthersInformation from "@activity/activitySingle/OthersInformation";
+import Overview from "@activity/activitySingle/OthersInformation";
 import LocationMap from "../../common/MapComponent";
-import TourSingleSidebar from "../../templateComponents/TourSingleSidebar";
-import Gallery1 from "../../templateComponents/Gallery1";
-import DateCalender from "../../templateComponents/DateCalender";
-import Rating from "../../templateComponents/Rating";
+import TourSingleSidebar from "@activity/activitySingle/OthersInformation";
+import Gallery1 from "@activity/activitySingle/OthersInformation";
+import Rating from "./Rating";
 import ReviewBox from "../../common/reviewBox";
 import ItineraryReviews from "./ItineraryReviews";
-import Roadmap2 from "../../templateComponents/Roadmap2";
+import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";
+import Index from './Index'
+
 export default function ItineraryDetails({ itinerary }) {
   const location = useLocation();
   const { page } = location.state || {};
   const [markerPosition, setMarkerPosition] = useState([38.8951, -77.0364]);
   const [selectedLocation, setSelectedLocation] = useState("");
 
-  if (!itinerary) return <div>Itinerary not found.</div>;
+  if (!itinerary) return <div><Index/></div>;
   const itineraryId = itinerary._id;
 
   return (
