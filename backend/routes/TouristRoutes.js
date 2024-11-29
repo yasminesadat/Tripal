@@ -15,6 +15,8 @@ const {
   getTouristPreferences,
   getTouristCategories,
   checkUserExists,
+  bookmarkEvent,
+  getBookmarkedEvents,
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -85,5 +87,20 @@ router.get(
   verifyToken,
   checkUserExists
 );
+
+router.post(
+  "/tourist/bookmark",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  bookmarkEvent
+);
+
+router.get(
+  "/tourist/bookmarks",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getBookmarkedEvents
+);
+
 
 module.exports = router;

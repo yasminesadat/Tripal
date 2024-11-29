@@ -406,6 +406,29 @@ const bookmarkEvent = async (req, res) => {
   }
 };
 
+const getBookmarkedEvents = async (req, res) => {
+  const touristId = req.userId; // Get the logged-in tourist's ID
+
+  try {
+    const tourist = await Tourist.findById(touristId)
+      .populate("bookmarkedActivities")
+      .populate("bookmarkedItineraries");
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    res.json({
+      bookmarkedActivities: tourist.bookmarkedActivities,
+      bookmarkedItineraries: tourist.bookmarkedItineraries,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 // const removeBookmarkEvent = async (req, res) => {
 //   const touristId = req.userId;
 //   const { eventId, eventType } = req.body;
@@ -458,5 +481,6 @@ module.exports = {
   getTouristPreferences,
   getTouristCategories,
   checkUserExists,
-  bookmarkEvent
+  bookmarkEvent,
+  getBookmarkedEvents,
 };

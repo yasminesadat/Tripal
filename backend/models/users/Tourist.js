@@ -94,8 +94,8 @@ const touristSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Product",
   }],
-  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
-  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary" }],
+  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: []}],
+  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: []}],
 
 }, { timestamps: true });
 
