@@ -3,6 +3,8 @@ import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck } from 'lucide-react';
 import { flagItinerary } from "@/api/AdminService";
+import { deleteItinerary, toggleItineraryStatus } from "@/api/ItineraryService";
+import  { useState, useEffect } from "react";
 
 const handleShare = (link) => {
   if (navigator.share) {
@@ -31,16 +33,37 @@ const handleFlag = (id) => {
   console.log(`Flagging itinerary with ID: ${id}`);
 };
 
+const handleDeleteItinerary = (id) => {
+  console.log(`Deleting itinerary with ID: ${id}`);
+};
 
 export default function ItineraryMainInformation({
-  itinerary,
+  itinerary: initialItinerary,
   userRole,
-  onDeactivateItinerary,
-  onDeleteItinerary,
   onEditItinerary,
    }) {
+    const [itinerary, setItinerary] = useState(initialItinerary);
+    const [loading, setLoading] = useState(false);
 
-  if (!itinerary) return <div><Spinner/></div>;
+  const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
+    const updatedStatus = !currentStatus;
+    setLoading(true);
+    try {
+        await toggleItineraryStatus(itineraryId);
+        setItinerary((prevItinerary) => ({
+          ...prevItinerary,
+          isActive: updatedStatus,
+        }));
+        message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+    } catch (error) {
+        message.error(error.response.data.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || !itinerary) return <div><Spinner/></div>; 
 
   return (
     <>
@@ -121,21 +144,27 @@ export default function ItineraryMainInformation({
                 <Pencil size={16} className="mr-10" />
                 Edit Details
               </button>
+              
               <button
                 className="action-button deactivate"
                 style={{ color: "grey" }}
                 onClick={() =>
-                  onDeactivateItinerary(itinerary._id)
+                  handleDeactivateItinerary(itinerary._id,itinerary.isActive)
                 }
               >
-                <ShieldMinus size={16} className="mr-10" />
-                Deactivate
+               {!itinerary.isActive? 
+               <ShieldCheck size={16} className="mr-10" color="green" />:
+                <ShieldMinus size={16} color="blue" className="mr-10" />}
+                {itinerary.isActive ? 
+                "Deactivate" :
+                 "Activate"}
               </button>
+
               <button
                 className="action-button delete"
                 style={{ color: "red" }}
                 onClick={() =>
-                  onDeleteItinerary(itinerary._id)
+                  handleDeleteItinerary(itinerary._id)
                 }
               >
                 <CircleX size={16} className="mr-10" />
