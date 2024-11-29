@@ -42,7 +42,9 @@ const itinerarySchema = new mongoose.Schema({
     ],
     flagged: {type: Boolean, default: false},
     isActive: {type: Boolean, default: true},
+    bookmarked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }],
     }, 
+    
     {timestamps: true}
 );
 
