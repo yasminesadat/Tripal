@@ -86,11 +86,7 @@ export default function ActivitiesList({
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
-          console.log(userRole)
         }
-        // else {
-        //   response = await getAllActivities();
-        // }
         const activitiesData = Array.isArray(response?.data)
           ? response?.data
           : [];

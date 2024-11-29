@@ -225,8 +225,7 @@ const getTouristItineraries = async (req, res) => {
         .select("-bookings"); //exclude bookings from response
 
         if (!itineraries.length)
-            return res.status(404).json({ message: "No itineraries found for this tourist." });
-        
+            return res.status(200).json({ message: "No itineraries found for this tourist." });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });

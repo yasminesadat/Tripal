@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Rate } from "antd"; 
 import { addRating } from "../../api/RatingService"; 
 // import "../style.css";
