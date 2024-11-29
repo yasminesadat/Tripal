@@ -23,7 +23,7 @@ const RoutesComponent = () => (
         element={
           <RoleProtectedRoute
             element={route.element}
-            requiredRoles={["Tourist", "Advertiser", "Admin"]}
+            requiredRoles={["Tourist", "Advertiser", "Admin", "Tour Guide"]}
           />
         }
       />

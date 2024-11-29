@@ -1,19 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { speedFeatures } from "./tourFilteringOptions";
 import Stars from "../common/Stars";
 import Pagination from "./Pagination";
-import { Link } from "react-router-dom";
 import { Tag, message } from "antd";
-// import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 import { getUserData } from "@/api/UserService";
 import {
   viewUpcomingActivities,
   getAllActivities,
 } from "@/api/ActivityService";
-import { getAdminActivities, flagActivity } from "@/api/AdminService";
+import { getAdminActivities} from "@/api/AdminService";
 
 export default function ActivitiesList({
   searchTerm,
@@ -22,15 +19,14 @@ export default function ActivitiesList({
   cancel,
   curr = "EGP",
   page,
-  onAdminFlag,
 }) {
+  //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
 
   const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
 
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState(activities);
@@ -55,6 +51,7 @@ export default function ActivitiesList({
   ];
 
   const errorDisplayed = useRef(false);
+  //#endregion
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -227,7 +224,7 @@ export default function ActivitiesList({
 
   const navigate = useNavigate();
   const handleRedirect = (activityId) => {
-    if (userRole === "Tourist")
+    if (userRole === "Tourist"|| userRole === "Admin")
       navigate(`/activity/${activityId}`, { state: { page } });
     else navigate(`/activities/${activityId}`, { state: { page } });
   };

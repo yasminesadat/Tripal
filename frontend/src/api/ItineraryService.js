@@ -105,3 +105,13 @@ export const toggleItineraryStatus = async (id) => {
     throw error;
   }
 };
+
+export const getItineraryById = async (id) => {
+  try {
+    const response = await axios.get(`/itinerary/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching itinerary with id ${id}`, error);
+    throw error;
+  }
+};

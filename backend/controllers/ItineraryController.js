@@ -262,7 +262,6 @@ const getAllItinerariesForAdmin = async (req, res) => {
             //     populate: [{path: 'tags'},{path: 'category', }]
             // })
             // .populate("tags");
-            console.log("backend"+itineraries)
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -285,6 +284,24 @@ const toggleItineraryStatus = async (req, res) => {
     }
 };
 
+const getItineraryById = async (req, res) => {
+    try {
+        const itinerary = await itineraryModel.findById(req.params.id)
+            .populate({
+            path: 'activities',
+            populate: [{path: 'tags'},{path: 'category', }]
+            })
+            .populate("tags");
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        res.status(200).json(itinerary);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createItinerary,
     getItinerariesForTourguide,
@@ -295,5 +312,6 @@ module.exports = {
     getTouristItineraries,
     adminFlagItinerary,
     getAllItinerariesForAdmin,
-    toggleItineraryStatus
+    toggleItineraryStatus,
+    getItineraryById
 };

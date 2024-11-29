@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 
 // The search component now accepts an `onSearch` prop to send data back to the parent
 export default function HeaderSearch({ white, onSearch }) {
