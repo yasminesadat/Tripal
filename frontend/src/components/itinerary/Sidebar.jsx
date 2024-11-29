@@ -10,7 +10,7 @@ import {
 import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, priceRange, setPriceRange }) {
+export default function Sidebar({ userRole,setStartDate, setEndDate, setRatingFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);
@@ -44,7 +44,8 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, pri
   return (
     <div className="sidebar -type-1 rounded-12">
       <div className="sidebar__header bg-accent-1">
-        <div className="text-15 text-white fw-500">When are you free?</div>
+        {userRole!=='Tour Guide' &&<div className="text-15 text-white fw-500">When are you free?</div>}
+        {userRole==='Tour Guide' &&<div className="text-15 text-white fw-450">Pick a Start date and an End date.</div>}
 
         <div className="mt-10">
           <div className="searchForm -type-1 -col-1 -narrow">

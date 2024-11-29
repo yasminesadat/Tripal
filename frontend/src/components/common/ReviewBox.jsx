@@ -79,7 +79,7 @@ export default function ReviewBox({ id, type }) {
                 <div className="row">
                     <div className="col-12">
                         <button
-                            className="button -md -dark-1 bg-blue-500 text-white"
+                          className="button -md -dark-1 bg-accent-1 text-white"
                             onClick={handlePostReview}
                             disabled={loading}
                         >
