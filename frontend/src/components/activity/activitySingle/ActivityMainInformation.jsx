@@ -2,7 +2,7 @@ import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag } from 'lucide-react';
 import { flagActivity } from "@/api/AdminService";
-import {bookmarkEvent} from "@/api/TouristService";
+import { bookmarkEvent } from "@/api/TouristService";
 
 //const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -10,7 +10,7 @@ const handleShare = (link) => {
   if (navigator.share) {
     navigator
       .share({
-        title: "Check out this itinerary!",
+        title: "Check out this activity!",
         url: link,
       })
       .catch((error) => {
@@ -34,7 +34,7 @@ const handleFlag = async (activityId) => {
   try {
     await flagActivity(activityId);
     message.success("Activity has been flagged successfully");
-    
+
   } catch (error) {
     message.error("Failed to flag activity");
   }
@@ -42,8 +42,8 @@ const handleFlag = async (activityId) => {
 
 const formatDate = (date) => {
   const d = new Date(date);
-  const day = d.getDate().toString().padStart(2, '0');  
-  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
   const year = d.getFullYear();
 
   return `${day}/${month}/${year}`;
@@ -55,7 +55,7 @@ export default function ActivityMainInformation({ activity, role }) {
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-          <div className="col-auto">
+            <div className="col-auto">
               <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
@@ -94,14 +94,14 @@ export default function ActivityMainInformation({ activity, role }) {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <i className="icon-calendar mr-10"></i> 
+                <i className="icon-calendar mr-10"></i>
                 {formatDate(activity?.date)}
               </div>
             </div>
           </div>
         </div>
 
-        {role ==='Tourist' ? (<div className="col-auto">
+        {role === 'Tourist' ? (<div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
             <a
               className="d-flex items-center"
@@ -128,14 +128,14 @@ export default function ActivityMainInformation({ activity, role }) {
               Add to Wishlist
             </div>
           </div>
-        </div>):role === 'Admin' ? (
-      <div className="col-auto">
-        <button className="flag-button" onClick={() => handleFlag(activity._id)}>
-          <Flag size={16} />
-          Flag
-        </button>
-      </div>
-    ) : null}
+        </div>) : role === 'Admin' ? (
+          <div className="col-auto">
+            <button className="flag-button" onClick={() => handleFlag(activity._id)}>
+              <Flag size={16} />
+              Flag
+            </button>
+          </div>
+        ) : null}
 
       </div>
       <style>
