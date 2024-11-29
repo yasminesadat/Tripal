@@ -10,7 +10,7 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
 
   const handlePageClick = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-      onPageChange(pageNumber); 
+      onPageChange(pageNumber);
     }
   };
 
@@ -31,57 +31,66 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
     pageNumbers.push(i);
   }
 
+  const displayPageNumbers = () => {
+    if (totalPages <= 5) {
+      return pageNumbers;
+    }
+    const visiblePages = [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
+    return visiblePages.filter(page => page > 0 && page <= totalPages);
+  };
+
   return (
     <div>
-        <div className="pagination justify-center">
+      <div className="pagination justify-center">
         <button
-            onClick={handlePrevClick}  
-            className="pagination__button customStylePaginationPre button -accent-1 mr-15 -prev"
+          onClick={handlePrevClick}
+          className="pagination__button customStylePaginationPre button -accent-1 mr-15 -prev"
         >
-            <i className="icon-arrow-left text-15"></i>
+          <i className="icon-arrow-left text-15"></i>
         </button>
 
         <div className="pagination__count">
-            {pageNumbers.map((pageNumber) => (
+          {displayPageNumbers().map((pageNumber) => (
             <div
-                key={pageNumber}
-                style={{ cursor: "pointer" }}
-                onClick={() => handlePageClick(pageNumber)} 
-                className={activeIndex === pageNumber ? `is-active` : ""}
+              key={pageNumber}
+              style={{ cursor: "pointer" }}
+              onClick={() => handlePageClick(pageNumber)}
+              className={activeIndex === pageNumber ? `is-active` : ""}
             >
-                {pageNumber}
+              {pageNumber}
             </div>
-            ))}
+          ))}
 
-            {totalPages > 5 && <div>...</div>}
+          {totalPages > 5 && !displayPageNumbers().includes(5) && <div>...</div>}
 
-            {totalPages > 4 && (
+          {totalPages > 5 && !displayPageNumbers().includes(totalPages) && (
             <div
-                style={{ cursor: "pointer" }}
-                onClick={() => handlePageClick(totalPages)}  
-                className={activeIndex === totalPages ? `is-active` : ""}
+              style={{ cursor: "pointer" }}
+              onClick={() => handlePageClick(totalPages)}
+              className={activeIndex === totalPages ? `is-active` : ""}
             >
-                {totalPages}
+              {totalPages}
             </div>
-            )}
+          )}
         </div>
 
         <button
-            onClick={handleNextClick}  
-            className="pagination__button customStylePaginationNext button -accent-1 ml-15 -next"
+          onClick={handleNextClick}
+          className="pagination__button customStylePaginationNext button -accent-1 ml-15 -next"
         >
-            <i className="icon-arrow-right text-15"></i>
+          <i className="icon-arrow-right text-15"></i>
         </button>
-        </div>
-        <div className="text-14 text-center mt-20">
+      </div>
+
+      <div className="text-14 text-center mt-20">
         Showing results{" "}
         {currentPage === totalPages
-        ? `${(currentPage - 1) * itemsPerPage + 1}-${totalItems}`
-        : `${(currentPage - 1) * itemsPerPage + 1}-${
-            currentPage * itemsPerPage
+          ? `${(currentPage - 1) * itemsPerPage + 1}-${totalItems}`
+          : `${(currentPage - 1) * itemsPerPage + 1}-${
+              currentPage * itemsPerPage
             }`}{" "}
         of {totalItems}
+      </div>
     </div>
-  </div>
   );
 }

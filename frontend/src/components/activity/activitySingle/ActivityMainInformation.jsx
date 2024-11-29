@@ -1,6 +1,7 @@
-import React from "react";
 import Stars from "../../common/Stars";
 import { message } from "antd";
+import { Flag } from 'lucide-react';
+import { flagActivity } from "@/api/AdminService";
 
 const handleShare = (link) => {
   if (navigator.share) {
@@ -17,7 +18,26 @@ const handleShare = (link) => {
   }
 };
 
-export default function ActivityMainInformation({ activity }) {
+const handleFlag = async (activityId) => {
+  try {
+    await flagActivity(activityId);
+    message.success("Activity has been flagged successfully");
+    
+  } catch (error) {
+    message.error("Failed to flag activity");
+  }
+};
+
+const formatDate = (date) => {
+  const d = new Date(date);
+  const day = d.getDate().toString().padStart(2, '0');  
+  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const year = d.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+export default function ActivityMainInformation({ activity, role }) {
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
@@ -62,14 +82,14 @@ export default function ActivityMainInformation({ activity }) {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <i className="icon-reservation text-16 mr-5"></i>
-                30K+ booked
+                <i className="icon-calendar mr-10"></i> 
+                {formatDate(activity?.date)}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="col-auto">
+        {role ==='Tourist' ? (<div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
             <a
               className="d-flex items-center"
@@ -93,8 +113,46 @@ export default function ActivityMainInformation({ activity }) {
               Wishlist
             </a>
           </div>
-        </div>
+        </div>):role === 'Admin' ? (
+      <div className="col-auto">
+        <button className="flag-button" onClick={() => handleFlag(activity._id)}>
+          <Flag size={16} />
+          Flag
+        </button>
       </div>
+    ) : null}
+
+      </div>
+      <style>
+        {`
+          .flag-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
+
+          .flag-button:hover {
+            background-color: #d9363e;
+          }
+
+          .flag-icon {
+            margin-right: 8px;
+          }
+
+          .flag-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.5);
+          }
+        `}
+      </style>
     </>
   );
 }

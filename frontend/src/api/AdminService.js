@@ -91,7 +91,7 @@ export const getAdminItineraries = async () => {
 export const getAdminActivities = async () => {
   try {
     const response = await axios.get("/admin/activities");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Can't fetch activities", error);
     throw error;
@@ -100,7 +100,7 @@ export const getAdminActivities = async () => {
 
 export const flagActivity = async (activityId) => {
   try {
-    const response = await axios.put(`/admin/flag-activity/${activityId}`);
+    const response = await axios.patch(`/admin/flag-activity/${activityId}`);
     return response.data;
   } catch (error) {
     console.error(`Error flagging activity with id ${activityId}`, error);

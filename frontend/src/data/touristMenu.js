@@ -1,5 +1,5 @@
 export const hotelsandflights = [
-  { id: 61, title: "Book Hotel", href: "/profile" },
+  { id: 61, title: "Book Hotel", href: "/hotel2" },
   { id: 62, title: "Book Flight", href: "/tourist/book-flight" },
 ];
 

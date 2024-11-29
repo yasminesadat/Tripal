@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Calendar from "./Calendar.jsx";
 
 import ActivityCategoryService from '@/api/ActivityCategoryService'

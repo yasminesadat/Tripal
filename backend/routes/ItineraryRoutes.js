@@ -4,7 +4,6 @@ const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
 const Itinerary = require("../models/Itinerary");
 const ItineraryRating = require("../models/ItineraryRating");
-
 const {
   createItinerary,
   getItinerariesForTourguide,
@@ -15,9 +14,12 @@ const {
   getTouristItineraries,
   toggleItineraryStatus,
   getAllItinerariesForAdmin,
+  getItineraryById,
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
+
+router.get("/itinerary/:id", getItineraryById);
 
 router.post(
   "/create-itinerary",
@@ -78,13 +80,7 @@ router.get(
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
 
-router.get(
-  "/itinerary",
-  verifyToken,
-  authorizeRoles("Admin"),
-  getAllItinerariesForAdmin,
-);
-
+router.get("/itinerary",verifyToken,authorizeRoles("Admin"),getAllItinerariesForAdmin,);
 
 router.patch(
   "/itinerary/:id/status",

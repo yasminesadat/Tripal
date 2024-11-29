@@ -6,12 +6,14 @@ import { checkTouristExists } from "../../api/TouristService";
 import { message, Dropdown, Menu } from "antd";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
+import Sidebar from "@/components/dasboard/Sidebar";
+import Header from "@/components/dasboard/Header";
 import Spinner from "@/components/common/Spinner";
 const ComplaintsPage = () => {
-    const tabs = ["all", "pending", "resolved"];
+    const tabs = ["All", "Pending", "Resolved"];
     const navigate = useNavigate();
     // const [sideBarOpen, setSideBarOpen] = useState(true);
-    const [currentTab, setcurrentTab] = useState("all");
+    const [currentTab, setcurrentTab] = useState("All");
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
@@ -21,6 +23,7 @@ const ComplaintsPage = () => {
     const [userData, setUserData] = useState("");
     const [userRole, setUserRole] = useState("");
     const [loading, setLoading] = useState(true); // Track loading state
+    const [sideBarOpen, setSideBarOpen] = useState(true);
 
     useEffect(() => {
         const fetchUserExistence = async () => {
@@ -150,81 +153,99 @@ const ComplaintsPage = () => {
     }
     return (
         <>
-            <div className="complaints">
-                {/* <AdminNavBar /> */}
-                {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
+            <div
+                className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
+            >
+
+                <Sidebar setSideBarOpen={setSideBarOpen} />
                 <div className="dashboard__content">
-                    {/* <Header setSideBarOpen={setSideBarOpen} /> */}
-                    <div className="dashboard__content_content">
-                        <h1 className="text-30">Complaints Management</h1>
-                        <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
-                            <div className="tabs -underline-2 js-tabs">
-                                <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
 
-                                    {tabs.map((tab, i) => (
-                                        <div
-                                            key={i}
-                                            className="col-auto"
-                                            onClick={() => setcurrentTab(tab)}
-                                        >
-                                            <button
-                                                className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${tab === currentTab ? "is-tab-el-active" : ""
-                                                    }`}
-                                            >
-                                                {tab}
-                                            </button>
+                    <Header setSideBarOpen={setSideBarOpen} />
+                    <div className="complaints">
+
+                        {/* <AdminNavBar /> */}
+                        {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
+                        <div >
+                            {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+                            <div className="dashboard__content_content">
+                                <h1 className="text-30">Complaints Management</h1>
+                                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
+                                    <div className="tabs -underline-2 js-tabs">
+                                        <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
+
+                                            {tabs.map((tab, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="col-auto"
+                                                    onClick={() => setcurrentTab(tab)}
+                                                >
+                                                    <button
+                                                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${tab === currentTab ? "is-tab-el-active" : ""
+                                                            }`}
+                                                    >
+                                                        {tab}
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
 
-                                <div className="tabs__content js-tabs-content">
-                                    <div className="tabs__pane -tab-item-1 is-tab-el-active">
-                                        <div className="overflowAuto">
-                                            <table className="tableTest mb-30">
-                                                <thead className="bg-light-1 rounded-12">
-                                                    <tr>
-                                                        <th>Complaint ID</th>
-                                                        <th>Title</th>
-                                                        <th>Status</th>
-                                                        <th>Date     <Dropdown menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
-                                                            <OrderedListOutlined style={{ cursor: 'pointer', fontSize: '24px' }} />
-                                                        </Dropdown></th>
-                                                        <th>Actions</th>
-                                                    </tr>
+                                        <div className="tabs__content js-tabs-content">
+                                            <div className="tabs__pane -tab-item-1 is-tab-el-active">
+                                                <div className="overflowAuto">
+                                                    <table className="tableTest mb-30">
+                                                        <thead className="bg-light-1 rounded-12">
+                                                            <tr>
+                                                                <th>Complaint ID</th>
+                                                                <th>Title</th>
+                                                                <th>Status</th>
+                                                                <th>Date     <Dropdown menu={{ items }} placement="bottom" arrow={{ pointAtCenter: true }}>
+                                                                    <OrderedListOutlined style={{ cursor: 'pointer', fontSize: '24px' }} />
+                                                                </Dropdown></th>
+                                                                <th>Actions</th>
+                                                            </tr>
 
-                                                </thead>
+                                                        </thead>
 
-                                                <tbody>
-                                                    {(isSorted ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date)) : complaints.sort((a, b) => new Date(b.date) - new Date(a.date)))
-                                                        .filter((complaint) => currentTab === "all" || complaint.status === currentTab)
-
-                                                        .map((complaint) => (
-                                                            <React.Fragment key={complaint._id}>
-                                                                <tr>
-                                                                    <td>#{complaint._id.slice(-3)}</td>
-
-                                                                    <td>{complaint.title}</td>
-                                                                    <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
-                                                                        {complaint.status}
-                                                                    </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
-                                                                    <td>
-                                                                        <div style={{ display: 'flex', gap: '5px' }}>
-                                                                            <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
-                                                                                View Details
-                                                                            </button>
-                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
-                                                                                Resolve
-                                                                            </button>
-                                                                        </div>
-                                                                    </td>
-
-                                                                </tr>
+                                                        <tbody>
+                                                            {
+                                                                (isSorted
+                                                                    ? [...complaints].sort((a, b) => new Date(a.date) - new Date(b.date))
+                                                                    : complaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                                                                )
+                                                                    .filter((complaint) =>
+                                                                        currentTab === "All" || complaint.status.toLowerCase() === currentTab.toLowerCase()
+                                                                    )
 
 
-                                                            </React.Fragment>
-                                                        ))}
+                                                                    .map((complaint) => (
+                                                                        <React.Fragment key={complaint._id}>
+                                                                            <tr>
+                                                                                <td>#{complaint._id.slice(-3)}</td>
 
-                                                    {/* <td>
+                                                                                <td>{complaint.title}</td>
+                                                                                <td className={`circle ${complaint.status === 'resolved' ? 'text-green-2' : 'text-red-2'}`}>
+                                                                                    {complaint.status}
+                                                                                </td><td>{(new Date(complaint.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))}</td>
+                                                                                <td>
+                                                                                    <div style={{ display: 'flex', gap: '5px' }}>
+                                                                                        <button className="custom-button" onClick={() => toggleComplaintDetails(complaint._id)}>
+                                                                                            View Details
+                                                                                        </button>
+                                                                                        {complaint.status === "pending" &&
+                                                                                            <button className="custom-button-green" onClick={() => handleStatusChange(complaint._id)}>
+                                                                                                Resolve
+                                                                                            </button>
+                                                                                        }
+                                                                                    </div>
+                                                                                </td>
+
+                                                                            </tr>
+
+
+                                                                        </React.Fragment>
+                                                                    ))}
+
+                                                            {/* <td>
                                 <div className="d-flex items-center">
                                   <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
                                     <i className="icon-pencil text-14"></i>
@@ -236,23 +257,25 @@ const ComplaintsPage = () => {
                                 </div>
                               </td> */}
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
-                                        {/* <Pagination /> */}
+                                                {/* <Pagination /> */}
 
-                                        {/* <div className="text-14 text-center mt-20">
+                                                {/* <div className="text-14 text-center mt-20">
                     Showing results 1-30 of 1,415
                   </div> */}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* <div className="text-center pt-30">
+                                {/* <div className="text-center pt-30">
             © Copyright Viatours {new Date().getFullYear()}
           </div> */}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
