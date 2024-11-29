@@ -25,7 +25,7 @@ export async function viewPaidItineraries() {
 export const getItinerariesByTourGuide = async () => {
   try {
     const response = await axios.get("/my-itineraries");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error fetching itineraries", error);
     throw error;
@@ -35,7 +35,7 @@ export const getItinerariesByTourGuide = async () => {
 export const getAllItineraries = async () => {
   try {
     const response = await axios.get("/itinerary");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error fetching itineraries", error);
     throw error;

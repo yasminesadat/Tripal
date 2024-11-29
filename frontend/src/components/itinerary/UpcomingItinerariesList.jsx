@@ -5,9 +5,9 @@ import Stars from "../common/Stars";
 import Pagination from "@/components/activity/Pagination";
 import {message } from "antd";
 import { getUserData } from "@/api/UserService";
-import { viewUpcomingItineraries } from "@/api/ItineraryService";
+import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
-
+ 
 export default function ItinerariesList({
   searchTerm,
   onCancel,
@@ -82,6 +82,9 @@ export default function ItinerariesList({
         } else if (userRole === "Admin") {
           response = await getAdminItineraries();
         }
+        else if(userRole==='Tour Guide'){
+          response = await getItinerariesByTourGuide();
+        } 
         const itinerariesData = Array.isArray(response?.data)
           ? response?.data
           : [];
@@ -196,7 +199,7 @@ export default function ItinerariesList({
 
   const navigate = useNavigate();
   const handleRedirect = (itineraryId) => {
-    if (userRole === "Tourist"|| userRole === "Admin")
+    if (userRole === "Tourist"|| userRole === "Admin"|| userRole === "Tour Guide")
       navigate(`/itinerary/${itineraryId}`, { state: { page } });
     else navigate(`/itineraries/${itineraryId}`, { state: { page } });
   };
@@ -224,12 +227,13 @@ const currentItineraries = filteredItineraries.slice(
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
-          {userRole !== "Admin" && (
+          {userRole !== "Admin" &&(
             <div className="col-xl-3 col-lg-4">
-              {(userRole === "Tourist" || userRole === "Guest") && (
+              {(userRole === "Tourist" || userRole === "Guest"||userRole==='Tour Guide') && (
                 <>
                   <div className="lg:d-none">
                     <Sidebar
+                    userRole={userRole}
                       setStartDate={setStartDate}
                       setEndDate={setEndDate}
                       setRatingFilter={setRatingFilter}
