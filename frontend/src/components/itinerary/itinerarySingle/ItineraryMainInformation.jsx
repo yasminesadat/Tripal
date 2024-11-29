@@ -8,6 +8,7 @@ import  { useState, useEffect } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 
+//#region 1. methods
 const handleShare = (link) => {
   if (navigator.share) {
     navigator
@@ -34,19 +35,23 @@ const formatDate = (date) => {
 const handleFlag = (id) => {
   console.log(`Flagging itinerary with ID: ${id}`);
 };
-
+//#endregion
 
 export default function ItineraryMainInformation({
   itinerary: initialItinerary,
   userRole,
   onEditItinerary,
    }) {
+
+    //#region 1. Variables
     const [itinerary, setItinerary] = useState(initialItinerary);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [itineraryToDelete, setItineraryToDelete] = useState(null);
     const navigate = useNavigate();
+    //#endregion
 
+    //#region 2. useEffect
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
     setLoading(true);
@@ -92,6 +97,8 @@ export default function ItineraryMainInformation({
   const handleCancelDelete = () => {
     setModalVisible(false);  // Close the modal without deleting
   };
+  //#endregion
+  
   if (loading || !itinerary) return <div><Spinner/></div>; 
 
   return (
@@ -209,7 +216,7 @@ export default function ItineraryMainInformation({
         onCancel={handleCancelDelete}
         message="Are you sure you want to delete this itinerary?"
       />
-
+      
         {userRole === "Admin" && (
           <div className="col-auto">
             <button
@@ -234,75 +241,63 @@ export default function ItineraryMainInformation({
           cursor: pointer;
           transition: background-color 0.3s, color 0.3s;
         }
-
         .action-button.edit {
           color: #007BFF;
           background-color: transparent;
         }
-
         .action-button.edit:hover {
           color: #007BFF;
           background-color: #e7f3ff;
         }
-
         .action-button.deactivate {
           color: #FFC107; /* Yellow/Orange for deactivate */
           background-color: transparent;
         }
-
         .action-button.deactivate:hover {
           background-color: #fff4d1; /* Light yellow on hover */
           color: #FFC107;
         }
-
         .action-button.delete {
           color: red; /* Red for delete */
           background-color: transparent;
         }
-
         .action-button.delete:hover {
           background-color: #ffe6e6;
-
         }
-          .flag-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #ff4d4f;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-          }
-
-          .flag-button:hover {
-            background-color: #d9363e;
-          }
-
-          .flag-icon {
-            margin-right: 8px;
-          }
-
-          .flag-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.5);
-          }
-          .button-custom {
-            background-color: var(--color-stone-light);
-            color: white; 
-            border: 1px solid var(--color-stone-light);
-            transition: background-color 0.3s, color 0.3s;
-          }
-
-          .button-custom:hover {
-            background-color: var(--color-stone);
-            border: 1px solid var(--color-stone);
-            color: white;
-}
-
+        .flag-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #ff4d4f;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          padding: 8px 15px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        .flag-button:hover {
+          background-color: #d9363e;
+        }
+        .flag-icon {
+          margin-right: 8px;
+        }
+        .flag-button:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.5);
+        }
+        .button-custom {
+          background-color: var(--color-stone-light);
+          color: white; 
+          border: 1px solid var(--color-stone-light);
+          transition: background-color 0.3s, color 0.3s;
+        }
+        .button-custom:hover {
+          background-color: var(--color-stone);
+          border: 1px solid var(--color-stone);
+          color: white;
+        }
       `}
     </style>
     </>
