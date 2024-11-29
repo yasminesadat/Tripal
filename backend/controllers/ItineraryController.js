@@ -133,7 +133,7 @@ const updateItinerary = async (req, res) => {
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
-            tourGuide, activities, language,location, startDate,endDate,
+            activities, language,location, startDate,endDate,tourGuide: req.userId,
             accessibility, pickupLocation, dropoffLocation, price, serviceFee,
             timeline, tags: uniqueTags
         }, { new: true });

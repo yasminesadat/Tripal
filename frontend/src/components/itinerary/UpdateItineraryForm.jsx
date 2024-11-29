@@ -1,296 +1,255 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Modal, message, Input, Tag, DatePicker, TimePicker, theme, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { updateItinerary } from '../../api/ItineraryService.js';
-import languages from '../../assets/constants/Languages.js';
-import ActivitySelectionModal from '../activity/ActivitySelectionModal.jsx';
-import MapPopUp from '../common/MapPopUp.js';
+import { Modal, Form, Input, Button, Row, Col, Select, DatePicker, message } from 'antd';
+const { RangePicker } = DatePicker;
+import { useState, useEffect } from 'react';
+import ActivitySelectionModal from './ActivitySelectionModal';
+import languages from '@/assets/constants/Languages';
+import AccessibilityTags from '@/assets/constants/AccessibiltyTags';
+import MapPopUp from '@/components/common/MapPopUp';
 
-const UpdateItineraryForm = ({ itinerary, onUpdate, isVisible, onClose }) => {
-    const { token } = theme.useToken();
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    const [updatedItinerary, setUpdatedItinerary] = useState(itinerary);
-    const [tags, setTags] = useState(['Wheelchair', 'Pet Friendly', 'Family Friendly', 'Senior Friendly', 'Elevator Access', 'Sign Language Interpretation']);
-    const [inputVisible, setInputVisible] = useState(false);
-    const [inputValue, setInputValue] = useState('');
-    const inputRef = useRef(null);
-    const [selectedTags, setSelectedTags] = useState([]);
-    const [availableDates, setAvailableDates] = useState([]);
-    const [availableTime, setAvailableTimes] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
+  const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [pickupLocation, setPickUpLocation] = useState(itinerary.pickupLocation || '');  
+  const [dropoffLocation, setDropOffLocation] = useState(itinerary.dropoffLocation || '');  
+  const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
+  const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
+  const [selectedActivities, setSelectedActivities] = useState(itinerary.activities || []);
+  const [numDays, setNumDays] = useState(itinerary.timeline.length || 1);
 
-    //tetsong maps
-    const [pickupLocation, setPickupLocation] = useState('');
-    const [dropoffLocation, setDropoffLocation] = useState('');
-    const [markerPosition, setMarkerPosition] = useState(null);
-    useEffect(() => {
-        if (itinerary) {
-            setUpdatedItinerary(itinerary);
-            setSelectedTags(itinerary.accessibility || []);
-            setAvailableDates(itinerary.availableDates || []);
-            setAvailableTimes(itinerary.availableTime || []);
-            setPickupLocation(itinerary.pickupLocation || '');
-            setDropoffLocation(itinerary.dropoffLocation || '');
+  const [dateRange, setDateRange] = useState([
+    itinerary.startDate ? new Date(itinerary.startDate) : null,
+    itinerary.endDate ? new Date(itinerary.endDate) : null
+  ]);
+
+  useEffect(() => {
+    // Whenever itinerary changes, update the state with the new start and end dates
+    setDateRange([
+      itinerary.startDate ? new Date(itinerary.startDate) : null,
+      itinerary.endDate ? new Date(itinerary.endDate) : null
+    ]);
+  }, [itinerary]);
+
+  const handleDateChange = (dates) => {
+    if (dates && dates.length === 2) {
+        var startDate = dates[0].startOf("day");
+        if(startDate.isBefore(new Date(), "day")) {
+            message.error("Start date cannot be in the past.");
+            dates = null;
+            startDate = null;
+            return;
         }
-        if (inputVisible) {
-            inputRef.current?.focus();
+        var endDate = dates[1].startOf("day");
+        if(endDate.isBefore(startDate, "day")) {
+            message.error("End date cannot be before start date.");
+            dates = null;
+            endDate = null;
+            return;
         }
-    }, [itinerary, inputVisible]);
-
-    const handleClose = (removedTag) => {
-        const newTags = selectedTags.filter((tag) => tag !== removedTag);
-        setSelectedTags(newTags);
-    };
-
-    const showInput = () => {
-        setInputVisible(true);
-    };
-
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleInputConfirm = () => {
-        const trimmedInputValue = inputValue.trim();
-
-        if (trimmedInputValue && !tags.includes(trimmedInputValue)) {
-            setTags(prevTags => [...prevTags, trimmedInputValue]);
-            setSelectedTags(prevSelectedTags => [...prevSelectedTags, trimmedInputValue]);
+        if(endDate.isBefore(new Date(), "day")) {
+            message.error("End date cannot be in the past.");
+            dates = null;
+            endDate = null;
+            return;
         }
-        setInputVisible(false);
-        setInputValue('');
+        const duration = endDate.diff(startDate, "days") + 1;
+        setNumDays(duration);
+    } else 
+        setNumDays(0);
     };
 
-    const handleTagChange = (tag, checked) => {
-        const nextSelectedTags = checked
-            ? [...selectedTags, tag]
-            : selectedTags.filter(t => t !== tag);
-        setSelectedTags(nextSelectedTags);
-    };
+  const handleSelectActivities = (activities) => {
+    setSelectedActivities(activities);
+  };
 
-    const handleOk = async () => {
-        setConfirmLoading(true);
-        updatedItinerary.accessibility = selectedTags;
-        updatedItinerary.availableDates = availableDates;
-        updatedItinerary.availableTime = availableTime;
-        updatedItinerary.pickupLocation = pickupLocation;
-        updatedItinerary.dropoffLocation = dropoffLocation;
-        try {
-            await updateItinerary(updatedItinerary._id, updatedItinerary);
-            message.success('Itinerary updated successfully!');
-            onUpdate(updatedItinerary);
-        } catch (error) {
-            console.error('Error updating itinerary:', error);
-            message.error(error.response?.data?.error || 'Failed to update itinerary');
-        } finally {
-            setConfirmLoading(false);
-        }
-    };
+  const handleSubmit = async () => {
+    try {
+      await form.validateFields();
+      const updatedItinerary = { ...form.getFieldsValue() };
+      updatedItinerary.activities = selectedActivities;
+      updatedItinerary.pickupLocation = pickupLocation;
+      updatedItinerary.dropoffLocation = dropoffLocation;
+      updatedItinerary.startDate = dateRange[0] ? dateRange[0].toISOString() : null;
+      updatedItinerary.endDate = dateRange[1] ? dateRange[1].toISOString() : null;
+      onUpdate(updatedItinerary);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const handleDateChange = (date, dateString) => {
-        if (date && !availableDates.includes(dateString)) {
-            setAvailableDates([...availableDates, dateString]);
-        }
-    };
-
-    const handleTimeChange = (time, timeString) => {
-        if (time && !availableTime.includes(timeString)) {
-            setAvailableTimes([...availableTime, timeString]);
-        }
-    };
-
-    const removeDate = (dateToRemove) => {
-        setAvailableDates(availableDates.filter(date => date !== dateToRemove));
-    };
-
-    const removeTime = (timeToRemove) => {
-        setAvailableTimes(availableTime.filter(time => time !== timeToRemove));
-    };
-    const handleSelectActivities = (selectedActivities) => {
-        setUpdatedItinerary(prev => ({ ...prev, activities: selectedActivities }));
-    };
-    return (
-        <Modal
-            title="Update Itinerary"
-            open={isVisible}
-            onOk={handleOk}
-            confirmLoading={confirmLoading}
-            onCancel={onClose}
+  return (
+    <Modal
+      visible={visible}
+      title="Update Itinerary"
+      onCancel={onCancel}
+      footer={null}
+      width="50%"
+    >
+      <Form
+        form={form}
+        initialValues={{
+          title: itinerary.title,
+          description: itinerary.description,
+          serviceFee: itinerary.serviceFee,
+          language: itinerary.language,
+          accessibility: itinerary.accessibility || [],
+          startDate: dateRange[0],
+        endDate: dateRange[1],
+        }}
+        layout="vertical"
+        onFinish={handleSubmit}
+        requiredMark={false}
+        style={{ width: '100%' }}
+      >
+        {/* Itinerary Title */}
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[{ required: true, message: 'Please enter the itinerary title' }]}
         >
-            <div>
-                <label>
-                    Title:
-                    <input
-                        type="text"
-                        name="title"
-                        value={updatedItinerary.title || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, title: e.target.value })}
-                        required
-                    />
-                </label>
-                <br /><br />
-                <label>
-                    Description:
-                    <input
-                        type="text"
-                        name="description"
-                        value={updatedItinerary.description || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, description: e.target.value })}
-                        required
-                    />
-                </label>
-                <div>
-                    <Button onClick={() => setIsModalVisible(true)}>Select Activities</Button>
-                    <ActivitySelectionModal
-                        isVisible={isModalVisible}
-                        onClose={() => setIsModalVisible(false)}
-                        onSelectActivities={handleSelectActivities}
-                        preSelectedActivities={updatedItinerary.activities || []}
-                    />
-                </div>
+          <Input size="large" />
+        </Form.Item>
 
-                <br /><br />
-                <label> Select your Language: </label>
-                <label>
-                    <select
-                        name="language"
-                        value={updatedItinerary.language || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, language: e.target.value })}
-                        required
-                    >
-                        <option value="" disabled>Select a language</option>
-                        {languages.map((lang, index) => (
-                            <option key={index} value={lang}>
-                                {lang}
-                            </option>
-                        ))}
-                    </select>
-                </label>
+        {/* Description */}
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true, message: 'Please enter a description' }]}
+        >
+          <Input.TextArea rows={4} size="large" />
+        </Form.Item>
 
-                <br /><br />
-                <label>
-                    Service Fee:
-                    <input
-                        type="number"
-                        name="serviceFee"
-                        value={updatedItinerary.serviceFee || ''}
-                        onChange={(e) => setUpdatedItinerary({ ...updatedItinerary, serviceFee: e.target.value })}
-                    />
-                </label>
-                <br /><br />
+        {/* Available Date */}
+        <Form.Item
+          label="Available Date"
+          name="availableDate"
+          rules={[{ required: true, message: 'Please select the available dates' }]}
+        >
+          <RangePicker
+            style={{ width: '100%' }}
+            size="large"
+            value={dateRange.length === 2 ? [dateRange[0], dateRange[1]] : []}
+            onChange={handleDateChange}
+          />
+        </Form.Item>
 
-                <label>
-                    Pickup Location:
-                    <input
-                        type="text"
-                        name="pickupLocation"
-                        value={pickupLocation} // Use the state variable for pickup location
-                        onChange={(e) => setPickupLocation(e.target.value)} // Update pickup location state
-                        required
-                    />
-                </label>
-                <MapPopUp
-                    markerPosition={markerPosition}
-                    setMarkerPosition={setMarkerPosition}
-                    setSelectedLocation={setPickupLocation} // Set selected location
-                    selectedLocation={pickupLocation} // Show selected location
-                />
-                <br /><br />
+        {/* Activities Button */}
+        <Form.Item>
+          <Button
+            style={{
+              color: 'black',
+              borderColor: '#036264',
+              ':hover': { borderColor: '#5a9ea0' },
+              ':focus': { borderColor: '#5a9ea0' },
+            }}
+            onClick={() => setIsModalVisible(true)}
+          >
+            Select Activities
+          </Button>
+          <ActivitySelectionModal
+            isVisible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            onSelectActivities={handleSelectActivities}
+            preSelectedActivities={selectedActivities}
+            maxActivities={numDays}
+          />
+        </Form.Item>
 
-                <label>
-                    Dropoff Location:
-                    <input
-                        type="text"
-                        name="dropoffLocation"
-                        value={dropoffLocation} // Use the state variable for dropoff location
-                        onChange={(e) => setDropoffLocation(e.target.value)} // Update dropoff location state
-                        required
-                    />
-                </label>
-                <MapPopUp
-                    markerPosition={markerPosition}
-                    setMarkerPosition={setMarkerPosition}
-                    setSelectedLocation={setDropoffLocation} // Set selected location
-                    selectedLocation={dropoffLocation} // Show selected location
-                />
+        {/* Service Fee and Language */}
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="Service Fee"
+              name="serviceFee"
+              rules={[{ required: true, message: 'Please enter the service fee' }]}
+            >
+              <Input prefix="$" size="large" placeholder="0" />
+            </Form.Item>
+          </Col>
 
-                <br /><br />
+          <Col span={12}>
+            <Form.Item
+              label="Language"
+              name="language"
+              rules={[{ required: true, message: 'Please select a language' }]}
+            >
+              <Select placeholder="Select language" size="large" style={{ borderColor: '#e0829d' }}>
+                {languages.map((language) => (
+                  <Select.Option key={language} value={language}>
+                    {language}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
-                <div>
-                    <label>Available Dates:</label>
-                    <DatePicker onChange={handleDateChange} />
-                    <div>
-                        {availableDates.map(date => (
-                            <Tag key={date} closable onClose={() => removeDate(date)}>
-                                {date}
-                            </Tag>
-                        ))}
-                    </div>
-                </div>
-                <br />
-                <div>
-                    <label>Available Times:</label>
-                    <TimePicker
-                        onChange={handleTimeChange}
-                        format="HH:mm"
-                    />
-                    <div>
-                        {availableTime.map(time => (
-                            <Tag key={time} closable onClose={() => removeTime(time)}>
-                                {time}
-                            </Tag>
-                        ))}
-                    </div>
-                </div>
-                <br />
-                <label>Accessibility:</label>
+        {/* Accessibility Tags */}
+        <Form.Item
+          label="Accessibility Tags"
+          name="accessibility"
+          tooltip="Add accessibility options such as wheelchair access, braille, etc."
+        >
+          <Select
+            mode="tags"
+            placeholder="Enter tags and press Enter"
+            size="large"
+            style={{ width: '100%', borderColor: '#5a9ea0' }}
+          >
+            {AccessibilityTags.map((accessibility) => (
+              <Select.Option key={accessibility} value={accessibility}>
+                {accessibility}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-                <div>
+        {/* Locations */}
+        <Form.Item>
+          <label>Pickup Location:</label>
+          <Input
+            type="text"
+            name="pickupLocation"
+            value={pickupLocation}
+            required
+          />
+          <MapPopUp
+            markerPosition={pickupMarkerPosition}
+            setMarkerPosition={setPickUpMarkerPosition}
+            setSelectedLocation={setPickUpLocation}
+            selectedLocation = {pickupLocation}
+          />
+        </Form.Item>
+        <Form.Item>
+          <label>Dropoff Location:</label>
+          <Input
+            type="text"
+            name="dropoffLocation"
+            value={dropoffLocation}
+            required
+          />
+          <MapPopUp
+            markerPosition={dropoffMarkerPosition}
+            setMarkerPosition={setDropOffMarkerPosition}
+            setSelectedLocation={setDropOffLocation}
+            selectedLocation = {dropoffLocation}
+          />
+        </Form.Item>
 
-                    {tags.map(tag => (
-                        <Tag.CheckableTag
-                            key={tag}
-                            checked={selectedTags.includes(tag)}
-                            onChange={checked => handleTagChange(tag, checked)}
-                        >
-                            {tag}
-                        </Tag.CheckableTag>
-                    ))}
-                </div>
-                <div style={{ marginBottom: 16 }}>
-                    {selectedTags.map((tag) => (
-                        <span key={tag} style={{ display: 'inline-block', marginRight: 8 }}>
-                            <Tag
-                                closable
-                                onClose={(e) => {
-                                    e.preventDefault();
-                                    handleClose(tag);
-                                }}
-                            >
-                                {tag}
-                            </Tag>
-                        </span>
-                    ))}
-                    {inputVisible ? (
-                        <Input
-                            ref={inputRef}
-                            type="text"
-                            size="small"
-                            style={{ width: 78 }}
-                            value={inputValue}
-                            onChange={handleInputChange}
-                            onBlur={handleInputConfirm}
-                            onPressEnter={handleInputConfirm}
-                        />
-                    ) : (
-                        <Tag onClick={showInput} style={{ background: token.colorBgContainer, borderStyle: 'dashed' }}>
-                            <PlusOutlined /> New Tag
-                        </Tag>
-                    )}
-                </div>
-            </div>
-        </Modal>
-    );
+        {/* Submit Button */}
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={false}
+            className="custom-button"
+            style={{ width: '100%', height: '50px' }}
+          >
+            Update Itinerary
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 };
 
-export default UpdateItineraryForm;
+export default UpdateItineraryModal;

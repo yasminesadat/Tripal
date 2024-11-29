@@ -3,10 +3,11 @@ import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck } from 'lucide-react';
 import { flagItinerary } from "@/api/AdminService";
-import { deleteItinerary, toggleItineraryStatus } from "@/api/ItineraryService";
+import { deleteItinerary, getItinerariesByTourGuide, toggleItineraryStatus,updateItinerary } from "@/api/ItineraryService";
 import  { useState, useEffect } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
+import UpdateItineraryModal from "../UpdateItineraryForm";
 
 //#region 1. methods
 const handleShare = (link) => {
@@ -40,7 +41,6 @@ const handleFlag = (id) => {
 export default function ItineraryMainInformation({
   itinerary: initialItinerary,
   userRole,
-  onEditItinerary,
    }) {
 
     //#region 1. Variables
@@ -48,10 +48,13 @@ export default function ItineraryMainInformation({
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [itineraryToDelete, setItineraryToDelete] = useState(null);
+    const [itineraries, setItineraries] = useState([]);
+    const [modalVisible2, setModalVisible2] = useState(false);
+    const [itineraryToEdit, setItineraryToEdit] = useState(null);
     const navigate = useNavigate();
     //#endregion
 
-    //#region 2. useEffect
+    //#region 2. event handlers
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
     setLoading(true);
@@ -69,6 +72,19 @@ export default function ItineraryMainInformation({
       setLoading(false);
     }
   };
+
+  const fetchItineraries = async () => {
+    try {
+      const response = await getItinerariesByTourGuide();
+      setItineraries(response.data);
+    } catch (error) {
+      message.error("Failed to fetch itineraries");
+    }
+  };
+
+  useEffect(() => {
+    fetchItineraries();
+  }, []);
 
   const handleDeleteItinerary = (id) => {
     setItineraryToDelete(id);
@@ -96,6 +112,26 @@ export default function ItineraryMainInformation({
 
   const handleCancelDelete = () => {
     setModalVisible(false);  // Close the modal without deleting
+  };
+
+  const onEditItinerary = (id) => {
+    const itinerary = itineraries.find((itinerary) => itinerary._id === id);
+    setItineraryToEdit(itinerary);
+    setModalVisible2(true);  // Show the modal
+  };
+
+  const handleSaveChanges = async (updatedItinerary) => {
+    setModalVisible2(false);
+    try {
+      const response = await updateItinerary(itinerary._id,updatedItinerary);
+      if (response.ok) {
+        fetchItineraries();
+      } 
+      message.success("Itinerary updated successfully!");
+
+    } catch (error) {
+      message.error(error.response.data.error);
+    }
   };
   //#endregion
   
@@ -216,7 +252,14 @@ export default function ItineraryMainInformation({
         onCancel={handleCancelDelete}
         message="Are you sure you want to delete this itinerary?"
       />
-      
+    {itineraryToEdit && (
+        <UpdateItineraryModal
+          visible={modalVisible2}
+          itinerary={itineraryToEdit}
+          onCancel={() => setModalVisible2(false)}
+          onUpdate={handleSaveChanges}
+        />
+      )}
         {userRole === "Admin" && (
           <div className="col-auto">
             <button
