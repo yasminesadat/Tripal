@@ -5,6 +5,8 @@ import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck } from 'lucide-react';
 import { flagItinerary } from "@/api/AdminService";
 import { deleteItinerary, toggleItineraryStatus } from "@/api/ItineraryService";
 import  { useState, useEffect } from "react";
+import AreYouSure from "@/components/common/AreYouSure";
+import { useNavigate } from "react-router-dom";
 
 const handleShare = (link) => {
   if (navigator.share) {
@@ -33,9 +35,6 @@ const handleFlag = (id) => {
   console.log(`Flagging itinerary with ID: ${id}`);
 };
 
-const handleDeleteItinerary = (id) => {
-  console.log(`Deleting itinerary with ID: ${id}`);
-};
 
 export default function ItineraryMainInformation({
   itinerary: initialItinerary,
@@ -44,6 +43,9 @@ export default function ItineraryMainInformation({
    }) {
     const [itinerary, setItinerary] = useState(initialItinerary);
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [itineraryToDelete, setItineraryToDelete] = useState(null);
+    const navigate = useNavigate();
 
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
@@ -63,6 +65,33 @@ export default function ItineraryMainInformation({
     }
   };
 
+  const handleDeleteItinerary = (id) => {
+    setItineraryToDelete(id);
+    setModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setLoading(true);
+    try {
+      await deleteItinerary(itineraryToDelete);
+      message.success("Itinerary deleted successfully.");
+      setItinerary(null);
+      setModalVisible(false);
+      setTimeout(() => {
+        setLoading(true);
+      }, 2000);
+      navigate("/my-itineraries");
+    } catch (error) {
+      message.error("Failed to delete itinerary.");
+      setModalVisible(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setModalVisible(false);  // Close the modal without deleting
+  };
   if (loading || !itinerary) return <div><Spinner/></div>; 
 
   return (
@@ -173,6 +202,13 @@ export default function ItineraryMainInformation({
             </div>
           </div>
         )}
+
+        <AreYouSure
+        visible={modalVisible}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        message="Are you sure you want to delete this itinerary?"
+      />
 
         {userRole === "Admin" && (
           <div className="col-auto">
