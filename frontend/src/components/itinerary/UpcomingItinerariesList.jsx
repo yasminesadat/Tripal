@@ -9,8 +9,6 @@ import { getUserData } from "@/api/UserService";
 import { viewUpcomingItineraries } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
 
-
-
 export default function ItinerariesList({
   searchTerm,
   book,

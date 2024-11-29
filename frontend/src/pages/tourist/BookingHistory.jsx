@@ -7,7 +7,7 @@ import { getConversionRate } from "../../api/ExchangeRatesService";
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-const tabs = ["Flights", "Hotels", "Activities", "Itineraries"];
+const tabs = ["Flights", "Hotels", "Activities", "Itineraries"];  
 
 export default function DbBooking() {
   const [currentTab, setCurrentTab] = useState("Flights");
@@ -78,7 +78,39 @@ export default function DbBooking() {
   //     price: "$40",
   //   },
   // ];
-  
+
+  // const bookedItineraries = [
+  //   {
+  //     _id: '1',
+  //     title: 'Mountain Hiking Trip',
+  //     startDate: '2024-12-15T09:00:00',  // Upcoming
+  //     price: 250,
+  //   },
+  //   {
+  //     _id: '2',
+  //     title: 'Beach Holiday',
+  //     startDate: '2023-11-25T10:00:00',  // Completed
+  //     price: 150,
+  //   },
+  //   {
+  //     _id: '3',
+  //     title: 'City Tour',
+  //     startDate: '2024-01-01T08:00:00',  // Upcoming
+  //     price: 200,
+  //   },
+  //   {
+  //     _id: '4',
+  //     title: 'Safari Adventure',
+  //     startDate: '2023-11-10T11:30:00',  // Completed
+  //     price: 300,
+  //   },
+  //   {
+  //     _id: '5',
+  //     title: 'Cruise Vacation',
+  //     startDate: '2024-05-20T16:00:00',  // Upcoming
+  //     price: 400,
+  //   },
+  // ];  
 
   useEffect(() => {
 
@@ -114,8 +146,12 @@ export default function DbBooking() {
     const fetchBookedActivities = async () => {
       try {
         const response = await getTouristActivities();
-        console.log("activities",response)
-        setBookedActivities(response);
+        const sortedActivities = response.sort((a, b) => {
+          const dateA = new Date(a.date); 
+          const dateB = new Date(b.date); 
+          return dateB - dateA; 
+        });
+        setBookedActivities(sortedActivities);
       } catch (error) {
         console.error("Error fetching booked activities", error);
       }
@@ -124,8 +160,12 @@ export default function DbBooking() {
     const fetchBookedItineraries = async () => {
       try {
         const response = await getTouristItineraries();
-        console.log("itineraries", response);
-        setBookedItineraries(response);
+        const sortedItineraries = response.sort((a, b) => {
+          const dateA = new Date(a.startDate); 
+          const dateB = new Date(b.startDate); 
+          return dateB - dateA; 
+        });
+        setBookedItineraries(sortedItineraries);
       } catch (error) {
         console.error("Error fetching booked itineraries", error);
       }
@@ -160,7 +200,7 @@ export default function DbBooking() {
   };
 
   const metadata = {
-    title: "Home || Tripal",
+    title: "My Bookings || Tripal",
 };
 
 const formatDate = (date) => {
@@ -172,11 +212,11 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-const checkActivityStatus = (activityDate) => {
+const checkStatus = (date) => {
   const today = new Date();
-  const activityDateObj = new Date(activityDate);
+  const dateObj = new Date(date);
 
-  if (activityDateObj > today) {
+  if (dateObj > today) {
     return { stat: 'upcoming ', icon: '⏳' }; 
   } else {
     return { stat: 'completed ', icon: '✔️' };
@@ -184,302 +224,314 @@ const checkActivityStatus = (activityDate) => {
 };
 
 const navigate = useNavigate();
-const handleRedirect = (activityId) => {
+const handleActivityRedirect = (activityId) => {
   navigate(`/activity/${activityId}`, { state: { page: 'history' }});
+};
+
+const handleItineraryRedirect = (itineraryId) => {
+  navigate(`/itinerary/${itineraryId}`, { state: { page: 'history' }});
 };
 
   return (
     <div>
       <>
-            <MetaComponent meta={metadata} />
-            <div className="page-wrapper">
-                <TouristHeader />
-                <main className="page-content">
-                  <div className="dashboard js-dashboard">
-
-                    <div className="dashboard__content">
-                      <div className="dashboard__content_content">
-                        <h1 className="text-30">My Bookings</h1>
-
-                        <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
-                          <div className="tabs -underline-2 js-tabs">
-                            <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
-                              {tabs.map((elm, i) => (
-                                <div key={i} className="col-auto" onClick={() => setCurrentTab(elm)}>
-                                  <button
-                                    className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${elm === currentTab ? "is-tab-el-active" : ""
-                                      }`}
-                                  >
-                                    {elm}
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="tabs__content js-tabs-content">
-                              {/* Flights Tab Content */}
-                              {currentTab === "Flights" && (
-                                <div className="tabs__pane -tab-item-1 is-tab-el-active">
-                                  <div className="overflowAuto">
-                                    <table className="tableTest mb-30">
-                                      <thead className="bg-light-1 rounded-12">
-                                        <tr>
-                                          <th>Flight Number</th>
-                                          <th>Airline</th>
-                                          <th>Origin</th>
-                                          <th>Destination</th>
-                                          <th>Price</th>
-                                          <th>Departure Time</th>
-                                          <th>Arrival Time</th>
-                                          <th>Status</th>
-                                          {/* <th>Action</th> */}
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        {bookedFlights.map((flight, i) => (
-                                          <tr key={i}>
-                                            <td>{flight.flightNumber}</td>
-                                            <td>{flight.airline}</td>
-                                            <td>{flight.origin}</td>
-                                            <td>{flight.destination}</td>
-                                          
-                                            <td>{convertPrice(flight.price)} {currency}</td>
-                                            <td>{new Date(flight.departureTime).toLocaleString()}</td>
-                                            <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
-                                            <td>
-                                              <div className={`circle ${getFlightStatus(flight.arrivalTime) === "Flight Complete" ? "text-purple-1" : "text-yellow-1"}`}>
-                                                {getFlightStatus(flight.arrivalTime)}
-                                              </div>
-                                            </td>
-                                            {/* <td>
-                                            <div className="d-flex items-center">
-                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                                <i className="icon-pencil text-14"></i>
-                                            </button>
-                                            {getFlightStatus(flight.arrivalTime) === "Flight Upcoming" && (
-                                                <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                                <i className="icon-delete text-14"></i>
-                                                </button>
-                                            )}
-                                            </div>
-                                        </td> */}
-                                          </tr>
-                                        ))}
-                                      </tbody>
-
-                                    </table>
-                                  </div>
-
-                                  <div className="text-14 text-center mt-20">
-                                    Showing results {bookedFlights.length} of {bookedFlights.length}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Hotels Tab Content */}
-                              {currentTab === "Hotels" && (
-                                <div className="tabs__pane -tab-item-2 is-tab-el-active">
-                                  <div className="overflowAuto">
-                                    <table className="tableTest mb-30">
-                                      <thead className="bg-light-1 rounded-12">
-                                        <tr>
-                                          <th>Hotel Name</th>
-                                          <th>Location</th>
-                                          <th>Check-in Date</th>
-                                          <th>Check-out Date</th>
-                                          <th>Total Price</th>
-                                          <th>Status</th>
-                                          {/* <th>Action</th> */}
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        {bookedHotels.map((hotel, i) => (
-                                          <tr key={i}>
-                                            <td>{hotel.hotelname}</td>
-                                            <td>{hotel.cityCode}</td>
-                                            <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
-                                            <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
-                                            {/* <td>{hotel.pricing} EGP</td> */}
-                                            <td>{convertPrice(hotel.pricing)} {currency}</td>
-                                            <td>
-                                              <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
-                                                {getHotelStatus(hotel.checkOut)}
-                                              </div>
-                                            </td>
-                                            {/* <td>
-                                            <div className="d-flex items-center">
-                                              <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                                <i className="icon-pencil text-14"></i>
-                                              </button>
-                                              <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                                <i className="icon-delete text-14"></i>
-                                              </button>
-                                            </div>
-                                          </td> */}
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-
-                                  <div className="text-14 text-center mt-20">
-                                    Showing results {bookedHotels.length} of {bookedHotels.length}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Activities Tab */}
-                              {currentTab === "Activities" && (
-                                <div className="tabs__pane -tab-item-1 is-tab-el-active">
-                                  <div className="overflowAuto">
-                                    <table className="tableTest mb-30">
-                                      <thead className="bg-light-1 rounded-12">
-                                        <tr>
-                                          <th>Activity Title</th>
-                                          <th>Category</th>
-                                          <th>Date</th>
-                                          <th>Time</th>
-                                          <th>Price</th>
-                                          <th>Status</th>
-                                          <th>Action</th>
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        {bookedActivities.map((activity, i) => {
-                                          const { stat, icon } = checkActivityStatus(activity.date);
-                                          
-                                          const actionButton = stat === "upcoming " ? (
-                                            <button
-                                              style={{
-                                                backgroundColor: '#e74c3c',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '8px 15px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                              }}
-                                              onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
-                                              onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
-                                            >
-                                              Cancel
-                                            </button>
-                                          ) : (
-                                            <button
-                                              style={{
-                                                backgroundColor: '#2ecc71',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '8px 15px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                              }}
-                                              onMouseOver={(e) => (e.target.style.backgroundColor = '#27ae60')} 
-                                              onMouseOut={(e) => (e.target.style.backgroundColor = '#2ecc71')} 
-                                              onClick={() => handleRedirect(activity._id)}
-                                            >
-                                              Review
-                                            </button>
-                                          );
-                                          return (
-                                            <tr key={i}>
-                                              <td>{activity.title}</td>
-                                              <td>{activity.category}</td>    
-                                              <td>{formatDate(activity.date)}</td>
-                                              <td>{activity.time}</td>
-                                              <td>{activity.price}</td>
-                                              <td>
-                                                {stat}
-                                                <span style={{ fontSize: '18px' }}>{icon}</span>
-                                              </td>
-                                              <td>{actionButton}</td>
-                                            </tr>
-                                          );
-                                        })}
-                                      </tbody>
-                                    </table>
-                                  </div>
-
-                                  <div className="text-14 text-center mt-20">
-                                    Showing results {bookedActivities.length} of {bookedActivities.length}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Itineraries Tab Content */}
-                              {currentTab === "Itineraries" && (
-                                <div className="tabs__pane -tab-item-1 is-tab-el-active">
-                                  <div className="overflowAuto">
-                                    <table className="tableTest mb-30">
-                                      <thead className="bg-light-1 rounded-12">
-                                        <tr>
-                                          <th>Flight Number</th>
-                                          <th>Airline</th>
-                                          <th>Origin</th>
-                                          <th>Destination</th>
-                                          <th>Price</th>
-                                          <th>Departure Time</th>
-                                          <th>Arrival Time</th>
-                                          <th>Status</th>
-                                          {/* <th>Action</th> */}
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        {bookedFlights.map((flight, i) => (
-                                          <tr key={i}>
-                                            <td>{flight.flightNumber}</td>
-                                            <td>{flight.airline}</td>
-                                            <td>{flight.origin}</td>
-                                            <td>{flight.destination}</td>
-                                          
-                                            <td>{convertPrice(flight.price)} {currency}</td>
-                                            <td>{new Date(flight.departureTime).toLocaleString()}</td>
-                                            <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
-                                            <td>
-                                              <div className={`circle ${getFlightStatus(flight.arrivalTime) === "Flight Complete" ? "text-purple-1" : "text-yellow-1"}`}>
-                                                {getFlightStatus(flight.arrivalTime)}
-                                              </div>
-                                            </td>
-                                            {/* <td>
-                                            <div className="d-flex items-center">
-                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                                <i className="icon-pencil text-14"></i>
-                                            </button>
-                                            {getFlightStatus(flight.arrivalTime) === "Flight Upcoming" && (
-                                                <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                                <i className="icon-delete text-14"></i>
-                                                </button>
-                                            )}
-                                            </div>
-                                        </td> */}
-                                          </tr>
-                                        ))}
-                                      </tbody>
-
-                                    </table>
-                                  </div>
-
-                                  <div className="text-14 text-center mt-20">
-                                    Showing results {bookedFlights.length} of {bookedFlights.length}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
+        <MetaComponent meta={metadata} />
+        <div className="page-wrapper">
+          <TouristHeader />
+            <main className="page-content">
+              <div className="dashboard js-dashboard">
+                <div className="dashboard__content">
+                  <div className="dashboard__content_content">
+                    <h1 className="text-30">My Bookings</h1>
+                      <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
+                        <div className="tabs -underline-2 js-tabs">
+                          <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
+                            {tabs.map((elm, i) => (
+                              <div key={i} className="col-auto" onClick={() => setCurrentTab(elm)}>
+                                <button
+                                  className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${elm === currentTab ? "is-tab-el-active" : ""}`}
+                                >
+                                  {elm}
+                                </button>
+                              </div>
+                            ))}
                           </div>
+
+                          <div className="tabs__content js-tabs-content">
+                            
+                            {/* Flights Tab */}
+                            {currentTab === "Flights" && (
+                              <div className="tabs__pane -tab-item-1 is-tab-el-active">
+                                <div className="overflowAuto">
+                                  <table className="tableTest mb-30">
+                                    <thead className="bg-light-1 rounded-12">
+                                      <tr>
+                                        <th>Flight Number</th>
+                                        <th>Airline</th>
+                                        <th>Origin</th>
+                                        <th>Destination</th>
+                                        <th>Price</th>
+                                        <th>Departure Time</th>
+                                        <th>Arrival Time</th>
+                                        <th>Status</th>
+                                        {/* <th>Action</th> */}
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      {bookedFlights.map((flight, i) => (
+                                        <tr key={i}>
+                                          <td>{flight.flightNumber}</td>
+                                          <td>{flight.airline}</td>
+                                          <td>{flight.origin}</td>
+                                          <td>{flight.destination}</td>
+                                        
+                                          <td>{convertPrice(flight.price)} {currency}</td>
+                                          <td>{new Date(flight.departureTime).toLocaleString()}</td>
+                                          <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
+                                          <td>
+                                            <div className={`circle ${getFlightStatus(flight.arrivalTime) === "Flight Complete" ? "text-purple-1" : "text-yellow-1"}`}>
+                                              {getFlightStatus(flight.arrivalTime)}
+                                            </div>
+                                          </td>
+                                          {/* <td>
+                                          <div className="d-flex items-center">
+                                          <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
+                                              <i className="icon-pencil text-14"></i>
+                                          </button>
+                                          {getFlightStatus(flight.arrivalTime) === "Flight Upcoming" && (
+                                              <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
+                                              <i className="icon-delete text-14"></i>
+                                              </button>
+                                          )}
+                                          </div>
+                                      </td> */}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+
+                                  </table>
+                                </div>
+
+                                <div className="text-14 text-center mt-20">
+                                  Showing results {bookedFlights.length} of {bookedFlights.length}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Hotels Tab */}
+                            {currentTab === "Hotels" && (
+                              <div className="tabs__pane -tab-item-2 is-tab-el-active">
+                                <div className="overflowAuto">
+                                  <table className="tableTest mb-30">
+                                    <thead className="bg-light-1 rounded-12">
+                                      <tr>
+                                        <th>Hotel Name</th>
+                                        <th>Location</th>
+                                        <th>Check-in Date</th>
+                                        <th>Check-out Date</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                        {/* <th>Action</th> */}
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      {bookedHotels.map((hotel, i) => (
+                                        <tr key={i}>
+                                          <td>{hotel.hotelname}</td>
+                                          <td>{hotel.cityCode}</td>
+                                          <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
+                                          <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
+                                          {/* <td>{hotel.pricing} EGP</td> */}
+                                          <td>{convertPrice(hotel.pricing)} {currency}</td>
+                                          <td>
+                                            <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
+                                              {getHotelStatus(hotel.checkOut)}
+                                            </div>
+                                          </td>
+                                          {/* <td>
+                                          <div className="d-flex items-center">
+                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
+                                              <i className="icon-pencil text-14"></i>
+                                            </button>
+                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
+                                              <i className="icon-delete text-14"></i>
+                                            </button>
+                                          </div>
+                                        </td> */}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                                <div className="text-14 text-center mt-20">
+                                  Showing results {bookedHotels.length} of {bookedHotels.length}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Activities Tab */}
+                            {currentTab === "Activities" && (
+                              <div className="tabs__pane -tab-item-1 is-tab-el-active">
+                                <div className="overflowAuto">
+                                  <table className="tableTest mb-30">
+                                    <thead className="bg-light-1 rounded-12">
+                                      <tr>
+                                        <th>Activity Title</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      {bookedActivities.map((activity, i) => {
+                                        const { stat, icon } = checkStatus(activity.date);
+                                        const actionButton = stat === "upcoming " ? (
+                                          <button
+                                            style={{
+                                              backgroundColor: '#e74c3c',
+                                              color: 'white',
+                                              border: 'none',
+                                              padding: '8px 15px',
+                                              borderRadius: '5px',
+                                              cursor: 'pointer',
+                                            }}
+                                            onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
+                                            onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
+                                          >
+                                            Cancel
+                                          </button>
+                                        ) : (
+                                          <button
+                                            style={{
+                                              backgroundColor: '#2ecc71',
+                                              color: 'white',
+                                              border: 'none',
+                                              padding: '8px 15px',
+                                              borderRadius: '5px',
+                                              cursor: 'pointer',
+                                            }}
+                                            onMouseOver={(e) => (e.target.style.backgroundColor = '#27ae60')} 
+                                            onMouseOut={(e) => (e.target.style.backgroundColor = '#2ecc71')} 
+                                            onClick={() => handleActivityRedirect(activity._id)}
+                                          >
+                                            Review
+                                          </button>
+                                        );
+                                        return (
+                                          <tr key={i}>
+                                            <td>{activity.title}</td>
+                                            <td>{activity.category}</td>    
+                                            <td>{formatDate(activity.date)}</td>
+                                            <td>{activity.time}</td>
+                                            <td>{activity.price}</td>
+                                            <td>
+                                              {stat}
+                                              <span style={{ fontSize: '18px' }}>{icon}</span>
+                                            </td>
+                                            <td>{actionButton}</td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                                <div className="text-14 text-center mt-20">
+                                  Showing results {bookedActivities.length} of {bookedActivities.length}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Itineraries Tab */}
+                            {currentTab === "Itineraries" && (
+                              <div className="tabs__pane -tab-item-1 is-tab-el-active">
+                                <div className="overflowAuto">
+                                  <table className="tableTest mb-30">
+                                    <thead className="bg-light-1 rounded-12">
+                                      <tr>
+                                        <th>Itinerary Title</th>
+                                        <th>Date</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      {bookedItineraries.map((itinerary, i) => {
+                                        const { stat, icon } = checkStatus(itinerary.startDate);
+                                        const actionButton = stat === "upcoming " ? (
+                                          <button
+                                            style={{
+                                              backgroundColor: '#e74c3c',
+                                              color: 'white',
+                                              border: 'none',
+                                              padding: '8px 15px',
+                                              borderRadius: '5px',
+                                              cursor: 'pointer',
+                                            }}
+                                            onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
+                                            onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
+                                          >
+                                            Cancel
+                                          </button>
+                                        ) : (
+                                          <button
+                                            style={{
+                                              backgroundColor: '#2ecc71',
+                                              color: 'white',
+                                              border: 'none',
+                                              padding: '8px 15px',
+                                              borderRadius: '5px',
+                                              cursor: 'pointer',
+                                            }}
+                                            onMouseOver={(e) => (e.target.style.backgroundColor = '#27ae60')} 
+                                            onMouseOut={(e) => (e.target.style.backgroundColor = '#2ecc71')} 
+                                            onClick={() => handleItineraryRedirect(itinerary._id)}
+                                          >
+                                            Review
+                                          </button>
+                                        );
+                                        return (
+                                          <tr key={i}>
+                                            <td>{itinerary.title}</td>
+                                            <td>{formatDate(itinerary.startDate)}</td>
+                                            <td>{convertPrice(itinerary.price)} {currency}</td>
+                                            <td>
+                                              {stat}
+                                              <span style={{ fontSize: '18px' }}>{icon}</span>
+                                            </td>
+                                            <td>{actionButton}</td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                                <div className="text-14 text-center mt-20">
+                                  Showing results {bookedItineraries.length} of {bookedItineraries.length}
+                                </div>
+                              </div>
+                            )}
+
                         </div>
-
-                       
-                      </div>
-                    </div>
-                    </div>
-
-                </main>
-                <FooterThree />
-            </div>
-        </>
- </div>
+                     </div>
+                    </div>                       
+                  </div>
+                </div>
+              </div>
+            </main>
+          <FooterThree />
+        </div>
+      </>
+  </div>
   );
 }
