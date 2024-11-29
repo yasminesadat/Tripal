@@ -31,7 +31,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
     <>
       <section className="">
         <div className="container">
-          <ItineraryMainInformation itinerary={itinerary} />
+          <ItineraryMainInformation itinerary={itinerary} userRole={userRole} />
           <Gallery1 />
         </div>
       </section>
