@@ -1,5 +1,5 @@
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header1 from "@/components/layout/header/TouristHeader";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/ActivitiesHeader";
 import { useEffect, useRef, useState } from "react";
 import ActivitiesList from "@/components/activity/UpcomingActivities";
@@ -87,7 +87,7 @@ export default function Activities() {
 
         {userRole === "Tourist" && (
           <>
-            <Header1 />
+            <TouristHeader />
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"

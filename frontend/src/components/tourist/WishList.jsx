@@ -43,6 +43,9 @@ export default function WishList() {
         <div className="dashboard js-dashboard">
             <div className="dashboard__content">
                 <div className="dashboard__content_content">
+                    <br></br>
+                    <br></br>
+                    <br></br>
                     <h1 className="text-30">Wishlist</h1>
 
                     <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:pb-20 mt-60 md:mt-30">
@@ -74,7 +77,7 @@ export default function WishList() {
                                                 <div className="row y-gap-15 justify-between items-end pt-5">
                                                     <div className="col-auto">
                                                         <div className="d-flex items-center">
-                                                            <div className="text-14">{truncateText(elm.description, 50)}</div>
+                                                            <div className="text-14">{truncateText(elm.description, 100)}</div>
                                                         </div>
                                                     </div>
                                                     <div className="col-auto">
@@ -101,10 +104,6 @@ export default function WishList() {
                             />
                         )}
                     </div>
-                </div>
-
-                <div className="text-center pt-30">
-                    © Copyright Tripal {new Date().getFullYear()}
                 </div>
             </div>
         </div>
