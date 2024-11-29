@@ -78,6 +78,7 @@ const getItinerariesForTourguide = async (req, res) => {
                 }
             ]
         }).populate("tags")
+        .sort({ startDate: -1 });
 
         res.status(200).json(itineraries);
     } catch (error) {
@@ -174,7 +175,8 @@ const viewUpcomingItineraries = async (req, res) => {
                     path: 'category',
                 }
             ]
-        }).populate("tags");
+        }).populate("tags")
+        .sort({ startDate: -1 });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -222,7 +224,8 @@ const getTouristItineraries = async (req, res) => {
             ]
         }).populate("tags")
         .populate('tourGuide bookings.touristId')
-        .select("-bookings"); //exclude bookings from response
+        .select("-bookings") //exclude bookings from response
+        .sort({ startDate: -1 });
 
         if (!itineraries.length)
             return res.status(200).json({ message: "No itineraries found for this tourist." });
@@ -256,6 +259,7 @@ const adminFlagItinerary = async (req, res) => {
 const getAllItinerariesForAdmin = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find()
+        .sort({ startDate: -1 });
             // .populate({
             //     path: 'activities',
             //     populate: [{path: 'tags'},{path: 'category', }]
