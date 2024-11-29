@@ -10,11 +10,11 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/destinations">View All Products</Link>
+            <Link to="/seller/view-products">View All Products</Link>
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/destinations">Create Product</Link>
+            <Link to="/seller/create-product">Create Product</Link>
           </div>
         </div>
       </div>
