@@ -24,6 +24,7 @@ const LocationMap = ({
   markerPosition,
   setMarkerPosition,
   setSelectedLocation,
+  search,
 }) => {
   const LocationMarker = () => {
     useMapEvents({
@@ -94,7 +95,7 @@ const LocationMap = ({
         maxZoom={18}
         ext="png"
       />
-      <SearchControl />
+      {!search&&<SearchControl />}
       <LocationMarker />
     </MapContainer>
   );
