@@ -418,10 +418,18 @@ const getBookmarkedEvents = async (req, res) => {
       return res.status(404).json({ error: "Tourist not found" });
     }
 
-    res.json({
-      bookmarkedActivities: tourist.bookmarkedActivities,
-      bookmarkedItineraries: tourist.bookmarkedItineraries,
-    });
+    const bookmarkedEvents = [
+      ...tourist.bookmarkedActivities.map(activity => ({
+        ...activity.toObject(),
+        type: "activity"                   //so ik fel frontend which type it is 
+      })),
+      ...tourist.bookmarkedItineraries.map(itinerary => ({
+        ...itinerary.toObject(),
+        type: "itinerary"
+      })),
+    ];
+
+    res.json(bookmarkedEvents);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });

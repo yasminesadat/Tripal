@@ -2,6 +2,9 @@ import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag } from 'lucide-react';
 import { flagActivity } from "@/api/AdminService";
+import {bookmarkEvent} from "@/api/TouristService";
+
+//const [isBookmarked, setIsBookmarked] = useState(false);
 
 const handleShare = (link) => {
   if (navigator.share) {
@@ -15,6 +18,15 @@ const handleShare = (link) => {
       });
   } else {
     window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+  }
+};
+const handleBookmark = async (eventId, eventType) => {
+  try {
+    const data = await bookmarkEvent(eventId, eventType);
+    //setIsBookmarked(true);
+    message.success("Added to Bookmarked Events")
+  } catch (error) {
+    console.error('Error bookmarking event:', error);
   }
 };
 
@@ -104,14 +116,17 @@ export default function ActivityMainInformation({ activity, role }) {
               Share
             </a>
 
-            <a
-              href="#"
+            <div
               className="d-flex items-center"
               style={{ color: "grey" }}
             >
-              <i className="icon-heart flex-center text-16 mr-10"></i>
-              Wishlist
-            </a>
+              <i
+                className="icon-heart flex-center text-16 mr-10"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleBookmark(activity._id, "activity")}
+              ></i>
+              Add to Wishlist
+            </div>
           </div>
         </div>):role === 'Admin' ? (
       <div className="col-auto">

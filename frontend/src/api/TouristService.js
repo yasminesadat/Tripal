@@ -134,3 +134,23 @@ export async function checkTouristExists() {
     throw error;
   }
 }
+
+export async function bookmarkEvent(eventId, eventType) {
+  try {
+    const response = await axios.post('/tourist/bookmark', { eventId, eventType });
+    return response.data;
+  } catch (error) {
+    console.error("Error bookmarking event:", error);
+    throw error;
+  }
+}
+
+export async function getBookmarkedEvents() {
+  try {
+    const response = await axios.get('/tourist/bookmarks');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}

@@ -21,6 +21,10 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
+            <Link to="/bookmarked-events">Bookmarked Events</Link>
+          </div>
+
+          <div className="desktopNav__item">
             <Link to="/destinations">Historical Places</Link>
           </div>
 

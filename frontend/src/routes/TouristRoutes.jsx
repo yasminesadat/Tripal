@@ -29,6 +29,7 @@ import BookingPages from "../pages/BookingHotels/BookingConfirmation";
 import HotelDetails from "../pages/BookingHotels/HotelDetails";
 import TourList1 from "../pages/BookingHotels/HotelList";
 import Hero6 from "../pages/BookingHotels/SearchHotel2";
+import BookmarkedEvents from "../pages/tourist/bookmarked"
 
 
 const touristRoutes = [
@@ -46,6 +47,7 @@ const touristRoutes = [
   { path: "/tourist/booking-summary", element: <FlightBookingDetails /> },
   { path: "/tourist/invoice", element: <FlightInvoice/>},
   { path: "/upcoming-itineraries",element: <Itineraries />},
+  { path: "/bookmarked-events",element: <BookmarkedEvents />},
   // { path: "/historical-places", element: <HistoricalPlaces /> },
   // { path: "/itineraries-history", element: <ItinerariesHistoryPage /> },
   // { path: "/tourist/view-products", element: <TouristProducts /> },
