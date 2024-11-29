@@ -2,17 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
-import Pagination from "./Pagination";
-import { Tag, message } from "antd";
+import Pagination from "@/components/activity/Pagination";
+import {message } from "antd";
 
 import { getUserData } from "@/api/UserService";
-import {
-  viewUpcomingActivities,
-  getAllActivities,
-} from "@/api/ActivityService";
-import { getAdminActivities} from "@/api/AdminService";
+import { viewUpcomingItineraries } from "@/api/ItineraryService";
+import { getAdminItineraries} from "@/api/AdminService";
 
-export default function ActivitiesList({
+
+
+export default function ItinerariesList({
   searchTerm,
   book,
   onCancel,
@@ -28,8 +27,8 @@ export default function ActivitiesList({
 
   const [userRole, setUserRole] = useState(null);
 
-  const [activities, setActivities] = useState([]);
-  const [filteredActivities, setFilteredActivities] = useState(activities);
+  const [itineraries, setItineraries] = useState([]);
+  const [filteredItineraries, setFilteredItineraries] = useState(itineraries);
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -41,7 +40,7 @@ export default function ActivitiesList({
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const activitiesPerPage = 2;
+  const itinerariesPerPage = 2;
 
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
@@ -78,24 +77,21 @@ export default function ActivitiesList({
   }, []);
 
   useEffect(() => {
-    const fetchActivities = async () => {
+    const fetchItineraries = async () => {
       setLoading(true);
       try {
         let response;
         if (userRole === "Tourist" || userRole === "Guest") {
-          response = await viewUpcomingActivities();
+          response = await viewUpcomingItineraries();
         } else if (userRole === "Admin") {
-          response = await getAdminActivities();
+          response = await getAdminItineraries();
           console.log(userRole)
         }
-        // else {
-        //   response = await getAllActivities();
-        // }
-        const activitiesData = Array.isArray(response?.data)
+        const itinerariesData = Array.isArray(response?.data)
           ? response?.data
           : [];
-        setActivities(activitiesData);
-        setFilteredActivities(activitiesData);
+        setItineraries(itinerariesData);
+        setFilteredItineraries(itinerariesData);
       } catch (err) {
         const errorMessage =
           err?.response?.data?.error ||
@@ -108,43 +104,39 @@ export default function ActivitiesList({
     };
 
     if (userRole) {
-      fetchActivities();
+      fetchItineraries();
     }
   }, [userRole]);
 
   useEffect(() => {
-    const filtered = activities.filter((activity) => {
-      const activityDate = new Date(activity.date);
-      const activityRating = activity.averageRating;
-      const activityCategory = activity.category.Name.toLowerCase();
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
+    const filtered = itineraries.filter((itinerary) => {
+      const itineraryStartDate = new Date(itinerary.startDate);
+      const itineraryRating = itinerary.averageRating;
+      // const activityCategory = itinerary.category.Name.toLowerCase();
+      const activityPrice = itinerary.price;
 
       const isDateValid =
         !startDate ||
         !endDate ||
-        (activityDate >= new Date(startDate.setHours(0, 0, 0, 0)) &&
-          activityDate <= new Date(endDate.setHours(23, 59, 59, 999)));
+        (itineraryStartDate >= new Date(startDate.setHours(0, 0, 0, 0)) &&
+          itineraryStartDate <= new Date(endDate.setHours(23, 59, 59, 999)));
 
       const isRatingValid =
         ratingFilter.length === 0 ||
-        ratingFilter.some((rating) => activityRating >= rating);
+        ratingFilter.some((rating) => itineraryRating >= rating);
 
-      const isCategoryValid =
-        selectedCategories.length === 0 ||
-        selectedCategories.some(
-          (cat) => cat.toLowerCase() === activityCategory
-        );
+      const isCategoryValid =1
+        // selectedCategories.length === 0 ||
+        // selectedCategories.some(
+        //   (cat) => cat.toLowerCase() === activityCategory
+        // );
 
       const isPriceValid =
         activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
 
       const isSearchValid =
-        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.category.Name.toLowerCase().includes(
-          searchTerm.toLowerCase()
-        ) ||
-        activity.tags.some((tag) =>
+        itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        itinerary.tags.some((tag) =>
           tag.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
@@ -157,21 +149,21 @@ export default function ActivitiesList({
       );
     });
 
-    setFilteredActivities(filtered);
+    setFilteredItineraries(filtered);
   }, [
     startDate,
     endDate,
-    activities,
+    itineraries,
     ratingFilter,
     selectedCategories,
     priceRange,
     searchTerm,
   ]);
 
-  useEffect(() => {}, [filteredActivities]);
+  useEffect(() => {}, [filteredItineraries]);
 
   const handleSort = (field, order) => {
-    const sortedActivities = [...filteredActivities].sort((a, b) => {
+    const sortedActivities = [...filteredItineraries].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
@@ -186,7 +178,7 @@ export default function ActivitiesList({
 
       return order === "asc" ? aValue - bValue : bValue - aValue;
     });
-    setFilteredActivities(sortedActivities);
+    setFilteredItineraries(sortedActivities);
   };
 
   useEffect(() => {
@@ -215,18 +207,18 @@ export default function ActivitiesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastActivity = currentPage * activitiesPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
-  const currentActivities = filteredActivities.slice(
-    indexOfFirstActivity,
-    indexOfLastActivity
+  const indexOfLastItinerary = currentPage * itinerariesPerPage;
+  const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
+  const currentItineraries = filteredItineraries.slice(
+    indexOfFirstItinerary,
+    indexOfLastItinerary
   );
 
   const navigate = useNavigate();
-  const handleRedirect = (activityId) => {
+  const handleRedirect = (itineraryId) => {
     if (userRole === "Tourist"|| userRole === "Admin")
-      navigate(`/activity/${activityId}`, { state: { page } });
-    else navigate(`/activities/${activityId}`, { state: { page } });
+      navigate(`/itinerary/${itineraryId}`, { state: { page } });
+    else navigate(`/itineraries/${itineraryId}`, { state: { page } });
   };
 
   const formatDate = (date) => {
@@ -304,7 +296,7 @@ export default function ActivitiesList({
                   {loading ? (
                     <span>Loading results...</span>
                   ) : (
-                    <span>{filteredActivities?.length} results</span>
+                    <span>{filteredItineraries?.length} results</span>
                   )}
                 </div>
               </div>
@@ -348,7 +340,7 @@ export default function ActivitiesList({
             </div>
 
             <div className="row y-gap-30 pt-30">
-              {currentActivities?.map((elm, i) => (
+              {currentItineraries?.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -357,7 +349,7 @@ export default function ActivitiesList({
                         alt="image"
                       />
 
-                      {elm.badgeText && (
+                      {/* {elm.badgeText && (
                         <div className="tourCard__badge">
                           <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
                             {elm.specialDiscounts}
@@ -371,7 +363,7 @@ export default function ActivitiesList({
                             FEATURED
                           </div>
                         </div>
-                      )}
+                      )} */}
 
                       <div className="tourCard__favorite">
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
@@ -383,7 +375,7 @@ export default function ActivitiesList({
                     <div className="tourCard__content">
                       <div className="tourCard__location">
                         <i className="icon-pin"></i>
-                        {elm.location}
+                        {/* {elm.location} */}
                       </div>
 
                       <h3 className="tourCard__title mt-5">
@@ -408,13 +400,13 @@ export default function ActivitiesList({
                       </p>
 
                       <div className="row x-gap-20 y-gap-5 pt-30">
-                        {elm.tags?.map((elm2, i2) => (
+                        {/* {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
                             <div className="text-14 text-accent-1">
                               {elm2.name}
                             </div>
                           </div>
-                        ))}
+                        ))} */}
                       </div>
                     </div>
 
@@ -422,11 +414,11 @@ export default function ActivitiesList({
                       <div>
                         <div className="d-flex items-center text-14">
                           <i className="icon-calendar mr-10"></i> 
-                          {formatDate(elm.date)}
+                          {formatDate(elm.startDate)}
                         </div>
                         <div className="d-flex items-center text-14">
                           <i className="icon-clock mr-10"></i>
-                          {elm.time}
+                          {/* {elm.time} */}
                         </div>
 
                         <div className="tourCard__price">
@@ -451,10 +443,10 @@ export default function ActivitiesList({
             </div>
 
             <div className="d-flex justify-center flex-column mt-60">
-              {filteredActivities?.length > activitiesPerPage && (
+              {filteredItineraries?.length > itinerariesPerPage && (
                 <Pagination
-                  totalItems={filteredActivities.length}
-                  itemsPerPage={activitiesPerPage}
+                  totalItems={filteredItineraries.length}
+                  itemsPerPage={itinerariesPerPage}
                   currentPage={currentPage}
                   onPageChange={handlePageChange}
                 />

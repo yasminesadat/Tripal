@@ -52,26 +52,12 @@ export default function TourSingleSidebar({itinerary,activity}) {
   };
 
   const [ticketNumber, setTicketCount] = useState(1);
-
-  const [selectedTime, setSelectedTime] = useState("");
-  const [activeTimeDD, setActiveTimeDD] = useState(false);
-
-  const [selectedDate, setSelectedDate] = useState("");
-  const [activeDateDD, setActiveDateDD] = useState(false);
-  
   const handleBookClick = async () => {
-    if (itinerary&&(!selectedDate || !selectedTime)) {
-      message.error("Please select both a date and time.");
-      return;
-    }
-
-    try {
+      try {
       const response = await bookResource(
         itinerary ? "itinerary" : "activity",
         itinerary ? itinerary._id : activity._id,
         userId,
-        selectedDate,
-        selectedTime,
         ticketNumber
       );
       message.success(response.message);
@@ -82,130 +68,6 @@ export default function TourSingleSidebar({itinerary,activity}) {
   
   return (
     <div className="tourSingleSidebar">
-
-      {itinerary&& (<div className="searchForm -type-1 -sidebar mt-20">
-        <div className="searchForm__form">
-          {/* <div className="searchFormItem js-select-control js-form-dd js-calendar">
-            <div className="searchFormItem__button" data-x-click="calendar">
-              <div className="searchFormItem__icon size-50 rounded-12 bg-light-1 flex-center">
-                <i className="text-20 icon-calendar"></i>
-              </div>
-              <div className="searchFormItem__content">
-                <h5>Dates</h5>
-                <div>
-                  <span className="js-first-date">
-                    <Calender /> 
-                    
-                  </span>
-                  <span className="js-last-date"></span>
-                </div>
-              </div>
-              <div className="searchFormItem__icon_chevron">
-                <i className="icon-chevron-down d-flex text-18"></i>
-              </div>
-            </div>
-          </div> */}
-
-          <div className="searchFormItem js-select-control js-form-dd js-calendar">
-            <div
-              className="searchFormItem__button"
-              onClick={() => setActiveDateDD((pre) => !pre)}
-              data-x-click="date"
-            >
-              <div className="searchFormItem__icon size-50 rounded-12 bg-light-1 flex-center">
-              <i className="text-20 icon-calendar"></i>
-              </div>
-              <div className="searchFormItem__content">
-                <h5>Date</h5>
-                <div className="js-select-control-chosen">
-                  {selectedDate ? selectedDate : "Choose date"}
-                </div>
-              </div>
-              <div className="searchFormItem__icon_chevron">
-                <i className="icon-chevron-down d-flex text-18"></i>
-              </div>
-            </div>
-
-            <div
-              className={`searchFormItemDropdown -tour-type ${
-                activeDateDD ? "is-active" : ""
-              }`}
-              data-x="date"
-              data-x-toggle="is-active"
-            >
-              <div className="searchFormItemDropdown__container">
-                <div className="searchFormItemDropdown__list sroll-bar-1">
-                  {itinerary.availableDates.map((elm, i) => (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        setSelectedDate((pre) => (pre == elm ? "" : elm));
-                        setActiveDateDD(false);
-                      }}
-                      className="searchFormItemDropdown__item"
-                    >
-                      <button className="js-select-control-button">
-                        <span className="js-select-control-choice" >{elm}</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="searchFormItem js-select-control js-form-dd">
-            <div
-              className="searchFormItem__button"
-              onClick={() => setActiveTimeDD((pre) => !pre)}
-              data-x-click="time"
-            >
-              <div className="searchFormItem__icon size-50 rounded-12 bg-light-1 flex-center">
-                <i className="text-20 icon-clock"></i>
-              </div>
-              <div className="searchFormItem__content">
-                <h5>Time</h5>
-                <div className="js-select-control-chosen">
-                  {selectedTime ? selectedTime : "Choose time"}
-                </div>
-              </div>
-              <div className="searchFormItem__icon_chevron">
-                <i className="icon-chevron-down d-flex text-18"></i>
-              </div>
-            </div>
-
-            <div
-              className={`searchFormItemDropdown -tour-type ${
-                activeTimeDD ? "is-active" : ""
-              }`}
-              data-x="time"
-              data-x-toggle="is-active"
-            >
-              <div className="searchFormItemDropdown__container">
-                <div className="searchFormItemDropdown__list sroll-bar-1">
-                  {itinerary.availableTime.map((elm, i) => (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        setSelectedTime((pre) => (pre == elm ? "" : elm));
-                        setActiveTimeDD(false);
-                      }}
-                      className="searchFormItemDropdown__item"
-                    >
-                      <button className="js-select-control-button">
-                        <span className="js-select-control-choice">{elm}</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
-        </div>
-      </div>)}
-
       <h5 className="text-18 fw-500 mb-20 mt-20">Tickets</h5>
 
       <div>
