@@ -16,7 +16,7 @@ const metadata = {
   description: "Itineraries || Tripal",
 };
 
-export default function Activities() {
+export default function Itineraries() {
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
   const [sideBarOpen, setSideBarOpen] = useState(true);
