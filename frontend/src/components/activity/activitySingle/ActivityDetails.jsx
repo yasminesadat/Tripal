@@ -64,7 +64,7 @@ export default function ActivityDetails({ activity }) {
                   markerPosition={markerPosition}
                   search={"hi"}
                 />
-                <label> {activity.location} </label>
+
               </div>
               <h2 className="text-30">Customer Reviews</h2>
               <ActivityReviews activityId={activityId} />

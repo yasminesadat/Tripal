@@ -17,7 +17,7 @@ const handleShare = (link) => {
         message.error("Failed to share");
       });
   } else {
-    window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+    window.location.href = `mailto:?subject=Check out this activity !&body=Check out this link: ${link}`;
   }
 };
 const handleBookmark = async (eventId, eventType) => {

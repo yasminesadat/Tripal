@@ -202,8 +202,13 @@ export default function Register() {
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
-    // setTermsAndConditionsCheck(false);
-    // setCurrentTab(0);
+    if (e.target.value === "tourist") {
+      setTermsAndConditionsCheck(true);
+    }
+    else {
+      setTermsAndConditionsCheck(false);
+    }
+    setCurrentTab(0);
   };
   const handleDocumentChange = (info) => {
     if (info.fileList.length === 0) {
@@ -483,7 +488,7 @@ export default function Register() {
                     type="primary"
                     htmlType="submit"
                     loading={loading}
-                    disabled={!termsAccepted}
+                    disabled={!termsAndConditionsCheck}
                     block
                   >
                     Create Account
@@ -840,6 +845,10 @@ export default function Register() {
         }
 
         .ant-btn-primary[disabled] {
+          background: #dac4d0;
+          opacity: 0.7;
+        }
+            .ant-btn-primary[loading] {
           background: #dac4d0;
           opacity: 0.7;
         }
