@@ -18,7 +18,8 @@ const {
   bookmarkEvent,
   getBookmarkedEvents,
   saveProduct,
-  getWishList
+  getWishList,
+  removeFromWishList
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -116,6 +117,13 @@ router.get(
   verifyToken,
   authorizeRoles("Tourist"),
   getWishList
+);
+
+router.post(
+  "/tourist/remove-wishlist",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  removeFromWishList
 );
 
 module.exports = router;

@@ -527,6 +527,26 @@ const getWishList = async (req, res) => {
   }
 };
 
+const removeFromWishList = async (req, res) => {
+  const touristId = req.userId;
+  const { productId } = req.body; 
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+    
+    let product = await productModel.findById(productId);
+
+
+    tourist.wishlist = tourist.wishlist.filter(id => id.toString() !== productId.toString());
+    await tourist.save();
+
+    res.status(200).json({ message: 'Product removed from wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 module.exports = {
   createTourist,
   getTouristInfo,
@@ -543,5 +563,6 @@ module.exports = {
   bookmarkEvent,
   getBookmarkedEvents,
   saveProduct,
-  getWishList
+  getWishList,
+  removeFromWishList
 };

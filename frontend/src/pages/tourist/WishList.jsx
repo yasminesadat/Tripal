@@ -1,8 +1,6 @@
-import React from "react";
-import WishList from "@/components/tourist/Wishlist";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-
+import WishList from "@/components/tourist/WishList";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {

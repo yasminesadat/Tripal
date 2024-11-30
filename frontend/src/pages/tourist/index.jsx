@@ -2,8 +2,7 @@ import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
 import PageHeader from "@/components/tours/PageHeader";
 import TourList1 from "@/components/tours/TourList1";
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import { message } from "antd";
 import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
 import AdvertiserActivities from "@/components/activity/AdvertiserActivities";

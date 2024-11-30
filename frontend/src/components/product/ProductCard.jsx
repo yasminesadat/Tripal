@@ -94,12 +94,12 @@ const ProductCard = ({
   const handleHeartClick = async (e) => {
     e.stopPropagation();
     try {
-      const response = await saveProduct(id);
+      await saveProduct(id);
       message.success("Product added to wishlist!");
       setIsSaved(true); 
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "An unexpected error occurred";      
-      message.error(errorMessage);
+      message.warning(errorMessage);
     }
   };
 

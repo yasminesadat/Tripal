@@ -166,6 +166,15 @@ export async function saveProduct(productId) {
   }
 }
 
+export async function removeWishList(productId) {
+  try {
+    await axios.post('/tourist/remove-wishlist', { productId });
+  } catch (error) {
+    console.error("Error removing product from wishlist:", error);
+    throw error;
+  }
+}
+
 export async function getWishList() {
   try {
     const response = await axios.get('/tourist/wishlist');

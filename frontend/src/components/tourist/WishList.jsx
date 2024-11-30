@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWishList } from "@/api/TouristService";
 import Pagination from "@/components/activity/Pagination";
+import { removeWishList } from "@/api/TouristService";
+import { message } from "antd";
 
 export default function WishList() {
     const [wishlist, setWishlist] = useState([]);
@@ -11,12 +13,12 @@ export default function WishList() {
 
     useEffect(() => {
         const fetchWishlist = async () => {
-        try {
-            const data = await getWishList();
-            setWishlist(data);
-        } catch (error) {
-            console.error("Error fetching wishlist", error);
-        }
+            try {
+                const data = await getWishList();
+                setWishlist(data);
+            } catch (error) {
+                console.error("Error fetching wishlist", error);
+            }
         };
         fetchWishlist();
     }, []);
@@ -27,10 +29,7 @@ export default function WishList() {
 
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = wishlist.slice(
-        indexOfFirstProduct,
-        indexOfLastProduct
-    );
+    const currentProducts = wishlist.slice(indexOfFirstProduct, indexOfLastProduct);
     
     const truncateText = (text, maxLength) => {
         if (text.length <= maxLength) {
@@ -44,6 +43,17 @@ export default function WishList() {
         navigate(`/tourist/view-products/product/${id}`, {
             state: { id, name, seller, price, description, quantity, picture, averageRating, sales, userRole }
         });
+    };
+
+    const handleRemoveFromWishlist = async (productId) => {
+        try {
+            await removeWishList(productId);
+            const updatedWishlist = await getWishList();
+            setWishlist(updatedWishlist);
+            message.success("item removed from the wishlist successfully")
+        } catch (error) {
+            message.error("item removal failed")
+        }
     };
 
     return (
@@ -94,6 +104,12 @@ export default function WishList() {
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div className="delete-btn-container">
+                                                    <button className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30" onClick={() => handleRemoveFromWishlist(elm._id)}>
+                                                        <i className="icon-delete text-20"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -115,6 +131,7 @@ export default function WishList() {
                 </div>
             </div>
         </div>
+
         <style jsx>{`
         .tourCardName span {
           background-repeat: no-repeat;
@@ -123,13 +140,19 @@ export default function WishList() {
           background-size: 0px 1px;
           transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
           padding: 0.1% 0px;
-          }
+        }
 
         .tourCardName span:hover {
          background-size: 100% 1px;
          cursor: pointer;
         }
-      `}</style>
+
+        .delete-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        `}</style>
         </>
     );
 }
