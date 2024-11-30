@@ -158,14 +158,25 @@ const getActivityById = async (req, res) => {
 };
 
 const getTouristActivities = async (req, res) => {
-  const { touristId } = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, isBookingOpen: true, flagged: false, date: { $gte: new Date() } })
+    const { touristId } = req.userId;
+    // const currentDate = new Date();
+    
+    const activities = await Activity.find(
+      { "bookings.touristId": touristId, 
+        flagged: false, 
+        // date: { $gte: currentDate } 
+      }
+    )
       .populate("category")
       .populate("tags")
+      .select("-bookings");
+
+    if (!activities.length)
+      return res.status(200).json({ message: "No booked activities found for this tourist." });
     res.status(200).json(activities);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: 'Error fetching activities', error });
   }
 };
 

@@ -6,13 +6,13 @@ export async function bookResource(resourceType, resourceId, touristId,tickets) 
       touristId,
       tickets
     });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error(`Error booking ${resourceType}:`, error);
     throw error;
   }
 }
-
 
 export async function cancelResource(resourceType, resourceId, touristId) {
   try {

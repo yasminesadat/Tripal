@@ -67,7 +67,8 @@ export async function getTouristItineraries() {
 
 export async function getTouristActivities() {
   try {
-    const response = await axios.get(`/activities`);
+    const response = await axios.get(`/booked-activities`);
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
