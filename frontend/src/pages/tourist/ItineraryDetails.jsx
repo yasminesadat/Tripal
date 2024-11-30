@@ -14,7 +14,7 @@ import Header from "@/components/dasboard/Header";
 import MetaComponent from "@/components/common/MetaComponent";
 import NotFoundPage from "@/pages/pages/404";
 import Spinner from "@/components/common/Spinner";
-import Index from './Index'
+import Index from './index'
 
 const ItineraryDetailsPage = () => {
   //#region 1. Variables
