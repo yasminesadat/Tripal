@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, message, Modal } from "antd";
 import { createComplaint } from "../../api/ComplaintsService";
 
-const ComplaintsForm = ({ open, onCancel }) => {
-
+const ComplaintsForm = ({ open, onCancel, onSubmitSuccess }) => {  // Add onSubmitSuccess prop
     const [loading, setLoading] = useState(false);
     const [buttonText, setButtonText] = useState("Submit Complaint");
     const [form] = Form.useForm();
@@ -15,10 +14,27 @@ const ComplaintsForm = ({ open, onCancel }) => {
             const complaintData = {
                 title: values.title,
                 body: values.body,
+                date: new Date().toISOString(),
             };
-            await createComplaint(complaintData);
+
+            // Get response from createComplaint
+            const response = await createComplaint(complaintData);
+
+            // Create complete data object to pass to parent
+            const completeData = {
+                title: values.title,
+                body: values.body,
+                date: new Date().toISOString(),
+                _id: response._id, // or response._id depending on your database
+                status: response.status
+            };
+
             message.success("Complaint submitted successfully");
             setButtonText("Success!");
+
+            // Pass the data to parent component
+            onSubmitSuccess(completeData);
+
             form.resetFields();
             onCancel();
         } catch (error) {
@@ -29,7 +45,6 @@ const ComplaintsForm = ({ open, onCancel }) => {
             setButtonText("Submit Complaint");
         }
     };
-
     return (
         <Modal
             title="Share Your Experience"

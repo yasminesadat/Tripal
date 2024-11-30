@@ -35,6 +35,12 @@ const MyComplaints = () => {
         fetchUserData(); // Invoke the renamed function
         // Log userData when it changes
     }, []);
+    const handleComplaintSubmit = (complaintData) => {
+        // Now you have access to the complaint data here
+        console.log('Complaint data:', complaintData);
+        // Add to complaints list if you want to display them
+        setComplaints(prev => [...prev, complaintData]);
+    };
     const navigate = useNavigate();
     useEffect(() => {
         const fetchComplaints = async () => {
@@ -154,6 +160,7 @@ const MyComplaints = () => {
             <ComplaintsForm
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
+                onSubmitSuccess={handleComplaintSubmit}
             />
             <style>{`
       
