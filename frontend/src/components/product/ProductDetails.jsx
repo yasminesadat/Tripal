@@ -129,9 +129,22 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                       onChange={(value) => console.log("changed", value)}
                       style={{ textAlign: "center", width: "100px" }}
                     />
-                    <Button type="primary" style={{ marginLeft: "10px" }}>
-                      Add to Cart
-                    </Button>
+                   <Button className="button purple-button" type="primary" style={{ marginLeft: "10px" }}>
+                  Add to Cart
+                </Button>
+
+                <style>{`
+                  .purple-button {
+                      background-color: #8f5774 !important;  /* Purple-600 */
+                      color: white !important;
+                      transition: background-color 0.3s ease !important;
+                  }
+
+                  .purple-button:hover {
+                      background-color: #5d384d !important;  /* Purple-700 */
+                  }
+                  `}</style>
+
                   </>
                 )}
               </Space>
