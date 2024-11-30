@@ -1,5 +1,6 @@
 import Stars from "../common/Stars";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getWishList } from "@/api/TouristService";
 import Pagination from "@/components/activity/Pagination";
 
@@ -32,12 +33,19 @@ export default function WishList() {
     );
     
     const truncateText = (text, maxLength) => {
-    if (text.length <= maxLength) {
-        return text;
-    }
-    return text.substring(0, maxLength) + "...";
+        if (text.length <= maxLength) {
+            return text;
+        }
+        return text.substring(0, maxLength) + "...";
     };
-    
+
+    const navigate = useNavigate();
+    const handleCardClick = (id, name, seller, price, description, quantity, picture, averageRating, sales, userRole) => {
+        navigate(`/tourist/view-products/product/${id}`, {
+            state: { id, name, seller, price, description, quantity, picture, averageRating, sales, userRole }
+        });
+    };
+
     return (
         <>
         <div className="dashboard js-dashboard">
@@ -62,9 +70,9 @@ export default function WishList() {
                                                 />
                                             </div>
 
-                                            <div className="col">
-                                                <div className="text-18 lh-15 fw-500 mt-5">
-                                                    {elm.name}
+                                            <div className="col" >
+                                                <div className="text-18 lh-15 fw-500 mt-5 tourCardName" onClick={() => handleCardClick(elm._id, elm.name, elm.seller, elm.price, elm.description, elm.quantity, elm.picture, elm.averageRating, elm.sales, elm.userRole)}>
+                                                    <span>{elm.name}</span>
                                                 </div>
 
                                                 <div className="d-flex items-center mt-5">
@@ -107,6 +115,21 @@ export default function WishList() {
                 </div>
             </div>
         </div>
+        <style jsx>{`
+        .tourCardName span {
+          background-repeat: no-repeat;
+          background-image: linear-gradient(to right, black 0%, black 100%);
+          background-position: 0px 95%;
+          background-size: 0px 1px;
+          transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
+          padding: 0.1% 0px;
+          }
+
+        .tourCardName span:hover {
+         background-size: 100% 1px;
+         cursor: pointer;
+        }
+      `}</style>
         </>
     );
 }
