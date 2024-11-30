@@ -2,65 +2,75 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Card, Timeline } from 'antd';
 import { CheckCircleOutlined, SyncOutlined, ClockCircleOutlined } from '@ant-design/icons';
-
+import FooterThree from "@/components/layout/footers/FooterThree";
+import GuestHeader from "@/components/layout/header/GuestHeader";
 const PendingPage = () => {
     const location = useLocation();
 
     return (
-        <div className="pending-page">
-            <div className="pending-container">
-                <div className="status-card">
-                    <div className="loader-section">
-                        <div className="circular-loader"></div>
-                        <div className="status-icon">
-                            <SyncOutlined spin style={{ fontSize: '24px', color: 'var(--color-dark-purple)' }} />
+        <>
+
+            <div className="page-wrapper">
+                <GuestHeader />
+                <main className="page-content">
+                    <div className="pending-page">
+                        <div className="pending-container">
+                            <div className="status-card">
+                                <div className="loader-section">
+                                    <div className="circular-loader"></div>
+                                    <div className="status-icon">
+                                        <SyncOutlined spin style={{ fontSize: '24px', color: 'var(--color-dark-purple)' }} />
+                                    </div>
+                                </div>
+
+                                <Card className="info-card">
+                                    <h1>Request Processing</h1>
+                                    <p className="subtitle">Your application is being reviewed by our team</p>
+
+                                    <div className="user-info">
+                                        <div className="info-item">
+                                            <label>Username</label>
+                                            <p>{location.state.userName}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Email</label>
+                                            <p>{location.state.email}</p>
+                                        </div>
+                                        <div className="info-item">
+                                            <label>Role</label>
+                                            <p>{location.state.role}</p>
+                                        </div>
+                                    </div>
+
+                                    <Timeline
+                                        items={[
+                                            {
+                                                dot: <CheckCircleOutlined style={{ color: 'var(--color-dark-purple)' }} />,
+                                                color: 'var(--color-dark-purple)',
+                                                children: 'Application Submitted',
+                                            },
+                                            {
+                                                dot: <SyncOutlined spin style={{ color: 'var(--color-pink)' }} />,
+                                                color: 'var(--color-pink)',
+                                                children: 'Under Review',
+                                            },
+                                            {
+                                                dot: <ClockCircleOutlined style={{ color: 'var(--color-light-purple)' }} />,
+                                                color: 'var(--color-light-purple)',
+                                                children: 'Final Approval',
+                                            },
+                                        ]}
+                                    />
+
+                                    <div className="notification-message">
+                                        <p>You will receive a notification once your application has been processed.</p>
+                                    </div>
+                                </Card>
+                            </div>
                         </div>
                     </div>
-
-                    <Card className="info-card">
-                        <h1>Request Processing</h1>
-                        <p className="subtitle">Your application is being reviewed by our team</p>
-
-                        <div className="user-info">
-                            <div className="info-item">
-                                <label>Username</label>
-                                <p>{location.state.userName}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Email</label>
-                                <p>{location.state.email}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Role</label>
-                                <p>{location.state.role}</p>
-                            </div>
-                        </div>
-
-                        <Timeline
-                            items={[
-                                {
-                                    dot: <CheckCircleOutlined style={{ color: 'var(--color-dark-purple)' }} />,
-                                    color: 'var(--color-dark-purple)',
-                                    children: 'Application Submitted',
-                                },
-                                {
-                                    dot: <SyncOutlined spin style={{ color: 'var(--color-pink)' }} />,
-                                    color: 'var(--color-pink)',
-                                    children: 'Under Review',
-                                },
-                                {
-                                    dot: <ClockCircleOutlined style={{ color: 'var(--color-light-purple)' }} />,
-                                    color: 'var(--color-light-purple)',
-                                    children: 'Final Approval',
-                                },
-                            ]}
-                        />
-
-                        <div className="notification-message">
-                            <p>You will receive a notification once your application has been processed.</p>
-                        </div>
-                    </Card>
-                </div>
+                </main>
+                <FooterThree />
             </div>
 
             <style jsx>{`
@@ -194,7 +204,7 @@ const PendingPage = () => {
                     }
                 }
             `}</style>
-        </div>
+        </>
     );
 };
 
