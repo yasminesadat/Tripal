@@ -51,7 +51,7 @@ export default function BannerEight() {
                       borderRadius: "8px",
                     }}
                   >
-                    <Link to="/tour-list-1">
+                    <Link to="/login">
                       Book Now
                       <i className="icon-arrow-top-right ml-10 text-16"></i>
                     </Link>
