@@ -16,6 +16,246 @@ import { useNavigate } from "react-router-dom";
 import { createTourist } from "@/api/TouristService";
 import { createRequest, SetRequestStatus } from "@/api/RequestService";
 const { Option } = Select;
+import { Tabs } from 'antd';
+
+const tabs = [
+  {
+    title: (<h2 className="text-20 fw-500">Introduction</h2>),
+    content:
+      (<p className="mt-10" >1.1 Acceptance of Terms
+        By using Tripal, you agree to these terms and conditions.If you do not agree, please do not use our services.
+        <br />
+        1.2 Services Provided
+        Tripal offers an online platform to browse, book, and manage flights, hotel reservations, tours, activities, and itineraries.We act as an intermediary, facilitating bookings and purchases with third - party suppliers.
+        <br />
+        1.3 Eligibility
+        To use our services, you must be at least 18 years of age or of legal age in your jurisdiction to enter into binding contracts.
+        <br />
+        1.4 User Responsibilities
+        You agree to provide accurate, complete, and up- to - date information.You are responsible for ensuring the accuracy of any booking details, including traveler names and contact information.
+      </p>)
+  },
+  {
+    title: (<h2 className="text-20 fw-500">Booking and Reservation Process</h2>),
+    content: (<p className="mt-10" >
+      2.1 Flights, Hotels, and Activities
+      All bookings are subject to availability and confirmation from the relevant third-party provider. Prices may vary based on availability and are not guaranteed until a booking is confirmed.
+      <br />
+      2.2 Payment
+      Full payment or a deposit may be required at the time of booking. Payment policies are specific to each service, as determined by the provider.
+      <br />
+      2.3 Cancellation and Refunds
+      Cancellation policies vary depending on the service and the third-party provider's policies. Please review each provider’s policy before booking. Refunds, if available, will be processed per the provider’s terms, and [Website Name] may charge an additional processing fee.
+    </p>),
+  },
+  {
+    title: (<h2 className="text-20 fw-500">Pricing and Fees</h2>),
+    content:
+      (<p className="mt-10" >
+        3.1 Service Fees
+        Tripal may charge a service fee for booking management, support, or added convenience. Fees will be disclosed prior to finalizing your booking.
+        <br />
+        3.2 Price Changes and Accuracy
+        We strive to provide accurate pricing information. However, Tripal cannot guarantee that prices will be the same at the time of booking, as prices can change due to market demand or provider pricing changes.
+      </p>),
+  },
+  {
+    title: (<h2 className="text-20 fw-500">Privacy</h2>),
+    content: (<p className="mt-10" >
+      4.1 Intellectual Property
+      All content on Tripal, including text, graphics, and logos, is protected by copyright, trademark, and other intellectual property laws. You may not copy, reproduce, or distribute any content without express permission.
+      <br />
+      4.2 User-Generated Content
+      You may submit reviews, comments, and feedback on our site. By submitting content, you grant Tripal a worldwide, royalty-free license to use, display, and distribute this content.
+      <br />
+      4.3 Privacy and Data Protection
+      Our [Privacy Policy](link to privacy policy) governs how we collect, use, and protect your personal data. Please review this policy for more information.
+      <br />
+      4.4 Modifications to Terms
+      Tripal reserves the right to modify these terms at any time. Changes will be posted on this page, and continued use of our services signifies acceptance of any updated terms.
+      <br />
+      4.5 Governing Law and Jurisdiction
+      These terms are governed by the laws of [Your Country/State]. Any disputes arising from these terms shall be resolved in the courts of [Your Jurisdiction].
+    </p>),
+  },
+  {
+    title: (<h2 className="text-20 fw-500">Liability and Disclaimer</h2>),
+    content: (<p className="mt-10" >
+      5.1 Limited Liability
+      Tripal is not liable for any direct, indirect, incidental, or consequential damages resulting from your use of our services, including but not limited to travel interruptions, cancellations, loss of personal items, or changes in booking details.
+      <br />
+      5.2 Disclaimer of Warranties
+      We provide our services "as is" and make no warranties or representations about the accuracy, reliability, or suitability of the information and services offered.
+    </p>),
+  }
+
+];
+
+
+
+const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) => {
+  return (
+    <Modal
+      title="Terms and Conditions"
+      open={open}
+      onOk={onOk}
+      onCancel={onCancel}
+      width={700}
+      okText={currentTab === tabs.length - 1 ? "Done" : "Accept"}
+      className="terms-modal"
+      centered={true}
+    >
+      <div className="h-full">
+        <Tabs
+          activeKey={String(currentTab)}
+          tabPosition="left"
+          onChange={(key) => setCurrentTab(Number(key))}
+          items={tabs.map((tab, i) => ({
+            key: String(i),
+            label: tab.title,
+            children: (
+              <div className="p-4">
+                <h3 className="text-lg font-medium mb-3">{tab.title}</h3>
+                <div className="terms-content">
+                  {tab.content}
+                </div>
+              </div>
+            ),
+          }))}
+          style={{ width: '100%' }}
+        />
+      </div>
+
+      <style jsx global>{`
+        .terms-modal .ant-modal-content {
+          background: white;
+          border-radius: 4px;
+          box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .terms-modal .ant-modal-header {
+          background: var(--color-stone);
+          border-radius: 4px 4px 0 0;
+          padding: 16px 20px;
+        }
+        
+        .terms-modal .ant-modal-title {
+          color: white;
+          font-size: 1.1rem;
+          font-weight: 500;
+          letter-spacing: 0.3px;
+        }
+        
+        .terms-modal .ant-modal-close-x {
+          color: white;
+        }
+        
+        .terms-modal .ant-tabs-content {
+          height: 50vh;
+          overflow-y: auto;
+          padding: 0 12px;
+          background: white;
+        }
+        
+        .terms-modal .ant-tabs-nav {
+          min-width: 130px;
+          padding: 12px 0;
+          background: #f8f8f8;
+          border-right: 1px solid #eee;
+        }
+        
+        .terms-modal .ant-tabs-tab {
+          padding: 8px 12px !important;
+          margin: 2px 0 !important;
+          color: #666;
+          transition: all 0.2s ease;
+          font-size: 13px;
+          min-height: unset !important;
+        }
+        
+        .terms-modal .ant-tabs-tab:hover {
+          color: var(--color-stone);
+        }
+        
+        .terms-modal .ant-tabs-tab-active {
+          background: transparent !important;
+          color: var(--color-stone) !important;
+          font-weight: 500;
+        }
+        
+        .terms-modal .ant-tabs-tab-active .ant-tabs-tab-btn {
+          color: var(--color-stone) !important;
+        }
+        
+        .terms-modal .ant-tabs-ink-bar {
+          background: var(--color-stone);
+          width: 3px !important;
+        }
+        
+        .terms-modal .terms-content {
+          line-height: 1.6;
+          color: #2c3e50;
+          font-size: 13px;
+        }
+        
+        .terms-modal .ant-modal-body {
+          padding: 0;
+        }
+        
+        .terms-modal .ant-modal-footer {
+          background: #f8f8f8;
+          border-top: 1px solid #eee;
+          padding: 12px 20px;
+          border-radius: 0 0 4px 4px;
+        }
+        
+        .terms-modal .ant-btn-primary {
+          background: var(--color-stone);
+          border-color: var(--color-stone);
+          height: 32px;
+          padding: 0 16px;
+          font-weight: 500;
+        }
+        
+        .terms-modal .ant-btn-primary:hover {
+          background: var(--color-stone-light);
+          border-color: var(--color-stone-light);
+        }
+        
+        .terms-modal .ant-btn-default {
+          height: 32px;
+          padding: 0 16px;
+          border: 1px solid #999;
+          color: #666;
+          margin-right: 8px;
+          background: white;
+        }
+        
+        .terms-modal .ant-btn-default:hover {
+          border-color: var(--color-stone);
+          color: var(--color-stone);
+        }
+
+        .terms-modal h3 {
+          color: var(--color-stone);
+          font-weight: 500;
+          letter-spacing: 0.3px;
+          font-size: 1rem;
+        }
+
+        .terms-modal .ant-tabs-content-holder {
+          padding-left: 8px;
+        }
+      `}</style>
+    </Modal>
+  );
+};
+
+
+
+
+
+
 const RegisterIllustration = () => (
   <svg viewBox="0 0 400 300" className="register-illustration floating">
     <defs>
@@ -79,78 +319,6 @@ const RegisterIllustration = () => (
 
 export default function Register() {
 
-  const tabs = [
-    {
-      title: (<h2 className="text-20 fw-500">Introduction</h2>),
-      content:
-        (<p className="mt-10" >1.1 Acceptance of Terms
-          By using Tripal, you agree to these terms and conditions.If you do not agree, please do not use our services.
-          <br />
-          1.2 Services Provided
-          Tripal offers an online platform to browse, book, and manage flights, hotel reservations, tours, activities, and itineraries.We act as an intermediary, facilitating bookings and purchases with third - party suppliers.
-          <br />
-          1.3 Eligibility
-          To use our services, you must be at least 18 years of age or of legal age in your jurisdiction to enter into binding contracts.
-          <br />
-          1.4 User Responsibilities
-          You agree to provide accurate, complete, and up- to - date information.You are responsible for ensuring the accuracy of any booking details, including traveler names and contact information.
-        </p>)
-    },
-    {
-      title: (<h2 className="text-20 fw-500">Booking and Reservation Process</h2>),
-      content: (<p className="mt-10" >
-        2.1 Flights, Hotels, and Activities
-        All bookings are subject to availability and confirmation from the relevant third-party provider. Prices may vary based on availability and are not guaranteed until a booking is confirmed.
-        <br />
-        2.2 Payment
-        Full payment or a deposit may be required at the time of booking. Payment policies are specific to each service, as determined by the provider.
-        <br />
-        2.3 Cancellation and Refunds
-        Cancellation policies vary depending on the service and the third-party provider's policies. Please review each provider’s policy before booking. Refunds, if available, will be processed per the provider’s terms, and [Website Name] may charge an additional processing fee.
-      </p>),
-    },
-    {
-      title: (<h2 className="text-20 fw-500">Pricing and Fees</h2>),
-      content:
-        (<p className="mt-10" >
-          3.1 Service Fees
-          Tripal may charge a service fee for booking management, support, or added convenience. Fees will be disclosed prior to finalizing your booking.
-          <br />
-          3.2 Price Changes and Accuracy
-          We strive to provide accurate pricing information. However, Tripal cannot guarantee that prices will be the same at the time of booking, as prices can change due to market demand or provider pricing changes.
-        </p>),
-    },
-    {
-      title: (<h2 className="text-20 fw-500">Privacy</h2>),
-      content: (<p className="mt-10" >
-        4.1 Intellectual Property
-        All content on Tripal, including text, graphics, and logos, is protected by copyright, trademark, and other intellectual property laws. You may not copy, reproduce, or distribute any content without express permission.
-        <br />
-        4.2 User-Generated Content
-        You may submit reviews, comments, and feedback on our site. By submitting content, you grant Tripal a worldwide, royalty-free license to use, display, and distribute this content.
-        <br />
-        4.3 Privacy and Data Protection
-        Our [Privacy Policy](link to privacy policy) governs how we collect, use, and protect your personal data. Please review this policy for more information.
-        <br />
-        4.4 Modifications to Terms
-        Tripal reserves the right to modify these terms at any time. Changes will be posted on this page, and continued use of our services signifies acceptance of any updated terms.
-        <br />
-        4.5 Governing Law and Jurisdiction
-        These terms are governed by the laws of [Your Country/State]. Any disputes arising from these terms shall be resolved in the courts of [Your Jurisdiction].
-      </p>),
-    },
-    {
-      title: (<h2 className="text-20 fw-500">Liability and Disclaimer</h2>),
-      content: (<p className="mt-10" >
-        5.1 Limited Liability
-        Tripal is not liable for any direct, indirect, incidental, or consequential damages resulting from your use of our services, including but not limited to travel interruptions, cancellations, loss of personal items, or changes in booking details.
-        <br />
-        5.2 Disclaimer of Warranties
-        We provide our services "as is" and make no warranties or representations about the accuracy, reliability, or suitability of the information and services offered.
-      </p>),
-    }
-
-  ];
   const [requestId, setRequestId] = useState('')
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -500,56 +668,14 @@ export default function Register() {
             </Form>
           </div>
         </div>
-        <Modal
-          title="Terms and conditions"
+        <TermsModal
           open={open}
           onOk={handleOk}
           onCancel={handleCancel}
-          okText={currentTab === tabs.length - 1 ? "Done" : "Accept"}
-        >
-          <section className="layout-pt-md layout-pb-lg">
-            <div className="container">
-              <div className="tabs -terms js-tabs">
-                <div className="row y-gap-30">
-                  <div className="col-lg-3">
-                    <div className="tabs__controls row y-gap-10 js-tabs-controls">
-                      {tabs.map((elm, i) => (
-                        <div
-                          key={i}
-                          className="col-12"
-                          onClick={() => setCurrentTab(i)}
-                        >
-                          <button
-                            className={`tabs__button relative pl-20 js-tabs-button ${i === currentTab ? "is-tab-el-active" : ""
-                              } `}
-                            data-tab-target=".-tab-item-1"
-                          >
-                            {elm.title}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="col-lg-9">
-                    <div className="tabs__content">
-                      {tabs.map(
-                        (tab, index) =>
-                          index === currentTab && (
-                            <div key={index} className="tabs__pane is-tab-el-active">
-                              {tab.title}
-                              {tab.content}
-
-                            </div>
-                          )
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </Modal>
+          tabs={tabs}
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+        />
       </div>
 
       <style>{`
