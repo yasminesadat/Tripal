@@ -10,9 +10,10 @@ import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
+import LocationMap from '../../components/common/MapComponent';
 // import { toast } from "react-toastify";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
-const tabs = ["Content", "Timings", "Location", "Pricing", "Included"];
+const tabs = ["Content", "Timings", "Location", "Pricing"];
 export default function AddHistoricalPlace() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Content");
@@ -44,6 +45,7 @@ export default function AddHistoricalPlace() {
     props?.location?.coordinates?.longitude || -0.09,
   ]);
   const [form] = Form.useForm();
+
   const [formData, setFormData] = useState({
     name: props?.name || "",
     description: props?.description || "",
@@ -221,17 +223,18 @@ export default function AddHistoricalPlace() {
     url: image.url,
   }));
   useEffect(() => {
+
     form.setFieldsValue({
       name: formData.name,
       description: formData.description,
-      historicalPeriod: [...formData.historicalPeriod.map((period) => ({
-        label: period.name,
-        value: period._id
-      }))],
-      tags: [...formData.tags.map((tag) => ({
-        label: tag.name,
-        value: tag._id
-      }))],
+      // historicalPeriod: [...formData.historicalPeriod.map((period) => ({
+      //   label: period.name,
+      //   value: period._id
+      // }))],
+      // tags: [...formData.tags.map((tag) => ({
+      //   label: tag.name,
+      //   value: tag._id
+      // }))],
       weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
       weekendClosingTime: formData.openingHours?.weekends?.closingTime
         ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
@@ -239,7 +242,10 @@ export default function AddHistoricalPlace() {
       weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
       weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
         ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-        : null
+        : null,
+        foreignerPrice: formData.ticketPrices.foreigner,
+        nativePrice: formData.ticketPrices.native,
+        studentPrice:formData.ticketPrices.student,
     });
   }, [formData, form]);
 
@@ -283,58 +289,80 @@ export default function AddHistoricalPlace() {
                 <div className="row pt-40">
                   <div className="col-xl-9 col-lg-10">
                     <div className="tabs__content js-tabs-content">
-                      <div
-                        className={`tabs__pane  ${activeTab == "Content" ? "is-tab-el-active" : ""
-                          }`}
+                      <Form className=" row y-gap-30"
+                        form={form}
+                        layout="vertical"
+                        name="validate_other"
+                        onFinish={() => {
+                          handleSubmission()
+                        }
+                        }
+                        initialValues={{
+                          upload: fileList,
+                          name: formData.name,
+                          description: formData.description,
+                          historicalPeriod: [...formData.historicalPeriod.map((period) => ({
+                            label: period.name,
+                            value: period._id
+                          }))],
+                          tags: [...formData.tags.map((tag) => ({
+                            label: tag.name,
+                            value: tag._id
+                          }))],
+                          weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
+                          weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
+                          weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+                          weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
+                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+                            : null,
+                          foreignerPrice: formData.ticketPrices.foreigner,
+                          nativePrice: formData.ticketPrices.native,
+                          studentPrice:formData.ticketPrices.student,
+
+
+                        }}
+                        onValuesChange={(changedValues, allValues) => {
+                          setFormData({
+                            ...formData,
+                            name: allValues.name,
+                            description: allValues.description,
+                            // historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
+                            //   const period = periodTagsOptions.find((p) => p._id === tagValue);
+                            //   return {
+                            //     name: period ? period.name : tagValue,
+                            //     _id: period ? period._id : ''
+                            //   };
+                            // }),
+                            // tags: allValues.tags.map((tagValue) => {
+                            //   const tag = tagsOptions.find((p) => p._id === tagValue);
+                            //   return {
+                            //     name: tag ? tag.name : tagValue,
+                            //     _id: tag ? tag._id : ''
+                            //   };
+                            //}),
+                            openingHours: {
+                              weekdays: {
+                                openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
+                                closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
+                              },
+                              weekends: {
+                                openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
+                                closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
+                              }
+                            },
+                            ticketPrices: {
+                              foreigner: allValues.foreignerPrice,
+                               native:allValues.nativePrice,
+                              student: allValues.studentPrice,
+                            },
+
+                          });
+                        }}
+
+
                       >
-                        <Form className="contactForm row y-gap-30"
-                          form={form}
-                          layout="vertical"
-                          name="validate_other"
-                          onFinish={() => {
-                            setActiveTab("Timings");
-                            console.log("hello");
-                          }
-                          }
-                          initialValues={{
-                            upload: fileList,
-                            name: formData.name,
-                            description: formData.description,
-                            historicalPeriod: [...formData.historicalPeriod.map((period) => ({
-                              label: period.name,
-                              value: period._id
-                            }))],
-                            tags: [...formData.tags.map((tag) => ({
-                              label: tag.name,
-                              value: tag._id
-                            }))]
-                          }}
-                          onValuesChange={(changedValues, allValues) => {
-                            setFormData({
-                              ...formData,
-                              name: allValues.name,
-                              description: allValues.description,
-                              historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
-                                const period = periodTagsOptions.find((p) => p._id === tagValue);
-                                return {
-                                  name: period ? period.name : tagValue,
-                                  _id: period ? period._id : ''
-                                };
-                              }),
-                              tags: allValues.tags.map((tagValue) => {
-                                const tag = tagsOptions.find((p) => p._id === tagValue);
-                                return {
-                                  name: tag ? tag.name : tagValue,
-                                  _id: tag ? tag._id : ''
-                                };
-                              }),
-                            });
-                          }}
-
-
-                        >
-                          <style>
-                            {`
+                        <style>
+                          {`
                           .contactForm .form-input {
                             position: relative;
                             margin-bottom: 20px;
@@ -366,7 +394,12 @@ export default function AddHistoricalPlace() {
                             background: #fff;
                           }
                           `}
-                          </style>
+                        </style>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Content" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+
                           <div className="col-12">
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                               Name
@@ -380,8 +413,16 @@ export default function AddHistoricalPlace() {
                                 },
                               ]}
                             >
-                              <Input 
+                              <Input
                                 type="text"
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  padding: '10px 15px', // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
                               />
                             </Form.Item>
                           </div>
@@ -390,7 +431,7 @@ export default function AddHistoricalPlace() {
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                               Description
                             </label>
-                            <Form.Item className="form-input "
+                            <Form.Item
 
                               name="description"
                               rules={[
@@ -402,6 +443,11 @@ export default function AddHistoricalPlace() {
 
                               <Input.TextArea style={{
                                 width: '100%',
+                                height: '50px', // Adjust the height as needed
+                                padding: '10px 15px', // Increase padding for taller appearance
+                                fontSize: '18px', // Increase font size for better readability
+                                border: '1px solid #ccc',
+                                borderRadius: '10px', // Optional for a rounded look
                               }}
                                 type="text"
                               />
@@ -412,12 +458,38 @@ export default function AddHistoricalPlace() {
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                               Historical Periods
                             </label>
-                            <Form.Item className="form-input "
+                            <Form.Item
                               name="historicalPeriod"
                               rules={[{ required: false, message: "Please select or create historical periods" }]}>
                               <Select
                                 mode="tags"
                                 placeholder="Please select or create period tags"
+                                // defaultValue={[...formData.historicalPeriod.map((period) => ({
+                                //     label: period.name,
+                                //     value: period._id
+                                // }))]}
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                                onChange={(selectedTags) => {
+                                  const selectedPeriods = selectedTags.map((tagValue) => {
+                                    const period = periodTagsOptions.find((p) => p._id === tagValue);
+                                    return {
+                                      name: period ? period.name : tagValue,
+                                      _id: period ? period._id : ''
+                                    };
+                                  });
+                                  console.log(selectedPeriods);
+                                  setFormData((data) => ({
+                                    ...data,
+                                    historicalPeriod: selectedPeriods,
+                                  }));
+                                }}
 
                                 options={periodTagsOptions.map((period) => (
                                   {
@@ -433,12 +505,39 @@ export default function AddHistoricalPlace() {
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                               Tags
                             </label>
-                            <Form.Item className="form-input "
+                            <Form.Item
                               name="tags"
                               rules={[{ required: false, message: "Please select or create tags" }]}>
                               <Select
                                 mode="tags"
                                 placeholder="Please select or new tags"
+                                // defaultValue={[...formData.tags.map((tag) => ({
+                                //     label: tag.name,
+                                //     value: tag._id
+                                // }))]}
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                                onChange={(selectedTags) => {
+                                  console.log("helo", selectedTags);
+                                  const tags = selectedTags.map((tagValue) => {
+                                    const tag = tagsOptions.find((p) => p._id === tagValue);
+                                    return {
+                                      name: tag ? tag.name : tagValue,
+                                      _id: tag ? tag._id : ''
+                                    };
+                                  });
+                                  console.log(tags);
+                                  setFormData((data) => ({
+                                    ...data,
+                                    tags: tags,
+                                  }));
+                                }}
 
                                 options={tagsOptions.map((tag) => (
                                   {
@@ -487,6 +586,14 @@ export default function AddHistoricalPlace() {
                                   }
                                 }}
                                 listType="picture"
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  padding: '10px 15px', // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
                               >
                                 <p >
                                   <InboxOutlined />
@@ -501,567 +608,242 @@ export default function AddHistoricalPlace() {
                           </div>
 
                           <div className="col-12">
-                            <Button className="button -md -dark-1 bg-accent-1 text-white" type="primary"
-                              htmlType="submit">
+                            <Button className="button -md -dark-1 bg-accent-1 text-white"
+                              onClick={() => {
+                                setActiveTab("Timings")
+                              }}>
                               Next
                               <i className="icon-arrow-top-right text-16 ml-10"></i>
                             </Button>
                           </div>
-                        </Form>
-                      </div>
-                      <div
-                        className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
-                          }`}
-                      >
-                        <Form className=" row y-gap-30"
-                          form={form}
-                          layout="vertical"
-                          name="timing"
-                          onFinish={() => {
-                            setActiveTab("Location");
-                            console.log("hello");
-                          }
-                          }
-                          initialValues={{
-                            weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-                            weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
-                            weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-                            weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-                              ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-                              : null
-                          }}
-                          onValuesChange={(changedValues, allValues) => {
-                            console.log(allValues)
-                            setFormData({
-                              ...formData,
-                              openingHours: {
-                                weekdays: {
-                                  openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
-                                  closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
-                                },
-                                weekends: {
-                                  openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
-                                  closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
-                                }
-                              }
-
-                            });
-                          }}
-
+                        </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
+                            }`}
                         >
-                          <div className="col-12">
-                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                              Weekends Opening Time
-                            </label>
-                            <Form.Item className="form-input " name="weekendOpeningTime" rules={[
-                              {
-                                type: 'object',
-                                required: id === undefined,
-                                message: 'Please select weekends opening time!',
-                              },
-                            ]}>
-                              <TimePicker 
-                                placeholder="please select the weekends opening time" />
-
-                            </Form.Item>
-                          </div>
-
-                          <div className="col-12">
-                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                              Weekends Closing Time
-                            </label>
-                            <Form.Item className="form-input " name="weekendClosingTime" rules={[
-                              {
-                                type: 'object',
-                                required: id === undefined,
-                                message: 'Please select weekends closing time!',
-                              },
-                            ]}>
-                              <TimePicker 
-                                placeholder="please select the weekends closing time" />
-                            </Form.Item>
-
-                          </div>
-                          <div className="col-12">
-                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                              Weekdays Opening Time
-                            </label>
-
-                            <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
-                              {
-                                type: 'object',
-                                required: id === undefined,
-                                message: 'Please select weekdays opening time!',
-                              },
-                            ]}>
-                              <TimePicker 
-
-                                placeholder="please select the weekdays opening time" />
-                            </Form.Item>
-                          </div>
-
-                          <div className="col-12">
-                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                              Weekdays Closing Time
-                            </label>
-
-                            <Form.Item className="form-input " name="weekdayClosingTime" rules={[
-                              {
-                                type: 'object',
-                                required: id === undefined,
-                                message: 'Please select weekdays closing time!',
-                              },
-                            ]}>
-                              <TimePicker
-
-                                placeholder="please select the weekdays closing time" />
-                            </Form.Item>
-
-                          </div>
-
-                          <div className="col-12">
-                            <Button className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                              Next
-                              <i className="icon-arrow-top-right text-16 ml-10"></i>
-                            </Button>
-                          </div>
-                        </Form>
-                      </div>
-                      <div
-                        className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
-                          }`}
-                      >
-                        <div className="contactForm row y-gap-30">
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                City
+                          <div className=" row y-gap-30">
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Opening Time
                               </label>
+                              <Form.Item className="form-input " name="weekendOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekends opening time" />
+                              </Form.Item>
                             </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                State
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Address
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Zip Code
-                              </label>
-                            </div>
-                          </div>
 
-                          <div className="col-lg-4">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Map Latitude
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Closing Time
                               </label>
+                              <Form.Item className="form-input " name="weekendClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekends closing time" />
+                              </Form.Item>
+
                             </div>
-                          </div>
-                          <div className="col-lg-4">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Map Longitude
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekdays Opening Time
                               </label>
+
+                              <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays opening time" />
+                              </Form.Item>
                             </div>
-                          </div>
-                          <div className="col-lg-4">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Map Zoom
+
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekdays Closing Time
                               </label>
+
+                              <Form.Item className="form-input " name="weekdayClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays closing time" />
+                              </Form.Item>
+
+                            </div>
+
+                            <div className="col-12">
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
+                                setActiveTab("Location")
+                              }}>
+                                Next
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
                             </div>
                           </div>
                         </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12" >
+                              <h2 style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Historical Place Location
+                              </h2>
+                              <div className="map relative mt-20">
+                                <LocationMap
+                                  markerPosition={coordinates}
+                                  setMarkerPosition={setCoordinates}
+                                  setSelectedLocation={setAddress}
+                                />
+                              </div>
+                            </div>
 
-                        <div className="map relative mt-30">
-                          {/* <Map /> */}
+                            <div className="col-12" >
+                              <strong>Selected Location:</strong> {address || 'No location selected yet'}
+                            </div>
+                            <div className="col-12" >
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
+                                setActiveTab("Pricing")
+                              }}>
+                                Next
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-
-                        <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                          Save Changes
-                          <i className="icon-arrow-top-right text-16 ml-10"></i>
-                        </button>
-                      </div>
-
-                      <div
-                        className={`tabs__pane  ${activeTab == "Pricing" ? "is-tab-el-active" : ""
-                          }`}
-                      >
-                        <div className="contactForm row y-gap-30">
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Tour Price
+                        <div
+                          className={`tabs__pane  ${activeTab == "Pricing" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Foreigner Ticket Price
                               </label>
+                              <Form.Item
+                                name="foreignerPrice"
+                                rules={[{ required: id === undefined, message: "Please enter the foreigner ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  placeholder="Enter foreigner ticket price"
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                />
+                              </Form.Item>
+
                             </div>
-                          </div>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Native Ticket Price
+                              </label>
+                              <Form.Item
+                                name="nativePrice"
+                                rules={[{ required: id === undefined, message: "Please enter the native ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="Enter native ticket price"
+                                  
+                                />
+                              </Form.Item>
+                            </div>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Student Ticket Price
+                              </label>
+                              <Form.Item
+                                name="studentPrice"
+                                rules={[{ required: id === undefined, message: "Please enter the student ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  placeholder="Enter student ticket price"
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                />
+                              </Form.Item>
+
+                            </div>
+                            <div className="col-12">
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" htmlType="submit" loading={loading} type="primary">
+                                {id === undefined ? "Create" : "Update"}
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
+                            </div></div>
                         </div>
-
-                        <div className="mt-30">
-                          <h3 className="text-18 fw-500 mb-20">Extra Price</h3>
-
-                          <div className="contactForm row y-gap-30 items-center">
-                            <div className="col-lg-4">
-                              <div className="form-input ">
-                                <input type="text" required />
-                                <label className="lh-1 text-16 text-light-1">
-                                  Add Service per booking
-                                </label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4">
-                              <div className="form-input ">
-                                <input type="text" required />
-                                <label className="lh-1 text-16 text-light-1">
-                                  Description
-                                </label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4">
-                              <div className="d-flex items-center">
-                                <div className="form-input ">
-                                  <input type="text" required />
-                                  <label className="lh-1 text-16 text-light-1">
-                                    Price
-                                  </label>
-                                </div>
-
-                                <button className="text-18 ml-20">
-                                  <i className="icon-delete"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="contactForm row y-gap-30 items-center pt-10">
-                            <div className="col-lg-4">
-                              <div className="form-input ">
-                                <input type="text" required />
-                                <label className="lh-1 text-16 text-light-1">
-                                  Add Service per booking
-                                </label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4">
-                              <div className="form-input ">
-                                <input type="text" required />
-                                <label className="lh-1 text-16 text-light-1">
-                                  Description
-                                </label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4">
-                              <div className="d-flex items-center">
-                                <div className="form-input ">
-                                  <input type="text" required />
-                                  <label className="lh-1 text-16 text-light-1">
-                                    Price
-                                  </label>
-                                </div>
-
-                                <button className="text-18 ml-20">
-                                  <i className="icon-delete"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-30">
-                            <button className="button -md -outline-dark-1 bg-light-1">
-                              <i className="icon-add-button text-16 mr-10"></i>
-                              Add Item
-                            </button>
-                          </div>
-                        </div>
-
-                        <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                          Save Changes
-                          <i className="icon-arrow-top-right text-16 ml-10"></i>
-                        </button>
-                      </div>
-
-                      <div
-                        className={`tabs__pane  ${activeTab == "Included" ? "is-tab-el-active" : ""
-                          }`}
-                      >
-                        <div className="row y-gap-20 justify-between">
-                          <div className="col-md-8">
-                            <div className="row y-gap-20">
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">
-                                    Beverages, drinking water, morning tea and
-                                    buffet lunch
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">Local taxes</div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">
-                                    Hotel pickup and drop-off by air-conditioned
-                                    minivan
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">
-                                    InsuranceTransfer to a private pier
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">Soft drinks</div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">Tour Guide</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="col-md-4">
-                            <div className="row y-gap-20">
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">Towel</div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">Tips</div>
-                                </div>
-                              </div>
-
-                              <div className="col-12">
-                                <div className="d-flex items-center">
-                                  <div className="form-checkbox ">
-                                    <input type="checkbox" name="name" />
-                                    <div className="form-checkbox__mark">
-                                      <div className="form-checkbox__icon">
-                                        <svg
-                                          width="10"
-                                          height="8"
-                                          viewBox="0 0 10 8"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M9.29082 0.971021C9.01235 0.692189 8.56018 0.692365 8.28134 0.971021L3.73802 5.51452L1.71871 3.49523C1.43988 3.21639 0.987896 3.21639 0.709063 3.49523C0.430231 3.77406 0.430231 4.22604 0.709063 4.50487L3.23309 7.0289C3.37242 7.16823 3.55512 7.23807 3.73783 7.23807C3.92054 7.23807 4.10341 7.16841 4.24274 7.0289L9.29082 1.98065C9.56965 1.70201 9.56965 1.24984 9.29082 0.971021Z"
-                                            fill="white"
-                                          />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="lh-16 ml-15">
-                                    Alcoholic Beverages
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
-                          Save Changes
-                          <i className="icon-arrow-top-right text-16 ml-10"></i>
-                        </button>
-                      </div>
+                      </Form>
                     </div>
                   </div>
                 </div>
