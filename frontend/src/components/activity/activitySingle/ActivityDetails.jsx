@@ -64,6 +64,7 @@ export default function ActivityDetails({ activity }) {
               <div className="mapTourSingle">
                 <LocationMap 
                   markerPosition={markerPosition} 
+                  search={"dont search bro"}
                 />
               </div>
               <h2 className="text-30">Customer Reviews</h2>
