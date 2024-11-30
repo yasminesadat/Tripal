@@ -35,13 +35,17 @@ const createSeller = asyncHandler(async (req, res) => {
 });
 
 const readSellerData = asyncHandler(async (req, res) => {
-  const seller = await Seller.findById(req.params.id);
-
+  try{
+  const id =  req.userId;
+  const seller = await Seller.findById(id);
   if (!seller) {
     return res.status(404).json({ error: "Seller not found" });
   }
-
   res.status(200).json({ status: "success", data: seller });
+}
+catch (error) {
+  return res.status(400).json({ error: error.message });
+}
 });
 
 const updateSellerData = asyncHandler(async (req, res) => {
@@ -78,7 +82,7 @@ const updateSellerData = asyncHandler(async (req, res) => {
   }
 
   const updatedSeller = await Seller.findByIdAndUpdate(
-    req.params.id,
+    req.userId,
     updateData,
     { new: true, runValidators: true } // Options: return updated document, run validation
   );

@@ -4,6 +4,7 @@ const {
   createTourGuide,
   updateTourguideData,
   getTourguideInfo,
+  getTourguideNotifications
 } = require("../controllers/TourGuideController");
 const validateIDs = require("../middleware/IDMiddleware");
 const TourGuide = require("../models/users/TourGuide");
@@ -15,6 +16,16 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post("/tourGuide", createTourGuide);
 router.patch("/tourGuide/:id", updateTourguideData);
+
+
+router.get(
+  "/tourGuide/notificationList",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getTourguideNotifications
+);
+
+
 router.get(
   "/tourGuide/:id",
   verifyToken,
@@ -35,6 +46,7 @@ router.get(
   authorizeRoles("Tourist", "Tour Guide"),
   getRatings(TourGuide, TourGuideRating, "tourGuideID")
 );
+
 router.put(
   "/tourGuide-change-pass/:id",
   validateIDs(["id"]),

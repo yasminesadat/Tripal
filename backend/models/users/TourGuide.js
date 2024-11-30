@@ -95,6 +95,12 @@ const tourGuideSchema = new Schema(
       required: false,
       default: "",
     },
+
+    notificationList:[ {
+      message: String,
+      read: {type:Boolean , default: false} ,
+      createdAt:{type:Date , default: Date.now} 
+    }]
   },
   { timestamps: true }
 );

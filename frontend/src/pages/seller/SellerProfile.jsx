@@ -1,66 +1,172 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getSellerDetails, updateSeller } from "../../api/SellerService";
-// import SellerNavBar from "../../components/navbar/SellerNavBar";
-import { sellerId } from "../../IDs";
-import { Form, Input, Button, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-// import "./SellerProfile.css";
-import ChangePassword from "../../components/common/ChangePassword";
+import Sidebar from "@/components/dasboard/Sidebar";
+import MetaComponent from "@/components/common/MetaComponent";
+import SellerHeader from "@/components/layout/header/SellerHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
 import { requestAccountDeletion } from "../../api/RequestService";
+import { Form, Button, message, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
-const SellerProfile = () => {
-  const [seller, setSeller] = useState(null);
-  const userType = "seller";
-  const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedSeller, setUpdatedSeller] = useState({
-    userName: "",
-    email: "",
-    password: "",
-    name: "",
-    description: "",
-    logo: "",
-  });
+
+
+//import { changeTouristPassword } from '../../api/TouristService';
+import { getUserData } from '@/api/UserService';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; 
+
+import Spinner from "@/components/common/Spinner";
+import { getSellerDetails, updateSeller } from "@/api/SellerService";
+
+import { logout } from "@/api/UserService";
+
+const metadata = {
+  title: "Profile || Tripal",
+};
+
+
+export default function Profile() {
+
+  const [userData, setUserData] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [profileInformation, setProfileInformation] = useState({});
   const [initialLogo, setInitialLogo] = useState(""); // State to store the initial logo
-  const [loading, setLoading] = useState(false); // State for loading
-  const [buttonText, setButtonText] = useState("Save Changes");
-  const navigate = useNavigate();
+
 
 
   useEffect(() => {
-    const fetchSellerProfile = async () => {
+    const fetchUser = async () => {
       try {
-        const response = await getSellerDetails(sellerId);
-        setSeller(response.data);
-        setUpdatedSeller({
-          userName: response.data.userName || "",
-          email: response.data.email || "",
-          password: response.data.password || "",
-          name: response.data.name || "",
-          description: response.data.description || "",
-          logo: response.data.logo || "", // Set logo if present
-        });
-        setInitialLogo(response.data.logo || ""); // Set initial logo
+        const user = await getUserData();
+        setUserData(user.data.id);
+        setUserRole(user.data.role);
+        console.log("id is ", user.data.id);
       } catch (error) {
-        setError(error.message);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchSellerProfile();
+    fetchUser();
   }, []);
+
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false
+  });
+  const togglePasswordVisibility = (field) => {
+    setShowPassword(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [PasswordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  })
+  const handlePasswordInput = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  const [editedProfile, setEditedProfile] = useState({
+    email: "",
+    description: "",
+    logo: "",
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedSeller((prev) => ({
-      ...prev,
+    setEditedProfile((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
   };
 
+  const handleChangePassword = async () => {
+    try {
+      if (PasswordForm.newPassword.length < 6) {
+        message.error("Password must be at least 6 characters long");
+        return;
+      }
+      if (PasswordForm.newPassword !== PasswordForm.confirmPassword) {
+        message.error("Passwords don't match");
+        return;
+      }
+
+      console.log("user", userData);
+      console.log("old pass, new pass", PasswordForm.oldPassword, PasswordForm.newPassword);
+      // await changeTouristPassword(userData, PasswordForm.oldPassword, PasswordForm.newPassword);
+      // message.success("Password changed successfully");
+
+      setPasswordForm({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+
+    } catch (error) {
+      message.error(error.response?.data?.message || "Failed to change password");
+      console.error("Password change error:", error);
+    }
+  };
+  const handleEditClick = async () => {
+    try {
+      await updateSeller(editedProfile);
+      message.success("Profile updated successfully");
+    } catch (error) {
+      console.error("Failed to update user information:", error);
+      message.error("Failed to update profile");
+    }
+  };
+
+ 
+  
+  const getUserInformation = async () => {
+    try {
+      const response= await getSellerDetails();
+     
+      setProfileInformation(response.data);
+      console.log("profileinfo", profileInformation)
+      setEditedProfile({
+        email: response.data.email,
+        description: response.data.description,
+        logo: response.data.logo || ""
+      });
+      setInitialLogo(response.data.logo || "");
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch user information000:", error);
+      setLoading(false);
+    }
+  };
+
+
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion();
+      message.success(response.message);
+      navigate("/login");
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred.");
+    }
+  };
+
+  useEffect(() => {
+    getUserInformation();
+  }, []);
+
+
+
   const handleLogoChange = (info) => {
     if (info.fileList.length === 0) {
-      setUpdatedSeller({ ...updatedSeller, logo: null });
+      setEditedProfile({ ...editedProfile, logo: null });
       return;
     }
 
@@ -68,207 +174,97 @@ const SellerProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setUpdatedSeller({ ...updatedSeller, logo: reader.result });
+        setEditedProfile({ ...editedProfile, logo: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleBeforeUpload = (file) => {
-    if (updatedSeller.logo) {
+    if (editedProfile.logo) {
       message.error("Only one logo can be uploaded.");
       return Upload.LIST_IGNORE;
     }
     const reader = new FileReader();
     reader.onload = () => {
-      setUpdatedSeller({ ...updatedSeller, logo: reader.result });
+      setEditedProfile({ ...editedProfile, logo: reader.result });
     };
     reader.readAsDataURL(file);
     return false;
   };
 
   const handleRemove = () => {
-    setUpdatedSeller({ ...updatedSeller, logo: null });
+    setEditedProfile({ ...editedProfile, logo: null });
   };
 
-  const handleSubmit = async (values) => {
-    setError(null);
-    setLoading(true); // Set loading to true before form submission
-    try {
-      setButtonText("Submitting...");
-      const sellerData = {
-        userName: updatedSeller.userName,
-        email: updatedSeller.email,
-        password: updatedSeller.password,
-        name: updatedSeller.name,
-        description: updatedSeller.description,
-        logo: initialLogo,
-      };
-
-      // Only include the logo if it has been changed
-      if (updatedSeller.logo !== initialLogo) {
-        sellerData.currLogo = updatedSeller.logo;
-        if (sellerData.initialLogo !== "") sellerData.initialLogo = initialLogo; // Include initialLogo for deletion
-      }
-
-      await updateSeller(sellerId, sellerData);
-      message.success("Profile updated successfully!");
-      setButtonText("Success!");
-      setIsEditing(false);
-      const response = await getSellerDetails(sellerId);
-      setSeller(response.data);
-      setUpdatedSeller({
-        userName: response.data.userName || "",
-        email: response.data.email || "",
-        password: response.data.password || "",
-        name: response.data.name || "",
-        description: response.data.description || "",
-        logo: response.data.logo || "", // Set logo if present
-      });
-      setInitialLogo(response.data.logo || ""); // Update initial logo
-    } catch (error) {
-      setError(error.message);
-      message.error("Failed to update profile: " + error.message);
-      setButtonText("Failed");
-    } finally {
-      setLoading(false); // Set loading to false after form submission
-      setTimeout(() => {
-        setButtonText("Save Changes");
-      }, 1000);
-    }
-  };
-
-  const handleDeletion = async () => {
-    try {
-      const response = await requestAccountDeletion();
-      message.success(response.message);
-      navigate("/");
-    } catch (error) {
-      message.warning(error.response?.data?.message || "An error occurred.");
-    }
-  };
-
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (loading) {
+    return <Spinner />;
   }
 
-  if (!seller) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Spinner />;
   }
 
   return (
     <>
-      <div>
-        {/* <SellerNavBar /> */}
-        <div className="seller-profile-container">
-          <h2 className="profile-title">Seller Profile</h2>
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
+        <SellerHeader />
+        <main className="page-content">
+          <div className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}>
+            <Sidebar setSideBarOpen={setSideBarOpen} />
+            <div className="dashboard__content">
+              <div className="dashboard__content_content">
+                <h2>Profile</h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h5>{profileInformation.userName}</h5>
+                </div>
+              
 
-          {!isEditing ? (
-            <div className="profile-info">
-              <div className="profile-details">
-                <p>
-                  <strong>User Name:</strong> {seller.userName}
-                </p>
-                <p>
-                  <strong>Email:</strong> {seller.email}
-                </p>
-                <p>
-                  <strong>Name:</strong> {seller.name || "N/A"}
-                </p>
-                <p>
-                  <strong>Description:</strong> {seller.description || "N/A"}
-                </p>
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  type="primary"
-                  style={{ width: "100%", marginTop: "16px" }}
-                >
-                  Edit Profile
-                </Button>
-              </div>
-              {seller.logo && (
-                <img
-                  src={seller.logo}
-                  alt="Seller Logo"
-                  className="seller-logo"
-                />
-              )}{" "}
-              {/* Display logo if present */}
-            </div>
-          ) : (
-            <Form
-              layout="vertical"
-              onFinish={handleSubmit}
-              initialValues={updatedSeller}
-            >
-              <Form.Item
-                label="User Name"
-                name="userName"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
-              >
-                <Input
-                  name="userName"
-                  placeholder="Enter your username"
-                  value={updatedSeller.userName}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  { required: true, message: "Please input your email!" },
-                  { type: "email", message: "Please enter a valid email!" },
-                ]}
-              >
-                <Input
-                  name="email"
-                  placeholder="Enter your email"
-                  value={updatedSeller.email}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              {/* <Form.Item
-                      label="Password"
-                      name="password"
-                      rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                      <Input.Password
-                        name="password"
-                        placeholder="Enter your new password"
-                        value={updatedSeller.password}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Item> */}
-              <Form.Item
-                label="Name"
-                name="name"
-                rules={[{ required: true, message: "Please input your name!" }]}
-              >
-                <Input
-                  name="name"
-                  placeholder="Enter your name"
-                  value={updatedSeller.name}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Description"
-                name="description"
-                rules={[
-                  { required: true, message: "Please input your description!" },
-                ]}
-              >
-                <Input.TextArea
-                  name="description"
-                  placeholder="Enter a brief description"
-                  value={updatedSeller.description}
-                  onChange={handleInputChange}
-                />
-              </Form.Item>
-              <Form.Item label="Logo" name="logo">
+                <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
+                  <h5 className="text-20 fw-500 mb-30">Profile Details</h5>
+
+                  <div className="contactForm row y-gap-30">
+                    <div className="col-md-6">
+                      <div className="form-input">
+                        <input
+                          type="text"
+                          name="userName"
+                          value={profileInformation.userName}
+                          readOnly
+                        />
+                        <label className="lh-1 text-16 text-light-1">Username</label>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-input">
+                        <input
+                          type="text"
+                          name="email"
+                          value={editedProfile.email}
+                          onChange={handleInputChange}
+                        />
+                        <label className="lh-1 text-16 text-light-1">Email</label>
+                      </div>
+                    </div>
+
+                    
+
+                    <div className="col-md-6">
+                      <div className="form-input">
+                        <input
+                          type="text"
+                          name="description"
+                          value={editedProfile.description}
+                          onChange={handleInputChange}
+                        />
+                        <label className="lh-1 text-16 text-light-1">Description</label>
+                      </div>
+                    </div>
+
+
+                <Form.Item label="Logo" name="logo">
                 <Upload
                   name="logo"
                   listType="picture"
@@ -277,19 +273,19 @@ const SellerProfile = () => {
                   onChange={handleLogoChange}
                   onRemove={handleRemove} // Allow removal of the logo
                   fileList={
-                    updatedSeller.logo
+                    editedProfile.logo
                       ? [
                         {
                           uid: "-1",
                           name: "logo.png",
                           status: "done",
-                          url: updatedSeller.logo,
+                          url: editedProfile.logo,
                         },
                       ]
                       : []
                   } // Ensure only one file is shown
                 >
-                  {!updatedSeller.logo && (
+                  {!editedProfile.logo && (
                     <Button
                       icon={<UploadOutlined />}
                       size="small"
@@ -304,38 +300,363 @@ const SellerProfile = () => {
                     </Button>
                   )}
                 </Upload>
-                {updatedSeller.logo && (
+                {editedProfile.logo && (
                   <img
-                    src={updatedSeller.logo}
+                    src={editedProfile.logo}
                     alt="Seller Logo"
                     className="seller-logo-preview"
                   />
                 )}{" "}
                 {/* Display logo preview if present */}
               </Form.Item>
-              <Form.Item
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ marginRight: "8px" }}
-                  loading={loading}
-                >
-                  {buttonText}
-                </Button>
-                <Button type="default" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </Button>
-              </Form.Item>
-            </Form>
-          )}
-        </div>
-        <ChangePassword id={sellerId} userType={userType} />
-        <button onClick={handleDeletion}>Delete Account</button>
+                   
+
+
+                    
+
+
+                    <div className="col-12">
+                      <div className="d-flex justify-between mt-30">
+                        <button onClick={handleEditClick} className="button -md -dark-1">
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                        <button className="button -md -dark-1 delete-btn" onClick={handleDeletion}>
+                          Delete Account
+                          <i className="icon-delete text-20 ml-10"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
+                  <h5 className="text-20 fw-500 mb-30">Change Password</h5>
+
+                  <div className="contactForm y-gap-30">
+
+
+                    <div className="row y-gap-30">
+                      <div className="col-md-6">
+                        <div className="form-input">
+                          <input
+                            type={showPassword.oldPassword ? "text" : "password"}
+                            name="oldPassword"
+                            value={PasswordForm.oldPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
+                          <label className="lh-1 text-16 text-light-1">Old password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('oldPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.oldPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
+                          <style jsx>{`
+        .form-input {
+          position: relative;
+        }
+        .password-toggle {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--color-stone);
+          z-index: 2;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .password-toggle:hover {
+          color: var(--color-stone-light);
+        }
+        .form-input input {
+          padding-right: 40px;
+        }
+      `}</style>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-input">
+                          <input
+                            type={showPassword.newPassword ? "text" : "password"}
+                            name="newPassword"
+                            value={PasswordForm.newPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
+                          <label className="lh-1 text-16 text-light-1">New password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('newPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.newPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-input">
+                          <input
+                            type={showPassword.confirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            value={PasswordForm.confirmPassword}
+                            onChange={handlePasswordInput}
+                            required
+                            minLength={6}
+                          />
+                          <label className="lh-1 text-16 text-light-1">Confirm new password</label>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('confirmPassword')}
+                            className="password-toggle"
+                          >
+                            {showPassword.confirmPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-12">
+                        <button className="button -md -dark-1" onClick={handleChangePassword}>
+                          Save Changes
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </main>
+        <FooterThree />
       </div>
+
+      <style jsx global>{`
+  :root {
+    --color-dark-purple: #8f5774;
+    --color-light-purple: #dac4d0;
+    --color-pink: #e0829d;
+    --color-stone: #036264;
+    --color-stone-light: #5a9ea0;
+    --color-footer: #e5f8f8;
+  }
+
+  /* Form Inputs */
+  .contactForm .form-input {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .contactForm .form-input label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.3s ease;
+    color: #aaa;
+    z-index: 1;
+    background: white;
+    padding: 0 5px;
+  }
+
+  .contactForm .form-input input:focus + label,
+  .contactForm .form-input textarea:focus + label,
+  .contactForm .form-input input:not(:placeholder-shown) + label,
+  .contactForm .form-input textarea:not(:placeholder-shown) + label,
+  .contactForm .form-input input.filled + label,
+  .contactForm .form-input textarea.filled + label,
+  .form-input .ant-select-focused + label,
+  .form-input .ant-select-selection-item + label,
+  .form-input .ant-select-open + label,
+  .form-input .ant-select-selection-placeholder + label {
+    transform: translateY(-29px);
+    font-size: 12px;
+    color: var(--color-stone);
+  }
+
+  .contactForm .form-input input,
+  .contactForm .form-input textarea {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid var(--color-light-purple);
+    outline: none;
+    border-radius: 8px;
+    height: 44px;
+  }
+
+  /* Select Styles */
+  .styled-select,
+  .styled-multi-select {
+    width: 100%;
+  }
+
+  .styled-select .ant-select-selector,
+  .styled-multi-select .ant-select-selector {
+    height: 44px !important;
+    padding: 5px 10px !important;
+    font-size: 16px !important;
+    border: 1px solid var(--color-light-purple) !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+  }
+
+  .styled-multi-select .ant-select-selector {
+    min-height: 44px !important;
+    height: auto !important;
+    padding: 4px 8px !important;
+  }
+
+  .styled-select .ant-select-selection-search-input,
+  .styled-multi-select .ant-select-selection-search-input {
+    height: 42px !important;
+  }
+
+  .styled-select .ant-select-selection-item,
+  .styled-multi-select .ant-select-selection-item {
+    line-height: 32px !important;
+    color: var(--color-stone) !important;
+  }
+
+  .styled-multi-select .ant-select-selection-overflow {
+    padding: 4px 0;
+  }
+
+  .styled-multi-select .ant-select-selection-item {
+    height: 32px !important;
+    background-color: var(--color-footer) !important;
+    border-color: var(--color-stone-light) !important;
+    border-radius: 6px !important;
+    padding: 0 10px !important;
+    margin: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .styled-select:hover .ant-select-selector,
+  .styled-multi-select:hover .ant-select-selector {
+    border-color: var(--color-stone) !important;
+  }
+
+  .styled-select.ant-select-focused .ant-select-selector,
+  .styled-multi-select.ant-select-focused .ant-select-selector {
+    border-color: var(--color-stone) !important;
+    box-shadow: 0 0 0 2px rgba(3, 98, 100, 0.1) !important;
+  }
+
+  .styled-select-dropdown,
+  .styled-multi-dropdown {
+    padding: 6px !important;
+    border-radius: 8px !important;
+  }
+
+  .styled-select-dropdown .ant-select-item,
+  .styled-multi-dropdown .ant-select-item {
+    padding: 8px 12px !important;
+    color: var(--color-stone) !important;
+    border-radius: 6px !important;
+  }
+
+  .styled-select-dropdown .ant-select-item-option-selected,
+  .styled-multi-dropdown .ant-select-item-option-selected {
+    background-color: var(--color-footer) !important;
+    font-weight: 500 !important;
+  }
+
+  .styled-select-dropdown .ant-select-item-option-active,
+  .styled-multi-dropdown .ant-select-item-option-active {
+    background-color: var(--color-light-purple) !important;
+  }
+
+  /* Points Container */
+  .points-container {
+    display: flex;
+    gap: 5px;
+  }
+
+  .points-container .form-input {
+    flex: 2;
+    margin-bottom: 0;
+  }
+
+  /* Button Styles */
+  .button.-md.-dark-1 {
+    background-color: var(--color-stone) !important;
+    border: none;
+    height: 44px !important;
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .button.-md.-dark-1:hover {
+    background-color: var(--color-stone-light) !important;
+  }
+
+  .button.-md.-dark-1.delete-btn {
+    background-color: var(--color-pink) !important;
+  }
+
+  .button.-md.-dark-1.delete-btn:hover {
+    background-color: var(--color-dark-purple) !important;
+  }
+
+  /* Section Headers */
+  .section-header {
+    color: var(--color-stone);
+    margin: 20px 0 10px;
+    font-size: 16px;
+  }
+
+  /* Clear Icon */
+  .ant-select-clear {
+    background: white !important;
+    color: var(--color-stone) !important;
+  }
+
+  /* Remove Tag Icon */
+  .ant-select-selection-item-remove {
+    color: var(--color-stone) !important;
+    font-size: 12px !important;
+    margin-left: 4px !important;
+  }
+
+  /* Dropdown Arrow */
+  .ant-select-arrow {
+    color: var(--color-stone) !important;
+  }
+
+  /* Empty Content */
+  .ant-select-empty {
+    color: #aaa !important;
+    padding: 10px !important;
+  }
+`}</style>
     </>
   );
-};
-
-export default SellerProfile;
+}

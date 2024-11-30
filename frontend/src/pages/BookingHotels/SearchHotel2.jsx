@@ -141,11 +141,11 @@ export default function Hero6() {
                           <i className="text-20 icon-calendar"></i>
                         </div>
                         <div className="searchFormItem__content">
-                          <h5>When</h5>
+                          {/* <h5>When</h5> */}
                           <div>
                             <span className="js-first-date">
                               <Calender dates={dates} setDates={setDates}
-                                // active={currentActiveDD === "calender"}
+                                active={currentActiveDD === "calender"}
                               />
                             </span>
                             <span className="js-last-date"></span>

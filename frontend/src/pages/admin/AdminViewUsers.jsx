@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
-import { message } from 'antd'
-import { requestAccountDeletion } from "../../api/RequestService";
-import FooterThree from '@/components/layout/footers/FooterThree';
 import Sidebar from '@/components/dasboard/Sidebar';
 import Header from '@/components/dasboard/Header';
 const UserList = () => {
@@ -34,16 +31,13 @@ const UserList = () => {
 
     const deleteUsers = async (id, role) => {
         try {
-            if (role === "Tourism Governor" || role === "Admin") {
-                await deleteUser(id);
-            } else {
-                await requestAccountDeletion(role, id);
-            }
+           
+            await deleteUser(role, id);    
             const updatedData = users.filter((item) => item.userId !== id);
             setUsers(updatedData);
             showNotification("User deleted successfully", "success");
         } catch (error) {
-            console.error("Error deleting user with id ${ id }:, error");
+            console.error("00Error deleting user with id ${ id }:, error");
             showNotification("Failed to delete user!", "error");
         }
         setDeleteConfirm(null);

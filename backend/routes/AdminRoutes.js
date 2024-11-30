@@ -10,7 +10,7 @@ const { verifyToken, authorizeRoles, } = require("../middleware/AuthMiddleware.j
 router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
 
 router.delete(
-  "/admin/user/:id",
+  "/admin/user/:role/:userId",
   verifyToken,
   authorizeRoles("Admin"),
   deleteUser
