@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
-import ReviewBox from "../common/reviewBox";
+import ReviewBox from "../common/ReviewBox";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
