@@ -20,8 +20,13 @@ import {
 import RangeSlider from "../common/RangeSlider";
 import { Link } from "react-router-dom";
 import { Card, Rate, message, Input, Select, Slider } from "antd";
+import MetaComponent from "../common/MetaComponent";
 const { Search } = Input;
 const { Option } = Select;
+
+const metadata = {
+  title: "Products || Tripal",
+};
 
 export default function ProductList() {
   const [sortOption, setSortOption] = useState("");
@@ -171,70 +176,74 @@ export default function ProductList() {
     };
   }, []);
   return (
-    <section className="layout-pt-lg layout-pb-xl">
-      <div className="container">
-        <div className="row custom-dd-container justify-between items-center relative z-5">
-          <div className="col-auto">
-            <div
-              ref={dropDownContainer2}
-              className="row custom-dd-container2 custom-dd-container x-gap-10 y-gap-10 items-center"
-            >
-              <div className="col-auto">
-                <div
-                  className={`dropdown -base -price js-dropdown js-form-dd ${
-                    curentDD === "priceFilter1" ? "is-active" : ""
-                  }`}
-                >
-                  {/* Dropdown Button */}
+    <>
+      <MetaComponent meta={metadata} />
+      <section className="layout-pt-lg layout-pb-xl">
+        <div className="container">
+          <div className="row custom-dd-container justify-between items-center relative z-5">
+            <div className="col-auto">
+              <div
+                ref={dropDownContainer2}
+                className="row custom-dd-container2 custom-dd-container x-gap-10 y-gap-10 items-center"
+              >
+                <div className="col-auto">
                   <div
-                    onClick={() => {
-                      setCurentDD((prev) =>
-                        prev === "priceFilter1" ? "" : "priceFilter1"
-                      );
-                    }}
-                    className="dropdown__button h-50 min-w-auto js-button"
+                    className={`dropdown -base -price js-dropdown js-form-dd ${
+                      curentDD === "priceFilter1" ? "is-active" : ""
+                    }`}
                   >
-                    <span className="js-title">Filter Price</span>
-                    <i className="icon-chevron-down ml-10"></i>
-                  </div>
-
-                  {/* Dropdown Menu */}
-                  {curentDD === "priceFilter1" && (
-                    <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
-                      <h5
-                        className="text-22 fw-500"
-                        style={{ marginBottom: "5%" }}
-                      >
-                        Filter Price
-                      </h5>
-                      <div style={{ marginBottom: "-7%", textAlign: "center" }}>
-                        {formatPriceRange()}
-                      </div>
-                      <div className="pt-20">
-                        {/* Slider */}
-                        <Slider
-                          range
-                          min={0}
-                          max={3000}
-                          value={priceRange}
-                          onChange={handlePriceChange}
-                          className="pink-slider"
-                        />
-                      </div>
-
-                      {/* Apply Button */}
-                      <button
-                        className="custom-apply-button button px-25 py-15 lh-12 text-accent-1 mt-30"
-                        onClick={handleGoClick}
-                      >
-                        Apply
-                        <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
+                    {/* Dropdown Button */}
+                    <div
+                      onClick={() => {
+                        setCurentDD((prev) =>
+                          prev === "priceFilter1" ? "" : "priceFilter1"
+                        );
+                      }}
+                      className="dropdown__button h-50 min-w-auto js-button"
+                    >
+                      <span className="js-title">Filter Price</span>
+                      <i className="icon-chevron-down ml-10"></i>
                     </div>
-                  )}
-                </div>
-                <style>
-                  {`
+
+                    {/* Dropdown Menu */}
+                    {curentDD === "priceFilter1" && (
+                      <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
+                        <h5
+                          className="text-22 fw-500"
+                          style={{ marginBottom: "5%" }}
+                        >
+                          Filter Price
+                        </h5>
+                        <div
+                          style={{ marginBottom: "-7%", textAlign: "center" }}
+                        >
+                          {formatPriceRange()}
+                        </div>
+                        <div className="pt-20">
+                          {/* Slider */}
+                          <Slider
+                            range
+                            min={0}
+                            max={3000}
+                            value={priceRange}
+                            onChange={handlePriceChange}
+                            className="pink-slider"
+                          />
+                        </div>
+
+                        {/* Apply Button */}
+                        <button
+                          className="custom-apply-button button px-25 py-15 lh-12 text-accent-1 mt-30"
+                          onClick={handleGoClick}
+                        >
+                          Apply
+                          <i className="icon-arrow-top-right text-16 ml-10"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <style>
+                    {`
 .pink-slider .ant-slider-track {
   background-color: var(--color-pink) !important; /* Track color */
 }
@@ -293,54 +302,54 @@ export default function ProductList() {
         color: white;
       }
   `}
-                </style>
-              </div>
+                  </style>
+                </div>
 
-              <div className="col-auto">
-                <div
-                  className={`dropdown -base -price js-dropdown js-form-dd ${
-                    curentDD === "ratingFilter1" ? "is-active" : ""
-                  }`}
-                >
+                <div className="col-auto">
                   <div
-                    onClick={() => {
-                      setCurentDD((prev) =>
-                        prev === "ratingFilter1" ? "" : "ratingFilter1"
-                      );
-                    }}
-                    className="dropdown__button h-50 min-w-auto js-button"
+                    className={`dropdown -base -price js-dropdown js-form-dd ${
+                      curentDD === "ratingFilter1" ? "is-active" : ""
+                    }`}
                   >
-                    <span className="js-title">Rating</span>
-                    <i className="icon-chevron-down ml-10"></i>
-                  </div>
+                    <div
+                      onClick={() => {
+                        setCurentDD((prev) =>
+                          prev === "ratingFilter1" ? "" : "ratingFilter1"
+                        );
+                      }}
+                      className="dropdown__button h-50 min-w-auto js-button"
+                    >
+                      <span className="js-title">Rating</span>
+                      <i className="icon-chevron-down ml-10"></i>
+                    </div>
 
-                  {curentDD === "ratingFilter1" && (
-                    <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
-                      <h5 className="text-18 fw-500">Rating</h5>
-                      <div className="pt-20">
-                        <div className="d-flex flex-column y-gap-15">
-                          <div
-                            className={`option ${
-                              sortOrder === "desc" ? "is-active" : ""
-                            }`}
-                            onClick={() => handleSortChange("desc")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Sort by Rating: High to Low
-                          </div>
-                          <div
-                            className={`option ${
-                              sortOrder === "asc" ? "is-active" : ""
-                            }`}
-                            onClick={() => handleSortChange("asc")}
-                            style={{ cursor: "pointer" }}
-                          >
-                            Sort by Rating: Low to High
+                    {curentDD === "ratingFilter1" && (
+                      <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
+                        <h5 className="text-18 fw-500">Rating</h5>
+                        <div className="pt-20">
+                          <div className="d-flex flex-column y-gap-15">
+                            <div
+                              className={`option ${
+                                sortOrder === "desc" ? "is-active" : ""
+                              }`}
+                              onClick={() => handleSortChange("desc")}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Sort by Rating: High to Low
+                            </div>
+                            <div
+                              className={`option ${
+                                sortOrder === "asc" ? "is-active" : ""
+                              }`}
+                              onClick={() => handleSortChange("asc")}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Sort by Rating: Low to High
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <style>
-                        {`
+                        <style>
+                          {`
       .option {
         padding: 5px 10px;
         border-radius: 3px;
@@ -383,59 +392,60 @@ export default function ProductList() {
         color: white;
       }
     `}
-                      </style>
-                    </div>
-                  )}
+                        </style>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
+            <Search
+              placeholder="Search products by name"
+              onChange={handleSearchChange}
+              style={{ width: 300, marginLeft: "32%" }}
+              allowClear
+              onSearch={handleGoClick}
+            />
           </div>
-          <Search
-            placeholder="Search products by name"
-            onChange={handleSearchChange}
-            style={{ width: 300, marginLeft: "32%" }}
-            allowClear
-            onSearch={handleGoClick}
-          />
-        </div>
-        {loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <div className="row y-gap-30 pt-30">
-              {filteredProducts.map((product, i) => (
-                <ProductCard
-                  id={product._id}
-                  productSeller={product.seller._id}
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  picture={product.picture}
-                  seller={product.seller.name}
-                  quantity={product.quantity}
-                  averageRating={product.averageRating}
-                  isArchived={product.isArchived}
-                  sales={product.sales}
-                  userRole={userRole}
-                  userId={userId}
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              <div className="row y-gap-30 pt-30">
+                {filteredProducts.map((product, i) => (
+                  <ProductCard
+                    id={product._id}
+                    productSeller={product.seller._id}
+                    name={product.name}
+                    description={product.description}
+                    price={product.price}
+                    picture={product.picture}
+                    seller={product.seller.name}
+                    quantity={product.quantity}
+                    averageRating={product.averageRating}
+                    isArchived={product.isArchived}
+                    sales={product.sales}
+                    userRole={userRole}
+                    userId={userId}
+                  />
+                ))}
+              </div>
+
+              <div className="d-flex justify-center flex-column mt-60">
+                <Pagination
+                  curr={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
                 />
-              ))}
-            </div>
 
-            <div className="d-flex justify-center flex-column mt-60">
-              <Pagination
-                curr={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-              />
-
-              {/* <div className="text-14 text-center mt-20">
+                {/* <div className="text-14 text-center mt-20">
               Showing results 1-30 of 1,415
             </div> */}
-            </div>
-          </>
-        )}
-      </div>
-    </section>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+    </>
   );
 }
