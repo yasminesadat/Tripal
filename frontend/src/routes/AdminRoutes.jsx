@@ -1,8 +1,8 @@
 import AdminDashboard from "../pages/admin/AdminHome";
 import ActivityCategoryDetails from "@/pages/admin/ActivityCategory";
 // import TagManager from "../pages/admin/PreferenceTags";
-// import AdminProducts from "../pages/admin/AdminProducts";
-// import AdminViewProduct from "../pages/admin/AdminViewProduct";
+import AdminProducts from "../pages/admin/AdminProducts";
+import AdminViewProduct from "../pages/admin/AdminViewProduct";
 import AdminViewUsers from "../pages/admin/AdminViewUsers";
 import CreateNewGovernor from "@/pages/governor/CreateNewGovernor";
 import CreateNewAdmin from "@/pages/admin/CreateNewAdmin";
@@ -20,8 +20,8 @@ const adminRoutes = [
   { path: "/activity-categories", element: <ActivityCategoryDetails /> },
   { path: "/preference-tags", element: <TagManager /> },
   // { path: "/preference-tags", element: <TagManager /> },
-  // { path: "/admin/view-products", element: <AdminProducts /> },
-  // { path: "/admin/view-products/product/:id", element: <AdminViewProduct /> },
+  { path: "/admin/view-products", element: <AdminProducts /> },
+  { path: "/admin/view-products/product/:id", element: <AdminViewProduct /> },
   { path: "/admin/delete-user", element: <AdminViewUsers /> },
   { path: "/admin/new-governor", element: <CreateNewGovernor /> },
   { path: "/admin/new-admin", element: <CreateNewAdmin /> },

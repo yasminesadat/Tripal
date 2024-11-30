@@ -10,7 +10,8 @@ import {
   Heart,
   LineChart,
   LogOut,
-  Martini
+  Martini,
+  ShoppingCart
 } from 'lucide-react';
 
 export const sidebarItems = [
@@ -61,7 +62,12 @@ export const sidebarItems = [
     href: "/admin/activities",
     icon: <Martini size={26} />,
     label: "All Activities",
-
+  },
+  {
+    id: 14,
+    href: "/admin/view-products",
+    icon: <ShoppingCart size={26} />,
+    label: "Products"
   },
   {
     id: 11,
