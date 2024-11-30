@@ -9,6 +9,7 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { cancelResource } from "@/api/BookingService";
 import { message } from "antd";
+import AreYouSure from "@/components/common/AreYouSure";
 
 export default function DbBooking() {
 
@@ -24,7 +25,10 @@ export default function DbBooking() {
   const navigate = useNavigate();
   const metadata = {
     title: "My Bookings || Tripal",
-};
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentResource, setCurrentResource] = useState({ resourceId: null, resourceType: '' });
+
   //#endregion
 
   // for testing dont delete
@@ -161,6 +165,7 @@ export default function DbBooking() {
       const response = await getTouristActivities();
       console.log(response)
       if (response.length === 0) {
+        setBookedActivities([]);
         console.log("No booked activities found.");
         return; 
       }    
@@ -178,6 +183,11 @@ export default function DbBooking() {
   const fetchBookedItineraries = async () => {
     try {
       const response = await getTouristItineraries();
+      if(response.length === 0) {
+        setBookedItineraries([]);
+        console.log("No booked itineraries found.");
+        return;
+      }
       const sortedItineraries = response.sort((a, b) => {
         const dateA = new Date(a.startDate); 
         const dateB = new Date(b.startDate); 
@@ -245,17 +255,29 @@ const handleItineraryRedirect = (itineraryId) => {
   navigate(`/itinerary/${itineraryId}`, { state: { page: 'history' }});
 };
 
-const handleCancelResource = async ({ resourceId, resourceType }) => {
+const handleCancelResource = async () => {
+  const { resourceId, resourceType } = currentResource;
   try {
-      await cancelResource(resourceType, resourceId);
-      message.success('Booking cancelled successfully');
-      if(resourceType === 'activity') 
-          fetchBookedActivities();
-      if(resourceType === 'itinerary')
-          fetchBookedItineraries();
+    await cancelResource(resourceType, resourceId);
+    message.success(`${resourceType === 'activity' ? 'Activity' : 'Itinerary'} canceled successfully.`);
+    if(resourceType === 'activity') 
+      fetchBookedActivities();
+    if(resourceType === 'itinerary')
+      fetchBookedItineraries();
   } catch (err) {
-      message.error(err.response.data.error);
+    message.error(err.response?.data?.error || 'An error occurred while canceling the resource.');
+  } finally {
+    setModalVisible(false);
   }
+};
+
+const handleCancelBooking = (resourceId, resourceType) => {
+  setCurrentResource({ resourceId, resourceType });
+  setModalVisible(true);
+};
+
+const handleCancelCancellation = () => {
+  setModalVisible(false);
 };
 //#endregion
   
@@ -264,6 +286,12 @@ return (
       <>
         <MetaComponent meta={metadata} />
         <div className="page-wrapper">
+        <AreYouSure
+        visible={modalVisible}
+        onConfirm={handleCancelResource}
+        onCancel={handleCancelCancellation}
+        message={`Are you sure you want to cancel this ${currentResource.resourceType}?`}
+      />
           <TouristHeader />
             <main className="page-content">
               <div className="dashboard js-dashboard">
@@ -431,8 +459,7 @@ return (
                                             }}
                                             onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
                                             onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
-                                            onClick={() => handleCancelResource({ resourceId: activity._id, resourceType: 'activity' })}
-                                          >
+                                            onClick={() => handleCancelBooking(activity._id, 'activity')}                                          >
                                             Cancel
                                           </button>
                                         ) : (
@@ -507,8 +534,7 @@ return (
                                             }}
                                             onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
                                             onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
-                                            onClick={() => handleCancelResource({ resourceId: itinerary._id, resourceType: 'itinerary' })}
-
+                                            onClick={() => handleCancelBooking(itinerary._id, 'itinerary')}
                                           >
                                             Cancel
                                           </button>
