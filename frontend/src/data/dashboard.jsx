@@ -11,7 +11,8 @@ import {
   LineChart,
   LogOut,
   Martini,
-  ShoppingCart
+  ShoppingCart,
+  FerrisWheel 
 } from 'lucide-react';
 
 export const sidebarItems = [
@@ -64,6 +65,12 @@ export const sidebarItems = [
     label: "All Activities",
   },
   {
+    id: 10,
+    href: "/admin/itineraries",
+    icon: <FerrisWheel size={26} />,
+    label: "All Itineraries",
+  },
+  {
     id: 14,
     href: "/admin/view-products",
     icon: <ShoppingCart size={26} />,
@@ -94,7 +101,6 @@ export const sidebarItems = [
     label: "Logout"
   },
 ];
-
 
 export const states = [
   {
@@ -268,7 +274,6 @@ export const bookingData = [
     cost: "$380.00",
     status: "Approved",
   },
-  // Add more entries as needed
 ];
 
 export const messageSanders = [

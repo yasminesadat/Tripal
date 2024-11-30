@@ -7,14 +7,14 @@ import {message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
+import Spinner from "../common/Spinner";
 
 export default function ItinerariesList({
   searchTerm,
-  onCancel,
-  cancel,
   curr = "EGP",
   page,
 }) {
+
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
@@ -45,7 +45,13 @@ export default function ItinerariesList({
   ];
 
   const errorDisplayed = useRef(false);
-  //#endregion
+  const indexOfLastItinerary = currentPage * itinerariesPerPage;
+  const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
+  const currentItineraries = filteredItineraries.slice(
+      indexOfFirstItinerary,
+      indexOfLastItinerary
+  );
+//#endregion
 
 //#region useEffect
   useEffect(() => {
@@ -100,7 +106,6 @@ export default function ItinerariesList({
         setLoading(false);
       }
     };
-
     if (userRole) {
       fetchItineraries();
     }
@@ -117,14 +122,12 @@ export default function ItinerariesList({
         !endDate ||
         (itineraryStartDate >= new Date(startDate.setHours(0, 0, 0, 0)) &&
           itineraryStartDate <= new Date(endDate.setHours(23, 59, 59, 999)));
-
       const isRatingValid =
         ratingFilter.length === 0 ||
         ratingFilter.some((rating) => itineraryRating >= rating);
 
       const isPriceValid =
         itineraryPrice >= priceRange[0] && itineraryPrice <= priceRange[1];
-
       const isSearchValid =
          itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) 
          ||
@@ -165,7 +168,6 @@ export default function ItinerariesList({
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
-
       return order === "asc" ? aValue - bValue : bValue - aValue;
     });
     setFilteredItineraries(sortedItineraries);
@@ -214,15 +216,6 @@ export default function ItinerariesList({
   };
 //#endregion
   
-const indexOfLastItinerary = currentPage * itinerariesPerPage;
-const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
-const currentItineraries = filteredItineraries.slice(
-    indexOfFirstItinerary,
-    indexOfLastItinerary
-);
-
-
-
   return (
     <section className="layout-pb-xl">
       <div className="container">
@@ -286,7 +279,7 @@ const currentItineraries = filteredItineraries.slice(
               <div className="col-auto">
                 <div>
                   {loading ? (
-                    <span>Loading results...</span>
+                    <span><Spinner/></span>
                   ) : (
                     <span>{filteredItineraries?.length} results</span>
                   )}

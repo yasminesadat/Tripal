@@ -237,17 +237,10 @@ const getTouristItineraries = async (req, res) => {
 
 const adminFlagItinerary = async (req, res) => {
     try{
-        const adminId = req.userId;
-        const admin = await Admin.findById(adminId);
-        if (!admin) 
-            return res.status(403).json({ message: 'Access denied. Admins only.' });
-         
         const itinerary= await itineraryModel.findById(req.params.itineraryId);
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});
-        if(itinerary.flagged)
-            return res.status(400).json({error: 'Itinerary already flagged'});
-        itinerary.flagged = true;
+        itinerary.flagged = !itinerary.flagged;
         await itinerary.save();
         res.status(200).json({message: 'Itinerary flagged successfully'});
     }

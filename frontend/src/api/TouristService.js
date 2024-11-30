@@ -68,7 +68,6 @@ export async function getTouristItineraries() {
 export async function getTouristActivities() {
   try {
     const response = await axios.get(`/booked-activities`);
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
@@ -165,7 +164,6 @@ export async function saveProduct(productId) {
     throw error;
   }
 }
-
 export async function removeWishList(productId) {
   try {
     await axios.post('/tourist/remove-wishlist', { productId });
@@ -174,7 +172,6 @@ export async function removeWishList(productId) {
     throw error;
   }
 }
-
 export async function getWishList() {
   try {
     const response = await axios.get('/tourist/wishlist');
