@@ -6,7 +6,8 @@ const Product = require("../models/Product.js");
 const Seller = require("../models/users/Seller.js");
 
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, sellerID, price, description, quantity, picture } = req.body;
+  const { name, price, description, quantity, picture } = req.body;
+  const sellerID = req.userId;
 
   const seller = await Seller.findById(sellerID);
   if (!seller) {

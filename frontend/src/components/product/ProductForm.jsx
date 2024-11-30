@@ -44,6 +44,10 @@ const ProductForm = () => {
     }
   };
 
+  const onFinishFailed = (errorInfo) => {
+    message.error("Please check the form and try again.");
+  };
+
   const handleNumberChange = (name, value) => {
     setProduct({ ...product, [name]: value });
   };
@@ -147,7 +151,69 @@ const ProductForm = () => {
   return (
     <>
       <div className="product-form-container">
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            name="picture"
+            rules={[
+              {
+                required: isCreate,
+                message: "Please upload a product picture",
+              },
+            ]}
+          >
+            {/* logo */}
+
+            <div className="col-12">
+              <Upload
+                name="logo"
+                listType="picture"
+                accept=".png,.jpeg,.jpg"
+                beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                onChange={handleImageChange}
+                onRemove={handleRemove} // Allow removal of the logo
+                fileList={
+                  product.picture
+                    ? [
+                        {
+                          uid: "-1",
+                          name: "image.png",
+                          status: "done",
+                          url: product.picture,
+                        },
+                      ]
+                    : []
+                } // Ensure only one file is shown
+              >
+                {product.picture ? (
+                  <div className="uploaded-image-container">
+                    <img
+                      alt="uploaded logo"
+                      src={product.picture}
+                      className="size-200 rounded-12 bg-light-purple1 flex-center flex-column"
+                    />
+                  </div>
+                ) : (
+                  <div className="col-auto">
+                    <label
+                      htmlFor="imageInp2"
+                      className="size-200 rounded-12 border-dash-2 bg-light-purple1 flex-center flex-column"
+                    >
+                      <img alt="image" src={"/img/dashboard/upload.svg"} />
+                      <div className="text-16 fw-500 dark-purple mt-10">
+                        Upload Product Image
+                      </div>
+                    </label>
+                  </div>
+                )}
+              </Upload>
+            </div>
+
+            {/* end logo */}
+          </Form.Item>
           <Form.Item
             label="Name"
             name="name"
@@ -224,57 +290,6 @@ const ProductForm = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            label="Picture"
-            name="picture"
-            rules={[
-              {
-                required: isCreate,
-                message: "Please upload a product picture",
-              },
-            ]}
-          >
-            <Upload
-              name="picture"
-              listType="picture"
-              accept=".png,.jpeg,.jpg"
-              beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-              onChange={handleImageChange}
-              onRemove={handleRemove} // Allow removal of the picture
-              fileList={
-                product.picture
-                  ? [
-                      {
-                        uid: "-1",
-                        name: "image.png",
-                        status: "done",
-                        url: product.picture,
-                      },
-                    ]
-                  : []
-              } // Ensure only one file is shown
-            >
-              {!product.picture && (
-                <Button
-                  icon={<UploadOutlined />}
-                  size="small"
-                  type="default"
-                  style={{
-                    whiteSpace: "nowrap",
-                    padding: "0 8px",
-                    width: "auto",
-                    backgroundColor: "var(--color-stone)",
-                    color: "white",
-                    borderColor: "white",
-                  }}
-                  className="upload-button"
-                >
-                  Upload Picture
-                </Button>
-              )}
-            </Upload>
-          </Form.Item>
-
           <Form.Item>
             <Button
               type="primary"
@@ -293,11 +308,6 @@ const ProductForm = () => {
     .product-form-container {
       padding-left: 15% !important;
       padding-right: 15% !important;
-    }
-
-    .upload-button:hover,
-    .upload-button:focus {
-      color: var(--color-stone-light) !important;
     }
 
     .submit-button {
