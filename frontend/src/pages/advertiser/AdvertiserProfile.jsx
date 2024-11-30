@@ -23,7 +23,7 @@ export default function AdvertiserProfile() {
   //   const [image3, setImage3] = useState("/img/dashboard/addtour/2.jpg");
   //   const [image4, setImage4] = useState("/img/dashboard/addtour/3.jpg");
   const [advertiser, setAdvertiser] = useState(null);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState({ currentLogo: null });
 
   //   const handleImageChange = (event, func) => {
   //     const file = event.target.files[0];
@@ -416,7 +416,15 @@ export default function AdvertiserProfile() {
                                   : []
                               } // Ensure only one file is shown
                             >
-                              {!formData.currentLogo && (
+                              {formData.currentLogo ? (
+                                <div className="uploaded-image-container">
+                                  <img
+                                    alt="uploaded logo"
+                                    src={formData.currentLogo}
+                                    className="size-200 rounded-12 bg-light-purple1 flex-center flex-column"
+                                  />
+                                </div>
+                              ) : (
                                 <div className="col-auto">
                                   <label
                                     htmlFor="imageInp2"
