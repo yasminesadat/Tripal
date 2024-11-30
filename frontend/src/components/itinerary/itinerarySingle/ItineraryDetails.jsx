@@ -6,7 +6,7 @@ import LocationMap from "../../common/MapComponent";
 import TourSingleSidebar from "@/components/activity/activitySingle/TourSingleSidebar";
 import Gallery1 from "@/components/activity/activitySingle/Gallery1";
 import Rating from "./Rating";
-import ReviewBox from "../../common/reviewBox";
+import ReviewBox from "../../common/ReviewBox";
 import ItineraryReviews from "./ItineraryReviews";
 import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";

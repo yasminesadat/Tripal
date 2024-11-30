@@ -79,8 +79,8 @@ export default function ReviewBox({ id, type }) {
                 <div className="row">
                     <div className="col-12">
                         <button
-                          className="button -md -dark-1 bg-accent-1 text-white"
-                            onClick={handlePostReview}
+                        className="button -md purple-button"
+                        onClick={handlePostReview}
                             disabled={loading}
                         >
                             {loading ? "Posting..." : "Post"}
@@ -89,6 +89,18 @@ export default function ReviewBox({ id, type }) {
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                     </div>
                 </div>
+                <style>{`
+            .purple-button {
+                background-color: #8f5774;  /* Purple-600 */
+                color: white;
+                transition: background-color 0.3s ease;
+            }
+
+            .purple-button:hover {
+                background-color: #5d384d;  /* Purple-700 */
+            }
+            `}
+            </style>
             </div>
         </>
     );

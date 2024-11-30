@@ -20,7 +20,7 @@ const ProductForm = () => {
     initialDescription,
     initialQuantity,
     initialPicture,
-    userId
+    userId,
   } = location.state || {};
 
   const [product, setProduct] = useState({
@@ -42,6 +42,10 @@ const ProductForm = () => {
       const { name, value } = e.target;
       setProduct({ ...product, [name]: value });
     }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    message.error("Please check the form and try again.");
   };
 
   const handleNumberChange = (name, value) => {
@@ -110,8 +114,11 @@ const ProductForm = () => {
           );
           return;
         }
+        if (!product.picture) {
+          message.warning("Please upload a picture.");
+          return;
+        }
         setButtonText("Submitting...");
-        const picture = useLocation.state;
         let productData = {};
         if (product.name) productData.name = product.name;
         if (product.price) productData.price = product.price;
@@ -119,7 +126,7 @@ const ProductForm = () => {
         if (product.quantity) productData.quantity = product.quantity;
         if (product.picture !== initialPicture) {
           productData.picture = product.picture;
-          productData.initalPicture = picture;
+          productData.initialPicture = initialPicture;
         }
         await editProduct(id, productData);
         message.success("Product updated successfully");
@@ -142,143 +149,215 @@ const ProductForm = () => {
   };
 
   return (
-    <div className="product-form-container">
-      <Form layout="vertical" onFinish={handleSubmit}>
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[
-            { required: isCreate, message: "Please enter the product name" },
-          ]}
+    <>
+      <div className="product-form-container">
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          onFinishFailed={onFinishFailed}
         >
-          <Input
-            type="text"
-            name="name"
-            defaultValue={initialName}
-            value={product.name}
-            onChange={handleInputChange}
-            placeholder="Enter product name"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Price"
-          name="price"
-          rules={[
-            { required: isCreate, message: "Please enter the product price" },
-          ]}
-        >
-          <InputNumber
-            name="price"
-            min={0}
-            defaultValue={initialPrice}
-            value={product.price}
-            onChange={(value) => handleNumberChange("price", value)}
-            placeholder="Enter price"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Description"
-          name="description"
-          rules={[
-            {
-              required: isCreate,
-              message: "Please input the product description!",
-            },
-          ]}
-        >
-          <Input.TextArea
-            type="text"
-            name="description"
-            defaultValue={initialDescription}
-            value={product.description}
-            onChange={handleInputChange}
-            placeholder="Enter product description"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Quantity"
-          name="quantity"
-          rules={[
-            {
-              required: isCreate,
-              message: "Please enter the product quantity",
-            },
-          ]}
-        >
-          <InputNumber
-            name="quantity"
-            min={0}
-            defaultValue={initialQuantity}
-            value={product.quantity}
-            onChange={(value) => handleNumberChange("quantity", value)}
-            placeholder="Enter quantity"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Picture"
-          name="picture"
-          rules={[
-            {
-              required: isCreate,
-              message: "Please upload a product picture",
-            },
-          ]}
-        >
-          <Upload
+          <Form.Item
             name="picture"
-            listType="picture"
-            accept=".png,.jpeg,.jpg"
-            beforeUpload={handleBeforeUpload} // Prevent multiple uploads
-            onChange={handleImageChange}
-            onRemove={handleRemove} // Allow removal of the picture
-            fileList={
-              product.picture
-                ? [
-                    {
-                      uid: "-1",
-                      name: "image.png",
-                      status: "done",
-                      url: product.picture,
-                    },
-                  ]
-                : []
-            } // Ensure only one file is shown
+            rules={[
+              {
+                required: isCreate,
+                message: "Please upload a product picture",
+              },
+            ]}
           >
-            {!product.picture && (
-              <Button
-                icon={<UploadOutlined />}
-                size="small"
-                type="default"
-                style={{
-                  whiteSpace: "nowrap",
-                  padding: "0 8px",
-                  width: "auto",
-                }}
-              >
-                Upload Picture
-              </Button>
-            )}
-          </Upload>
-        </Form.Item>
+            {/* logo */}
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ width: "100%" }}
-            loading={loading}
+            <div className="col-12">
+              <Upload
+                name="logo"
+                listType="picture"
+                accept=".png,.jpeg,.jpg"
+                beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                onChange={handleImageChange}
+                onRemove={handleRemove} // Allow removal of the logo
+                fileList={
+                  product.picture
+                    ? [
+                        {
+                          uid: "-1",
+                          name: "image.png",
+                          status: "done",
+                          url: product.picture,
+                        },
+                      ]
+                    : []
+                } // Ensure only one file is shown
+              >
+                {product.picture ? (
+                  <div className="uploaded-image-container">
+                    <img
+                      alt="uploaded logo"
+                      src={product.picture}
+                      className="size-200 rounded-12 bg-light-purple1 flex-center flex-column"
+                    />
+                  </div>
+                ) : (
+                  <div className="col-auto">
+                    <label
+                      htmlFor="imageInp2"
+                      className="size-200 rounded-12 border-dash-2 bg-light-purple1 flex-center flex-column"
+                    >
+                      <img alt="image" src={"/img/dashboard/upload.svg"} />
+                      <div className="text-16 fw-500 dark-purple mt-10">
+                        Upload Product Image
+                      </div>
+                    </label>
+                  </div>
+                )}
+              </Upload>
+            </div>
+
+            {/* end logo */}
+          </Form.Item>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              { required: isCreate, message: "Please enter the product name" },
+            ]}
           >
-            {buttonText}
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+            <Input
+              type="text"
+              name="name"
+              defaultValue={initialName}
+              value={product.name}
+              onChange={handleInputChange}
+              placeholder="Enter product name"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Price"
+            name="price"
+            rules={[
+              { required: isCreate, message: "Please enter the product price" },
+            ]}
+          >
+            <InputNumber
+              name="price"
+              min={0}
+              defaultValue={initialPrice}
+              value={product.price}
+              onChange={(value) => handleNumberChange("price", value)}
+              placeholder="Enter price"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[
+              {
+                required: isCreate,
+                message: "Please input the product description!",
+              },
+            ]}
+          >
+            <Input.TextArea
+              type="text"
+              name="description"
+              defaultValue={initialDescription}
+              value={product.description}
+              onChange={handleInputChange}
+              placeholder="Enter product description"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            rules={[
+              {
+                required: isCreate,
+                message: "Please enter the product quantity",
+              },
+            ]}
+          >
+            <InputNumber
+              name="quantity"
+              min={0}
+              defaultValue={initialQuantity}
+              value={product.quantity}
+              onChange={(value) => handleNumberChange("quantity", value)}
+              placeholder="Enter quantity"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: "100%" }}
+              loading={loading}
+              className="submit-button"
+            >
+              {buttonText}
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+      <style>
+        {`
+    .product-form-container {
+      padding-left: 15% !important;
+      padding-right: 15% !important;
+    }
+
+    .submit-button {
+      background-color: var(--color-stone) !important;
+    }
+
+    .submit-button:hover,
+    .submit-button:focus {
+      background-color: var(--color-stone-light) !important;
+    }
+     
+    .ant-input,
+    .ant-input-number,
+    .ant-input-affix-wrapper,
+    .ant-input-password {
+      padding: 8px !important; 
+    }
+
+    .ant-input:focus,
+    .ant-input-focused,
+    .ant-input:hover,
+    .ant-input-affix-wrapper:focus,
+    .ant-input-affix-wrapper-focused,
+    .ant-input-affix-wrapper:hover,
+    .ant-input-number:hover,
+    .ant-input-number:focus,
+    .ant-input-number-focused:hover,
+    .ant-input-number .ant-input:focus,
+    .ant-input-number .ant-input-focused,
+    .ant-input-number .ant-input:hover,
+    .ant-input-number .ant-input:focus,
+    .ant-input-number .ant-input-focused:hover,
+    .ant-input-number .ant-input:active,
+    .ant-input-number .ant-input:visited,
+    .ant-input-number-focused,
+    .ant-input-number:focus-within {
+      border-color: var(--color-light-purple) !important;
+      box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
+    }
+
+     /* Override Ant Design arrow colors to dark purple */
+    .ant-select-arrow,
+    .ant-picker-arrow,
+    .ant-input-number-handler-up-inner,
+    .ant-input-number-handler-down-inner {
+      color: var(--color-dark-purple) !important;
+    }
+  `}
+      </style>
+    </>
   );
 };
 

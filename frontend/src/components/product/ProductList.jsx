@@ -160,51 +160,189 @@ export default function ProductList() {
   return (
     <section className="layout-pt-lg layout-pb-xl">
       <div className="container">
-        <div className="row  custom-dd-container justify-between items-center relative z-5">
-          <div className="col-auto">
-            <div
-              ref={dropDownContainer2}
-              className="row  custom-dd-container2 custom-dd-container x-gap-10 y-gap-10 items-center"
-            >
-              <div className="col-auto">
-                <div
-                  className={` dropdown -base -price js-dropdown js-form-dd  ${
-                    curentDD == "priceFilter1" ? "is-active" : ""
-                  } `}
-                >
-                  <div
-                    onClick={() => {
-                      setCurentDD((pre) =>
-                        pre == "priceFilter1" ? "" : "priceFilter1",
-                      );
-                    }}
-                    className="dropdown__button h-50 min-w-auto js-button"
-                  >
-                    <span className="js-title">Filter Price</span>
-                    <i className="icon-chevron-down ml-10"></i>
-                  </div>
+      <div className="row custom-dd-container justify-between items-center relative z-5">
+  <div className="col-auto">
+    <div
+      ref={dropDownContainer2}
+      className="row custom-dd-container2 custom-dd-container x-gap-10 y-gap-10 items-center"
+    >
+      <div className="col-auto">
+        <div
+          className={`dropdown -base -price js-dropdown js-form-dd ${
+            curentDD === "priceFilter1" ? "is-active" : ""
+          }`}
+        >
+          {/* Dropdown Button */}
+          <div
+            onClick={() => {
+              setCurentDD((prev) => (prev === "priceFilter1" ? "" : "priceFilter1"));
+            }}
+            className="dropdown__button h-50 min-w-auto js-button"
+          >
+            <span className="js-title">Filter Price</span>
+            <i className="icon-chevron-down ml-10"></i>
+          </div>
 
-                  <div className="dropdown__menu px-30 py-30 shadow-1 border-1 js-">
-                    <h5 className="text-22 fw-500" style={{marginBottom:"5%"}}>Filter Price</h5>
-                    <div style={{ marginBottom: "-7%",textAlign:"center" }}>{formatPriceRange()}</div>
-                    <div className="pt-20">
-                      <Slider
-                        range
-                        min={0}
-                        max={3000}
-                        value={priceRange}
-                        onChange={handlePriceChange}
-                        style={{ marginBottom: "10px" }}
-                      />                    
-                      </div>
-                    <button className="button px-25 py-15 lh-12 -accent-1 text-accent-1 bg-accent-1-05 border-accent-1 mt-30"
-                    onClick={handleGoClick}>
-                      Apply
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
-                  </div>
-                </div>
+          {/* Dropdown Menu */}
+          {curentDD === "priceFilter1" && (
+            <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
+              <h5 className="text-22 fw-500" style={{ marginBottom: "5%" }}>
+                Filter Price
+              </h5>
+              <div style={{ marginBottom: "-7%", textAlign: "center" }}>
+                {formatPriceRange()}
               </div>
+              <div className="pt-20">
+                {/* Slider */}
+                <Slider
+                  range
+                  min={0}
+                  max={3000}
+                  value={priceRange}
+                  onChange={handlePriceChange}
+                  className="custom-slider"
+                  />
+              </div>
+
+              {/* Apply Button */}
+              <button
+                className="custom-apply-button button px-25 py-15 lh-12 text-accent-1 mt-30"
+                onClick={handleGoClick}
+              >
+                Apply
+                <i className="icon-arrow-top-right text-16 ml-10"></i>
+              </button>
+            </div>
+          )}
+        </div>
+        <style>
+  {`
+    /* Apply Button Styles */
+    .custom-apply-button {
+      background-color: #8f5774; 
+      color: white; /* White text */
+      border: none; /* Remove default border */
+      border-radius: 5px; /* Rounded corners */
+      transition: background-color 0.3s ease;
+    }
+
+    .custom-apply-button:hover {
+      background-color: #dac4d0; 
+    }
+     .dropdown__menu {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+          .dropdown__button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+        .dropdown__button:hover {
+        background-color: #8f5774;
+      }
+    .dropdown.is-active .dropdown__button {
+        background-color: #8f5774;
+        color: white;
+      }
+  `}
+</style>
+      </div>
+              
+              <div className="col-auto">
+  <div
+    className={`dropdown -base -price js-dropdown js-form-dd ${
+      curentDD === "ratingFilter1" ? "is-active" : ""
+    }`}
+  >
+    <div
+      onClick={() => {
+        setCurentDD((prev) => (prev === "ratingFilter1" ? "" : "ratingFilter1"));
+      }}
+      className="dropdown__button h-50 min-w-auto js-button"
+    >
+      <span className="js-title">Rating</span>
+      <i className="icon-chevron-down ml-10"></i>
+    </div>
+
+    {curentDD === "ratingFilter1" && (
+      <div className="dropdown__menu px-30 py-30 shadow-1 border-1">
+        <h5 className="text-18 fw-500">Rating</h5>
+        <div className="pt-20">
+          <div className="d-flex flex-column y-gap-15">
+            <div
+              className={`option ${sortOrder === "desc" ? "is-active" : ""}`}
+              onClick={() => handleSortChange("desc")}
+              style={{ cursor: "pointer" }}
+            >
+              Sort by Rating: High to Low
+            </div>
+            <div
+              className={`option ${sortOrder === "asc" ? "is-active" : ""}`}
+              onClick={() => handleSortChange("asc")}
+              style={{ cursor: "pointer" }}
+            >
+              Sort by Rating: Low to High
+            </div>
+          </div>
+        </div>
+        <style>
+    {`
+      .option {
+        padding: 5px 10px;
+        border-radius: 3px;
+        transition: background-color 0.3s ease;
+      }
+
+      .option:hover {
+        background-color: #dac4d0;
+      }
+
+      .option.is-active {
+        background-color: #8f5774; 
+        color: white;
+      }
+
+      .dropdown__menu {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .dropdown__button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .dropdown__button:hover {
+        background-color: #8f5774;
+      }
+
+      .dropdown.is-active .dropdown__button {
+        background-color: #8f5774;
+        color: white;
+      }
+    `}
+  </style>
+      </div>
+    )}
+  </div>
+</div>
+
             </div>
             </div>
             <Search
@@ -214,16 +352,6 @@ export default function ProductList() {
               allowClear
               onSearch={handleGoClick}
             />
-          <div className="col-auto" style={{width: 300, marginLeft: "auto"}}>
-          <Select
-            value={sortOrder} 
-            style={{ width: "100%" }}
-            onChange={handleSortChange}
-          >
-            <Option value="desc">Sort by Rating: High to Low</Option>
-            <Option value="asc">Sort by Rating: Low to High</Option>
-          </Select>
-          </div>
         </div>
         {loading ? ( <Spinner/>) :
         (<>

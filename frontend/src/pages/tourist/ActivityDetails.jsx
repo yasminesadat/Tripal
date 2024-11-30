@@ -34,9 +34,10 @@ const ActivityDetailsPage = () => {
         if (response.data.status === "success") {
           setUserRole(response.data.role);
           setUserId(response.data.id);
+        } else if (response.data.message === "No token found.") {
+          setUserRole("Guest");
         } else {
           message.error(response.data.message);
-          setUserRole("Guest");
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
@@ -60,21 +61,29 @@ const ActivityDetailsPage = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div><NotFoundPage/></div>;
+  if (error)
+    return (
+      <div>
+        <NotFoundPage />
+      </div>
+    );
   if (!activity) return <div>Activity not found.</div>;
 
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
-        {userRole === "Guest" && 
+        {userRole === "Guest" && (
           <>
-            <GuestHeader /> 
-            <PageHeader activityId={activityId} activityTitle={activity.title} />
+            <GuestHeader />
+            <PageHeader
+              activityId={activityId}
+              activityTitle={activity.title}
+            />
             <ActivityDetails activity={activity} />
             <FooterThree />
           </>
-        }
+        )}
 
         {userRole === "Admin" && (
           <div
@@ -85,7 +94,10 @@ const ActivityDetailsPage = () => {
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
-              <PageHeader activityId={activityId} activityTitle={activity.title} />
+              <PageHeader
+                activityId={activityId}
+                activityTitle={activity.title}
+              />
               <ActivityDetails activity={activity} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
@@ -97,7 +109,11 @@ const ActivityDetailsPage = () => {
         {userRole === "Tourist" && (
           <>
             <Header1 />
-            <PageHeader activityId={activityId} activityTitle={activity.title} tourist={'ana t3ebt'} />
+            <PageHeader
+              activityId={activityId}
+              activityTitle={activity.title}
+              tourist={"ana t3ebt"}
+            />
             <ActivityDetails activity={activity} />
             <FooterThree />
           </>
