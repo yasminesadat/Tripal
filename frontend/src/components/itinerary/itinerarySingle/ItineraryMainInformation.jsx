@@ -78,7 +78,7 @@ export default function ItineraryMainInformation({
         ...previousItinerary, 
         flagged: updatedFlagStatus 
       }));
-      message.success(`Itinerary ${updatedFlagStatus ? "flagged" : "unflagged"} successfully.`);
+      message.success(`Itinerary ${updatedFlagStatus ? "is flagged as inappropriate " : "has been unflagged"} successfully.`);
     } catch (error) {
       message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update itinerary flag status.");
     } finally {
@@ -278,11 +278,11 @@ export default function ItineraryMainInformation({
           <div className="col-auto">
             <button className="flag-button" onClick={() => handleFlag(itinerary._id, itinerary.flagged)}>
                {!itinerary.flagged? 
-               <FlagOff  size={16} className="mr-10" />:
-                <Flag size={16} className="mr-10" />}
+               <Flag  size={16} className="mr-10" />:
+                <FlagOff size={16} className="mr-10" />}
                 {itinerary.flagged ? 
                 "Unflag" :
-                 "Flag"}
+                 "Flag as Inappropriate"}
               </button>
           </div>
         )}

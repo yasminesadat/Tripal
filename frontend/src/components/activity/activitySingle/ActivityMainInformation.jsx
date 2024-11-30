@@ -59,7 +59,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
         ...prevActivity, 
         flagged: updatedFlagStatus 
       }));
-      message.success(`Activity ${updatedFlagStatus ? "flagged" : "unflagged"} successfully.`);
+      message.success(`Activity ${updatedFlagStatus ? "is flagged as inappropriate " : "has been unflagged"} successfully.`);
     } catch (error) {
       message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update activity flag status.");
     } finally {
@@ -169,11 +169,11 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       <div className="col-auto">
         <button className="flag-button" onClick={() => handleFlag(activity._id, activity.flagged)}>
                {!activity.flagged? 
-               <FlagOff  size={16} className="mr-10" />:
-                <Flag size={16} className="mr-10" />}
+               <Flag  size={16} className="mr-10" />:
+                <FlagOff size={16} className="mr-10" />}
                 {activity.flagged ? 
                 "Unflag" :
-                 "Flag"}
+                 "Flag as Inappropriate"}
               </button>
         </div>
       ) : null}
