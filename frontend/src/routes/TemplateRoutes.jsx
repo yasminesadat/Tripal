@@ -24,7 +24,7 @@ import TourSinglePage2 from "../pages/tour-singles/tour-single-2";
 import TourSinglePage3 from "../pages/tour-singles/tour-single-3";
 import TourSinglePage4 from "../pages/tour-singles/tour-single-4";
 import TourSinglePage5 from "../pages/tour-singles/tour-single-5";
-
+import PendingPage from "@/pages/commonPagesForMultipleUsers/PendingRequest";
 import BookingPage from "../pages/pages/booking-pages";
 
 import DBMainPage from "../pages/dashboard/db-main";
@@ -107,6 +107,7 @@ const templateRoutes = [
 
   { path: "/404", element: <NotFoundPage /> },
   { path: "/*", element: <NotFoundPage /> },
+  { path: "/pendingRequest", element: <PendingPage /> },
 ];
 
 export default templateRoutes;
