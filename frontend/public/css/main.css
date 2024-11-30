@@ -170,6 +170,10 @@
   color: var(--color-light-purple) !important;
 }
 
+.bg-light-purple1 {
+  background-color: var(--color-light-purple) !important;
+}
+
 .bg-light-purple {
   background-color: var(--color-light-purple) !important;
 }
@@ -14255,6 +14259,10 @@ table.table-4.-border-bottom tbody > tr {
 
 .border-dash-1 {
   border: 1px dashed var(--color-primary, #eb662b);
+}
+
+.border-dash-2 {
+  border: 1px dashed var(--color-dark-purple);
 }
 
 .absoluteIcon1 {
