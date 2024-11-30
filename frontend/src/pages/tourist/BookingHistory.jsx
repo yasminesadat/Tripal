@@ -259,11 +259,12 @@ const handleCancelResource = async () => {
   const { resourceId, resourceType } = currentResource;
   try {
     await cancelResource(resourceType, resourceId);
-    message.success(`${resourceType === 'activity' ? 'Activity' : 'Itinerary'} canceled successfully.`);
-    if(resourceType === 'activity') 
-      fetchBookedActivities();
-    if(resourceType === 'itinerary')
-      fetchBookedItineraries();
+    message.success(`${resourceType === 'activity' ? 'Activity' : 'Itinerary'} reservation is canceled successfully.`);
+    if (resourceType === 'activity') {
+      setBookedActivities((prev) => prev.filter((activity) => activity._id !== resourceId));
+    } else if (resourceType === 'itinerary') {
+      setBookedItineraries((prev) => prev.filter((itinerary) => itinerary._id !== resourceId));
+    }
   } catch (err) {
     message.error(err.response?.data?.error || 'An error occurred while canceling the resource.');
   } finally {
