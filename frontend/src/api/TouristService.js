@@ -68,7 +68,6 @@ export async function getTouristItineraries() {
 export async function getTouristActivities() {
   try {
     const response = await axios.get(`/booked-activities`);
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
@@ -152,35 +151,6 @@ export async function getBookmarkedEvents() {
     return response.data;
   } catch (error) {
     console.error("Error fetching events:", error);
-    throw error;
-  }
-}
-
-export async function saveProduct(productId) {
-  try {
-    const response = await axios.post('/tourist/save-product', { productId });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding product to wishlist:", error);
-    throw error;
-  }
-}
-
-export async function removeWishList(productId) {
-  try {
-    await axios.post('/tourist/remove-wishlist', { productId });
-  } catch (error) {
-    console.error("Error removing product from wishlist:", error);
-    throw error;
-  }
-}
-
-export async function getWishList() {
-  try {
-    const response = await axios.get('/tourist/wishlist');
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching wishlist:", error);
     throw error;
   }
 }
