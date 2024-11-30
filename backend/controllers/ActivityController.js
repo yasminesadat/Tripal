@@ -55,10 +55,10 @@ const getAdvertiserActivities = async (req, res) => {
   const id = req.userId;
   console.log("curr advertiser is", id);
   try {
-    const activites = await Activity.find({ advertiser: id })
+    const activities = await Activity.find({ advertiser: id })
       .select("title date time location")
-    console.log(activites)
-    res.status(200).json(activites);
+      .sort({ date: -1 });
+    res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -114,10 +114,10 @@ const deleteActivity = async (req, res) => {
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-    const activities = await Activity.find({ isBookingOpen: true, date: { $gte: currentDate }, flagged: false })
+    const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -158,11 +158,11 @@ const getActivityById = async (req, res) => {
 };
 
 const getTouristActivities = async (req, res) => {
-  const { touristId } = req.userId;
+  const  touristId  = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, isBookingOpen: true, flagged: false, date: { $gte: new Date() } })
-      .populate("category")
-      .populate("tags")
+    const activities = await Activity.find({ "bookings.touristId": touristId,  flagged: false, date: { $gte: new Date() } })
+    
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -175,6 +175,7 @@ const getAllActivitiesForAdmin = async (req, res) => {
     const activities = await Activity.find()
       .populate("category")
       .populate("tags")
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -186,6 +187,7 @@ const getAllActivities = async (req, res) => {
     const activities = await Activity.find()
       .populate("category")
       .populate("tags")
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });

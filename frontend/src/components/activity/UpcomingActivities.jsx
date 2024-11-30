@@ -3,23 +3,18 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "./Pagination";
-import { Tag, message } from "antd";
-
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
-import {
-  viewUpcomingActivities,
-  getAllActivities,
-} from "@/api/ActivityService";
+import {viewUpcomingActivities,} from "@/api/ActivityService";
 import { getAdminActivities} from "@/api/AdminService";
+
 
 export default function ActivitiesList({
   searchTerm,
-  book,
-  onCancel,
-  cancel,
   curr = "EGP",
   page,
 }) {
+
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
@@ -42,7 +37,13 @@ export default function ActivitiesList({
 
   const [currentPage, setCurrentPage] = useState(1);
   const activitiesPerPage = 2;
-
+  const navigate = useNavigate();
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = filteredActivities.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
@@ -53,6 +54,7 @@ export default function ActivitiesList({
   const errorDisplayed = useRef(false);
   //#endregion
 
+  //#region useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -86,11 +88,7 @@ export default function ActivitiesList({
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
-          console.log(userRole)
         }
-        // else {
-        //   response = await getAllActivities();
-        // }
         const activitiesData = Array.isArray(response?.data)
           ? response?.data
           : [];
@@ -204,6 +202,10 @@ export default function ActivitiesList({
     };
   }, []);
 
+  
+  //#endregion
+
+  //#region Functions
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -215,14 +217,6 @@ export default function ActivitiesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastActivity = currentPage * activitiesPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
-  const currentActivities = filteredActivities.slice(
-    indexOfFirstActivity,
-    indexOfLastActivity
-  );
-
-  const navigate = useNavigate();
   const handleRedirect = (activityId) => {
     if (userRole === "Tourist"|| userRole === "Admin")
       navigate(`/activity/${activityId}`, { state: { page } });
@@ -237,6 +231,7 @@ export default function ActivitiesList({
   
     return `${day}/${month}/${year}`;
   };
+  //#endregion
 
   return (
     <section className="layout-pb-xl">

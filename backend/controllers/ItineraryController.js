@@ -78,6 +78,7 @@ const getItinerariesForTourguide = async (req, res) => {
                 }
             ]
         }).populate("tags")
+        .sort({ startDate: -1 });
 
         res.status(200).json(itineraries);
     } catch (error) {
@@ -132,7 +133,7 @@ const updateItinerary = async (req, res) => {
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
-            tourGuide, activities, language,location, startDate,endDate,
+            activities, language,location, startDate,endDate,tourGuide: req.userId,
             accessibility, pickupLocation, dropoffLocation, price, serviceFee,
             timeline, tags: uniqueTags
         }, { new: true });
@@ -174,7 +175,8 @@ const viewUpcomingItineraries = async (req, res) => {
                     path: 'category',
                 }
             ]
-        }).populate("tags");
+        }).populate("tags")
+        .sort({ startDate: -1 });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -204,11 +206,11 @@ const viewPaidItineraries = async (req, res) => {
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.userId;
-        const currentDate = new Date();
+        // const currentDate = new Date();
 
         const itineraries = await itineraryModel.find(
             { 'bookings.touristId': touristId,
-            endDate: { $gte: currentDate },
+            // endDate: { $gte: currentDate },
             flagged: false }).populate({
 
             path: 'activities',
@@ -222,11 +224,11 @@ const getTouristItineraries = async (req, res) => {
             ]
         }).populate("tags")
         .populate('tourGuide bookings.touristId')
-        .select("-bookings"); //exclude bookings from response
+        .select("-bookings") //exclude bookings from response
+        .sort({ startDate: -1 });
 
         if (!itineraries.length)
-            return res.status(404).json({ message: "No itineraries found for this tourist." });
-        
+            return res.status(200).json({ message: "No booked itineraries found for this tourist." });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });
@@ -235,17 +237,10 @@ const getTouristItineraries = async (req, res) => {
 
 const adminFlagItinerary = async (req, res) => {
     try{
-        const adminId = req.userId;
-        const admin = await Admin.findById(adminId);
-        if (!admin) 
-            return res.status(403).json({ message: 'Access denied. Admins only.' });
-         
         const itinerary= await itineraryModel.findById(req.params.itineraryId);
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});
-        if(itinerary.flagged)
-            return res.status(400).json({error: 'Itinerary already flagged'});
-        itinerary.flagged = true;
+        itinerary.flagged = !itinerary.flagged;
         await itinerary.save();
         res.status(200).json({message: 'Itinerary flagged successfully'});
     }
@@ -257,6 +252,7 @@ const adminFlagItinerary = async (req, res) => {
 const getAllItinerariesForAdmin = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find()
+        .sort({ startDate: -1 });
             // .populate({
             //     path: 'activities',
             //     populate: [{path: 'tags'},{path: 'category', }]

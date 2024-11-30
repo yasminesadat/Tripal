@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const [activeIndex, setActiveIndex] = useState(1);
 
@@ -8,6 +9,7 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
     setActiveIndex(currentPage);
   }, [currentPage]);
 
+  //#region 1. Event Handlers
   const handlePageClick = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       onPageChange(pageNumber);
@@ -32,13 +34,26 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
   }
 
   const displayPageNumbers = () => {
+    const visiblePages = [];
+  
     if (totalPages <= 5) {
       return pageNumbers;
     }
-    const visiblePages = [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
-    return visiblePages.filter(page => page > 0 && page <= totalPages);
+    visiblePages.push(1);
+    if (currentPage > 3) {
+      visiblePages.push("...");
+    } 
+    for (let i = Math.max(currentPage - 1, 2); i <= Math.min(currentPage + 1, totalPages - 1); i++) {
+      visiblePages.push(i);
+    }
+    if (currentPage < totalPages - 2) {
+      visiblePages.push("...");
+    } 
+    visiblePages.push(totalPages); 
+    return visiblePages;
   };
-
+  //#endregion
+  
   return (
     <div>
       <div className="pagination justify-center">
@@ -50,28 +65,19 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
         </button>
 
         <div className="pagination__count">
-          {displayPageNumbers().map((pageNumber) => (
-            <div
-              key={pageNumber}
-              style={{ cursor: "pointer" }}
-              onClick={() => handlePageClick(pageNumber)}
-              className={activeIndex === pageNumber ? `is-active` : ""}
-            >
-              {pageNumber}
-            </div>
-          ))}
-
-          {totalPages > 5 && !displayPageNumbers().includes(5) && <div>...</div>}
-
-          {totalPages > 5 && !displayPageNumbers().includes(totalPages) && (
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => handlePageClick(totalPages)}
-              className={activeIndex === totalPages ? `is-active` : ""}
-            >
-              {totalPages}
-            </div>
-          )}
+        {displayPageNumbers().map((pageNumber, index) => (
+          <div
+            key={index}
+            style={{
+              cursor: pageNumber === "..." ? "default" : "pointer",
+              pointerEvents: pageNumber === "..." ? "none" : "auto",
+            }}
+            onClick={pageNumber !== "..." ? () => handlePageClick(pageNumber) : undefined}
+            className={activeIndex === pageNumber ? `is-active` : ""}
+          >
+            {pageNumber}
+          </div>
+        ))}
         </div>
 
         <button
