@@ -18,7 +18,6 @@ const metadata = {
 
 export default function Itineraries() {
   const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState(""); 
   const errorDisplayed = useRef(false);

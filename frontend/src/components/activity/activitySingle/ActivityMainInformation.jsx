@@ -85,7 +85,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
   //#endregion
   
   if (loading || !activity) return <div><Spinner/></div>; 
-
+ 
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
