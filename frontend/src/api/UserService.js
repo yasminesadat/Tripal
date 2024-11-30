@@ -2,8 +2,12 @@ import { axios } from "./axios";
 
 export async function login(userName, password) {
   try {
-    await axios.post("/login", { userName, password });
-    return { status: "success", message: "Logged in successfully!" };
+    const response = await axios.post("/login", { userName, password });
+    return {
+      status: "success",
+      message: "Logged in successfully!",
+      role: response.data.role,
+    };
   } catch (error) {
     console.log(error);
     return handleError(error);
@@ -45,7 +49,6 @@ function handleError(error) {
         break;
     }
   } else if (error.request) {
-    // The request was made but no response was received
     userFriendlyMessage.message = "Please check your network connection.";
     userFriendlyMessage.status = "warning";
   }
@@ -54,4 +57,23 @@ function handleError(error) {
 
 export async function getUserData() {
   return await axios.get("/user-data");
+}
+
+export async function logout() {
+  try {
+    const response = await axios.post("/logout");
+    if (response.status === 200) {
+      return { status: "success" };
+    } else {
+      return {
+        status: "error",
+        message: "Failed to log out. Please try again.",
+      };
+    }
+  } catch (error) {
+    return {
+      status: "error",
+      message: "An error occurred during logout. Please try again later.",
+    };
+  }
 }

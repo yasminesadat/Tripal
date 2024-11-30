@@ -32,9 +32,9 @@ router.put(
 );
 router.put("/requestDocument/:id", updateRequest);
 router.delete(
-  "/request-deletion/:role/:userId",
+  "/request-deletion",
   verifyToken,
-  authorizeRoles("Advertiser", "Tour Guide", "Seller", "Tourism Governor"),
+  authorizeRoles("Advertiser", "Tour Guide", "Seller", "Tourist"),
   requestAccountDeletion
 );
 

@@ -49,8 +49,10 @@ import InvoicePage from "../pages/pages/invoice";
 import UIElementsPage from "../pages/pages/ui-elements";
 import NotFoundPage from "../pages/pages/404";
 import ContactPage from "../pages/pages/contact";
+import Header3 from "@/components/layout/header/Header3";
 
 const templateRoutes = [
+  { path: "/template", element: <Header3></Header3> },
   { path: "/home-5", element: <HomePage1 /> },
   { path: "/home-2", element: <HomePage2 /> },
   { path: "/home-3", element: <HomePage3 /> },

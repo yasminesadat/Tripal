@@ -1,14 +1,14 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
-const Rating = require('../models/Rating');
 const preferenceTagModel = require('../models/PreferenceTag');
+const Admin = require('../models/users/Admin');
 
 const createItinerary = async (req, res) => {
     try {
-        const { title, description, tourGuide, activities, serviceFee,
-            language, availableDates, availableTime, accessibility, ratings,
+        const tourGuideId = req.userId;
+        const { title, description, activities, serviceFee,
+            language, startDate,endDate, accessibility,
             pickupLocation, dropoffLocation } = req.body;
-
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
 
         if (!fetchedActivities || fetchedActivities.length === 0) {
@@ -16,31 +16,34 @@ const createItinerary = async (req, res) => {
         }
 
         let price = Number(serviceFee);
-        const locations = []; //gama3ly locations
-        const timeline = []; //name w time
+        const location={
+            latitude: fetchedActivities[0].latitude, 
+            longitude: fetchedActivities[0].longitude};
+        
+        const timeline = [];
         const tags = new Set(); //to remove dups
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
-            locations.push(activity.location);
-            timeline.push({ activityName: activity.title,content:activity.description, time: activity.time });
+            timeline.push({ 
+                activityName: activity.title,
+                content:activity.description, 
+                time: activity.time,
+                date: activity.date});
             activity.tags.forEach((tag) => tags.add(tag));
         })
         const uniqueTagIds = Array.from(tags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
 
-        //this is for ommitting any past datessss
-        const currentDate = new Date();
-        const futureDates = availableDates.filter(date => new Date(date) >= currentDate);
-
         const resultItinerary = await itineraryModel.create({
             title,
             description,
-            tourGuide,
+            tourGuide: tourGuideId,
             activities,
-            availableDates: futureDates,
-            availableTime,
+            location,
+            startDate,
+            endDate,
             language,
             accessibility,
             serviceFee,
@@ -48,8 +51,6 @@ const createItinerary = async (req, res) => {
             dropoffLocation,
             bookings: [],
             price,
-            ratings,
-            locations,
             timeline,
             tags: uniqueTags
         });
@@ -62,8 +63,8 @@ const createItinerary = async (req, res) => {
     };
 };
 
-const getItineraries = async (req, res) => {
-    const { tourGuideId } = req.query;
+const getItinerariesForTourguide = async (req, res) => {
+    const tourGuideId = req.userId;
     try {
         const itineraries = await itineraryModel.find({ tourGuide: tourGuideId, flagged: false })
         .populate({
@@ -77,18 +78,20 @@ const getItineraries = async (req, res) => {
                 }
             ]
         }).populate("tags")
+        .sort({ startDate: -1 });
 
         res.status(200).json(itineraries);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error fetching itineraries:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 const updateItinerary = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, tourGuide, activities, serviceFee,
-            language, availableDates, availableTime, accessibility,
+        const { title, description, activities, serviceFee,
+            language, startDate,endDate, accessibility,
             pickupLocation, dropoffLocation } = req.body;
             
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
@@ -98,37 +101,42 @@ const updateItinerary = async (req, res) => {
         }
      
         let price = Number(serviceFee);
-        const locations = [];
+        const location={
+            latitude: fetchedActivities[0].latitude, 
+            longitude: fetchedActivities[0].longitude};
+        
         const timeline = [];
-        const allTags = new Set();
+        const tags = new Set(); //to remove dups
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
-            locations.push(activity.location);
-            timeline.push({ activityName: activity.title, time: activity.time });
-            activity.tags.forEach((tag) => allTags.add(tag));
+            timeline.push({ 
+                activityName: activity.title,
+                content:activity.description, 
+                time: activity.time,
+                date: activity.date});
+            activity.tags.forEach((tag) => tags.add(tag));
         })
 
-        const uniqueTagIds = Array.from(allTags);
+        const uniqueTagIds = Array.from(tags);
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
+        
+        //leave it like this for now
         const itinerary = await itineraryModel.findById(id);
-        const hasBookings = itinerary.bookings.length > 0;
-        const isDatesArrayDifferent = JSON.stringify(itinerary.availableDates) !== JSON.stringify(availableDates);
-
-        if (hasBookings && isDatesArrayDifferent) {
-            return res.status(400).json({ error: 'Cannot update itinerary with bookings if available dates are changed' });
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        if (itinerary.bookings.length > 0) {
+            return res.status(400).json({ error: 'Cannot update itinerary with bookings' });
         }
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
-            tourGuide, activities, availableDates, availableTime, language,
-            accessibility, pickupLocation, dropoffLocation, price, locations, serviceFee,
+            activities, language,location, startDate,endDate,tourGuide: req.userId,
+            accessibility, pickupLocation, dropoffLocation, price, serviceFee,
             timeline, tags: uniqueTags
         }, { new: true });
-        if (!updatedItinerary) {
-            return res.status(404).json({ error: 'Itinerary not found' });
-        }
         res.status(200).json(updatedItinerary);
     }
     catch (error) {
@@ -138,14 +146,14 @@ const updateItinerary = async (req, res) => {
 
 const deleteItinerary = async (req, res) => {
     try {
-        const { id } = req.params;//check for this
+        const { id } = req.params;
         const itinerary = await itineraryModel.findById(id);
         console.log(itinerary);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
         await itineraryModel.findByIdAndDelete(id);
-        res.status(200).json({ message: "deleted yay", itinerary });
+        res.status(200).json({ message: "Itinerary Deleted Successfully", itinerary });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -154,11 +162,10 @@ const deleteItinerary = async (req, res) => {
 //it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
-        const itineraries = await itineraryModel.find({flagged:false, isActive:true,availableDates: {
-            $elemMatch: {
-             $gte: new Date().setHours(0, 0, 0, 0) 
-            }
-        }}).populate({
+        const currentDate = new Date();
+        const itineraries = await itineraryModel.find({startDate: { $gt: currentDate },
+            isActive: true,
+            flagged: false}).populate({
             path: 'activities',
             populate: [
                 {
@@ -168,7 +175,8 @@ const viewUpcomingItineraries = async (req, res) => {
                     path: 'category',
                 }
             ]
-        }).populate("tags");
+        }).populate("tags")
+        .sort({ startDate: -1 });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -195,55 +203,16 @@ const viewPaidItineraries = async (req, res) => {
     }
 };
 
-const addItineraryRating = async (req, res) => {
-
-    try {
-        const itinerary = await Itinerary.findById(id);
-        if (!itinerary) {
-            return res.status(404).json({ error: "Itinerary not found" });
-        }
-
-        const tourist = await Tourist.findById(userID);
-        if (!tourist) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        const newRating = new Rating({ rating, review, userID });
-        await newRating.save();
-
-        itinerary.ratings.push(newRating._id);
-        await itinerary.save();
-
-        res.status(201).json({
-            message: "Rating added successfully",
-            rating: newRating
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-const getItineraryRatings = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const itinerary = await Itinerary.findById(id).populate('ratings');
-        if (!itinerary) {
-            return res.status(404).json({ error: "Itinerary not found" });
-        }
-
-        res.status(200).json(itinerary.ratings);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
 const getTouristItineraries = async (req, res) => {
     try {
-        const touristId = req.params.touristId;
-        
-        // Find itineraries that include the given touristId in the bookings array
-        const itineraries = await itineraryModel.find({ 'bookings.touristId': touristId,'bookings.selectedDate': { $gte: new Date() } , flagged: false }).populate({
+        const touristId = req.userId;
+        // const currentDate = new Date();
+
+        const itineraries = await itineraryModel.find(
+            { 'bookings.touristId': touristId,
+            // endDate: { $gte: currentDate },
+            flagged: false }).populate({
+
             path: 'activities',
             populate: [
                 {
@@ -254,8 +223,12 @@ const getTouristItineraries = async (req, res) => {
                 }
             ]
         }).populate("tags")
-            .populate('tourGuide bookings.touristId');
-        
+        .populate('tourGuide bookings.touristId')
+        .select("-bookings") //exclude bookings from response
+        .sort({ startDate: -1 });
+
+        if (!itineraries.length)
+            return res.status(200).json({ message: "No booked itineraries found for this tourist." });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });
@@ -264,6 +237,11 @@ const getTouristItineraries = async (req, res) => {
 
 const adminFlagItinerary = async (req, res) => {
     try{
+        const adminId = req.userId;
+        const admin = await Admin.findById(adminId);
+        if (!admin) 
+            return res.status(403).json({ message: 'Access denied. Admins only.' });
+         
         const itinerary= await itineraryModel.findById(req.params.itineraryId);
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});
@@ -281,19 +259,12 @@ const adminFlagItinerary = async (req, res) => {
 const getAllItinerariesForAdmin = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find()
-            .populate({
-                path: 'activities',
-                populate: [
-                    {
-                        path: 'tags',
-                    },
-                    {
-                        path: 'category',
-                    }
-                ]
-            })
-            .populate("tags");
-
+        .sort({ startDate: -1 });
+            // .populate({
+            //     path: 'activities',
+            //     populate: [{path: 'tags'},{path: 'category', }]
+            // })
+            // .populate("tags");
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -316,18 +287,34 @@ const toggleItineraryStatus = async (req, res) => {
     }
 };
 
+const getItineraryById = async (req, res) => {
+    try {
+        const itinerary = await itineraryModel.findById(req.params.id)
+            .populate({
+            path: 'activities',
+            populate: [{path: 'tags'},{path: 'category', }]
+            })
+            .populate("tags");
+        if (!itinerary) {
+            return res.status(404).json({ error: 'Itinerary not found' });
+        }
+        res.status(200).json(itinerary);
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 
 module.exports = {
     createItinerary,
-    getItineraries,
+    getItinerariesForTourguide,
     updateItinerary,
     deleteItinerary,
     viewUpcomingItineraries,
     viewPaidItineraries,
-    addItineraryRating,
-    getItineraryRatings,
     getTouristItineraries,
     adminFlagItinerary,
     getAllItinerariesForAdmin,
-    toggleItineraryStatus
+    toggleItineraryStatus,
+    getItineraryById
 };

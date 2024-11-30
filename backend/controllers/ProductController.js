@@ -6,7 +6,8 @@ const Product = require("../models/Product.js");
 const Seller = require("../models/users/Seller.js");
 
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, sellerID, price, description, quantity, picture } = req.body;
+  const { name, price, description, quantity, picture } = req.body;
+  const sellerID = req.userId;
 
   const seller = await Seller.findById(sellerID);
   if (!seller) {
@@ -39,78 +40,63 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const getProducts = asyncHandler(async (req, res) => { 
+const getProducts = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const productsPerPage = 6;
-  const { searchValue, minPrice, maxPrice, sortOrder, userRole } = req.query;
+  const productsPerPage = 8;
+  const {
+    searchValue = "",
+    minPrice,
+    maxPrice,
+    sortOrder,
+    userRole,
+  } = req.query;
 
-  let filter = {};
-
+  const filter = {};
   if (searchValue) {
-    filter.name = { $regex: new RegExp(`${searchValue}`, "i") }; 
+    filter.name = { $regex: new RegExp(searchValue, "i") };
   }
 
   if (minPrice || maxPrice) {
     filter.price = {};
+
     if (minPrice) filter.price.$gte = parseFloat(minPrice);
-    if (maxPrice && parseFloat(maxPrice) < 3000) {
-      filter.price.$lte = parseFloat(maxPrice);
+    if (maxPrice) {
+      if (parseFloat(maxPrice) !== 3000) {
+        filter.price.$lte = parseFloat(maxPrice);
+      }
     }
   }
 
-  const sort = {};
-  if (sortOrder === 'asc') {
-    sort.averageRating = 1; 
-  } else if (sortOrder === 'desc') {
-    sort.averageRating = -1; 
-  }
-  
+  const sort = {
+    averageRating: sortOrder === "asc" ? 1 : -1,
+    _id: 1,
+  };
+
   const skip = (page - 1) * productsPerPage;
-  
+
   try {
-    if (userRole === "Tourist") {
-      const unarchivedFilter = { ...filter, isArchived: false };
-      
-      const unarchivedProducts = await Product.find(unarchivedFilter)
-        .populate("seller")
-        .skip(skip)
-        .limit(productsPerPage)
-        .sort(sort);
-      
-      let totalUnarchivedProducts;
-      if (page === 1) {
-        totalUnarchivedProducts = await Product.countDocuments(unarchivedFilter);
-      }
+    const baseFilter =
+      userRole === "Tourist" ? { ...filter, isArchived: false } : filter;
+    const totalProducts =
+      page === 1 ? await Product.countDocuments(baseFilter) : null;
 
-      res.status(200).json({
-        unarchivedProducts,
-        totalPagesUnarchived: page === 1 ? Math.ceil(totalUnarchivedProducts / productsPerPage) : undefined,
-      });
-    } else {
-      const products = await Product.find(filter)
-        .populate("seller")
-        .skip(skip)
-        .limit(productsPerPage)
-        .sort(sort);
-      
-      let totalProducts;
-      if (page === 1) {
-        totalProducts = await Product.countDocuments(filter);
-      }
+    const products = await Product.find(baseFilter)
+      .populate("seller")
+      .skip(skip)
+      .limit(productsPerPage)
+      .sort(sort);
 
-      res.status(200).json({
-        products,
-        totalPages: page === 1 ? Math.ceil(totalProducts / productsPerPage) : undefined,
-      });
-    }
+    res.status(200).json({
+      products,
+      totalPages: totalProducts
+        ? Math.ceil(totalProducts / productsPerPage)
+        : undefined,
+    });
   } catch (error) {
-    console.error(error.message);
+    console.error("Error fetching products:", error.message);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
-
-
-
 
 const searchProductsByName = asyncHandler(async (req, res) => {
   const { name } = req.query;
@@ -120,7 +106,7 @@ const searchProductsByName = asyncHandler(async (req, res) => {
   }
 
   const products = await Product.find({
-    name: { $regex: new RegExp(`${name}`, "i") }, 
+    name: { $regex: new RegExp(`${name}`, "i") },
   });
 
   res.status(200).json(products);
@@ -213,7 +199,7 @@ const editProduct = asyncHandler(async (req, res) => {
 
 const archiveProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  try{
+  try {
     const product = await Product.findById(id);
     if (!product) {
       res.status(404);
@@ -224,15 +210,14 @@ const archiveProduct = asyncHandler(async (req, res) => {
     await product.save();
 
     res.status(200).json({ message: "Product archived successfully", product });
- }
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
   }
 });
 
 const unArchiveProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  try{
+  try {
     const product = await Product.findById(id);
     if (!product) {
       res.status(404);
@@ -242,13 +227,13 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
     product.isArchived = false;
     await product.save();
 
-    res.status(200).json({ message: "Product unarchived successfully", product });
- }
-  catch (error) {
+    res
+      .status(200)
+      .json({ message: "Product unarchived successfully", product });
+  } catch (error) {
     console.log(error.message);
   }
 });
-
 
 module.exports = {
   createProduct,

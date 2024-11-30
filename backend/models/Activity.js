@@ -51,6 +51,10 @@ const activitySchema = new Schema(
         default: []
       },
     ],
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
     averageRating: {
       type: Number,
       default: 0.0,
@@ -76,6 +80,7 @@ const activitySchema = new Schema(
       type: Boolean,
       default: false,
     },
+    bookmarked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }],
   },
   { timestamps: true }
 );

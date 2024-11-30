@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
 const Request = require('../models/Request.js');
 const hotelBookings = require("../models/BookingHotel.js");
-
+const activityModel= require("../models/Activity.js");
+const itineraryModel= require("../models/Itinerary.js");
+const productModel= require("../models/Product.js");
 
 const createTourist = async (req, res) => {
   try {
@@ -79,7 +81,7 @@ const createTourist = async (req, res) => {
 
 const getTouristInfo = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     // checks if the id is a valid one
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -104,7 +106,7 @@ const getTouristInfo = async (req, res) => {
 
 const updateTouristProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
 
     if (tags) {
@@ -166,7 +168,7 @@ const updateTouristProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
     const { oldPassword, newPassword } = req.body
     const hashedOldPassword = await bcrypt.hash(oldPassword, 10);
 
@@ -185,7 +187,7 @@ const changePassword = async (req, res) => {
 };
 
 const getTouristNameAndEmail = async (req, res) => {
-  const { id } = req.params;
+  const id = req.userId;
 
   try {
     const tourist = await touristModel.findById(id).select('userName email');
@@ -206,16 +208,16 @@ const getTouristNameAndEmail = async (req, res) => {
 
 const redeemPoints = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     const tourist = await touristModel.findById(id);
     if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-
-    const newAmount = tourist.wallet.amount + (tourist.currentPoints / 100);
-    tourist.wallet.amount = newAmount;
-    tourist.currentPoints = 0;
+    
+    const amount=tourist.currentPoints-(tourist.currentPoints%10000);
+    tourist.wallet.amount = tourist.wallet.amount + amount*100;
+    tourist.currentPoints = tourist.currentPoints%10000;
 
     await tourist.save();
 
@@ -227,7 +229,7 @@ const redeemPoints = async (req, res) => {
 
 const getTouristBookedFlights = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -249,7 +251,7 @@ const getTouristBookedFlights = async (req, res) => {
 
 const getTouristBookedHotels = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -285,7 +287,7 @@ const getTouristBookedHotels = async (req, res) => {
 
 const getTouristAge = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid tourist ID format' });
@@ -307,7 +309,7 @@ const getTouristAge = async (req, res) => {
 
 const checkUserExists = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid user ID format' });
@@ -329,7 +331,7 @@ const checkUserExists = async (req, res) => {
 
 const getTouristPreferences = async (req, res) => {
   try {
-    const { id } = req.params
+    const id = req.userId;
     const tourist = await touristModel.findById(id)
       .populate("tags")
 
@@ -346,7 +348,7 @@ const getTouristPreferences = async (req, res) => {
 
 const getTouristCategories = async (req, res) => {
   try {
-    const { id } = req.params
+    const id = req.userId;
     const tourist = await touristModel.findById(id)
       .populate("categories")
 
@@ -358,6 +360,190 @@ const getTouristCategories = async (req, res) => {
   } catch (error) {
     console.error("Error fetching tourist information:", error);
     res.status(500).json({ message: "Error fetching tourists' categories" });
+  }
+};
+
+const bookmarkEvent = async (req, res) => {
+  const touristId = req.userId;
+  const { eventId, eventType } = req.body; // eventType can be activity or itinerary
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    let event;
+    if (eventType === 'activity') {
+      event = await activityModel.findById(eventId);
+    } else if (eventType === 'itinerary') {
+      event = await itineraryModel.findById(eventId);
+    } else {
+      return res.status(400).json({ error: 'Invalid event type' });
+    }
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Add the event to the tourist's bookmarked list (depending on event type)
+    const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
+    if (!tourist[bookmarkArray].includes(eventId)) {   //prevents adding the same event more than once but should i handle removing bookmarked events?
+      tourist[bookmarkArray].push(eventId);
+      await tourist.save();
+    }                           //if bookmarkArray is 'bookmarkedActivities' yeb2a tourist['bookmarkedActivities'] will be accessed
+
+    // Add the tourist to the event's bookmarked list
+    if (!event.bookmarked.includes(touristId)) {
+      event.bookmarked.push(touristId);
+      await event.save();
+    }
+
+    res.status(200).json({ message: 'Event bookmarked successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const getBookmarkedEvents = async (req, res) => {
+  const touristId = req.userId; // Get the logged-in tourist's ID
+
+  try {
+    const tourist = await touristModel.findById(touristId)
+      .populate("bookmarkedActivities")
+      .populate("bookmarkedItineraries");
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    const bookmarkedEvents = [
+      ...tourist.bookmarkedActivities.map(activity => ({
+        ...activity.toObject(),
+        type: "activity"                   //so ik fel frontend which type it is 
+      })),
+      ...tourist.bookmarkedItineraries.map(itinerary => ({
+        ...itinerary.toObject(),
+        type: "itinerary"
+      })),
+    ];
+
+    res.json(bookmarkedEvents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// const removeBookmarkEvent = async (req, res) => {
+//   const touristId = req.userId;
+//   const { eventId, eventType } = req.body;
+
+//   try {
+//     const tourist = await touristModel.findById(touristId);
+//     if (!tourist) {
+//       return res.status(404).json({ error: 'Tourist not found' });
+//     }
+
+//     let event;
+//     if (eventType === 'activity') {
+//       event = await activityModel.findById(eventId);
+//     } else if (eventType === 'itinerary') {
+//       event = await itineraryModel.findById(eventId);
+//     }
+
+//     if (!event) {
+//       return res.status(404).json({ error: 'Event not found' });
+//     }
+
+//     // Remove event from tourist's bookmarked list
+//     const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
+//     tourist[bookmarkArray] = tourist[bookmarkArray].filter(id => id.toString() !== eventId.toString());
+//     await tourist.save();
+
+//     // Remove tourist from the event's bookmarked list
+//     event.bookmarked = event.bookmarked.filter(id => id.toString() !== touristId.toString());
+//     await event.save();
+
+//     res.status(200).json({ message: 'Bookmark removed successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// };
+
+const saveProduct = async (req, res) => {
+  const touristId = req.userId;
+  const { productId } = req.body; 
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    let product = await productModel.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (tourist.wishlist.includes(productId)) {
+      return res.status(400).json({ message: 'You already have this product in your wishlist' });
+    }
+
+    tourist.wishlist.push(productId);
+    await tourist.save();
+
+    res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const getWishList = async (req, res) => {
+  const touristId = req.userId; 
+
+  try {
+    const tourist = await touristModel.findById(touristId)
+      .populate("wishlist")
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    const wishlist = [
+      ...tourist.wishlist.map(product => ({
+        ...product.toObject(),
+      })),
+    ];
+
+    res.json(wishlist);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const removeFromWishList = async (req, res) => {
+  const touristId = req.userId;
+  const { productId } = req.body; 
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+    
+    let product = await productModel.findById(productId);
+
+
+    tourist.wishlist = tourist.wishlist.filter(id => id.toString() !== productId.toString());
+    await tourist.save();
+
+    res.status(200).json({ message: 'Product removed from wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -373,5 +559,10 @@ module.exports = {
   getTouristBookedHotels,
   getTouristPreferences,
   getTouristCategories,
-  checkUserExists
+  checkUserExists,
+  bookmarkEvent,
+  getBookmarkedEvents,
+  saveProduct,
+  getWishList,
+  removeFromWishList
 };

@@ -4,52 +4,65 @@ const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
 const Itinerary = require("../models/Itinerary");
 const ItineraryRating = require("../models/ItineraryRating");
-
 const {
   createItinerary,
-  getItineraries,
+  getItinerariesForTourguide,
   updateItinerary,
   deleteItinerary,
-  getItineraryRatings,
   viewUpcomingItineraries,
   viewPaidItineraries,
   getTouristItineraries,
   toggleItineraryStatus,
+  getAllItinerariesForAdmin,
+  getItineraryById,
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
+router.get("/itinerary/:id", getItineraryById);
+
 router.post(
-  "/itinerary",
+  "/create-itinerary",
   verifyToken,
   authorizeRoles("Tour Guide"),
   createItinerary
 );
 
-router.get("/itinerary", getItineraries);
+router.get("/my-itineraries",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getItinerariesForTourguide);
+
 router.put(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   updateItinerary
 );
+
 router.delete(
   "/itinerary/:id",
   verifyToken,
   authorizeRoles("Tour Guide"),
   deleteItinerary
 );
-router.get("/itinerary/upcoming/view", viewUpcomingItineraries);
+
+router.get("/itinerary/upcoming/view",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  viewUpcomingItineraries);
+
 router.get(
   "/itinerary/paid/view",
   verifyToken,
   authorizeRoles("Tourist"),
   viewPaidItineraries
 );
+
 router.get(
-  "/itineraries/booked-itineraries/:touristId",
+  "/itineraries/booked-itineraries",
   verifyToken,
-  authorizeRoles("Touriat"),
+  authorizeRoles("Tourist"),
   getTouristItineraries
 );
 
@@ -66,9 +79,11 @@ router.get(
   validateIDs(["id"]),
   getRatings(Itinerary, ItineraryRating, "itineraryID")
 );
-router.get("/itineraryRatings/:id", validateIDs(["id"]), getItineraryRatings);
-router.put(
-  "/itinerary/:id/toggleStatus",
+
+router.get("/itinerary",verifyToken,authorizeRoles("Admin"),getAllItinerariesForAdmin,);
+
+router.patch(
+  "/itinerary/:id/status",
   validateIDs(["id"]),
   verifyToken,
   authorizeRoles("Tour Guide"),

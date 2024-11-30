@@ -5,59 +5,65 @@ const itinerarySchema = new mongoose.Schema({
 
     description: {type: String, required: true},
 
-    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide'
-        , required: true},
+    tourGuide: {type: mongoose.Schema.Types.ObjectId, ref: 'TourGuide', required: true},
 
-    activities:[{type: mongoose.Schema.Types.ObjectId, ref: 'Activity'
-        , required: true}],
-
-    locations:[{type:String}],//kol activity already 3ando location yetmely men activites
-
-    //timeline btetrateb when, kol activity 3ando time attribute
+    activities:[{type: mongoose.Schema.Types.ObjectId, ref: 'Activity', required: true}],
+    location: {
+        latitude: {type: Number, required: true},
+        longitude: {type: Number, required: true},
+    },
     timeline: [
         {
             activityName: { type: String}, 
             content: { type: String},
             time: { type: String},
+            date: { type: Date},
         },
     ],
 
-    //duration for each activity activity 3ando time already
     serviceFee: {type: Number}, 
     language: {type: String, required: true},
-    price:{type: Number}, //activity 3ando price also 3ando special disscpunts
+    price:{type: Number},
 
-    availableDates:[{type: Date, required: true}],
-    availableTime: [{type: String, required: true}],
+    startDate: {type: Date, required: true},
+    endDate: {type: Date, required: true},
 
     accessibility: [{type: String, required: true}],
     pickupLocation: {type: String, required: true},
     dropoffLocation: {type: String, required: true},
-    averageRating: {type: Number,default: 0.0,},    
-    tags:[{type:String}], // lesa idk how to use this do i need tags from activity?
+    averageRating: {type: Number,default: 0.0,},  
+    totalRatings: { type: Number, default: 0 } ,  
+    tags:[{type:String}],
     bookings: [
         {
             touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
             tickets: { type: Number, default: 1 },
-            selectedDate: { type: Date },
-            selectedTime: { type: String },
         },
     ],
     flagged: {type: Boolean, default: false},
     isActive: {type: Boolean, default: true},
+    bookmarked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }],
     }, 
+    
     {timestamps: true}
 );
 
-//this hook middleware is used to prevent the deletion of an itinerary that has bookings
 itinerarySchema.pre('findOneAndDelete', async function (next) {
-    const itinerary = await this.model.findOne(this.getQuery());
-    if (itinerary.bookings.length > 0) {
-        next(new Error('Cannot delete itinerary with associated tourists.'));
-    } else {
+    try {
+        const itinerary = await this.model.findOne(this.getQuery());
+        
+        if (!itinerary) 
+            return next();
+        
+        if (itinerary.bookings.length > 0) 
+            return next(new Error('Cannot delete itinerary with associated bookings.'));
+        
         next();
+    } catch (error) {
+        next(error);
     }
 });
+
 
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 module.exports = Itinerary;
