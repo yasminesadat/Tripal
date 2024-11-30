@@ -1,4 +1,3 @@
-
 import Gallery2 from '../../components/historicalplace/Gallery2';
 import MainInformation from '../../components/historicalplace/MainInformation';
 import OthersInformation from '../../components/historicalplace/OthersInformation';

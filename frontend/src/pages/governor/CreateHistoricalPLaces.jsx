@@ -1,27 +1,28 @@
-import Sidebar from "./Sidebar";
-import Header from "./Header";
-import Map from "../pages/contact/Map";
+// import Sidebar from "./Sidebar";
+// import Header from "./Header";
+// import Map from "../pages/contact/Map";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { tourismGovernerID } from "../../IDs";
+
 import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-import MapPopUp from "../../components/common/MapPopUp";
+// import MapPopUp from "../../components/common/MapPopUp";
 import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
-const tabs = ["Content", "Location", "Pricing", "Included"];
-export default function AddTour() {
+const tabs = ["Content", "Timings", "Location", "Pricing", "Included"];
+export default function AddHistoricalPlace() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Content");
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("/img/dashboard/addtour/1.jpg");
   const [image3, setImage3] = useState("/img/dashboard/addtour/2.jpg");
   const [image4, setImage4] = useState("/img/dashboard/addtour/3.jpg");
-
+  const location = useLocation();
+  const props = location.state?.place;
   const handleImageChange = (event, func) => {
     const file = event.target.files[0];
     if (file) {
@@ -32,8 +33,6 @@ export default function AddTour() {
       reader.readAsDataURL(file);
     }
   };
-  const location = useLocation();
-  const props = location.state?.place;
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState(props?.location?.address || "");
@@ -42,205 +41,226 @@ export default function AddTour() {
   const [deletedImages, setDeletedImages] = useState(new Set([]));
   const [newImages, setNewImages] = useState(new Set([]));
   const [coordinates, setCoordinates] = useState([
-      props?.location?.coordinates?.latitude || 51.505,
-      props?.location?.coordinates?.longitude || -0.09,
+    props?.location?.coordinates?.latitude || 51.505,
+    props?.location?.coordinates?.longitude || -0.09,
   ]);
+  const [form] = Form.useForm();
   const [formData, setFormData] = useState({
-      tourismGovernor: tourismGovernerID,
-      name: props?.name || "",
-      description: props?.description || "",
-      images: new Set(props?.images || []),
-      openingHours: {
-          weekdays: {
-              openingTime: props?.openingHours?.weekdays?.openingTime || '',
-              closingTime: props?.openingHours?.weekdays?.closingTime || '',
-          },
-          weekends: {
-              openingTime: props?.openingHours?.weekends?.openingTime || '',
-              closingTime: props?.openingHours?.weekends?.closingTime || '',
-          }
+    name: props?.name || "",
+    description: props?.description || "",
+    images: new Set(props?.images || []),
+    openingHours: {
+      weekdays: {
+        openingTime: props?.openingHours?.weekdays?.openingTime || '',
+        closingTime: props?.openingHours?.weekdays?.closingTime || '',
       },
-      ticketPrices: {
-          foreigner: props?.ticketPrices?.foreigner || 0,
-          native: props?.ticketPrices?.native || 0,
-          student: props?.ticketPrices?.student || 0,
-      },
-      tags: props?.tags || [],
-      historicalPeriod: props?.historicalPeriod || []
+      weekends: {
+        openingTime: props?.openingHours?.weekends?.openingTime || '',
+        closingTime: props?.openingHours?.weekends?.closingTime || '',
+      }
+    },
+    ticketPrices: {
+      foreigner: props?.ticketPrices?.foreigner || 0,
+      native: props?.ticketPrices?.native || 0,
+      student: props?.ticketPrices?.student || 0,
+    },
+    tags: props?.tags || [],
+    historicalPeriod: props?.historicalPeriod || []
   });
   const handleChoosingImage = (e) => {
-      e.fileList.forEach(file => {
-          if (file.status !== 'done') {
-              const reader = new FileReader();
-              reader.readAsDataURL(file.originFileObj);
-              reader.onloadend = () => {
-                  setNewImages((oldImages) => new Set(oldImages).add(
-                      reader.result
-                  ))
+    e.fileList.forEach(file => {
+      if (file.status !== 'done') {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onloadend = () => {
+          setNewImages((oldImages) => new Set(oldImages).add(
+            reader.result
+          ))
 
-              }
-          }
-      });
+        }
+      }
+    });
   }
   useEffect(() => {
-      const getHistoricalPeriods = async () => {
-          setLoading(true);
-          const PeriodTagsData = await getAllPeriodTags();
-          if (PeriodTagsData) {
-              setPeriodTagsOption(PeriodTagsData);
-          }
-          setLoading(false);
-      };
-      getHistoricalPeriods();
+    const getHistoricalPeriods = async () => {
+      setLoading(true);
+      const PeriodTagsData = await getAllPeriodTags();
+      if (PeriodTagsData) {
+        setPeriodTagsOption(PeriodTagsData);
+      }
+      setLoading(false);
+    };
+    getHistoricalPeriods();
   }, []);
+
   useEffect(() => {
-      const getHistoricalTags = async () => {
-          setLoading(true);
-          const typeTagsData = await getAllTypeTags();
-          if (typeTagsData) {
-              setTagsOption(typeTagsData);
-          }
-          setLoading(false);
-      };
-      getHistoricalTags();
+    const getHistoricalTags = async () => {
+      setLoading(true);
+      const typeTagsData = await getAllTypeTags();
+      if (typeTagsData) {
+        setTagsOption(typeTagsData);
+      }
+      setLoading(false);
+    };
+    getHistoricalTags();
   }, [])
 
 
   const normFile = (e) => {
-      console.log('Upload event:', e);
-      if (Array.isArray(e)) {
-          return e;
-      }
-      return e?.fileList;
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
 
   async function handleSubmission() {
-      console.log("ia m hereee")
-      const newHistoricalPlace = {
-          tourismGovernor: tourismGovernerID
-          ,
+    console.log("ia m hereee")
+    const newHistoricalPlace = {
+
+      name: formData.name
+      ,
+      description: formData.description,
+      images: [...newImages],
+      location: {
+        address: address,
+        coordinates: {
+          latitude: Number(coordinates[0]),
+          longitude: Number(coordinates[1]),
+        }
+      },
+      openingHours: {
+        weekdays: {
+          openingTime: (formData.openingHours.weekdays.openingTime).toString(),
+          closingTime: (formData.openingHours.weekdays.closingTime).toString(),
+
+        },
+        weekends: {
+          openingTime: (formData.openingHours.weekends.openingTime).toString(),
+          closingTime: (formData.openingHours.weekends.closingTime).toString(),
+        },
+      },
+      ticketPrices: {
+        foreigner: formData.ticketPrices.foreigner,
+        native: formData.ticketPrices.native,
+        student: formData.ticketPrices.student
+      },
+      tags: await formData.tags,
+      historicalPeriod: await formData.historicalPeriod,
+    };
+    setLoading(true);
+    console.log("historical Places", newHistoricalPlace);
+    if (id === undefined) {
+      try {
+        const result = await CreateNewHistoricalPlace(newHistoricalPlace);
+        if (result) {
+          setLoading(false);
+          // toast.success('Historical place created successfully')
+        }
+      }
+      catch (err) {
+        // toast.error(err);
+        setLoading(false);
+      }
+    }
+    else {
+      try {
+        const updatedHistoricalPlace = {
           name: formData.name
           ,
           description: formData.description,
           images: [...newImages],
           location: {
-              address: address,
-              coordinates: {
-                  latitude: Number(coordinates[0]),
-                  longitude: Number(coordinates[1]),
-              }
+            address: address,
+            coordinates: {
+              latitude: Number(coordinates[0]),
+              longitude: Number(coordinates[1]),
+            }
           },
           openingHours: {
-              weekdays: {
-                  openingTime: (formData.openingHours.weekdays.openingTime).toString(),
-                  closingTime: (formData.openingHours.weekdays.closingTime).toString(),
+            weekdays: {
+              openingTime: (formData.openingHours.weekdays.openingTime).toString(),
+              closingTime: (formData.openingHours.weekdays.closingTime).toString(),
 
-              },
-              weekends: {
-                  openingTime: (formData.openingHours.weekends.openingTime).toString(),
-                  closingTime: (formData.openingHours.weekends.closingTime).toString(),
-              },
+            },
+            weekends: {
+              openingTime: (formData.openingHours.weekends.openingTime).toString(),
+              closingTime: (formData.openingHours.weekends.closingTime).toString(),
+            },
           },
           ticketPrices: {
-              foreigner: formData.ticketPrices.foreigner,
-              native: formData.ticketPrices.native,
-              student: formData.ticketPrices.student
+            foreigner: formData.ticketPrices.foreigner,
+            native: formData.ticketPrices.native,
+            student: formData.ticketPrices.student
           },
           tags: await formData.tags,
           historicalPeriod: await formData.historicalPeriod,
-      };
-      setLoading(true);
-      console.log("historical Places", newHistoricalPlace);
-      if (id === undefined) {
-          try {
-              const result = await CreateNewHistoricalPlace(newHistoricalPlace);
-              if (result) {
-                  setLoading(false);
-                  toast.success('Historical place created successfully')
-              }
-          }
-          catch (err) {
-              toast.error(err);
-              setLoading(false);
-          }
-      }
-      else {
-          try {
-              const updatedHistoricalPlace = {
-                  tourismGovernor: tourismGovernerID
-                  ,
-                  name: formData.name
-                  ,
-                  description: formData.description,
-                  images: [...newImages],
-                  location: {
-                      address: address,
-                      coordinates: {
-                          latitude: Number(coordinates[0]),
-                          longitude: Number(coordinates[1]),
-                      }
-                  },
-                  openingHours: {
-                      weekdays: {
-                          openingTime: (formData.openingHours.weekdays.openingTime).toString(),
-                          closingTime: (formData.openingHours.weekdays.closingTime).toString(),
+          deletedImages: [...deletedImages]
+        }
+        console.log("in update ", updatedHistoricalPlace);
+        const result = await updateHistoricalPlace(id, updatedHistoricalPlace);
+        if (result) {
+          setLoading(false);
+          // toast.success('Historical place Updated successfully')
+        }
 
-                      },
-                      weekends: {
-                          openingTime: (formData.openingHours.weekends.openingTime).toString(),
-                          closingTime: (formData.openingHours.weekends.closingTime).toString(),
-                      },
-                  },
-                  ticketPrices: {
-                      foreigner: formData.ticketPrices.foreigner,
-                      native: formData.ticketPrices.native,
-                      student: formData.ticketPrices.student
-                  },
-                  tags: await formData.tags,
-                  historicalPeriod: await formData.historicalPeriod,
-                  deletedImages: [...deletedImages]
-              }
-              console.log("in update ", updatedHistoricalPlace);
-              const result = await updateHistoricalPlace(id, updatedHistoricalPlace);
-              if (result) {
-                  setLoading(false);
-                  toast.success('Historical place Updated successfully')
-              }
-
-          } catch (err) {
-              toast.error(err);
-              setLoading(false);
-          }
+      } catch (err) {
+        // toast.error(err);
+        setLoading(false);
       }
+    }
   }
   const handleInputChange = (e) => {
-      console.log(e.target.value);
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
   const fileList = [...formData.images].map((image, index) => ({
-      uid: image.public_id,
-      name: `image-${index + 1}.png`,
-      status: 'done',
-      url: image.url,
+    uid: image.public_id,
+    name: `image-${index + 1}.png`,
+    status: 'done',
+    url: image.url,
   }));
-
+  useEffect(() => {
+    form.setFieldsValue({
+      name: formData.name,
+      description: formData.description,
+      historicalPeriod: [...formData.historicalPeriod.map((period) => ({
+        label: period.name,
+        value: period._id
+      }))],
+      tags: [...formData.tags.map((tag) => ({
+        label: tag.name,
+        value: tag._id
+      }))],
+      weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
+      weekendClosingTime: formData.openingHours?.weekends?.closingTime
+        ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
+        : null,
+      weekdayOpeningTime:formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+      weekdayClosingTime:formData.openingHours?.weekdays?.closingTime
+      ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+      : null
+    });
+  }, [formData, form]);
 
   return (
     <>
+
       <div
-        className={`dashboard ${
-          sideBarOpen ? "-is-sidebar-visible" : ""
-        } js-dashboard`}
+        className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+          } js-dashboard`}
       >
-        <Sidebar setSideBarOpen={setSideBarOpen} />
+        {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
 
         <div className="dashboard__content">
-          <Header setSideBarOpen={setSideBarOpen} />
+          {/* <Header setSideBarOpen={setSideBarOpen} /> */}
 
           <div className="dashboard__content_content">
-            <h1 className="text-30">Add Tour</h1>
-            <p className="">Lorem ipsum dolor sit amet, consectetur.</p>
+
+            {id === undefined && <h1 className="text-30">Add Historical Place</h1>}
+            {id !== undefined && <h1 className="text-30">Update Historical Place</h1>}
+            {/* // <p className="">Lorem ipsum dolor sit amet, consectetur.</p> */}
 
             <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60">
               <div className="tabs -underline-2 js-tabs">
@@ -252,9 +272,8 @@ export default function AddTour() {
                       className="col-auto"
                     >
                       <button
-                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${
-                          activeTab == elm ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${activeTab == elm ? "is-tab-el-active" : ""
+                          }`}
                       >
                         {i + 1}. {elm}
                       </button>
@@ -266,245 +285,368 @@ export default function AddTour() {
                   <div className="col-xl-9 col-lg-10">
                     <div className="tabs__content js-tabs-content">
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Content" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Content" ? "is-tab-el-active" : ""
+                          }`}
                       >
-                        <div className="contactForm row y-gap-30">
+                        <Form className="contactForm row y-gap-30"
+                          form={form}
+                          layout="vertical"
+                          name="validate_other"
+                          onFinish={() => {
+                            setActiveTab("Timings");
+                            console.log("hello");
+                          }
+                          }
+                          initialValues={{
+                            upload: fileList,
+                            name: formData.name,
+                            description: formData.description,
+                            historicalPeriod: [...formData.historicalPeriod.map((period) => ({
+                              label: period.name,
+                              value: period._id
+                            }))],
+                            tags: [...formData.tags.map((tag) => ({
+                              label: tag.name,
+                              value: tag._id
+                            }))]
+                          }}
+                          onValuesChange={(changedValues, allValues) => {
+                            setFormData({
+                              ...formData,
+                              name: allValues.name,
+                              description: allValues.description,
+                              historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
+                                const period = periodTagsOptions.find((p) => p._id === tagValue);
+                                return {
+                                  name: period ? period.name : tagValue,
+                                  _id: period ? period._id : ''
+                                };
+                              }),
+                              tags: allValues.tags.map((tagValue) => {
+                                const tag = tagsOptions.find((p) => p._id === tagValue);
+                                return {
+                                  name: tag ? tag.name : tagValue,
+                                  _id: tag ? tag._id : ''
+                                };
+                              }),
+                            });
+                          }}
+
+
+                        >
+                          <style>
+                            {`
+        .contactForm .form-input {
+          position: relative;
+          margin-bottom: 20px;
+        }
+        .contactForm .form-input label {
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: 0.3s ease;
+          color: #aaa;
+          pointer-events: none;
+        }
+        .contactForm .form-input input:focus + label,
+        .contactForm .form-input textarea:focus + label,
+        .contactForm .form-input input:not(:placeholder-shown) + label,
+        .contactForm .form-input textarea:not(:placeholder-shown) + label {
+          transform: translateY(-29px);
+          font-size: 12px;
+          color: #333;
+        }
+        .contactForm .form-input input,
+        .contactForm .form-input textarea {
+          padding: 10px;
+          font-size: 16px;
+          width: 100%;
+          border: 1px solid #ccc;
+          outline: none;
+          background: #fff;
+        }
+        `}
+                          </style>
                           <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Tour Title
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Category
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <input type="text" required />
-                              <label className="lh-1 text-16 text-light-1">
-                                Keywords
-                              </label>
-                            </div>
-                          </div>
-
-                          <div className="col-12">
-                            <div className="form-input ">
-                              <textarea required rows="8"></textarea>
-                              <label className="lh-1 text-16 text-light-1">
-                                Tour Content
-                              </label>
-                            </div>
-                          </div>
-
-                          <div className="col-12">
-                            <h4 className="text-18 fw-500 mb-20">Gallery</h4>
-
-                            <div className="row x-gap-20 y-gap-20">
-                              {image1 ? (
-                                <div className="col-auto  ">
-                                  <div className="relative">
-                                    <img
-                                      src={image1}
-                                      alt="image"
-                                      className="size-200 rounded-12 object-cover"
-                                    />
-                                    <button
-                                      onClick={() => {
-                                        setImage1("");
-                                      }}
-                                      className="absoluteIcon1 button -dark-1"
-                                    >
-                                      <i className="icon-delete text-18"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="col-auto  ">
-                                  <label
-                                    htmlFor="imageInp1"
-                                    className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column"
-                                  >
-                                    <img
-                                      alt="image"
-                                      src={"/img/dashboard/upload.svg"}
-                                    />
-
-                                    <div className="text-16 fw-500 text-accent-1 mt-10">
-                                      Upload Images
-                                    </div>
-                                  </label>
-                                  <input
-                                    onChange={(e) =>
-                                      handleImageChange(e, setImage1)
-                                    }
-                                    accept="image/*"
-                                    id="imageInp1"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                  />
-                                </div>
-                              )}
-                              {image2 ? (
-                                <div className="col-auto  ">
-                                  <div className="relative">
-                                    <img
-                                      src={image2}
-                                      alt="image"
-                                      className="size-200 rounded-12 object-cover"
-                                    />
-                                    <button
-                                      onClick={() => {
-                                        setImage2("");
-                                      }}
-                                      className="absoluteIcon1 button -dark-1"
-                                    >
-                                      <i className="icon-delete text-18"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="col-auto  ">
-                                  <label
-                                    htmlFor="imageInp2"
-                                    className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column"
-                                  >
-                                    <img
-                                      alt="image"
-                                      src={"/img/dashboard/upload.svg"}
-                                    />
-
-                                    <div className="text-16 fw-500 text-accent-1 mt-10">
-                                      Upload Images
-                                    </div>
-                                  </label>
-                                  <input
-                                    onChange={(e) =>
-                                      handleImageChange(e, setImage2)
-                                    }
-                                    accept="image/*"
-                                    id="imageInp2"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                  />
-                                </div>
-                              )}
-                              {image3 ? (
-                                <div className="col-auto ">
-                                  <div className="relative">
-                                    <img
-                                      src={image3}
-                                      alt="image"
-                                      className="size-200 rounded-12 object-cover"
-                                    />
-                                    <button
-                                      onClick={() => {
-                                        setImage3("");
-                                      }}
-                                      className="absoluteIcon1 button -dark-1"
-                                    >
-                                      <i className="icon-delete text-18"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="col-auto ">
-                                  <label
-                                    htmlFor="imageInp3"
-                                    className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column"
-                                  >
-                                    <img
-                                      alt="image"
-                                      src={"/img/dashboard/upload.svg"}
-                                    />
-
-                                    <div className="text-16 fw-500 text-accent-1 mt-10">
-                                      Upload Images
-                                    </div>
-                                  </label>
-                                  <input
-                                    onChange={(e) =>
-                                      handleImageChange(e, setImage3)
-                                    }
-                                    accept="image/*"
-                                    id="imageInp3"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                  />
-                                </div>
-                              )}
-                              {image4 ? (
-                                <div className="col-auto ">
-                                  <div className="relative">
-                                    <img
-                                      src={image4}
-                                      alt="image"
-                                      className="size-200 rounded-12 object-cover"
-                                    />
-                                    <button
-                                      onClick={() => {
-                                        setImage4("");
-                                      }}
-                                      className="absoluteIcon1 button -dark-1"
-                                    >
-                                      <i className="icon-delete text-18"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="col-auto ">
-                                  <label
-                                    htmlFor="imageInp4"
-                                    className="size-200 rounded-12 border-dash-1 bg-accent-1-05 flex-center flex-column"
-                                  >
-                                    <img
-                                      alt="image"
-                                      src={"/img/dashboard/upload.svg"}
-                                    />
-
-                                    <div className="text-16 fw-500 text-accent-1 mt-10">
-                                      Upload Images
-                                    </div>
-                                  </label>
-                                  <input
-                                    onChange={(e) =>
-                                      handleImageChange(e, setImage4)
-                                    }
-                                    accept="image/*"
-                                    id="imageInp4"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="text-14 mt-20">
-                              PNG or JPG no bigger than 800px wide and tall.
-                            </div>
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Name
+                            </label>
+                            <Form.Item className="form-input "
+                              name="name"
+                              rules={[
+                                {
+                                  required: id === undefined,
+                                  message: 'Please enter the place name!',
+                                },
+                              ]}
+                            >
+                              <Input style={{
+                                width: '100%',
+                              }}
+                                type="text"
+                              />
+                            </Form.Item>
                           </div>
 
                           <div className="col-12">
-                            <button className="button -md -dark-1 bg-accent-1 text-white">
-                              Save Changes
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Description
+                            </label>
+                            <Form.Item className="form-input "
+
+                              name="description"
+                              rules={[
+                                {
+                                  required: id === undefined,
+                                  message: 'Please enter the place description!',
+                                },
+                              ]}>
+
+                              <Input.TextArea style={{
+                                width: '100%',
+                              }}
+                                type="text"
+                              />
+
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Historical Periods
+                            </label>
+                            <Form.Item className="form-input "
+                              name="historicalPeriod"
+                              rules={[{ required: false, message: "Please select or create historical periods" }]}>
+                              <Select
+                                mode="tags"
+                                placeholder="Please select or create period tags"
+                                style={{
+                                  width: '100%',
+                                }}
+                                options={periodTagsOptions.map((period) => (
+                                  {
+                                    label: period.name,
+                                    value: period._id
+                                  }
+                                )
+                                )}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Tags
+                            </label>
+                            <Form.Item className="form-input "
+                              name="tags"
+                              rules={[{ required: false, message: "Please select or create tags" }]}>
+                              <Select
+                                mode="tags"
+                                placeholder="Please select or new tags"
+                                style={{
+                                  width: '100%',
+                                }}
+                                options={tagsOptions.map((tag) => (
+                                  {
+                                    label: tag.name,
+                                    value: tag._id,
+                                  }
+                                )
+                                )}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{
+                              color: 'black',
+                              marginBottom: '10px',
+                            }} className="lh-1 text-16 text-light-1">
+                              Upload Place Images
+                            </label>
+                            <Form.Item
+                              name="upload"
+                              valuePropName="fileList"
+                              getValueFromEvent={normFile}
+                              extra="You can select one or more images"
+                            >
+                              <Upload.Dragger
+                                multiple
+                                onChange={handleChoosingImage}
+                                onRemove={(file) => {
+                                  console.log("the file to be removed", file);
+                                  if ('url' in file) {
+                                    setDeletedImages((oldImages) => new Set([...oldImages]).add({
+                                      public_id: file.uid,
+                                      url: file.url,
+                                    }))
+                                    console.log("deleted images set", deletedImages)
+                                  } else {
+                                    setNewImages((oldData) => {
+                                      const reader = new FileReader();
+                                      reader.readAsDataURL(file.originFileObj);
+                                      reader.onloadend = () => {
+                                        const encodedImage = reader.result;
+                                        return new Set([...oldData].filter((image) => image !== encodedImage))
+                                      }
+                                    });
+                                    console.log("the new images set", newImages)
+                                  }
+                                }}
+                                listType="picture">
+                                <p >
+                                  <InboxOutlined />
+                                </p>
+                                <p >Click or drag files to this area to upload</p>
+                                <p >
+                                  Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files.
+                                </p>
+                              </Upload.Dragger>
+
+                            </Form.Item>
+                          </div>
+
+                          <div className="col-12">
+                            <Button className="button -md -dark-1 bg-accent-1 text-white" type="primary"
+                              htmlType="submit">
+                              Next
                               <i className="icon-arrow-top-right text-16 ml-10"></i>
-                            </button>
+                            </Button>
                           </div>
-                        </div>
+                        </Form>
                       </div>
-
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Location" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
+                          }`}
+                      >
+                        <Form className="contactForm row y-gap-30"
+                          form={form}
+                          layout="vertical"
+                          name="timing"
+                          onFinish={() => {
+                            setActiveTab("Location");
+                            console.log("hello");
+                          }
+                          }
+                          initialValues={{
+                            weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
+                            weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
+                            weekdayOpeningTime:formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+                            weekdayClosingTime:formData.openingHours?.weekdays?.closingTime
+                              ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+                              : null
+                          }}
+                          onValuesChange={(changedValues, allValues) => {
+                            console.log(allValues)
+                            setFormData({
+                              ...formData,
+                              openingHours: {
+                                weekdays: {
+                                  openingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
+                                  closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
+                                },
+                                weekends: {
+                                  openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
+                                  closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
+                                }
+                              }
+
+                            });
+                          }}
+                       
+                        >
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Weekends Opening Time
+                            </label>
+                            <Form.Item className="form-input " name="weekendOpeningTime" rules={[
+                              {
+                                type: 'object',
+                                required: id === undefined,
+                                message: 'Please select weekends opening time!',
+                              },
+                            ]}>
+                              <TimePicker style={{
+                                width: '100%',
+                              }}
+                                placeholder="please select the weekends opening time" />
+
+                            </Form.Item>
+                          </div>
+
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Weekends Closing Time
+                            </label>
+                            <Form.Item className="form-input " name="weekendClosingTime" rules={[
+                              {
+                                type: 'object',
+                                required: id === undefined,
+                                message: 'Please select weekends closing time!',
+                              },
+                            ]}>
+                              <TimePicker style={{
+                                width: '100%',
+                              }}
+
+                                placeholder="please select the weekends closing time" />
+                            </Form.Item>
+
+                          </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Weekdays Opening Time
+                            </label>
+
+                            <Form.Item className="form-input " name="weekdayOpeningTime" label="Weekdays opening time" rules={[
+                              {
+                                type: 'object',
+                                required: id === undefined,
+                                message: 'Please select weekdays opening time!',
+                              },
+                            ]}>
+                              <TimePicker style={{
+                                width: '100%',
+                              }} name="weekdayOpeningTime"
+                                
+                                
+                                placeholder="please select the weekdays opening time" />
+                            </Form.Item>
+                          </div>
+
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Weekdays Closing Time
+                            </label>
+                            
+                            <Form.Item className="form-input " name="weekdayClosingTime"  rules={[
+                    {
+                        type: 'object',
+                        required: id === undefined,
+                        message: 'Please select weekdays closing time!',
+                    },
+                ]}>
+                    <TimePicker style={{
+                        width: '100%',
+                    }} name="weekdayClosingTime"
+                       
+                        
+                        placeholder="please select the weekdays closing time" />
+                </Form.Item>
+
+                            </div>
+                          
+                          <div className="col-12">
+                            <Button className="button -md -dark-1 bg-accent-1 text-white mt-30">
+                              Next
+                              <i className="icon-arrow-top-right text-16 ml-10"></i>
+                            </Button>
+                          </div>
+                        </Form>
+                      </div>
+                      <div
+                        className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="contactForm row y-gap-30">
                           <div className="col-12">
@@ -567,7 +709,7 @@ export default function AddTour() {
                         </div>
 
                         <div className="map relative mt-30">
-                          <Map />
+                          {/* <Map /> */}
                         </div>
 
                         <button className="button -md -dark-1 bg-accent-1 text-white mt-30">
@@ -577,9 +719,8 @@ export default function AddTour() {
                       </div>
 
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Pricing" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Pricing" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="contactForm row y-gap-30">
                           <div className="col-12">
@@ -676,9 +817,8 @@ export default function AddTour() {
                       </div>
 
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Included" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Included" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="row y-gap-20 justify-between">
                           <div className="col-md-8">
