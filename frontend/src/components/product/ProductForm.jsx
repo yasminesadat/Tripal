@@ -5,8 +5,11 @@ import { createProduct, editProduct } from "../../api/ProductService";
 // import { currUser } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
+import MetaComponent from "../common/MetaComponent";
 // import "../../components/product/product.css";
-
+const metadata = {
+  title: "Products || Tripal",
+};
 const ProductForm = () => {
   const { id } = useParams();
   const isCreate = id === undefined;
@@ -150,6 +153,7 @@ const ProductForm = () => {
 
   return (
     <>
+      <MetaComponent meta={metadata} />
       <div className="product-form-container">
         <Form
           layout="vertical"
