@@ -1,11 +1,10 @@
 import  { useEffect, useState } from "react";
-import Calendar from "../Calendar";
 import { getConversionRate } from "@/api/ExchangeRatesService";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 
-export default function TourSingleSidebar({itinerary,activity}) {
+export default function TourSingleSidebar({itinerary, activity}) {
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
 
@@ -52,6 +51,7 @@ export default function TourSingleSidebar({itinerary,activity}) {
   };
 
   const [ticketNumber, setTicketCount] = useState(1);
+  
   const handleBookClick = async () => {
       try {
       const response = await bookResource(
@@ -60,6 +60,7 @@ export default function TourSingleSidebar({itinerary,activity}) {
         ticketNumber
       );
       message.success(response.message);
+      console.log(activity?.bookings)
     } catch (error) {
       message.error(error.response?.data?.error || "Booking failed");
     }

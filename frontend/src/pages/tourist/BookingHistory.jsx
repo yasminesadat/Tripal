@@ -146,6 +146,11 @@ export default function DbBooking() {
     const fetchBookedActivities = async () => {
       try {
         const response = await getTouristActivities();
+        console.log(response)
+        if (response.length === 0) {
+          console.log("No booked activities found.");
+          return; 
+        }    
         const sortedActivities = response.sort((a, b) => {
           const dateA = new Date(a.date); 
           const dateB = new Date(b.date); 

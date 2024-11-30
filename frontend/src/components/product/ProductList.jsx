@@ -1,20 +1,11 @@
-import { tourDataThree } from "@/data/tours";
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { fetchProducts, archiveProduct, unArchiveProduct} from "../../api/ProductService";
 import {getUserData} from "../../api/UserService";
-import React, { useState, useRef, useEffect } from "react";
 import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner"; 
 import ProductCard from "./ProductCard";
-import {
-  durations,
-  features,
-  languages,
-  rating,
-  speedFeatures,
-} from "@/data/tourFilteringOptions";
-import RangeSlider from "../common/RangeSlider";
-import { Link } from "react-router-dom";
 import { Card, Rate, message,Input,Select,Slider } from "antd"; 
 const { Search } = Input;
 const { Option } = Select;
@@ -52,7 +43,6 @@ export default function ProductList() {
         userRole
         );
         let filtered = productsData.products;
-        console.log(filtered);
         if(productsData.totalPages)
           setTotalPages(productsData.totalPages);
 
@@ -144,8 +134,6 @@ export default function ProductList() {
     window.scrollTo(0, 0);
   }, [currentPage]);
   
-  
-
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -168,6 +156,7 @@ export default function ProductList() {
       document.removeEventListener("click", handleClick);
     };
   }, []);
+
   return (
     <section className="layout-pt-lg layout-pb-xl">
       <div className="container">

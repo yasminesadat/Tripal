@@ -59,7 +59,7 @@ router.get(
   getRatings(Activity, ActivityRating, "activityID")
 );
 router.get(
-  "/activities",
+  "/booked-activities",
   verifyToken,
   authorizeRoles("Tourist"),
   getTouristActivities

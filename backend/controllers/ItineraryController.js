@@ -206,11 +206,11 @@ const viewPaidItineraries = async (req, res) => {
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.userId;
-        const currentDate = new Date();
+        // const currentDate = new Date();
 
         const itineraries = await itineraryModel.find(
             { 'bookings.touristId': touristId,
-            endDate: { $gte: currentDate },
+            // endDate: { $gte: currentDate },
             flagged: false }).populate({
 
             path: 'activities',
@@ -228,7 +228,7 @@ const getTouristItineraries = async (req, res) => {
         .sort({ startDate: -1 });
 
         if (!itineraries.length)
-            return res.status(200).json({ message: "No itineraries found for this tourist." });
+            return res.status(200).json({ message: "No booked itineraries found for this tourist." });
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching itineraries', error });
