@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts={refProducts} }) {
+export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
 
   return (
     <>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Tag, message } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Tag, message, Tour } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleActivityHeader";
@@ -19,6 +19,8 @@ const metadata = {
 import NotFoundPage from "@/pages/pages/404";
 
 const ActivityDetailsPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { activityId } = useParams();
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,22 @@ const ActivityDetailsPage = () => {
   const [userRole, setUserRole] = useState(null);
   const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const refActivityBook = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const steps = [
+    {
+      title: "Book Activity.",
+      description: "Another step towards a great time.",
+      target: () => refActivityBook.current, 
+      // onNext: () => {}
+    },
+    {
+      title: "Nothing",
+      description: "Helps you in making a final decision.",
+      target: () => refActivityBook.current, 
+    },
+  ]
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -58,8 +76,20 @@ const ActivityDetailsPage = () => {
       }
     };
     fetchActivities();
-  }, []);
+  }, [activityId]);
 
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 300); //might need to change it
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
+  
   if (loading) return <div>Loading...</div>;
   if (error)
     return (
@@ -75,12 +105,13 @@ const ActivityDetailsPage = () => {
       <main>
         {userRole === "Guest" && (
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <GuestHeader />
             <PageHeader
               activityId={activityId}
               activityTitle={activity.title}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails activity={activity} refActivityBook={refActivityBook}/>
             <FooterThree />
           </>
         )}
@@ -108,13 +139,14 @@ const ActivityDetailsPage = () => {
 
         {userRole === "Tourist" && (
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <Header1 />
             <PageHeader
               activityId={activityId}
               activityTitle={activity.title}
               tourist={"ana t3ebt"}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails activity={activity} refActivityBook={refActivityBook}/>
             <FooterThree />
           </>
         )}

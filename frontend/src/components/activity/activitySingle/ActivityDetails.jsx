@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
@@ -11,7 +11,7 @@ import LocationMap from "../../common/MapComponent";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 
-export default function ActivityDetails({ activity }) {
+export default function ActivityDetails({ activity, refActivityBook }) {
 
   //#region 1. Variables
   const location = useLocation();
@@ -80,7 +80,7 @@ export default function ActivityDetails({ activity }) {
             {page === "upcoming" && userRole ==='Tourist' &&(
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
-                  <TourSingleSidebar activity={activity}/>
+                  <TourSingleSidebar activity={activity} refActivityBook={refActivityBook}/>
                 </div>
               </div>
             )}

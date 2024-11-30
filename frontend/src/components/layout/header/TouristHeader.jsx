@@ -121,18 +121,17 @@ export default function TouristHeader({ refHeader, setOpen, refFlights, refHotel
           </div>
 
           <div className="header__right">
-            <button type="primary" onClick={() => setOpen(true)}>
-              Start Tour
+          <button type="primary" onClick={() => setOpen(true)}>
+              Guide
             </button>
+            
             <div className="ml-15">
               <Currency
                 userCurrency={profileInformation.choosenCurrency}
                 onCurrencyChange={handleCurrencyChange}
               />
             </div>
-            <Link to="/" className="ml-20">
-              Help
-            </Link>
+            
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}

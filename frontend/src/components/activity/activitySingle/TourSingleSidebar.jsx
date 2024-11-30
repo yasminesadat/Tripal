@@ -1,10 +1,10 @@
-import  { useEffect, useState } from "react";
+import  { useEffect, useState, useRef } from "react";
 import { getConversionRate } from "@/api/ExchangeRatesService";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 
-export default function TourSingleSidebar({itinerary, activity}) {
+export default function TourSingleSidebar({itinerary, activity, refActivityBook}) {
   const [userRole, setUserRole] = useState(null); 
   const [userId, setUserId] = useState(null); 
 
@@ -178,7 +178,7 @@ export default function TourSingleSidebar({itinerary, activity}) {
 
       </div>
 
-      <button onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
+      <button ref={refActivityBook} onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
       </button>

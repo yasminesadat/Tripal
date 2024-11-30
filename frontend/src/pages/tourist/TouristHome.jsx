@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button, Divider, Space, Tour } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import Banner9 from "@/components/homes/banners/Banner9";
 import BannerEight from "@/components/homes/banners/BannerEight";
@@ -21,7 +21,9 @@ const metadata = {
 
 export default function TouristHome() {
   const [open, setOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(localStorage.getItem('currentStep') || 0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const refHeader = useRef(null);
   const refFlights = useRef(null);
@@ -53,7 +55,10 @@ export default function TouristHome() {
       title: "Book an activity.",
       description: "Explore activities you can do there.",
       target: () => refActivities.current,
-      // onNext: () => navigate("/upcoming-activities"),
+      onNext: () => {
+        localStorage.setItem('currentStep', 3); 
+        navigate("/upcoming-activities", { state: { fromTour: true } });
+      }
     },
     {
       title: "Book an itinerary.",
@@ -75,6 +80,13 @@ export default function TouristHome() {
     },
   ];
 
+  useEffect(() => {
+    if (location.pathname === '/upcoming-activities') {
+      setCurrentStep(4); 
+      localStorage.setItem('currentStep', 4);  // Persist step
+    }
+  }, [location.pathname]);
+
   return (
     <>
       <MetaComponent meta={metadata} />
@@ -89,7 +101,16 @@ export default function TouristHome() {
           refHisPlaces={refHisPlaces}
           refProducts={refProducts}
         />
-        <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
+        <Tour 
+          open={open} 
+          onClose={() => setOpen(false)} 
+          steps={steps} 
+          currentStep={currentStep}
+          onStepChange={step => {
+            setCurrentStep(step); 
+            localStorage.setItem('currentStep', step); 
+          }}
+        />
         <Divider />
         <Hero5 />
         <BrandsThree />
