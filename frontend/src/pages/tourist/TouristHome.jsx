@@ -1,3 +1,6 @@
+import React, { useState, useRef } from "react";
+import { Button, Divider, Space, Tour } from "antd";
+import { useNavigate } from "react-router-dom";
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import Banner9 from "@/components/homes/banners/Banner9";
 import BannerEight from "@/components/homes/banners/BannerEight";
@@ -17,11 +20,77 @@ const metadata = {
 };
 
 export default function TouristHome() {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const refHeader = useRef(null);
+  const refFlights = useRef(null);
+  const refHotels = useRef(null);
+  const refActivities = useRef(null); 
+  const refItineraries = useRef(null);
+  const refHisPlaces = useRef(null);
+  const refProducts = useRef(null);
+
+  const steps = [
+    {
+      title: "Welcome to TriPal!",
+      description: "This is your guide to hassle-free travel planning, from start to finish.",
+      target: () => refHeader.current,
+    },
+    {
+      title: "Book your flight.",
+      description: "Let's plan-e your next getaway.",
+      target: () => refFlights.current,
+      // onNext: () => navigate("/tourist/book-flight"),
+    },
+    {
+      title: "Book a hotel.",
+      description: "Where are you gonna stay?",
+      target: () => refHotels.current,
+      // onNext: () => navigate("/hotel2"),
+    },
+    {
+      title: "Book an activity.",
+      description: "Explore activities you can do there.",
+      target: () => refActivities.current,
+      // onNext: () => navigate("/upcoming-activities"),
+    },
+    {
+      title: "Book an itinerary.",
+      description: "Check out pre-designed programs.",
+      target: () => refItineraries.current,
+      // onNext: () => navigate("/upcoming-itineraries"),
+    },
+    {
+      title: "View historical places.",
+      description: "Get to know where to go.",
+      target: () => refHisPlaces.current,
+      // onNext: () => navigate("/upcoming-itineraries"),
+    },
+    {
+      title: "Buy a product.",
+      description: "Get yourself & your loved ones a souvenir.",
+      target: () => refProducts.current,
+      // onNext: () => navigate("/upcoming-itineraries"),
+    },
+  ];
+
   return (
     <>
       <MetaComponent meta={metadata} />
       <main>
-        <TouristHeader />
+        <TouristHeader 
+          refHeader={refHeader} 
+          setOpen={setOpen} 
+          refFlights={refFlights} 
+          refHotels={refHotels} 
+          refActivities={refActivities}
+          refItineraries={refItineraries}
+          refHisPlaces={refHisPlaces}
+          refProducts={refProducts}
+        />
+        <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
+        <Divider />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />
