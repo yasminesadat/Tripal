@@ -1,8 +1,6 @@
-# Tripal
-
+ ![logo](https://github.com/user-attachments/assets/2d83d299-a3b9-4a42-a6f0-091d3e7add52)
+--------
 ## edit to add motivation
-
-## edit to add how to use
 
 ## edit to add screenshots
 
@@ -15,7 +13,7 @@
 [![Node.js][Node.js]][Node-url]
 [![npm][npm]][npm-url]
 
-## Setup the project locally
+## Setup the project locally:
 ### 1. Clone the repository
 ```
 git clone https://github.com/dianarehan/Tripal.git
@@ -44,14 +42,7 @@ npm start
 * **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 
-## edit to add code exmaplessss
-
 ##  API References
-
-## tests??????????????????😔
-
-## Contribute 
-which contribute en we are willing to accept modifications bug fixes w  feature enhancements,   tests and so on?
 
 ## add creditsss
 
@@ -71,3 +62,8 @@ which contribute en we are willing to accept modifications bug fixes w  feature 
 
 [npm]: https://img.shields.io/badge/npm-8C150D?style=for-the-badge&logo=npm&logoColor=white
 [npm-url]: https://www.npmjs.com/
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
