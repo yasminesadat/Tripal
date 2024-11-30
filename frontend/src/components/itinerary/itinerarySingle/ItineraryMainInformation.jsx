@@ -69,6 +69,25 @@ export default function ItineraryMainInformation({
     }
   };
 
+  const handleFlag = async (itineraryId, currentFlagStatus) => {
+    const updatedFlagStatus = !currentFlagStatus;
+    setLoading(true);
+    try {
+      await flagItinerary(itineraryId);
+      setItinerary((previousItinerary) =>( { 
+        ...previousItinerary, 
+        flagged: updatedFlagStatus 
+      }));
+      message.success(`Itinerary ${updatedFlagStatus ? "flagged" : "unflagged"} successfully.`);
+    } catch (error) {
+      message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update itinerary flag status.");
+    } finally {
+      //having the effect of reloading page
+      fetchItinerary(itineraryId);
+      setLoading(false);     
+    }
+  };
+
   const fetchItinerary = async (itineraryId) => {
     try {
       if (userRole !== "Tour Guide" && userRole !== "Admin") return;
@@ -257,13 +276,14 @@ export default function ItineraryMainInformation({
       )}
         {userRole === "Admin" && (
           <div className="col-auto">
-            <button
-              className="flag-button"
-              onClick={() => handleFlag(itinerary._id)}
-            >
-              <Flag size={16} className="mr-10"/>
-              Flag
-            </button>
+            <button className="flag-button" onClick={() => handleFlag(itinerary._id, itinerary.flagged)}>
+               {!itinerary.flagged? 
+               <FlagOff  size={16} className="mr-10" />:
+                <Flag size={16} className="mr-10" />}
+                {itinerary.flagged ? 
+                "Unflag" :
+                 "Flag"}
+              </button>
           </div>
         )}
       </div>
