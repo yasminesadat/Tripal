@@ -3,7 +3,6 @@
 // import Map from "../pages/contact/Map";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
 import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
 // import MapPopUp from "../../components/common/MapPopUp";
@@ -237,10 +236,10 @@ export default function AddHistoricalPlace() {
       weekendClosingTime: formData.openingHours?.weekends?.closingTime
         ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
         : null,
-      weekdayOpeningTime:formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-      weekdayClosingTime:formData.openingHours?.weekdays?.closingTime
-      ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-      : null
+      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+      weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
+        ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+        : null
     });
   }, [formData, form]);
 
@@ -336,37 +335,37 @@ export default function AddHistoricalPlace() {
                         >
                           <style>
                             {`
-        .contactForm .form-input {
-          position: relative;
-          margin-bottom: 20px;
-        }
-        .contactForm .form-input label {
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          transition: 0.3s ease;
-          color: #aaa;
-          pointer-events: none;
-        }
-        .contactForm .form-input input:focus + label,
-        .contactForm .form-input textarea:focus + label,
-        .contactForm .form-input input:not(:placeholder-shown) + label,
-        .contactForm .form-input textarea:not(:placeholder-shown) + label {
-          transform: translateY(-29px);
-          font-size: 12px;
-          color: #333;
-        }
-        .contactForm .form-input input,
-        .contactForm .form-input textarea {
-          padding: 10px;
-          font-size: 16px;
-          width: 100%;
-          border: 1px solid #ccc;
-          outline: none;
-          background: #fff;
-        }
-        `}
+                          .contactForm .form-input {
+                            position: relative;
+                            margin-bottom: 20px;
+                          }
+                          .contactForm .form-input label {
+                            position: absolute;
+                            left: 10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            transition: 0.3s ease;
+                            color: #aaa;
+                            pointer-events: none;
+                          }
+                          .contactForm .form-input input:focus + label,
+                          .contactForm .form-input textarea:focus + label,
+                          .contactForm .form-input input:not(:placeholder-shown) + label,
+                          .contactForm .form-input textarea:not(:placeholder-shown) + label {
+                            transform: translateY(-29px);
+                            font-size: 12px;
+                            color: #333;
+                          }
+                          .contactForm .form-input input,
+                          .contactForm .form-input textarea {
+                            padding: 10px;
+                            font-size: 16px;
+                            width: 100%;
+                            border: 1px solid #ccc;
+                            outline: none;
+                            background: #fff;
+                          }
+                          `}
                           </style>
                           <div className="col-12">
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
@@ -381,9 +380,7 @@ export default function AddHistoricalPlace() {
                                 },
                               ]}
                             >
-                              <Input style={{
-                                width: '100%',
-                              }}
+                              <Input 
                                 type="text"
                               />
                             </Form.Item>
@@ -421,9 +418,7 @@ export default function AddHistoricalPlace() {
                               <Select
                                 mode="tags"
                                 placeholder="Please select or create period tags"
-                                style={{
-                                  width: '100%',
-                                }}
+
                                 options={periodTagsOptions.map((period) => (
                                   {
                                     label: period.name,
@@ -444,9 +439,7 @@ export default function AddHistoricalPlace() {
                               <Select
                                 mode="tags"
                                 placeholder="Please select or new tags"
-                                style={{
-                                  width: '100%',
-                                }}
+
                                 options={tagsOptions.map((tag) => (
                                   {
                                     label: tag.name,
@@ -493,7 +486,8 @@ export default function AddHistoricalPlace() {
                                     console.log("the new images set", newImages)
                                   }
                                 }}
-                                listType="picture">
+                                listType="picture"
+                              >
                                 <p >
                                   <InboxOutlined />
                                 </p>
@@ -519,7 +513,7 @@ export default function AddHistoricalPlace() {
                         className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
                           }`}
                       >
-                        <Form className="contactForm row y-gap-30"
+                        <Form className=" row y-gap-30"
                           form={form}
                           layout="vertical"
                           name="timing"
@@ -531,8 +525,8 @@ export default function AddHistoricalPlace() {
                           initialValues={{
                             weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
                             weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
-                            weekdayOpeningTime:formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-                            weekdayClosingTime:formData.openingHours?.weekdays?.closingTime
+                            weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+                            weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
                               ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
                               : null
                           }}
@@ -542,7 +536,7 @@ export default function AddHistoricalPlace() {
                               ...formData,
                               openingHours: {
                                 weekdays: {
-                                  openingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
+                                  openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
                                   closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
                                 },
                                 weekends: {
@@ -553,7 +547,7 @@ export default function AddHistoricalPlace() {
 
                             });
                           }}
-                       
+
                         >
                           <div className="col-12">
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
@@ -566,9 +560,7 @@ export default function AddHistoricalPlace() {
                                 message: 'Please select weekends opening time!',
                               },
                             ]}>
-                              <TimePicker style={{
-                                width: '100%',
-                              }}
+                              <TimePicker 
                                 placeholder="please select the weekends opening time" />
 
                             </Form.Item>
@@ -585,10 +577,7 @@ export default function AddHistoricalPlace() {
                                 message: 'Please select weekends closing time!',
                               },
                             ]}>
-                              <TimePicker style={{
-                                width: '100%',
-                              }}
-
+                              <TimePicker 
                                 placeholder="please select the weekends closing time" />
                             </Form.Item>
 
@@ -598,18 +587,15 @@ export default function AddHistoricalPlace() {
                               Weekdays Opening Time
                             </label>
 
-                            <Form.Item className="form-input " name="weekdayOpeningTime" label="Weekdays opening time" rules={[
+                            <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
                               {
                                 type: 'object',
                                 required: id === undefined,
                                 message: 'Please select weekdays opening time!',
                               },
                             ]}>
-                              <TimePicker style={{
-                                width: '100%',
-                              }} name="weekdayOpeningTime"
-                                
-                                
+                              <TimePicker 
+
                                 placeholder="please select the weekdays opening time" />
                             </Form.Item>
                           </div>
@@ -618,24 +604,21 @@ export default function AddHistoricalPlace() {
                             <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                               Weekdays Closing Time
                             </label>
-                            
-                            <Form.Item className="form-input " name="weekdayClosingTime"  rules={[
-                    {
-                        type: 'object',
-                        required: id === undefined,
-                        message: 'Please select weekdays closing time!',
-                    },
-                ]}>
-                    <TimePicker style={{
-                        width: '100%',
-                    }} name="weekdayClosingTime"
-                       
-                        
-                        placeholder="please select the weekdays closing time" />
-                </Form.Item>
 
-                            </div>
-                          
+                            <Form.Item className="form-input " name="weekdayClosingTime" rules={[
+                              {
+                                type: 'object',
+                                required: id === undefined,
+                                message: 'Please select weekdays closing time!',
+                              },
+                            ]}>
+                              <TimePicker
+
+                                placeholder="please select the weekdays closing time" />
+                            </Form.Item>
+
+                          </div>
+
                           <div className="col-12">
                             <Button className="button -md -dark-1 bg-accent-1 text-white mt-30">
                               Next
