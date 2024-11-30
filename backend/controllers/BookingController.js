@@ -1,6 +1,8 @@
 const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
+const transporter = require('./Mailer');
+const { format } = require('date-fns'); 
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
@@ -72,7 +74,32 @@ const bookResource = async (req, res) => {
             },
             { new: true }
         );
-    
+
+        const emailSubject = `Booking Confirmation for ${resource.name}`;
+        const emailBody = `
+            <h1>Booking Successful!</h1>
+            <p>Dear ${tourist.name},</p>
+            <p>Your booking for ${resourceType} "${resource.name}" has been confirmed.</p>
+            <p>Tickets Booked: ${tickets}</p>
+            <p>Total Cost: ${resource.price * tickets}</p>
+            <p>Booking Date: ${format(new Date(), 'MM/dd/yyyy')}</p>
+            <p>Wallet Balance: ${tourist.wallet.amount}</p>
+            <p>Points Earned: ${pointsToReceive}</p>
+            <p>Thank you for booking with us!</p>
+        `;
+
+        transporter.sendMail({from: process.env.EMAIL_USER,  
+                                    to: 'nabila.sherif81@gmail.com',
+                                    subject: emailSubject,
+                                    html: emailBody,
+                                },function(error,info){
+                                    if (error){
+                                        console.error("yohhh"+error)
+                                    }else{
+                                        console.log("email sent successfully"+ info.response);
+                                    }
+                                });
+
         res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully` });
         } catch (error) {
         res.status(500).json({ error: error.message });
