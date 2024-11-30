@@ -93,8 +93,8 @@ export default function Register() {
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
-    setTermsAndConditionsCheck(false);
-    setCurrentTab(0);
+    // setTermsAndConditionsCheck(false);
+    // setCurrentTab(0);
   };
   const handleDocumentChange = (info) => {
     if (info.fileList.length === 0) {
@@ -118,10 +118,11 @@ export default function Register() {
     }
 
     setDocumentUploaded(file);
+    console.log("the uploaded file is ", file);
   };
 
   const handleRemove = () => {
-    setFormData({ ...formData, document: null });
+    setDocumentUploaded("");
   };
 
   const handleSubmit = async (values) => {
@@ -175,9 +176,9 @@ export default function Register() {
           response = await createRequest({
             ...commonUser,
             role: "Tour Guide",
-          }, formData.document);
+          }, documentUploaded);
 
-          navigate("/seller/pending", {
+          navigate("/pendingRequest", {
             state: {
               ...commonUser,
               role: "Tour Guide"
@@ -187,9 +188,9 @@ export default function Register() {
           response = await createRequest({
             ...commonUser,
             role: "Advertiser",
-          }, formData.document);
+          }, documentUploaded);
 
-          navigate("/seller/pending", {
+          navigate("/pendingRequest", {
             state: {
               ...commonUser,
               role: "Advertiser"
