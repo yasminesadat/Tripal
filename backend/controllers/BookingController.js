@@ -4,8 +4,8 @@ const Tourist = require('../models/users/Tourist');
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
-    const { touristId, tickets} = req.body;
-
+    const { tickets} = req.body;
+    const touristId = req.userId;
     const model = resourceType === 'activity' ? Activity : itineraryModel;
   
     try {
@@ -33,14 +33,17 @@ const bookResource = async (req, res) => {
             }
 
             tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
+
             
         } 
         else{
-            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() ===touristId );
             if (existingBooking) 
                 existingBooking.tickets += tickets;
+            
             else 
-                resource.bookings.push({ touristId, tickets });
+                resource.bookings.push({ touristId,tickets});
+            
             tourist.wallet.amount -= resource.price*tickets;
         }
         if(tourist.wallet.amount<0)
@@ -78,7 +81,7 @@ const bookResource = async (req, res) => {
 
 const cancelResource = async (req, res) => {
 const { resourceType, resourceId } = req.params;
-const { touristId } = req.body;
+const touristId  = req.userId;
 const model = resourceType === 'activity' ? Activity : itineraryModel;
 const currentTime = new Date();
 

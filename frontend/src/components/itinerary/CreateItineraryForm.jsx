@@ -12,6 +12,8 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default function CreateItineraryForm() {
+
+  //#region 1. Variables
     const [loading, setLoading] = useState(false);
     const [pickupLocation, setPickUpLocation] = useState(null);
     const [dropoffLocation, setDropOffLocation] = useState(null);
@@ -21,7 +23,9 @@ export default function CreateItineraryForm() {
     const [numDays, setNumDays] = useState(0); // Store the number of days
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
     const [form] = Form.useForm();
+  //#endregion
 
+  //#region 2. Event Handlers
     const handleDateChange = (dates) => {
     if (dates && dates.length === 2) {
         var startDate = dates[0].startOf("day");
@@ -95,6 +99,8 @@ export default function CreateItineraryForm() {
             setLoading(false);
         }
     };
+    //#endregion
+    
     return (
       <div className="full-height-container">
         <MDBContainer fluid className="p-2">

@@ -57,7 +57,6 @@ export default function TourSingleSidebar({itinerary, activity}) {
       const response = await bookResource(
         itinerary ? "itinerary" : "activity",
         itinerary ? itinerary._id : activity._id,
-        userId,
         ticketNumber
       );
       message.success(response.message);
