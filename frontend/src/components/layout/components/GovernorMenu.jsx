@@ -14,7 +14,7 @@ export default function Menu() {
           </div>
 
           <div className="desktopNav__item">
-            <Link to="/destinations">Add Historical Place</Link>
+            <Link to="/add-historical-place">Add Historical Place</Link>
           </div>
         </div>
       </div>
