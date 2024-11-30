@@ -75,6 +75,7 @@ export default function ItineraryMainInformation({
 
   const fetchItineraries = async () => {
     try {
+      if(userRole !== "Tour Guide") return;
       const response = await getItinerariesByTourGuide();
       setItineraries(response.data);
     } catch (error) {
