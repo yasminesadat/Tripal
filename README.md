@@ -1,66 +1,73 @@
-# Development Branch Workflow
+# Tripal
 
-## Overview
-The **development** branch serves as our common development branch. It is crucial for integrating various features and changes made by team members. Please follow the guidelines below to ensure a smooth development process.
+## edit to add motivation
 
-## Workflow Guidelines
+## edit to add how to use
 
-### 1. Pull the Latest Changes
-Before making any changes, always ensure that you have the latest version of the **development** branch:
+## edit to add screenshots
 
-```bash
-git checkout development
-git pull origin development
+## what is code styles??
+
+## Frameworks/Libraries used
+[![MongoDB][MongoDB]][MongoDB-url]
+[![Express.js][Express.js]][Express-url]
+[![React][React.js]][React-url]
+[![Node.js][Node.js]][Node-url]
+[![npm][npm]][npm-url]
+
+## Setup the project locally
+### 1. Clone the repository
 ```
-
-### 2. Create Your Team Branch
-When working on new features or tasks, create a separate branch from the development branch. This allows you to work simultaneously with other team members without conflicts:
-
-```bash
-git checkout -b your-team-branch-name
+git clone https://github.com/dianarehan/Tripal.git
 ```
-
-### 3. Make Your Changes
-Implement your changes in your team branch. Regularly commit your changes with meaningful messages:
-
-```bash
-git add .
-git commit -m "Describe your changes here"
+### 2. Install dependencies
 ```
-
-### 4. Sync with the Development Branch
-While you are working, periodically pull the latest changes from the development branch to keep your branch up to date and resolve any conflicts:
-
-```bash
-git checkout development
-git pull origin development
-git checkout your-team-branch-name
-git merge development
+npm install
+cd backend
+npm install
+cd ..
+cd frontend
+npm install
+cd ..
 ```
-
-### 5. Create Pull Request
-Once your changes are complete and tested, create a Pull Request to merge your team branch back into the development branch. Make sure to:
-
-Clearly describe the changes and their purpose.
-Reference any relevant issues or tasks.
-
-### 6. Review and Merge
-Review and Merge
-After creating a PR, other team members should review the changes. Address any feedback received. Once approved, merge the PR into the development branch.
-
-### 7. Delete Your Team Branch (Optional)
-After merging your changes, you may delete your team branch if it's no longer needed:
-
-```bash
-git branch -d your-team-branch-name
-git push origin --delete your-team-branch-name
+### 3. Start the application
 ```
+npm start
+```
+## Key features
+* **User Management:** secure sign up and login for tourist, tour guide, seller and advertiser
+* **Activities and Bookings:** Create, manage, and book activities, events, and itineraries with search and filter options for tourists.
+* **Hotels and flights:** tourist can book hotels, flights and transportation.
+* **Product Management:** Sellers can add, edit, and manage products. Tourists can browse, filter, and purchase products.
+* **Payments & Cancellations:** Tourists can book and pay for events and activities, with options for cancellations and loyalty points.
+* **Reviews & Ratings:** Users can rate and review activities, products, and tour guides.
+* **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
+* **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 
-## Summary
-Always start from the development branch.
+## edit to add code exmaplessss
 
-Create a unique team branch for your work.
+##  API References
 
-Keep your branch updated with the latest changes from development.
+## tests??????????????????😔
 
-Use Pull Requests for merging changes back to the development branch.
+## Contribute 
+which contribute en we are willing to accept modifications bug fixes w  feature enhancements,   tests and so on?
+
+## add creditsss
+
+
+
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+
+[Node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[Node-url]: https://nodejs.org/
+
+[Express.js]: https://img.shields.io/badge/Express.js-404D59?style=for-the-badge
+[Express-url]: https://expressjs.com/
+
+[MongoDB]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
+[MongoDB-url]: https://www.mongodb.com/
+
+[npm]: https://img.shields.io/badge/npm-8C150D?style=for-the-badge&logo=npm&logoColor=white
+[npm-url]: https://www.npmjs.com/
