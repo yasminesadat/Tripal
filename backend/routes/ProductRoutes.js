@@ -16,13 +16,7 @@ const Product = require("../models/Product");
 const ProductRating = require("../models/ProductRating");
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
-router.post(
-  "/products",
-  validateIDs(["sellerID"]),
-  verifyToken,
-  authorizeRoles("Seller"),
-  createProduct
-);
+router.post("/products", verifyToken, authorizeRoles("Seller"), createProduct);
 router.get("/products", getProducts);
 router.get("/products/search", searchProductsByName);
 router.get("/products/filter", filterProductsByPrice);
@@ -50,14 +44,14 @@ router.patch(
   "/products/:id/archive",
   validateIDs(["id"]),
   verifyToken,
-  authorizeRoles("Admin","Seller"),
+  authorizeRoles("Admin", "Seller"),
   archiveProduct
 );
 router.patch(
   "/products/:id/unarchive",
   validateIDs(["id"]),
   verifyToken,
-  authorizeRoles("Admin","Seller"),
+  authorizeRoles("Admin", "Seller"),
   unArchiveProduct
 );
 
