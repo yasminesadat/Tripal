@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
@@ -8,7 +8,7 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { Tag, message } from "antd";
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 
 export default function ActivityDetails({ activity }) {
@@ -22,6 +22,7 @@ export default function ActivityDetails({ activity }) {
   const activityId = activity._id;  
   //#endregion
 
+  //#region 2. useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -38,6 +39,7 @@ export default function ActivityDetails({ activity }) {
     };
     fetchUserData();
   }, []);
+  //#endregion
 
   if (!activity) return <div><Index/></div>;
 
@@ -45,7 +47,7 @@ export default function ActivityDetails({ activity }) {
     <>
       <section className="">
         <div className="container">
-          <ActivityMainInformation activity={activity} role ={userRole}/>
+          <ActivityMainInformation activity={activity} userRole ={userRole}/>
           <Gallery1 />
         </div>
       </section>
@@ -81,7 +83,6 @@ export default function ActivityDetails({ activity }) {
                 </div>
               </div>
             )}
-            
           </div>
         </div>
       </section>
