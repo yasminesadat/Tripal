@@ -240,10 +240,8 @@ export default function Register() {
   };
 
   const handleSubmit = async (values) => {
-    if (!termsAccepted) {
-      message.warning("Please accept the terms and conditions");
-      return;
-    }
+
+
 
     setLoading(true);
 
@@ -488,7 +486,7 @@ export default function Register() {
                     type="primary"
                     htmlType="submit"
                     loading={loading}
-                    disabled={!termsAndConditionsCheck}
+                    disabled={!termsAndConditionsCheck && role !== "tourist"}
                     block
                   >
                     Create Account
