@@ -75,6 +75,25 @@ cron.schedule('00 00 * * *', async () => {
   }
 });
 
+cron.schedule('59 23 * * *', async () => {
+
+  const allUsers = await touristModel.find({});
+
+
+  for (const user of allUsers) {
+    try {
+
+
+
+      user.promoCodes.length = 0;
+      await user.save();
+      console.log(`Cleared promo code: ( for ${user.userName}`);
+    } catch (error) {
+      console.error(`Error clearing promo code for ${user.userName}:`, error.message);
+      continue;
+    }
+  }
+});
 
 
 const { sendEmail } = require('./Mailer');
