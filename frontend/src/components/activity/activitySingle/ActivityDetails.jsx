@@ -8,7 +8,7 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { Tag, message } from "antd";
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 
 export default function ActivityDetails({ activity }) {
@@ -22,6 +22,7 @@ export default function ActivityDetails({ activity }) {
   const activityId = activity._id;
   //#endregion
 
+  //#region 2. useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -38,6 +39,7 @@ export default function ActivityDetails({ activity }) {
     };
     fetchUserData();
   }, []);
+  //#endregion
 
   if (!activity) return <div><Index /></div>;
 
@@ -45,7 +47,8 @@ export default function ActivityDetails({ activity }) {
     <>
       <section className="">
         <div className="container">
-          <ActivityMainInformation activity={activity} role={userRole} />
+
+          <ActivityMainInformation activity={activity} userRole ={userRole}/>
           <Gallery1 />
         </div>
       </section>
@@ -60,9 +63,11 @@ export default function ActivityDetails({ activity }) {
               <div className="line mt-60 mb-60"></div>
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
-                <LocationMap
-                  markerPosition={markerPosition}
-                  search={"hi"}
+
+                <LocationMap 
+                  markerPosition={markerPosition} 
+                  search={"dont search bro"}
+
                 />
 
               </div>

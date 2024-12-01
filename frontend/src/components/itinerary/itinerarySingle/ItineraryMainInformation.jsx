@@ -1,10 +1,11 @@
 import Spinner from "@/components/common/Spinner";
 import Stars from "../../common/Stars";
 import { message } from "antd";
-import { Flag, Pencil, CircleX, ShieldMinus, ShieldCheck } from 'lucide-react';
+
+import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck,FlagOff } from 'lucide-react';
 import { flagItinerary } from "@/api/AdminService";
-import { deleteItinerary, getItinerariesByTourGuide, toggleItineraryStatus, updateItinerary } from "@/api/ItineraryService";
-import { useState, useEffect } from "react";
+import { deleteItinerary, toggleItineraryStatus,updateItinerary,getItineraryById } from "@/api/ItineraryService";
+import  { useState, useEffect } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import UpdateItineraryModal from "../UpdateItineraryForm";
@@ -32,10 +33,6 @@ const formatDate = (date) => {
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
-
-const handleFlag = (id) => {
-  console.log(`Flagging itinerary with ID: ${id}`);
-};
 //#endregion
 
 export default function ItineraryMainInformation({
@@ -43,28 +40,30 @@ export default function ItineraryMainInformation({
   userRole,
 }) {
 
-  //#region 1. Variables
-  const [itinerary, setItinerary] = useState(initialItinerary);
-  const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [itineraryToDelete, setItineraryToDelete] = useState(null);
-  const [itineraries, setItineraries] = useState([]);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [itineraryToEdit, setItineraryToEdit] = useState(null);
-  const navigate = useNavigate();
-  //#endregion
+
+    //#region 1. Variables
+    const [itinerary, setItinerary] = useState(initialItinerary);
+    const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [itineraryToDelete, setItineraryToDelete] = useState(null);
+    const [modalVisible2, setModalVisible2] = useState(false);
+    const [itineraryToEdit, setItineraryToEdit] = useState(null);
+    const navigate = useNavigate();
+    //#endregion
 
   //#region 2. event handlers
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
     setLoading(true);
     try {
-      await toggleItineraryStatus(itineraryId);
-      setItinerary((prevItinerary) => ({
-        ...prevItinerary,
-        isActive: updatedStatus,
-      }));
-      message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+
+        await toggleItineraryStatus(itineraryId);
+        setItinerary((prevItinerary) => ({
+          ...prevItinerary,
+          isActive: updatedStatus,
+        }));
+        fetchItinerary(itineraryId);
+        message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
     } catch (error) {
       message.error(error.response.data.message);
     }
@@ -73,18 +72,34 @@ export default function ItineraryMainInformation({
     }
   };
 
-  const fetchItineraries = async () => {
+  const handleFlag = async (itineraryId, currentFlagStatus) => {
+    const updatedFlagStatus = !currentFlagStatus;
+    setLoading(true);
     try {
-      const response = await getItinerariesByTourGuide();
-      setItineraries(response.data);
+      await flagItinerary(itineraryId);
+      setItinerary((previousItinerary) =>( { 
+        ...previousItinerary, 
+        flagged: updatedFlagStatus 
+      }));
+      message.success(`Itinerary ${updatedFlagStatus ? "is flagged as inappropriate " : "has been unflagged"} successfully.`);
+    } catch (error) {
+      message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update itinerary flag status.");
+    } finally {
+      //having the effect of reloading page
+      fetchItinerary(itineraryId);
+      setLoading(false);     
+    }
+  };
+
+  const fetchItinerary = async (itineraryId) => {
+    try {
+      if (userRole !== "Tour Guide" && userRole !== "Admin") return;
+      const response = await getItineraryById(itineraryId);
+      setItinerary(response.data);
     } catch (error) {
       message.error("Failed to fetch itineraries");
     }
   };
-
-  useEffect(() => {
-    fetchItineraries();
-  }, []);
 
   const handleDeleteItinerary = (id) => {
     setItineraryToDelete(id);
@@ -111,26 +126,31 @@ export default function ItineraryMainInformation({
   };
 
   const handleCancelDelete = () => {
-    setModalVisible(false);  // Close the modal without deleting
+    setModalVisible(false);
   };
 
-  const onEditItinerary = (id) => {
-    const itinerary = itineraries.find((itinerary) => itinerary._id === id);
-    setItineraryToEdit(itinerary);
-    setModalVisible2(true);  // Show the modal
+  const onEditItinerary = async (id) => {
+    const itinerary = await getItineraryById(id);
+    setItineraryToEdit(itinerary.data);
+    setModalVisible2(true);
   };
 
   const handleSaveChanges = async (updatedItinerary) => {
     setModalVisible2(false);
+    setLoading(true);
     try {
-      const response = await updateItinerary(itinerary._id, updatedItinerary);
-      if (response.ok) {
-        fetchItineraries();
-      }
+
+
+      await updateItinerary(itinerary._id,updatedItinerary);
+      fetchItinerary(itinerary._id);
+
       message.success("Itinerary updated successfully!");
 
     } catch (error) {
       message.error(error.response.data.error);
+    }
+    finally {
+      setLoading(false);
     }
   };
   //#endregion
@@ -262,13 +282,16 @@ export default function ItineraryMainInformation({
         )}
         {userRole === "Admin" && (
           <div className="col-auto">
-            <button
-              className="flag-button"
-              onClick={() => handleFlag(itinerary._id)}
-            >
-              <Flag size={16} className="mr-10" />
-              Flag
-            </button>
+
+            <button className="flag-button" onClick={() => handleFlag(itinerary._id, itinerary.flagged)}>
+               {!itinerary.flagged? 
+               <Flag  size={16} className="mr-10" />:
+                <FlagOff size={16} className="mr-10" />}
+                {itinerary.flagged ? 
+                "Unflag" :
+                 "Flag as Inappropriate"}
+              </button>
+
           </div>
         )}
       </div>

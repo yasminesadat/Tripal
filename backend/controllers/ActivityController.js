@@ -158,11 +158,10 @@ const getActivityById = async (req, res) => {
 };
 
 const getTouristActivities = async (req, res) => {
-  const { touristId } = req.userId;
+  const  touristId  = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, isBookingOpen: true, flagged: false, date: { $gte: new Date() } })
-      .populate("category")
-      .populate("tags")
+    const activities = await Activity.find({ "bookings.touristId": touristId,  flagged: false, date: { $gte: new Date() } })
+    
       .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {

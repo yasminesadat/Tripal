@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getTouristActivities, getTouristFlights, getTouristItineraries } from "../../api/TouristService";
-import { getHotelHistory } from "../../api/HotelService"; //from service 
+import { getHotelHistory } from "../../api/HotelService";
 import { format } from 'date-fns';
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-const tabs = ["Flights", "Hotels", "Activities", "Itineraries"];  
+import { cancelResource } from "@/api/BookingService";
+import { message } from "antd";
+import AreYouSure from "@/components/common/AreYouSure";
 
 export default function DbBooking() {
+
+  //#region use state and variables
+  const tabs = ["Flights", "Hotels", "Activities", "Itineraries"];  
   const [currentTab, setCurrentTab] = useState("Flights");
   const [bookedFlights, setBookedFlights] = useState([]); //stored flights
   const [bookedHotels, setBookedHotels] = useState([]); // state to store bookedHotels
@@ -17,8 +22,15 @@ export default function DbBooking() {
   const [bookedItineraries, setBookedItineraries] = useState([]); 
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
-  
+  const navigate = useNavigate();
+  const metadata = {
+    title: "My Bookings || Tripal",
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentResource, setCurrentResource] = useState({ resourceId: null, resourceType: '' });
+
+  //#endregion
+
   // for testing dont delete
   // const bookedActivities = [
   //   {
@@ -111,7 +123,8 @@ export default function DbBooking() {
   //     price: 400,
   //   },
   // ];  
-
+  
+  //#region useEffect and methods
   useEffect(() => {
 
     const fetchCurrency = () => {
@@ -143,41 +156,50 @@ export default function DbBooking() {
       }
     };
 
-    const fetchBookedActivities = async () => {
-      try {
-        const response = await getTouristActivities();
-        console.log(response)
-        if (response.length === 0) {
-          console.log("No booked activities found.");
-          return; 
-        }    
-        const sortedActivities = response.sort((a, b) => {
-          const dateA = new Date(a.date); 
-          const dateB = new Date(b.date); 
-          return dateB - dateA; 
-        });
-        setBookedActivities(sortedActivities);
-      } catch (error) {
-        console.error("Error fetching booked activities", error);
-      }
-    };
-
-    const fetchBookedItineraries = async () => {
-      try {
-        const response = await getTouristItineraries();
-        const sortedItineraries = response.sort((a, b) => {
-          const dateA = new Date(a.startDate); 
-          const dateB = new Date(b.startDate); 
-          return dateB - dateA; 
-        });
-        setBookedItineraries(sortedItineraries);
-      } catch (error) {
-        console.error("Error fetching booked itineraries", error);
-      }
-    };
-
     fetchBookedFlights();
     fetchBookedHotels();
+  }, []);
+
+  const fetchBookedActivities = async () => {
+    try {
+      const response = await getTouristActivities();
+      console.log(response)
+      if (response.length === 0) {
+        setBookedActivities([]);
+        console.log("No booked activities found.");
+        return; 
+      }    
+      const sortedActivities = response.sort((a, b) => {
+        const dateA = new Date(a.date); 
+        const dateB = new Date(b.date); 
+        return dateB - dateA; 
+      });
+      setBookedActivities(sortedActivities);
+    } catch (error) {
+      console.error("Error fetching booked activities", error);
+    }
+  };
+
+  const fetchBookedItineraries = async () => {
+    try {
+      const response = await getTouristItineraries();
+      if(response.length === 0) {
+        setBookedItineraries([]);
+        console.log("No booked itineraries found.");
+        return;
+      }
+      const sortedItineraries = response.sort((a, b) => {
+        const dateA = new Date(a.startDate); 
+        const dateB = new Date(b.startDate); 
+        return dateB - dateA; 
+      });
+      setBookedItineraries(sortedItineraries);
+    } catch (error) {
+      console.error("Error fetching booked itineraries", error);
+    }
+  };
+
+  useEffect(() => {
     fetchBookedActivities();
     fetchBookedItineraries();
   }, []);
@@ -190,6 +212,7 @@ export default function DbBooking() {
       console.error('Failed to fetch exchange rate:', error);
     }
   };
+
   const getFlightStatus = (arrivalTime) => {
     const now = new Date();
     return new Date(arrivalTime) < now ? "Flight Complete" : "Flight Upcoming";
@@ -203,10 +226,6 @@ export default function DbBooking() {
   const convertPrice = (price) => {
     return (price * exchangeRate).toFixed(2);
   };
-
-  const metadata = {
-    title: "My Bookings || Tripal",
-};
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -228,7 +247,6 @@ const checkStatus = (date) => {
   }
 };
 
-const navigate = useNavigate();
 const handleActivityRedirect = (activityId) => {
   navigate(`/activity/${activityId}`, { state: { page: 'history' }});
 };
@@ -237,11 +255,44 @@ const handleItineraryRedirect = (itineraryId) => {
   navigate(`/itinerary/${itineraryId}`, { state: { page: 'history' }});
 };
 
-  return (
+const handleCancelResource = async () => {
+  const { resourceId, resourceType } = currentResource;
+  try {
+    await cancelResource(resourceType, resourceId);
+    message.success(`${resourceType === 'activity' ? 'Activity' : 'Itinerary'} reservation is canceled successfully.`);
+    if (resourceType === 'activity') {
+      setBookedActivities((prev) => prev.filter((activity) => activity._id !== resourceId));
+    } else if (resourceType === 'itinerary') {
+      setBookedItineraries((prev) => prev.filter((itinerary) => itinerary._id !== resourceId));
+    }
+  } catch (err) {
+    message.error(err.response?.data?.error || 'An error occurred while canceling the resource.');
+  } finally {
+    setModalVisible(false);
+  }
+};
+
+const handleCancelBooking = (resourceId, resourceType) => {
+  setCurrentResource({ resourceId, resourceType });
+  setModalVisible(true);
+};
+
+const handleCancelCancellation = () => {
+  setModalVisible(false);
+};
+//#endregion
+  
+return (
     <div>
       <>
         <MetaComponent meta={metadata} />
         <div className="page-wrapper">
+        <AreYouSure
+        visible={modalVisible}
+        onConfirm={handleCancelResource}
+        onCancel={handleCancelCancellation}
+        message={`Are you sure you want to cancel this ${currentResource.resourceType}?`}
+      />
           <TouristHeader />
             <main className="page-content">
               <div className="dashboard js-dashboard">
@@ -409,7 +460,7 @@ const handleItineraryRedirect = (itineraryId) => {
                                             }}
                                             onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
                                             onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
-                                          >
+                                            onClick={() => handleCancelBooking(activity._id, 'activity')}                                          >
                                             Cancel
                                           </button>
                                         ) : (
@@ -484,6 +535,7 @@ const handleItineraryRedirect = (itineraryId) => {
                                             }}
                                             onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')} 
                                             onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')} 
+                                            onClick={() => handleCancelBooking(itinerary._id, 'itinerary')}
                                           >
                                             Cancel
                                           </button>

@@ -55,7 +55,6 @@ export default function ItineraryDetails({ itinerary, userRole }) {
                 <LocationMap
                   markerPosition={markerPosition}
                   search={"dont search bro"}
-                 
                 />
               </div>
 
