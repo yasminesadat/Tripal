@@ -137,7 +137,6 @@ export default function ActivitiesList({
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase();
       const activityPrice = activity.price * exchangeRate;
-      //const activityPrice = activity.price;
 
       const isDateValid =
         !startDate ||
@@ -194,8 +193,6 @@ export default function ActivitiesList({
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
