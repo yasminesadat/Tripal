@@ -72,21 +72,21 @@ export default function TouristHome() {
         navigate("/upcoming-itineraries", { state: { fromTour: true } });
       },
     },
-    // {
-    //   title: "View historical places.",
-    //   description: "Get to know where to go.",
-    //   target: () => refHisPlaces.current,
-    //   onNext: () => {
-    //     localStorage.setItem('currentStep', 5);
-    //     // navigate("/hist", { state: { fromTour: true } });
-    //   }
-    // },
+    {
+      title: "View historical places.",
+      description: "Get to know where to go.",
+      target: () => refHisPlaces.current,
+      onNext: () => {
+        localStorage.setItem('currentStep', 5);
+        // navigate("/hist", { state: { fromTour: true } });
+      }
+    },
     {
       title: "Buy a product.",
       description: "Get yourself & your loved ones a souvenir.",
       target: () => refProducts.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 5);
+        localStorage.setItem('currentStep', 6);
         navigate("/tourist/view-products", { state: { fromTour: true } });
       }
     },
