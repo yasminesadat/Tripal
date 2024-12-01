@@ -158,6 +158,20 @@ export default function ProductList() {
     }
   }, [userRole, sortOrder]);
 
+  // useEffect(() => {
+  //   const getExchangeRate = async () => {
+  //     if (curr) {
+  //       try {
+  //         const rate = await getConversionRate(curr);
+  //         setExchangeRate(rate);
+  //       } catch (error) {
+  //         message.error("Failed to fetch exchange rate.");
+  //       }
+  //     }
+  //   };
+
+  //   getExchangeRate();
+  // }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -566,3 +580,4 @@ export default function ProductList() {
     </>
   );
 }
+

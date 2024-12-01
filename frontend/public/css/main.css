@@ -5892,7 +5892,7 @@ h6 {
 
 .tourCard.-type-1 .tourCard__favorite:hover {
   color: white;
-  background-color: var(--color-accent-1);
+  background-color: var(--color-dark-purple);
 }
 
 .tourCard.-type-1.-hover-shadow {

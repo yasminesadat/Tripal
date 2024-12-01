@@ -38,7 +38,8 @@ const ProductCard = ({
         picture,
         averageRating,
         sales,
-        userRole
+        userRole,
+        userId
       },
     });
   };
