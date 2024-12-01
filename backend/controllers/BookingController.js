@@ -211,9 +211,9 @@ const cancelResource = async (req, res) => {
 //LAW ANA YOOM 1 EL EMAIL HAYETBE3ET LAW EL EVENT YOOM 4
 
 // Cron job to run every day at midnight
-cron.schedule('39 17 * * *', async () => {
+cron.schedule('47 1 * * *', async () => {
   const today = moment().utc();  // Current date and time in UTC
-  const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
+  const fiveDaysLater = today.add(4, 'days').startOf('day').utc(); // Start of the day in UTC
   const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
 
   console.log('Today:', today.toString());
@@ -248,8 +248,9 @@ cron.schedule('39 17 * * *', async () => {
             console.log("SENT!")
             tourist.notificationList.push({
                 message: `This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!`,
-                notifType: "event"
+                notifType: "events"
               });
+              await tourist.save(); 
           }
         }
       }
