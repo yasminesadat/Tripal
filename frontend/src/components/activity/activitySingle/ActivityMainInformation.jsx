@@ -2,6 +2,7 @@ import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag,FlagOff  } from 'lucide-react';
 import { flagActivity } from "@/api/AdminService";
+
 import {bookmarkEvent} from "@/api/TouristService";
 import { useState,useEffect } from "react";
 import Spinner from "@/components/common/Spinner";
@@ -14,14 +15,14 @@ const handleShare = (link) => {
   if (navigator.share) {
     navigator
       .share({
-        title: "Check out this itinerary!",
+        title: "Check out this activity!",
         url: link,
       })
       .catch((error) => {
         message.error("Failed to share");
       });
   } else {
-    window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+    window.location.href = `mailto:?subject=Check out this activity !&body=Check out this link: ${link}`;
   }
 };
 
@@ -35,10 +36,11 @@ const handleBookmark = async (eventId, eventType) => {
   }
 };
 
+
 const formatDate = (date) => {
   const d = new Date(date);
-  const day = d.getDate().toString().padStart(2, '0');  
-  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
@@ -91,7 +93,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-          <div className="col-auto">
+            <div className="col-auto">
               <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
@@ -130,12 +132,13 @@ export default function ActivityMainInformation({ activity: initialActivity, use
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <i className="icon-calendar mr-10"></i> 
+                <i className="icon-calendar mr-10"></i>
                 {formatDate(activity?.date)}
               </div>
             </div>
           </div>
         </div>
+
 
         {userRole ==='Tourist' ? (<div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
@@ -164,6 +167,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
               Add to Wishlist
             </div>
           </div>
+
         </div>)
         :userRole === 'Admin' ? (
       <div className="col-auto">
@@ -178,6 +182,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
         </div>
       ) : null}
                 
+
       </div>
       <style>
         {`

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductList from "../../components/product/ProductList"; 
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";

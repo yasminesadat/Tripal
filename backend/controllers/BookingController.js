@@ -1,6 +1,10 @@
 const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
+const {sendEmail} = require('./Mailer');
+const cron = require('node-cron');
+const moment = require('moment'); // Use moment.js for date manipulation
+
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
@@ -72,8 +76,25 @@ const bookResource = async (req, res) => {
             },
             { new: true }
         );
-    
-        res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully` });
+
+            const subject = `Booking Confirmation for ${resource.title}`;
+            const html = `
+              <h1>Booking Successful!</h1>
+              <p>Dear ${tourist.userName},</p>
+              <p>Your booking for ${resource.title} has been confirmed.</p>
+              <p>Tickets Booked: ${tickets}</p>
+              <p>Total Cost: ${resource.price * tickets}</p>
+              <p>Wallet Balance: ${tourist.wallet.amount}</p>
+              <p>Points Earned: ${pointsToReceive}</p>
+              <p>Thank you for booking with us!</p>
+            `;
+            try {
+              await sendEmail(tourist.email, subject, html);
+              res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully, Booking confirmation email sent` });
+            } catch (error) {
+              console.error('Error sending booking confirmation:', error.message);
+            }
+          
         } catch (error) {
         res.status(500).json({ error: error.message });
         }
@@ -174,5 +195,117 @@ try {
     res.status(500).json({ message: 'Error canceling booking', error });
 }
 };
+
+
+// * * * * * 
+// | | | | |
+// | | | | +---- Day of the week (0 - 7) (Sunday = 0 or 7)
+// | | | +------ Month (1 - 12)
+// | | +-------- Day of the month (1 - 31)
+// | +---------- Hour (0 - 23)
+// +------------ Minute (0 - 59)
+
+//'1 * * * *' --> 1 min from now
+//'30 14 * * *' --> at 2 30 PM
+//'0 0 * * *' --> at midnight
+//LAW ANA YOOM 1 EL EMAIL HAYETBE3ET LAW EL EVENT YOOM 4
+
+// Cron job to run every day at midnight
+cron.schedule('39 17 * * *', async () => {
+    const today = moment().utc();  // Current date and time in UTC
+  const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
+  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+
+  console.log('Today:', today.toString());
+  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+  console.log('End of day (UTC):', endOfDay.toString());
+
+    try {
+      // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
+      const activities = await Activity.find({
+        date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isBookingOpen: true,  
+      });
+      //console.log('Found activities:', activities); 
+      if (activities.length > 0) {
+        for (let activity of activities) {
+          // Iterate over the tourists who booked the activity
+          for (let booking of activity.bookings) {
+            const tourist = await Tourist.findById(booking.touristId);
+            if (tourist && tourist.email) {
+              const subject = `Your upcoming activity: ${activity.title}`;
+              const html = `
+                <p>Dear ${tourist.userName},</p>
+                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 5 days!</p>
+                <p>Location: ${activity.location}</p>
+                <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
+                <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+                <p>Best regards,</p>
+                <p>Tripal</p>
+              `;
+              
+              await sendEmail(tourist.email, subject, html);
+              console.log("SENT!")
+            }
+          }
+        }
+      } else {
+        console.log('No activities found for 5 days.');
+      }
+    } catch (error) {
+      console.error('Error checking activities for 5 days later:', error);
+    }
+  });
+
+cron.schedule('41 17 * * *', async () => {
+    const today = moment().utc();  // Current date and time in UTC
+    const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
+    const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
   
+    console.log('Today:', today.toString());
+    console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+    console.log('End of day (UTC):', endOfDay.toString());
+
+  try {
+    // Find itineraries that start in exactly 3 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
+    const itineraries = await itineraryModel.find({
+        startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isActive: true,  // Only consider active itineraries
+    });
+
+    //console.log('Found itineraries:', itineraries); 
+
+    if (itineraries.length > 0) {
+      for (let itinerary of itineraries) {
+        console.log('Itinerary Start Date:', moment(itinerary.startDate).toString());
+
+        // Iterate over the tourists who booked the itinerary
+        for (let booking of itinerary.bookings) {
+          const tourist = await Tourist.findById(booking.touristId);
+          if (tourist && tourist.email) {
+            const subject = `Your upcoming itinerary: ${itinerary.title}`;
+            const html = `
+              <p>Dear ${tourist.userName},</p>
+              <p>This is a reminder that your booked itinerary, <strong>${itinerary.title}</strong>, is coming up in 5 days!</p>
+              <p>Location: ${itinerary.pickupLocation}</p>
+              <p>Start Date: ${moment(itinerary.startDate).format('MMMM Do YYYY')}</p>
+              <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+              <p>Best regards,</p>
+              <p>Your Tripal Team</p>
+            `;
+            
+            await sendEmail(tourist.email, subject, html);
+            console.log("SENT!");
+          }
+        }
+      }
+    } else {
+      console.log('No itineraries found for 5 days.');
+    }
+  } catch (error) {
+    console.error('Error checking itineraries for 5 days later:', error);
+  }
+});
+
+
 module.exports = {cancelResource, bookResource};

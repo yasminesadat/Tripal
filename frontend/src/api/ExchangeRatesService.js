@@ -6,7 +6,7 @@ async function fetchExchangeRates() {
   if (savedRates) {
     exchangeRates = JSON.parse(savedRates);
   } else {
-    const response = await fetch('https://v6.exchangerate-api.com/v6/f975ea74aec709add4731646/latest/EGP');
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/f975ea74aec709add4731646/latest/EGP`);
     exchangeRates = await response.json();
     sessionStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
   }
