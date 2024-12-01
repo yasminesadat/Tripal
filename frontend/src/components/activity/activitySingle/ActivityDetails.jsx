@@ -45,7 +45,7 @@ export default function ActivityDetails({ activity, refActivityBook }) {
 
   return (
     <>
-      <section className="">
+      <section className="" >
         <div className="container">
           <ActivityMainInformation activity={activity} userRole ={userRole}/>
           <Gallery1 />

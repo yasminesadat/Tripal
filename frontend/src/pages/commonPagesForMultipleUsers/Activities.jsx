@@ -34,7 +34,7 @@ export default function Activities() {
       target: () => refActivityDetails.current, 
       onNext: () => {
         if (firstActivityId) 
-          navigate(`/activity/${firstActivityId}`, { state: { fromTour: true } })
+          navigate(`/activity/${firstActivityId}`, { state: { fromTour: true, page: "upcoming" } })
       }
     },
     {

@@ -21,7 +21,7 @@ const metadata = {
 
 export default function TouristHome() {
   const [open, setOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState(localStorage.getItem('currentStep') || 0);
+  const [currentStep, setCurrentStep] = useState(0); 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,9 +56,9 @@ export default function TouristHome() {
       description: "Explore activities you can do there.",
       target: () => refActivities.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 3); 
+        localStorage.setItem('currentStep', 3);
         navigate("/upcoming-activities", { state: { fromTour: true } });
-      }
+      },
     },
     {
       title: "Book an itinerary.",
@@ -81,11 +81,11 @@ export default function TouristHome() {
   ];
 
   useEffect(() => {
-    if (location.pathname === '/upcoming-activities') {
-      setCurrentStep(4); 
-      localStorage.setItem('currentStep', 4);  // Persist step
+    const storedStep = localStorage.getItem('currentStep');
+    if (storedStep) {
+      setCurrentStep(parseInt(storedStep, 10));
     }
-  }, [location.pathname]);
+  }, []);
 
   return (
     <>
@@ -102,14 +102,11 @@ export default function TouristHome() {
           refProducts={refProducts}
         />
         <Tour 
-          open={open} 
-          onClose={() => setOpen(false)} 
-          steps={steps} 
-          currentStep={currentStep}
-          onStepChange={step => {
-            setCurrentStep(step); 
-            localStorage.setItem('currentStep', step); 
-          }}
+          open={open}
+          onClose={() => setOpen(false)}
+          steps={steps}
+          current={currentStep}
+          onChange={setCurrentStep}
         />
         <Divider />
         <Hero5 />

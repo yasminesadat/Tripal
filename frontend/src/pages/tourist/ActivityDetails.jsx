@@ -35,13 +35,11 @@ const ActivityDetailsPage = () => {
     {
       title: "Book Activity.",
       description: "Another step towards a great time.",
-      target: () => refActivityBook.current, 
-      // onNext: () => {}
-    },
-    {
-      title: "Nothing",
-      description: "Helps you in making a final decision.",
-      target: () => refActivityBook.current, 
+      target: () => refActivityBook.current,
+      onFinish: () => {
+        localStorage.setItem('currentStep', 4); 
+        navigate("/tourist", { state: { fromActivityDetails: true, targetStep: 4 } });
+      },
     },
   ]
 
@@ -80,16 +78,24 @@ const ActivityDetailsPage = () => {
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refActivityBook.current) {
+      refActivityBook.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
   
     const timer = setTimeout(() => {
       if (isFromTour) {
         setOpen(true); 
       }
-    }, 300); //might need to change it
+    }, 1000); //might need to change it
   
     return () => clearTimeout(timer); 
   }, [location]);
-  
+
   if (loading) return <div>Loading...</div>;
   if (error)
     return (
