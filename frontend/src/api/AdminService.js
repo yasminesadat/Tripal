@@ -98,9 +98,9 @@ export const getAdminActivities = async () => {
   }
 };
 
-export const flagActivity = async (activityId) => {
+export const flagActivity = async (activityId,userData) => {
   try {
-    const response = await axios.patch(`/admin/flag-activity/${activityId}`);
+    const response = await axios.patch(`/admin/flag-activity/${activityId}`,userData);
     return response.data;
   } catch (error) {
     console.error(`Error flagging activity with id ${activityId}`, error);

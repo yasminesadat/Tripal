@@ -306,7 +306,7 @@ const sendAnEmailForItineraryFlag = async (userData,itineraryTitle) => {
     const subject = `Itinerary Flag Notification`;
     const html = `
       <p>Dear ${userName},</p>
-      <p>We wanted to inform you that your itinerary: ${itineraryTitle}  has been flagged for review. Please review the flagged content and address any issues as soon as possible.</p>
+      <p>We wanted to inform you that your itinerary: <strong>${itineraryTitle}</strong> has been flagged for review. Please review the flagged content and address any issues as soon as possible.</p>
       <p>If you have any questions or believe this flagging was a mistake, please <a href="mailto:support@tripal.com">contact support</a>.</p>
       <p>Thank you for your understanding.</p>
       <p>Best regards,</p>

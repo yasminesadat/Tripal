@@ -84,7 +84,6 @@ export default function ItineraryMainInformation({
     setLoading(true);
     try {
       const userData = await getEventOwnerData(itinerary.tourGuide);
-      console.log("userData",userData);
       await flagItinerary(itineraryId,userData);
       setItinerary((previousItinerary) =>( { 
         ...previousItinerary, 

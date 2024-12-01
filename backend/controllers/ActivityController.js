@@ -185,9 +185,6 @@ const getActivityById = async (req, res) => {
     const activity = await Activity.findById(id).populate("category").populate("tags");
     if (!activity)
       return res.status(404).json({ error: "Activity not found." });
-
-    // if (activity.flagged)
-    //   res.status(404).json({ error: "Activity flagged." });
     else
       res.status(200).json(activity);
   } catch (error) {
@@ -236,12 +233,36 @@ const getAllActivities = async (req, res) => {
 const adminFlagActivity = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.activityId);
+    const userData  = req.body;
+    sendAnEmailForActivityFlag(userData, activity.title);
     if (!activity) return res.status(404).json({ error: "Activity not found" });
     activity.flagged = !activity.flagged;
     await activity.save();
     res.status(200).json({ message: "Activity flagged successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+const sendAnEmailForActivityFlag = async (userData, activityTitle) => {
+  const mail = userData.email;
+  const userName = userData.userName;
+
+  const subject = `Activity Flag Notification`;
+  const html = `
+    <p>Dear ${userName},</p>
+    <p>We wanted to inform you that your activity: <strong>${activityTitle}</strong> has been flagged for review. Please review the flagged content and address any issues as soon as possible.</p>
+    <p>If you have any questions or believe this flagging was a mistake, please <a href="mailto:support@tripal.com">contact support</a>.</p>
+    <p>Thank you for your understanding.</p>
+    <p>Best regards,</p>
+    <p>Your Support Team</p>
+  `;
+
+  try {
+    await sendEmail(mail, subject, html);
+    console.log('Activity flag notification email sent successfully');
+  } catch (error) {
+    console.error('Failed to send activity flag notification email:', error);
   }
 };
 
