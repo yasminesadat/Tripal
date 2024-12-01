@@ -1,5 +1,5 @@
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header1 from "@/components/layout/header/TouristHeader";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import TourGuideHeader from "@/components/layout/header/TourGuideHeader";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
@@ -82,7 +82,7 @@ export default function Itineraries() {
         )}
          {userRole === "Tourist" && (
           <>
-            <Header1 />
+            <TouristHeader/>
             <PageHeader onSearch={handleSearch} title="Explore all upcoming itineraries" userRole={userRole}/>
             <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />

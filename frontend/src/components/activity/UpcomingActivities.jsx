@@ -7,6 +7,7 @@ import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import {viewUpcomingActivities,} from "@/api/ActivityService";
 import { getAdminActivities} from "@/api/AdminService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 
 export default function ActivitiesList({
@@ -31,7 +32,7 @@ export default function ActivitiesList({
   const [ratingFilter, setRatingFilter] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 2000000]);
-
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -50,6 +51,26 @@ export default function ActivitiesList({
     { label: "Rating: Low to High", field: "ratings", order: "asc" },
     { label: "Rating: High to Low", field: "ratings", order: "desc" },
   ];
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   const errorDisplayed = useRef(false);
   //#endregion
@@ -115,8 +136,8 @@ export default function ActivitiesList({
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase();
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
+      const activityPrice = activity.price * exchangeRate;
+      //const activityPrice = activity.price;
 
       const isDateValid =
         !startDate ||
@@ -425,7 +446,7 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {elm.price}
+                          {currency} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
