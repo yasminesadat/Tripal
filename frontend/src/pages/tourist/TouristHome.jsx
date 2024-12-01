@@ -37,7 +37,10 @@ export default function TouristHome() {
     {
       title: "Welcome to TriPal!",
       description: "This is your guide to hassle-free travel planning, from start to finish.",
-      target: () => refHeader.current,
+      target: () => {
+        refHeader.current;
+        localStorage.setItem('currentStep', 0);
+      },
     },
     {
       title: "Book your flight.",
@@ -64,13 +67,17 @@ export default function TouristHome() {
       title: "Book an itinerary.",
       description: "Check out pre-designed programs.",
       target: () => refItineraries.current,
-      // onNext: () => navigate("/upcoming-itineraries"),
+      onNext: () => {
+        localStorage.setItem('currentStep', 4);
+        navigate("/upcoming-itineraries", { state: { fromTour: true } });
+      },
     },
     {
       title: "View historical places.",
       description: "Get to know where to go.",
       target: () => refHisPlaces.current,
-      // onNext: () => navigate("/upcoming-itineraries"),
+      onNext: () => {
+      }
     },
     {
       title: "Buy a product.",
@@ -84,8 +91,36 @@ export default function TouristHome() {
     const storedStep = localStorage.getItem('currentStep');
     if (storedStep) {
       setCurrentStep(parseInt(storedStep, 10));
+    } else {
+      setCurrentStep(0);
     }
   }, []);
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+    const targetStep = location.state?.targetStep;
+  
+    if (isFromTour && targetStep !== undefined) {
+      setCurrentStep(targetStep);  
+      localStorage.setItem('currentStep', targetStep); 
+  
+      const timer = setTimeout(() => {
+        setOpen(true);  
+      }, 1000);  
+  
+      return () => clearTimeout(timer);
+    } else {
+      const storedStep = localStorage.getItem('currentStep');
+      if (storedStep) {
+        setCurrentStep(parseInt(storedStep, 10));
+      }
+    }
+  }, [location]);
+  
+  const handleStepChange = (newStep) => {
+    setCurrentStep(newStep);
+    localStorage.setItem('currentStep', newStep);
+  };
 
   return (
     <>
@@ -106,7 +141,7 @@ export default function TouristHome() {
           onClose={() => setOpen(false)}
           steps={steps}
           current={currentStep}
-          onChange={setCurrentStep}
+          onChange={handleStepChange}
         />
         <Divider />
         <Hero5 />

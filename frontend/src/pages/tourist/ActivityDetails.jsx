@@ -37,8 +37,9 @@ const ActivityDetailsPage = () => {
       description: "Another step towards a great time.",
       target: () => refActivityBook.current,
       onFinish: () => {
+        setOpen(false); 
         localStorage.setItem('currentStep', 4); 
-        navigate("/tourist", { state: { fromActivityDetails: true, targetStep: 4 } });
+        navigate("/tourist", { state: { fromTour: true, targetStep: 4 } });
       },
     },
   ]
@@ -91,7 +92,7 @@ const ActivityDetailsPage = () => {
       if (isFromTour) {
         setOpen(true); 
       }
-    }, 1000); //might need to change it
+    }, 1000); 
   
     return () => clearTimeout(timer); 
   }, [location]);
