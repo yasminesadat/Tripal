@@ -10,7 +10,7 @@ const productModel = require("../models/Product.js");
 const PromoCode = require("../models/PromoCode.js")
 const cron = require('node-cron');
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('00 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
