@@ -12,20 +12,25 @@ const transporter = nodemailer.createTransport({
   debug: true,
 });
 
+const sendEmail = async (to, subject, html) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    html,
+  };
 
-const mailOptions = {
-  from: process.env.EMAIL_USER, 
-  to: 'daiana.rehan.dr@gmail.com',
-  subject: 'Test Email from Node.js',
-  text: 'Hello, this is a test email from Node.js!',
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Email Error:', error);
+        reject(error);
+      } else {
+        console.log('Email sent:', info.response);
+        resolve(info);
+      }
+    });
+  });
 };
 
-transporter.sendMail(mailOptions, (error, info) => {
-  if (error) {
-      console.log('Error:', error);
-  } else {
-      console.log('Email sent:', info.response);
-  }
-});
-
-module.exports = transporter;
+module.exports = { sendEmail };
