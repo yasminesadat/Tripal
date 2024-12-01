@@ -257,21 +257,21 @@ cron.schedule('51 15 * * *', async () => {
     }
   });
 
-cron.schedule('51 15 * * *', async () => {
-  const today = moment().utc();  // Current date and time in UTC
-  const fiveDaysLater = today.add(5, 'days').startOf('day').utc(); // Start of the day in UTC
-  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
-
-  // Log the dates to verify their values
-  console.log('Today:', today.toString());
-  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
-  console.log('End of day (UTC):', endOfDay.toString());
+cron.schedule('48 16 * * *', async () => {
+    const today = moment().utc();  // Current date and time in UTC
+    const fiveDaysLater = today.add(4, 'days').startOf('day').utc(); // Start of the day in UTC
+    const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+  
+    // Log the dates to verify their values
+    console.log('Today:', today.toString());
+    console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+    console.log('End of day (UTC):', endOfDay.toString());
 
   try {
     // Find itineraries that start in exactly 5 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
-    const itineraries = await Itinerary.find({
-      startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-      isActive: true,  // Only consider active itineraries
+    const itineraries = await itineraryModel.find({
+        startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isActive: true,  // Only consider active itineraries
     });
 
     console.log('Found itineraries:', itineraries); // For debugging, see what itineraries are found
