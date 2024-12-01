@@ -1,25 +1,12 @@
-import { tourDataThree } from "@/data/tours";
 import {
   fetchProducts,
-  archiveProduct,
-  unArchiveProduct,
 } from "../../api/ProductService";
 import { getUserData } from "../../api/UserService";
-import React, { useState, useRef, useEffect } from "react";
-import Stars from "../common/Stars";
+import { useState, useRef, useEffect } from "react";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import ProductCard from "./ProductCard";
-import {
-  durations,
-  features,
-  languages,
-  rating,
-  speedFeatures,
-} from "@/data/tourFilteringOptions";
-import RangeSlider from "../common/RangeSlider";
-import { Link } from "react-router-dom";
-import { Card, Rate, message, Input, Select, Slider } from "antd";
+import { message, Input, Select, Slider } from "antd";
 import MetaComponent from "../common/MetaComponent";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
@@ -63,7 +50,6 @@ export default function ProductList() {
         userRole
       );
       let filtered = productsData.products;
-      console.log(filtered);
       if (productsData.totalPages) setTotalPages(productsData.totalPages);
 
       setProducts(filtered);
@@ -140,16 +126,11 @@ export default function ProductList() {
     getProducts(1);
   };
 
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice;
-  };
-
   const formatPriceRange = () => {
     if (priceRange[1] === 3000) {
-      return `${priceRange[0]} - ${priceRange[1]} & above`;
+      return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate} & above`;
     }
-    return `${priceRange[0]} - ${priceRange[1]}`;
+    return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate}`;
   };
 
   const onPageChange = (page) => {
