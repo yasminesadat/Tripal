@@ -2,6 +2,9 @@ const Activity = require("../models/Activity");
 const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
+const {sendEmail} = require('./Mailer');
+const Tourist = require('../models/users/Tourist');
+
 
 const createActivity = async (req, res) => {
   const {
@@ -64,6 +67,39 @@ const getAdvertiserActivities = async (req, res) => {
   }
 };
 
+const notifyTouristsOnBookingOpen = async (activityId) => {
+  try {
+    // Find the activity by ID
+    const activity = await Activity.findById(activityId).populate('bookings.touristId');
+    if (!activity) {
+      console.log('Activity not found');
+      return;
+    }
+    console.log("will try to send emails now")
+    // Loop through the bookings and send an email to each tourist
+    for (let id of activity.bookmarked) {
+      const tourist = await Tourist.findById(id);
+      console.log(tourist)
+      console.log(tourist.email)
+      if (tourist && tourist.email) {
+        const subject = `Your upcoming activity is now open for booking: ${activity.title}`;
+        const html = `
+          <p>Dear ${tourist.userName},</p>
+          <p>The activity "${activity.title}" you bookmarked is now open for booking!</p>
+          <p>Location: ${activity.location}</p>
+          <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+          <p>Best regards,</p>
+          <p>Tripal Team</p>
+        `;
+        await sendEmail(tourist.email, subject, html); // Send email via utility function
+        console.log(`Email sent to ${tourist.email}`);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending email notifications:", error);
+  }
+};
+
 const updateActivity = async (req, res) => {
   const { id } = req.params;
   const { tags, category, ...updateParameters } = req.body;
@@ -95,6 +131,9 @@ const updateActivity = async (req, res) => {
     }
 
     const updatedActivity = await Activity.findByIdAndUpdate(id, updateParameters, { new: true });
+    if (updatedActivity.isBookingOpen && updatedActivity.isBookingOpen !== activity.isBookingOpen) { //only sends when update is actually made le isBookingOpen
+      await notifyTouristsOnBookingOpen(updatedActivity._id);
+    }
     res.status(200).json(updatedActivity);
   } catch (error) {
     res.status(400).json({ error: error.message });
