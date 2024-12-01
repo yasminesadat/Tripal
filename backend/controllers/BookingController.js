@@ -306,10 +306,4 @@ cron.schedule('41 17 * * *', async () => {
     console.error('Error checking itineraries for 5 days later:', error);
   }
 });
-cron.schedule('* * * * *', async () => {
-  console.log('running a task every minute booking');
-});
-cron.schedule('* * * * *', async () => {
-  console.log('running a task every minute booking 2');
-});
 module.exports = { cancelResource, bookResource };
