@@ -21,6 +21,8 @@ import RangeSlider from "../common/RangeSlider";
 import { Link } from "react-router-dom";
 import { Card, Rate, message, Input, Select, Slider } from "antd";
 import MetaComponent from "../common/MetaComponent";
+import { getConversionRate } from "../../api/ExchangeRatesService";
+
 const { Search } = Input;
 const { Option } = Select;
 
@@ -28,7 +30,7 @@ const metadata = {
   title: "Products || Tripal",
 };
 
-export default function ProductList() {
+const ProductList = ({ curr = "EGP" }) => {
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
@@ -100,20 +102,20 @@ export default function ProductList() {
     }
   }, [userRole, sortOrder]);
 
-  // useEffect(() => {
-  //   const getExchangeRate = async () => {
-  //     if (curr) {
-  //       try {
-  //         const rate = await getConversionRate(curr);
-  //         setExchangeRate(rate);
-  //       } catch (error) {
-  //         message.error("Failed to fetch exchange rate.");
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    const getExchangeRate = async () => {
+      if (curr) {
+        try {
+          const rate = await getConversionRate(curr);
+          setExchangeRate(rate);
+        } catch (error) {
+          message.error("Failed to fetch exchange rate.");
+        }
+      }
+    };
 
-  //   getExchangeRate();
-  // }, [curr]);
+    getExchangeRate();
+  }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -418,7 +420,7 @@ export default function ProductList() {
                     productSeller={product.seller._id}
                     name={product.name}
                     description={product.description}
-                    price={product.price}
+                    price={`${curr} ${formatPrice(product.price)}`}
                     picture={product.picture}
                     seller={product.seller.name}
                     quantity={product.quantity}
@@ -449,3 +451,5 @@ export default function ProductList() {
     </>
   );
 }
+
+export default ProductList;

@@ -37,7 +37,8 @@ const ProductCard = ({
         picture,
         averageRating,
         sales,
-        userRole
+        userRole,
+        userId
       },
     });
   };
@@ -176,7 +177,7 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
-              <span className="text-16 fw-500">${price}</span>
+              <span className="text-16 fw-500">{price}</span>
             </div>
           </div>
         </div>

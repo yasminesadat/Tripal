@@ -12,10 +12,12 @@ import {
   Typography,
   Avatar,
   Spin,
+  message
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
+import { addToCart } from "../../api/TouristService";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -33,9 +35,11 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     averageRating,
     sales,
     userRole,
+    userId
   } = location.state || {}; // Use 'id' from location.state
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedQuantity, setSelectedQuantity] = useState(1); // New state for selected quantity
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -52,6 +56,20 @@ const ProductDetails = ({ homeURL, productsURL }) => {
 
     fetchRatings();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!selectedQuantity || selectedQuantity < 1) {
+      message.error("Please select a valid quantity.");
+      return;
+    }
+    try {
+      const response = await addToCart(userId, id, selectedQuantity);
+      message.success("Product added to cart successfully!");
+      
+    } catch (error) {
+      message.error("Error adding product to cart.");
+    }
+  };
 
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -152,13 +170,14 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                         `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
                       parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      onChange={(value) => console.log("changed", value)}
+                      onChange={(value) => setSelectedQuantity(value)} 
                       style={{ textAlign: "center", width: "100px" }}
                     />
                     <Button
                       className="button purple-button"
                       type="primary"
                       style={{ marginLeft: "10px" }}
+                      onClick={handleAddToCart} // Call handleAddToCart on button click
                     >
                       Add to Cart
                     </Button>

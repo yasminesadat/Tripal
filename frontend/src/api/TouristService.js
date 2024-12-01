@@ -181,3 +181,17 @@ export async function getWishList() {
     throw error;
   }
 }
+
+export async function addToCart(touristId, productId, quantity){
+  try{
+    const response = await axios.post('/tourist/cart', {
+      touristId,
+      productId,
+      quantity,
+    });    
+    return response.data;
+  }catch(error){
+    console.error("Error adding product to cart:", error);
+    throw error;
+  }
+}
