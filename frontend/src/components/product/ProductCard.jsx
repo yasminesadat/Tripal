@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
@@ -176,7 +176,7 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
-              <span className="text-16 fw-500">${price}</span>
+              <span className="text-16 fw-500">{price}</span>
             </div>
           </div>
         </div>

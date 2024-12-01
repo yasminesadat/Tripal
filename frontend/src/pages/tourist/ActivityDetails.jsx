@@ -26,6 +26,7 @@ const ActivityDetailsPage = () => {
   const [userRole, setUserRole] = useState(null);
   const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState("EGP");  // For currency state
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -58,7 +59,7 @@ const ActivityDetailsPage = () => {
       }
     };
     fetchActivities();
-  }, []);
+  }, [activityId]);
 
   if (loading) return <div>Loading...</div>;
   if (error)
@@ -80,16 +81,17 @@ const ActivityDetailsPage = () => {
               activityId={activityId}
               activityTitle={activity.title}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+            />
             <FooterThree />
           </>
         )}
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
@@ -98,7 +100,10 @@ const ActivityDetailsPage = () => {
                 activityId={activityId}
                 activityTitle={activity.title}
               />
-              <ActivityDetails activity={activity} />
+              <ActivityDetails
+                activity={activity}
+                selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+              />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -114,7 +119,10 @@ const ActivityDetailsPage = () => {
               activityTitle={activity.title}
               tourist={"ana t3ebt"}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency} 
+            />
             <FooterThree />
           </>
         )}
