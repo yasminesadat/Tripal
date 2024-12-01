@@ -241,7 +241,7 @@ cron.schedule('39 17 * * *', async () => {
                 <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
                 <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
                 <p>Best regards,</p>
-                <p>Tripal</p>
+                <p>Tripal Team</p>
               `;
               
               await sendEmail(tourist.email, subject, html);
@@ -291,7 +291,7 @@ cron.schedule('41 17 * * *', async () => {
               <p>Start Date: ${moment(itinerary.startDate).format('MMMM Do YYYY')}</p>
               <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
               <p>Best regards,</p>
-              <p>Your Tripal Team</p>
+              <p>Tripal Team</p>
             `;
             
             await sendEmail(tourist.email, subject, html);
