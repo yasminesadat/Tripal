@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,8 @@ const ProductCard = ({
   isArchived,
   sales,
   userRole,
-  userId
+  userId, 
+  refProductDetails
 }) => {
   const navigate = useNavigate();
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
@@ -126,12 +127,14 @@ const ProductCard = ({
           ) : [] }
         </div>
         <div className="tourCard__content px-10 pt-10">
-          <h3
-            className="tourCardName text-16 fw-500 mt-5"
-          >            
+          <h3 className="tourCardName text-16 fw-500 mt-5">            
             <span 
-            onClick={handleCardClick}
-            style={{ cursor: 'pointer' }}>{name}</span>
+              onClick={handleCardClick}
+              style={{ cursor: 'pointer' }}
+              ref={refProductDetails}
+            >
+              {name}
+            </span>
           </h3>
 
           <div className="tourCard__location text-13 text-light-2" style={{ cursor: 'default' }}>
