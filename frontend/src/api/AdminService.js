@@ -107,3 +107,23 @@ export const flagActivity = async (activityId) => {
     throw error;
   }
 };
+
+export const createPromoCode = async (body) => {
+  try {
+    const response = await axios.post(`/admin/promocode`, body);
+    return response.data;
+  } catch (error) {
+    console.error(`Error creating promo code`, error);
+    throw error;
+  }
+};
+
+export const getPromoCodes = async () => {
+  try {
+    const response = await axios.get(`/admin/promocode`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting promo cods`, error);
+    throw error;
+  }
+};

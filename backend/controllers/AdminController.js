@@ -128,5 +128,17 @@ const createPromoCode = async (req, res) => {
   }
 };
 
+const getPromoCodes = async (req, res) => {
+  try {
+    const promoCodes = await PromoCode.find()
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode };
+
+
+
+    res.status(201).json(promoCodes);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode, getPromoCodes };
