@@ -9,6 +9,7 @@ import  { useState, useEffect } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import UpdateItineraryModal from "../UpdateItineraryForm";
+import {bookmarkEvent} from "@/api/TouristService";
 
 //#region 1. methods
 const handleShare = (link) => {
@@ -23,6 +24,14 @@ const handleShare = (link) => {
       });
   } else {
     window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+  }
+};
+const handleBookmark = async (eventId, eventType) => {
+  try {
+    const data = await bookmarkEvent(eventId, eventType);
+    message.success("Added to Bookmarked Events")
+  } catch (error) {
+    console.error('Error bookmarking event:', error);
   }
 };
 
@@ -215,10 +224,17 @@ export default function ItineraryMainInformation({
                 <i className="icon-share flex-center text-16 mr-10"></i>
                 Share
               </a>
-              <a href="#" className="d-flex items-center" style={{ color: "grey" }}>
-                <i className="icon-heart flex-center text-16 mr-10"></i>
-                Wishlist
-              </a>
+              <div
+                className="d-flex items-center"
+                style={{ color: "grey" }}
+              >
+                 <i
+                    className="icon-heart flex-center text-16 mr-10"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleBookmark(itinerary._id, "itinerary")}
+                  ></i>
+                  Add to Wishlist
+              </div>
             </div>
           </div>
         )}
