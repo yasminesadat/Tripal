@@ -31,6 +31,7 @@ export default function TouristHome() {
   const refItineraries = useRef(null);
   const refHisPlaces = useRef(null);
   const refProducts = useRef(null);
+  const refFinish = useRef(null);
 
   const steps = [
     {
@@ -90,13 +91,13 @@ export default function TouristHome() {
       }
     },
     {
-      title: "Buy a product.",
-      description: "Get yourself & your loved ones a souvenir.",
-      // target: () => ref.current,
-      // onNext: () => {
-      //   localStorage.setItem('currentStep', 5);
-      //   // navigate("/prod", { state: { fromTour: true } });
-      // }
+      title: "That's it!",
+      description: "Now you can start your journey to an unforgettable experience",
+      target: () => refFinish.current,
+      onFinish: () => {
+        localStorage.setItem('currentStep', 0);
+        setOpen(false)
+      }
     },
   ];
 
