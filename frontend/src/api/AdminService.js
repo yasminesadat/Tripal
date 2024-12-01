@@ -68,9 +68,9 @@ export const createGovernor = async (name, password) => {
   }
 }
 
-export const flagItinerary = async (itineraryId) => {
+export const flagItinerary = async (itineraryId,userData) => {
   try {
-    const response = await axios.put(`/admin/flag-itinerary/${itineraryId}`);
+    const response = await axios.put(`/admin/flag-itinerary/${itineraryId}`,userData);
     return response.data;
   } catch (error) {
     console.error(`Error flagging itinerary with id ${itineraryId}`, error);
@@ -104,6 +104,16 @@ export const flagActivity = async (activityId) => {
     return response.data;
   } catch (error) {
     console.error(`Error flagging activity with id ${activityId}`, error);
+    throw error;
+  }
+};
+
+export const getEventOwnerData = async (userId) => {
+  try {
+    const response = await axios.get(`/admin/getDataForEventOwner/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting data for event owner with id ${userId}`, error);
     throw error;
   }
 };

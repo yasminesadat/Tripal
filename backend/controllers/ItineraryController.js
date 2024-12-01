@@ -1,7 +1,7 @@
 const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const preferenceTagModel = require('../models/PreferenceTag');
-const Admin = require('../models/users/Admin');
+const {sendEmail} = require('./Mailer');
 
 const createItinerary = async (req, res) => {
     try {
@@ -238,6 +238,8 @@ const getTouristItineraries = async (req, res) => {
 const adminFlagItinerary = async (req, res) => {
     try{
         const itinerary= await itineraryModel.findById(req.params.itineraryId);
+        const userData  = req.body;
+        sendAnEmailForItineraryFlag(userData,itinerary.title);
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});
         itinerary.flagged = !itinerary.flagged;
@@ -297,6 +299,26 @@ const getItineraryById = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+
+const sendAnEmailForItineraryFlag = async (userData,itineraryTitle) => {
+    const mail = userData.email;
+    const userName = userData.userName;
+    const subject = `Itinerary Flag Notification`;
+    const html = `
+      <p>Dear ${userName},</p>
+      <p>We wanted to inform you that your itinerary: ${itineraryTitle}  has been flagged for review. Please review the flagged content and address any issues as soon as possible.</p>
+      <p>If you have any questions or believe this flagging was a mistake, please <a href="mailto:support@tripal.com">contact support</a>.</p>
+      <p>Thank you for your understanding.</p>
+      <p>Best regards,</p>
+      <p>Your Support Team</p>
+    `;
+    try {
+      await sendEmail(mail, subject, html);
+      console.log('Flag notification email sent successfully');
+    } catch (error) {
+      console.error('Failed to send flag notification email:', error);
+    }
+};  
 
 module.exports = {
     createItinerary,
