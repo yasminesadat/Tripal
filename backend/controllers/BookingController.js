@@ -290,7 +290,7 @@ cron.schedule('51 15 * * *', async () => {
             const html = `
               <p>Dear ${tourist.userName},</p>
               <p>This is a reminder that your booked itinerary, <strong>${itinerary.title}</strong>, is coming up in 5 days!</p>
-              <p>Location: ${itinerary.location}</p>
+              <p>Location: ${itinerary.pickupLocation}</p>
               <p>Start Date: ${moment(itinerary.startDate).format('MMMM Do YYYY')}</p>
               <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
               <p>Best regards,</p>
