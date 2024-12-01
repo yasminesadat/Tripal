@@ -1,55 +1,104 @@
 import Stars from "../../common/Stars";
 import { message } from "antd";
-import { Flag } from 'lucide-react';
-import { flagActivity } from "@/api/AdminService";
+import { Flag,FlagOff  } from 'lucide-react';
+import { flagActivity,getEventOwnerData } from "@/api/AdminService";
+import {bookmarkEvent} from "@/api/TouristService";
+import { useState,useEffect } from "react";
+import Spinner from "@/components/common/Spinner";
+import { getActivityById } from "@/api/ActivityService";
 
+//const [isBookmarked, setIsBookmarked] = useState(false);
+
+//#region 1. functions
 const handleShare = (link) => {
   if (navigator.share) {
     navigator
       .share({
-        title: "Check out this itinerary!",
+        title: "Check out this activity!",
         url: link,
       })
       .catch((error) => {
         message.error("Failed to share");
       });
   } else {
-    window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+    window.location.href = `mailto:?subject=Check out this activity !&body=Check out this link: ${link}`;
   }
 };
 
-const handleFlag = async (activityId) => {
+const handleBookmark = async (eventId, eventType) => {
   try {
-    await flagActivity(activityId);
-    message.success("Activity has been flagged successfully");
-    
+    await bookmarkEvent(eventId, eventType);
+    //setIsBookmarked(true);
+    message.success("Added to Bookmarked Events")
   } catch (error) {
-    message.error("Failed to flag activity");
+    console.error('Error bookmarking event:', error);
   }
 };
 
 const formatDate = (date) => {
   const d = new Date(date);
-  const day = d.getDate().toString().padStart(2, '0');  
-  const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
   const year = d.getFullYear();
-
   return `${day}/${month}/${year}`;
 };
+//#endregion
 
-export default function ActivityMainInformation({ activity, role }) {
+export default function ActivityMainInformation({ activity: initialActivity, userRole }) {
+  
+  const [loading, setLoading] = useState(false);
+  const [activity, setActivity] = useState(initialActivity);
+  
+  //#region 2. useEffect/methods
+  const handleFlag = async (activityId, currentFlagStatus) => {
+    const updatedFlagStatus = !currentFlagStatus;
+    setLoading(true);
+    try {
+      const userData = await getEventOwnerData(activity.advertiser);
+      await flagActivity(activityId,userData);
+      setActivity((prevActivity) =>( { 
+        ...prevActivity, 
+        flagged: updatedFlagStatus 
+      }));
+      message.success(`Activity ${updatedFlagStatus ? "is flagged as inappropriate " : "has been unflagged"} successfully.`);
+    } catch (error) {
+      message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update activity flag status.");
+    } finally {
+      //having the effect of reloading page
+      fetchActivities(activityId);
+      setLoading(false);     
+    }
+  };
+  
+  const fetchActivities = async (activityId) => {
+    try {
+      if(userRole !== "Admin") return;
+      const response = await getActivityById(activityId);
+      setActivity(response.data);
+    } catch (error) {
+      message.error("Failed to fetch activities.");
+    }
+  };
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+  //#endregion
+  
+  if (loading || !activity) return <div><Spinner/></div>; 
+ 
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
             <div className="col-auto">
-              <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
+              <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
             </div>
             <div className="col-auto">
-              <button className="button -accent-1 text-14 py-5 px-15 bg-accent-1-05 text-accent-1 rounded-200">
+              <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Free cancellation
               </button>
             </div>
@@ -82,14 +131,15 @@ export default function ActivityMainInformation({ activity, role }) {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <i className="icon-calendar mr-10"></i> 
+                <i className="icon-calendar mr-10"></i>
                 {formatDate(activity?.date)}
               </div>
             </div>
           </div>
         </div>
 
-        {role ==='Tourist' ? (<div className="col-auto">
+
+        {userRole ==='Tourist' ? (<div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
             <a
               className="d-flex items-center"
@@ -104,23 +154,33 @@ export default function ActivityMainInformation({ activity, role }) {
               Share
             </a>
 
-            <a
-              href="#"
+            <div
               className="d-flex items-center"
               style={{ color: "grey" }}
             >
-              <i className="icon-heart flex-center text-16 mr-10"></i>
-              Wishlist
-            </a>
+              <i
+                className="icon-heart flex-center text-16 mr-10"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleBookmark(activity._id, "activity")}
+              ></i>
+              Add to Wishlist
+            </div>
           </div>
-        </div>):role === 'Admin' ? (
+
+        </div>)
+        :userRole === 'Admin' ? (
       <div className="col-auto">
-        <button className="flag-button" onClick={() => handleFlag(activity._id)}>
-          <Flag size={16} />
-          Flag
-        </button>
-      </div>
-    ) : null}
+        <button className="flag-button" onClick={() => handleFlag(activity._id, activity.flagged)}>
+               {!activity.flagged? 
+               <Flag  size={16} className="mr-10" />:
+                <FlagOff size={16} className="mr-10" />}
+                {activity.flagged ? 
+                "Unflag" :
+                 "Flag as Inappropriate"}
+              </button>
+        </div>
+      ) : null}
+                
 
       </div>
       <style>
@@ -151,7 +211,18 @@ export default function ActivityMainInformation({ activity, role }) {
             outline: none;
             box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.5);
           }
-        `}
+          .button-custom {
+            background-color: var(--color-stone-light);
+            color: white; 
+            border: 1px solid var(--color-stone-light);
+            transition: background-color 0.3s, color 0.3s;
+          }
+
+          .button-custom:hover {
+            background-color: var(--color-stone);
+            border: 1px solid var(--color-stone);
+            color: white;`
+        }
       </style>
     </>
   );

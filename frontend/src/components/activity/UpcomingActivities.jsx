@@ -3,23 +3,18 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "./Pagination";
-import { Tag, message } from "antd";
-
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
-import {
-  viewUpcomingActivities,
-  getAllActivities,
-} from "@/api/ActivityService";
+import {viewUpcomingActivities,} from "@/api/ActivityService";
 import { getAdminActivities} from "@/api/AdminService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+
 
 export default function ActivitiesList({
   searchTerm,
-  book,
-  onCancel,
-  cancel,
-  curr = "EGP",
   page,
 }) {
+
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
@@ -36,23 +31,50 @@ export default function ActivitiesList({
   const [ratingFilter, setRatingFilter] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 2000000]);
-
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const activitiesPerPage = 2;
-
+  const navigate = useNavigate();
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = filteredActivities.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
     { label: "Rating: Low to High", field: "ratings", order: "asc" },
     { label: "Rating: High to Low", field: "ratings", order: "desc" },
   ];
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   const errorDisplayed = useRef(false);
   //#endregion
 
+  //#region useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -86,11 +108,7 @@ export default function ActivitiesList({
           response = await viewUpcomingActivities();
         } else if (userRole === "Admin") {
           response = await getAdminActivities();
-          console.log(userRole)
         }
-        // else {
-        //   response = await getAllActivities();
-        // }
         const activitiesData = Array.isArray(response?.data)
           ? response?.data
           : [];
@@ -117,8 +135,7 @@ export default function ActivitiesList({
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase();
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
+      const activityPrice = activity.price * exchangeRate;
 
       const isDateValid =
         !startDate ||
@@ -175,8 +192,6 @@ export default function ActivitiesList({
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
@@ -204,6 +219,10 @@ export default function ActivitiesList({
     };
   }, []);
 
+  
+  //#endregion
+
+  //#region Functions
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -215,14 +234,6 @@ export default function ActivitiesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastActivity = currentPage * activitiesPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
-  const currentActivities = filteredActivities.slice(
-    indexOfFirstActivity,
-    indexOfLastActivity
-  );
-
-  const navigate = useNavigate();
   const handleRedirect = (activityId) => {
     if (userRole === "Tourist"|| userRole === "Admin")
       navigate(`/activity/${activityId}`, { state: { page } });
@@ -237,6 +248,7 @@ export default function ActivitiesList({
   
     return `${day}/${month}/${year}`;
   };
+  //#endregion
 
   return (
     <section className="layout-pb-xl">
@@ -430,7 +442,7 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {elm.price}
+                          {currency} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>

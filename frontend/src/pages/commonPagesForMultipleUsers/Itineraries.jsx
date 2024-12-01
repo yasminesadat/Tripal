@@ -1,5 +1,5 @@
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header1 from "@/components/layout/header/TouristHeader";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import TourGuideHeader from "@/components/layout/header/TourGuideHeader";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
@@ -16,9 +16,8 @@ const metadata = {
   description: "Itineraries || Tripal",
 };
 
-export default function Activities() {
+export default function Itineraries() {
   const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState(""); 
   const errorDisplayed = useRef(false);
@@ -83,7 +82,7 @@ export default function Activities() {
         )}
          {userRole === "Tourist" && (
           <>
-            <Header1 />
+            <TouristHeader/>
             <PageHeader onSearch={handleSearch} title="Explore all upcoming itineraries" userRole={userRole}/>
             <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
@@ -92,7 +91,7 @@ export default function Activities() {
         {userRole === "Tour Guide" && (
           <>
             <TourGuideHeader />
-            <PageHeader onSearch={handleSearch} title="View all itineraries" userRole={userRole}/>
+            <PageHeader onSearch={handleSearch} title="Manage My Itineraries" userRole={userRole}/>
             <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
             <FooterThree />
           </>

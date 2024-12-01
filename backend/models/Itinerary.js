@@ -42,7 +42,9 @@ const itinerarySchema = new mongoose.Schema({
     ],
     flagged: {type: Boolean, default: false},
     isActive: {type: Boolean, default: true},
+    bookmarked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }],
     }, 
+    
     {timestamps: true}
 );
 
@@ -50,7 +52,7 @@ itinerarySchema.pre('findOneAndDelete', async function (next) {
     try {
         const itinerary = await this.model.findOne(this.getQuery());
         
-        if (!itinerary) //case mesh ht7sal ya bro
+        if (!itinerary) 
             return next();
         
         if (itinerary.bookings.length > 0) 

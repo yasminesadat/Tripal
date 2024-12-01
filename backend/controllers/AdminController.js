@@ -1,9 +1,5 @@
 const bcrypt = require("bcrypt");
 const Admin = require("../models/users/Admin.js");
-const TourGuide = require("../models/users/TourGuide.js");
-const Seller = require("../models/users/Seller.js");
-const Advertiser = require("../models/users/Advertiser.js");
-const Tourist = require("../models/users/Tourist.js");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
 const User = require("../models/users/User.js");
 const Request = require('../models/Request.js')
@@ -55,7 +51,6 @@ const addAdmin = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
-
 
 const deleteUser = async (req, res) => {
   const { role, userId } = req.params;  // role Tourist , etc userId is the id from the tourist table 
@@ -197,6 +192,7 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 const createPromoCode = async (req, res) => {
   try {
     const { name, discountPercentage } = req.body;
@@ -215,5 +211,17 @@ const createPromoCode = async (req, res) => {
   }
 };
 
+const getDataForEventOwner = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne({ userId }, 'userName email');
+    if (!user) 
+      return res.status(404).json({ message: 'User not found' });
+    
+    res.status(200).json({userName: user.userName,email: user.email});
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode };
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode, getDataForEventOwner };

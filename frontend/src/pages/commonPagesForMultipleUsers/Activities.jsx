@@ -1,5 +1,5 @@
 import FooterThree from "@/components/layout/footers/FooterThree";
-import Header1 from "@/components/layout/header/TouristHeader";
+import TouristHeader from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/ActivitiesHeader";
 import { useEffect, useRef, useState } from "react";
 import ActivitiesList from "@/components/activity/UpcomingActivities";
@@ -17,7 +17,6 @@ const metadata = {
 
 export default function Activities() {
   const [userRole, setUserRole] = useState(null);
-  //const [userId, setUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const errorDisplayed = useRef(false);
@@ -50,6 +49,7 @@ export default function Activities() {
     setSearchTerm(term);
   };
 
+
   return (
     <>
       <MetaComponent meta={metadata} />
@@ -62,22 +62,26 @@ export default function Activities() {
               title="Explore all upcoming activities"
               tourist={true}
             />
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <ActivitiesList
+              page={"upcoming"}
+              searchTerm={searchTerm}
+            />
             <FooterThree />
           </>
         )}
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
               <PageHeader onSearch={handleSearch} title="View all activities" />
-              <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+              <ActivitiesList
+                page={"upcoming"}
+                searchTerm={searchTerm}
+              />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -87,13 +91,16 @@ export default function Activities() {
 
         {userRole === "Tourist" && (
           <>
-            <Header1 />
+            <TouristHeader  />
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
               tourist={true}
             />
-            <ActivitiesList page={"upcoming"} searchTerm={searchTerm} />
+            <ActivitiesList
+              page={"upcoming"}
+              searchTerm={searchTerm}
+            />
             <FooterThree />
           </>
         )}

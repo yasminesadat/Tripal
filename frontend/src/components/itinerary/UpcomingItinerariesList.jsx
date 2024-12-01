@@ -4,27 +4,24 @@ import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "@/components/activity/Pagination";
 import {message } from "antd";
-
 import { getUserData } from "@/api/UserService";
-import { viewUpcomingItineraries } from "@/api/ItineraryService";
+import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
-
+import Spinner from "../common/Spinner";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 
 export default function ItinerariesList({
   searchTerm,
-  book,
-  onCancel,
-  cancel,
-  curr = "EGP",
   page,
 }) {
+
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
-
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [userRole, setUserRole] = useState(null);
 
   const [itineraries, setItineraries] = useState([]);
@@ -33,14 +30,13 @@ export default function ItinerariesList({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 2000000]);
+  const [priceRange, setPriceRange] = useState([0, 2000000000]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itinerariesPerPage = 2;
+  const itinerariesPerPage = 3;
 
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
@@ -50,8 +46,37 @@ export default function ItinerariesList({
   ];
 
   const errorDisplayed = useRef(false);
-  //#endregion
+  const indexOfLastItinerary = currentPage * itinerariesPerPage;
+  const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
+  const currentItineraries = filteredItineraries.slice(
+      indexOfFirstItinerary,
+      indexOfLastItinerary
+  );
 
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
+//#endregion
+
+//#region useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -85,8 +110,10 @@ export default function ItinerariesList({
           response = await viewUpcomingItineraries();
         } else if (userRole === "Admin") {
           response = await getAdminItineraries();
-          console.log(userRole)
         }
+        else if(userRole==='Tour Guide'){
+          response = await getItinerariesByTourGuide();
+        } 
         const itinerariesData = Array.isArray(response?.data)
           ? response?.data
           : [];
@@ -96,13 +123,12 @@ export default function ItinerariesList({
         const errorMessage =
           err?.response?.data?.error ||
           err?.message ||
-          "Error fetching activities";
+          "Error fetching itineraries.";
         setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
-
     if (userRole) {
       fetchItineraries();
     }
@@ -112,38 +138,29 @@ export default function ItinerariesList({
     const filtered = itineraries.filter((itinerary) => {
       const itineraryStartDate = new Date(itinerary.startDate);
       const itineraryRating = itinerary.averageRating;
-      // const activityCategory = itinerary.category.Name.toLowerCase();
-      const activityPrice = itinerary.price;
+      const itineraryPrice = itinerary.price* exchangeRate;
 
       const isDateValid =
         !startDate ||
         !endDate ||
         (itineraryStartDate >= new Date(startDate.setHours(0, 0, 0, 0)) &&
           itineraryStartDate <= new Date(endDate.setHours(23, 59, 59, 999)));
-
       const isRatingValid =
         ratingFilter.length === 0 ||
         ratingFilter.some((rating) => itineraryRating >= rating);
 
-      const isCategoryValid =1
-        // selectedCategories.length === 0 ||
-        // selectedCategories.some(
-        //   (cat) => cat.toLowerCase() === activityCategory
-        // );
-
       const isPriceValid =
-        activityPrice >= priceRange[0] && activityPrice <= priceRange[1];
-
+        itineraryPrice >= priceRange[0] && itineraryPrice <= priceRange[1];
       const isSearchValid =
-        itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) 
+         ||
         itinerary.tags.some((tag) =>
-          tag.name.toLowerCase().includes(searchTerm.toLowerCase())
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
       return (
         isDateValid &&
         isRatingValid &&
-        isCategoryValid &&
         isPriceValid &&
         isSearchValid
       );
@@ -155,7 +172,6 @@ export default function ItinerariesList({
     endDate,
     itineraries,
     ratingFilter,
-    selectedCategories,
     priceRange,
     searchTerm,
   ]);
@@ -163,22 +179,19 @@ export default function ItinerariesList({
   useEffect(() => {}, [filteredItineraries]);
 
   const handleSort = (field, order) => {
-    const sortedActivities = [...filteredItineraries].sort((a, b) => {
+    const sortedItineraries = [...filteredItineraries].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
         aValue = a.averageRating;
         bValue = b.averageRating;
       }
-
       return order === "asc" ? aValue - bValue : bValue - aValue;
     });
-    setFilteredItineraries(sortedActivities);
+    setFilteredItineraries(sortedItineraries);
   };
 
   useEffect(() => {
@@ -207,16 +220,9 @@ export default function ItinerariesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastItinerary = currentPage * itinerariesPerPage;
-  const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
-  const currentItineraries = filteredItineraries.slice(
-    indexOfFirstItinerary,
-    indexOfLastItinerary
-  );
-
   const navigate = useNavigate();
   const handleRedirect = (itineraryId) => {
-    if (userRole === "Tourist"|| userRole === "Admin")
+    if (userRole === "Tourist"|| userRole === "Admin"|| userRole === "Tour Guide")
       navigate(`/itinerary/${itineraryId}`, { state: { page } });
     else navigate(`/itineraries/${itineraryId}`, { state: { page } });
   };
@@ -229,21 +235,22 @@ export default function ItinerariesList({
   
     return `${day}/${month}/${year}`;
   };
-
+//#endregion
+  
   return (
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
-          {userRole !== "Admin" && (
+          {userRole !== "Admin" &&(
             <div className="col-xl-3 col-lg-4">
-              {(userRole === "Tourist" || userRole === "Guest") && (
+              {(userRole === "Tourist" || userRole === "Guest"||userRole==='Tour Guide') && (
                 <>
                   <div className="lg:d-none">
                     <Sidebar
+                    userRole={userRole}
                       setStartDate={setStartDate}
                       setEndDate={setEndDate}
                       setRatingFilter={setRatingFilter}
-                      setCategoryFilter={setSelectedCategories}
                       priceRange={priceRange}
                       setPriceRange={setPriceRange}
                     />
@@ -272,7 +279,6 @@ export default function ItinerariesList({
                             setStartDate={setStartDate}
                             setEndDate={setEndDate}
                             setRatingFilter={setRatingFilter}
-                            setCategoryFilter={setSelectedCategories}
                             priceRange={priceRange}
                             setPriceRange={setPriceRange}
                           />
@@ -294,7 +300,7 @@ export default function ItinerariesList({
               <div className="col-auto">
                 <div>
                   {loading ? (
-                    <span>Loading results...</span>
+                    <span><Spinner/></span>
                   ) : (
                     <span>{filteredItineraries?.length} results</span>
                   )}
@@ -349,7 +355,7 @@ export default function ItinerariesList({
                         alt="image"
                       />
 
-                      {/* {elm.badgeText && (
+                      {elm.badgeText && (
                         <div className="tourCard__badge">
                           <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
                             {elm.specialDiscounts}
@@ -363,7 +369,7 @@ export default function ItinerariesList({
                             FEATURED
                           </div>
                         </div>
-                      )} */}
+                      )}
 
                       <div className="tourCard__favorite">
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
@@ -373,11 +379,6 @@ export default function ItinerariesList({
                     </div>
 
                     <div className="tourCard__content">
-                      <div className="tourCard__location">
-                        <i className="icon-pin"></i>
-                        {/* {elm.location} */}
-                      </div>
-
                       <h3 className="tourCard__title mt-5">
                         <span>{elm.title}</span>
                       </h3>
@@ -398,15 +399,15 @@ export default function ItinerariesList({
                       <p className="tourCard__text mt-5">
                         {truncateText(elm.description, 50)}
                       </p>
-
+                     { console.log(elm.tags)}
                       <div className="row x-gap-20 y-gap-5 pt-30">
-                        {/* {elm.tags?.map((elm2, i2) => (
+                        {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
                             <div className="text-14 text-accent-1">
-                              {elm2.name}
+                              {elm2}
                             </div>
                           </div>
-                        ))} */}
+                        ))}
                       </div>
                     </div>
 
@@ -417,12 +418,14 @@ export default function ItinerariesList({
                           {formatDate(elm.startDate)}
                         </div>
                         <div className="d-flex items-center text-14">
-                          <i className="icon-clock mr-10"></i>
-                          {/* {elm.time} */}
+                          To
                         </div>
-
+                        <div className="d-flex items-center text-14">
+                          <i className="icon-calendar mr-10"></i> 
+                          {formatDate(elm.endDate)}
+                        </div>
                         <div className="tourCard__price">
-                          {elm.price}
+                            {currency} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>

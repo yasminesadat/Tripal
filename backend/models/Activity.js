@@ -80,6 +80,7 @@ const activitySchema = new Schema(
       type: Boolean,
       default: false,
     },
+    bookmarked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' }],
   },
   { timestamps: true }
 );

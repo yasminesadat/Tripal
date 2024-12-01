@@ -20,6 +20,12 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.get(
+  "/booked-activities",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getTouristActivities
+);
+router.get(
   "/activities/advertiser",
   verifyToken,
   authorizeRoles("Advertiser"),
@@ -58,12 +64,7 @@ router.get(
   validateIDs(["id"]),
   getRatings(Activity, ActivityRating, "activityID")
 );
-router.get(
-  "/activities",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  getTouristActivities
-);
+
 router.get("/all-activities",verifyToken,authorizeRoles("Admin"), getAllActivities);
 
 module.exports = router;

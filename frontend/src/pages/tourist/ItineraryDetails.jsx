@@ -14,15 +14,10 @@ import Header from "@/components/dasboard/Header";
 import MetaComponent from "@/components/common/MetaComponent";
 import NotFoundPage from "@/pages/pages/404";
 import Spinner from "@/components/common/Spinner";
-import Index from './Index'
-
-const metadata = {
-  title: "Itinerary Details || Tripal Travel",
-  description: "Itinerary Details || Tripal Travel",
-};
-
+import Index from './index'
 
 const ItineraryDetailsPage = () => {
+  //#region 1. Variables
   const { itineraryId } = useParams();
   const [itinerary, setItinerary] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +25,9 @@ const ItineraryDetailsPage = () => {
   const [userRole, setUserRole] = useState(null);
   //const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  //#endregion
 
+  //#region 2. useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -62,11 +59,16 @@ const ItineraryDetailsPage = () => {
     };
     fetchActivities();
   }, []);
-
+  //#endregion
+  
   if (loading) return <div><Spinner/></div>;
   if (error) return <div><NotFoundPage/></div>;
   if (!itinerary) return <div><Index/></div>;
 
+  const metadata = {
+    title: `${itinerary.title} Details | Tripal Travel`,
+    description: "Itinerary Details || Tripal Travel",
+  };
   return (
     <>
       <MetaComponent meta={metadata} />

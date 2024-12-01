@@ -67,7 +67,7 @@ export async function getTouristItineraries() {
 
 export async function getTouristActivities() {
   try {
-    const response = await axios.get(`/activities`);
+    const response = await axios.get(`/booked-activities`);
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
@@ -131,6 +131,53 @@ export async function checkTouristExists() {
     return response.data;
   } catch (error) {
     console.error("error", error);
+    throw error;
+  }
+}
+
+export async function bookmarkEvent(eventId, eventType) {
+  try {
+    const response = await axios.post('/tourist/bookmark', { eventId, eventType });
+    return response.data;
+  } catch (error) {
+    console.error("Error bookmarking event:", error);
+    throw error;
+  }
+}
+
+export async function getBookmarkedEvents() {
+  try {
+    const response = await axios.get('/tourist/bookmarks');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}
+
+export async function saveProduct(productId) {
+  try {
+    const response = await axios.post('/tourist/save-product', { productId });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product to wishlist:", error);
+    throw error;
+  }
+}
+export async function removeWishList(productId) {
+  try {
+    await axios.post('/tourist/remove-wishlist', { productId });
+  } catch (error) {
+    console.error("Error removing product from wishlist:", error);
+    throw error;
+  }
+}
+export async function getWishList() {
+  try {
+    const response = await axios.get('/tourist/wishlist');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching wishlist:", error);
     throw error;
   }
 }

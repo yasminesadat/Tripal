@@ -2,6 +2,9 @@ const Activity = require("../models/Activity");
 const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
+const {sendEmail} = require('./Mailer');
+const Tourist = require('../models/users/Tourist');
+
 
 const createActivity = async (req, res) => {
   const {
@@ -55,12 +58,45 @@ const getAdvertiserActivities = async (req, res) => {
   const id = req.userId;
   console.log("curr advertiser is", id);
   try {
-    const activites = await Activity.find({ advertiser: id })
+    const activities = await Activity.find({ advertiser: id })
       .select("title date time location")
-    console.log(activites)
-    res.status(200).json(activites);
+      .sort({ date: -1 });
+    res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message })
+  }
+};
+
+const notifyTouristsOnBookingOpen = async (activityId) => {
+  try {
+    // Find the activity by ID
+    const activity = await Activity.findById(activityId).populate('bookings.touristId');
+    if (!activity) {
+      console.log('Activity not found');
+      return;
+    }
+    console.log("will try to send emails now")
+    // Loop through the bookings and send an email to each tourist
+    for (let id of activity.bookmarked) {
+      const tourist = await Tourist.findById(id);
+      console.log(tourist)
+      console.log(tourist.email)
+      if (tourist && tourist.email) {
+        const subject = `Your upcoming activity is now open for booking: ${activity.title}`;
+        const html = `
+          <p>Dear ${tourist.userName},</p>
+          <p>The activity "${activity.title}" you bookmarked is now open for booking!</p>
+          <p>Location: ${activity.location}</p>
+          <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+          <p>Best regards,</p>
+          <p>Tripal Team</p>
+        `;
+        await sendEmail(tourist.email, subject, html); // Send email via utility function
+        console.log(`Email sent to ${tourist.email}`);
+      }
+    }
+  } catch (error) {
+    console.error("Error sending email notifications:", error);
   }
 };
 
@@ -95,6 +131,9 @@ const updateActivity = async (req, res) => {
     }
 
     const updatedActivity = await Activity.findByIdAndUpdate(id, updateParameters, { new: true });
+    if (updatedActivity.isBookingOpen && updatedActivity.isBookingOpen !== activity.isBookingOpen) { //only sends when update is actually made le isBookingOpen
+      await notifyTouristsOnBookingOpen(updatedActivity._id);
+    }
     res.status(200).json(updatedActivity);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -114,10 +153,10 @@ const deleteActivity = async (req, res) => {
 const viewUpcomingActivities = async (req, res) => {
   try {
     const currentDate = new Date();
-    const activities = await Activity.find({ isBookingOpen: true, date: { $gte: currentDate }, flagged: false })
+    const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
       .populate("category")
       .populate("tags")
-
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -146,9 +185,6 @@ const getActivityById = async (req, res) => {
     const activity = await Activity.findById(id).populate("category").populate("tags");
     if (!activity)
       return res.status(404).json({ error: "Activity not found." });
-
-    // if (activity.flagged)
-    //   res.status(404).json({ error: "Activity flagged." });
     else
       res.status(200).json(activity);
   } catch (error) {
@@ -158,11 +194,11 @@ const getActivityById = async (req, res) => {
 };
 
 const getTouristActivities = async (req, res) => {
-  const { touristId } = req.userId;
+  const  touristId  = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId, isBookingOpen: true, flagged: false, date: { $gte: new Date() } })
-      .populate("category")
-      .populate("tags")
+    const activities = await Activity.find({ "bookings.touristId": touristId,  flagged: false, date: { $gte: new Date() } })
+    
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -175,6 +211,7 @@ const getAllActivitiesForAdmin = async (req, res) => {
     const activities = await Activity.find()
       .populate("category")
       .populate("tags")
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -186,6 +223,7 @@ const getAllActivities = async (req, res) => {
     const activities = await Activity.find()
       .populate("category")
       .populate("tags")
+      .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -195,12 +233,36 @@ const getAllActivities = async (req, res) => {
 const adminFlagActivity = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.activityId);
+    const userData  = req.body;
+    sendAnEmailForActivityFlag(userData, activity.title);
     if (!activity) return res.status(404).json({ error: "Activity not found" });
     activity.flagged = !activity.flagged;
     await activity.save();
     res.status(200).json({ message: "Activity flagged successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+const sendAnEmailForActivityFlag = async (userData, activityTitle) => {
+  const mail = userData.email;
+  const userName = userData.userName;
+
+  const subject = `Activity Flag Notification`;
+  const html = `
+    <p>Dear ${userName},</p>
+    <p>We wanted to inform you that your activity: <strong>${activityTitle}</strong> has been flagged for review. Please review the flagged content and address any issues as soon as possible.</p>
+    <p>If you have any questions or believe this flagging was a mistake, please <a href="mailto:support@tripal.com">contact support</a>.</p>
+    <p>Thank you for your understanding.</p>
+    <p>Best regards,</p>
+    <p>Your Support Team</p>
+  `;
+
+  try {
+    await sendEmail(mail, subject, html);
+    console.log('Activity flag notification email sent successfully');
+  } catch (error) {
+    console.error('Failed to send activity flag notification email:', error);
   }
 };
 

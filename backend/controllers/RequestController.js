@@ -9,6 +9,7 @@ const Tourist = require('../models/users/Tourist.js')
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary");
 const Product = require("../models/Product");
+const jwt = require("jsonwebtoken");
 
 const createRequest = async (req, res) => {
     const { userName, email, password, role } = req.body;
@@ -198,11 +199,11 @@ const setRequestState = async (req, res) => {
 
 const requestAccountDeletion = async (req, res) => {
 
-    const  role  = req.userRole;  // role Tourist , etc userId is the id from the tourist table 
-    const  userId = req.userId;
+    const role = req.userRole;  // role Tourist , etc userId is the id from the tourist table 
+    const userId = req.userId;
 
     try {
-        const user = await User.findOne({ userId }); 
+        const user = await User.findOne({ userId });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -233,7 +234,7 @@ const requestAccountDeletion = async (req, res) => {
 
         switch (role) {
             case "TourGuide":
-                await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } }); 
+                await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } });
                 await Itinerary.deleteMany({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
                 await TourGuide.findByIdAndDelete(userId)
                 break;
@@ -241,7 +242,7 @@ const requestAccountDeletion = async (req, res) => {
                 await Activity.deleteMany({ advertiser: userId, date: { $gt: new Date() } });
                 await Advertiser.findByIdAndDelete(userId)
                 break;
-            case "Seller": 
+            case "Seller":
                 await Product.deleteMany({ seller: userId });
                 await Seller.findByIdAndDelete(userId)
                 break;
@@ -252,7 +253,8 @@ const requestAccountDeletion = async (req, res) => {
                 return res.status(400).json({ message: "Invalid role" });
         }
         await User.deleteOne({ userId });
-        
+        res.clearCookie("jwt");
+
         return res.status(200).json({ message: "Account deleted successfully." });
     } catch (error) {
         return res.status(500).json({ error: error.message });

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
+import { saveProduct } from "@/api/TouristService";
 import Stars from "../common/Stars";
 
 const ProductCard = ({
@@ -22,6 +23,7 @@ const ProductCard = ({
 }) => {
   const navigate = useNavigate();
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleCardClick = () => {
     navigate(`product/${id}`, {
@@ -35,6 +37,7 @@ const ProductCard = ({
         picture,
         averageRating,
         sales,
+        userRole
       },
     });
   };
@@ -47,6 +50,7 @@ const ProductCard = ({
         initialDescription: description,
         initialQuantity: quantity,
         initialPicture: picture,
+        userId: userId,
       },
     });
   };
@@ -87,6 +91,18 @@ const ProductCard = ({
     </div>
   );
 
+  const handleHeartClick = async (e) => {
+    e.stopPropagation();
+    try {
+      await saveProduct(id);
+      message.success("Product added to wishlist!");
+      setIsSaved(true); 
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message || "An unexpected error occurred";      
+      message.warning(errorMessage);
+    }
+  };
+
   return (
     <div className="col-lg-3 col-sm-6">
       <div className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow">
@@ -101,8 +117,11 @@ const ProductCard = ({
           {userId === productSeller ? (
             <EditOutlined className="tourCard__favorite" key="edit" onClick={handleEditClick} />
           ) : userRole === "Tourist" ? (
-            <button className="tourCard__favorite">
-              <i className="icon-heart"></i>
+            <button className="tourCard__favorite" onClick={handleHeartClick}>
+              <i 
+                className={!isSaved ? "icon-heart" : ""}
+              />
+              <i>{ isSaved && "❤" }</i>
             </button>
           ) : [] }
         </div>
@@ -157,7 +176,7 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
-              <span className="text-16 fw-500">${price}</span>
+              <span className="text-16 fw-500">{price}</span>
             </div>
           </div>
         </div>
