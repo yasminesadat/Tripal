@@ -236,7 +236,7 @@ cron.schedule('39 17 * * *', async () => {
             const subject = `Your upcoming activity: ${activity.title}`;
             const html = `
                 <p>Dear ${tourist.userName},</p>
-                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 5 days!</p>
+                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!</p>
                 <p>Location: ${activity.location}</p>
                 <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
                 <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
@@ -246,6 +246,10 @@ cron.schedule('39 17 * * *', async () => {
 
             await sendEmail(tourist.email, subject, html);
             console.log("SENT!")
+            tourist.notificationList.push({
+                message: `This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!`,
+                notifType: "event"
+              });
           }
         }
       }
