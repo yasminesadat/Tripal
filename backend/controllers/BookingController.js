@@ -2,6 +2,9 @@ const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
 const {sendEmail} = require('./Mailer');
+const cron = require('node-cron');
+const moment = require('moment'); // Use moment.js for date manipulation
+
 
 const bookResource = async (req, res) => {
     const { resourceType, resourceId } = req.params;
@@ -192,5 +195,66 @@ try {
     res.status(500).json({ message: 'Error canceling booking', error });
 }
 };
+
+
+// * * * * * 
+// | | | | |
+// | | | | +---- Day of the week (0 - 7) (Sunday = 0 or 7)
+// | | | +------ Month (1 - 12)
+// | | +-------- Day of the month (1 - 31)
+// | +---------- Hour (0 - 23)
+// +------------ Minute (0 - 59)
+
+//'1 * * * *' --> 1 min from now
+//'30 14 * * *' --> at 2 30 PM
+
+// Cron job to run every day at midnight
+cron.schedule('51 15 * * *', async () => {
+    const today = moment().utc();  // Current date and time in UTC
+  const fiveDaysLater = today.add(4, 'days').startOf('day').utc(); // Start of the day in UTC
+  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+
+  // Log the dates to verify their values
+  console.log('Today:', today.toString());
+  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+  console.log('End of day (UTC):', endOfDay.toString());
+
+    try {
+      // Find activities that are exactly 5 days away, ensuring the activity date falls between midnight and 11:59:59.999
+      const activities = await Activity.find({
+        date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isBookingOpen: true,  // Only consider activities where booking is open
+      });
+      console.log('Found activities:', activities); // For debugging, see what activities are found
+      if (activities.length > 0) {
+        for (let activity of activities) {
+          // Iterate over the tourists who booked the activity
+          for (let booking of activity.bookings) {
+            const tourist = await Tourist.findById(booking.touristId);
+            if (tourist && tourist.email) {
+              // Send email to the tourist
+              const subject = `Your upcoming activity: ${activity.title}`;
+              const html = `
+                <p>Dear ${tourist.userName},</p>
+                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 5 days!</p>
+                <p>Location: ${activity.location}</p>
+                <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
+                <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+                <p>Best regards,</p>
+                <p>Tripal</p>
+              `;
+              
+              await sendEmail(tourist.email, subject, html);
+              console.log("SENT!")
+            }
+          }
+        }
+      } else {
+        console.log('No activities found for 5 days.');
+      }
+    } catch (error) {
+      console.error('Error checking activities for 5 days later:', error);
+    }
+  });
 
 module.exports = {cancelResource, bookResource};
