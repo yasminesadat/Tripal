@@ -367,9 +367,7 @@ const TourGuideProfile = () => {
                               height: 37px;
                             }
                               .absoluteIcon2 {
-                              position: absolute;
-                              top: 10px;
-                              right: 50px;
+                              bottom:5px
                               border-radius: 12px;
                               display: flex;
                               justify-content: center;
@@ -667,21 +665,21 @@ const TourGuideProfile = () => {
                                           Year of Completion
                                         </label>
                                       </div>
-
                                       <button
-                                        className="text-18 ml-20"
                                         onClick={() =>
                                           setFormData({ ...formData, education: formData.education.filter((elm, idx) => idx !== index) })
                                         }
+                                        className="text-18 ml-20 absoluteIcon2 button -dark-1"
                                       >
-                                        <i className="icon-delete"></i>
+                                        <i className="icon-delete text-18"></i>
                                       </button>
+                                     
                                     </div>
                                   </div>
                                 </div>
                               )
                             )
-                          ) : (
+                           ) : (
                             <div>
                               <span className="text-16 ">
                                 No Education Provided
@@ -719,19 +717,20 @@ const TourGuideProfile = () => {
                                 key={index}
                                 className="contactForm row y-gap-30 items-center"
                               >
-                                <div className="col-lg-2">
+                                <div className="col-lg-11">
                                  <h5 className="text-20 fw-500 ">{`Previous Work ${index + 1}`}</h5>
                                  </div>
-                                 <div className="col-lg-2">
+                                 <div className="col-lg-1">
                                  <button
-                                  className="text-18 ml-20"
-                                  onClick={() =>
-                                    setFormData({ ...formData, previousWork: formData.previousWork.filter((elm, idx) => idx !== index) })
-                                  
-                                }
-                                >
-                                  <i className="icon-delete"></i>
-                                </button>
+                                        onClick={() =>
+                                          setFormData({ ...formData, previousWork: formData.previousWork.filter((elm, idx) => idx !== index) })
+                                        
+                                      }
+                                        className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                                      >
+                                        <i className="icon-delete text-18"></i>
+                                      </button>
+                                 
                                 </div>
                                 <div className="col-12">
                                   <div className="row x-gap-20 y-gap">
@@ -848,15 +847,17 @@ const TourGuideProfile = () => {
                                     </div>
                                 </div>
                                 </div>
-                                
+                                <br /><br />
+                                <br /><br />
                               </div>
+                           
 
                             )
                           )
                         ) : (
                           <div>
                             <span className="text-16 ">
-                              Awards not provided
+                              No previous Work is Provided
                             </span>
                           </div>
                         )}
@@ -889,7 +890,7 @@ const TourGuideProfile = () => {
 
 
                     <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
-                      navigate(`/tourguide/update`);
+                     handleSubmit();
                     }}>
                       Save Changes
                       <i className="icon-arrow-top-right text-16 ml-10"></i>
