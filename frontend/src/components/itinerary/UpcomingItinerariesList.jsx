@@ -13,7 +13,6 @@ import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesServic
 
 export default function ItinerariesList({
   searchTerm,
-  curr = "EGP",
   page,
 }) {
 

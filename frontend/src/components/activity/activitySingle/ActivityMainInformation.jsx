@@ -1,8 +1,7 @@
 import Stars from "../../common/Stars";
 import { message } from "antd";
 import { Flag,FlagOff  } from 'lucide-react';
-import { flagActivity } from "@/api/AdminService";
-
+import { flagActivity,getEventOwnerData } from "@/api/AdminService";
 import {bookmarkEvent} from "@/api/TouristService";
 import { useState,useEffect } from "react";
 import Spinner from "@/components/common/Spinner";
@@ -28,14 +27,13 @@ const handleShare = (link) => {
 
 const handleBookmark = async (eventId, eventType) => {
   try {
-    const data = await bookmarkEvent(eventId, eventType);
+    await bookmarkEvent(eventId, eventType);
     //setIsBookmarked(true);
     message.success("Added to Bookmarked Events")
   } catch (error) {
     console.error('Error bookmarking event:', error);
   }
 };
-
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -56,7 +54,8 @@ export default function ActivityMainInformation({ activity: initialActivity, use
     const updatedFlagStatus = !currentFlagStatus;
     setLoading(true);
     try {
-      await flagActivity(activityId);
+      const userData = await getEventOwnerData(activity.advertiser);
+      await flagActivity(activityId,userData);
       setActivity((prevActivity) =>( { 
         ...prevActivity, 
         flagged: updatedFlagStatus 

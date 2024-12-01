@@ -50,10 +50,10 @@ export default function TouristHeader() {
     };
 
     try {
-      await updateTouristInformation(updatedProfileData); // Update the profile data
-      setTouristCurrency(currency); // Update the currency in the system
-      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency })); // Update the profile information in state
-      sessionStorage.setItem("currency", currency); // Store the chosen currency in session storage
+      await updateTouristInformation(updatedProfileData);
+      setTouristCurrency(currency);
+      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency })); 
+      sessionStorage.setItem("currency", currency);
     } catch (error) {
       message.error("Failed to update user information:", error);
     }
@@ -64,9 +64,8 @@ export default function TouristHeader() {
       try {
         const response = await getTouristInformation();
         setProfileInformation(response);
-        // Set the currency from the user's information
         sessionStorage.setItem("currency", response.choosenCurrency);
-        setTouristCurrency(response.choosenCurrency); // Initialize the currency from the profile
+        setTouristCurrency(response.choosenCurrency);
       } catch (error) {
         message.error("Failed to fetch user information:", error);
       }
@@ -117,8 +116,8 @@ export default function TouristHeader() {
           <div className="header__right">
             <div className="ml-15">
               <Currency
-                userCurrency={profileInformation.choosenCurrency}  // Pass choosenCurrency from profile
-                onCurrencyChange={handleCurrencyChange}  // Handle currency change
+                userCurrency={profileInformation.choosenCurrency}
+                onCurrencyChange={handleCurrencyChange}
               />
             </div>
             <Link to="/" className="ml-20">

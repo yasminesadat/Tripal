@@ -12,7 +12,6 @@ import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesServic
 
 export default function ActivitiesList({
   searchTerm,
-  curr = "EGP",
   page,
 }) {
 

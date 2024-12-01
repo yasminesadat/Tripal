@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
