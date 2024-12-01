@@ -1,14 +1,16 @@
 import { hotelsandflights } from "@/data/touristMenu";
 
 import { Link, useLocation } from "react-router-dom";
-
+import NotificationTab from "@/components/common/NotificationBell";
 export default function Menu() {
   const { pathname } = useLocation();
   return (
     <>
       <div className="xl:d-none ">
         <div className="desktopNav">
+          <NotificationTab />
           <div className="desktopNav__item">
+
             <Link to="/tourist">Home</Link>
           </div>
 
@@ -52,8 +54,11 @@ export default function Menu() {
                   </div>
                 ))}
               </div>
+
             </div>
+
           </div>
+
         </div>
       </div>
     </>

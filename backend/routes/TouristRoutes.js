@@ -21,7 +21,7 @@ const {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList
+  removeFromWishList, getTouristNotifications
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -131,5 +131,11 @@ router.get(
   "/promoCode",
 
   getRandomPromoCode
+);
+router.get(
+  "/tourist/notifications",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getTouristNotifications
 );
 module.exports = router;

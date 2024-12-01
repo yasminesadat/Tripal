@@ -4,6 +4,7 @@ import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "@/api/UserService";
+import NotificationTab from "@/components/common/NotificationBell";
 import { message } from "antd";
 import {
   updateTouristInformation,
@@ -126,9 +127,8 @@ export default function TouristHeader() {
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""
+                }`}
             >
               <i className="icon-person text-18"></i>
             </button>
@@ -151,7 +151,10 @@ export default function TouristHeader() {
                 </ul>
               </div>
             )}
+
+
           </div>
+
         </div>
       </header>
       <style>{`

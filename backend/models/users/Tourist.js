@@ -97,6 +97,12 @@ const touristSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "PromoCode",
   }],
+  notificationList: [{
+    message: String,
+    read: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now },
+    notifType: String
+  }],
   bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: [] }],
   bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: [] }],
 

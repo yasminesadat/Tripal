@@ -10,7 +10,7 @@ const productModel = require("../models/Product.js");
 const PromoCode = require("../models/PromoCode.js")
 const cron = require('node-cron');
 
-cron.schedule('35 22 * * *', async () => {
+cron.schedule('* * * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -62,6 +62,10 @@ cron.schedule('35 22 * * *', async () => {
 
       await sendEmail(user.email, subject, html);
       user.promoCodes.push(promocode);
+      user.notificationList.push({
+        message: `Happy birthday! Use promo code ${name} for a discount of ${discount}%  today only!`,
+        notifType: "birthday"
+      });
       await user.save();
       console.log(`Birthday email sent to ${user.userName}`);
     } catch (error) {
@@ -561,7 +565,6 @@ const saveProduct = async (req, res) => {
 
     tourist.wishlist.push(productId);
     await tourist.save();
-
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {
     console.error(error);
@@ -627,6 +630,18 @@ const getRandomPromoCode = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const getTouristNotifications = async (req, res) => {
+  try {
+    const touristId = req.userId;
+    const tourist = await touristModel.findById(touristId);
+    const notifications = tourist.notificationList;
+    return res.status(200).json(notifications);
+
+  }
+  catch (error) {
+
+  }
+}
 // const checkTouristPromocode= async (req,res)
 // {
 //   const touristId = req.userId;
@@ -651,5 +666,6 @@ module.exports = {
   getWishList,
   removeFromWishList,
   getRandomPromoCode,
+  getTouristNotifications
   // checkTouristPromocode
 };
