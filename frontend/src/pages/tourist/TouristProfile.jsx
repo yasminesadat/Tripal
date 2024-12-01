@@ -15,7 +15,7 @@ import ActivityCategoryService from "../../api/ActivityCategoryService";
 
 import { changeTouristPassword } from '../../api/TouristService';
 import { getUserData } from '@/api/UserService';
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'; 
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 import Spinner from "@/components/common/Spinner";
 
@@ -276,9 +276,9 @@ export default function Profile() {
 
   const handleDeletion = async () => {
     try {
-      const response = await requestAccountDeletion("Tourist", id);
+      const response = await requestAccountDeletion();
       message.success(response.message);
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred.");
     }
@@ -304,9 +304,6 @@ export default function Profile() {
       reader.readAsDataURL(file);
     }
   };
-  if (loading) {
-    return <Spinner />;
-  }
 
   if (loading) {
     return <Spinner />;

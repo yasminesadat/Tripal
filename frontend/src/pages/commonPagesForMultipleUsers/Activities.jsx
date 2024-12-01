@@ -114,9 +114,7 @@ export default function Activities() {
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">

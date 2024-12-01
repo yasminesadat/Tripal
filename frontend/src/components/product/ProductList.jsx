@@ -7,6 +7,8 @@ import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import ProductCard from "./ProductCard";
 import MetaComponent from "../common/MetaComponent";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+
 const { Search } = Input;
 
 const metadata = {
@@ -114,6 +116,27 @@ export default function ProductList() {
     }
   };
 
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -135,20 +158,6 @@ export default function ProductList() {
     }
   }, [userRole, sortOrder]);
 
-  // useEffect(() => {
-  //   const getExchangeRate = async () => {
-  //     if (curr) {
-  //       try {
-  //         const rate = await getConversionRate(curr);
-  //         setExchangeRate(rate);
-  //       } catch (error) {
-  //         message.error("Failed to fetch exchange rate.");
-  //       }
-  //     }
-  //   };
-
-  //   getExchangeRate();
-  // }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -166,16 +175,11 @@ export default function ProductList() {
     getProducts(1);
   };
 
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice;
-  };
-
   const formatPriceRange = () => {
     if (priceRange[1] === 3000) {
-      return `${priceRange[0]} - ${priceRange[1]} & above`;
+      return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate} & above`;
     }
-    return `${priceRange[0]} - ${priceRange[1]}`;
+    return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate}`;
   };
 
   const onPageChange = (page) => {
@@ -454,7 +458,7 @@ export default function ProductList() {
                     productSeller={product.seller._id}
                     name={product.name}
                     description={product.description}
-                    price={product.price}
+                    price={`${currency} ${(product.price*exchangeRate).toFixed(2)}`}
                     picture={product.picture}
                     seller={product.seller.name}
                     quantity={product.quantity}

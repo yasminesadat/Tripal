@@ -27,6 +27,7 @@ const ActivityDetailsPage = () => {
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState("EGP");  // For currency state
   const refActivityBook = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -73,7 +74,7 @@ const ActivityDetailsPage = () => {
       }
     };
     fetchActivities();
-  }, [activityId]);
+  }, [activityIdactivityId]);
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
@@ -116,8 +117,9 @@ const ActivityDetailsPage = () => {
               activityId={activityId}
               activityTitle={activity.title}
             />
-            <ActivityDetails 
-              activity={activity} 
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency}  // Pass selectedCurrency
               userRole={userRole}
               refActivityBook={refActivityBook}
             />
@@ -127,9 +129,7 @@ const ActivityDetailsPage = () => {
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
@@ -138,8 +138,9 @@ const ActivityDetailsPage = () => {
                 activityId={activityId}
                 activityTitle={activity.title}
               />
-              <ActivityDetails 
-                activity={activity} 
+              <ActivityDetails
+                activity={activity}
+                selectedCurrency={selectedCurrency}  // Pass selectedCurrency
                 userRole={userRole}
               />
               <div className="text-center pt-30">
@@ -158,8 +159,10 @@ const ActivityDetailsPage = () => {
               activityTitle={activity.title}
               tourist={"ana t3ebt"}
             />
-            <ActivityDetails 
-              activity={activity} 
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency} 
+            
               userRole={userRole}
               refActivityBook={refActivityBook}
             />

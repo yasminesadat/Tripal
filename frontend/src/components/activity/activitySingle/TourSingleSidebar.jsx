@@ -1,5 +1,5 @@
 import  { useEffect, useState, useRef } from "react";
-import { getConversionRate } from "@/api/ExchangeRatesService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
@@ -27,19 +27,24 @@ export default function TourSingleSidebar({itinerary, activity, refActivityBook,
   }, []);
 
   useEffect(() => {
-    const curr = sessionStorage.getItem("currency");
-    if (curr) {
-      setCurrency(curr); 
-      fetchExchangeRate(curr); 
-    }
+    const intervalId = setInterval(async () => {
+      const curr = getTouristCurrency();
+      if (curr) {
+        setCurrency(curr); 
+        fetchExchangeRate(curr); 
+      }
+    }, 500); // every 500ms
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchExchangeRate = async (curr) => {
     try {
-        const rate = await getConversionRate(curr);
-        setExchangeRate(rate);
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
     } catch (error) {
-        message.error("Failed to fetch exchange rate.");
+      message.error("Failed to fetch exchange rate.");
     }
   };
 
@@ -165,9 +170,7 @@ export default function TourSingleSidebar({itinerary, activity, refActivityBook,
         <div className="text-18 fw-500">Total:</div>
         {itinerary&&<div className="text-18 fw-500">
           {
-            formatPrice((itinerary.price * ticketNumber +
-            itinerary.serviceFee
-          ).toFixed(2))}
+            formatPrice((itinerary.price * ticketNumber +itinerary.serviceFee).toFixed(2))}
         </div>}
 
         {activity&&<div className="text-18 fw-500">

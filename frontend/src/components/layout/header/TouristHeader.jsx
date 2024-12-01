@@ -9,6 +9,7 @@ import {
   updateTouristInformation,
   getTouristInformation,
 } from "@/api/TouristService";
+import { setTouristCurrency } from "@/api/ExchangeRatesService";
 
 export default function TouristHeader({ refHeader, setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
   const [profileInformation, setProfileInformation] = useState({});
@@ -50,8 +51,9 @@ export default function TouristHeader({ refHeader, setOpen, refFlights, refHotel
 
     try {
       await updateTouristInformation(updatedProfileData);
-      // sessionStorage.removeItem("currency");
-      // sessionStorage.setItem("currency", currency);
+      setTouristCurrency(currency);
+      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency })); 
+      sessionStorage.setItem("currency", currency);
     } catch (error) {
       message.error("Failed to update user information:", error);
     }
@@ -62,8 +64,8 @@ export default function TouristHeader({ refHeader, setOpen, refFlights, refHotel
       try {
         const response = await getTouristInformation();
         setProfileInformation(response);
-        // sessionStorage.removeItem("currency");
-        // sessionStorage.setItem("currency", response.choosenCurrency);
+        sessionStorage.setItem("currency", response.choosenCurrency);
+        setTouristCurrency(response.choosenCurrency);
       } catch (error) {
         message.error("Failed to fetch user information:", error);
       }

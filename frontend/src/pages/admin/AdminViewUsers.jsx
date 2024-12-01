@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
-import { message } from 'antd'
-import { requestAccountDeletion } from "../../api/RequestService";
-import FooterThree from '@/components/layout/footers/FooterThree';
+import {message} from "antd";
 import Sidebar from '@/components/dasboard/Sidebar';
 import Header from '@/components/dasboard/Header';
 const UserList = () => {
@@ -27,24 +25,18 @@ const UserList = () => {
         fetchData();
     }, []);
 
-    const showNotification = (message, type) => {
-        setNotification({ message, type });
-        setTimeout(() => setNotification(null), 3000);
-    };
+   
 
-    const deleteUsers = async (id, role) => {
+    const deleteUsers = async (name,id, role) => {
         try {
-            if (role === "Tourism Governor" || role === "Admin") {
-                await deleteUser(id);
-            } else {
-                await requestAccountDeletion(role, id);
-            }
+           
+            await deleteUser(role, id);    
             const updatedData = users.filter((item) => item.userId !== id);
             setUsers(updatedData);
-            showNotification("User deleted successfully", "success");
+            message.success(`${name} deleted successfully`, "success");
         } catch (error) {
-            console.error("Error deleting user with id ${ id }:, error");
-            showNotification("Failed to delete user!", "error");
+            console.error(`00Error deleting user with id ${ id }:`, error);
+            message.error("Failed to delete user!", "error");
         }
         setDeleteConfirm(null);
     };
@@ -161,7 +153,7 @@ const UserList = () => {
                                                         {deleteConfirm === user.userId ? (
                                                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                                                                 <button
-                                                                    onClick={() => deleteUsers(user.userId, user.role)}
+                                                                    onClick={() => deleteUsers(user.userName,user.userId, user.role)}
                                                                     style={{
                                                                         backgroundColor: '#dc2626',
                                                                         color: 'white',

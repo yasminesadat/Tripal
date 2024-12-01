@@ -10,20 +10,12 @@ const metadata = {
 };
 
 const TouristProducts = () => {
-  const [currency, setCurrency] = useState("EGP"); 
 
-  useEffect(() => {
-    const curr = sessionStorage.getItem("currency");
-    if (curr) {
-      setCurrency(curr);
-    }
-  }, []);
-  
   return (
     <div>
       <MetaComponent meta={metadata} />
       <TouristHeader /> <br/>
-      <ProductList curr={currency} />
+      <ProductList/>
       <FooterThree />
     </div>
   );

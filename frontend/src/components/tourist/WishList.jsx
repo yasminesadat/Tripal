@@ -5,10 +5,12 @@ import { getWishList } from "@/api/TouristService";
 import Pagination from "@/components/activity/Pagination";
 import { removeWishList } from "@/api/TouristService";
 import { message } from "antd";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 export default function WishList() {
     const [wishlist, setWishlist] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [exchangeRate, setExchangeRate] = useState(1);
     const productsPerPage = 4;
 
     useEffect(() => {
@@ -38,6 +40,27 @@ export default function WishList() {
         return text.substring(0, maxLength) + "...";
     };
 
+    const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
     const navigate = useNavigate();
     const handleCardClick = (id, name, seller, price, description, quantity, picture, averageRating, sales, userRole) => {
         navigate(`/tourist/view-products/product/${id}`, {
@@ -55,6 +78,10 @@ export default function WishList() {
             message.error("item removal failed")
         }
     };
+    const formatPrice = (price) => {
+        return `${currency} ${(price * exchangeRate).toFixed(2)}`;
+      }
+      
 
     return (
         <>
@@ -81,7 +108,7 @@ export default function WishList() {
                                             </div>
 
                                             <div className="col" >
-                                                <div className="text-18 lh-15 fw-500 mt-5 tourCardName" onClick={() => handleCardClick(elm._id, elm.name, elm.seller, elm.price, elm.description, elm.quantity, elm.picture, elm.averageRating, elm.sales, elm.userRole)}>
+                                                <div className="text-18 lh-15 fw-500 mt-5 tourCardName" onClick={() => handleCardClick(elm._id, elm.name, elm.seller,formatPrice(elm.price), elm.description, elm.quantity, elm.picture, elm.averageRating, elm.sales, elm.userRole)}>
                                                     <span>{elm.name}</span>
                                                 </div>
 
@@ -100,7 +127,7 @@ export default function WishList() {
                                                     </div>
                                                     <div className="col-auto">
                                                         <div className="text-right md:text-left">
-                                                            <span className="text-20 fw-500">{elm.price}</span>
+                                                            <span className="text-20 fw-500"> {formatPrice(elm.price)}</span>
                                                         </div>
                                                     </div>
                                                 </div>
