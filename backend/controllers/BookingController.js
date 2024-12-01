@@ -1,7 +1,6 @@
 const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
-const { format } = require('date-fns'); 
 const {sendEmail} = require('./Mailer');
 
 const bookResource = async (req, res) => {
@@ -87,7 +86,7 @@ const bookResource = async (req, res) => {
               <p>Thank you for booking with us!</p>
             `;
             try {
-              await sendEmail("daiana.rehan.dr@gmail.com", subject, html);
+              await sendEmail(tourist.email, subject, html);
               res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully, Booking confirmation email sent` });
             } catch (error) {
               console.error('Error sending booking confirmation:', error.message);
