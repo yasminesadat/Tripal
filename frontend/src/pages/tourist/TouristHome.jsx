@@ -97,39 +97,48 @@ export default function TouristHome() {
       onFinish: () => {
         localStorage.setItem('currentStep', 0);
         setOpen(false)
+        navigate("/tourist", { state: { fromTour: false, targetStep: 0 } });
       }
     },
   ];
 
   useEffect(() => {
     const storedStep = localStorage.getItem('currentStep');
-    if (storedStep) {
-      setCurrentStep(parseInt(storedStep, 10));
-    } else {
+    
+    if (storedStep === '6') {
+      localStorage.setItem('currentStep', 0);
       setCurrentStep(0);
+    } else if (storedStep) {
+      setCurrentStep(parseInt(storedStep, 10)); 
+    } else {
+      setCurrentStep(0); 
     }
   }, []);
-
+  
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
     const targetStep = location.state?.targetStep;
   
+    // If coming from tour and target step is defined, open the tour from the specified step
     if (isFromTour && targetStep !== undefined) {
       setCurrentStep(targetStep);  
-      localStorage.setItem('currentStep', targetStep); 
+      localStorage.setItem('currentStep', targetStep);  // Ensure the step is updated in localStorage
   
       const timer = setTimeout(() => {
-        setOpen(true);  
-      }, 1000);  
+        setOpen(true);  // Open the tour after the target step is set
+      }, 1000);  // Add a delay to ensure the state has been updated
   
       return () => clearTimeout(timer);
     } else {
+      // When not coming from tour, set current step from localStorage
       const storedStep = localStorage.getItem('currentStep');
       if (storedStep) {
         setCurrentStep(parseInt(storedStep, 10));
+      } else {
+        setCurrentStep(0);  // Default to step 0 if there's no stored step
       }
     }
-  }, [location]);
+  }, [location]);  
   
   const handleStepChange = (newStep) => {
     setCurrentStep(newStep);
