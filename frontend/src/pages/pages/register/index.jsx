@@ -5,7 +5,7 @@ import MetaComponent from "@/components/common/MetaComponent";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 
 const metadata = {
-  title: "Register || ViaTour - Travel & Tour Reactjs Template",
+  title: "Register || Tripal",
   description: "ViaTour - Travel & Tour Reactjs Template",
 };
 
