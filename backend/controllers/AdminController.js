@@ -8,6 +8,9 @@ const TourismGovernor = require("../models/users/TourismGovernor.js");
 const User = require("../models/users/User.js");
 const Request = require('../models/Request.js')
 const PromoCode = require("../models/PromoCode.js")
+const Activity = require("../models/Activity");
+const Itinerary = require("../models/Itinerary");
+const Product = require("../models/Product");
 
 const addAdmin = async (req, res) => {
   try {
@@ -90,7 +93,7 @@ const deleteUser = async (req, res) => {
 
           }
       }
-
+     // console.log("hi1");
       switch (role) {
           case "TourGuide":
               //   await Itinerary.updateMany( { tourGuide: userId }, { $set: { isActive: true } });
@@ -109,8 +112,10 @@ const deleteUser = async (req, res) => {
               await Advertiser.findByIdAndDelete(userId)
               break;
           case "Seller": // deletes seller and associated products
+             // console.log("hiA");
               await Product.deleteMany({ seller: userId });
-              await Seller.findByIdAndDelete(userId)
+            //  console.log("hiB");
+              await Seller.findByIdAndDelete(userId);
               break;
           case "Tourist": // deletes tourist without any restrictions
               // check that we have no future activities that are booked
@@ -127,8 +132,9 @@ const deleteUser = async (req, res) => {
           default:
               return res.status(400).json({ message: "Invalid role" });
       }
+     
       await User.deleteOne({ userId }); // deletes from the user table 
-
+//console.log("hi3");
       return res.status(200).json({ message: "Account deleted successfully." });
   } catch (error) {
       return res.status(500).json({ error: error.message });

@@ -276,7 +276,6 @@ export default function Profile() {
 
   const handleDeletion = async () => {
     try {
-      const response = await requestAccountDeletion("Tourist", userData);
       message.success(response.message);
       navigate("/");
     } catch (error) {

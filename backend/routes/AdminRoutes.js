@@ -7,14 +7,16 @@ const Admin = require("../models/users/Admin.js");
 const { adminFlagItinerary, getAllItinerariesForAdmin, } = require("../controllers/ItineraryController.js");
 const { getAllActivitiesForAdmin, adminFlagActivity, } = require("../controllers/ActivityController.js");
 const { verifyToken, authorizeRoles, } = require("../middleware/AuthMiddleware.js");
-router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
-
 router.delete(
   "/admin/user/:role/:userId",
   verifyToken,
   authorizeRoles("Admin"),
   deleteUser
 );
+
+
+router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
+
 
 router.get("/admin/users", verifyToken, authorizeRoles("Admin"), getAllUsers);
 
