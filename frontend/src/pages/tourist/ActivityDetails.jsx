@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Tag, message, Tour } from "antd";
+import { message, Tour } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleActivityHeader";
@@ -26,15 +26,14 @@ const ActivityDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const refActivityBook = useRef(null);
   const [open, setOpen] = useState(false);
 
   const steps = [
     {
-      title: "Book Activity.",
-      description: "Another step towards a great time.",
+      title: "Book Activity",
+      description: "Cross it off your bucket-list.",
       target: () => refActivityBook.current,
       onFinish: () => {
         setOpen(false); 
@@ -50,7 +49,6 @@ const ActivityDetailsPage = () => {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id);
         } else if (response.data.message === "No token found.") {
           setUserRole("Guest");
         } else {
@@ -92,7 +90,7 @@ const ActivityDetailsPage = () => {
       if (isFromTour) {
         setOpen(true); 
       }
-    }, 1000); 
+    }, 1200); 
   
     return () => clearTimeout(timer); 
   }, [location]);
@@ -118,7 +116,11 @@ const ActivityDetailsPage = () => {
               activityId={activityId}
               activityTitle={activity.title}
             />
-            <ActivityDetails activity={activity} refActivityBook={refActivityBook}/>
+            <ActivityDetails 
+              activity={activity} 
+              userRole={userRole}
+              refActivityBook={refActivityBook}
+            />
             <FooterThree />
           </>
         )}
@@ -136,7 +138,10 @@ const ActivityDetailsPage = () => {
                 activityId={activityId}
                 activityTitle={activity.title}
               />
-              <ActivityDetails activity={activity} />
+              <ActivityDetails 
+                activity={activity} 
+                userRole={userRole}
+              />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -153,7 +158,11 @@ const ActivityDetailsPage = () => {
               activityTitle={activity.title}
               tourist={"ana t3ebt"}
             />
-            <ActivityDetails activity={activity} refActivityBook={refActivityBook}/>
+            <ActivityDetails 
+              activity={activity} 
+              userRole={userRole}
+              refActivityBook={refActivityBook}
+            />
             <FooterThree />
           </>
         )}

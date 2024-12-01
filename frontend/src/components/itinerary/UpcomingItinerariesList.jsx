@@ -13,6 +13,8 @@ export default function ItinerariesList({
   searchTerm,
   curr = "EGP",
   page,
+  refItineraryDetails,
+  onFirstItineraryId
 }) {
 
   //#region States
@@ -154,6 +156,12 @@ export default function ItinerariesList({
   ]);
 
   useEffect(() => {}, [filteredItineraries]);
+
+  useEffect(() => {
+    if (filteredItineraries.length > 0) {
+      onFirstItineraryId(filteredItineraries[0]._id);
+    }
+  }, [filteredItineraries, onFirstItineraryId]);
 
   const handleSort = (field, order) => {
     const sortedItineraries = [...filteredItineraries].sort((a, b) => {
@@ -414,6 +422,7 @@ export default function ItinerariesList({
                       <button
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => handleRedirect(elm._id)}
+                        ref={i === 0 ? refItineraryDetails : null}
                       >
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>

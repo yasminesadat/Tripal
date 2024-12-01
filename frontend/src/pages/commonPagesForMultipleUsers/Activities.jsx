@@ -83,7 +83,7 @@ export default function Activities() {
       if (isFromTour) {
         setOpen(true); 
       }
-    }, 300); //might need to change it
+    }, 300);
   
     return () => clearTimeout(timer); 
   }, [location]);

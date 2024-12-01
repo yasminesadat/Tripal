@@ -8,37 +8,18 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { message } from "antd";
-import { getUserData } from "@/api/UserService";
 
-export default function ActivityDetails({ activity, refActivityBook }) {
+export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
   //#region 1. Variables
   const location = useLocation();
   const { page } = location.state || {};
   const markerPosition = [activity?.latitude|| 35.11, activity?.longitude||35.11];
-  const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
   const activityId = activity._id;  
   //#endregion
 
   //#region 2. useEffect
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getUserData();
-        if (response.data.status === "success") {
-          setUserRole(response.data.role);
-          setUserId(response.data.id); 
-        } else {
-          setUserRole("Guest");
-        }
-      } catch (error) {
-        message.error("Failed to fetch user data.");
-      }
-    };
-    fetchUserData();
-  }, []);
+  
   //#endregion
 
   if (!activity) return <div><Index/></div>;

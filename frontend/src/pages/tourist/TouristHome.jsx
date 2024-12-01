@@ -77,13 +77,18 @@ export default function TouristHome() {
       description: "Get to know where to go.",
       target: () => refHisPlaces.current,
       onNext: () => {
+        localStorage.setItem('currentStep', 5);
+        // navigate("/hist", { state: { fromTour: true } });
       }
     },
     {
       title: "Buy a product.",
       description: "Get yourself & your loved ones a souvenir.",
       target: () => refProducts.current,
-      // onNext: () => navigate("/upcoming-itineraries"),
+      onNext: () => {
+        localStorage.setItem('currentStep', 6);
+        // navigate("/prod", { state: { fromTour: true } });
+      }
     },
   ];
 
