@@ -225,7 +225,7 @@ cron.schedule('51 15 * * *', async () => {
         date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
         isBookingOpen: true,  // Only consider activities where booking is open
       });
-      console.log('Found activities:', activities); // For debugging, see what activities are found
+      //console.log('Found activities:', activities); // For debugging, see what activities are found
       if (activities.length > 0) {
         for (let activity of activities) {
           // Iterate over the tourists who booked the activity
@@ -256,5 +256,59 @@ cron.schedule('51 15 * * *', async () => {
       console.error('Error checking activities for 5 days later:', error);
     }
   });
+
+cron.schedule('51 15 * * *', async () => {
+  const today = moment().utc();  // Current date and time in UTC
+  const fiveDaysLater = today.add(5, 'days').startOf('day').utc(); // Start of the day in UTC
+  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+
+  // Log the dates to verify their values
+  console.log('Today:', today.toString());
+  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+  console.log('End of day (UTC):', endOfDay.toString());
+
+  try {
+    // Find itineraries that start in exactly 5 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
+    const itineraries = await Itinerary.find({
+      startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+      isActive: true,  // Only consider active itineraries
+    });
+
+    console.log('Found itineraries:', itineraries); // For debugging, see what itineraries are found
+
+    if (itineraries.length > 0) {
+      for (let itinerary of itineraries) {
+        // Log the itinerary startDate to check if it matches
+        console.log('Itinerary Start Date:', moment(itinerary.startDate).toString());
+
+        // Iterate over the tourists who booked the itinerary
+        for (let booking of itinerary.bookings) {
+          const tourist = await Tourist.findById(booking.touristId);
+          if (tourist && tourist.email) {
+            // Send email to the tourist
+            const subject = `Your upcoming itinerary: ${itinerary.title}`;
+            const html = `
+              <p>Dear ${tourist.userName},</p>
+              <p>This is a reminder that your booked itinerary, <strong>${itinerary.title}</strong>, is coming up in 5 days!</p>
+              <p>Location: ${itinerary.location}</p>
+              <p>Start Date: ${moment(itinerary.startDate).format('MMMM Do YYYY')}</p>
+              <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
+              <p>Best regards,</p>
+              <p>Your Tripal Team</p>
+            `;
+            
+            await sendEmail(tourist.email, subject, html);
+            console.log("SENT!");
+          }
+        }
+      }
+    } else {
+      console.log('No itineraries found for 5 days.');
+    }
+  } catch (error) {
+    console.error('Error checking itineraries for 5 days later:', error);
+  }
+});
+
 
 module.exports = {cancelResource, bookResource};
