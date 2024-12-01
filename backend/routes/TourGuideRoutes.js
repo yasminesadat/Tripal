@@ -16,7 +16,7 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 router.post("/tourGuide", createTourGuide);
 router.patch("/tourGuide/:id", updateTourguideData);
 router.get(
-  "/tourGuide/:id",
+  "/tourGuide",
   verifyToken,
   authorizeRoles("Tour Guide", "Admin"),
   getTourguideInfo

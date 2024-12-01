@@ -35,7 +35,7 @@ const createTourGuide = async (req, res) => {
 
 const getTourguideInfo = async (req, res) => {
   try {
-    const tourGuide = await tourGuideModel.findById(req.params.id);
+    const tourGuide = await tourGuideModel.findById(req.userId);
 
     if (!tourGuide) {
       return res.status(404).json({ error: "Tour Guide not found" });
@@ -49,7 +49,7 @@ const getTourguideInfo = async (req, res) => {
 
 const updateTourguideData = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.userId;
     const { currProfilePicture, initialProfilePicture, ...data } = req.body;
 
     if (initialProfilePicture) {

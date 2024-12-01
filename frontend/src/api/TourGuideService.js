@@ -2,16 +2,16 @@ import { axios } from "./axios";
 
 export async function createTourGuide(newUser) {
   try {
-    const response = await axios.post("/tourGuide/", newUser);
+    const response = await axios.post("/tourGuide", newUser);
     return response;
   } catch (error) {
     throw error;
   }
 }
 
-export const updateProfile = async (id, Data) => {
+export const updateProfile = async (Data) => {
   try {
-    const response = await axios.patch(`/tourGuide/${id}`, Data);
+    const response = await axios.patch(`/tourGuide`, Data);
     return response;
   } catch (error) {
     console.error("Error updating your profile:", error);
@@ -19,9 +19,9 @@ export const updateProfile = async (id, Data) => {
   }
 };
 
-export const getProfileData = async (id) => {
+export const getProfileData = async () => {
   try {
-    const response = await axios.get(`/tourGuide/${id}`);
+    const response = await axios.get(`/tourGuide`);
     return response;
   } catch (error) {
     console.error("Error fetch your profile data:", error);
