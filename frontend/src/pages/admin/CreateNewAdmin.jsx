@@ -73,10 +73,11 @@ try{
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           maxWidth: "55%",
-          marginLeft: "10%",
+          marginLeft: "23%",
+          marginTop: "8%",
         }}
       >
-        <Title level={3} style={{ textAlign: "center" }}>
+        <Title level={3} style={{ textAlign: "center" ,  fontWeight: 'bold'}}>
        Add New Admin
         </Title>
         <Text
@@ -100,13 +101,14 @@ try{
           autoComplete="off"
           initialValues={{ remember: true }}
           requiredMark={false}
-          style={{ width: "100%" }}
+          style={{ width: "100%", padding: "30px", }}
         >
           {/* Username Field */}
           <Form.Item
             label="Username"
             name="userName"
             rules={[{ required: true, message: "Please enter your username" }]}
+            labelCol={{ style: { fontWeight: 'bold' } }} 
           >
             <Input
               size="large"
@@ -128,6 +130,7 @@ try{
                 message: "Password must be at least 6 characters",
               },
             ]}
+            labelCol={{ style: { fontWeight: 'bold' } }} 
           >
             <Input.Password
               size="large"
@@ -139,15 +142,7 @@ try{
           </Form.Item>
 
           {/* Remember Me and Forgot Password */}
-          <Form.Item>
-            <Row justify="space-between" align="middle">
-              <Checkbox>Remember me</Checkbox>
-              <Link to="/forgot-password" className="sign-up-link">
-                Forgot password?
-              </Link>
-            </Row>
-          </Form.Item>
-
+         
           {/* Submit Button */}
           <Form.Item>
             <Button
@@ -155,7 +150,7 @@ try{
               htmlType="submit"
           //    loading={loading}
               className="custom-button"
-              style={{ width: "100%", height: "50px" }}
+              style={{ width: "100%", height: "50px" , marginTop:"35px"}}
             >
               Create
             </Button>
@@ -165,23 +160,23 @@ try{
       
       <style>{`
         .sign-up-link {
-          color: var(--color-stone)!important;
+          color: var(--color-dark-purple)!important;
           font-weight: bold;
         }
         .sign-up-link:hover {
-          color: var(--color-stone-light)!important;
+          color: var(--color-light-purple)!important;
           font-weight: bold;
         }
        .custom-button {
-          background-color: var(--color-stone-light) !important;
-          border-color: var(--color-stone-light)!important;
+          background-color: var(--color-dark-purple) !important;
+          border-color: var(--color-light-purple)!important;
         }
         .custom-button:hover,
         .custom-button.ant-btn:hover,
         .custom-button.ant-btn:focus,
         .custom-button.ant-btn-primary:hover {
-          background-color:--color-stone !important;
-          border-color: var(--color-stone) !important;
+          background-color:--color-light-purple !important;
+          border-color: var(--color-light-purple) !important;
         }
 
         /* Custom outline color for input fields */
@@ -195,19 +190,25 @@ try{
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
         }
 
-        /* Custom hover color for password field */
-        .ant-input-password:hover,
-        .ant-input-password:focus,
-        .ant-input-password-focused:hover {
+       .ant-form-item-label {
+          font-weight: bold;
+          font-size: 16px;
+          color: #4A4A4A;
+        }
+
+/* Specific label styling for 'Username' */
+        .ant-form-item-label[for="userName"] {
+          font-size: 18px;
+          color: #9b3d6d; /* Use a custom color */
+        }
+       
+        /* Fix for input hover color issue in password field */
+        .ant-input .ant-input-affix-wrapper:hover {
           border-color: var(--color-light-purple) !important;
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
         }
 
-        /* Fix for input hover color issue in password field */
-        .ant-input-password .ant-input-affix-wrapper:hover {
-          border-color: var(--color-light-purple) !important;
-          box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
-        }
+       
 
         /* Username input default border color to gray */
         .ant-input {
@@ -257,9 +258,7 @@ try{
         }
       `}</style>
     </>
-    <div className="text-center pt-30">
-            © Copyright Viatours {new Date().getFullYear()}
-          </div>
+  
     </div>
     </div>
     </div>

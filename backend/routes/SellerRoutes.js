@@ -13,21 +13,26 @@ const {
   authorizeRoles,
 } = require("../middleware/AuthMiddleware.js");
 
-router.post("/seller", createSeller);
+router.post("/seller",  
+  verifyToken,
+  authorizeRoles("Admin"),
+  createSeller);
+
+
 router.put(
-  "/seller/:id",
+  "/seller",
   verifyToken,
   authorizeRoles("Seller"),
   updateSellerData
 );
 router.get(
-  "/seller/:id",
+  "/seller",
   verifyToken,
   authorizeRoles("Seller", "Admin"),
   readSellerData
 );
 router.put(
-  "/seller-change-pass/:id",
+  "/seller-change-pass",
   validateIDs(["id"]),
   verifyToken,
   authorizeRoles("Seller"),

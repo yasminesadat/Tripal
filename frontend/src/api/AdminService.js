@@ -25,16 +25,18 @@ export async function changeAdminPassword(id, oldPassword, newPassword) {
   }
 }
 
-export const deleteUser = async (id) => {
+export async function deleteUser (role,userId) {
   try {
-    // Use backticks for template literals
-    const response = await axios.delete(`/admin/user/${id}`);
+    console.log("delete userr")
+    const response = await axios.delete(`/admin/user/${role}/${userId}`);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting user with id ${id}:`, error);
+    console.error(`Error deleting user with id ${userId}:`, error);
     throw error;
   }
-};
+}
+
+
 
 export const createAdmin = async (name, password) => {
   const requestBody = {
@@ -49,7 +51,7 @@ export const createAdmin = async (name, password) => {
     const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
     console.log("ERRPR MESSAGE", errorMessage)
     throw new Error(errorMessage);
-  };
+  }
 }
 
 export const createGovernor = async (name, password) => {

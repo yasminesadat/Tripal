@@ -16,11 +16,11 @@ const sellerSchema = new Schema(
       type: String,
       required: true,
     },
-    name: {
-      type: String,
-      required: false,
-      default: "",
-    },
+    // name: {
+    //   type: String,
+    //   required: false,
+    //   default: "",
+    // },
 
     description: {
       type: String,
