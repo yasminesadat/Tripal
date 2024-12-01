@@ -13,6 +13,8 @@ import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesServic
 export default function ActivitiesList({
   searchTerm,
   page,
+  refActivityDetails,
+  onFirstActivityId,
 }) {
 
   //#region States
@@ -44,6 +46,7 @@ export default function ActivitiesList({
     indexOfFirstActivity,
     indexOfLastActivity
   );
+
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
@@ -186,6 +189,12 @@ export default function ActivitiesList({
   ]);
 
   useEffect(() => {}, [filteredActivities]);
+
+  useEffect(() => {
+    if (filteredActivities.length > 0) {
+      onFirstActivityId(filteredActivities[0]._id);
+    }
+  }, [filteredActivities, onFirstActivityId]);
 
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
@@ -452,6 +461,7 @@ export default function ActivitiesList({
                       <button
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => handleRedirect(elm._id)}
+                        ref={i === 0 ? refActivityDetails : null}
                       >
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>

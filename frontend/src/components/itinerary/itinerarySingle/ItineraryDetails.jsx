@@ -12,7 +12,7 @@ import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";
 import Index from './Index'
 
-export default function ItineraryDetails({ itinerary, userRole }) {
+export default function ItineraryDetails({ itinerary, userRole, refItineraryBook }) {
   
   //#region 1. Variables
   const location = useLocation();
@@ -83,7 +83,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {page == "upcoming" && userRole === 'Tourist' && <TourSingleSidebar itinerary={itinerary} />}
+                {page == "upcoming" && userRole === 'Tourist' && <TourSingleSidebar itinerary={itinerary} refItineraryBook={refItineraryBook}/>}
               </div>
             </div>
           </div>

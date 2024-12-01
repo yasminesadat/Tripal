@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
@@ -8,44 +8,25 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { message } from "antd";
-import { getUserData } from "@/api/UserService";
 
-export default function ActivityDetails({ activity }) {
+export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
   //#region 1. Variables
   const location = useLocation();
   const { page } = location.state || {};
-  const markerPosition = [activity?.latitude || 35.11, activity?.longitude || 35.11];
-  const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const activityId = activity._id;
+  const markerPosition = [activity?.latitude|| 35.11, activity?.longitude||35.11];
+  const activityId = activity._id;  
   //#endregion
 
   //#region 2. useEffect
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getUserData();
-        if (response.data.status === "success") {
-          setUserRole(response.data.role);
-          setUserId(response.data.id);
-        } else {
-          setUserRole("Guest");
-        }
-      } catch (error) {
-        message.error("Failed to fetch user data.");
-      }
-    };
-    fetchUserData();
-  }, []);
+  
   //#endregion
 
   if (!activity) return <div><Index /></div>;
 
   return (
     <>
-      <section className="">
+      <section className="" >
         <div className="container">
 
           <ActivityMainInformation activity={activity} userRole ={userRole}/>
@@ -84,7 +65,7 @@ export default function ActivityDetails({ activity }) {
             {page === "upcoming" && userRole === 'Tourist' && (
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
-                  <TourSingleSidebar activity={activity} />
+                  <TourSingleSidebar activity={activity} refActivityBook={refActivityBook}/>
                 </div>
               </div>
             )}
