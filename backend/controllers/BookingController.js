@@ -207,32 +207,32 @@ try {
 
 //'1 * * * *' --> 1 min from now
 //'30 14 * * *' --> at 2 30 PM
+//'0 0 * * *' --> at midnight
+//LAW ANA YOOM 1 EL EMAIL HAYETBE3ET LAW EL EVENT YOOM 4
 
 // Cron job to run every day at midnight
-cron.schedule('51 15 * * *', async () => {
+cron.schedule('39 17 * * *', async () => {
     const today = moment().utc();  // Current date and time in UTC
-  const fiveDaysLater = today.add(4, 'days').startOf('day').utc(); // Start of the day in UTC
+  const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
   const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
 
-  // Log the dates to verify their values
   console.log('Today:', today.toString());
   console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
   console.log('End of day (UTC):', endOfDay.toString());
 
     try {
-      // Find activities that are exactly 5 days away, ensuring the activity date falls between midnight and 11:59:59.999
+      // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
       const activities = await Activity.find({
         date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-        isBookingOpen: true,  // Only consider activities where booking is open
+        isBookingOpen: true,  
       });
-      //console.log('Found activities:', activities); // For debugging, see what activities are found
+      //console.log('Found activities:', activities); 
       if (activities.length > 0) {
         for (let activity of activities) {
           // Iterate over the tourists who booked the activity
           for (let booking of activity.bookings) {
             const tourist = await Tourist.findById(booking.touristId);
             if (tourist && tourist.email) {
-              // Send email to the tourist
               const subject = `Your upcoming activity: ${activity.title}`;
               const html = `
                 <p>Dear ${tourist.userName},</p>
@@ -257,35 +257,32 @@ cron.schedule('51 15 * * *', async () => {
     }
   });
 
-cron.schedule('48 16 * * *', async () => {
+cron.schedule('41 17 * * *', async () => {
     const today = moment().utc();  // Current date and time in UTC
-    const fiveDaysLater = today.add(4, 'days').startOf('day').utc(); // Start of the day in UTC
+    const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
     const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
   
-    // Log the dates to verify their values
     console.log('Today:', today.toString());
     console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
     console.log('End of day (UTC):', endOfDay.toString());
 
   try {
-    // Find itineraries that start in exactly 5 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
+    // Find itineraries that start in exactly 3 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
     const itineraries = await itineraryModel.find({
         startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
         isActive: true,  // Only consider active itineraries
     });
 
-    console.log('Found itineraries:', itineraries); // For debugging, see what itineraries are found
+    //console.log('Found itineraries:', itineraries); 
 
     if (itineraries.length > 0) {
       for (let itinerary of itineraries) {
-        // Log the itinerary startDate to check if it matches
         console.log('Itinerary Start Date:', moment(itinerary.startDate).toString());
 
         // Iterate over the tourists who booked the itinerary
         for (let booking of itinerary.bookings) {
           const tourist = await Tourist.findById(booking.touristId);
           if (tourist && tourist.email) {
-            // Send email to the tourist
             const subject = `Your upcoming itinerary: ${itinerary.title}`;
             const html = `
               <p>Dear ${tourist.userName},</p>
