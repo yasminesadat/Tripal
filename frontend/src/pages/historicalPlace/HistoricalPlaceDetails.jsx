@@ -71,11 +71,11 @@ const HistoricalPlaceDetails = ({userRole}) => {
 
               <h2 className="text-30 mt-60 mb-30">Location</h2>
               <div className="mapTourSingle">
-                <LocationMap
+              <LocationMap
                   markerPosition={coordinates}
-                  setMarkerPosition={setCoordinates}
-                  setSelectedLocation={setAddress}
+                  search={"dont search bro"}
                 />
+                
               </div>
 
               {/* <div className="line mt-60 mb-60"></div>

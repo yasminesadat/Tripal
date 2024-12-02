@@ -241,7 +241,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
   return (
 
-    
+
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
@@ -260,7 +260,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
               </div>
             </div>
             <style>
-{`
+              {`
 .tourCard.-type-2 .tourCard__favorite2 {
   position: absolute;
   top: 20px;
@@ -268,8 +268,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
   z-index: 1;
 }
 `}
-      
-</style>
+
+            </style>
             <div className="row y-gap-30 pt-30">
               {filteredPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
@@ -279,7 +279,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
                       {userRole === "Tourism Governor" && <div className="tourCard__favorite2">
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
 
-                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace:elm } });
+                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace: elm } });
 
                         }}>
                           <i className="icon-pencil text-15"></i>
