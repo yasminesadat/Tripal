@@ -3,11 +3,13 @@ import ChangePassword from "./ChangePassword";
 import { useState } from "react";
 
 export default function OtpForm({ email }) {
+
     const [isOtpValid, setIsOtpValid] = useState(false);
 
     const handleOtpValidationSuccess = () => {
       setIsOtpValid(true);
     };
+    
   return (
     <div className="full-height-container">
         <div className="layout-pt-xl layout-pb-xl rounded-12">

@@ -36,7 +36,8 @@ const OtpModal = ({ visible, onClose,clearError  }) => {
     onClose();
   };
     //#endregion
-  return (
+  
+    return (
     <Modal
       title="Forgot Password?"
       visible={visible}
