@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
+import { saveFlightBooking } from "../../api/TouristService";
 //import { getHotelHistory } from "";
 //import TransportationBookingPopUp from './TransportationBooking';
 //import moment from "moment";
@@ -9,6 +10,7 @@ import { Checkbox } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
+import { loadStripe } from "@stripe/stripe-js";
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -29,6 +31,8 @@ const FlightBookingDetails = () => {
   const [isBookedOriginatingTransportation, setIsBookedOriginatingTransportation] = useState(false);
   const [isBookedReturnTransportation,setIsBookedReturnTransportation]=useState(false);
   const [isBookedAccepted,setIsBookedAccepted]=useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("wallet");
+  const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
   useEffect(() => {
     const fetchTouristInfo = async () => {
       try {
@@ -113,34 +117,43 @@ const FlightBookingDetails = () => {
   };
   const handlePaymentSubmit = async (event) => {
     event.preventDefault();
-    message.success("Payment processed successfully!");
-      try {
-        const body = {
-          bookedFlights: flight.itineraries.map((itinerary,index) => ({
-            flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
-            airline: flight.validatingAirlineCodes[0] || "Unknown",
-            departureTime: new Date(itinerary?.segments[0]?.departure?.at),
-            arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at),
-            origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
-            destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
-            price: flight.price?.total || "0.00",
-            currency: flight.price?.currency || "EGP",
-            bookingDate: new Date(),
-          })),
-        };
-        console.log("Formatted flight data:", body);
-        const response = await updateTouristInformation( body);
+    try {
+      const body = {
+        bookedFlights: flight.itineraries.map((itinerary, index) => ({
+          flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
+          airline: flight.validatingAirlineCodes[0] || "Unknown",
+          departureTime: new Date(itinerary?.segments[0]?.departure?.at).toISOString(),
+          arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
+          origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
+          destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
+          price: flight.price?.total.toString() || "0.00",
+          currency: flight.price?.currency || "EGP",
+        })),
+        useWallet: paymentMethod === "wallet",
+        paymentMethod,
+      };
+      if (paymentMethod === 'wallet') {
+        const response = await saveFlightBooking(body);
         console.log("Tourist updated with flight info:", response);
-        navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate, isBookedAccepted,isBookedOriginatingTransportation,isBookedReturnTransportation} });
-
-      } catch (error) {
-        console.error("Error updating tourist information:", error);
-        message.error("There was an issue updating your information.", error);
+        navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate, isBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation } });
       }
-    
+      
+      // If payment method is card, create a Stripe checkout session
+      else if (paymentMethod === 'card') {
+        const response = await saveFlightBooking(body);
+  
+        const stripe = await stripePromise;
+        const { sessionId } = response;
+  
+        const stripeSession = await stripe.redirectToCheckout({ sessionId });
+  
+      }
+  
+    } catch (error) {
+      console.error("Error updating tourist information:", error);
+      message.error("There was an issue updating your information.");
+    }
   };
-
-
   return (
     <>
       <MetaComponent title="Flight Booking Details" />
@@ -154,47 +167,36 @@ const FlightBookingDetails = () => {
             <div className="row">
               <div className="col-lg-6">
                 <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
-                  <h2 className="text-30 md:text-24 fw-700 mb-30">
-                    Payment Information
+                <h2 className="text-30 md:text-24 fw-700 mb-30">
+                    How would you like to pay?
                   </h2>
 
                   <form className="contactForm">
                     <div className="row y-gap-30">
-                      <div className="col-12">
-                        <div className="form-input">
-                          <input type="text" required />
-                          <label className="lh-1 text-16 text-light-1">
-                            Card Holder Name *
+                      <h5 className="text-18 fw-500 mb-20">Select Payment Method</h5>
+                      <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+                            <input
+                              type="radio"
+                              value="wallet"
+                              checked={paymentMethod === "wallet"}
+                              onChange={() => setPaymentMethod("wallet")}
+                              style={{ marginRight: "5px", transform: "scale(0.4)" }}
+                            />
+                            Wallet Payment
+                          </label>
+                          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+                            <input
+                              type="radio"
+                              value="card"
+                              checked={paymentMethod === "card"}
+                              onChange={() => setPaymentMethod("card")}
+                              style={{ marginRight: "5px", transform: "scale(0.4)" }}
+                            />
+                            Credit Card (via Stripe)
                           </label>
                         </div>
-                      </div>
 
-                      <div className="col-12">
-                        <div className="form-input">
-                          <input type="text" required />
-                          <label className="lh-1 text-16 text-light-1">
-                            Card Number *
-                          </label>
-                        </div>
-                      </div>
-
-                      <div className="col-6">
-                        <div className="form-input">
-                          <input type="text" required />
-                          <label className="lh-1 text-16 text-light-1">
-                            Expiry Date *
-                          </label>
-                        </div>
-                      </div>
-
-                      <div className="col-6">
-                        <div className="form-input">
-                          <input type="text" required />
-                          <label className="lh-1 text-16 text-light-1">
-                            CVV *
-                          </label>
-                        </div>
-                      </div>
 
                       {(isBookedOriginatingTransportation || isBookedReturnTransportation) && (
                         <div className="col-12">
