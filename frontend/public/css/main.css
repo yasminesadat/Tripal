@@ -632,7 +632,7 @@ img {
 }
 
 a {
-   color: inherit; 
+  color: inherit;
   font-size: inherit;
   line-height: inherit;
   font-weight: inherit;
@@ -641,7 +641,6 @@ a {
 }
 
 a:hover {
-  color: var(--color-white);
   text-decoration: none;
 }
 
