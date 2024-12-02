@@ -1,24 +1,74 @@
 
-import React from "react";
+import  { useEffect, useState } from "react";
+import { getConversionRate } from "../../api/ExchangeRatesService";
 
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {message} from "antd";
 
-export default function MainInformation({historicalPlace}) {
+export default function MainInformation({historicalPlace, userRole}) {
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const navigate = useNavigate();
+  // useEffect(() => {
+  //   const fetchExchangeRate = async () => {
+  //     if (curr) {
+  //       try {
+  //         const rate = await getConversionRate(curr);
+  //         setExchangeRate(rate);
+  //       } catch (error) {
+  //         message.error("Failed to fetch exchange rate.");
+  //       }
+  //     }
+  //   };
+
+  //   fetchExchangeRate();
+  // }, [curr]);
+
+  // const convertPrice = (price) => {
+  //   return (price * exchangeRate).toFixed(2);
+  // };
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
+
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this historical place!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
+    }
+  };
+
+
   
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-            {historicalPlace?.tags?.map((tag)=>
-            <div className="col-auto">
+            {historicalPlace?.tags?.map((tag,index)=>
+            <div className="col-auto" key={`tag-${index}`}>
               <button className="button -accent-1 text-14 py-5 px-15 bg-light-1 rounded-200">
                {tag?.name}
               </button>
             </div>
             )}
-             {historicalPlace?.historicalPeriod?.map((tag)=>
-            <div className="col-auto">
+             {historicalPlace?.historicalPeriod?.map((tag,index)=>
+            <div className="col-auto" key={`historicalPeriod-${index}`}>
               <button className="button -accent-1 text-14 py-5 px-15 bg-light-1 rounded-200">
                {tag?.name}
               </button>
@@ -57,18 +107,36 @@ export default function MainInformation({historicalPlace}) {
             </div>*/}
           </div>
         </div> 
-
+          
         <div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
-            <a href="#" className="d-flex items-center">
+           {userRole==="Tourism Governor" &&<a href="#" className="d-flex items-center"
+            onClick={() => (
+              navigate(`/update-historical-place/${historicalPlace._id}`,{state:{historicalPlace}})
+
+  )}>
+              <i className="icon-pencil flex-center text-16 mr-10"></i>
+              Edit
+            </a> }
+            {userRole==="Tourist" && <a href="#" className="d-flex items-center" onClick={() =>
+                  handleCopyLink(
+                    `${window.location.origin}/historical-places/${historicalPlace._id}`
+                  )
+                }>
+              <i className="icon-clipboard flex-center text-16 mr-10"></i>
+              Copy
+            </a> }
+            {userRole==="Tourist" && <a href="#" className="d-flex items-center" onClick={() =>
+                  handleShare(
+                    `${window.location.origin}/historical-places/${historicalPlace._id}`
+                  )
+                }>
               <i className="icon-share flex-center text-16 mr-10"></i>
               Share
-            </a>
+            </a>}
 
-            {/* <a href="#" className="d-flex items-center">
-              <i className="icon-heart flex-center text-16 mr-10"></i>
-              Wishlist
-            </a> */}
+            
+            
           </div>
         </div>
       </div>

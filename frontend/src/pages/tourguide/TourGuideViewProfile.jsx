@@ -947,7 +947,8 @@ const TourGuideProfile = () => {
           </div>
         </div >
       </div >
-      <ChangePassword userType="tour guide" />
+      
+
       <button onClick={handleDeletion}>Delete Account</button>
       </div>
       </div>

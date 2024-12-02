@@ -9,6 +9,7 @@ const governorRoutes = [
   { path: "/governor", element: <GovernorHome /> },
   { path: "/add-historical-place", element: <AddHistoricalPlace /> },
  { path: "/my-historical-places", element: <HistoricalPlacesList /> },
+ { path: "/update-historical-place/:id", element: <AddHistoricalPlace /> },
   // { path: "/create-historical-tag", element: <CreateHistoricalTag /> },
   // { path: "/governor/changepassword", element: <GovernorChangePassword /> },
 ];

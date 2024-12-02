@@ -57,7 +57,7 @@ export default function HistoricalPlacesDetails() {
           <>
              <GuestHeader />
            
-            <HistoricalPlaceDetails  />
+            <HistoricalPlaceDetails  userRole={userRole}/>
             <FooterThree />
           </>
         )}
@@ -72,7 +72,7 @@ export default function HistoricalPlacesDetails() {
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
             
-              <HistoricalPlaceDetails />
+              <HistoricalPlaceDetails userRole={userRole}/>
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -83,7 +83,7 @@ export default function HistoricalPlacesDetails() {
           <>
             <TouristHeader />
            
-            <HistoricalPlaceDetails  />
+            <HistoricalPlaceDetails  userRole={userRole}/>
             <FooterThree />
           </>
         )}
@@ -91,7 +91,7 @@ export default function HistoricalPlacesDetails() {
           <>
             <GovernorHeader />
            
-            <HistoricalPlaceDetails  />
+            <HistoricalPlaceDetails  userRole={userRole}/>
             <FooterThree />
           </>
         )}

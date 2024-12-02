@@ -8,12 +8,11 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getHistoricalPlaceDetails } from '../../api/HistoricalPlaceService'
 import { useLocation } from 'react-router-dom';
-const HistoricalPlaceDetails = () => {
+const HistoricalPlaceDetails = ({userRole}) => {
   const location = useLocation();
   const props = location.state?.governerHistoricalPlace;
   const prices = location.state?.ticketPrices;
   const currency = location.state?.currency;
-
   console.log(props);
   const { id } = useParams();
   const [address, setAddress] = useState("");
@@ -45,7 +44,7 @@ const HistoricalPlaceDetails = () => {
       <Gallery2 images={historicalPlace?.images} />
       <section className="pt-30">
         <div className="container">
-          <MainInformation historicalPlace={historicalPlace} />
+          <MainInformation historicalPlace={historicalPlace} userRole={userRole} />
         </div>
       </section>
 
