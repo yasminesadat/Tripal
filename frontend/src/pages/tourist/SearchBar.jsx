@@ -378,6 +378,12 @@ export default function FlightsList() {
                 type="text"
                 placeholder="From where?"
                 className="location-input"
+                style={{
+                  border: '1px solid #dac4d0',
+                  outline: "none", 
+                  borderRadius: '10px', 
+                  transition: 'all 0.3s ease'
+                }}
                 value={originInput}
                 onChange={(e) => handleInputChange(e, setOriginSearchData, setOriginActive, setOriginInput)}
               />
@@ -416,6 +422,12 @@ export default function FlightsList() {
                 type="text"
                 placeholder="Where to?"
                 className="location-input"
+                style={{
+                  border: '1px solid #dac4d0',
+                  outline: "none", 
+                  borderRadius: '10px', 
+                  transition: 'all 0.3s ease'
+                }}
                 value={destinationInput}
                 onChange={(e) => handleInputChange(e, setDestinationSearchData, setDestinationActive, setDestinationInput)}
               />
