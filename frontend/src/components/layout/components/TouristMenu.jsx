@@ -7,23 +7,23 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
       <div className="xl:d-none ">
         <div className="desktopNav">
 
-          <div className="desktopNavitem">
+          <div className="desktopNav__item">
             <Link to="/tourist">Home</Link>
           </div>
 
-          <div className="desktopNavitem" ref={refFlights}>
+          <div className="desktopNav__item" ref={refFlights}>
             <Link to="/tourist/book-flight" >Flights</Link>
           </div>
 
-          <div className="desktopNavitem" ref={refHotels}>
+          <div className="desktopNav__item" ref={refHotels}>
             <Link to="/hotel2">Hotels</Link>
           </div>
 
-          <div className="desktopNavitem" ref={refActivities}>
+          <div className="desktopNav__item" ref={refActivities}>
             <Link to="/upcoming-activities">Activities</Link>
           </div>
 
-          <div className="desktopNavitem" ref={refItineraries}>
+          <div className="desktopNav__item" ref={refItineraries}>
             <Link to="/upcoming-itineraries">Itineraries</Link>
           </div>
 
