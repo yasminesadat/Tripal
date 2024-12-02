@@ -53,18 +53,29 @@ const ChangePassword =({email})=>{
         <div style={{ marginBottom: "20px" }}>
       <LockKeyholeOpen size={40} color="#036264" />
         </div>
-        <h2 style={{ marginBottom: "20px" }}>Change Password</h2>
+        <h2 style={{ marginBottom: "20px" }}>Create New Password</h2>
+        <p style={{ marginBottom: "20px", color:'gray' }}>Please create a new password for your account.</p>
         <Input.Password
         placeholder="Enter new password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
-        style={{ width: "100%", marginBottom: "15px" }}
+        style={{ width: "100%",
+            marginBottom: "15px",
+            border: "1px solid #d9d9d9",
+            outline: "none",
+            backgroundColor: "transparent",
+            }}
       />
       <Input.Password
         placeholder="Confirm new password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
-        style={{ width: "100%", marginBottom: "15px" }}
+        style={{ width: "100%",
+            marginBottom: "15px",
+            border: "1px solid #d9d9d9",
+            outline: "none",
+            backgroundColor: "transparent",
+            }}
       />
       
       {/* Change Password Button */}
@@ -75,10 +86,30 @@ const ChangePassword =({email})=>{
         style={{
           width: "100%",
           marginTop: "20px",
+          backgroundColor: "#036264",
+          borderColor: "#036264",
+          color: "white"
         }}
-      >
+        onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#5a9ea0";
+            e.target.style.borderColor = "#5a9ea0";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "#036264";
+            e.target.style.borderColor = "#036264";
+          }}
+      > 
         Change Password
       </Button>
+      <style>
+       {`
+       .custom-input {
+        }
+        .custom-input:focus {
+        border-color: #8f5774;
+        }
+       `}
+      </style>
         </Card>
     );
 }
