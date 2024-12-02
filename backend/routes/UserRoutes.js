@@ -5,7 +5,6 @@ const {
   getUserData,
   logoutUser,
 } = require("../controllers/UserController");
-const { verifyToken } = require("../middleware/AuthMiddleware");
 
 router.post("/login", loginUser);
 router.get("/user-data", getUserData);
