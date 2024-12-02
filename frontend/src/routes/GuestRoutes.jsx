@@ -4,12 +4,14 @@ import ActivityDetailsPage from "../pages/tourist/ActivityDetails";
 import LoginPage from "@/pages/pages/login";
 import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 import HistoricalPlaces from "../pages/commonPagesForMultipleUsers/HistoricalPlaces";
+import HistoricalPlacesDetails from "../pages/commonPagesForMultipleUsers/HistoricalPlacesDetails"
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces  /> },
+  { path: "/historical-places/:id", element: <HistoricalPlacesDetails /> },
 
   // { path: "/itineraries/:itineraryId", element: <ItineraryDetailsPage /> },
 ];

@@ -1,13 +1,13 @@
-import  { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
-import { speedFeatures } from "@/data/tourFilteringOptions";
+// import { speedFeatures } from "@/data/tourFilteringOptions";
 import Stars from "../../components/common/Stars";
 // import {Pagination} from  "../../components/common/Pagination";
 import { getUserData } from "@/api/UserService";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
-import {getAllHistoricalPlacesByTourismGoverner,deleteHistoricalPlace,getAllHistoricalPlaces} from '../../api/HistoricalPlaceService';
-export default function HistoricalPlacesList({searchTerm}) {
+import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
+export default function HistoricalPlacesList({ searchTerm }) {
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -28,140 +28,170 @@ export default function HistoricalPlacesList({searchTerm}) {
     };
   }, []);
   const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-    const [userRole, setUserRole] = useState(null);
-    const [searchKey, setSearchKey] = useState(searchTerm);
-    const [sideBarOpen, setSideBarOpen] = useState(true);
-    const errorDisplayed = useRef(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+  const [searchKey, setSearchKey] = useState(searchTerm);
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const errorDisplayed = useRef(false);
+ useEffect(()=>{
+  const getHistoricalPlacesByGoverner = async () => {
+    setLoading(true);
+    try {
+      const result = await getAllHistoricalPlacesByTourismGoverner();
+      if (result) {
+        console.log("result: ", result);
+        setPlaces(result);
+        setFilteredPlaces(result);
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      //toast.error('Error while fetching')
+    }
+  }
+  const fetchPlaces = async () => {
+    try {
+      const response = await getAllHistoricalPlaces();
+      setPlaces(response);
+      setFilteredPlaces(response);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || "Error fetching historical places"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+  if(userRole!==null){
+    if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
+      fetchPlaces();
+    }
+    if (userRole === "Tourism Governor") {
+      getHistoricalPlacesByGoverner();
+    }  
+  }
 
-    useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const response = await getUserData();
-          if (response.data.status === "success") {
-            setUserRole(response.data.role);
-          } else if (response.data.message === "No token found.") {
-            setUserRole("Guest");
-          } else {
-            if (!errorDisplayed.current) {
-              message.error(response.data.message);
-              errorDisplayed.current = true;
-            }
-          }
-        } catch (error) {
+
+ },userRole)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserData();
+        if (response.data.status === "success") {
+          setUserRole(response.data.role);
+        } else if (response.data.message === "No token found.") {
+          setUserRole("Guest");
+        } else {
           if (!errorDisplayed.current) {
-            message.error("Failed to fetch user data.");
+            message.error(response.data.message);
             errorDisplayed.current = true;
           }
         }
-      };
-        const getHistoricalPlacesByGoverner = async () => {
-            setLoading(true);
-            try {
-                const result = await getAllHistoricalPlacesByTourismGoverner();
-                if (result) {
-                    console.log("result: ", result);
-                    setPlaces(result);
-                    setFilteredPlaces(result);
-                }
-                setLoading(false);
-            } catch (e) {
-                setLoading(false);
-                //toast.error('Error while fetching')
-            }
+      } catch (error) {
+        if (!errorDisplayed.current) {
+          message.error("Failed to fetch user data.");
+          errorDisplayed.current = true;
         }
-        const fetchPlaces = async () => {
-          try {
-            const response = await getAllHistoricalPlaces();
-            setPlaces(response);
-            setFilteredPlaces(response);
-          } catch (err) {
-            setError(
-              err.response?.data?.error || "Error fetching historical places"
-            );
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchUserData();
-        if(userRole==="Guest"||userRole==="Admin"||userRole==="Tourist"){
-          fetchPlaces();
-        }
-        if(userRole==="Tourism Governor"){
-          getHistoricalPlacesByGoverner();
-        }
-        
-        
-    }, []);
-    const handleDelete = async (id) => {
-        try {
-            const response = await deleteHistoricalPlace(id);
-            if (response) {
-                setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
-            }
-        }
-        catch (e) {
-          // error msg
-        }
+      }
+    };
+   
+    fetchUserData();
+   
+
+
+  }, []);
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteHistoricalPlace(id);
+      if (response) {
+        setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
+      }
+    }
+    catch (e) {
+      // error msg
+    }
+  }
+  const getMinPrice = (Place) => {
+
+    const minValue = Math.min(Place.ticketPrices.foreigner, Place.ticketPrices.native, Place.ticketPrices.student);
+    return minValue;
+
+  }
+
+
+  const [places, setPlaces] = useState([]);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState("EGP");
+  const [filters, setFilters] = useState({ historicType: [], historicalTagPeriod: [] });
+  useEffect(() => {
+    const curr = sessionStorage.getItem("currency");
+    if (curr) {
+      setCurrency(curr);
+    }
+  }, []);
+
+  const handleSearch = () => {
+    const lowerCaseSearchTerm = searchKey.toLowerCase();
+    const results = places.filter((place) => {
+      const matchesName = place.name
+        .toLowerCase()
+        .includes(lowerCaseSearchTerm);
+      const matchesTags =
+        place.tags &&
+        place.tags.some(
+          (tag) =>
+            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+      const matchesPeriods = place.historicalPeriod &&
+        place.historicalPeriod.some(
+          (tag) =>
+            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+
+      return matchesName || matchesTags || matchesPeriods;
+    });
+    setFilteredPlaces(results);
+  };
+
+  const handleFilter = (filters) => {
+    const { historicType, historicalTagPeriod } = filters;
+
+    if (historicType.length == 0 && historicalTagPeriod.length == 0) {
+      setFilteredPlaces(places);
+      return;
     }
 
+    const filtered = places.filter((place) => {
+      const matchesHistoricType = historicType.length > 0
+        ? place.tags &&
+        place.tags.some(placeTag =>
+          historicType.some(
+            historicTag =>
+              placeTag.name &&
+              historicTag &&
+              placeTag.name.toLowerCase().includes(historicTag.toLowerCase())
+          )
+        )
+        : true;
+      const matchesHistoricalTag = historicalTagPeriod > 0
+        ? place.historicalPeriod && place.historicalPeriod.some(tag => historicalTagPeriod.some(
+          historicPeriod =>
+            tag.name &&
+            historicPeriod &&
+            tag.name.toLowerCase().includes(historicPeriod.toLowerCase())
+        ))
+        : true;
 
-    const [places, setPlaces] = useState([]);
-    const [filteredPlaces, setFilteredPlaces] = useState([]);
-    const [error, setError] = useState(null);
-    const [currency, setCurrency] = useState("EGP");
-  
-    useEffect(() => {
-      const curr = sessionStorage.getItem("currency");
-      if (curr) {
-        setCurrency(curr);
-      }
-    }, []);
-  
-    const handleSearch = () => {
-      const lowerCaseSearchTerm = searchKey.toLowerCase();
-      const results = places.filter((place) => {
-        const matchesName = place.name
-          .toLowerCase()
-          .includes(lowerCaseSearchTerm);
-        const matchesTags =
-          place.tags &&
-          place.tags.some(
-            (tag) =>
-              tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
-          );
-  
-        return matchesName || matchesTags;
-      });
-      setFilteredPlaces(results);
-    };
-  
-    const handleFilter = (filters) => {
-      const { historicType, historicalTagPeriod } = filters;
-  
-      if (!historicType && !historicalTagPeriod) {
-        setFilteredPlaces(places);
-        return;
-      }
-  
-      const filtered = places.filter((place) => {
-        const matchesHistoricType = historicType
-          ? place.tags && place.tags.some(tag => tag.name && tag.name.toLowerCase().includes(historicType.toLowerCase()))
-          : true;
-  
-        const matchesHistoricalTag = historicalTagPeriod
-          ? place.historicalPeriod && place.historicalPeriod.some(tag => tag.name && tag.name.toLowerCase().includes(historicalTagPeriod.toLowerCase()))
-          : true;
-  
-        return matchesHistoricType && matchesHistoricalTag;
-      });
-  
-      setFilteredPlaces(filtered);
-    };
-  
-    // if (loading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error}</div>;
+      return matchesHistoricType && matchesHistoricalTag;
+    });
+
+    setFilteredPlaces(filtered);
+  };
+
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="layout-pb-xl">
@@ -169,14 +199,13 @@ export default function HistoricalPlacesList({searchTerm}) {
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-              <Sidebar />
+              <Sidebar setFilters={setFilters} />
             </div>
 
-            <div className="accordion d-none mb-30 lg:d-flex js-accordion">
+            {/* <div className="accordion d-none mb-30 lg:d-flex js-accordion">
               <div
-                className={`accordion__item col-12 ${
-                  sidebarActive ? "is-active" : ""
-                } `}
+                className={`accordion__item col-12 ${sidebarActive ? "is-active" : ""
+                  } `}
               >
                 <button
                   className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
@@ -184,61 +213,28 @@ export default function HistoricalPlacesList({searchTerm}) {
                 >
                   <i className="icon-sort-down mr-10 text-16"></i>
                   Filter
-                </button>
+                </button> */}
 
-                <div
+                {/* <div
                   className="accordion__content"
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                >
-                  <div className="pt-20">
-                    <Sidebar />
-                  </div>
-                </div>
-              </div>
-            </div>
+                > */}
+                  {/* <div className="pt-20">
+                    <Sidebar setFilters={setFilters} />
+                  </div> */}
+                {/* </div> */}
+              {/* </div> */}
+            {/* </div> */}
           </div>
 
           <div className="col-xl-9 col-lg-8">
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
-                <div>{governerHistoricalPlace?.length} results</div>
+                <div>{filteredPlaces?.length} results</div>
               </div>
 
-              <div ref={dropDownContainer} className="col-auto">
-                <div
-                  className={`dropdown -type-2 js-dropdown js-form-dd ${
-                    ddActives ? "is-active" : ""
-                  } `}
-                  data-main-value=""
-                >
-                  <div
-                    className="dropdown__button js-button"
-                    onClick={() => setDdActives((pre) => !pre)}
-                  >
-                    <span>Sort by: </span>
-                    <span className="js-title">
-                      {sortOption ? sortOption : "Featured"}
-                    </span>
-                    <i className="icon-chevron-down"></i>
-                  </div>
-
-                  <div className="dropdown__menu js-menu-items">
-                    {speedFeatures.map((elm, i) => (
-                      <div
-                        onClick={() => {
-                          setSortOption((pre) => (pre == elm ? "" : elm));
-                          setDdActives(false);
-                        }}
-                        key={i}
-                        className="dropdown__item"
-                        data-value="fast"
-                      >
-                        {elm}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+             
+             
             </div>
 
             <div className="row y-gap-30 pt-30">
@@ -246,28 +242,10 @@ export default function HistoricalPlacesList({searchTerm}) {
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
-                     {elm?.images?.length>0&&<img src={elm.images[0].url} alt="image" />}                      {elm.badgeText && (
-                        <div className="tourCard__badge">
-                          <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
-                            {elm.badgeText}
-                          </div>
-                        </div>
-                      )}
-
-                      {elm.featured && (
-                        <div className="tourCard__badge">
-                          <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
-                            FEATURED
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
-                          <i className="icon-heart text-15"></i>
-                        </button>
-                      </div>
+                      {elm?.images?.length > 0 && elm.images[0]?.url&& <img src={elm.images[0].url} alt="image" />}
                     </div>
+                   
+
 
                     <div className="tourCard__content">
                       <div className="tourCard__location">
@@ -279,49 +257,28 @@ export default function HistoricalPlacesList({searchTerm}) {
                         <span>{elm.name}</span>
                       </h3>
 
-                      <div className="d-flex items-center mt-5">
-                        <div className="d-flex items-center x-gap-5">
-                          <Stars star={elm.rating} font={12} />
-                        </div>
-
-                        {/* <div className="text-14 ml-10">
-                          <span className="fw-500">{elm.rating}</span> (
-                          {elm.ratingCount})
-                        </div> */}
-                      </div>
+                  
 
                       <p className="tourCard__text mt-5">{elm.description}</p>
 
-                      <div className="row x-gap-20 y-gap-5 pt-30">
-                        {elm.features?.map((elm2, i2) => (
-                          <div key={i2} className="col-auto">
-                            <div className="text-14 text-accent-1">
-                              <i className={`${elm2.icon} mr-10`}></i>
-                              {elm2.name}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                     
                     </div>
 
                     <div className="tourCard__info">
                       <div>
-                        <div className="d-flex items-center text-14">
-                          <i className="icon-clock mr-10"></i>
-                          {elm.duration}
-                        </div>
+                       
 
                         <div className="tourCard__price">
-                          <div>${elm.fromPrice}</div>
+                          <div></div>
 
                           <div className="d-flex items-center">
                             From{" "}
                             <span className="text-20 fw-500 ml-5">
-                              ${elm.price}
+                              {currency}{getMinPrice(elm)}
                             </span>
                           </div>
                         </div>
-                      </div> 
+                      </div>
 
                       <button className="button -outline-accent-1 text-accent-1">
                         <Link to={`/historical-places/${elm._id}`}>
@@ -330,6 +287,8 @@ export default function HistoricalPlacesList({searchTerm}) {
                         </Link>
                       </button>
                     </div>
+
+
                   </div>
                 </div>
               ))}
@@ -339,7 +298,7 @@ export default function HistoricalPlacesList({searchTerm}) {
               {/* <Pagination /> */}
 
               <div className="text-14 text-center mt-20">
-                Showing results 1-30 of 1,415
+                {/* Showing results 1-30 of 1,415 */}
               </div>
             </div>
           </div>

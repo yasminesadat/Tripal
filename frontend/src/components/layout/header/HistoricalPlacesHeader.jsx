@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import HeaderSearch from "./HeaderSearch";
+import HeaderSearch from "../../../pages/historicalPlace/components/HeaderSearch";
 
 export default function PageHeader({onSearch, title,  userRole}) {
   return (
