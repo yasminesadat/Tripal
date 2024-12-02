@@ -21,12 +21,9 @@ const Revenue = () => {
             setLoading(true);
             try {
                 const activityResponse = await getAllActivities();
-                console.log("activities "+activityResponse.data)
                 setActivities(activityResponse.data);
-                //haddd ye fix el 404 daaaaaaaaaaaaaaaa
                 const itineraryResponse = await getAllItineraries();
-                console.log("itineraries"+itineraryResponse);
-                setItineraries(itineraryResponse);
+                setItineraries(itineraryResponse.data);
                 const productResponse = await fetchProducts();
                 setProducts(productResponse.products);
             } catch (error) {

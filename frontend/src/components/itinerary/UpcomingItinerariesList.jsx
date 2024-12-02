@@ -407,7 +407,6 @@ export default function ItinerariesList({
                       <p className="tourCard__text mt-5">
                         {truncateText(elm.description, 50)}
                       </p>
-                     { console.log(elm.tags)}
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
