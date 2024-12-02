@@ -9,7 +9,8 @@ const itineraryModel = require("../models/Itinerary.js");
 const productModel = require("../models/Product.js");
 const PromoCode = require("../models/PromoCode.js")
 const cron = require('node-cron');
-
+const { sendEmail } = require('./Mailer');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 cron.schedule('00 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -93,7 +94,7 @@ cron.schedule('59 23 * * *', async () => {
 });
 
 
-const { sendEmail } = require('./Mailer');const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -843,7 +844,7 @@ module.exports = {
   getWishList,
   removeFromWishList,
   getRandomPromoCode,
-  getTouristNotifications
+  getTouristNotifications,
   // checkTouristPromocode,
   saveFlightBooking,
   completeFlightBooking
