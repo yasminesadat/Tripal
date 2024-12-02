@@ -25,7 +25,7 @@ export async function changeAdminPassword(id, oldPassword, newPassword) {
   }
 }
 
-export async function deleteUser (role,userId) {
+export async function deleteUser(role, userId) {
   try {
     console.log("delete userr")
     const response = await axios.delete(`/admin/user/${role}/${userId}`);
@@ -70,9 +70,9 @@ export const createGovernor = async (name, password) => {
   }
 }
 
-export const flagItinerary = async (itineraryId,userData) => {
+export const flagItinerary = async (itineraryId, userData) => {
   try {
-    const response = await axios.put(`/admin/flag-itinerary/${itineraryId}`,userData);
+    const response = await axios.put(`/admin/flag-itinerary/${itineraryId}`, userData);
     return response.data;
   } catch (error) {
     console.error(`Error flagging itinerary with id ${itineraryId}`, error);
@@ -100,9 +100,9 @@ export const getAdminActivities = async () => {
   }
 };
 
-export const flagActivity = async (activityId,userData) => {
+export const flagActivity = async (activityId, userData) => {
   try {
-    const response = await axios.patch(`/admin/flag-activity/${activityId}`,userData);
+    const response = await axios.patch(`/admin/flag-activity/${activityId}`, userData);
     return response.data;
   } catch (error) {
     console.error(`Error flagging activity with id ${activityId}`, error);
@@ -126,7 +126,8 @@ export const getPromoCodes = async () => {
     return response.data;
   } catch (error) {
     console.error(`Error getting promo cods`, error);
-
+  }
+}
 export const getEventOwnerData = async (userId) => {
   try {
     const response = await axios.get(`/admin/getDataForEventOwner/${userId}`);

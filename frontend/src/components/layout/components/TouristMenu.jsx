@@ -1,40 +1,33 @@
 import { Link, useLocation } from "react-router-dom";
 
-import NotificationTab from "@/components/common/NotificationBell";
-export default function Menu() {
-  const { pathname } = useLocation();
-
-
 export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
 
   return (
     <>
       <div className="xl:d-none ">
         <div className="desktopNav">
-          <NotificationTab />
 
-          <div className="desktopNav__item">
-
+          <div className="desktopNavitem">
             <Link to="/tourist">Home</Link>
           </div>
 
-          <div className="desktopNav__item" ref={refFlights}>
+          <div className="desktopNavitem" ref={refFlights}>
             <Link to="/tourist/book-flight" >Flights</Link>
           </div>
 
-          <div className="desktopNav__item" ref={refHotels}>
+          <div className="desktopNavitem" ref={refHotels}>
             <Link to="/hotel2">Hotels</Link>
           </div>
 
-          <div className="desktopNav__item" ref={refActivities}>
+          <div className="desktopNavitem" ref={refActivities}>
             <Link to="/upcoming-activities">Activities</Link>
           </div>
 
-          <div className="desktopNav__item" ref={refItineraries}>
+          <div className="desktopNavitem" ref={refItineraries}>
             <Link to="/upcoming-itineraries">Itineraries</Link>
           </div>
 
-          <div className="desktopNav__item" ref={refHisPlaces}>
+          <div className="desktopNavitem" ref={refHisPlaces}>
             <Link to="/destinations">Historical Places</Link>
           </div>
 
