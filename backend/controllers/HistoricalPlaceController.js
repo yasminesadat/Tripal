@@ -67,7 +67,8 @@ const createHistoricalPlace = async (req, res) => {
     req.body.tags = tagsID;
     req.body.historicalPeriod = historicalPeriodsID;
     const historicalPlace = await HistoricalPlace.create({
-      ...req.body
+      ...req.body,
+      tourismGovernor:req.userId
     });
 
 
@@ -148,14 +149,17 @@ const getAllHistoricalPlaces = (req, res) => {
 // };
 
 const getTourismGovernerHistoricalPlaces = async (req, res) => {
-  const { id } = req.params;
+  const id=req.userId;
   try {
     const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: id }).populate("tags").populate("historicalPeriod");
     res.status(200).json(historicalPlaces);
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    console.error(error);
+    res.status(400).json({ error: error.message });
   }
 };
+
+
 
 const updateHistoricalPlaces = async (req, res) => {
   const id = req.params.id;
