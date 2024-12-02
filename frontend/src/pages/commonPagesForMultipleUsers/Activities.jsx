@@ -123,6 +123,8 @@ export default function Activities() {
               <ActivitiesList 
                 page={"upcoming"} 
                 searchTerm={searchTerm} 
+                refActivityDetails={refActivityDetails} 
+                onFirstActivityId={handleFirstActivityId}
               />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}

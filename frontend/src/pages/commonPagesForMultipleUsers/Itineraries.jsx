@@ -117,7 +117,7 @@ export default function Itineraries() {
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
               <PageHeader onSearch={handleSearch} title="View all itineraries" userRole={userRole} />
-              <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
+              <ItinerariesList page={"upcoming"} searchTerm={searchTerm} onFirstItineraryId={handleFirstItineraryId}/>
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -128,7 +128,7 @@ export default function Itineraries() {
         {userRole === "Tourist" && (
           <>
             <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
-            <Header1 />
+            <TouristHeader />
             <PageHeader onSearch={handleSearch} title="Explore all upcoming itineraries" userRole={userRole}/>
             <ItinerariesList 
               page={"upcoming"} 
@@ -144,7 +144,7 @@ export default function Itineraries() {
           <>
             <TourGuideHeader />
             <PageHeader onSearch={handleSearch} title="Manage My Itineraries" userRole={userRole}/>
-            <ItinerariesList page={"upcoming"} searchTerm={searchTerm} />
+            <ItinerariesList page={"upcoming"} searchTerm={searchTerm} onFirstItineraryId={handleFirstItineraryId}/>
             <FooterThree />
           </>
         )}

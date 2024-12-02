@@ -74,7 +74,7 @@ const ActivityDetailsPage = () => {
       }
     };
     fetchActivities();
-  }, [activityIdactivityId]);
+  }, [activityId]);
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
