@@ -1,4 +1,5 @@
 import ValidateOtp from "./ValidateOtp";
+import ChangePassword from "./ChangePassword";
 
 export default function OtpForm({ email }) {
   return (
@@ -18,7 +19,8 @@ export default function OtpForm({ email }) {
           </div>
 
           <div className="row y-gap-30 justify-center items-center">
-           <ValidateOtp email={email} />
+           {/* <ValidateOtp email={email} /> */}
+            <ChangePassword email={email} />
           </div>
         </div>
         <style>{`
