@@ -12,7 +12,11 @@ const NotificationTab = () => {
         setLoading(true);
         try {
             const notifications = await getTouristNotifications();
-            setNotifications(notifications);
+            // Sort notifications by date in descending order (most recent first)
+            const sortedNotifications = [...notifications].sort((a, b) =>
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setNotifications(sortedNotifications);
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -146,9 +150,6 @@ const NotificationTab = () => {
                                             )}
                                             <div className={`notification-item p-2 ${!notification.read ? 'unread' : ''}`}>
                                                 <div className="flex items-start gap-2">
-                                                    {/* <div className="text-sm">
-                                                        {notification.notifType === 'birthday' ? '🎀' : '✨'}
-                                                    </div> */}
                                                     <div className="flex-1">
                                                         <div className="text-xs text-[#8f5774] mb-1 flex items-center justify-between">
                                                             <span>{notification.message} </span>
