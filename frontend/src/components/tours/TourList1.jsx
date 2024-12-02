@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import { speedFeatures } from "@/data/tourFilteringOptions";
 import { tourDataTwo } from "@/data/tours";

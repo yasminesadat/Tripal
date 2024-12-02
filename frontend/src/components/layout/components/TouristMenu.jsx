@@ -27,8 +27,8 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
             <Link to="/upcoming-itineraries">Itineraries</Link>
           </div>
 
-          <div className="desktopNavitem" ref={refHisPlaces}>
-            <Link to="/destinations">Historical Places</Link>
+          <div className="desktopNav__item" ref={refHisPlaces}>
+            <Link to="/historicalPlaces">Historical Places</Link>
           </div>
 
           <div className="desktopNav__item" ref={refProducts}>

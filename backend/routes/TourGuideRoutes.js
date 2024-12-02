@@ -27,7 +27,7 @@ router.get(
 
 
 router.get(
-  "/tourGuide/:id",
+  "/tourGuide",
   verifyToken,
   authorizeRoles("Tour Guide", "Admin"),
   getTourguideInfo
