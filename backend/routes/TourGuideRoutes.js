@@ -15,7 +15,8 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 // defining tour-guide routes
 
 router.post("/tourGuide", createTourGuide);
-router.patch("/tourGuide/:id", updateTourguideData);
+router.patch("/tourGuide",verifyToken,
+  authorizeRoles("Tour Guide"), updateTourguideData);
 
 
 router.get(
