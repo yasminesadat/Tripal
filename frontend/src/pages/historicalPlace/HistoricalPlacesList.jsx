@@ -32,7 +32,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
+    }, 1); return () => clearInterval(intervalId);
   }, [currency]);
 
 
@@ -73,7 +73,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
         setLoading(false);
       } catch (e) {
         setLoading(false);
-        
+
       }
     }
     const fetchPlaces = async () => {
@@ -131,13 +131,41 @@ export default function HistoricalPlacesList({ searchTerm }) {
     try {
       const response = await deleteHistoricalPlace(id);
       if (response) {
-        setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
+        setPlaces(places.filter(place => place._id !== id));
+        setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
+        message.success("Deleted Successfully");
       }
     }
     catch (e) {
-      // error msg
+      message.error("Failed to delete");
     }
   }
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
+
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this historical place!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
+    }
+  };
   const getMinPrice = (Place) => {
 
     const minValue = Math.min(Place.ticketPrices.foreigner, Place.ticketPrices.native, Place.ticketPrices.student);
@@ -212,6 +240,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
   return (
+
+    
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
@@ -220,7 +250,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
               <Sidebar setFilters={setFilters} />
             </div>
 
-       
+
           </div>
 
           <div className="col-xl-9 col-lg-8">
@@ -228,17 +258,61 @@ export default function HistoricalPlacesList({ searchTerm }) {
               <div className="col-auto">
                 <div>{filteredPlaces?.length} results</div>
               </div>
-
-
-
             </div>
-
+            <style>
+{`
+.tourCard.-type-2 .tourCard__favorite2 {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  z-index: 1;
+}
+`}
+      
+</style>
             <div className="row y-gap-30 pt-30">
               {filteredPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
                       {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+
+                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace:elm } });
+
+                        }}>
+                          <i className="icon-pencil text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+                          handleDelete(elm._id);
+
+                        }}>
+                          <i className="icon-delete text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleCopyLink(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-clipboard text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleShare(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-share text-15"></i>
+                        </button>
+                      </div>}
+
+
                     </div>
 
 

@@ -8,7 +8,7 @@ import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
 import LocationMap from '../../components/common/MapComponent';
-import message from "antd";
+import {message} from "antd";
 import { useNavigate } from "react-router-dom";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
 const tabs = ["Content", "Timings", "Location", "Pricing"];
@@ -177,13 +177,13 @@ export default function AddHistoricalPlace() {
           },
           openingHours: {
             weekdays: {
-              openingTime: (formData.openingHours.weekdays.openingTime).format("HH:mm"),
-              closingTime: (formData.openingHours.weekdays.closingTime).format("HH:mm"),
+              openingTime: (formData.openingHours.weekdays.openingTime).toString(),
+              closingTime: (formData.openingHours.weekdays.closingTime).toString(),
 
             },
             weekends: {
-              openingTime: (formData.openingHours.weekends.openingTime).format("HH:mm"),
-              closingTime: (formData.openingHours.weekends.closingTime).format("HH:mm"),
+              openingTime: (formData.openingHours.weekends.openingTime).toString(),
+              closingTime: (formData.openingHours.weekends.closingTime).toString(),
             },
           },
           ticketPrices: {
@@ -232,14 +232,12 @@ export default function AddHistoricalPlace() {
       //   label: tag.name,
       //   value: tag._id
       // }))],
-      weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-      weekendClosingTime: formData.openingHours?.weekends?.closingTime
-        ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
-        : null,
-      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-      weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-        ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-        : null,
+      weekendOpeningTime: formData.openingHours.weekends.openingTime? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null ,
+      weekendClosingTime: formData.openingHours?.weekends?.closingTime? moment(formData.openingHours?.weekends?.closingTime, "HH:mm:ss") : null 
+        ,
+      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss") : null ,
+      weekdayClosingTime: formData.openingHours?.weekdays?.closingTime? moment(formData.openingHours?.weekdays?.closingTime, "HH:mm:ss") : null 
+        ,
         foreignerPrice: formData.ticketPrices.foreigner,
         nativePrice: formData.ticketPrices.native,
         studentPrice:formData.ticketPrices.student,
@@ -306,11 +304,11 @@ export default function AddHistoricalPlace() {
                             label: tag.name,
                             value: tag._id
                           }))],
-                          weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-                          weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
-                          weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+                          weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null,
+                          weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm:ss"): null,
+                          weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss"): null,
                           weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm:ss')
                             : null,
                           foreignerPrice: formData.ticketPrices.foreigner,
                           nativePrice: formData.ticketPrices.native,
@@ -319,6 +317,7 @@ export default function AddHistoricalPlace() {
 
                         }}
                         onValuesChange={(changedValues, allValues) => {
+                          console.log(allValues)
                           setFormData({
                             ...formData,
                             name: allValues.name,
@@ -337,16 +336,16 @@ export default function AddHistoricalPlace() {
                             //     _id: tag ? tag._id : ''
                             //   };
                             //}),
-                            openingHours: {
-                              weekdays: {
-                                openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
-                                closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
-                              },
-                              weekends: {
-                                openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
-                                closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
-                              }
-                            },
+                            // openingHours: {
+                            //   weekdays: {
+                            //     openingTime: allValues.weekdayOpeningTime?.toString(),
+                            //     closingTime: allValues.weekdayClosingTime?.toString(),
+                            //   },
+                            //   weekends: {
+                            //     openingTime: allValues.weekendOpeningTime?.toString(),
+                            //     closingTime: allValues.weekendClosingTime?.toString(),
+                            //   }
+                            // },
                             ticketPrices: {
                               foreigner: allValues.foreignerPrice,
                                native:allValues.nativePrice,
@@ -639,7 +638,20 @@ export default function AddHistoricalPlace() {
                                     border: '1px solid #ccc',
                                     borderRadius: '10px', // Optional for a rounded look
                                   }}
-                                  placeholder="please select the weekends opening time" />
+                                  placeholder="please select the weekends opening time" 
+                                   onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekends: {
+                                        ...data.openingHours.weekends,
+                                        openingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                                 />
                               </Form.Item>
                             </div>
 
@@ -663,7 +675,19 @@ export default function AddHistoricalPlace() {
                                     border: '1px solid #ccc',
                                     borderRadius: '10px', // Optional for a rounded look
                                   }}
-                                  placeholder="please select the weekends closing time" />
+                                  placeholder="please select the weekends closing time" 
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekends: {
+                                                ...data.openingHours.weekends,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }}/>
                               </Form.Item>
 
                             </div>
@@ -688,7 +712,19 @@ export default function AddHistoricalPlace() {
                                     border: '1px solid #ccc',
                                     borderRadius: '10px', // Optional for a rounded look
                                   }}
-                                  placeholder="please select the weekdays opening time" />
+                                  placeholder="please select the weekdays opening time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                openingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
                               </Form.Item>
                             </div>
 
@@ -713,7 +749,19 @@ export default function AddHistoricalPlace() {
                                     border: '1px solid #ccc',
                                     borderRadius: '10px', // Optional for a rounded look
                                   }}
-                                  placeholder="please select the weekdays closing time" />
+                                  placeholder="please select the weekdays closing time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
                               </Form.Item>
 
                             </div>
