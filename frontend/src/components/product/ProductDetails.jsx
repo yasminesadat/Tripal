@@ -36,7 +36,7 @@ const steps = [
     target: () => refProdToCart.current,
     onFinish: () => {
       setOpen(false); 
-      navigate("/tourist", { state: { fromTour: true, targetStep: 6 } });
+      navigate("/tourist", { state: { fromTour: true, targetStep: 7 } });
     },
   },
 ]

@@ -78,7 +78,7 @@ export default function TouristHome() {
       target: () => refHisPlaces.current,
       onNext: () => {
         localStorage.setItem('currentStep', 5);
-        navigate("/historical-places", { state: { fromTour: true } });
+        navigate("/historicalPlaces", { state: { fromTour: true } });
       }
     },
     {
@@ -92,7 +92,7 @@ export default function TouristHome() {
     },
     {
       title: "That's it!",
-      description: "Now you can start your journey to an unforgettable experience",
+      description: "Now you can start your journey for an unforgettable experience.",
       target: () => refFinish.current,
       onFinish: () => {
         localStorage.setItem('currentStep', 0);

@@ -29,7 +29,7 @@ export default function Activities() {
 
   const steps = [
     {
-      title: "Check More Details.",
+      title: "Check More Details",
       description: "Helps you in making a final decision.",
       target: () => refActivityDetails.current, 
       onNext: () => {
