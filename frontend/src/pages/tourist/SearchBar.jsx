@@ -8,13 +8,12 @@ import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 
-export default function FlightSearchUI() {
+export default function FlightsList() {
   const [originLocationCode, setOriginLocationCode] = useState('');
   const [destinationLocationCode, setDestinationLocationCode] = useState('');
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [passengers, setPassengers] = useState(1);
-  const [cabinType, setCabinType] = useState('ECONOMY');
   const [originSearchData, setOriginSearchData] = useState([]);
   const [destinationSearchData, setDestinationSearchData] = useState([]);
   const [originActive, setOriginActive] = useState(false);
@@ -24,6 +23,10 @@ export default function FlightSearchUI() {
   const [tripType, setTripType] = useState('roundTrip');
   const [showPassengers, setShowPassengers] = useState(false);
   const [showCabin, setShowCabin] = useState(false);
+  const [showNumberOfAdults, setShowNumberOfAdults] = useState(false);
+  const [showCabinType, setShowCabinType] = useState(false);
+  const [numberOfAdults, setNumberOfAdults] = useState(1);
+  const [cabinType, setCabinType] = useState('ECONOMY');
 
   const navigate = useNavigate();
   const originRef = useRef();
@@ -113,6 +116,7 @@ export default function FlightSearchUI() {
             max-width: 1200px;
             margin: 0 auto;
           }
+            
 
           .flight-options {
             display: flex;
@@ -244,25 +248,29 @@ export default function FlightSearchUI() {
           }
 
           .search-button {
-  padding: 12px 32px;
-  background: linear-gradient(135deg, #e0829d, #8f5774);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center; /* Align content vertically */
-  justify-content: center; /* Center content horizontally */
-  gap: 8px;
-  transition: all 0.2s ease;
-  margin-top: 24px;
+            padding: 12px 32px;
+            background: #8f5774;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center; /* Align content vertically */
+            justify-content: center; /* Center content horizontally */
+            gap: 8px;
+            transition: all 0.2s ease;
+            margin-top: 24px;
+            margin: 0 auto; /* Centers the button horizontally */
+ display: block; /* Ensures margin auto works */
 }
 
           .search-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(143, 87, 116, 0.2);
-          }
+  transform: translateY(-2px);
+  background: #dac4d0;
+  color: #036264;
+  box-shadow: 0 4px 12px rgba(143, 87, 116, 0.2);
+}
 
           .dropdown {
             position: absolute;
@@ -286,6 +294,20 @@ export default function FlightSearchUI() {
           .dropdown-item:hover {
             background: #e5f8f8;
           }
+
+          .hero__title {
+  position: relative;
+  right: -180px; /* Move to the right */
+  top: -50px;  /* Move up */
+  z-index: 10; /* Ensure it stays above other elements */
+}
+
+.hero__subtitle {
+  position: relative;
+  right: -180px; /* Match the title's horizontal positioning */
+  top: -40px;   /* Match the title's vertical positioning */
+  z-index: 10;
+}
         `}
       </style>
       <MetaComponent />
@@ -296,11 +318,24 @@ export default function FlightSearchUI() {
         </div>
         <div className="hero__image">
         <img
-  src="/img/flights/flight background.png"
-  style={{ height: '100%', width: 'auto' }}
-  alt="Flight Background"
-/>
+          src="/img/flights/flight background.png"
+          style={{ height: '100%', width: 'auto' }}
+          alt="Flight Background"
+        />
         </div>
+
+        <h1 data-aos="fade-up" data-aos-delay="300" className="hero__title">
+            Plan Your <br className="md:d-none" />
+            <span style={{ color: '#036264' }}>Next Journey</span>
+          </h1>
+          <div
+            data-aos="fade-up"
+            data-aos-delay="100"
+            className="hero__subtitle mb-10"
+          >
+            Search, compare and book flights easily.
+          </div>
+        
 
         <div className="search-container" style={{ position: 'relative', zIndex: 10 }}>
           <div className="flight-options" style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
