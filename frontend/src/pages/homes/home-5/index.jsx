@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Divider, Tour } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Tour, ConfigProvider } from "antd";
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import Banner9 from "@/components/homes/banners/Banner9";
 import BannerEight from "@/components/homes/banners/BannerEight";
@@ -23,7 +22,6 @@ export default function HomePage5() {
   const [open, setOpen] = useState(false);
   const refHeader = useRef(null);
   const refLogin = useRef(null);
-  console.log("in home", setOpen);
 
   const steps = [
     {
