@@ -186,6 +186,7 @@ export default function ActivitiesList({
     selectedCategories,
     priceRange,
     searchTerm,
+    exchangeRate
   ]);
 
   useEffect(() => {}, [filteredActivities]);

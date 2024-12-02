@@ -28,12 +28,12 @@ export default function ItinerariesList({
 
   const [itineraries, setItineraries] = useState([]);
   const [filteredItineraries, setFilteredItineraries] = useState(itineraries);
-
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 2000000000]);
-
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -141,6 +141,8 @@ export default function ItinerariesList({
       const itineraryStartDate = new Date(itinerary.startDate);
       const itineraryRating = itinerary.averageRating;
       const itineraryPrice = itinerary.price* exchangeRate;
+      const itineraryTags = itinerary.tags.map(tag => tag.toLowerCase());
+      const itineraryLanguage=itinerary.language.toLowerCase();
 
       const isDateValid =
         !startDate ||
@@ -151,6 +153,10 @@ export default function ItinerariesList({
         ratingFilter.length === 0 ||
         ratingFilter.some((rating) => itineraryRating >= rating);
 
+        const isLanguageValid =
+        !selectedLanguage || // If no language is selected, always valid
+        (itinerary.language && itinerary.language.toLowerCase() === selectedLanguage.toLowerCase());
+
       const isPriceValid =
         itineraryPrice >= priceRange[0] && itineraryPrice <= priceRange[1];
       const isSearchValid =
@@ -160,11 +166,19 @@ export default function ItinerariesList({
           tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
+        const isCategoryValid =
+      selectedCategories.length === 0 ||
+      selectedCategories.some(
+        (cat) => itineraryTags.includes(cat.toLowerCase()) // Check if any tag matches selected categories
+      );
+
       return (
         isDateValid &&
         isRatingValid &&
         isPriceValid &&
-        isSearchValid
+        isSearchValid&&
+        isCategoryValid&&
+        isLanguageValid
       );
     });
 
@@ -174,8 +188,11 @@ export default function ItinerariesList({
     endDate,
     itineraries,
     ratingFilter,
+    selectedCategories,
     priceRange,
     searchTerm,
+    exchangeRate,
+    selectedLanguage,
   ]);
 
   useEffect(() => {}, [filteredItineraries]);
@@ -259,8 +276,10 @@ export default function ItinerariesList({
                       setStartDate={setStartDate}
                       setEndDate={setEndDate}
                       setRatingFilter={setRatingFilter}
+                      setCategoryFilter={setSelectedCategories}
                       priceRange={priceRange}
                       setPriceRange={setPriceRange}
+                      setLanguageFilter={setSelectedLanguage}
                     />
                   </div>
 
@@ -287,8 +306,10 @@ export default function ItinerariesList({
                             setStartDate={setStartDate}
                             setEndDate={setEndDate}
                             setRatingFilter={setRatingFilter}
+                            setCategoryFilter={setSelectedCategories}
                             priceRange={priceRange}
                             setPriceRange={setPriceRange}
+                            setLanguageFilter={setSelectedLanguage}
                           />
                         </div>
                       </div>
