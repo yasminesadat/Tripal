@@ -1,8 +1,38 @@
 import{ useState,useEffect } from "react";
+import {  Select } from "antd";
+import { getAllPeriodTags } from '../../../api/HistoricalPlacePeriodService';
+import { getAllTypeTags } from '../../../api/HistoricalPlaceTagService';
+
+export default function Sidebar({setFilters}) {
+  const [ddActives, setDdActives] = useState("");
+  const [tagsOptions, setTagsOption] = useState([]);
+  const [periodTagsOptions, setPeriodTagsOption] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedPeriods, setSelectedPeriods] = useState([]);
+  useEffect(() => {
+    const getHistoricalPeriods = async () => {
+      const PeriodTagsData = await getAllPeriodTags();
+      if (PeriodTagsData) {
+        setPeriodTagsOption(PeriodTagsData);
+      }
+     
+    };
+    getHistoricalPeriods();
+  }, []);
+
+  useEffect(() => {
+    const getHistoricalTags = async () => {
+     
+      const typeTagsData = await getAllTypeTags();
+      if (typeTagsData) {
+        setTagsOption(typeTagsData);
+      }
+     
+    };
+    getHistoricalTags();
+  }, [])
   return (
     <div className="sidebar -type-1 rounded-12">
-      <div className="sidebar__header bg-accent-1">
-        <div className="text-15 text-white fw-500">When are you traveling?</div>
 
       <div className="sidebar__content">
         <div className="sidebar__item">
