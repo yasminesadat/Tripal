@@ -25,24 +25,30 @@ const ValidateOtp = ({ email }) => {
 
   return (
     <Card
-      title="Validate OTP"
-      style={{
-        width: 400,
-        height: 400,
-        margin: "1 auto",
-        textAlign: "center",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-      }}
-    >
+    title="Validate OTP"
+    style={{
+      width: 400,
+      height: 300,
+      margin: "auto",
+      textAlign: "center",
+      boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "20px",
+    }}
+  >
       <p>Please enter the OTP sent to your email.</p>
       <Input.OTP
         length={6}
         value={otp}
+        autoFocus
+        status="warning"
         onChange={(value) => {
           console.log("OTP entered:", value);
           setOtp(value);
         }}
-        autoFocus
         style={{ marginBottom: "20px" }}
       />
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -51,6 +57,20 @@ const ValidateOtp = ({ email }) => {
         onClick={handleValidateOtp}
         loading={loading}
         block
+        style={{
+            marginTop: "20px",
+            backgroundColor: "#8f5774",
+            borderColor: "#8f5774",
+            color: "white"
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#e0829d";
+            e.target.style.borderColor = "#e0829d";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "#8f5774";
+            e.target.style.borderColor = "#8f5774";
+          }}
       >
         Validate OTP
       </Button>
