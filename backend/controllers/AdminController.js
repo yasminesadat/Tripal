@@ -136,54 +136,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// const deleteUser = async (req, res) => {
-//   console.log("I came here")
-//   const { id } = req.params; // THIS ID IS ALRIGHT HERE KEEP 
-
-//   try {
-//     const correspondingUser = await User.find({ userId: id }) // Ensure to await the promise
-
-//     console.log("I deleted from user", correspondingUser)
-//     if (!correspondingUser) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     const role = correspondingUser[0].role;
-//     console.log("Role is", role);
-//     switch (role) {
-//       // case "Tour Guide":
-//       //   await TourGuide.findByIdAndDelete(id)
-//       //   break;
-//       // case "Advertiser":
-//       //   await Advertiser.findByIdAndDelete(id)
-//       //   break;
-//       // case "Seller":
-//       //   await Seller.findByIdAndDelete(id)
-//       //   break;
-//       // case "Tourist":
-//       //   await Tourist.findByIdAndDelete(id)
-//       //   break;
-//       case "Tourism Governor":
-//         await TourismGovernor.findByIdAndDelete(id)
-//         break;
-//       case "Admin":
-//         await Admin.findByIdAndDelete(id)
-//         break;
-//       default:
-//         return res.status(400).json({ message: "Invalid role" });
-//     }
-
-//     // Proceed with deleting the user
-//     await User.deleteOne({ userId: id });
-//     return res.status(200).json({ message: "User deleted successfully" });
-//   } catch (error) {
-//     console.error("Error deleting user:", error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
-
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await User.find({})

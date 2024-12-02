@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const express = require("express");
-const router = express.Router();
 const app = express();
 require("dotenv").config();
 
@@ -34,6 +33,7 @@ const loginUser = async (req, res) => {
 
     if (!user) {
       const request = await Request.findOne({ userName });
+
       if (!request) {
         return res
           .status(400)
