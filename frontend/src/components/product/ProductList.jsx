@@ -458,7 +458,7 @@ export default function ProductList() {
                     productSeller={product.seller._id}
                     name={product.name}
                     description={product.description}
-                    price={`${currency} ${(product.price*exchangeRate).toFixed(2)}`}
+                    price={`${currency||"EGP"} ${(product.price*exchangeRate).toFixed(2)}`}
                     picture={product.picture}
                     seller={product.seller.name}
                     quantity={product.quantity}
