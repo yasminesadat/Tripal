@@ -1,17 +1,42 @@
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
-// import { speedFeatures } from "@/data/tourFilteringOptions";
-import Stars from "../../components/common/Stars";
-// import {Pagination} from  "../../components/common/Pagination";
 import { getUserData } from "@/api/UserService";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
 export default function HistoricalPlacesList({ searchTerm }) {
-  const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
+
+
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -32,48 +57,49 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
   const [searchKey, setSearchKey] = useState(searchTerm);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
   const errorDisplayed = useRef(false);
- useEffect(()=>{
-  const getHistoricalPlacesByGoverner = async () => {
-    setLoading(true);
-    try {
-      const result = await getAllHistoricalPlacesByTourismGoverner();
-      if (result) {
-        console.log("result: ", result);
-        setPlaces(result);
-        setFilteredPlaces(result);
+
+  useEffect(() => {
+    const getHistoricalPlacesByGoverner = async () => {
+
+      setLoading(true);
+      try {
+        const result = await getAllHistoricalPlacesByTourismGoverner();
+        if (result) {
+          console.log("result: ", result);
+          setPlaces(result);
+          setFilteredPlaces(result);
+        }
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        
       }
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      //toast.error('Error while fetching')
     }
-  }
-  const fetchPlaces = async () => {
-    try {
-      const response = await getAllHistoricalPlaces();
-      setPlaces(response);
-      setFilteredPlaces(response);
-    } catch (err) {
-      setError(
-        err.response?.data?.error || "Error fetching historical places"
-      );
-    } finally {
-      setLoading(false);
+    const fetchPlaces = async () => {
+      try {
+        const response = await getAllHistoricalPlaces();
+        setPlaces(response);
+        setFilteredPlaces(response);
+      } catch (err) {
+        setError(
+          err.response?.data?.error || "Error fetching historical places"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (userRole !== null) {
+      if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
+        fetchPlaces();
+      }
+      if (userRole === "Tourism Governor") {
+        getHistoricalPlacesByGoverner();
+      }
     }
-  };
-  if(userRole!==null){
-    if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
-      fetchPlaces();
-    }
-    if (userRole === "Tourism Governor") {
-      getHistoricalPlacesByGoverner();
-    }  
-  }
 
 
- },userRole)
+  }, userRole)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -95,9 +121,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
         }
       }
     };
-   
+
     fetchUserData();
-   
+
 
 
   }, []);
@@ -123,14 +149,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [error, setError] = useState(null);
-  const [currency, setCurrency] = useState("EGP");
   const [filters, setFilters] = useState({ historicType: [], historicalTagPeriod: [] });
-  useEffect(() => {
-    const curr = sessionStorage.getItem("currency");
-    if (curr) {
-      setCurrency(curr);
-    }
-  }, []);
+
 
   const handleSearch = () => {
     const lowerCaseSearchTerm = searchKey.toLowerCase();
@@ -155,7 +175,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
     setFilteredPlaces(results);
   };
 
-  const handleFilter = (filters) => {
+  const handleFilter = () => {
     const { historicType, historicalTagPeriod } = filters;
 
     if (historicType.length == 0 && historicalTagPeriod.length == 0) {
@@ -190,8 +210,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
     setFilteredPlaces(filtered);
   };
 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="layout-pb-xl">
@@ -202,29 +220,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
               <Sidebar setFilters={setFilters} />
             </div>
 
-            {/* <div className="accordion d-none mb-30 lg:d-flex js-accordion">
-              <div
-                className={`accordion__item col-12 ${sidebarActive ? "is-active" : ""
-                  } `}
-              >
-                <button
-                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
-                  onClick={() => setSidebarActive((pre) => !pre)}
-                >
-                  <i className="icon-sort-down mr-10 text-16"></i>
-                  Filter
-                </button> */}
-
-                {/* <div
-                  className="accordion__content"
-                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                > */}
-                  {/* <div className="pt-20">
-                    <Sidebar setFilters={setFilters} />
-                  </div> */}
-                {/* </div> */}
-              {/* </div> */}
-            {/* </div> */}
+       
           </div>
 
           <div className="col-xl-9 col-lg-8">
@@ -233,8 +229,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
                 <div>{filteredPlaces?.length} results</div>
               </div>
 
-             
-             
+
+
             </div>
 
             <div className="row y-gap-30 pt-30">
@@ -242,9 +238,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
-                      {elm?.images?.length > 0 && elm.images[0]?.url&& <img src={elm.images[0].url} alt="image" />}
+                      {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
                     </div>
-                   
+
 
 
                     <div className="tourCard__content">
@@ -257,16 +253,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
                         <span>{elm.name}</span>
                       </h3>
 
-                  
+
 
                       <p className="tourCard__text mt-5">{elm.description}</p>
 
-                     
+
                     </div>
 
                     <div className="tourCard__info">
                       <div>
-                       
+
 
                         <div className="tourCard__price">
                           <div></div>
@@ -281,7 +277,17 @@ export default function HistoricalPlacesList({ searchTerm }) {
                       </div>
 
                       <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/historical-places/${elm._id}`}>
+                        <Link to={{
+                          pathname: `/historical-places/${elm._id}`,
+                          state: {
+                            ticketPrices: {
+                              foreigner: convertPrice(elm.ticketPrices.foreigner),
+                              native: convertPrice(elm.ticketPrices.native),
+                              student: convertPrice(elm.ticketPrices.student),
+                            },
+                            currency: currency,
+                          },
+                        }}>
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
                         </Link>

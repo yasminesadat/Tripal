@@ -1,25 +1,23 @@
-// import Sidebar from "./Sidebar";
-// import Header from "./Header";
-// import Map from "../pages/contact/Map";
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-// import MapPopUp from "../../components/common/MapPopUp";
 import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
 import LocationMap from '../../components/common/MapComponent';
-// import { toast } from "react-toastify";
+import message from "antd";
+import { useNavigate } from "react-router-dom";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
 const tabs = ["Content", "Timings", "Location", "Pricing"];
 export default function AddHistoricalPlace() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Content");
- 
   const location = useLocation();
   const props = location.state?.historicalPlace;
+  const navigate = useNavigate();
   const handleImageChange = (event, func) => {
     const file = event.target.files[0];
     if (file) {
@@ -95,6 +93,7 @@ export default function AddHistoricalPlace() {
     const getHistoricalTags = async () => {
       setLoading(true);
       const typeTagsData = await getAllTypeTags();
+      console.log(formData);
       if (typeTagsData) {
         setTagsOption(typeTagsData);
       }
@@ -153,11 +152,12 @@ export default function AddHistoricalPlace() {
         const result = await CreateNewHistoricalPlace(newHistoricalPlace);
         if (result) {
           setLoading(false);
-          // toast.success('Historical place created successfully')
+          navigate(`/my-historical-places`);
+         message.success("Created Successfully");
         }
       }
       catch (err) {
-        // toast.error(err);
+        message.error("Error while creating");
         setLoading(false);
       }
     }
@@ -177,13 +177,13 @@ export default function AddHistoricalPlace() {
           },
           openingHours: {
             weekdays: {
-              openingTime: (formData.openingHours.weekdays.openingTime).toString(),
-              closingTime: (formData.openingHours.weekdays.closingTime).toString(),
+              openingTime: (formData.openingHours.weekdays.openingTime).format("HH:mm"),
+              closingTime: (formData.openingHours.weekdays.closingTime).format("HH:mm"),
 
             },
             weekends: {
-              openingTime: (formData.openingHours.weekends.openingTime).toString(),
-              closingTime: (formData.openingHours.weekends.closingTime).toString(),
+              openingTime: (formData.openingHours.weekends.openingTime).format("HH:mm"),
+              closingTime: (formData.openingHours.weekends.closingTime).format("HH:mm"),
             },
           },
           ticketPrices: {
