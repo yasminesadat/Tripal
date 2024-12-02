@@ -125,7 +125,7 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
           </div>
 
           <div className="header__right">
-          <button type="primary" onClick={() => setOpen(true)}>
+          <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
               Guide
           </button>
             

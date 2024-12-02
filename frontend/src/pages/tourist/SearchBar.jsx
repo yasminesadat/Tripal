@@ -1,14 +1,20 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { message } from 'antd';
+import { Tour, message } from 'antd';
 import dayjs from 'dayjs';
 import { MapPin, ArrowRightLeft, ArrowLeftRight, Users, ChevronDown, Search, ArrowRight } from 'lucide-react';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
+const metadata = {
+  title: "Flights Search || Tripal",
+  description: "Flights Search || Tripal",
+};
 
 export default function FlightsList() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [originLocationCode, setOriginLocationCode] = useState('');
   const [destinationLocationCode, setDestinationLocationCode] = useState('');
   const [departureDate, setDepartureDate] = useState('');
@@ -27,11 +33,56 @@ export default function FlightsList() {
   const [showCabinType, setShowCabinType] = useState(false);
   const [numberOfAdults, setNumberOfAdults] = useState(1);
   const [cabinType, setCabinType] = useState('ECONOMY');
-
-  const navigate = useNavigate();
   const originRef = useRef();
   const destinationRef = useRef();
   const debounceTimeout = useRef(null);
+  const refFlightsFilter = useRef(null);
+  const refFlightsExplore = useRef(null);
+  const refFlightsSearch = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const steps = [
+    {
+      title: "Choose flight options",
+      description: "Narrow down your flights search by specifying some options.",
+      target: () => refFlightsFilter.current, 
+    },
+    {
+      title: "Enter more details",
+      description: "In order to find all the flights that match your choices available for booking.",
+      target: () => refFlightsSearch.current, 
+    },
+    {
+      title: "Start exploring!",
+      description: "Hopefully you will find a match.",
+      target: () => refFlightsExplore.current, 
+      onFinish: () => {
+        localStorage.setItem("currentStep", 2);
+        setOpen(false);
+        navigate("/tourist", {state: {fromTour: true, targetStep: 2}});
+      }
+    },
+  ]
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refFlightsSearch.current) {
+      refFlightsSearch.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 300);
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
 
   const fetchCityCode = async (searchInfo, setData) => {
     try {
@@ -310,7 +361,84 @@ export default function FlightsList() {
 }
         `}
       </style>
-      <MetaComponent />
+      <style jsx global>{`
+        /* Base style for all dots */
+        /* Try multiple selectors and approaches */
+        .ant-tour .ant-tour-indicators > span {
+          width: 8px !important;
+          height: 8px !important;
+          border-radius: 50% !important;
+          background: #dac4d0 !important;
+        }
+        .ant-tour .ant-tour-indicators > span[class*="active"] {
+          background: #036264 !important;
+        }
+
+        /* Additional specificity */
+        .ant-tour-indicators span[role="dot"][aria-current="true"] {
+          background: #036264 !important;
+        }
+
+        .ant-tour .ant-tour-inner {
+          border: 1px solid #5a9ea0;
+          box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
+        }
+
+        .ant-tour .ant-tour-content {
+          color: #8f5774;
+          font-weight: 500 !important;
+          letter-spacing: 0.3px !important;
+          text-rendering: optimizeLegibility !important;
+        }
+
+        .ant-tour .ant-tour-title {
+          color: #5a9ea0;
+          font-weight: 600;
+        }
+
+        .ant-tour .ant-tour-close {
+          color: #5a9ea0;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+        }
+
+        .ant-tour .ant-tour-close:hover {
+          opacity: 1;
+          color: #e5f8f8;
+        }
+
+        .ant-tour .ant-tour-buttons .ant-btn {
+          transition: all 0.3s ease;
+        }
+
+        .ant-tour .ant-tour-buttons .ant-btn-primary
+        {
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+        .ant-tour .ant-tour-buttons .ant-btn-default{
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+        
+        .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
+        .ant-tour .ant-tour-buttons .ant-btn-default:hover {
+          color:white;
+          background: #5a9ea0;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
+        }
+        .ant-tour .ant-tour-arrow-content {
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+        }  
+      `}</style>
+      <MetaComponent meta={metadata}/>
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <TouristHeader />
       <section className="hero -type-5">
         <div className="hero__bg">
@@ -329,7 +457,7 @@ export default function FlightsList() {
             <span style={{ color: '#036264' }}>Next Journey</span>
           </h1>
           <div
-            data-aos="fade-up"
+            data-aos="fade-up"x
             data-aos-delay="100"
             className="hero__subtitle mb-10"
           >
@@ -338,7 +466,7 @@ export default function FlightsList() {
         
 
         <div className="search-container" style={{ position: 'relative', zIndex: 10 }}>
-          <div className="flight-options" style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
+          <div className="flight-options" ref={refFlightsFilter} style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
             <button
               className={`select-button ${tripType === 'roundTrip' ? 'active' : ''}`}
               onClick={() => setTripType('roundTrip')}
@@ -371,7 +499,7 @@ export default function FlightsList() {
             </button>
           </div>
 
-          <div className="search-grid" style={{ display: 'grid', justifyContent: 'center' }}>
+          <div className="search-grid" ref={refFlightsSearch} style={{ display: 'grid', justifyContent: 'center' }}>
             <div className="input-group" style={{ position: 'relative' }}>
               <MapPin className="location-icon" size={18} />
               <input
@@ -475,6 +603,7 @@ export default function FlightsList() {
           </div>
 
           <button
+            ref={refFlightsExplore}
             className="search-button"
             onClick={handleSearch}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}
