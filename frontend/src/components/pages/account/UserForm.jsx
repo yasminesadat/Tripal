@@ -12,6 +12,7 @@ export default function UserForm() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [error, setError] = useState("");
   //#endregion
 
   //#region functions
@@ -59,6 +60,9 @@ export default function UserForm() {
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+  };
+  const clearError = () => {
+    setError("");
   };
   //#endregion
   
@@ -151,8 +155,11 @@ export default function UserForm() {
             </Row>
           </Form.Item>
 
-               {/* OTP Modal */}
-          <OtpModal visible={isModalVisible} onClose={handleCloseModal} />
+          {/* OTP Modal */}
+          <OtpModal visible={isModalVisible} 
+          onClose={handleCloseModal} 
+          clearError={clearError}  />
+
           {/* Submit Button */}
           <Form.Item>
             <Button
