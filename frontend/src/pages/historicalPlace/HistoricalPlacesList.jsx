@@ -1,5 +1,5 @@
 import  { useState, useEffect, useRef } from "react";
-import Sidebar from "../../components/tours/Sidebar";
+import Sidebar from "./components/Sidebar";
 import { speedFeatures } from "@/data/tourFilteringOptions";
 import Stars from "../../components/common/Stars";
 // import {Pagination} from  "../../components/common/Pagination";
@@ -125,7 +125,6 @@ export default function HistoricalPlacesList({searchTerm}) {
         const matchesName = place.name
           .toLowerCase()
           .includes(lowerCaseSearchTerm);
-  
         const matchesTags =
           place.tags &&
           place.tags.some(

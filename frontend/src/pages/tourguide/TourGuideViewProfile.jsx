@@ -1,25 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile, getProfileData } from "../../api/TourGuideService";
-
 import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import languages from "../../assets/constants/Languages";
 import { nationalities } from "../../assets/Nationalities";
 import moment from "moment";
-
-import Calendar from './Component/DateCalender';
 import Upload from "antd/es/upload/Upload";
 
 import Stars from '../../components/common/Stars'
 const TourGuideProfile = () => {
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const tabs = ["Personal Information", "Education", "Previous Work"];
   const [activeTab, setActiveTab] = useState("Personal Information");
   const navigate = useNavigate();
-  const [selected, setSelected] = useState([]);
   const [isActiveDD1, setIsActiveDD1] = useState(false);
   const [isActiveDD2, setIsActiveDD2] = useState(false);
   const handleDeletion = async () => {
@@ -31,7 +26,7 @@ const TourGuideProfile = () => {
       message.warning(error.response?.data?.message || "An error occurred");
     }
   };
-  const [currentActiveDD, setCurrentActiveDD] = useState("");
+
   const [workChanged, setWorkChanged] = useState(false);
   const [educationChanged, setEducationChanged] = useState(false);
   const [languagesChanged, setLanguagesChanged] = useState(false);
@@ -45,7 +40,7 @@ const TourGuideProfile = () => {
     initialProfilePicture: "",
     name: "",
     email: "",
-    userName:"",
+    userName: "",
     mobileNumber: "",
     nationality: "",
     yearsOfExperience: 0,
@@ -269,15 +264,12 @@ const TourGuideProfile = () => {
           <p className="text-20">{formData.name}</p>
           <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
 
-
-
-
             {/* <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60"> */}
             <div className="tabs -underline-2 js-tabs">
               <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                 {tabs.map((elm, i) => (
                   <div
-                    onClick={() => {setActiveTab(elm);console.log("active ytab changed") }}
+                    onClick={() => { setActiveTab(elm); console.log("active ytab changed") }}
                     key={i}
                     className="col-auto"
                   >
@@ -378,7 +370,6 @@ const TourGuideProfile = () => {
                                     </button>
                                   </div>
                                 </div>
-
                               </div>) : (
                               <div className="col-auto  ">
                                 <label
@@ -409,7 +400,6 @@ const TourGuideProfile = () => {
                               <Stars star={formData?.averageRating} font={12} />
                             </div>
                             {formData?.averageRating}
-
                           </div>
                         </div>
                         <div className="row pt-40">
@@ -479,13 +469,14 @@ const TourGuideProfile = () => {
                                   <div className="select__options js-options">
                                     {languages.map((elm, i) => (
                                       <div
-                                        onClick={() =>
+                                        onClick={() => {
                                           setFormData((formData) =>
                                             formData.languagesSpoken.includes(elm)
                                               ? { ...formData, languagesSpoken: formData.languagesSpoken.filter((el) => el != elm) }
                                               : { ...formData, languagesSpoken: [...formData.languagesSpoken, elm] }
                                           )
-                                        }
+                                          setLanguagesChanged(true);
+                                        }}
                                         key={i}
                                         className="select__options__button"
                                       >
@@ -576,8 +567,7 @@ const TourGuideProfile = () => {
 
 
 
-                          {/* </div> */}
-                        </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -605,6 +595,7 @@ const TourGuideProfile = () => {
                                       type="text"
                                       value={edu.degree ?? ""}
                                       onChange={(e) => {
+                                        setEducationChanged(true);
                                         setFormData({
                                           ...formData,
                                           eduaction: formData.education.map((item, i) =>
@@ -626,6 +617,7 @@ const TourGuideProfile = () => {
                                       type="text"
                                       value={edu.institution ?? ""}
                                       onChange={(e) => {
+                                        setEducationChanged(true);
                                         setFormData({
                                           ...formData,
                                           eduaction: formData.education.map((item, i) =>
@@ -648,6 +640,7 @@ const TourGuideProfile = () => {
                                         type="text"
                                         value={edu.yearOfCompletion ?? ""}
                                         onChange={(e) => {
+                                          setEducationChanged(true);
                                           setFormData({
                                             ...formData,
                                             eduaction: formData.education.map((item, i) =>
@@ -662,9 +655,10 @@ const TourGuideProfile = () => {
                                       </label>
                                     </div>
                                     <button
-                                      onClick={() =>
+                                      onClick={() => {
+                                        setEducationChanged(true);
                                         setFormData({ ...formData, education: formData.education.filter((elm, idx) => idx !== index) })
-                                      }
+                                      }}
                                       className="text-18 ml-20 absoluteIcon2 button -dark-1"
                                     >
                                       <i className="icon-delete text-18"></i>
@@ -700,279 +694,267 @@ const TourGuideProfile = () => {
                       </div>
                     </div>
                   </div>
+
                   <div
                     className={`tabs__pane  ${activeTab == "Previous Work" ? "is-tab-el-active" : ""
                       }`}
                   >
+                    <div className="contactForm row y-gap-30">
+                      <div className="mt-30">
+                       
+                        {formData?.previousWork?.length > 0 ? (
+                          formData?.previousWork.map(
+                            (prevWork, index) => (
 
-
-                    <div className="mt-30">
-                      {/* <h3 className="text-18 fw-500 mb-20">Previous Work</h3> */}
-                      {formData?.previousWork?.length > 0 ? (
-                        formData?.previousWork.map(
-                          (prevWork, index) => (
-
-                            <div
-                              key={index}
-                              className="contactForm row y-gap-30 items-center"
-                            >
-                              <div className="col-lg-10">
-                                <h5 className="text-20 fw-500 ">{`Previous Work ${index + 1}`}</h5>
-                              </div>
-                              <div className="col-lg-1"> 
-                                <button
-                                  onClick={() =>
-                                    setFormData({ ...formData, previousWork: formData.previousWork.filter((elm, idx) => idx !== index) })
-
-                                  }
-                                  className="text-18 ml-20 absoluteIcon2 button -dark-1"
-                                >
-                                  <i className="icon-delete text-18"></i>
-                                </button>
-
-                              </div>
-                              {activePrevWork === index?
-                              <div className="col-lg-1">
-                              <button
-                                onClick={() =>
-                                setActivePrevWork(-1)
-                                }
-                                className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                              <div
+                                key={index}
+                                className="contactForm row y-gap-30 items-center"
                               >
-                                <i className="icon-minus text-18"></i>
-                              </button>
+                                <div className="col-lg-10">
+                                  <h5 className="text-20 fw-500 ">{`Previous Work ${index + 1}`}</h5>
+                                </div>
+                                <div className="col-lg-1">
+                                  <button
+                                    onClick={() => {
+                                      setFormData({ ...formData, previousWork: formData.previousWork.filter((elm, idx) => idx !== index) })
+                                      setWorkChanged(true);
+                                    }}
+                                    className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                                  >
+                                    <i className="icon-delete text-18"></i>
+                                  </button>
+                                </div>
+                                {activePrevWork === index ?
+                                  <div className="col-lg-1">
+                                    <button
+                                      onClick={() =>
+                                        setActivePrevWork(-1)
+                                      }
+                                      className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                                    >
+                                      <i className="icon-minus text-18"></i>
+                                    </button>
 
-                            </div>:
-                              <div className="col-lg-1">
-                                <button
-                                  onClick={() =>
-                                  setActivePrevWork(index)
-                                  }
-                                  className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                                  </div> :
+                                  <div className="col-lg-1">
+                                    <button
+                                      onClick={() =>
+                                        setActivePrevWork(index)
+                                      }
+                                      className="text-18 ml-20 absoluteIcon2 button -dark-1"
+                                    >
+                                      <i className="icon-chevron-down text-18"></i>
+                                    </button>
+
+                                  </div>}
+                                <div
+                                  className={`tabs__pane  ${activePrevWork === index ? "is-tab-el-active" : ""
+                                    }`}
                                 >
-                                  <i className="icon-chevron-down text-18"></i>
-                                </button>
-
-                              </div>}
-                             <div
-                    className={`tabs__pane  ${activePrevWork === index ? "is-tab-el-active" : ""
-                      }`}
-                  >
-                                <div className="col-12">
-                                  <div className="row x-gap-20 y-gap">
-                                    <div className="col-lg-4">
-                                      <div className="form-input">
-                                        <input
-                                          type="text"
-                                          value={prevWork.companyName ?? ""}
-                                          onChange={(e) => {
-                                            setFormData({
-                                              ...formData,
-                                              previousWork: formData.previousWork.map((item, i) =>
-                                                i === index ? { ...item, companyName: e.target.value } : item
-                                              ),
-                                            });
-                                          }}
-                                          required
-                                        />
-                                        <label className="lh-1 text-16 text-light-1">
-                                          Company Name
-                                        </label>
+                                  <div className="col-12">
+                                    <div className="row x-gap-20 y-gap">
+                                      <div className="col-lg-4">
+                                        <div className="form-input">
+                                          <input
+                                            type="text"
+                                            value={prevWork.companyName ?? ""}
+                                            onChange={(e) => {
+                                              setWorkChanged(true);
+                                              setFormData({
+                                                ...formData,
+                                                previousWork: formData.previousWork.map((item, i) =>
+                                                  i === index ? { ...item, companyName: e.target.value } : item
+                                                ),
+                                              });
+                                            }}
+                                            required
+                                          />
+                                          <label className="lh-1 text-16 text-light-1">
+                                            Company Name
+                                          </label>
+                                        </div>
                                       </div>
-                                    </div>
 
-                                    <div className="col-lg-4">
-                                      <div className="form-input">
-                                        <input
-                                          type="text"
-                                          value={prevWork.position ?? ""}
-                                          onChange={(e) => {
-                                            setFormData({
-                                              ...formData,
-                                              previousWork: formData.previousWork.map((item, i) =>
-                                                i === index ? { ...item, position: e.target.value } : item
-                                              ),
-                                            });
-                                          }}
-                                          required
-                                        />
-                                        <label className="lh-1 text-16 text-light-1">
-                                          Position
-                                        </label>
+                                      <div className="col-lg-4">
+                                        <div className="form-input">
+                                          <input
+                                            type="text"
+                                            value={prevWork.position ?? ""}
+                                            onChange={(e) => {
+                                              setWorkChanged(true);
+                                              setFormData({
+                                                ...formData,
+                                                previousWork: formData.previousWork.map((item, i) =>
+                                                  i === index ? { ...item, position: e.target.value } : item
+                                                ),
+                                              });
+                                            }}
+                                            required
+                                          />
+                                          <label className="lh-1 text-16 text-light-1">
+                                            Position
+                                          </label>
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div className="col-lg-4">
+                                      <div className="col-lg-4">
 
-                                      <div className="form-input">
-                                        <input
-                                          type="text"
-                                          value={prevWork.location ?? ""}
-                                          onChange={(e) => {
-                                            setFormData({
-                                              ...formData,
-                                              previousWork: formData.previousWork.map((item, i) =>
-                                                i === index ? { ...item, location: e.target.value } : item
-                                              ),
-                                            });
-                                          }}
-                                          required
-                                        />
-                                        <label className="lh-1 text-16 text-light-1">
-                                          Location
-                                        </label>
+                                        <div className="form-input">
+                                          <input
+                                            type="text"
+                                            value={prevWork.location ?? ""}
+                                            onChange={(e) => {
+                                              setWorkChanged(true);
+                                              setFormData({
+                                                ...formData,
+                                                previousWork: formData.previousWork.map((item, i) =>
+                                                  i === index ? { ...item, location: e.target.value } : item
+                                                ),
+                                              });
+                                            }}
+                                            required
+                                          />
+                                          <label className="lh-1 text-16 text-light-1">
+                                            Location
+                                          </label>
+
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                  <div className="col-12">
+                                    <div className="row  y-gap">
+                                      <div className="col-lg-6">
+
+                                        <div className="form-input ">
+
+                                          <input
+                                            type="date"
+
+                                            value={new Date(prevWork.startDate).toISOString().split('T')[0]}
+                                            onChange={(e) => {
+                                              setWorkChanged(true);
+                                              setFormData({
+                                                ...formData,
+                                                previousWork: formData.previousWork.map((item, i) =>
+                                                  i === index ? { ...item, startDate: e.target.value } : item
+                                                ),
+                                              });
+                                            }}
+                                            // Sets minimum date to today
+                                            required
+                                          />
+
+
+                                          <label className="lh-1 text-16 text-light-1"> Start Date</label>
+                                        </div>
 
                                       </div>
-                                    </div>
-                                  </div></div>
-                                <div className="col-12">
-                                  <div className="row  y-gap">
-                                    <div className="col-lg-6">
 
+
+
+                                      <div className="col-lg-6">
+                                        <div className="form-input ">
+
+                                          <input type="date" value={new Date(prevWork.endDate).toISOString().split('T')[0]}
+                                            onChange={(e) => {
+                                              setWorkChanged(true);
+                                              setFormData({
+                                                ...formData,
+                                                previousWork: formData.previousWork.map((item, i) =>
+                                                  i === index ? { ...item, endDate: e.target.value } : item
+                                                ),
+                                              });
+                                            }}
+                                            // Sets minimum date to today
+                                            required />
+                                          <label className="lh-1 text-16 text-light-1"> End Date </label>
+
+                                        </div>
+                                      </div>
+
+
+                                    </div></div>
+
+                                  <div className="col-md-12">
+                                    <div className="row x-gap-20 y-gap">
+                                      <label style={{ color: 'black', marginBottom: '10px' }} className="lh-1 text-16 text-light-1">Description</label>
                                       <div className="form-input ">
-                     
-                                        
-          <div className="searchFormItem js-select-control js-form-dd js-calendar">
-                      <div
-                        className="searchFormItem__button"
-                        onClick={() =>
-                          setCurrentActiveDD((pre) =>
-                            pre === "calender" ? "" : "calender",
-                          )
-                        }
-                      >
-                        <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                          <i className="text-20 icon-calendar"></i>
-                        </div>
-                        <div className="searchFormItem__content">
-                          <h5>When</h5>
-                          <div>
-                            <span className="js-first-date">
-                            <Calendar  value={prevWork.startDate ? new Date(prevWork.startDate).toLocaleDateString() : null}
-                                          setDate={(e) => {
-                                            setFormData({
-                                              ...formData,
-                                              previousWork: formData.previousWork.map((item, i) =>
-                                                i === index ? { ...item, startDate: e.target.value } : item
-                                              ),
-                                            });
-                                          }} />
-                            </span>
-                            <span className="js-last-date"></span>
-                          </div>
-                        </div>
-                     
-                    </div>
-                  </div>
-                                        <label className="lh-1 text-16 text-light-1"> Start Date</label>
+                                        <textarea value={prevWork.description} onChange={(e) => {
+                                          setWorkChanged(true);
+                                          setFormData({
+                                            ...formData,
+                                            previousWork: formData.previousWork.map((item, i) =>
+                                              i === index ? { ...item, description: e.target.value } : item
+                                            ),
+                                          });
+                                        }} rows="3" />
                                       </div>
-
-                                    </div>
-
-
-                                    <div className="col-lg-6">
-                                      <div className="form-input ">
-                                        <input type="text" value={prevWork.endDate ? new Date(prevWork.endDate).toLocaleDateString() : null}
-                                          onChange={(e) => {
-                                            setFormData({
-                                              ...formData,
-                                              previousWork: formData.previousWork.map((item, i) =>
-                                                i === index ? { ...item, endDate: e.target.value } : item
-                                              ),
-                                            });
-                                          }} />
-                                        <label className="lh-1 text-16 text-light-1"> End Date </label>
-
-                                      </div>
-                                    </div>
-
-
-                                  </div></div>
-
-                                <div className="col-md-12">
-                                  <div className="row x-gap-20 y-gap">
-                                    <label style={{ color: 'black', marginBottom: '10px' }} className="lh-1 text-16 text-light-1">Description</label>
-                                    <div className="form-input ">
-                                      <textarea value={prevWork.description} onChange={(e) => {
-                                        setFormData({
-                                          ...formData,
-                                          previousWork: formData.previousWork.map((item, i) =>
-                                            i === index ? { ...item, description: e.target.value } : item
-                                          ),
-                                        });
-                                      }} rows="3" />
                                     </div>
                                   </div>
+                                  <br /><br />
+                                  <br /><br />
                                 </div>
-                                <br /><br />
-                                <br /><br />
-                              </div>
                               </div>
 
 
-                              )
-                              )
-                              ) : (
-                              <div>
-                                <span className="text-16 ">
-                                  No previous Work is Provided
-                                </span>
-                              </div>
+                            )
+                          )
+                        ) : (
+                          <div>
+                            <span className="text-16 ">
+                              No previous Work is Provided
+                            </span>
+                          </div>
                         )}
 
-                              <div className="mt-30">
-                                <button
-                                  className="button -md -outline-dark-1 bg-light-1"
-                                  onClick={() =>
-                                    setFormData({
-                                      ...formData, previousWork: [...formData.previousWork, {
-                                        companyName: "",
-                                        position: "",
-                                        location: "",
-                                        startDate: "",
-                                        endDate: "",
-                                        description: "",
-                                      }]
-                                    })
+                        <div className="mt-30">
+                          <button
+                            className="button -md -outline-dark-1 bg-light-1"
+                            onClick={() =>
+                              setFormData({
+                                ...formData, previousWork: [...formData.previousWork, {
+                                  companyName: "",
+                                  position: "",
+                                  location: "",
+                                  startDate: "",
+                                  endDate: "",
+                                  description: "",
+                                }]
+                              })
 
-                                  }
-                                >
-                                  <i className="icon-add-button text-16 mr-10"></i>
-                                  Add Previous Work
-                                </button>
-                              </div>
-                            </div>
+                            }
+                          >
+                            <i className="icon-add-button text-16 mr-10"></i>
+                            Add Previous Work
+                          </button>
+                        </div>
+                      </div>
                     </div>
-
-
-
-
-
-
-                    <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
-                      handleSubmit();
-                    }}>
-                      Save Changes
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
-
                   </div>
 
-                </div>
 
-              </div>
 
-              {/* </div> */}
 
+
+
+                  <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
+                    handleSubmit();
+                  }}>
+                    Save Changes
+                    <i className="icon-arrow-top-right text-16 ml-10"></i>
+                  </button>
             </div>
-          </div >
+            </div>
+          </div>
         </div >
-        <ChangePassword userType="tour guide" />
-        <button onClick={handleDeletion}>Delete Account</button>
-
       </div >
+      <ChangePassword userType="tour guide" />
+      <button onClick={handleDeletion}>Delete Account</button>
+      </div>
+      </div>
+    </div >
 
 
-      );
+  );
 };
 
-      export default TourGuideProfile;
+export default TourGuideProfile;
