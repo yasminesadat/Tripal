@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { getConversionRate } from "@/api/ExchangeRatesService";
+import  { useEffect, useState, useRef } from "react";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 
-export default function TourSingleSidebar({ itinerary, activity }) {
-  const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
-
+export default function TourSingleSidebar({itinerary, activity, refActivityBook, refItineraryBook}) {
+  const [userRole, setUserRole] = useState(null); 
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState("EGP");
+  const selectedRef = refActivityBook || refItineraryBook;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -17,9 +16,8 @@ export default function TourSingleSidebar({ itinerary, activity }) {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id);
         } else {
-          message.error(response.data.message);
+          message.error(response.data.message); 
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
@@ -29,11 +27,16 @@ export default function TourSingleSidebar({ itinerary, activity }) {
   }, []);
 
   useEffect(() => {
-    const curr = sessionStorage.getItem("currency");
-    if (curr) {
-      setCurrency(curr);
-      fetchExchangeRate(curr);
-    }
+    const intervalId = setInterval(async () => {
+      const curr = getTouristCurrency();
+      if (curr) {
+        setCurrency(curr); 
+        fetchExchangeRate(curr); 
+      }
+    }, 500); // every 500ms
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchExchangeRate = async (curr) => {
@@ -51,9 +54,9 @@ export default function TourSingleSidebar({ itinerary, activity }) {
   };
 
   const [ticketNumber, setTicketCount] = useState(1);
-
+  
   const handleBookClick = async () => {
-    try {
+      try {
       const response = await bookResource(
         itinerary ? "itinerary" : "activity",
         itinerary ? itinerary._id : activity._id,
@@ -65,7 +68,7 @@ export default function TourSingleSidebar({ itinerary, activity }) {
       message.error(error.response?.data?.error || "Booking failed");
     }
   };
-
+  
   return (
     <div className="tourSingleSidebar">
       <h5 className="text-18 fw-500 mb-20 mt-20">Tickets</h5>
@@ -74,12 +77,12 @@ export default function TourSingleSidebar({ itinerary, activity }) {
         <div className="d-flex items-center justify-between">
           <div className="text-14">
             Tickets: {" "}
-            {itinerary && <span className="fw-500">
-              {ticketNumber} x {formatPrice(itinerary.price.toFixed(2))}
+            {itinerary&&<span className="fw-500">
+              {ticketNumber} x {formatPrice(itinerary.price.toFixed(2))} 
             </span>}
 
-            {activity && <span className="fw-500">
-              {ticketNumber} x {formatPrice(activity.price.toFixed(2))}
+            {activity&&<span className="fw-500">
+              {ticketNumber} x {formatPrice(activity.price.toFixed(2))} 
             </span>}
           </div>
 
@@ -101,11 +104,8 @@ export default function TourSingleSidebar({ itinerary, activity }) {
             >
               <i className="icon-plus text-10"></i>
             </button>
-
           </div>
-
         </div>
-
       </div>
 
       {/* <h5 className="text-18 fw-500 mb-20 mt-20">Add Extra</h5> */}
@@ -157,47 +157,29 @@ export default function TourSingleSidebar({ itinerary, activity }) {
         <div className="text-14">$40</div>
       </div> */}
 
-      <div className="line mt-20 mb-20" />
+      <div className="line mt-20 mb-20"/>
+        
 
-
-      {itinerary && <div className="text-14 ">
-        <span className="fw-500">Service Fee:  </span>
-        {(formatPrice(itinerary.serviceFee.toFixed(2)))}
-      </div>}
+        {itinerary&&<div className="text-14 ">
+        <span className="fw-500">Service Fee:  </span> 
+         {(formatPrice(itinerary.serviceFee.toFixed(2)))}
+        </div>}
 
       <div className="d-flex items-center justify-between">
 
         <div className="text-18 fw-500">Total:</div>
-        {itinerary && <div className="text-18 fw-500">
+        {itinerary&&<div className="text-18 fw-500">
           {
-            formatPrice((itinerary.price * ticketNumber +
-              itinerary.serviceFee
-            ).toFixed(2))}
+            formatPrice((itinerary.price * ticketNumber +itinerary.serviceFee).toFixed(2))}
         </div>}
 
-        {activity && <div className="text-18 fw-500">
+        {activity&&<div className="text-18 fw-500">
           {formatPrice((activity.price * ticketNumber).toFixed(2))}
         </div>}
 
       </div>
-      <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
-        <h2 className="text-20 fw-500">Do you have a promo code?</h2>
 
-        <div className="contactForm mt-25">
-          <div className="form-input ">
-            <input type="text" required />
-            <label className="lh-1 text-16 text-light-1">
-              Promo code
-            </label>
-          </div>
-        </div>
-
-        <button className="button -md -outline-accent-1 text-accent-1 mt-30">
-          Apply
-          <i className="icon-arrow-top-right text-16 ml-10"></i>
-        </button>
-      </div>
-      <button onClick={handleBookClick} className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
+      <button ref={selectedRef} onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
       </button>

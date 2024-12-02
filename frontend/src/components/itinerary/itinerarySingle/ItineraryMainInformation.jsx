@@ -1,11 +1,10 @@
 import Spinner from "@/components/common/Spinner";
 import Stars from "../../common/Stars";
 import { message } from "antd";
-
 import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck,FlagOff } from 'lucide-react';
-import { flagItinerary } from "@/api/AdminService";
+import { flagItinerary,getEventOwnerData } from "@/api/AdminService";
 import { deleteItinerary, toggleItineraryStatus,updateItinerary,getItineraryById } from "@/api/ItineraryService";
-import  { useState, useEffect } from "react";
+import  { useState } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import UpdateItineraryModal from "../UpdateItineraryForm";
@@ -28,7 +27,7 @@ const handleShare = (link) => {
 };
 const handleBookmark = async (eventId, eventType) => {
   try {
-    const data = await bookmarkEvent(eventId, eventType);
+    await bookmarkEvent(eventId, eventType);
     message.success("Added to Bookmarked Events")
   } catch (error) {
     console.error('Error bookmarking event:', error);
@@ -48,7 +47,6 @@ export default function ItineraryMainInformation({
   itinerary: initialItinerary,
   userRole,
 }) {
-
 
     //#region 1. Variables
     const [itinerary, setItinerary] = useState(initialItinerary);
@@ -85,7 +83,8 @@ export default function ItineraryMainInformation({
     const updatedFlagStatus = !currentFlagStatus;
     setLoading(true);
     try {
-      await flagItinerary(itineraryId);
+      const userData = await getEventOwnerData(itinerary.tourGuide);
+      await flagItinerary(itineraryId,userData);
       setItinerary((previousItinerary) =>( { 
         ...previousItinerary, 
         flagged: updatedFlagStatus 
@@ -148,11 +147,8 @@ export default function ItineraryMainInformation({
     setModalVisible2(false);
     setLoading(true);
     try {
-
-
       await updateItinerary(itinerary._id,updatedItinerary);
       fetchItinerary(itinerary._id);
-
       message.success("Itinerary updated successfully!");
 
     } catch (error) {

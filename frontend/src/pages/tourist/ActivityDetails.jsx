@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Tag, message } from "antd";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { message, Tour } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleActivityHeader";
@@ -19,13 +19,30 @@ const metadata = {
 import NotFoundPage from "@/pages/pages/404";
 
 const ActivityDetailsPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { activityId } = useParams();
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState("EGP");  // For currency state
+  const refActivityBook = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const steps = [
+    {
+      title: "Book Activity",
+      description: "Cross it off your bucket-list.",
+      target: () => refActivityBook.current,
+      onFinish: () => {
+        setOpen(false); 
+        localStorage.setItem('currentStep', 4); 
+        navigate("/tourist", { state: { fromTour: true, targetStep: 4 } });
+      },
+    },
+  ]
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,7 +50,6 @@ const ActivityDetailsPage = () => {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id);
         } else if (response.data.message === "No token found.") {
           setUserRole("Guest");
         } else {
@@ -58,7 +74,27 @@ const ActivityDetailsPage = () => {
       }
     };
     fetchActivities();
-  }, []);
+  }, [activityId]);
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refActivityBook.current) {
+      refActivityBook.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1200); 
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
 
   if (loading) return <div>Loading...</div>;
   if (error)
@@ -75,21 +111,25 @@ const ActivityDetailsPage = () => {
       <main>
         {userRole === "Guest" && (
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <GuestHeader />
             <PageHeader
               activityId={activityId}
               activityTitle={activity.title}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+              userRole={userRole}
+              refActivityBook={refActivityBook}
+            />
             <FooterThree />
           </>
         )}
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
@@ -98,7 +138,11 @@ const ActivityDetailsPage = () => {
                 activityId={activityId}
                 activityTitle={activity.title}
               />
-              <ActivityDetails activity={activity} />
+              <ActivityDetails
+                activity={activity}
+                selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+                userRole={userRole}
+              />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
@@ -108,13 +152,20 @@ const ActivityDetailsPage = () => {
 
         {userRole === "Tourist" && (
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <Header1 />
             <PageHeader
               activityId={activityId}
               activityTitle={activity.title}
               tourist={"ana t3ebt"}
             />
-            <ActivityDetails activity={activity} />
+            <ActivityDetails
+              activity={activity}
+              selectedCurrency={selectedCurrency} 
+            
+              userRole={userRole}
+              refActivityBook={refActivityBook}
+            />
             <FooterThree />
           </>
         )}

@@ -18,20 +18,19 @@ import { useParams } from "react-router-dom";
 
 
 
-import { Link } from "react-router-dom";
-import { getHotelPrices, getHotels } from "../../api/HotelService.js";
+import {  getHotels } from "../../api/HotelService.js";
 
 
 export default function TourList1() {
-  const [sortOption, setSortOption] = useState("");
-  const [ddActives, setDdActives] = useState(false);
-  const [sidebarActive, setSidebarActive] = useState(false);
+  const [ setDdActives] = useState(false);
   const [filteredHotels, setFilteredHotels] = useState([]);
   const dropDownContainer = useRef();
   const {cityCode,dates1,dates2}  = useParams();
   
   const images=[img1,img2,img3,img4,img5,img6]
 
+ 
+ 
 
 
 const fetchTourData = async () => {
@@ -44,7 +43,7 @@ const fetchTourData = async () => {
         id: hotel.hotelId,
         title: hotel.name,
         location: hotel.iataCode, 
-        description: "A beautiful hotel in the heart of Paris", 
+        description: "A beautiful hotel for a remarkable holiday.", 
        price: 10000, // Default or mock price
        fromPrice: 15000, // Default starting price
        features: [
@@ -105,82 +104,9 @@ const fetchTourData = async () => {
         <TouristHeader />
         <main className="page-content">
         <section className="layout-pb-xl">
-      <div className="container">
-        <div className="row">
-          <div className="col-xl-3 col-lg-4">
-            <div className="lg:d-none">
-              <Sidebar />
-            </div>
-
-            <div className="accordion d-none mb-30 lg:d-flex js-accordion">
-              <div
-                className={`accordion__item col-12 ${
-                  sidebarActive ? "is-active" : ""
-                } `}
-              >
-                <button
-                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
-                  onClick={() => setSidebarActive((pre) => !pre)}
-                >
-                  <i className="icon-sort-down mr-10 text-16"></i>
-                  Filter
-                </button>
-
-                <div
-                  className="accordion__content"
-                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                >
-                  <div className="pt-20">
-                    <Sidebar />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-xl-9 col-lg-8">
-            <div className="row y-gap-5 justify-between">
-              <div className="col-auto">
-                <div>1362 results</div>
-              </div>
-
-              <div ref={dropDownContainer} className="col-auto">
-                <div
-                  className={`dropdown -type-2 js-dropdown js-form-dd ${
-                    ddActives ? "is-active" : ""
-                  } `}
-                  data-main-value=""
-                >
-                  <div
-                    className="dropdown__button js-button"
-                    onClick={() => setDdActives((pre) => !pre)}
-                  >
-                    <span>Sort by: </span>
-                    <span className="js-title">
-                      {sortOption ? sortOption : "Featured"}
-                    </span>
-                    <i className="icon-chevron-down"></i>
-                  </div>
-
-                  <div className="dropdown__menu js-menu-items">
-                    {speedFeatures.map((elm, i) => (
-                      <div
-                        onClick={() => {
-                          setSortOption((pre) => (pre == elm ? "" : elm));
-                          setDdActives(false);
-                        }}
-                        key={i}
-                        className="dropdown__item"
-                        data-value="fast"
-                      >
-                        {elm}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
+      <div className="container" style={{placeItems:'center',marginRight:"10px"}}>
+          <div className="col-xl-9 col-lg-8" style={{}}>
+            
             <div className="row y-gap-30 pt-30">
               {filteredHotels.map((elm, i) => (
                 <div className="col-12" key={i}>
@@ -195,14 +121,6 @@ const fetchTourData = async () => {
                           </div>
                         </div>
                       )}
-
-                      {/* {elm.featured && (
-                        <div className="tourCard__badge">
-                          <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
-                            FEATURED
-                          </div>
-                        </div>
-                      )} */}
 
                       <div className="tourCard__favorite">
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
@@ -220,17 +138,6 @@ const fetchTourData = async () => {
                       <h3 className="tourCard__title mt-5">
                         <span>{elm.title}</span>
                       </h3>
-
-                      <div className="d-flex items-center mt-5">
-                        {/* <div className="d-flex items-center x-gap-5">
-                          <Stars star={elm.rating} font={12} />
-                        </div> */}
-
-                        {/* <div className="text-14 ml-10">
-                          <span className="fw-500">{elm.rating}</span> (
-                          {elm.ratingCount})
-                        </div> */}
-                      </div>
 
                       <p className="tourCard__text mt-5">{elm.description}</p>
 
@@ -265,11 +172,11 @@ const fetchTourData = async () => {
                         </div>
                       </div>
 
-                      <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}>
+                      <button className="button -outline-accent-1 text-accent-1" onClick={() => window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`} >
+                        {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
-                        </Link>
+                        {/* </Link> */}
                       </button>
                     </div>
                   </div>
@@ -286,7 +193,6 @@ const fetchTourData = async () => {
             </div>
           </div>
         </div>
-      </div>
     </section>        </main>
         <FooterThree />
     </div>

@@ -9,13 +9,13 @@ export default function PageHeader({ activityId, activityTitle, tourist }) {
           <div className="col-auto">
             <div className="breadcrumbs">
               <span className="breadcrumbs__item">
-               {tourist&& <Link to="/tourist">Home</Link> }
-                {!tourist&& <Link to="/admin">Home</Link> }
+                {tourist && <Link to="/tourist">Home</Link> }
+                {!tourist && <Link to="/admin">Home</Link> }
               </span>
               <span>{"> "}</span>
               <span className="breadcrumbs__item">
-            {tourist&&    <Link to="/upcoming-activities">Activities</Link> }
-             {!tourist  && <Link to="/admin/activities">Activities</Link> }
+                {tourist && <Link to="/upcoming-activities">Activities</Link> }
+                {!tourist && <Link to="/admin/activities">Activities</Link> }
               </span>
               <span>{"> "}</span>
               <span className="breadcrumbs__item">

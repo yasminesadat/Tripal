@@ -2,19 +2,24 @@ const express = require("express");
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
 const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes } = require("../controllers/AdminController");
+
+const { deleteUser, addAdmin, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner } = require("../controllers/AdminController");
+
 const { changePassword } = require("../controllers/PasswordController.js");
 const Admin = require("../models/users/Admin.js");
 const { adminFlagItinerary, getAllItinerariesForAdmin, } = require("../controllers/ItineraryController.js");
 const { getAllActivitiesForAdmin, adminFlagActivity, } = require("../controllers/ActivityController.js");
 const { verifyToken, authorizeRoles, } = require("../middleware/AuthMiddleware.js");
-router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
-
 router.delete(
-  "/admin/user/:id",
+  "/admin/user/:role/:userId",
   verifyToken,
   authorizeRoles("Admin"),
   deleteUser
 );
+
+
+router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
+
 
 router.get("/admin/users", verifyToken, authorizeRoles("Admin"), getAllUsers);
 
@@ -68,5 +73,12 @@ router.get(
 );
 
 
+
+router.get(
+  "/admin/getDataForEventOwner/:userId",
+  verifyToken,
+  authorizeRoles("Admin"),
+  getDataForEventOwner
+);
 
 module.exports = router;

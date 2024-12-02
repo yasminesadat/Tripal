@@ -1,18 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { getRatings } from "../../api/RatingService";
-import {
-  Rate,
-  Layout,
-  Breadcrumb,
-  Button,
-  Space,
-  Divider,
-  List,
-  Typography,
-  Avatar,
-  Spin,
-} from "antd";
+import { Tour, Rate, Layout, Breadcrumb, Button, Space, Divider, List, Typography, Avatar, Spin } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
@@ -21,6 +10,7 @@ const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
 const ProductDetails = ({ homeURL, productsURL }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const {
     id,
@@ -33,9 +23,23 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     averageRating,
     sales,
     userRole,
-  } = location.state || {}; // Use 'id' from location.state
+  } = location.state || {}; 
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const refProdToCart = useRef(null);
+  const [open, setOpen] = useState(false);
+
+const steps = [
+  {
+    title: "Add Product to Cart",
+    description: "You can finally checkout from there!",
+    target: () => refProdToCart.current,
+    onFinish: () => {
+      setOpen(false); 
+      navigate("/tourist", { state: { fromTour: true, targetStep: 6 } });
+    },
+  },
+]
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -53,6 +57,26 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     fetchRatings();
   }, [id]);
 
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refProdToCart.current) {
+      refProdToCart.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1000); 
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
+
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -65,6 +89,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   return (
     <>
       <div className="productDetails">
+        <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <div style={{ display: "flex", margin: "5%" }}>
           <div
             className="imagePlaceholder"
@@ -159,6 +184,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                       className="button purple-button"
                       type="primary"
                       style={{ marginLeft: "10px" }}
+                      ref={refProdToCart}
                     >
                       Add to Cart
                     </Button>

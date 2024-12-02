@@ -1,3 +1,5 @@
+import { useState, useRef, useEffect } from "react";
+import { Tour, ConfigProvider } from "antd";
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import Banner9 from "@/components/homes/banners/Banner9";
 import BannerEight from "@/components/homes/banners/BannerEight";
@@ -17,11 +19,34 @@ const metadata = {
 };
 
 export default function HomePage5() {
+  const [open, setOpen] = useState(false);
+  const refHeader = useRef(null);
+  const refLogin = useRef(null);
+
+  const steps = [
+    {
+      title: "Welcome to TriPal!",
+      description: "This is your guide to hassle-free travel planning, from start to finish.",
+      target: () => {
+        refHeader.current;
+      },
+    },
+    {
+      title: "Sign up or Log in",
+      description: "You are 1 step away from getting introduced to a rollercoaster of events.",
+      target: () => refLogin.current,
+      // onFinish: () => {
+      //   setOpen(false)
+      // }
+    },
+  ];
+
   return (
     <>
       <MetaComponent meta={metadata} />
-      <main>
-        <GuestHeader />
+      <main >
+        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} />
+        <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />

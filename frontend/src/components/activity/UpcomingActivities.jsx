@@ -7,12 +7,14 @@ import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import {viewUpcomingActivities,} from "@/api/ActivityService";
 import { getAdminActivities} from "@/api/AdminService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 
 export default function ActivitiesList({
   searchTerm,
-  curr = "EGP",
   page,
+  refActivityDetails,
+  onFirstActivityId,
 }) {
 
   //#region States
@@ -31,7 +33,7 @@ export default function ActivitiesList({
   const [ratingFilter, setRatingFilter] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 2000000]);
-
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -44,12 +46,33 @@ export default function ActivitiesList({
     indexOfFirstActivity,
     indexOfLastActivity
   );
+
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
     { label: "Price: High to Low", field: "price", order: "desc" },
     { label: "Rating: Low to High", field: "ratings", order: "asc" },
     { label: "Rating: High to Low", field: "ratings", order: "desc" },
   ];
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   const errorDisplayed = useRef(false);
   //#endregion
@@ -115,8 +138,7 @@ export default function ActivitiesList({
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase();
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
+      const activityPrice = activity.price * exchangeRate;
 
       const isDateValid =
         !startDate ||
@@ -168,13 +190,17 @@ export default function ActivitiesList({
 
   useEffect(() => {}, [filteredActivities]);
 
+  useEffect(() => {
+    if (filteredActivities.length > 0) {
+      onFirstActivityId(filteredActivities[0]._id);
+    }
+  }, [filteredActivities, onFirstActivityId]);
+
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
@@ -425,7 +451,7 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {elm.price}
+                          {currency} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
@@ -435,6 +461,7 @@ export default function ActivitiesList({
                       <button
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => handleRedirect(elm._id)}
+                        ref={i === 0 ? refActivityDetails : null}
                       >
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>

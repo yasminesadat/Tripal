@@ -39,6 +39,16 @@ export const getRatings = async (id) => {
   }
 };
 
+export const getNotifications = async () => {
+  try {
+    const response = await axios.get(`/tourGuide/notificationList`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications in service file:", error);
+    throw error;
+  }
+};
+
 export const addRating = async (tourGuideID, ratingData) => {
   try {
     const response = await axios.post(

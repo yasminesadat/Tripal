@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Menu from "../components/TouristMenu";
 import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";
@@ -10,14 +10,16 @@ import {
   updateTouristInformation,
   getTouristInformation,
 } from "@/api/TouristService";
+import { setTouristCurrency } from "@/api/ExchangeRatesService";
 
-export default function TouristHeader() {
+export default function TouristHeader({ setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
   const [profileInformation, setProfileInformation] = useState({});
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
+
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -51,8 +53,9 @@ export default function TouristHeader() {
 
     try {
       await updateTouristInformation(updatedProfileData);
-      // sessionStorage.removeItem("currency");
-      // sessionStorage.setItem("currency", currency);
+      setTouristCurrency(currency);
+      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency })); 
+      sessionStorage.setItem("currency", currency);
     } catch (error) {
       message.error("Failed to update user information:", error);
     }
@@ -63,8 +66,8 @@ export default function TouristHeader() {
       try {
         const response = await getTouristInformation();
         setProfileInformation(response);
-        // sessionStorage.removeItem("currency");
-        // sessionStorage.setItem("currency", response.choosenCurrency);
+        sessionStorage.setItem("currency", response.choosenCurrency);
+        setTouristCurrency(response.choosenCurrency);
       } catch (error) {
         message.error("Failed to fetch user information:", error);
       }
@@ -75,7 +78,7 @@ export default function TouristHeader() {
 
   return (
     <>
-      <header
+      <header 
         className={`header -type-3 js-header ${addClass ? "-is-sticky" : ""}`}
       >
         <div className="header__container container">
@@ -92,8 +95,17 @@ export default function TouristHeader() {
             <Link to="/tourist" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
-
-            <Menu />
+            <div >
+              <Menu 
+                refFlights={refFlights} 
+                refHotels={refHotels} 
+                refActivities={refActivities}
+                refItineraries={refItineraries}
+                refHisPlaces={refHisPlaces}
+                refProducts={refProducts}    
+              />
+            </div>
+            
           </div>
 
           <div className="headerMobile__right">
@@ -113,16 +125,17 @@ export default function TouristHeader() {
           </div>
 
           <div className="header__right">
+          <button type="primary" onClick={() => setOpen(true)}>
+              Guide
+          </button>
+            
             <div className="ml-15">
               <Currency
                 userCurrency={profileInformation.choosenCurrency}
                 onCurrencyChange={handleCurrencyChange}
               />
             </div>
-            <Link to="/" className="ml-20">
-              {/*/help-center*/}
-              Help
-            </Link>
+            
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}

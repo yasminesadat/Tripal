@@ -12,7 +12,6 @@ import MyComplaints from "../pages/tourist/MyComplaints";
 import ComplaintsReplies from "@/pages/tourist/ComplaintsReplies";
 import FlightSearch from "../pages/tourist/SearchBar";
 import Cart from "@/pages/tourist/Cart";
-import WishList from "@/pages/tourist/WishList";
 // import Invoice from "../components/tourist/Invoice";
 import DbBooking from "@/pages/tourist/BookingHistory";
 import TouristHome from "@/pages/tourist/TouristHome";
