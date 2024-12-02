@@ -1,19 +1,26 @@
 import  { useState } from "react";
 import { Modal, Input, Button } from "antd";
 import { requestOtp } from "@/api/OtpService";
+import { useNavigate } from "react-router-dom";
 
 const OtpModal = ({ visible, onClose,clearError  }) => {
+
+    //#region user State
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const handleRequestOtp = async () => {
+  const navigate = useNavigate();
+    //#endregion
+    
+    //#region functions
+    const handleRequestOtp = async () => {
     try {
       setLoading(true);
       setError("");
       const response = await requestOtp({ email });
       if (response.status === 200) {
         onClose();
+        navigate("/reset-password", { state: { email } });
       }
     } catch (err) {
       setError("Failed to send OTP. Please write a valid email.");
@@ -28,7 +35,7 @@ const OtpModal = ({ visible, onClose,clearError  }) => {
     clearError();
     onClose();
   };
-
+    //#endregion
   return (
     <Modal
       title="Forgot Password?"
