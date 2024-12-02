@@ -112,7 +112,7 @@ const NotificationTab = () => {
             >
                 <Bell className="w-4 h-4 text-[#8f5774]" />
                 {unreadCount > 0 && (
-                    <span className="notification-badge absolute -top-1 -right-1 bg-[#e0829d] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white">
+                    <span className="notification-badge absolute -top-1 -right-1 bg-[#e0829d] text-black text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white">
                         {unreadCount}
                     </span>
                 )}
@@ -146,12 +146,12 @@ const NotificationTab = () => {
                                             )}
                                             <div className={`notification-item p-2 ${!notification.read ? 'unread' : ''}`}>
                                                 <div className="flex items-start gap-2">
-                                                    <div className="text-sm">
+                                                    {/* <div className="text-sm">
                                                         {notification.notifType === 'birthday' ? '🎀' : '✨'}
-                                                    </div>
+                                                    </div> */}
                                                     <div className="flex-1">
                                                         <div className="text-xs text-[#8f5774] mb-1 flex items-center justify-between">
-                                                            <span>{notification.message}</span>
+                                                            <span>{notification.message} </span>
                                                             {!notification.read && (
                                                                 <span className="text-[9px] bg-[#e0829d] text-white px-1.5 py-0.5 rounded-full">
                                                                     New

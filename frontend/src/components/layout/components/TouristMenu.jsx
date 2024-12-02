@@ -10,7 +10,9 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
           <div className="desktopNav__item">
             <Link to="/tourist">Home</Link>
           </div>
-          <NotificationTab />
+          <div className="desktopNav__item">
+            <NotificationTab />
+          </div>
           <div className="desktopNav__item" ref={refFlights}>
             <Link to="/tourist/book-flight" >Flights</Link>
           </div>
