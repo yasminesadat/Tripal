@@ -616,7 +616,7 @@ body {
 select,
 input:not([type="range"]),
 textarea {
-  /*border: 0;*/
+  border: 0;
   outline: none;
   width: 100%;
   background-color: transparent;
@@ -758,11 +758,11 @@ button:focus {
 }
 
 .button.-outline-accent-1 {
-  border-color: var(--color-accent-1);
+  border-color: var(--color-stone);
 }
 
 .button.-outline-accent-1:hover {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-stone-light) !important;
   border-color: transparent;
   color: white !important;
 }
@@ -11442,7 +11442,7 @@ h6 {
 }
 
 .bg-accent-1 {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-dark-purple) !important;
 }
 
 .bg-accent-1-dark {
@@ -11594,11 +11594,11 @@ h6 {
 }
 
 .text-accent-1 {
-  color: var(--color-accent-1);
+  color: var(--color-dark-purple);
 }
 
 .text-accent-1-dark {
-  color: var(--color-accent-1-dark);
+  color: var(--color-dark-purple);
 }
 
 .text-accent-2 {

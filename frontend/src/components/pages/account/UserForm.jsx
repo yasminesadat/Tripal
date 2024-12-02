@@ -107,7 +107,10 @@ export default function UserForm() {
               size="large"
               style={{
                 height: "50px",
-                borderColor: "#d9d9d9",
+                border: "1px solid #d9d9d9",
+                outline: "none",
+                width: "100%",
+                backgroundColor: "transparent",
               }}
             />
           </Form.Item>
@@ -158,6 +161,7 @@ export default function UserForm() {
         </Form>
       </Card>
       <style>{`
+
         .sign-up-link {
           color: var(--color-stone)!important;
           font-weight: bold;

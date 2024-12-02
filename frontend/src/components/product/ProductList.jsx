@@ -1,34 +1,23 @@
-import { tourDataThree } from "@/data/tours";
-import {
-  fetchProducts,
-  archiveProduct,
-  unArchiveProduct,
-} from "../../api/ProductService";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Tour, Card, Rate, message, Input, Select, Slider } from "antd";
+import { fetchProducts, archiveProduct, unArchiveProduct } from "../../api/ProductService";
 import { getUserData } from "../../api/UserService";
-import React, { useState, useRef, useEffect } from "react";
-import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import ProductCard from "./ProductCard";
-import {
-  durations,
-  features,
-  languages,
-  rating,
-  speedFeatures,
-} from "@/data/tourFilteringOptions";
-import RangeSlider from "../common/RangeSlider";
-import { Link } from "react-router-dom";
-import { Card, Rate, message, Input, Select, Slider } from "antd";
 import MetaComponent from "../common/MetaComponent";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+
 const { Search } = Input;
-const { Option } = Select;
 
 const metadata = {
   title: "Products || Tripal",
 };
 
 export default function ProductList() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
@@ -48,6 +37,55 @@ export default function ProductList() {
   const [userId, setUserId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newIsArchived, setNewIsArchived] = useState(false);
+  const refProductDetails = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [firstProductId, setFirstProductId] = useState(null);  
+
+  const steps = [
+    {
+      title: "See More Details",
+      description: "Check it out to make your choice.",
+      target: () => refProductDetails.current, 
+      onNext: () => {
+        const firstProduct = filteredProducts[0];
+        if (firstProduct){
+          navigate(`/tourist/view-products/product/${firstProductId}`, { 
+            state: { 
+              fromTour: true, 
+              id: firstProduct._id,
+              productSeller: firstProduct.seller._id,
+              name: firstProduct.name,
+              description: firstProduct.description,
+              price: firstProduct.price,
+              picture: firstProduct.picture,
+              seller: firstProduct.seller.name,
+              quantity: firstProduct.quantity,
+              averageRating: firstProduct.averageRating,
+              isArchived: firstProduct.isArchived,
+              sales: firstProduct.sales,
+              userRole: userRole,
+              userId: userId,
+            } 
+          })
+        }   
+      }
+    },
+    {
+      title: "Nothing",
+    },
+  ]
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1000);
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
 
   const getProducts = async (page = 1) => {
     setLoading(true);
@@ -61,7 +99,6 @@ export default function ProductList() {
         userRole
       );
       let filtered = productsData.products;
-      console.log(filtered);
       if (productsData.totalPages) setTotalPages(productsData.totalPages);
 
       setProducts(filtered);
@@ -78,6 +115,27 @@ export default function ProductList() {
       setLoading(false);
     }
   };
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,20 +158,6 @@ export default function ProductList() {
     }
   }, [userRole, sortOrder]);
 
-  // useEffect(() => {
-  //   const getExchangeRate = async () => {
-  //     if (curr) {
-  //       try {
-  //         const rate = await getConversionRate(curr);
-  //         setExchangeRate(rate);
-  //       } catch (error) {
-  //         message.error("Failed to fetch exchange rate.");
-  //       }
-  //     }
-  //   };
-
-  //   getExchangeRate();
-  // }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -131,16 +175,11 @@ export default function ProductList() {
     getProducts(1);
   };
 
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice;
-  };
-
   const formatPriceRange = () => {
     if (priceRange[1] === 3000) {
-      return `${priceRange[0]} - ${priceRange[1]} & above`;
+      return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate} & above`;
     }
-    return `${priceRange[0]} - ${priceRange[1]}`;
+    return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate}`;
   };
 
   const onPageChange = (page) => {
@@ -178,6 +217,7 @@ export default function ProductList() {
   return (
     <>
       <MetaComponent meta={metadata} />
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <section className="layout-pt-lg layout-pb-xl">
         <div className="container">
           <div className="row custom-dd-container justify-between items-center relative z-5">
@@ -418,7 +458,7 @@ export default function ProductList() {
                     productSeller={product.seller._id}
                     name={product.name}
                     description={product.description}
-                    price={product.price}
+                    price={`${currency} ${(product.price*exchangeRate).toFixed(2)}`}
                     picture={product.picture}
                     seller={product.seller.name}
                     quantity={product.quantity}
@@ -427,6 +467,7 @@ export default function ProductList() {
                     sales={product.sales}
                     userRole={userRole}
                     userId={userId}
+                    refProductDetails={i === 0 ? refProductDetails : null}
                   />
                 ))}
               </div>

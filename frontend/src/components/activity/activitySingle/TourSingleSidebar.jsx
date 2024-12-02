@@ -1,15 +1,14 @@
-import  { useEffect, useState } from "react";
-import { getConversionRate } from "@/api/ExchangeRatesService";
+import  { useEffect, useState, useRef } from "react";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 
-export default function TourSingleSidebar({itinerary, activity}) {
+export default function TourSingleSidebar({itinerary, activity, refActivityBook, refItineraryBook}) {
   const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
-
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState("EGP");
+  const selectedRef = refActivityBook || refItineraryBook;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -17,7 +16,6 @@ export default function TourSingleSidebar({itinerary, activity}) {
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-          setUserId(response.data.id); 
         } else {
           message.error(response.data.message); 
         }
@@ -29,19 +27,24 @@ export default function TourSingleSidebar({itinerary, activity}) {
   }, []);
 
   useEffect(() => {
-    const curr = sessionStorage.getItem("currency");
-    if (curr) {
-      setCurrency(curr); 
-      fetchExchangeRate(curr); 
-    }
+    const intervalId = setInterval(async () => {
+      const curr = getTouristCurrency();
+      if (curr) {
+        setCurrency(curr); 
+        fetchExchangeRate(curr); 
+      }
+    }, 500); // every 500ms
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchExchangeRate = async (curr) => {
     try {
-        const rate = await getConversionRate(curr);
-        setExchangeRate(rate);
+      const rate = await getConversionRate(curr);
+      setExchangeRate(rate);
     } catch (error) {
-        message.error("Failed to fetch exchange rate.");
+      message.error("Failed to fetch exchange rate.");
     }
   };
 
@@ -167,9 +170,7 @@ export default function TourSingleSidebar({itinerary, activity}) {
         <div className="text-18 fw-500">Total:</div>
         {itinerary&&<div className="text-18 fw-500">
           {
-            formatPrice((itinerary.price * ticketNumber +
-            itinerary.serviceFee
-          ).toFixed(2))}
+            formatPrice((itinerary.price * ticketNumber +itinerary.serviceFee).toFixed(2))}
         </div>}
 
         {activity&&<div className="text-18 fw-500">
@@ -178,7 +179,7 @@ export default function TourSingleSidebar({itinerary, activity}) {
 
       </div>
 
-      <button onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
+      <button ref={selectedRef} onClick={handleBookClick}  className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20">
         Book Now
         <i className="icon-arrow-top-right ml-10"></i>
       </button>

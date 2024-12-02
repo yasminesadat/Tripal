@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Menu from "../components/TourGuideMenu";
 import { profile } from "@/data/tourGuideMenu";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import { message } from "antd";
 import { logout } from "@/api/UserService";
+import { Bell, Check, X } from "lucide-react";
+import { getNotifications } from "@/api/TourGuideService";
+
 export default function TourGuideHeader() {
   const navigate = useNavigate();
 
@@ -16,6 +17,38 @@ export default function TourGuideHeader() {
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+
+  // Sample notifications data
+  const [notifications, setNotifications] = useState([]);
+
+  const fetchNotifications = async ()=>{
+    try{
+  
+      const response = await getNotifications();
+    
+    const transformedData= response.map((notification) => ({
+       id:notification._id,
+        message:notification.message,
+        read:notification.read
+      })
+    );
+
+    setNotifications(transformedData);
+  }
+  catch (error) {
+    console.error("Error fetching notifications:", error);
+  }
+}
+
+useEffect(() => {
+  fetchNotifications();
+}, []);
+
+
+  // Count unread notifications
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   let closeTimeout;
 
@@ -28,6 +61,17 @@ export default function TourGuideHeader() {
   const handleMouseEnter = () => {
     clearTimeout(closeTimeout);
     setDropdownOpen(true);
+  };
+
+  // Notification handling methods
+  const handleNotificationRead = (id) => {
+    setNotifications(notifications.map(n => 
+      n.id === id ? { ...n, read: true } : n
+    ));
+  };
+
+  const handleNotificationRemove = (id) => {
+    setNotifications(notifications.filter(n => n.id !== id));
   };
 
   const handleLogout = async () => {
@@ -80,9 +124,64 @@ export default function TourGuideHeader() {
 
           <div className="header__right">
             <Link to="/" className="ml-20">
-              {/*/help-center*/}
               Help
             </Link>
+
+            {/* Notifications Button */}
+            <div className="relative ml-30">
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="d-flex"
+              >
+                <Bell className="text-18" />
+                {unreadCount > 0 && (
+                 <span classname ="absolute -top-2 -right-2 bg-red-500 text-red-700 rounded-full px-3 py-1 text-xs">
+                 {2}
+               </span>
+               
+                )}
+              </button>
+
+              {notificationsOpen && (
+                <div className="dropdown-menu2">
+                  <div className="p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-bold">Notifications</h3>
+                      <span className="text-sm text-gray-500">
+                        {unreadCount} unread
+                      </span>
+                    </div>
+                    {notifications.length === 0 ? (
+                      <p className="text-gray-500">No notifications</p>
+                    ) : (
+                      <ul>
+                        {notifications.map((notification) => (
+                          <li 
+                            key={notification.id} 
+                            className={`flex justify-between items-center p-2 ${
+                              !notification.read ? 'bg-gray-100' : ''
+                            }`}
+                          >
+                            <span>{notification.message}</span>
+                            <div className="flex space-x-2">
+                              <Check 
+                                className="h-4 w-4 text-green-500 cursor-pointer"
+                                onClick={() => handleNotificationRead(notification.id)}
+                              />
+                              <X 
+                                className="h-4 w-4 text-red-500 cursor-pointer"
+                                onClick={() => handleNotificationRemove(notification.id)}
+                              />
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
@@ -119,6 +218,19 @@ export default function TourGuideHeader() {
         .button.hovered {
           background-color: var(--color-dark-1) !important;
           color: white !important;
+        }
+
+        .dropdown-menu2 {
+          position: absolute;
+          top: 90%;
+          left: auto;
+          right: 0;
+          background-color: white;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          z-index: 1000;
+          min-width: 250px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .dropdown-menu {

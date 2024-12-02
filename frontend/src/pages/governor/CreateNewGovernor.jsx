@@ -73,10 +73,11 @@ try{
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           maxWidth: "55%",
-          marginLeft: "10%",
+          marginLeft: "23%",
+          marginTop: "8%",
         }}
       >
-        <Title level={3} style={{ textAlign: "center" }}>
+        <Title level={3} style={{ textAlign: "center",  fontWeight: 'bold' }}>
        Add New Governor
         </Title>
         <Text
@@ -100,13 +101,14 @@ try{
           autoComplete="off"
           initialValues={{ remember: true }}
           requiredMark={false}
-          style={{ width: "100%" }}
+          style={{ width: "100%", padding: "30px", }}
         >
           {/* Username Field */}
           <Form.Item
             label="Username"
             name="username"
             rules={[{ required: true, message: "Please enter your username" }]}
+            labelCol={{ style: { fontWeight: 'bold' } }}
           >
             <Input
               size="large"
@@ -128,6 +130,7 @@ try{
                 message: "Password must be at least 6 characters",
               },
             ]}
+            labelCol={{ style: { fontWeight: 'bold' } }}
           >
             <Input.Password
               size="large"
@@ -139,14 +142,7 @@ try{
           </Form.Item>
 
           {/* Remember Me and Forgot Password */}
-          <Form.Item>
-            <Row justify="space-between" align="middle">
-              <Checkbox>Remember me</Checkbox>
-              <Link to="/forgot-password" className="sign-up-link">
-                Forgot password?
-              </Link>
-            </Row>
-          </Form.Item>
+        
 
           {/* Submit Button */}
           <Form.Item>
@@ -155,7 +151,7 @@ try{
               htmlType="submit"
           //    loading={loading}
               className="custom-button"
-              style={{ width: "100%", height: "50px" }}
+              style={{ width: "100%", height: "50px" ,  marginTop:"35px"}}
             >
               Create
             </Button>
@@ -195,19 +191,7 @@ try{
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
         }
 
-        /* Custom hover color for password field */
-        .ant-input-password:hover,
-        .ant-input-password:focus,
-        .ant-input-password-focused:hover {
-          border-color: var(--color-light-purple) !important;
-          box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
-        }
-
-        /* Fix for input hover color issue in password field */
-        .ant-input-password .ant-input-affix-wrapper:hover {
-          border-color: var(--color-light-purple) !important;
-          box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
-        }
+        
 
         /* Username input default border color to gray */
         .ant-input {
@@ -257,9 +241,7 @@ try{
         }
       `}</style>
     </>
-    <div className="text-center pt-30">
-            © Copyright Viatours {new Date().getFullYear()}
-          </div>
+   
     </div>
     </div>
     </div>

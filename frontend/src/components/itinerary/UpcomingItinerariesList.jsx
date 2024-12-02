@@ -8,11 +8,14 @@ import { getUserData } from "@/api/UserService";
 import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
 import { getAdminItineraries} from "@/api/AdminService";
 import Spinner from "../common/Spinner";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+
 
 export default function ItinerariesList({
   searchTerm,
-  curr = "EGP",
   page,
+  refItineraryDetails,
+  onFirstItineraryId
 }) {
 
   //#region States
@@ -20,7 +23,7 @@ export default function ItinerariesList({
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
-
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [userRole, setUserRole] = useState(null);
 
   const [itineraries, setItineraries] = useState([]);
@@ -51,6 +54,28 @@ export default function ItinerariesList({
       indexOfFirstItinerary,
       indexOfLastItinerary
   );
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
 //#endregion
 
 //#region useEffect
@@ -115,7 +140,7 @@ export default function ItinerariesList({
     const filtered = itineraries.filter((itinerary) => {
       const itineraryStartDate = new Date(itinerary.startDate);
       const itineraryRating = itinerary.averageRating;
-      const itineraryPrice = itinerary.price;
+      const itineraryPrice = itinerary.price* exchangeRate;
 
       const isDateValid =
         !startDate ||
@@ -155,13 +180,17 @@ export default function ItinerariesList({
 
   useEffect(() => {}, [filteredItineraries]);
 
+  useEffect(() => {
+    if (filteredItineraries.length > 0) {
+      onFirstItineraryId(filteredItineraries[0]._id);
+    }
+  }, [filteredItineraries, onFirstItineraryId]);
+
   const handleSort = (field, order) => {
     const sortedItineraries = [...filteredItineraries].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
@@ -404,7 +433,7 @@ export default function ItinerariesList({
                           {formatDate(elm.endDate)}
                         </div>
                         <div className="tourCard__price">
-                          Price: {elm.price}
+                            {currency} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
@@ -414,6 +443,7 @@ export default function ItinerariesList({
                       <button
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => handleRedirect(elm._id)}
+                        ref={i === 0 ? refItineraryDetails : null}
                       >
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>

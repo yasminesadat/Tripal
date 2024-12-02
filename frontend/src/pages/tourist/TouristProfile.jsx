@@ -304,9 +304,6 @@ export default function Profile() {
       reader.readAsDataURL(file);
     }
   };
-  if (loading) {
-    return <Spinner />;
-  }
 
   if (loading) {
     return <Spinner />;

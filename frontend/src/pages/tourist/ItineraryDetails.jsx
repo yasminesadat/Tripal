@@ -1,6 +1,6 @@
-import  { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { message } from "antd";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { message, Tour } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Header1 from "@/components/layout/header/TouristHeader";
 import PageHeader from "@/components/layout/header/SingleItineraryHeader";
@@ -18,13 +18,30 @@ import Index from './index'
 
 const ItineraryDetailsPage = () => {
   //#region 1. Variables
+  const location = useLocation();
+  const navigate = useNavigate();
   const { itineraryId } = useParams();
   const [itinerary, setItinerary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  //const [userId, setUserId] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const refItineraryBook = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const steps = [
+    {
+      title: "Book Itinerary",
+      description: "Another step towards a great time.",
+      target: () => refItineraryBook.current,
+      onFinish: () => {
+        setOpen(false); 
+        localStorage.setItem('currentStep', 5); 
+        navigate("/tourist", { state: { fromTour: true, targetStep: 5 } });
+      },
+    },
+  ]
+
   //#endregion
 
   //#region 2. useEffect
@@ -59,6 +76,27 @@ const ItineraryDetailsPage = () => {
     };
     fetchActivities();
   }, []);
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refItineraryBook.current) {
+      refItineraryBook.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1200); 
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
+
   //#endregion
   
   if (loading) return <div><Spinner/></div>;
@@ -75,9 +113,14 @@ const ItineraryDetailsPage = () => {
       <main>
         {userRole === "Guest" && 
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <GuestHeader /> 
             <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title} />
-            <ItineraryDetails itinerary={itinerary} userRole={userRole} />
+            <ItineraryDetails 
+              itinerary={itinerary} 
+              userRole={userRole} 
+              refItineraryBook={refItineraryBook} 
+            />
             <FooterThree />
           </>
         }
@@ -102,9 +145,14 @@ const ItineraryDetailsPage = () => {
 
         {userRole === "Tourist" && (
           <>
+            <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <Header1 />
             <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  userRole={userRole}/>
-            <ItineraryDetails itinerary={itinerary} userRole={userRole}/>
+            <ItineraryDetails 
+              itinerary={itinerary} 
+              userRole={userRole}
+              refItineraryBook={refItineraryBook} 
+            />
             <FooterThree />
           </>
         )}

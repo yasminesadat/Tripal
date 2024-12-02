@@ -1,11 +1,11 @@
 import React from "react";
 
 
-export default function Overview({serviceFee, accessibility, itineraryDescription, activityDescription}) {
+export default function Overview({serviceFee, accessibility, itineraryDescription, activityDescription, refActivityBook}) {
   const resource = itineraryDescription? 'Itinerary':'Activity';
   return (
     <>
-      <h2 className="text-30"> {resource} Overview</h2>
+      <h2 className="text-30" ref={refActivityBook}> {resource} Overview</h2>
       <p className="mt-20">
         {itineraryDescription}{activityDescription}
       </p>
