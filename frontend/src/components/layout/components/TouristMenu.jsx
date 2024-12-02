@@ -1,13 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 
+import NotificationTab from "@/components/common/NotificationBell";
+export default function Menu() {
+  const { pathname } = useLocation();
+
+
 export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
 
   return (
     <>
       <div className="xl:d-none ">
         <div className="desktopNav">
+          <NotificationTab />
 
           <div className="desktopNav__item">
+
             <Link to="/tourist">Home</Link>
           </div>
 
@@ -34,7 +41,7 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
           <div className="desktopNav__item" ref={refProducts}>
             <Link to="/tourist/view-products">Products</Link>
           </div>
-          
+
         </div>
       </div>
     </>

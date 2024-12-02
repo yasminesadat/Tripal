@@ -181,3 +181,12 @@ export async function getWishList() {
     throw error;
   }
 }
+export async function getTouristNotifications() {
+  try {
+    const response = await axios.get('/tourist/notifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+}

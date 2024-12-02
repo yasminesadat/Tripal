@@ -4,10 +4,99 @@ const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
 const Request = require('../models/Request.js');
 const hotelBookings = require("../models/BookingHotel.js");
-const activityModel= require("../models/Activity.js");
-const itineraryModel= require("../models/Itinerary.js");
-const productModel= require("../models/Product.js");
+const activityModel = require("../models/Activity.js");
+const itineraryModel = require("../models/Itinerary.js");
+const productModel = require("../models/Product.js");
+const PromoCode = require("../models/PromoCode.js")
+const cron = require('node-cron');
 
+cron.schedule('00 00 * * *', async () => {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  const birthdayUsers = await touristModel.find({
+    $expr: {
+      $and: [
+        { $eq: [{ $month: "$dateOfBirth" }, month] },
+        { $eq: [{ $dayOfMonth: "$dateOfBirth" }, day] }
+      ]
+    }
+  })
+
+
+  for (const user of birthdayUsers) {
+    try {
+      const promocode = await getRandomPromoCode();
+      const name = promocode.name;
+      const discount = promocode.discountPercentage;
+
+      const subject = `🎉 Happy Birthday from Tripal!`;
+      const html = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h1 style="color: #5a9ea0;">Happy Birthday, ${user.userName}! 🎂</h1>
+
+                        <div style="background-color: #f8f8f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h2 style="color: #036264; margin: 0;">🎁 Your Birthday Gift</h2>
+                            <p style="font-size: 18px;">Enjoy <strong>${discount}% OFF</strong> your next adventure!</p>
+                            <div style="background: #ffffff; padding: 15px; border-radius: 4px; text-align: center; margin: 15px 0;">
+                                <p style="font-size: 24px; font-weight: bold; color: #5a9ea0; margin: 0;">
+                                    ${name}
+                                </p>
+                            </div>
+                            <p style="color: #666; font-size: 14px;">Valid for the next 24 hours</p>
+                        </div>
+
+                        <p>Don't miss out on this exclusive birthday offer! 
+                            Book your next trip today and make your birthday month even more special.</p>
+
+                        <p style="color: #666; font-size: 12px;">
+                            * Promo code expires in 24 hours • Cannot be combined with other offers
+                        </p>
+
+                        <p style="margin-top: 30px;">
+                            Happy Travels!<br/>
+                            The Tripal Team ✈️
+                        </p>
+                    </div>
+                `;
+
+      await sendEmail(user.email, subject, html);
+      user.promoCodes.push(promocode);
+      user.notificationList.push({
+        message: `Happy birthday! Use promo code ${name} for a discount of ${discount}%  today only!`,
+        notifType: "birthday"
+      });
+      await user.save();
+      console.log(`Birthday email sent to ${user.userName}`);
+    } catch (error) {
+      console.error(`Error processing birthday email for ${user.userName}:`, error.message);
+      continue;
+    }
+  }
+});
+
+cron.schedule('59 23 * * *', async () => {
+
+  const allUsers = await touristModel.find({});
+
+
+  for (const user of allUsers) {
+    try {
+
+
+
+      user.promoCodes.length = 0;
+      await user.save();
+      console.log(`Cleared promo code: ( for ${user.userName}`);
+    } catch (error) {
+      console.error(`Error clearing promo code for ${user.userName}:`, error.message);
+      continue;
+    }
+  }
+});
+
+
+const { sendEmail } = require('./Mailer');
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -214,10 +303,10 @@ const redeemPoints = async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-    
-    const amount=tourist.currentPoints-(tourist.currentPoints%10000);
-    tourist.wallet.amount = tourist.wallet.amount + amount*100;
-    tourist.currentPoints = tourist.currentPoints%10000;
+
+    const amount = tourist.currentPoints - (tourist.currentPoints % 10000);
+    tourist.wallet.amount = tourist.wallet.amount + amount * 100;
+    tourist.currentPoints = tourist.currentPoints % 10000;
 
     await tourist.save();
 
@@ -475,7 +564,7 @@ const getBookmarkedEvents = async (req, res) => {
 
 const saveProduct = async (req, res) => {
   const touristId = req.userId;
-  const { productId } = req.body; 
+  const { productId } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
@@ -495,7 +584,6 @@ const saveProduct = async (req, res) => {
 
     tourist.wishlist.push(productId);
     await tourist.save();
-
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {
     console.error(error);
@@ -504,7 +592,7 @@ const saveProduct = async (req, res) => {
 };
 
 const getWishList = async (req, res) => {
-  const touristId = req.userId; 
+  const touristId = req.userId;
 
   try {
     const tourist = await touristModel.findById(touristId)
@@ -529,11 +617,11 @@ const getWishList = async (req, res) => {
 
 const removeFromWishList = async (req, res) => {
   const touristId = req.userId;
-  const { productId } = req.body; 
+  const { productId } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
-    
+
     let product = await productModel.findById(productId);
 
 
@@ -546,6 +634,37 @@ const removeFromWishList = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+const getRandomPromoCode = async (req, res) => {
+  try {
+    const randomPromoCode = await PromoCode.aggregate([
+      { $sample: { size: 1 } }  // Get 1 random document
+    ]);
+
+
+    if (!randomPromoCode || randomPromoCode.length === 0) {
+      return res.status(404).json({ message: "No promo codes available" });
+    }
+    return randomPromoCode[0];
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+const getTouristNotifications = async (req, res) => {
+  try {
+    const touristId = req.userId;
+    const tourist = await touristModel.findById(touristId);
+    const notifications = tourist.notificationList;
+    return res.status(200).json(notifications);
+
+  }
+  catch (error) {
+
+  }
+}
+// const checkTouristPromocode= async (req,res)
+// {
+//   const touristId = req.userId;
+// }
 
 module.exports = {
   createTourist,
@@ -564,5 +683,8 @@ module.exports = {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList
+  removeFromWishList,
+  getRandomPromoCode,
+  getTouristNotifications
+  // checkTouristPromocode
 };
