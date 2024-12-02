@@ -1,41 +1,45 @@
 const User = require("../models/users/User.js");
 const{sendEmail} =require("./Mailer");
 
-async function requestOtp(email) {
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ message: "User not found" });
-
-  const otp = await user.generateOtp();
-
-  try {
-    await sendOtpEmail(email, otp);
-  } catch (error) {
-    return res.status(500).json({ message: "Failed to send OTP email" });
-  }
-  return user.otp;
-}
-
-async function validateOtp(email, inputOtp) {
+async function requestOtp(req, res) {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+  
+    const otp = await user.generateOtp();
+  
     try {
-      const user = await User.findOne({ email }).select("+otp +otpExpiresAt"); // Include hidden fields
-      if (!user) return res.status(400).json({ message: "User not found" });
-  
-      user.clearExpiredOtp();
-      await user.save();
-  
-      if (!user.otp || user.otp !== inputOtp) {
-        return res.status(400).json({ message: "Invalid OTP" });
-      }
-  
-      user.otp = undefined;
-      user.otpExpiresAt = undefined;
-      await user.save();
-  
-      return true;
+      await sendOtpEmail(email, otp);
     } catch (error) {
-      console.error("Error in validateOtp:", error);
-      throw error;
+      return res.status(500).json({ message: "Failed to send OTP email" });
     }
+    return res.status(200).json({ otp: user.otp });
+}
+  
+async function validateOtp(req, res) {
+try {
+    const { email, otp } = req.body; 
+    const user = await User.findOne({ email }).select("+otp +otpExpiresAt");
+    if (!user) return res.status(400).json({ message: "User not found" });
+    console.log(user.otpExpiresAt);
+    console.log(user.otp);
+    console.log(otp); 
+    user.clearExpiredOtp();
+    await user.save();
+
+    if (!user.otp || user.otp !== otp) {
+    return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    user.otp = undefined;
+    user.otpExpiresAt = undefined;
+    await user.save();
+
+    return res.status(200).json({ message: "OTP validated successfully" });
+} catch (error) {
+    console.error("Error in validateOtp:", error);
+    return res.status(500).json({ message: "Internal server error" });
+}
 }
 
 const sendOtpEmail = async (email, otp) => {
