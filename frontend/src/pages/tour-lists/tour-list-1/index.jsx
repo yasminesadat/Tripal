@@ -1,7 +1,7 @@
 import FooterOne from "@/components/layout/footers/FooterOne";
 import Header1 from "@/components/layout/header/Header1";
 import PageHeader from "@/components/tours/PageHeader";
-import HistoricalPlacesList from "@/components/tours/HistoricalPlacesList";
+import HistoricalPlacesList from "@/pages/historicalPlace/HistoricalPlacesList";
 import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";

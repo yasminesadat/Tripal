@@ -8,20 +8,10 @@ import { message } from 'antd';
 import languages from "../../assets/constants/Languages";
 import { nationalities } from "../../assets/Nationalities";
 import moment from "moment";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  DatePicker,
-  Button,
 
-  Card,
-} from "antd";
-import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
-
+import Calendar from './Component/DateCalender';
 import Upload from "antd/es/upload/Upload";
-const { Option } = Select;
+
 import Stars from '../../components/common/Stars'
 const TourGuideProfile = () => {
   const [error, setError] = useState(null);
@@ -41,6 +31,7 @@ const TourGuideProfile = () => {
       message.warning(error.response?.data?.message || "An error occurred");
     }
   };
+  const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [workChanged, setWorkChanged] = useState(false);
   const [educationChanged, setEducationChanged] = useState(false);
   const [languagesChanged, setLanguagesChanged] = useState(false);
@@ -54,6 +45,7 @@ const TourGuideProfile = () => {
     initialProfilePicture: "",
     name: "",
     email: "",
+    userName:"",
     mobileNumber: "",
     nationality: "",
     yearsOfExperience: 0,
@@ -171,7 +163,7 @@ const TourGuideProfile = () => {
     setFormData({ ...formData, currProfilePicture: null });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     setLoading(true);
 
     let hasChanges = false;
@@ -285,7 +277,7 @@ const TourGuideProfile = () => {
               <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                 {tabs.map((elm, i) => (
                   <div
-                    onClick={() => setActiveTab(elm)}
+                    onClick={() => {setActiveTab(elm);console.log("active ytab changed") }}
                     key={i}
                     className="col-auto"
                   >
@@ -837,8 +829,26 @@ const TourGuideProfile = () => {
                                     <div className="col-lg-6">
 
                                       <div className="form-input ">
-                                        <input type="text" value={prevWork.startDate ? new Date(prevWork.startDate).toLocaleDateString() : null}
-                                          onChange={(e) => {
+                     
+                                        
+          <div className="searchFormItem js-select-control js-form-dd js-calendar">
+                      <div
+                        className="searchFormItem__button"
+                        onClick={() =>
+                          setCurrentActiveDD((pre) =>
+                            pre === "calender" ? "" : "calender",
+                          )
+                        }
+                      >
+                        <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
+                          <i className="text-20 icon-calendar"></i>
+                        </div>
+                        <div className="searchFormItem__content">
+                          <h5>When</h5>
+                          <div>
+                            <span className="js-first-date">
+                            <Calendar  value={prevWork.startDate ? new Date(prevWork.startDate).toLocaleDateString() : null}
+                                          setDate={(e) => {
                                             setFormData({
                                               ...formData,
                                               previousWork: formData.previousWork.map((item, i) =>
@@ -846,6 +856,13 @@ const TourGuideProfile = () => {
                                               ),
                                             });
                                           }} />
+                            </span>
+                            <span className="js-last-date"></span>
+                          </div>
+                        </div>
+                     
+                    </div>
+                  </div>
                                         <label className="lh-1 text-16 text-light-1"> Start Date</label>
                                       </div>
 

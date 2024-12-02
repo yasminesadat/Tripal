@@ -1,8 +1,9 @@
 import HistoricalPlaceForm from "../pages/historicalPlace/HistoricalPlaceForm";
 import HistoricalPlacesList from "../pages/historicalPlace/HistoricalPlacesList";
 import HistoricalPlaceDetails from "../pages/historicalPlace/HistoricalPlaceDetails";
+import HistoricalPlaces from "../pages/commonPagesForMultipleUsers/HistoricalPlaces"
 const historicalPlaceRoutes = [
-  { path: "/historicalPlace", element: <HistoricalPlaceForm state={false} /> },
+  { path: "/historicalPlaces", element: <HistoricalPlaces  /> },
   {
     path: "/historicalPlace/:id",
     element: <HistoricalPlaceForm state={true} />,

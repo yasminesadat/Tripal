@@ -1,6 +1,6 @@
 import GovernorHome from "../pages/governor/GovernorHome";
  import AddHistoricalPlace from "../pages/governor/CreateHistoricalPLaces";
- import HistoricalPlacesList from "../components/tours/HistoricalPlacesList"
+ import HistoricalPlacesList from "../pages/historicalPlace/HistoricalPlacesList"
 // import CreateHistoricalTag from "../pages/governor/CreateHistoricalTag";
 // import MyHistoricalPlaces from "../pages/governor/MyHistoricalPlaces";
 // import GovernorChangePassword from "../pages/governor/GovernorProfile";

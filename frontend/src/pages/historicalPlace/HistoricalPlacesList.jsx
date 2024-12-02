@@ -1,116 +1,351 @@
+import  { useState, useEffect, useRef } from "react";
+import Sidebar from "../../components/tours/Sidebar";
+import { speedFeatures } from "@/data/tourFilteringOptions";
+import Stars from "../../components/common/Stars";
+// import {Pagination} from  "../../components/common/Pagination";
+import { getUserData } from "@/api/UserService";
+import { Link,useNavigate } from "react-router-dom";
+import { message } from "antd";
+import {getAllHistoricalPlacesByTourismGoverner,deleteHistoricalPlace,getAllHistoricalPlaces} from '../../api/HistoricalPlaceService';
+export default function HistoricalPlacesList({searchTerm}) {
+  const [sortOption, setSortOption] = useState("");
+  const [ddActives, setDdActives] = useState(false);
+  const [sidebarActive, setSidebarActive] = useState(false);
+  const dropDownContainer = useRef();
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (
+        dropDownContainer.current &&
+        !dropDownContainer.current.contains(event.target)
+      ) {
+        setDdActives(false);
+      }
+    };
+    document.addEventListener("click", handleClick);
 
-import {  useEffect, useState } from "react";
-import { tourismGovernerID } from '../../IDs';
-import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace } from '../../api/HistoricalPlaceService';
-import Maps from '../../components/historicalplace/Maps';
-import { toast } from 'react-toastify';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {  useNavigate } from "react-router-dom";
-import GovernorNavBar from "../../components/navbar/GovernorNavBar";
-
-const HistoricalPlacesList = () => {
-    const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+  const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [userRole, setUserRole] = useState(null);
+    const [searchKey, setSearchKey] = useState(searchTerm);
+    const [sideBarOpen, setSideBarOpen] = useState(true);
+    const errorDisplayed = useRef(false);
+
     useEffect(() => {
-        const getHistoricalPlacesByGoverner = async (id) => {
+      const fetchUserData = async () => {
+        try {
+          const response = await getUserData();
+          if (response.data.status === "success") {
+            setUserRole(response.data.role);
+          } else if (response.data.message === "No token found.") {
+            setUserRole("Guest");
+          } else {
+            if (!errorDisplayed.current) {
+              message.error(response.data.message);
+              errorDisplayed.current = true;
+            }
+          }
+        } catch (error) {
+          if (!errorDisplayed.current) {
+            message.error("Failed to fetch user data.");
+            errorDisplayed.current = true;
+          }
+        }
+      };
+        const getHistoricalPlacesByGoverner = async () => {
             setLoading(true);
             try {
-                const result = await getAllHistoricalPlacesByTourismGoverner(id);
+                const result = await getAllHistoricalPlacesByTourismGoverner();
                 if (result) {
                     console.log("result: ", result);
-                    setGovernerHistoricalPlace(result);
+                    setPlaces(result);
+                    setFilteredPlaces(result);
                 }
                 setLoading(false);
             } catch (e) {
                 setLoading(false);
-                toast.error('Error while fetching')
+                //toast.error('Error while fetching')
             }
         }
-        getHistoricalPlacesByGoverner(tourismGovernerID)
+        const fetchPlaces = async () => {
+          try {
+            const response = await getAllHistoricalPlaces();
+            setPlaces(response);
+            setFilteredPlaces(response);
+          } catch (err) {
+            setError(
+              err.response?.data?.error || "Error fetching historical places"
+            );
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchUserData();
+        if(userRole==="Guest"||userRole==="Admin"||userRole==="Tourist"){
+          fetchPlaces();
+        }
+        if(userRole==="Tourism Governor"){
+          getHistoricalPlacesByGoverner();
+        }
+        
+        
     }, []);
     const handleDelete = async (id) => {
         try {
             const response = await deleteHistoricalPlace(id);
             if (response) {
-                toast.success('Historical place deleted successfully')
                 setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
             }
         }
         catch (e) {
-            toast.error('Doesnt found')
+          // error msg
         }
     }
 
 
-    return (
-        <div>
-            <GovernorNavBar />
-            <div className="list" >
-                {governerHistoricalPlace.length > 0 ?
-                    governerHistoricalPlace.map((place) => (
-                        <div className="list-item" key={place._id}>
-                            <div className="list-item-header">{place.name}
-                                <div style={{ display: 'inline-block', marginLeft: 'auto' }}>
-                                    <EditOutlined
-                                        onClick={() => {
-                                            navigate(`/historicalPlace/${place._id}`, { state: { place } })
-                                        }}
+    const [places, setPlaces] = useState([]);
+    const [filteredPlaces, setFilteredPlaces] = useState([]);
+    const [error, setError] = useState(null);
+    const [currency, setCurrency] = useState("EGP");
+  
+    useEffect(() => {
+      const curr = sessionStorage.getItem("currency");
+      if (curr) {
+        setCurrency(curr);
+      }
+    }, []);
+  
+    const handleSearch = () => {
+      const lowerCaseSearchTerm = searchKey.toLowerCase();
+      const results = places.filter((place) => {
+        const matchesName = place.name
+          .toLowerCase()
+          .includes(lowerCaseSearchTerm);
+  
+        const matchesTags =
+          place.tags &&
+          place.tags.some(
+            (tag) =>
+              tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          );
+  
+        return matchesName || matchesTags;
+      });
+      setFilteredPlaces(results);
+    };
+  
+    const handleFilter = (filters) => {
+      const { historicType, historicalTagPeriod } = filters;
+  
+      if (!historicType && !historicalTagPeriod) {
+        setFilteredPlaces(places);
+        return;
+      }
+  
+      const filtered = places.filter((place) => {
+        const matchesHistoricType = historicType
+          ? place.tags && place.tags.some(tag => tag.name && tag.name.toLowerCase().includes(historicType.toLowerCase()))
+          : true;
+  
+        const matchesHistoricalTag = historicalTagPeriod
+          ? place.historicalPeriod && place.historicalPeriod.some(tag => tag.name && tag.name.toLowerCase().includes(historicalTagPeriod.toLowerCase()))
+          : true;
+  
+        return matchesHistoricType && matchesHistoricalTag;
+      });
+  
+      setFilteredPlaces(filtered);
+    };
+  
+    // if (loading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error}</div>;
 
-                                        style={{ color: 'white', marginRight: '10px', cursor: 'pointer' }}
-                                    />
-                                    <DeleteOutlined
-                                        onClick={() => handleDelete(place._id)}
-                                        style={{ color: 'red', cursor: 'pointer' }}
-                                    />
-                                    
-                                </div>
-                            </div>
-                            <div className="list-item-attributes">
-                                <div className="list-item-attribute">{place.description}</div>
-                                {place.images && place.images.length > 0 && (
-                                    <div className="list-item-attribute">
-                                        <div>Pictures:</div>
-                                        {place.images.map((image,idx) => (<img
-                                            key ={`Image ${idx+1}`}
-                                            src={image.url}
-                                            alt={place.name}
-                                            style={{ width: "200px" }}
-                                        />))}
-                                    </div>
-                                )}
-                                <div className="list-item-attribute">Location: {place.location.address}</div>
-                                < Maps selectPosition={{ lat: place.location.coordinates.latitude, lon: place.location.coordinates.longitude }} />
-                                <div className="list-item-attribute">
-                                    Opening Hours: Weekdays {place.openingHours.weekdays.openingTime} -{" "}
-                                    {place.openingHours.weekdays.closingTime}, Weekends{" "}
-                                    {place.openingHours.weekends.openingTime} -{" "}
-                                    {place.openingHours.weekends.closingTime}
-                                </div>
-                                <div className="list-item-attribute">
-                                    Ticket Prices: Foreigner: ${place.ticketPrices.foreigner}, Native: $
-                                    {place.ticketPrices.native}, Student: ${place.ticketPrices.student}
-                                </div>
-                                <div className="list-item-attribute">
-                                    Tags:{" "}
-                                    {place.tags && place.tags.length > 0
-                                        ? place.tags.map((tag) => tag.name).join(", ")
-                                        : "N/A"}
-                                </div>
-                                <div className="list-item-attribute">
-                                    Historical periods:{" "}
-                                    {place.historicalPeriod && place.historicalPeriod.length > 0
-                                        ? place.historicalPeriod.map((period) => period.name).join(", ")
-                                        : "N/A"}
-                                </div>
-                            </div>
-                        </div>
-                    )) : (
-                        <div>No historical places found</div>
-                    )}
+  return (
+    <section className="layout-pb-xl">
+      <div className="container">
+        <div className="row">
+          <div className="col-xl-3 col-lg-4">
+            <div className="lg:d-none">
+              <Sidebar />
             </div>
-        </div>
-    );
-};
 
-export default HistoricalPlacesList;
+            <div className="accordion d-none mb-30 lg:d-flex js-accordion">
+              <div
+                className={`accordion__item col-12 ${
+                  sidebarActive ? "is-active" : ""
+                } `}
+              >
+                <button
+                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
+                  onClick={() => setSidebarActive((pre) => !pre)}
+                >
+                  <i className="icon-sort-down mr-10 text-16"></i>
+                  Filter
+                </button>
+
+                <div
+                  className="accordion__content"
+                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
+                >
+                  <div className="pt-20">
+                    <Sidebar />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-xl-9 col-lg-8">
+            <div className="row y-gap-5 justify-between">
+              <div className="col-auto">
+                <div>{governerHistoricalPlace?.length} results</div>
+              </div>
+
+              <div ref={dropDownContainer} className="col-auto">
+                <div
+                  className={`dropdown -type-2 js-dropdown js-form-dd ${
+                    ddActives ? "is-active" : ""
+                  } `}
+                  data-main-value=""
+                >
+                  <div
+                    className="dropdown__button js-button"
+                    onClick={() => setDdActives((pre) => !pre)}
+                  >
+                    <span>Sort by: </span>
+                    <span className="js-title">
+                      {sortOption ? sortOption : "Featured"}
+                    </span>
+                    <i className="icon-chevron-down"></i>
+                  </div>
+
+                  <div className="dropdown__menu js-menu-items">
+                    {speedFeatures.map((elm, i) => (
+                      <div
+                        onClick={() => {
+                          setSortOption((pre) => (pre == elm ? "" : elm));
+                          setDdActives(false);
+                        }}
+                        key={i}
+                        className="dropdown__item"
+                        data-value="fast"
+                      >
+                        {elm}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="row y-gap-30 pt-30">
+              {filteredPlaces.map((elm, i) => (
+                <div className="col-12" key={i}>
+                  <div className="tourCard -type-2">
+                    <div className="tourCard__image">
+                     {elm?.images?.length>0&&<img src={elm.images[0].url} alt="image" />}                      {elm.badgeText && (
+                        <div className="tourCard__badge">
+                          <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
+                            {elm.badgeText}
+                          </div>
+                        </div>
+                      )}
+
+                      {elm.featured && (
+                        <div className="tourCard__badge">
+                          <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
+                            FEATURED
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
+                          <i className="icon-heart text-15"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="tourCard__content">
+                      <div className="tourCard__location">
+                        <i className="icon-pin"></i>
+                        {elm.location.address}
+                      </div>
+
+                      <h3 className="tourCard__title mt-5">
+                        <span>{elm.name}</span>
+                      </h3>
+
+                      <div className="d-flex items-center mt-5">
+                        <div className="d-flex items-center x-gap-5">
+                          <Stars star={elm.rating} font={12} />
+                        </div>
+
+                        {/* <div className="text-14 ml-10">
+                          <span className="fw-500">{elm.rating}</span> (
+                          {elm.ratingCount})
+                        </div> */}
+                      </div>
+
+                      <p className="tourCard__text mt-5">{elm.description}</p>
+
+                      <div className="row x-gap-20 y-gap-5 pt-30">
+                        {elm.features?.map((elm2, i2) => (
+                          <div key={i2} className="col-auto">
+                            <div className="text-14 text-accent-1">
+                              <i className={`${elm2.icon} mr-10`}></i>
+                              {elm2.name}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="tourCard__info">
+                      <div>
+                        <div className="d-flex items-center text-14">
+                          <i className="icon-clock mr-10"></i>
+                          {elm.duration}
+                        </div>
+
+                        <div className="tourCard__price">
+                          <div>${elm.fromPrice}</div>
+
+                          <div className="d-flex items-center">
+                            From{" "}
+                            <span className="text-20 fw-500 ml-5">
+                              ${elm.price}
+                            </span>
+                          </div>
+                        </div>
+                      </div> 
+
+                      <button className="button -outline-accent-1 text-accent-1">
+                        <Link to={`/historical-places/${elm._id}`}>
+                          View Details
+                          <i className="icon-arrow-top-right ml-10"></i>
+                        </Link>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="d-flex justify-center flex-column mt-60">
+              {/* <Pagination /> */}
+
+              <div className="text-14 text-center mt-20">
+                Showing results 1-30 of 1,415
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
