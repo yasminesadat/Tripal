@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Button, Divider, Space, Tour } from "antd";
+import { useState, useRef, useEffect } from "react";
+import { Divider, Tour } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import ArticlesOne from "@/components/homes/articles/ArticlesOne";
 import Banner9 from "@/components/homes/banners/Banner9";
@@ -119,23 +119,21 @@ export default function TouristHome() {
     const isFromTour = location.state?.fromTour;
     const targetStep = location.state?.targetStep;
   
-    // If coming from tour and target step is defined, open the tour from the specified step
     if (isFromTour && targetStep !== undefined) {
       setCurrentStep(targetStep);  
-      localStorage.setItem('currentStep', targetStep);  // Ensure the step is updated in localStorage
+      localStorage.setItem('currentStep', targetStep);  
   
       const timer = setTimeout(() => {
-        setOpen(true);  // Open the tour after the target step is set
-      }, 1000);  // Add a delay to ensure the state has been updated
+        setOpen(true);
+      }, 1000);  
   
       return () => clearTimeout(timer);
     } else {
-      // When not coming from tour, set current step from localStorage
       const storedStep = localStorage.getItem('currentStep');
       if (storedStep) {
         setCurrentStep(parseInt(storedStep, 10));
       } else {
-        setCurrentStep(0);  // Default to step 0 if there's no stored step
+        setCurrentStep(0);
       }
     }
   }, [location]);  
@@ -150,7 +148,6 @@ export default function TouristHome() {
       <MetaComponent meta={metadata} />
       <main>
         <TouristHeader 
-          refHeader={refHeader} 
           setOpen={setOpen} 
           refFlights={refFlights} 
           refHotels={refHotels} 
