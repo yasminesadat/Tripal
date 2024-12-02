@@ -61,6 +61,12 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
     setPriceRange(newRange);
   };
 
+  const handleLanguageChange = (event) => {
+    const language = event.target.value;
+    setSelectedLanguage(language);
+    setLanguageFilter(language);
+  };
+
   useEffect(() => {
     setCategoryFilter(selectedCategories);
   }, [selectedCategories, setCategoryFilter]);
@@ -73,12 +79,6 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
         return [...prevSelected, categoryName];
       }
     });
-  };
-
-  const handleLanguageChange = (event) => {
-    const selectedLanguage = event.target.value;
-    setSelectedLanguage(selectedLanguage);
-    setLanguageFilter(selectedLanguage);
   };
 
   return (
@@ -289,8 +289,8 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
                           type="text"
                           className="form-input"
                           placeholder="Enter language"
-                          value={selectedLanguage} 
-                          onChange={(e) => setSelectedLanguage(e.target.value)}
+                          value={selectedLanguage}
+                          onChange={handleLanguageChange}
                         />
                       </div>
                     </div>

@@ -140,9 +140,9 @@ export default function ItinerariesList({
     const filtered = itineraries.filter((itinerary) => {
       const itineraryStartDate = new Date(itinerary.startDate);
       const itineraryRating = itinerary.averageRating;
-      const itineraryPrice = itinerary.price* exchangeRate;
+      const itineraryPrice = itinerary.price * exchangeRate;
       const itineraryTags = itinerary.tags.map(tag => tag.toLowerCase());
-      const itineraryLanguage=itinerary.language.toLowerCase();
+      const itineraryLanguage = itinerary.language ? itinerary.language.toLowerCase() : "";
 
       const isDateValid =
         !startDate ||
@@ -154,30 +154,29 @@ export default function ItinerariesList({
         ratingFilter.some((rating) => itineraryRating >= rating);
 
         const isLanguageValid =
-        !selectedLanguage || // If no language is selected, always valid
-        (itinerary.language && itinerary.language.toLowerCase() === selectedLanguage.toLowerCase());
+        !selectedLanguage ||
+        itineraryLanguage.toLowerCase().startsWith(selectedLanguage.toLowerCase());
 
       const isPriceValid =
         itineraryPrice >= priceRange[0] && itineraryPrice <= priceRange[1];
       const isSearchValid =
-         itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) 
-         ||
+        itinerary.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         itinerary.tags.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-        const isCategoryValid =
-      selectedCategories.length === 0 ||
-      selectedCategories.some(
-        (cat) => itineraryTags.includes(cat.toLowerCase()) // Check if any tag matches selected categories
-      );
+      const isCategoryValid =
+        selectedCategories.length === 0 ||
+        selectedCategories.some(
+          (cat) => itineraryTags.includes(cat.toLowerCase()) // Check if any tag matches selected categories
+        );
 
       return (
         isDateValid &&
         isRatingValid &&
         isPriceValid &&
-        isSearchValid&&
-        isCategoryValid&&
+        isSearchValid &&
+        isCategoryValid &&
         isLanguageValid
       );
     });
@@ -194,6 +193,7 @@ export default function ItinerariesList({
     exchangeRate,
     selectedLanguage,
   ]);
+
 
   useEffect(() => {}, [filteredItineraries]);
 
