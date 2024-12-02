@@ -9,7 +9,8 @@ const itineraryModel = require("../models/Itinerary.js");
 const productModel = require("../models/Product.js");
 const PromoCode = require("../models/PromoCode.js")
 const cron = require('node-cron');
-
+const { sendEmail } = require('./Mailer');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 cron.schedule('00 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -93,7 +94,7 @@ cron.schedule('59 23 * * *', async () => {
 });
 
 
-const { sendEmail } = require('./Mailer');
+
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -663,6 +664,167 @@ const getTouristNotifications = async (req, res) => {
 //   const touristId = req.userId;
 // }
 
+
+
+const saveFlightBooking = async (req, res) => {
+  try {
+    const { bookedFlights, useWallet, paymentMethod } = req.body;
+    const userId = req.userId;
+
+    const existingTourist = await touristModel.findById(userId);
+    if (!existingTourist) {
+      return res.status(400).json({ error: "User ID doesn't exist!" });
+    }
+
+  
+    if (paymentMethod === 'wallet') {
+      existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
+      const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+      let pointsToReceive = 0;
+
+      if (existingTourist.totalPoints <= 100000) {
+        pointsToReceive = totalCost * 0.5;
+      } else if (existingTourist.totalPoints <= 500000) {
+        pointsToReceive = totalCost * 1;
+      } else {
+        pointsToReceive = totalCost * 1.5;
+      }
+
+      if (useWallet) {
+        if (existingTourist.wallet.amount < totalCost) {
+          return res.status(400).json({ error: "Insufficient wallet balance." });
+        }
+        existingTourist.wallet.amount -= totalCost;
+      }
+
+      bookedFlights.forEach(flight => {
+        const newFlightBooking = {
+          flightNumber: flight.flightNumber,
+          airline: flight.airline,
+          departureTime: new Date(flight.departureTime),
+          arrivalTime: new Date(flight.arrivalTime),
+          origin: flight.origin,
+          destination: flight.destination,
+          price: flight.price,
+          currency: flight.currency || "EGP",
+          bookingDate: new Date(),
+        };
+
+        existingTourist.bookedFlights.push(newFlightBooking);
+      });
+
+      existingTourist.totalPoints = existingTourist.totalPoints || 0;
+      existingTourist.currentPoints = existingTourist.currentPoints || 0; 
+      existingTourist.totalPoints += pointsToReceive;
+      existingTourist.currentPoints += pointsToReceive;
+      await existingTourist.save();
+
+      return res.status(200).json({
+        message: "Flight booked successfully with wallet payment.",
+        bookedFlights: existingTourist.bookedFlights,
+      });
+    }
+
+    if (paymentMethod === 'card') {
+      // Calculate the total cost of flights
+      const totalAmount = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+
+
+      const lineItems = bookedFlights.map(flight => ({
+        price_data: {
+          currency: 'egp',
+          product_data: {
+            name: `Your Flight Number: ${flight.flightNumber}`,
+          },
+          unit_amount: Math.round(parseFloat(flight.price) * 100),  // Stripe requires amount in cents
+        },
+        quantity: 1,
+      }));
+
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        customer_email: existingTourist.email,
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}&userId=${userId}&bookedFlights=${encodeURIComponent(JSON.stringify(bookedFlights))}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+      });
+
+      return res.status(200).json({
+        sessionId: session.id,
+      });
+    }
+
+    return res.status(400).json({ error: 'Invalid payment method selected.' });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const completeFlightBooking = async (req, res) => {
+  const { sessionId, userId, bookedFlights } = req.body;
+
+  try {
+    // Retrieve the Stripe session
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // Check if the payment was successful
+    if (session.payment_status !== "paid") {
+      return res.status(400).json({ error: "Payment not successful" });
+    }
+
+    // Find the tourist based on the userId
+    const existingTourist = await touristModel.findById(userId);
+    if (!existingTourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    // Process the booking for each flight
+    bookedFlights.forEach(flight => {
+      const newFlightBooking = {
+        flightNumber: flight.flightNumber,
+        airline: flight.airline,
+        departureTime: new Date(flight.departureTime),
+        arrivalTime: new Date(flight.arrivalTime),
+        origin: flight.origin,
+        destination: flight.destination,
+        price: flight.price,
+        currency: flight.currency || "EGP",
+        bookingDate: new Date(),
+      };
+
+      // Add the flight booking to the tourist's bookedFlights array
+      existingTourist.bookedFlights.push(newFlightBooking);
+    });
+
+    // Calculate the total price and update wallet if using wallet payment
+    const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+    if (req.body.paymentMethod === 'wallet') {
+      if (existingTourist.wallet.amount < totalCost) {
+        return res.status(400).json({ error: "Insufficient wallet balance" });
+      }
+      existingTourist.wallet.amount -= totalCost;
+    }
+
+    // Save the tourist's updated details
+    await existingTourist.save();
+
+    // Respond with success
+    return res.status(200).json({
+      message: "Flight booking completed successfully.",
+      bookedFlights: existingTourist.bookedFlights,
+    });
+
+  } catch (error) {
+    console.error("Error completing flight booking:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
 module.exports = {
   createTourist,
   getTouristInfo,
@@ -682,6 +844,8 @@ module.exports = {
   getWishList,
   removeFromWishList,
   getRandomPromoCode,
-  getTouristNotifications
-  // checkTouristPromocode
+  getTouristNotifications,
+  // checkTouristPromocode,
+  saveFlightBooking,
+  completeFlightBooking
 };

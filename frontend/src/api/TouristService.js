@@ -181,6 +181,26 @@ export async function getWishList() {
     throw error;
   }
 }
+
+export async function saveFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/book-flight', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
+
+export async function completeFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/flight-payment', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
 export async function getTouristNotifications() {
   try {
     const response = await axios.get('/tourist/notifications');
