@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
-const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes } = require("../controllers/AdminController");
 
-const { deleteUser, addAdmin, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner } = require("../controllers/AdminController");
+const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes, getDataForEventOwner } = require("../controllers/AdminController");
 
 const { changePassword } = require("../controllers/PasswordController.js");
 const Admin = require("../models/users/Admin.js");

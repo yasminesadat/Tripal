@@ -82,9 +82,6 @@ cron.schedule('59 23 * * *', async () => {
 
   for (const user of allUsers) {
     try {
-
-
-
       user.promoCodes.length = 0;
       await user.save();
       console.log(`Cleared promo code: ( for ${user.userName}`);
