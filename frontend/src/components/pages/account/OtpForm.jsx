@@ -1,7 +1,13 @@
 import ValidateOtp from "./ValidateOtp";
 import ChangePassword from "./ChangePassword";
+import { useState } from "react";
 
 export default function OtpForm({ email }) {
+    const [isOtpValid, setIsOtpValid] = useState(false);
+
+    const handleOtpValidationSuccess = () => {
+      setIsOtpValid(true);
+    };
   return (
     <div className="full-height-container">
         <div className="layout-pt-xl layout-pb-xl rounded-12">
@@ -19,8 +25,11 @@ export default function OtpForm({ email }) {
           </div>
 
           <div className="row y-gap-30 justify-center items-center">
-           {/* <ValidateOtp email={email} /> */}
+          {!isOtpValid ? (
+            <ValidateOtp email={email} onValidationSuccess={handleOtpValidationSuccess} />
+          ) : (
             <ChangePassword email={email} />
+          )}
           </div>
         </div>
         <style>{`

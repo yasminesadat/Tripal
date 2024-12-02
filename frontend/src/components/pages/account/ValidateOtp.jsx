@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { Input, Button, Card } from "antd";
-import { validateOtp } from "@/api/OtpService";
+import { Input, Button, Card,message } from "antd";
+import { validateOtp,requestOtp } from "@/api/OtpService";
 
-const ValidateOtp = ({ email }) => {
+const ValidateOtp = ({ email,onValidationSuccess }) => {
+    //#region user State
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [resendTimer, setResendTimer] = useState(30);
+    //#endregion
 
+    //#region functions
   const handleValidateOtp = async () => {
     try {
       setLoading(true);
@@ -15,15 +20,40 @@ const ValidateOtp = ({ email }) => {
       const response = await validateOtp({ email, otp });
       if (response.status === 200) {
         console.log("OTP validated successfully!");
+        setTimeout(() => {
+            onValidationSuccess();
+            setLoading(false);
+        }, 2000);
       }
     } catch (err) {
       setError("Invalid OTP. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
-  return (
+  const handleResendOtp = async () => {
+    try {
+      setError("");
+      const response = await requestOtp({ email });
+      if (response.status === 200) {
+        message.success("OTP has been resent to your email.");
+        setResendDisabled(true);
+        const interval = setInterval(() => {
+          setResendTimer((prev) => {
+            if (prev === 1) {
+              clearInterval(interval);
+              setResendDisabled(false);
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    } catch (err) {
+      setError("Failed to resend OTP. Please try again.");
+    }
+  };
+    //#endregion
+  
+    return (
     <Card
     title="Validate OTP"
     style={{
@@ -74,6 +104,21 @@ const ValidateOtp = ({ email }) => {
       >
         Validate OTP
       </Button>
+      <span>
+        <p style={{ marginTop: "10px" }}>Didn't receive the OTP?
+        <Button
+            type="link"
+            onClick={handleResendOtp}
+            disabled={resendDisabled}
+            style={{
+            marginTop: "10px",
+            color: "#8f5774",
+            textDecoration: "underline",
+            }}
+        >
+            {resendDisabled ? `Resend OTP in ${resendTimer}s` : "Resend OTP"}
+        </Button></p>
+        </span>
     </Card>
   );
 };
