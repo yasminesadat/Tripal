@@ -4,11 +4,11 @@ const Tourist = require('../models/users/Tourist');
 const { sendEmail } = require('./Mailer');
 const cron = require('node-cron');
 const moment = require('moment'); // Use moment.js for date manipulation
-
+const promoCode = require('../models/PromoCode');
 
 const bookResource = async (req, res) => {
   const { resourceType, resourceId } = req.params;
-  const { tickets } = req.body;
+  const { tickets, myPromoCode } = req.body;
   const touristId = req.userId;
   const model = resourceType === 'activity' ? Activity : itineraryModel;
 
@@ -36,8 +36,22 @@ const bookResource = async (req, res) => {
         resource.bookings.push({ touristId, tickets });
       }
 
-      tourist.wallet.amount -= resource.price * tickets + resource.serviceFee;
+      const originalPrice = resource.price * tickets + resource.serviceFee;
 
+      console.log("BACKEND promoCode", myPromoCode);
+
+      console.log("PROMO CODE");
+      if (myPromoCode) {
+        const code = await promoCode.findOne({ name: myPromoCode });
+        const discountValue = code.discountPercentage / 100 * (originalPrice);
+
+        tourist.wallet.amount -= (originalPrice - discountValue)
+      } else {
+
+        tourist.wallet.amount -= originalPrice;
+
+
+      }
 
     }
     else {
@@ -47,8 +61,24 @@ const bookResource = async (req, res) => {
 
       else
         resource.bookings.push({ touristId, tickets });
+      const originalPrice = resource.price * tickets;
+      console.log("BACKEND promoCode", myPromoCode);
+      if (myPromoCode) {
+        console.log("BACKEND promoCode2 ", myPromoCode);
+        const code = await promoCode.findOne({ name: myPromoCode });
+        console.log("BACKEND promoCode2 ", code);
+        const discountValue = code.discountPercentage / 100 * (originalPrice);
 
-      tourist.wallet.amount -= resource.price * tickets;
+        tourist.wallet.amount -= (originalPrice - discountValue)
+      }
+      else {
+
+        tourist.wallet.amount -= originalPrice;
+
+
+      }
+
+
     }
     if (tourist.wallet.amount < 0)
       return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
@@ -247,10 +277,12 @@ cron.schedule('6 22 * * *', async () => {
             await sendEmail(tourist.email, subject, html);
             console.log("SENT!")
             tourist.notificationList.push({
+
                 message: `This is a reminder that your booked activity, ${activity.title}, is coming up in 3 days!`,
                 notifType: "events"
               });
               await tourist.save(); 
+
           }
         }
       }

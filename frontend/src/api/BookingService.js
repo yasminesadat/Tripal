@@ -1,8 +1,11 @@
 import { axios } from "./axios";
 
-export async function bookResource(resourceType, resourceId,tickets) {
+export async function bookResource(resourceType, resourceId, tickets, myPromoCode) {
   try {
-    const response = await axios.post(`/${resourceType}/${resourceId}/book`, { tickets});
+    const response = await axios.post(`/${resourceType}/${resourceId}/book`, {
+      tickets,
+      myPromoCode  // Include it in the request body
+    });
     return response.data;
   } catch (error) {
     console.error(`Error booking ${resourceType}:`, error);

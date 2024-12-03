@@ -54,7 +54,7 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
     try {
       await updateTouristInformation(updatedProfileData);
       setTouristCurrency(currency);
-      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency })); 
+      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency }));
       sessionStorage.setItem("currency", currency);
     } catch (error) {
       message.error("Failed to update user information:", error);
@@ -78,7 +78,7 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
 
   return (
     <>
-      <header 
+      <header
         className={`header -type-3 js-header ${addClass ? "-is-sticky" : ""}`}
       >
         <div className="header__container container">
@@ -96,16 +96,16 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
             <div >
-              <Menu 
-                refFlights={refFlights} 
-                refHotels={refHotels} 
+              <Menu
+                refFlights={refFlights}
+                refHotels={refHotels}
                 refActivities={refActivities}
                 refItineraries={refItineraries}
                 refHisPlaces={refHisPlaces}
-                refProducts={refProducts}    
+                refProducts={refProducts}
               />
             </div>
-            
+
           </div>
 
           <div className="headerMobile__right">
@@ -125,17 +125,17 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
           </div>
 
           <div className="header__right">
-          <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
+            <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
               Guide
-          </button>
-            
+            </button>
+
             <div className="ml-15">
               <Currency
                 userCurrency={profileInformation.choosenCurrency}
                 onCurrencyChange={handleCurrencyChange}
               />
             </div>
-            
+
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
@@ -164,6 +164,8 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
                 </ul>
               </div>
             )}
+            <NotificationTab />
+
 
 
           </div>

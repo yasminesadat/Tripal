@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import NotificationTab from "@/components/common/NotificationBell";
 export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
 
   return (
@@ -9,9 +8,6 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
 
           <div className="desktopNav__item">
             <Link to="/tourist">Home</Link>
-          </div>
-          <div className="desktopNav__item">
-            <NotificationTab />
           </div>
           <div className="desktopNav__item" ref={refFlights}>
             <Link to="/tourist/book-flight" >Flights</Link>

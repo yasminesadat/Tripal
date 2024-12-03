@@ -185,8 +185,8 @@ export default function Profile() {
       await fetchTouristTags();
       await fetchTouristCategories();
     } catch (error) {
-      console.error("Failed to update user information:", error);
-      message.error("Failed to update profile");
+
+      message.error(error.response.data.error);
     }
   };
 
