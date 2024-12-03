@@ -23,7 +23,10 @@ const {
   getWishList,
   removeFromWishList,
   saveFlightBooking,
-  completeFlightBooking, getTouristNotifications
+  completeFlightBooking, getTouristNotifications,
+  addToCart,
+  removeFromCart,
+  getCart
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -128,6 +131,27 @@ router.post(
   verifyToken,
   authorizeRoles("Tourist"),
   removeFromWishList
+);
+
+router.post(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addToCart
+);
+
+router.delete(
+  "/tourist/cart",
+  verifyToken, 
+  authorizeRoles("Tourist"), 
+  removeFromCart 
+);
+
+router.get(
+  "/tourist/cart",
+  verifyToken, 
+  authorizeRoles("Tourist"), 
+  getCart 
 );
 
 router.post(

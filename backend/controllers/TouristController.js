@@ -11,6 +11,8 @@ const PromoCode = require("../models/PromoCode.js")
 const cron = require('node-cron');
 const { sendEmail } = require('./Mailer');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const asyncHandler = require("express-async-handler");
+
 cron.schedule('00 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -77,19 +79,14 @@ cron.schedule('00 00 * * *', async () => {
 });
 
 cron.schedule('59 23 * * *', async () => {
-
-  const allUsers = await touristModel.find({});
-
-
-  for (const user of allUsers) {
-    try {
-      user.promoCodes.length = 0;
-      await user.save();
-      console.log(`Cleared promo code: ( for ${user.userName}`);
-    } catch (error) {
-      console.error(`Error clearing promo code for ${user.userName}:`, error.message);
-      continue;
-    }
+  try {
+    const result = await touristModel.updateMany(
+      {},
+      { $set: { promoCodes: [] } }
+    );
+    console.log(`Cleared promo codes for ${result.modifiedCount} users`);
+  } catch (error) {
+    console.error('Error clearing promo codes:', error.message);
   }
 });
 
@@ -676,7 +673,7 @@ const saveFlightBooking = async (req, res) => {
       return res.status(400).json({ error: "User ID doesn't exist!" });
     }
 
-  
+
     if (paymentMethod === 'wallet') {
       existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
       const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
@@ -714,7 +711,7 @@ const saveFlightBooking = async (req, res) => {
       });
 
       existingTourist.totalPoints = existingTourist.totalPoints || 0;
-      existingTourist.currentPoints = existingTourist.currentPoints || 0; 
+      existingTourist.currentPoints = existingTourist.currentPoints || 0;
       existingTourist.totalPoints += pointsToReceive;
       existingTourist.currentPoints += pointsToReceive;
       await existingTourist.save();
@@ -823,6 +820,75 @@ const completeFlightBooking = async (req, res) => {
   }
 };
 
+const addToCart = asyncHandler(async (req, res) => {
+  const { touristId, productId, quantity } = req.body;
+  try{
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const cartItem = tourist.cart.find((item) => item.product.toString() === productId);
+    const price = product.price * quantity;
+
+    if (cartItem) {
+      cartItem.quantity += quantity;
+      cartItem.price += price;
+    } else {
+      tourist.cart.push({ product: productId, quantity, price});
+    }
+    await tourist.save();
+
+    res.status(200).json({ message: "Product added to cart successfully.", cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while adding product to cart.", error: error.message });
+  }
+
+});
+
+const removeFromCart = asyncHandler(async (req, res) => {
+  const { touristId, productId } = req.body;
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const cartIndex = tourist.cart.findIndex((item) => item.product.toString() === productId);
+    if (cartIndex === -1) {
+      return res.status(404).json({ message: "Product not found in the cart." });
+    }
+
+    tourist.cart.splice(cartIndex, 1);
+
+    await tourist.save();
+
+    res.status(200).json({ message: "Product removed from cart successfully.", cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while removing product from cart.", error: error.message });
+  }
+});
+
+const getCart = asyncHandler(async (req, res) => {
+  const touristId = req.userId; 
+  
+  try {
+    const tourist = await touristModel.findById(touristId).populate('cart.product'); 
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    res.status(200).json({ cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while retrieving the cart.", error: error.message });
+  }
+});
 
 
 module.exports = {
@@ -843,6 +909,9 @@ module.exports = {
   saveProduct,
   getWishList,
   removeFromWishList,
+  addToCart,
+  removeFromCart,
+  getCart,
   getRandomPromoCode,
   getTouristNotifications,
   // checkTouristPromocode,

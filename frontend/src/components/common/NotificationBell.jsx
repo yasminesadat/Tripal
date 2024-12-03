@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, X, Heart } from 'lucide-react';
 import { getTouristNotifications } from '@/api/TouristService';
+import { format } from 'date-fns';
 
 const NotificationTab = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +12,11 @@ const NotificationTab = () => {
         setLoading(true);
         try {
             const notifications = await getTouristNotifications();
-            setNotifications(notifications);
+            // Sort notifications by date in descending order (most recent first)
+            const sortedNotifications = [...notifications].sort((a, b) =>
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setNotifications(sortedNotifications);
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -28,65 +33,148 @@ const NotificationTab = () => {
 
     return (
         <div className="relative">
+            <style jsx>{`
+               .notification-panel {
+                   box-shadow: 0 15px 35px rgba(143, 87, 116, 0.15);
+                   transform: translateY(10px);
+                   opacity: 0;
+                   animation: slideIn 0.3s ease forwards;
+                   width: 320px !important;
+                   max-height: 70vh;
+               }
+
+               @keyframes slideIn {
+                   to {
+                       transform: translateY(0);
+                       opacity: 1;
+                   }
+               }
+
+               .notification-badge {
+                   animation: pulse 2s infinite;
+               }
+
+               @keyframes pulse {
+                   0% { transform: scale(1); }
+                   50% { transform: scale(1.2); }
+                   100% { transform: scale(1); }
+               }
+
+               .notification-item {
+                   transition: all 0.3s ease;
+                   border-left: 2px solid transparent;
+                   margin: 4px;
+                   border-radius: 6px;
+                   background: #fff;
+                   box-shadow: 0 1px 4px rgba(218, 196, 208, 0.15);
+               }
+
+               .notification-item:hover {
+                   border-left-color: #8f5774;
+                   background: #e5f8f8;
+               }
+
+               .notification-item.unread {
+                   border-left-color: #e0829d;
+                   background: #fff;
+               }
+
+               .scroll-container {
+                   max-height: 60vh;
+                   overflow-y: auto;
+                   background: #f7f7f9;
+                   padding: 4px 0;
+               }
+
+               .scroll-container::-webkit-scrollbar {
+                   width: 4px;
+               }
+
+               .scroll-container::-webkit-scrollbar-track {
+                   background: #e5f8f8;
+               }
+
+               .scroll-container::-webkit-scrollbar-thumb {
+                   background-color: #dac4d0;
+                   border-radius: 20px;
+               }
+
+               .date-divider {
+                   padding: 4px 8px;
+                   background: #dac4d0;
+                   color: #8f5774;
+                   font-size: 10px;
+                   font-weight: 500;
+                   margin: 8px 4px;
+                   border-radius: 4px;
+               }
+           `}</style>
+
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-full hover:bg-[#dac4d0] transition-all duration-300 transform hover:scale-105 group"
-                aria-label="Notifications"
+                className="relative p-2 rounded-full hover:bg-[#dac4d0] transition-all duration-300"
             >
-                <Bell className="w-5 h-5 text-[#8f5774] group-hover:animate-bounce" />
+                <Bell className="w-4 h-4 text-[#8f5774]" />
                 {unreadCount > 0 && (
-                    <div className="absolute -top-1 -right-1 bg-[#e0829d] text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white animate-pulse">
+                    <span className="notification-badge absolute -top-1 -right-1 bg-[#e0829d] text-black text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white">
                         {unreadCount}
-                    </div>
+                    </span>
                 )}
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 translate-x-[+10000%] mt-2 w-64 shadow-lg bg-white rounded-2xl border-2 border-[#dac4d0] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="flex items-center justify-between p-3 bg-[#e5f8f8] border-b border-[#dac4d0]">
-                        <h3 className="text-sm font-semibold text-[#8f5774] flex items-center gap-1">
-                            Notifications <Heart className="w-3 h-3 text-[#e0829d] animate-pulse" />
-                        </h3>
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="text-[#036264] hover:text-[#e0829d] transition-colors duration-300 rounded-full p-1 hover:bg-[#dac4d0]"
-                            aria-label="Close notifications"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
+                <div className="notification-panel absolute right-0 mt-2 bg-white rounded-lg border border-[#dac4d0] z-50">
+                    <div className="flex items-center justify-between p-2 bg-[#e5f8f8] rounded-t-lg border-b border-[#dac4d0]">
+                        <p className="text-[#8f5774] text-xs flex items-center gap-1">
+                            Notifications ({unreadCount})
+                        </p>
                     </div>
 
-                    <div className="max-h-72 overflow-y-auto bg-gradient-to-b from-white to-[#e5f8f8]">
+                    <div className="scroll-container">
                         {loading ? (
-                            <div className="p-6 text-center text-[#036264] text-sm">
-                                <div className="animate-bounce mb-2">✨</div>
+                            <div className="p-4 text-center text-[#036264] text-xs">
+                                <div className="animate-spin mb-1">✨</div>
                                 Loading...
                             </div>
                         ) : notifications.length > 0 ? (
-                            <div>
-                                {notifications.map((notification) => (
-                                    <div
-                                        key={notification.id}
-                                        className={`p-3 border-b border-[#dac4d0] hover:bg-[#dac4d0]/20 transition-colors duration-300 ${notification.unread ? 'bg-[#e5f8f8]/50' : ''
-                                            }`}
-                                    >
-                                        <div className="text-sm font-medium text-[#8f5774] mb-1 flex items-center gap-2">
-                                            {notification.notifType === 'birthday' && '🎀'}
-                                            {notification.notifType === 'events' && '✨'}
-                                            {notification.message}
-                                            {notification.read && (
-                                                <span className="ml-auto text-[10px] bg-[#e0829d] text-white px-2 py-0.5 rounded-full">New</span>
+                            <>
+                                {notifications.map((notification, index) => {
+                                    const date = format(new Date(notification.createdAt), 'MMMM dd, yyyy');
+                                    const showDateDivider = index === 0 ||
+                                        format(new Date(notifications[index - 1].createdAt), 'MMMM dd, yyyy') !== date;
+
+                                    return (
+                                        <React.Fragment key={notification.id}>
+                                            {showDateDivider && (
+                                                <div className="date-divider">{date}</div>
                                             )}
-                                        </div>
-                                        <p className="text-xs text-[#036264] mb-1 pl-5">{notification.content}</p>
-                                        <span className="text-[10px] text-[#5a9ea0] pl-5">{notification.time}</span>
-                                    </div>
-                                ))}
-                            </div>
+                                            <div className={`notification-item p-2 ${!notification.read ? 'unread' : ''}`}>
+                                                <div className="flex items-start gap-2">
+                                                    <div className="flex-1">
+                                                        <div className="text-xs text-[#8f5774] mb-1 flex items-center justify-between">
+                                                            <span>{notification.message} </span>
+                                                            {!notification.read && (
+                                                                <span className="text-[9px] bg-[#e0829d] text-white px-1.5 py-0.5 rounded-full">
+                                                                    New
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-[10px] text-[#036264] mb-1">{notification.content}</p>
+                                                        <span className="text-[9px] text-[#5a9ea0]">
+                                                            {format(new Date(notification.createdAt), 'h:mm a')}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </>
                         ) : (
-                            <div className="p-6 text-center text-[#036264] text-sm">
-                                <div className="mb-2">🌸</div>
-                                All caught up!
+                            <div className="p-4 text-center">
+                                <div className="text-xl mb-1">🌸</div>
+                                <p className="text-xs text-[#8f5774] font-medium">All caught up!</p>
+                                <p className="text-[10px] text-[#036264] mt-0.5">Check back later</p>
                             </div>
                         )}
                     </div>

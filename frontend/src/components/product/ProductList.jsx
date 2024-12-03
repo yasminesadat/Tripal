@@ -158,7 +158,6 @@ export default function ProductList() {
     }
   }, [userRole, sortOrder]);
 
-
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
   };
@@ -566,3 +565,4 @@ export default function ProductList() {
     </>
   );
 }
+

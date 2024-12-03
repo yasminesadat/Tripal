@@ -33,11 +33,12 @@ export default function ReviewBox({ id, type }) {
     const handlePostReview = async () => {
         setLoading(true);
         setError(null); 
+        console.log("user ID: ",userId);
 
         const ratingData = {
             rating,
             review, 
-            userId, 
+            userID: userId, 
         };
 
         try {
