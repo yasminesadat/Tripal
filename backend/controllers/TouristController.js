@@ -79,19 +79,14 @@ cron.schedule('00 00 * * *', async () => {
 });
 
 cron.schedule('59 23 * * *', async () => {
-
-  const allUsers = await touristModel.find({});
-
-
-  for (const user of allUsers) {
-    try {
-      user.promoCodes.length = 0;
-      await user.save();
-      console.log(`Cleared promo code: ( for ${user.userName}`);
-    } catch (error) {
-      console.error(`Error clearing promo code for ${user.userName}:`, error.message);
-      continue;
-    }
+  try {
+    const result = await touristModel.updateMany(
+      {},
+      { $set: { promoCodes: [] } }
+    );
+    console.log(`Cleared promo codes for ${result.modifiedCount} users`);
+  } catch (error) {
+    console.error('Error clearing promo codes:', error.message);
   }
 });
 
@@ -678,7 +673,7 @@ const saveFlightBooking = async (req, res) => {
       return res.status(400).json({ error: "User ID doesn't exist!" });
     }
 
-  
+
     if (paymentMethod === 'wallet') {
       existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
       const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
@@ -716,7 +711,7 @@ const saveFlightBooking = async (req, res) => {
       });
 
       existingTourist.totalPoints = existingTourist.totalPoints || 0;
-      existingTourist.currentPoints = existingTourist.currentPoints || 0; 
+      existingTourist.currentPoints = existingTourist.currentPoints || 0;
       existingTourist.totalPoints += pointsToReceive;
       existingTourist.currentPoints += pointsToReceive;
       await existingTourist.save();
