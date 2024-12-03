@@ -145,6 +145,11 @@ const TagManager = () => {
     input: {
       flex: 1,
       fontSize: '14px',
+      height: "50px",
+      border: "1px solid #d9d9d9",
+      outline: "none",
+      width: "100%",
+      backgroundColor: "transparent"
     },
     button: {
       backgroundColor: '#5a9ea0',
@@ -185,98 +190,98 @@ const TagManager = () => {
 
   return (
     <>
-            <div
-                className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
-            >
-                <Sidebar setSideBarOpen={setSideBarOpen} />
+      <div
+        className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
+      >
+        <Sidebar setSideBarOpen={setSideBarOpen} />
 
-                <div className="dashboard__content">
-                    <Header setSideBarOpen={setSideBarOpen} />
-                <div style={styles.container}>
-                <style>{globalStyles}</style>
-                <div style={styles.card}>
-                    <div style={styles.header}>
-                    <h1 style={styles.headerTitle}>Preference Tags</h1>
-                    </div>
+        <div className="dashboard__content">
+          <Header setSideBarOpen={setSideBarOpen} />
+          <div style={styles.container}>
+            <style>{globalStyles}</style>
+            <div style={styles.card}>
+              <div style={styles.header}>
+                <h1 style={styles.headerTitle}>Preference Tags</h1>
+              </div>
 
-                    <div style={styles.section}>
-                    <h2 style={styles.title}>Create New Tag</h2>
-                    <div style={styles.inputGroup}>
-                        <Input
-                        value={newTag}
-                        onChange={(e) => setNewTag(e.target.value)}
-                        placeholder="Enter new tag name"
-                        style={styles.input}
-                        />
-                        <Button
-                        onClick={handleCreateTag}
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        style={styles.button}
-                        >
-                        Add
-                        </Button>
-                    </div>
-
-                    <h2 style={styles.title}>Existing Tags</h2>
-                    <List
-                        itemLayout="horizontal"
-                        dataSource={tags}
-                        renderItem={(tag) => (
-                        <List.Item
-                            style={styles.listItem}
-                            actions={[
-                            <Button
-                                type="text"
-                                icon={<EditOutlined />}
-                                style={styles.editButton}
-                                onClick={() => showUpdateModal(tag._id, tag.name)}
-                            >
-                                Edit
-                            </Button>,
-                            <Button
-                                type="text"
-                                icon={<DeleteOutlined />}
-                                style={styles.deleteButton}
-                                onClick={() => handleDeleteTag(tag._id)}
-                            >
-                                Delete
-                            </Button>,
-                            ]}
-                        >
-                            <List.Item.Meta
-                            title={
-                                <span style={styles.categoryName}>
-                                {tag.name}
-                                </span>
-                            }
-                            />
-                        </List.Item>
-                        )}
-                    />
-                    </div>
-                </div>
-
-                <Modal
-                    title={<span style={styles.modal.title}>Update Tag</span>}
-                    visible={isModalVisible}
-                    onOk={handleUpdateTag}
-                    okButtonProps={{ style: styles.button }}
-                    onCancel={() => setIsModalVisible(false)}
-                    cancelButtonProps={{ style: { display: 'none' } }}
-                >
-                    <Input
-                    value={updateTagName}
-                    onChange={(e) => setUpdateTagName(e.target.value)}
+              <div style={styles.section}>
+                <h2 style={styles.title}>Create New Tag</h2>
+                <div style={styles.inputGroup}>
+                  <Input
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
                     placeholder="Enter new tag name"
-                    style={styles.modal.input}
-                    />
-                </Modal>
+                    style={styles.input}
+                  />
+                  <Button
+                    onClick={handleCreateTag}
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    style={styles.button}
+                  >
+                    Add
+                  </Button>
                 </div>
-                </div>
+
+                <h2 style={styles.title}>Existing Tags</h2>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={tags}
+                  renderItem={(tag) => (
+                    <List.Item
+                      style={styles.listItem}
+                      actions={[
+                        <Button
+                          type="text"
+                          icon={<EditOutlined />}
+                          style={styles.editButton}
+                          onClick={() => showUpdateModal(tag._id, tag.name)}
+                        >
+                          Edit
+                        </Button>,
+                        <Button
+                          type="text"
+                          icon={<DeleteOutlined />}
+                          style={styles.deleteButton}
+                          onClick={() => handleDeleteTag(tag._id)}
+                        >
+                          Delete
+                        </Button>,
+                      ]}
+                    >
+                      <List.Item.Meta
+                        title={
+                          <span style={styles.categoryName}>
+                            {tag.name}
+                          </span>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+              </div>
             </div>
-        </>
-    );
+
+            <Modal
+              title={<span style={styles.modal.title}>Update Tag</span>}
+              visible={isModalVisible}
+              onOk={handleUpdateTag}
+              okButtonProps={{ style: styles.button }}
+              onCancel={() => setIsModalVisible(false)}
+              cancelButtonProps={{ style: { display: 'none' } }}
+            >
+              <Input
+                value={updateTagName}
+                onChange={(e) => setUpdateTagName(e.target.value)}
+                placeholder="Enter new tag name"
+                style={styles.modal.input}
+              />
+            </Modal>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 

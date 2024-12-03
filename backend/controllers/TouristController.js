@@ -14,7 +14,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 
-cron.schedule('00 00 * * *', async () => {
+cron.schedule('16 01 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();

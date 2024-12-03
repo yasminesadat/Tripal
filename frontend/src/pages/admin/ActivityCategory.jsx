@@ -169,6 +169,11 @@ const ActivityCategoryDetails = () => {
         input: {
             flex: 1,
             fontSize: '14px',
+            height: "50px",
+            border: "1px solid #d9d9d9",
+            outline: "none",
+            width: "100%",
+            backgroundColor: "transparent"
         },
         button: {
             backgroundColor: '#5a9ea0',

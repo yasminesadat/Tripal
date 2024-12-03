@@ -66,6 +66,7 @@ const PromoCodeDetails = () => {
     };
 
     const styles = {
+
         container: {
             padding: '40px 20px',
             minHeight: '100vh',
@@ -105,6 +106,11 @@ const PromoCodeDetails = () => {
         input: {
             flex: 1,
             fontSize: '14px',
+            height: "50px",
+            border: "1px solid #d9d9d9",
+            outline: "none",
+            width: "100%",
+            backgroundColor: "transparent"
         },
         button: {
             backgroundColor: '#5a9ea0',
@@ -160,7 +166,11 @@ const PromoCodeDetails = () => {
                             <div style={styles.section}>
                                 <h2 style={styles.title}>Create New Promo Code</h2>
                                 <div style={styles.inputGroup}>
+
+
+
                                     <Input
+
                                         value={name}
                                         onChange={handlePromoCodeChange}
                                         placeholder="Enter promo code"
