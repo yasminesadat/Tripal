@@ -23,6 +23,16 @@ export async function changeTouristPassword(oldPassword, newPassword) {
     throw error;
   }
 }
+export async function checkTouristPromoCode(promocode) {
+  try {
+
+    const response = await axios.get(`/tourist/checkPromoCode`, promocode);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 
 export async function getTouristInformation() {
   try {
@@ -211,15 +221,15 @@ export async function getTouristNotifications() {
   }
 }
 
-export async function addToCart(touristId, productId, quantity){
-  try{
+export async function addToCart(touristId, productId, quantity) {
+  try {
     const response = await axios.post('/tourist/cart', {
       touristId,
       productId,
       quantity,
-    });    
+    });
     return response.data;
-  }catch(error){
+  } catch (error) {
     console.error("Error adding product to cart:", error);
     throw error;
   }
@@ -235,16 +245,16 @@ export async function getCart() {
   }
 }
 
-export async function removeFromCart(touristId, productId){
-  try{
+export async function removeFromCart(touristId, productId) {
+  try {
     const response = await axios.delete('/tourist/cart', {
       data: {
         touristId,
         productId,
       },
-    });    
+    });
     return response.data;
-  }catch(error){
+  } catch (error) {
     console.error("Error removing product from cart:", error);
     throw error;
   }

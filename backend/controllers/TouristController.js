@@ -216,6 +216,7 @@ const updateTouristProfile = async (req, res) => {
         message: "You cannot update your balance",
       });
     }
+    console.log("email ", updateParameters.email);
     const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
 
 
@@ -237,7 +238,7 @@ const updateTouristProfile = async (req, res) => {
     if (updateParameters.email && updateParameters.email !== currTourist.email) {
       await User.findOneAndUpdate(
         { email: currTourist.email },
-        { email: email },
+        { email: updateParameters.email },
         { new: true, runValidators: true }
       );
     }
@@ -678,11 +679,34 @@ const getTouristNotifications = async (req, res) => {
 
   }
 }
-// const checkTouristPromocode= async (req,res)
-// {
-//   const touristId = req.userId;
-// }
+const checkTouristPromocode = async (req, res) => {
+  const touristId = req.userId;
+  const { promoCode } = req.body;
 
+  try {
+    const tourist = await touristModel
+      .findById(touristId)
+      .populate('promoCodes');
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    // Now promoCodes will be the full objects, not just IDs
+    const isPromoCodeValid = tourist.promoCodes.some(promoCodeObj =>
+      promoCodeObj.name === promoCode
+    );
+    if (!isPromoCodeValid) {
+      return res.status(400).json({ error: "Invalid promo code!" });
+    }
+    else {
+      return res.status(400).json({ error: "correct promo code" });
+    }
+    // return res.status(200).json({ isPromoCodeValid });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
 
 const saveFlightBooking = async (req, res) => {
@@ -936,7 +960,7 @@ module.exports = {
   getCart,
   getRandomPromoCode,
   getTouristNotifications,
-  // checkTouristPromocode,
+  checkTouristPromocode,
   saveFlightBooking,
   completeFlightBooking
 };
