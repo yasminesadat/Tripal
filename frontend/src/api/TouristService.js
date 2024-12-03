@@ -26,7 +26,7 @@ export async function changeTouristPassword(oldPassword, newPassword) {
 export async function checkTouristPromoCode(promocode) {
   try {
 
-    const response = await axios.get(`/tourist/checkPromoCode`, promocode);
+    const response = await axios.post(`/tourist/checkPromoCode`, promocode);
     return response.data;
   } catch (error) {
     console.error("error", error);

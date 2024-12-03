@@ -696,11 +696,14 @@ const checkTouristPromocode = async (req, res) => {
     const isPromoCodeValid = tourist.promoCodes.some(promoCodeObj =>
       promoCodeObj.name === promoCode
     );
+    console.log("valueee", isPromoCodeValid);
+    console.log(tourist.promoCodes);
+    console.log("promo", promoCode);
     if (!isPromoCodeValid) {
-      return res.status(400).json({ error: "Invalid promo code!" });
+      return res.status(200).json({ status: "no", message: "Invalid promo code!" });
     }
     else {
-      return res.status(400).json({ error: "correct promo code" });
+      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!" });
     }
     // return res.status(200).json({ isPromoCodeValid });
   } catch (error) {

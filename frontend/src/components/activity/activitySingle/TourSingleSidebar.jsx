@@ -10,7 +10,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState("EGP");
   const selectedRef = refActivityBook || refItineraryBook;
-  const [promoCode, setPromoCode] = useState('');
+  const [myPromoCode, setPromoCode] = useState('');
 
   const handlePromoCodeChange = (e) => {
     setPromoCode(e.target.value);
@@ -18,10 +18,18 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
 
   const handlePromoCodeSubmit = async () => {
     try {
-      const promoCode = await checkTouristPromoCode(promoCode);
+      const promoCodeNew = await checkTouristPromoCode({ promoCode: myPromoCode });
+      if (promoCodeNew.status === "yes") {
+        message.success(promoCodeNew.message);
+      }
+      else {
+        message.error(promoCodeNew.message);
+      }
     }
     catch (error) {
+      console.log("error", error);
       message.error(error.response.data.error);
+      ;
     }
 
   };
@@ -75,7 +83,8 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
       const response = await bookResource(
         itinerary ? "itinerary" : "activity",
         itinerary ? itinerary._id : activity._id,
-        ticketNumber
+        ticketNumber,
+        myPromoCode
       );
       message.success(response.message);
       console.log(activity?.bookings)
@@ -214,7 +223,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
               <input
                 type="text"
                 required
-                value={promoCode}
+                value={myPromoCode}
                 onChange={handlePromoCodeChange}
               />
               <label className="lh-1 text-16 text-light-1">

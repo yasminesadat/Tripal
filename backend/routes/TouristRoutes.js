@@ -180,7 +180,7 @@ router.get(
   getTouristNotifications
 );
 
-router.get(
+router.post(
   "/tourist/checkPromoCode",
   verifyToken,
   authorizeRoles("Tourist"),
