@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Form, Input, Button, Select, DatePicker, Radio, message, Upload, Checkbox, Modal } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  Radio,
+  message,
+  Upload,
+  Checkbox,
+  Modal,
+} from "antd";
 import {
   UploadOutlined,
   UserOutlined,
@@ -9,91 +20,128 @@ import {
   PhoneOutlined,
   CalendarOutlined,
   IdcardOutlined,
-  GlobalOutlined
+  GlobalOutlined,
 } from "@ant-design/icons";
 import { nationalities } from "../../assets/Nationalities";
 import { useNavigate } from "react-router-dom";
 import { createTourist } from "@/api/TouristService";
 import { createRequest, SetRequestStatus } from "@/api/RequestService";
 const { Option } = Select;
-import { Tabs } from 'antd';
+import { Tabs } from "antd";
 
 const tabs = [
   {
-    title: (<h2 className="text-20 fw-500">Introduction</h2>),
-    content:
-      (<p className="mt-10" >1.1 Acceptance of Terms
-        By using Tripal, you agree to these terms and conditions.If you do not agree, please do not use our services.
+    title: <h2 className="text-20 fw-500">Introduction</h2>,
+    content: (
+      <p className="mt-10">
+        1.1 Acceptance of Terms By using Tripal, you agree to these terms and
+        conditions.If you do not agree, please do not use our services.
         <br />
-        1.2 Services Provided
-        Tripal offers an online platform to browse, book, and manage flights, hotel reservations, tours, activities, and itineraries.We act as an intermediary, facilitating bookings and purchases with third - party suppliers.
+        1.2 Services Provided Tripal offers an online platform to browse, book,
+        and manage flights, hotel reservations, tours, activities, and
+        itineraries.We act as an intermediary, facilitating bookings and
+        purchases with third - party suppliers.
         <br />
-        1.3 Eligibility
-        To use our services, you must be at least 18 years of age or of legal age in your jurisdiction to enter into binding contracts.
+        1.3 Eligibility To use our services, you must be at least 18 years of
+        age or of legal age in your jurisdiction to enter into binding
+        contracts.
         <br />
-        1.4 User Responsibilities
-        You agree to provide accurate, complete, and up- to - date information.You are responsible for ensuring the accuracy of any booking details, including traveler names and contact information.
-      </p>)
+        1.4 User Responsibilities You agree to provide accurate, complete, and
+        up- to - date information.You are responsible for ensuring the accuracy
+        of any booking details, including traveler names and contact
+        information.
+      </p>
+    ),
   },
   {
-    title: (<h2 className="text-20 fw-500">Booking and Reservation Process</h2>),
-    content: (<p className="mt-10" >
-      2.1 Flights, Hotels, and Activities
-      All bookings are subject to availability and confirmation from the relevant third-party provider. Prices may vary based on availability and are not guaranteed until a booking is confirmed.
-      <br />
-      2.2 Payment
-      Full payment or a deposit may be required at the time of booking. Payment policies are specific to each service, as determined by the provider.
-      <br />
-      2.3 Cancellation and Refunds
-      Cancellation policies vary depending on the service and the third-party provider's policies. Please review each provider’s policy before booking. Refunds, if available, will be processed per the provider’s terms, and [Website Name] may charge an additional processing fee.
-    </p>),
-  },
-  {
-    title: (<h2 className="text-20 fw-500">Pricing and Fees</h2>),
-    content:
-      (<p className="mt-10" >
-        3.1 Service Fees
-        Tripal may charge a service fee for booking management, support, or added convenience. Fees will be disclosed prior to finalizing your booking.
+    title: <h2 className="text-20 fw-500">Booking and Reservation Process</h2>,
+    content: (
+      <p className="mt-10">
+        2.1 Flights, Hotels, and Activities All bookings are subject to
+        availability and confirmation from the relevant third-party provider.
+        Prices may vary based on availability and are not guaranteed until a
+        booking is confirmed.
         <br />
-        3.2 Price Changes and Accuracy
-        We strive to provide accurate pricing information. However, Tripal cannot guarantee that prices will be the same at the time of booking, as prices can change due to market demand or provider pricing changes.
-      </p>),
+        2.2 Payment Full payment or a deposit may be required at the time of
+        booking. Payment policies are specific to each service, as determined by
+        the provider.
+        <br />
+        2.3 Cancellation and Refunds Cancellation policies vary depending on the
+        service and the third-party provider's policies. Please review each
+        provider’s policy before booking. Refunds, if available, will be
+        processed per the provider’s terms, and [Website Name] may charge an
+        additional processing fee.
+      </p>
+    ),
   },
   {
-    title: (<h2 className="text-20 fw-500">Privacy</h2>),
-    content: (<p className="mt-10" >
-      4.1 Intellectual Property
-      All content on Tripal, including text, graphics, and logos, is protected by copyright, trademark, and other intellectual property laws. You may not copy, reproduce, or distribute any content without express permission.
-      <br />
-      4.2 User-Generated Content
-      You may submit reviews, comments, and feedback on our site. By submitting content, you grant Tripal a worldwide, royalty-free license to use, display, and distribute this content.
-      <br />
-      4.3 Privacy and Data Protection
-      Our [Privacy Policy](link to privacy policy) governs how we collect, use, and protect your personal data. Please review this policy for more information.
-      <br />
-      4.4 Modifications to Terms
-      Tripal reserves the right to modify these terms at any time. Changes will be posted on this page, and continued use of our services signifies acceptance of any updated terms.
-      <br />
-      4.5 Governing Law and Jurisdiction
-      These terms are governed by the laws of [Your Country/State]. Any disputes arising from these terms shall be resolved in the courts of [Your Jurisdiction].
-    </p>),
+    title: <h2 className="text-20 fw-500">Pricing and Fees</h2>,
+    content: (
+      <p className="mt-10">
+        3.1 Service Fees Tripal may charge a service fee for booking management,
+        support, or added convenience. Fees will be disclosed prior to
+        finalizing your booking.
+        <br />
+        3.2 Price Changes and Accuracy We strive to provide accurate pricing
+        information. However, Tripal cannot guarantee that prices will be the
+        same at the time of booking, as prices can change due to market demand
+        or provider pricing changes.
+      </p>
+    ),
   },
   {
-    title: (<h2 className="text-20 fw-500">Liability and Disclaimer</h2>),
-    content: (<p className="mt-10" >
-      5.1 Limited Liability
-      Tripal is not liable for any direct, indirect, incidental, or consequential damages resulting from your use of our services, including but not limited to travel interruptions, cancellations, loss of personal items, or changes in booking details.
-      <br />
-      5.2 Disclaimer of Warranties
-      We provide our services "as is" and make no warranties or representations about the accuracy, reliability, or suitability of the information and services offered.
-    </p>),
-  }
-
+    title: <h2 className="text-20 fw-500">Privacy</h2>,
+    content: (
+      <p className="mt-10">
+        4.1 Intellectual Property All content on Tripal, including text,
+        graphics, and logos, is protected by copyright, trademark, and other
+        intellectual property laws. You may not copy, reproduce, or distribute
+        any content without express permission.
+        <br />
+        4.2 User-Generated Content You may submit reviews, comments, and
+        feedback on our site. By submitting content, you grant Tripal a
+        worldwide, royalty-free license to use, display, and distribute this
+        content.
+        <br />
+        4.3 Privacy and Data Protection Our [Privacy Policy](link to privacy
+        policy) governs how we collect, use, and protect your personal data.
+        Please review this policy for more information.
+        <br />
+        4.4 Modifications to Terms Tripal reserves the right to modify these
+        terms at any time. Changes will be posted on this page, and continued
+        use of our services signifies acceptance of any updated terms.
+        <br />
+        4.5 Governing Law and Jurisdiction These terms are governed by the laws
+        of [Your Country/State]. Any disputes arising from these terms shall be
+        resolved in the courts of [Your Jurisdiction].
+      </p>
+    ),
+  },
+  {
+    title: <h2 className="text-20 fw-500">Liability and Disclaimer</h2>,
+    content: (
+      <p className="mt-10">
+        5.1 Limited Liability Tripal is not liable for any direct, indirect,
+        incidental, or consequential damages resulting from your use of our
+        services, including but not limited to travel interruptions,
+        cancellations, loss of personal items, or changes in booking details.
+        <br />
+        5.2 Disclaimer of Warranties We provide our services "as is" and make no
+        warranties or representations about the accuracy, reliability, or
+        suitability of the information and services offered.
+      </p>
+    ),
+  },
 ];
 
-
-
-const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) => {
+const TermsModal = ({
+  open,
+  onOk,
+  onCancel,
+  tabs,
+  currentTab,
+  setCurrentTab,
+}) => {
   return (
     <Modal
       title="Terms and Conditions"
@@ -116,13 +164,11 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
             children: (
               <div className="p-4">
                 <h3 className="text-lg font-medium mb-3">{tab.title}</h3>
-                <div className="terms-content">
-                  {tab.content}
-                </div>
+                <div className="terms-content">{tab.content}</div>
               </div>
             ),
           }))}
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
         />
       </div>
 
@@ -132,38 +178,38 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
           border-radius: 4px;
           box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
         .terms-modal .ant-modal-header {
           background: var(--color-stone);
           border-radius: 4px 4px 0 0;
           padding: 16px 20px;
         }
-        
+
         .terms-modal .ant-modal-title {
           color: white;
           font-size: 1.1rem;
           font-weight: 500;
           letter-spacing: 0.3px;
         }
-        
+
         .terms-modal .ant-modal-close-x {
           color: white;
         }
-        
+
         .terms-modal .ant-tabs-content {
           height: 50vh;
           overflow-y: auto;
           padding: 0 12px;
           background: white;
         }
-        
+
         .terms-modal .ant-tabs-nav {
           min-width: 130px;
           padding: 12px 0;
           background: #f8f8f8;
           border-right: 1px solid #eee;
         }
-        
+
         .terms-modal .ant-tabs-tab {
           padding: 8px 12px !important;
           margin: 2px 0 !important;
@@ -172,43 +218,43 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
           font-size: 13px;
           min-height: unset !important;
         }
-        
+
         .terms-modal .ant-tabs-tab:hover {
           color: var(--color-stone);
         }
-        
+
         .terms-modal .ant-tabs-tab-active {
           background: transparent !important;
           color: var(--color-stone) !important;
           font-weight: 500;
         }
-        
+
         .terms-modal .ant-tabs-tab-active .ant-tabs-tab-btn {
           color: var(--color-stone) !important;
         }
-        
+
         .terms-modal .ant-tabs-ink-bar {
           background: var(--color-stone);
           width: 3px !important;
         }
-        
+
         .terms-modal .terms-content {
           line-height: 1.6;
           color: #2c3e50;
           font-size: 13px;
         }
-        
+
         .terms-modal .ant-modal-body {
           padding: 0;
         }
-        
+
         .terms-modal .ant-modal-footer {
           background: #f8f8f8;
           border-top: 1px solid #eee;
           padding: 12px 20px;
           border-radius: 0 0 4px 4px;
         }
-        
+
         .terms-modal .ant-btn-primary {
           background: var(--color-stone);
           border-color: var(--color-stone);
@@ -216,12 +262,12 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
           padding: 0 16px;
           font-weight: 500;
         }
-        
+
         .terms-modal .ant-btn-primary:hover {
           background: var(--color-stone-light);
           border-color: var(--color-stone-light);
         }
-        
+
         .terms-modal .ant-btn-default {
           height: 32px;
           padding: 0 16px;
@@ -230,7 +276,7 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
           margin-right: 8px;
           background: white;
         }
-        
+
         .terms-modal .ant-btn-default:hover {
           border-color: var(--color-stone);
           color: var(--color-stone);
@@ -251,11 +297,6 @@ const TermsModal = ({ open, onOk, onCancel, tabs, currentTab, setCurrentTab }) =
   );
 };
 
-
-
-
-
-
 const RegisterIllustration = () => (
   <svg viewBox="0 0 400 300" className="register-illustration floating">
     <defs>
@@ -270,13 +311,34 @@ const RegisterIllustration = () => (
     </defs>
 
     {/* Background elements */}
-    <circle cx="200" cy="150" r="120" fill="url(#gradient1)" className="pulse" />
-    <circle cx="300" cy="100" r="50" fill="url(#gradient1)" className="float-slow" />
-    <circle cx="100" cy="200" r="70" fill="url(#gradient1)" className="float-delay" />
+    <circle
+      cx="200"
+      cy="150"
+      r="120"
+      fill="url(#gradient1)"
+      className="pulse"
+    />
+    <circle
+      cx="300"
+      cy="100"
+      r="50"
+      fill="url(#gradient1)"
+      className="float-slow"
+    />
+    <circle
+      cx="100"
+      cy="200"
+      r="70"
+      fill="url(#gradient1)"
+      className="float-delay"
+    />
 
     {/* Airplane */}
     <g className="float-slow" transform="translate(220,100) rotate(15)">
-      <path d="M0,20 L-5,25 L-40,25 L-45,20 L-40,15 L-5,15 L0,20" fill="#dac4d0" />
+      <path
+        d="M0,20 L-5,25 L-40,25 L-45,20 L-40,15 L-5,15 L0,20"
+        fill="#dac4d0"
+      />
       <path d="M0,20 L60,20 L65,25 L60,30 L0,30 L-5,25 L0,20" fill="#dac4d0" />
       <path d="M45,15 L55,20 L45,25" fill="#dac4d0" />
       <path d="M10,10 L20,20 L10,30" fill="#dac4d0" />
@@ -284,7 +346,14 @@ const RegisterIllustration = () => (
 
     {/* Suitcase */}
     <g className="float">
-      <rect x="120" y="120" width="100" height="80" rx="8" fill="url(#gradient2)" />
+      <rect
+        x="120"
+        y="120"
+        width="100"
+        height="80"
+        rx="8"
+        fill="url(#gradient2)"
+      />
       <rect x="120" y="110" width="100" height="20" rx="5" fill="#dac4d0" />
       <rect x="160" y="105" width="20" height="10" rx="2" fill="#dac4d0" />
       <circle cx="135" cy="170" r="8" fill="#fff" opacity="0.6" />
@@ -294,15 +363,21 @@ const RegisterIllustration = () => (
     {/* Travel elements */}
     <g className="float-reverse">
       <circle cx="280" cy="160" r="15" fill="#dac4d0" opacity="0.5" />
-      <text x="280" y="165" textAnchor="middle" fill="#fff" fontSize="14">✈</text>
+      <text x="280" y="165" textAnchor="middle" fill="#fff" fontSize="14">
+        ✈
+      </text>
     </g>
     <g className="float-delay">
       <circle cx="150" cy="80" r="12" fill="#dac4d0" opacity="0.5" />
-      <text x="150" y="84" textAnchor="middle" fill="#fff" fontSize="12">🌍</text>
+      <text x="150" y="84" textAnchor="middle" fill="#fff" fontSize="12">
+        🌍
+      </text>
     </g>
     <g className="pulse">
       <circle cx="320" cy="200" r="10" fill="#dac4d0" />
-      <text x="320" y="204" textAnchor="middle" fill="#dac4d0" fontSize="10">🗺</text>
+      <text x="320" y="204" textAnchor="middle" fill="#dac4d0" fontSize="10">
+        🗺
+      </text>
     </g>
 
     {/* Dotted path */}
@@ -318,8 +393,7 @@ const RegisterIllustration = () => (
 );
 
 export default function Register() {
-
-  const [requestId, setRequestId] = useState('')
+  const [requestId, setRequestId] = useState("");
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [role, setRole] = useState("tourist");
@@ -345,10 +419,8 @@ export default function Register() {
     if (currentTab === 4) {
       setOpen(false);
 
-
       setTermsAndConditionsCheck(true);
-    }
-    else {
+    } else {
       setCurrentTab((oldTab) => oldTab + 1);
     }
   };
@@ -359,21 +431,18 @@ export default function Register() {
   const onAcceptTermsAndConditions = () => {
     if (!termsAndConditionsCheck) {
       showModal();
-    }
-    else {
+    } else {
       setTermsAndConditionsCheck(false);
       setCurrentTab(0);
     }
-  }
-
+  };
 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
     form.resetFields();
     if (e.target.value === "tourist") {
       setTermsAndConditionsCheck(true);
-    }
-    else {
+    } else {
       setTermsAndConditionsCheck(false);
     }
     setCurrentTab(0);
@@ -387,14 +456,14 @@ export default function Register() {
     const file = info.fileList[0].originFileObj;
 
     // Optional: Add validations
-    if (file.type !== 'application/pdf') {
-      message.error('Please upload a PDF file only!');
+    if (file.type !== "application/pdf") {
+      message.error("Please upload a PDF file only!");
       setDocumentUploaded("");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      message.error('File must be smaller than 5MB!');
+      message.error("File must be smaller than 5MB!");
       setDocumentUploaded("");
       return;
     }
@@ -408,15 +477,13 @@ export default function Register() {
   };
 
   const handleSubmit = async (values) => {
-
-
-
     setLoading(true);
 
     try {
-      const formattedDateOfBirth = role === "tourist"
-        ? new Date(values.dateOfBirth).toISOString().split("T")[0]
-        : values.dateOfBirth;
+      const formattedDateOfBirth =
+        role === "tourist"
+          ? new Date(values.dateOfBirth).toLocaleDateString("en-CA")
+          : values.dateOfBirth;
 
       const commonUser = {
         userName: values.userName,
@@ -441,40 +508,49 @@ export default function Register() {
 
       try {
         if (role === "seller") {
-          response = await createRequest({
-            ...commonUser,
-            role: "Seller",
-          }, documentUploaded);
+          response = await createRequest(
+            {
+              ...commonUser,
+              role: "Seller",
+            },
+            documentUploaded
+          );
 
           navigate("/pendingRequest", {
             state: {
               ...commonUser,
-              role: "Seller"
-            }
+              role: "Seller",
+            },
           });
         } else if (role === "tour-guide") {
-          response = await createRequest({
-            ...commonUser,
-            role: "Tour Guide",
-          }, documentUploaded);
+          response = await createRequest(
+            {
+              ...commonUser,
+              role: "Tour Guide",
+            },
+            documentUploaded
+          );
 
           navigate("/pendingRequest", {
             state: {
               ...commonUser,
-              role: "Tour Guide"
-            }
+              role: "Tour Guide",
+            },
           });
         } else if (role === "advertiser") {
-          response = await createRequest({
-            ...commonUser,
-            role: "Advertiser",
-          }, documentUploaded);
+          response = await createRequest(
+            {
+              ...commonUser,
+              role: "Advertiser",
+            },
+            documentUploaded
+          );
 
           navigate("/pendingRequest", {
             state: {
               ...commonUser,
-              role: "Advertiser"
-            }
+              role: "Advertiser",
+            },
           });
         } else if (role === "tourist") {
           response = await createTourist(newUser);
@@ -540,7 +616,9 @@ export default function Register() {
                   <h3>Account Information</h3>
                   <Form.Item
                     name="userName"
-                    rules={[{ required: true, message: "Username is required" }]}
+                    rules={[
+                      { required: true, message: "Username is required" },
+                    ]}
                   >
                     <Input prefix={<UserOutlined />} placeholder="Username" />
                   </Form.Item>
@@ -549,20 +627,29 @@ export default function Register() {
                     name="email"
                     rules={[
                       { required: true, message: "Email is required" },
-                      { type: "email", message: "Please enter a valid email" }
+                      { type: "email", message: "Please enter a valid email" },
                     ]}
                   >
-                    <Input prefix={<MailOutlined />} placeholder="Email Address" />
+                    <Input
+                      prefix={<MailOutlined />}
+                      placeholder="Email Address"
+                    />
                   </Form.Item>
 
                   <Form.Item
                     name="password"
                     rules={[
                       { required: true, message: "Password is required" },
-                      { min: 8, message: "Password must be at least 8 characters" }
+                      {
+                        min: 8,
+                        message: "Password must be at least 8 characters",
+                      },
                     ]}
                   >
-                    <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                    <Input.Password
+                      prefix={<LockOutlined />}
+                      placeholder="Password"
+                    />
                   </Form.Item>
                 </div>
 
@@ -571,21 +658,36 @@ export default function Register() {
                     <h3>Personal Details</h3>
                     <Form.Item
                       name="mobileNumber"
-                      rules={[{ required: true, message: "Mobile number is required" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Mobile number is required",
+                        },
+                      ]}
                     >
-                      <Input prefix={<PhoneOutlined />} placeholder="Mobile Number" />
+                      <Input
+                        prefix={<PhoneOutlined />}
+                        placeholder="Mobile Number"
+                      />
                     </Form.Item>
 
                     <Form.Item
                       name="nationality"
-                      rules={[{ required: true, message: "Please select nationality" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select nationality",
+                        },
+                      ]}
                     >
                       <Select
                         placeholder="Select Nationality"
                         suffixIcon={<GlobalOutlined />}
                       >
                         {nationalities.map((nationality, index) => (
-                          <Option key={index} value={nationality}>{nationality}</Option>
+                          <Option key={index} value={nationality}>
+                            {nationality}
+                          </Option>
                         ))}
                       </Select>
                     </Form.Item>
@@ -593,7 +695,12 @@ export default function Register() {
                     <div className="two-columns">
                       <Form.Item
                         name="dateOfBirth"
-                        rules={[{ required: true, message: "Date of birth is required" }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Date of birth is required",
+                          },
+                        ]}
                       >
                         <DatePicker
                           placeholder="Date of Birth"
@@ -606,7 +713,10 @@ export default function Register() {
                         name="job"
                         rules={[{ required: true, message: "Job is required" }]}
                       >
-                        <Input prefix={<IdcardOutlined />} placeholder="Occupation" />
+                        <Input
+                          prefix={<IdcardOutlined />}
+                          placeholder="Occupation"
+                        />
                       </Form.Item>
                     </div>
                   </div>
@@ -617,10 +727,20 @@ export default function Register() {
                     <h3>Documents</h3>
                     <Form.Item
                       name="document"
-                      rules={[{ required: true, message: "Please upload required documents" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please upload required documents",
+                        },
+                      ]}
                     >
-                      <Upload.Dragger accept=".pdf" onChange={handleDocumentChange}
-                        onRemove={handleRemove} beforeUpload={() => false} maxCount={1}>
+                      <Upload.Dragger
+                        accept=".pdf"
+                        onChange={handleDocumentChange}
+                        onRemove={handleRemove}
+                        beforeUpload={() => false}
+                        maxCount={1}
+                      >
                         <p className="ant-upload-drag-icon">
                           <UploadOutlined />
                         </p>
@@ -640,15 +760,16 @@ export default function Register() {
                 <div className="form-section">
                   {role !== "tourist" && (
                     <Form.Item>
-
                       <div className="terms-section">
                         <Checkbox
-                          onChange={onAcceptTermsAndConditions} checked={termsAndConditionsCheck}
+                          onChange={onAcceptTermsAndConditions}
+                          checked={termsAndConditionsCheck}
                         >
                           I accept the Terms & Conditions
                         </Checkbox>
                       </div>
-                    </Form.Item>)}
+                    </Form.Item>
+                  )}
 
                   <Button
                     type="primary"
@@ -1065,4 +1186,3 @@ export default function Register() {
     </div>
   );
 }
-
