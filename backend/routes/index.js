@@ -21,6 +21,7 @@ const routes = [
   "./FlightRoutes",
   "./HotelBookingRoutes",
   "./UserRoutes.js",
+  "./OrderRoutes.js"
 ];
 
 routes.forEach((route) => {
