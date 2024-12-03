@@ -305,7 +305,7 @@ const ActivityForm = ({ isUpdate }) => {
                     }
 
                     .activity-form .ant-btn-primary:hover {
-                      background: #5a9ea0;
+                      background: #5a9ea0 !important;
                     }
 
                     .activity-form textarea.ant-input {
@@ -314,8 +314,8 @@ const ActivityForm = ({ isUpdate }) => {
                     }
 
                     .activity-form .ant-checkbox-checked .ant-checkbox-inner {
-                      background-color: #036264;
-                      border-color: #036264;
+                      background-color: #036264 !important;
+                      border-color: #036264 !important;
                     }
 
                     .activity-form .ant-select-selector:hover {
