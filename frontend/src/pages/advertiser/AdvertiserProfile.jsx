@@ -14,6 +14,7 @@ import { requestAccountDeletion } from "../../api/RequestService";
 import { Button, message, Upload } from "antd";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 
+
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
   //const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -59,16 +60,6 @@ export default function AdvertiserProfile() {
     fetchAdvertiser();
   }, []);
 
-  //   const handleDeletion = async () => {
-  //     try {
-  //       const response = await requestAccountDeletion();
-  //       message.success("Account deletion request submitted successfully.");
-  //       message.success(response.message);
-  //       navigate("/");
-  //     } catch (error) {
-  //       message.warning(error.response?.data?.message || "An error occurred");
-  //     }
-  //   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -259,6 +250,15 @@ export default function AdvertiserProfile() {
     }
   };
 
+  const handleDeletion = async () => {
+    try {
+      const response = await requestAccountDeletion();
+      message.success(response.message);
+      navigate("/login");
+    } catch (error) {
+      message.warning(error.response?.data?.message || "An error occurred.");
+    }
+  };
   //   console.log(advertiser)
   const General = advertiser
     ? [
@@ -361,9 +361,16 @@ export default function AdvertiserProfile() {
 
         <div className="dashboard__content" style={{ marginTop: "70px" }}>
           <div className="dashboard__content_content">
+          <div className="d-flex justify-between items-center mb-20">
             <h1 className="text-30">Profile</h1>
-            {/* <p className="">Lorem ipsum dolor sit amet, consectetur.</p> */}
-
+            <button
+              className="button -md -dark-1 delete-btn"
+              onClick={handleDeletion}
+            >
+              Delete Account
+              <i className="icon-delete text-20 ml-10"></i>
+            </button>
+          </div>
             <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60">
               <div className="tabs -underline-2 js-tabs">
                 <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
@@ -862,6 +869,7 @@ export default function AdvertiserProfile() {
                           <i className="icon-arrow-top-right text-16 ml-10"></i>
                         </button>
                       </div>
+                     
                     </div>
                   </div>
                 </div>

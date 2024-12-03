@@ -49,13 +49,14 @@ export default function AdvertiserActivityDetails() {
        <AdvertiserGallery />
         <section className="">
           <div className="container">
+            <br/>
             <h2 className="text-40 sm:text-30 lh-14 mt-20">
               {activity?.title.split(" ").slice(0, 7).join(" ")}
 
               <br />
               {activity?.title.split(" ").slice(7).join(" ")}
             </h2>
-
+            <br />
             <div className="d-flex justify-content-between">
             <div className="d-flex align-items-center">
               <i className="icon-pin mr-5"></i>
@@ -64,6 +65,7 @@ export default function AdvertiserActivityDetails() {
             <div className="d-flex align-items-center">
               <i className="icon-clock mr-5"></i>
               <div className="text-20">Date: {new Date(activity.date).toLocaleDateString()}</div>
+              <span className="mx-2">•</span>
               <div className="text-20">Time: {activity.time}</div>
             </div>
           </div>
@@ -75,7 +77,20 @@ export default function AdvertiserActivityDetails() {
           <div className="container">
             <div className="row y-gap-30 justify-between">
               <div className="col-lg-12">
-                <div className="row y-gap-20 justify-between items-center layout-pb-md">
+
+             
+                <div className="row y-gap-20 col-lg-8 justify-between items-center layout-pb-md" style={{ margin: "0 auto", display: "flex", justifyContent: "center" }}>
+                <div 
+  className="grey-box" 
+  style={{ 
+    backgroundColor: "#f5f5f5", 
+    borderRadius: "12px", 
+    padding: "20px", 
+    display: "flex", 
+    justifyContent: "center", 
+    margin: "0 auto" 
+  }}
+>
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
@@ -84,23 +99,6 @@ export default function AdvertiserActivityDetails() {
                       <div className="ml-10">
                         <div className="lh-16">Price</div>
                         <div className="text-14 text-light-2 lh-16">EGP {activity.price}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 col-6">
-                    <div className="d-flex items-center">
-                      <div className="flex-center size-50 rounded-12 border-1">
-                      <TagOutlined />
-                      </div>
-                      <div className="ml-10">
-                        <div className="lh-16">Tags</div>
-                        <div className="text-14 text-light-2 lh-16">
-                          {activity?.tags && activity?.tags.length > 0 ? (
-                            activity.tags.map((tag) => tag.name).join(", ")
-                          ) : (
-                            "No tags available"
-                          )}
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -143,15 +141,34 @@ export default function AdvertiserActivityDetails() {
                       </div>
                     </div>
                   </div>
-
-
+                </div>
                 </div>
 
+
+                
                 <h2 className="text-30">Activity Description</h2>
-                <p className="mt-20">
+                <p className="col-lg-8 mt-20 text-20">
                   {activity.description}
                 </p>
+                <br/>
 
+                  <div >
+                    <div className="d-flex items-center">
+                      <div className="flex-center size-50 rounded-12 border-1">
+                      <TagOutlined />
+                      </div>
+                      <div className="ml-10">
+                        <div className="lh-16">Tags</div>
+                        <div className="text-14 text-light-2 lh-16">
+                          {activity?.tags && activity?.tags.length > 0 ? (
+                            activity.tags.map((tag) => tag.name).join(",   ")
+                          ) : (
+                            "No tags available"
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 {/* <div className="line mt-60 mb-60"></div>
 
               <h2 className="text-30">Customer Reviews</h2>
@@ -167,34 +184,18 @@ export default function AdvertiserActivityDetails() {
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                 <Button
-                  type="default"
-                  style={{
-                    backgroundColor: "#003DA5",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    padding: "12px 20px",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  }}
+                  className="button -md -outline-accent-1 text-accent-1 "
                   onClick={() => navigate(`/update-activity/${activity._id}`, { state: { activity } })}
                 >
                   Update
+                  <i className="icon-arrow-top-right text-16 ml-10"></i>
                 </Button>
                 <Button
-                  type="danger"
-                  style={{
-                    backgroundColor: "#f08080",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    padding: "12px 20px",
-                    cursor: "pointer"
-                  }}
+                 className="button -md -dark-1 bg-accent-1 text-white"
                   onClick={() => handleDeleteActivity(activity._id)}
 
                 >
-                  Delete
+                  Delete Activity
                 </Button>
               </div>
             </div>

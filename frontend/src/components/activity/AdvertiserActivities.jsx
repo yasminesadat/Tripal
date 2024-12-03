@@ -36,7 +36,7 @@ const AdvertiserActivities = () => {
         <AdvertiserHeader />
       <div class="dashboard__content_content" style={{ backgroundColor: '#f0f0f0', marginTop: "70px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h1 class="text-30">Your Activities</h1>
+        <h1 class="text-30">Activity Management</h1>
       </div>
       <div class="rounded-12 bg-white shadow-2 px-10 pt-10 pb-30 md:px-20 md:pt-20 md:pb-20 mt-20 md:mt-30">
       <div class="row y-gap-30 pt-30">
@@ -45,7 +45,7 @@ const AdvertiserActivities = () => {
          <div data-anim-child="slide-up delay-3" class="col-lg-3 col-sm-6 is-in-view">
           <div class="tourCard -type-1 border-1 rounded-12 px-20 py-20 -hover-shadow" key={activity._id}>
             <div class="row x-gap-20 y-gap-20 items-center" style={{
-                      height: "250px",
+                      height: "210px",
                       width: "100%",
                       display: "flex",
                       flexDirection: "column",
@@ -61,11 +61,15 @@ const AdvertiserActivities = () => {
                   <div class="text-14">Time: {activity.time}</div>
                 </div>
               
-            </div> 
+            </div>
             </div>
                 <button
-                  className="btn btn-primary mt-3"
-                  onClick={async () => {
+                 className="button -md -dark-1 bg-accent-1 text-white"
+                 style={{
+                  padding: "6px 12px", 
+                  fontSize: "12px",    
+                }}
+                 onClick={async () => {
                     try {
                       // Fetch the full activity details
                       const id=activity._id;
@@ -80,6 +84,8 @@ const AdvertiserActivities = () => {
                   }}
                 >
                   View More
+                  <i className="icon-arrow-top-right text-16 ml-10"></i>
+
                 </button>
             
           </div>
