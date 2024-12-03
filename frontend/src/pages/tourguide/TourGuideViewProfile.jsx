@@ -270,7 +270,7 @@ const TourGuideProfile = () => {
               <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                 {tabs.map((elm, i) => (
                   <div
-                    onClick={() => { setActiveTab(elm); console.log("active ytab changed") }}
+                    onClick={() => { setActiveTab(elm);  setActivePrevWork(-1); }}
                     key={i}
                     className="col-auto"
                   >
@@ -291,7 +291,7 @@ const TourGuideProfile = () => {
                       className={`tabs__pane  ${activeTab == "Personal Information" ? "is-tab-el-active" : ""
                         }`}
                     >
-                      <div className="contactForm row y-gap-30">
+                     
                         <style>
                           {`
                           .contactForm .form-input {
@@ -404,6 +404,7 @@ const TourGuideProfile = () => {
                           </div>
                         </div>
                         <div className="row pt-40">
+                        <div className="contactForm row y-gap-30">
                           {/* <div className="col-xl-9 col-lg-10"> */}
                           <div className="col-md-6">
                             <div className="form-input ">
@@ -976,6 +977,7 @@ const TourGuideProfile = () => {
         </div>
       </div>
     </div >
+
 
 
   );
