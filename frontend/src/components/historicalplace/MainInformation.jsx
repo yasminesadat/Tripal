@@ -1,6 +1,5 @@
 
-import  { useEffect, useState } from "react";
-import { getConversionRate } from "../../api/ExchangeRatesService";
+import  { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import {message} from "antd";

@@ -2,7 +2,6 @@ import Gallery2 from '../../components/historicalplace/Gallery2';
 import MainInformation from '../../components/historicalplace/MainInformation';
 import OthersInformation from '../../components/historicalplace/OthersInformation';
 import Overview from '../../components/historicalplace/Overview';
-import TourSlider from '../../components/historicalplace/TourSlider';
 import LocationMap from '../../components/common/MapComponent';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
