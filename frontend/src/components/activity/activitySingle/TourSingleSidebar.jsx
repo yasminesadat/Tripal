@@ -250,7 +250,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
   .form-input input {
     width: 100%;
     padding: 12px;
-    border: 2px solid var(--color-stone-light);
+    border: 2px solid var(--color-stone-light)! important;
     border-radius: 12px;
     font-size: 16px;
     outline: none;
@@ -266,7 +266,24 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
     color: var(--color-light-1);
     pointer-events: none;
   }
-
+  .contactForm .form-input label {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.3s ease;
+            color: #aaa;
+          }
+          .contactForm .form-input input:focus + label,
+          .contactForm .form-input textarea:focus + label,
+          .contactForm .form-input input:not(:placeholder-shown) + label,
+          .contactForm .form-input textarea:not(:placeholder-shown) + label,
+          .contactForm .form-input input.filled + label,
+          .contactForm .form-input textarea.filled + label {
+            transform: translateY(-29px);
+            font-size: 12px;
+            color: #333;
+          }
   .button.-md.-outline-accent-1 {
     padding: 8px 16px;
     font-size: 14px;
