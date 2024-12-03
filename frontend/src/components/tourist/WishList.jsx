@@ -1,17 +1,38 @@
 import Stars from "../common/Stars";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWishList } from "@/api/TouristService";
 import Pagination from "@/components/activity/Pagination";
 import { removeWishList } from "@/api/TouristService";
-import { message } from "antd";
+import { message,Button } from "antd";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+import { addToCart } from "../../api/TouristService";
+import { getUserData } from "@/api/UserService";
 
 export default function WishList() {
     const [wishlist, setWishlist] = useState([]);
+    const [userId, setUserId] = useState(null); 
     const [currentPage, setCurrentPage] = useState(1);
     const [exchangeRate, setExchangeRate] = useState(1);
     const productsPerPage = 4;
+    const refProdToCart = useRef(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            const response = await getUserData();
+            if (response.data.status === "success") {
+              setUserId(response.data.id); 
+            } else {
+              message.error(response.data.message); 
+            }
+          } catch (error) {
+            message.error("Failed to fetch user data.");
+          }
+        };
+        fetchUserData();
+      }, []);
+    
 
     useEffect(() => {
         const fetchWishlist = async () => {
@@ -50,6 +71,17 @@ export default function WishList() {
       } catch (error) {
         message.error("Failed to fetch exchange rate.");
       }
+    }
+  };
+ 
+
+  const handleAddToCart = async (id) => {
+    try {
+      await addToCart(userId, id, 1);
+      message.success("Product added to cart successfully!");
+    } catch (error) {
+        console.error("err"+ error)
+      message.error("Error adding product to cart.");
     }
   };
 
@@ -132,10 +164,35 @@ export default function WishList() {
                                                     </div>
                                                 </div>
 
-                                                <div className="delete-btn-container">
-                                                    <button className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30" onClick={() => handleRemoveFromWishlist(elm._id)}>
-                                                        <i className="icon-delete text-20"></i>
-                                                    </button>
+                                                <div className="d-flex justify-content-end align-items-center">
+                                                    <Button
+                                                        className="button purple-button"
+                                                        type="primary"
+                                                        style={{ marginLeft: "10px" }}
+                                                        onClick={() => handleAddToCart(elm._id)} 
+                                                        ref={refProdToCart}
+                                                    >
+                                                        Add to Cart
+                                                    </Button>
+
+                                                    <Button
+                                                        className="button purple-button"
+                                                        type="primary"
+                                                        style={{ marginLeft: "10px" }}
+                                                        onClick={() => handleRemoveFromWishlist(elm._id)} 
+                                                    >
+                                                        Delete
+                                                    </Button>
+
+
+                                                    {/* <div className="delete-btn-container">
+                                                        <button
+                                                            className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
+                                                            onClick={() => handleRemoveFromWishlist(elm._id)}
+                                                        >
+                                                            <i className="icon-delete text-20"></i>
+                                                        </button>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
