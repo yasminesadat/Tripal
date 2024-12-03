@@ -33,7 +33,12 @@ export default function Messages({ complaint, user, role }) {
       });
 
       const today = new Date();
-      const formattedDate = today.toISOString();
+      const formattedDate = today.getFullYear() + '-' +
+        (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+        today.getDate().toString().padStart(2, '0') + ' ' +
+        today.getHours().toString().padStart(2, '0') + ':' +
+        today.getMinutes().toString().padStart(2, '0') + ':' +
+        today.getSeconds().toString().padStart(2, '0');
 
       complaint.replies.push({
         message: replyMessage,
@@ -331,11 +336,11 @@ export default function Messages({ complaint, user, role }) {
         }
 
         .message-avatar.sent {
-          background-color: #8b5cf6;
+          background-color: #8f5774;
         }
 
         .message-avatar.received {
-          background-color: #ec4899;
+          background-color: #e0829d;
         }
 
         .sender-name {
@@ -351,13 +356,13 @@ export default function Messages({ complaint, user, role }) {
         }
 
         .message-bubble.sent {
-          background-color: #f3e8ff;
-          color: #6b21a8;
+          background-color: var(--color-light-6);
+          color: #333;
         }
 
         .message-bubble.received {
-          background-color: #f3f4f6;
-          color: #1f2937;
+          background-color: var(--color-light-purple);
+          color: #333;
         }
 
         .message-timestamp {
@@ -374,22 +379,22 @@ export default function Messages({ complaint, user, role }) {
 
         .message-input {
           flex: 1;
-          padding: 1rem 1.5rem;
-          font-size: 1.1rem;
-          border: 2px solid #e5e5e5;
-          border-radius: 0.75rem;
-          transition: all 0.3s ease;
+          padding: 10px 15px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+          outline: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .message-input:focus {
-          outline: none;
-          border-color: #8b5cf6;
-          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+          border-color: #8f5774;
+          box-shadow: 0 0 5px rgba(143, 87, 116, 0.5);
         }
 
         .send-button {
-          padding: 1rem 2rem;
-          background-color: #8b5cf6;
+          padding: 0.75rem 1.5rem;
+          background-color: #8f5774;
           color: white;
           border: none;
           border-radius: 0.75rem;
@@ -403,10 +408,9 @@ export default function Messages({ complaint, user, role }) {
         }
 
         .send-button:hover {
-          background-color: #7c3aed;
+          background-color: #7a4363;
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
           .dashboard-grid {
             grid-template-columns: 1fr;
@@ -429,132 +433,6 @@ export default function Messages({ complaint, user, role }) {
           .message-wrapper {
             max-width: 85%;
           }
-            .dashboard {
-    min-height: 100vh;
-    background-color: #f5f5f5;
-    display: flex;
-  }
-
-  /* Updated color palette to match your original design */
-  .message-bubble.sent {
-    background-color: var(--color-light-6);  /* Your original light color */
-    color: #333;
-  }
-
-  .message-bubble.received {
-    background-color: var(--color-light-purple);  /* Your original light purple */
-    color: #333;
-  }
-
-  .message-avatar.sent {
-    background-color: #8f5774 !important;  /* Your original dark purple */
-  }
-
-  .message-avatar.received {
-    background-color: #e0829d !important;  /* Your original pink */
-  }
-
-  /* Make sure chat remains scrollable with your original height */
-  .messages-container {
-    max-height: 400px;  /* Your original height */
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 1.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: #8f5774 #f0f0f0;
-  }
-
-  /* Custom scrollbar styling */
-  .messages-container::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .messages-container::-webkit-scrollbar-track {
-    background: #f0f0f0;
-  }
-
-  .messages-container::-webkit-scrollbar-thumb {
-    background-color: #8f5774;
-    border-radius: 4px;
-  }
-
-  /* Updated send button to match your color scheme */
-  .send-button {
-    background-color: #8f5774;
-    transition: background-color 0.3s ease;
-  }
-
-  .send-button:hover {
-    background-color: #7a4363;  /* Slightly darker on hover */
-  }
-
-  /* Input styling to match your design */
-  .message-input {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    outline: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .message-input:focus {
-    border-color: #8f5774;
-    box-shadow: 0 0 5px rgba(143, 87, 116, 0.5);
-  }
-
-  /* Root variables for consistent colors */
-  :root {
-    --color-light-purple: #f8f0f4;
-    --color-light-6: #f4f4f4;
-    --primary-purple: #8f5774;
-    --primary-pink: #e0829d;
-  }
-
-  /* Custom styling for status badges */
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    font-weight: 600;
-  }
-
-  .status-badge.resolved {
-    color: #166534;
-    background-color: #dcfce7;
-  }
-
-  .status-badge.pending {
-    color: #991b1b;
-    background-color: #fee2e2;
-  }
-
-  /* Message wrapper adjustments */
-  .message-wrapper {
-    margin: 1rem 0;
-  }
-
-  .message-content {
-    max-width: 70%;
-  }
-
-  .message-wrapper.sent .message-content {
-    margin-left: auto;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .message-content {
-      max-width: 85%;
-    }
-
-    .messages-container {
-      padding: 1rem;
-    }
-  }
         }
       `}</style>
     </>

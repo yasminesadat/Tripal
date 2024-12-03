@@ -23,7 +23,7 @@ export default function ComplaintsReplies() {
             <MetaComponent meta={metadata} />
             <div className="page-wrapper">
                 <TouristHeader />
-                <main className="page-content">
+                <main className="page-content-hana">
                     <Messages complaint={complaint} user={user} role={role} />
                 </main>
                 <FooterThree />
