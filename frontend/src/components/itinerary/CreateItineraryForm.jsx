@@ -2,7 +2,7 @@ import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 import { useState } from "react";
 import { Form, Input, Button, Card, Row, Col, DatePicker, Select, Typography, message } from "antd";
 import LocationMap from '../common/MapComponent';
-import languages  from '../../assets/constants/Languages';
+import languages from '../../assets/constants/Languages';
 import AccessibilityTags from '../../assets/constants/AccessibiltyTags';
 import ActivitySelectionModal from './ActivitySelectionModal';
 import { createItinerary } from '../../api/ItineraryService';
@@ -12,169 +12,158 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default function CreateItineraryForm() {
+  // State declarations
+  const [loading, setLoading] = useState(false);
+  const [pickupLocation, setPickUpLocation] = useState(null);
+  const [dropoffLocation, setDropOffLocation] = useState(null);
+  const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
+  const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [numDays, setNumDays] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
-  //#region 1. Variables
-    const [loading, setLoading] = useState(false);
-    const [pickupLocation, setPickUpLocation] = useState(null);
-    const [dropoffLocation, setDropOffLocation] = useState(null);
-    const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
-    const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
-    const [selectedActivities, setSelectedActivities] = useState([]);
-    const [numDays, setNumDays] = useState(0); // Store the number of days
-    const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
-    const [form] = Form.useForm();
-  //#endregion
-
-  //#region 2. Event Handlers
-    const handleDateChange = (dates) => {
+  // Event handlers
+  const handleDateChange = (dates) => {
     if (dates && dates.length === 2) {
-        var startDate = dates[0].startOf("day");
-        if(startDate.isBefore(new Date(), "day")) {
-            message.error("Start date cannot be in the past.");
-            dates = null;
-            startDate = null;
-            return;
-        }
-        var endDate = dates[1].startOf("day");
-        if(endDate.isBefore(startDate, "day")) {
-            message.error("End date cannot be before start date.");
-            dates = null;
-            endDate = null;
-            return;
-        }
-        if(endDate.isBefore(new Date(), "day")) {
-            message.error("End date cannot be in the past.");
-            dates = null;
-            endDate = null;
-            return;
-        }
-        const duration = endDate.diff(startDate, "days") + 1;
-        setNumDays(duration);
-    } else 
-        setNumDays(0);
+      var startDate = dates[0].startOf("day");
+      if (startDate.isBefore(new Date(), "day")) {
+        message.error("Start date cannot be in the past.");
+        dates = null;
+        startDate = null;
+        return;
+      }
+      var endDate = dates[1].startOf("day");
+      if (endDate.isBefore(startDate, "day")) {
+        message.error("End date cannot be before start date.");
+        dates = null;
+        endDate = null;
+        return;
+      }
+      if (endDate.isBefore(new Date(), "day")) {
+        message.error("End date cannot be in the past.");
+        dates = null;
+        endDate = null;
+        return;
+      }
+      const duration = endDate.diff(startDate, "days") + 1;
+      setNumDays(duration);
+    } else setNumDays(0);
+  };
+
+  const handleSelectActivities = (activities) => {
+    setSelectedActivities(activities);
+  };
+
+  const onFinish = (values) => {
+    console.log("Form Values: ", values);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Form Errors: ", errorInfo);
+  };
+
+  const handleSubmit = async () => {
+    const values = await form.validateFields();
+    const itineraryData = {
+      title: values.title,
+      description: values.description,
+      serviceFee: values.serviceFee,
+      language: values.language,
+      accessibility: values.accessibility,
+      startDate: values.availableDate[0],
+      endDate: values.availableDate[1],
+      activities: selectedActivities.map(activity => activity._id),
+      pickupLocation: pickupLocation,
+      dropoffLocation: dropoffLocation,
     };
 
-    const handleSelectActivities = (activities) => {
-        setSelectedActivities(activities);
-    };
+    if (values.availableDate[0].isBefore(new Date(), "day") || values.availableDate[1].isBefore(new Date(), "day")) {
+      return message.error("Please enter future dates for the itinerary.");
+    }
+    if (!selectedActivities || selectedActivities.length === 0) {
+      return message.error("Please select activities for the itinerary.");
+    }
 
-    const onFinish = (values) => {
-        console.log("Form Values: ", values);
-    };
+    try {
+      setLoading(true);
+      await createItinerary(itineraryData);
+      message.success("Itinerary created successfully!");
+      form.resetFields();
+      setSelectedActivities([]);
+    } catch (error) {
+      message.error('Failed to create itinerary.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log("Form Errors: ", errorInfo);
-    };
+  return (
+    <div className="dashboard__content bg-light-2">
+      <div className="dashboard__content_wrapper">
+        <div className="dashboard__content_container">
+          <MDBContainer fluid>
+            <MDBRow>
+              <MDBCol md="4">
+                <div className="sticky-sidebar">
+                  <div className="text-center">
+                    <img src="/img/hero/3/1.png" alt="hero" className="hero-image" />
+                    <h3 className="hero__subtitle">Plan Your Dream Itinerary with Ease</h3>
+                    <h1 className="hero__title">
+                      Create<br />
+                      Memorable<br />
+                      Adventures!
+                    </h1>
+                    <img src="/img/hero/3/2.png" alt="hero" className="hero-image" />
+                  </div>
+                </div>
+              </MDBCol>
 
-    const handleSubmit = async () => {
-        const values = await form.validateFields();
-        const itineraryData = {
-            title: values.title,
-            description: values.description,
-            serviceFee: values.serviceFee,
-            language: values.language,
-            accessibility: values.accessibility,
-            startDate: values.availableDate[0],
-            endDate: values.availableDate[1],
-            activities: selectedActivities.map(activity => activity._id),
-            pickupLocation: pickupLocation,
-            dropoffLocation: dropoffLocation,
-        };
-        if(values.availableDate[0].isBefore(new Date(), "day") || values.availableDate[1].isBefore(new Date(), "day")){
-            return message.error("Please enter future dates for the itinerary.");
-        }
-        if(!selectedActivities || selectedActivities.length === 0){
-            return message.error("Please select activities for the itinerary.");
-        }
-        try {
-            
-            setLoading(true);
-            await createItinerary(itineraryData);
-            message.success("Itinerary created successfully!");
-            form.resetFields();
-            setSelectedActivities([]);
-        } catch (error) {
-            message.error('Failed to create itinerary.');
-        }finally{
-            setLoading(false);
-        }
-    };
-    //#endregion
-    
-    return (
-      <div className="full-height-container">
-        <MDBContainer fluid className="p-2">
-          <MDBRow>
-            {/* Left Section with Images and Text */}
-            <MDBCol
-              md="3"
-              className="text-center text-md-start d-flex flex-column align-items-center"
-            >
-              <div className="images-container">
-                <img
-                  src="/img/hero/3/1.png"
-                  alt="image"
-                  className="background-image"
-                />
-                <div
-                data-aos="fade-up"
-                data-aos-delay="200"
-                className="hero__subtitle mb-20 md:mb-10"
-              >
-                Plan Your Dream Itinerary with Ease
-              </div>
-  
-              <h1 className="hero__title" data-aos="fade-up" data-aos-delay="300">
-                Create
-                <br className="md:d-none" />
-                Memorable
-                <br className="md:d-none" />
-                Adventures!
-                <br />
-              </h1>
-                <img
-                  src="/img/hero/3/2.png"
-                  alt="image"
-                  className="background-image"
-                />
-              </div>
-              
-            </MDBCol>
-  
-            {/* Right Section with Form */}
-            <MDBCol md="6">
-                <Card
-                  bordered={false}
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.8)",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    maxWidth: "75%",
-                    margin: "auto",
-                    padding: "20px",
-                  }}
-                >
-                  <Title level={3} style={{ textAlign: "center" }}>
-                    Create a New Itinerary
-                  </Title>
-            
+              <MDBCol md="8">
+                <Card className="form-card">
+                  <Title level={3}>Create a New Itinerary</Title>
+
                   <Form
                     form={form}
                     layout="vertical"
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     requiredMark={false}
-                    style={{ width: "100%" }}
                   >
-                    {/* Itinerary Title */}
-                    <Form.Item
-                      label="Title"
-                      name="title"
-                      rules={[{ required: true, message: "Please enter the itinerary title" }]}
-                    >
-                      <Input size="large" />
-                    </Form.Item>
-            
-                    {/* Description */}
+                    <Row gutter={24}>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Title"
+                          name="title"
+                          rules={[{ required: true, message: "Please enter the itinerary title" }]}
+                        >
+                          <Input
+                            size="large"
+                            style={{
+                              height: "50px",
+                              border: "1px solid #d9d9d9",
+                              outline: "none",
+                              width: "100%",
+                              backgroundColor: "transparent"
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Available Date"
+                          name="availableDate"
+                          rules={[{ required: true, message: "Please select dates" }]}
+                        >
+                          <RangePicker
+                            style={{ width: "100%" }}
+                            size="large"
+                            onChange={handleDateChange}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
                     <Form.Item
                       label="Description"
                       name="description"
@@ -182,58 +171,42 @@ export default function CreateItineraryForm() {
                     >
                       <Input.TextArea rows={4} size="large" />
                     </Form.Item>
-            
-                    {/* Available Date */}
-                    <Form.Item
-                      label="Available Date"
-                      name="availableDate"
-                      rules={[{ required: true, message: "Please select the available dates" }]}
-                    >
-                      <RangePicker style={{ width: "100%"}} size="large" onChange={handleDateChange}/>
-                    </Form.Item>
 
-                    <Form.Item>
-                    <Button style={{
-                        color: "black",
-                        borderColor: '',
-                        ':hover': { borderColor: "#5a9ea0" },
-                        ':select': { borderColor: "#5a9ea0" },
-                    }}onClick={() => setIsModalVisible(true)}>
-                        Select Activities ({numDays} Days)
-                    </Button>
-                    <ActivitySelectionModal
-                        isVisible={isModalVisible}
-                        onClose={() => setIsModalVisible(false)}
-                        onSelectActivities={handleSelectActivities}
-                        preSelectedActivities={selectedActivities}
-                        maxActivities={numDays}
-                    />
-                    </Form.Item>
-
-                    {/* Service Fee */}
-                    <Row gutter={16}>
+                    <Row gutter={24}>
                       <Col span={12}>
                         <Form.Item
                           label="Service Fee"
                           name="serviceFee"
                           rules={[{ required: true, message: "Please enter the service fee" }]}
                         >
-                          <Input prefix="$" size="large" placeholder="0"/>
+                          <Input
+                            prefix="$"
+                            size="large"
+                            style={{
+                              height: "50px",
+                              border: "1px solid #d9d9d9",
+                              outline: "none",
+                              width: "100%",
+                              backgroundColor: "transparent"
+                            }}
+                            placeholder="0"
+                          />
                         </Form.Item>
                       </Col>
-            
                       <Col span={12}>
-                        {/* Language */}
                         <Form.Item
                           label="Language"
                           name="language"
                           rules={[{ required: true, message: "Please select a language" }]}
                         >
-                          <Select placeholder="Select language" size="large" style={{
-                            borderColor: "#e0829d",
-                            ':hover': { borderColor: "#e0829d" },
-                            ':focus': { borderColor: "#e0829d" },
-                        }}>
+                          <Select
+                            size="large"
+                            style={{
+                              width: "100%",
+                              height: "50px"
+                            }}
+                            placeholder="Select language"
+                          >
                             {languages.map((language) => (
                               <Option key={language} value={language}>
                                 {language}
@@ -243,166 +216,219 @@ export default function CreateItineraryForm() {
                         </Form.Item>
                       </Col>
                     </Row>
-            
-                    {/* Accessibility Tags */}
-                    <Form.Item
-                      label="Accessibility Tags"
-                      name="accessibility"
-                      tooltip="Add accessibility options such as wheelchair access, braille, etc."
-                    >
-                      <Select
-                        mode="tags"
-                        placeholder="Enter tags and press Enter"
-                        size="large"
-                        style={{
-                            width: "100%",
-                            borderColor: "#5a9ea0",
-                            ':hover': { borderColor: "#5a9ea0" },
-                            ':focus': { borderColor: "#5a9ea0" },
-                        }}>
-                        {AccessibilityTags.map((accessibility) => (
-                            <Option key={accessibility} value={accessibility}>
-                              {accessibility}
-                            </Option>
-                          ))}
-                        </Select>
-                    </Form.Item>
 
-                    {/* Locations */}
-                    <Form.Item
-                      label="Pickup Location"
-                      name="pickupLocation"
-                      rules={[{ required: !pickupLocation, message: "Please enter a Pickup Location" }]}
-                    >
-                    <LocationMap
-                        markerPosition={pickupMarkerPosition}
-                        setMarkerPosition={setPickUpMarkerPosition}
-                        setSelectedLocation={setPickUpLocation}
-                        selectedLocation = {pickupLocation}
-                    /></Form.Item>
-                    <Form.Item
-                      label="Drop Off Location"
-                      name="dropoffLocation"
-                      rules={[{ required: !dropoffLocation, message: "Please enter a Drop off Location" }]}
-                    >
-                    <LocationMap
-                        markerPosition={dropoffMarkerPosition}
-                        setMarkerPosition={setDropOffMarkerPosition}
-                        setSelectedLocation={setDropOffLocation}
-                        selectedLocation = {dropoffLocation}
-                    /></Form.Item>
+                    <Row gutter={24}>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Select Activities"
+                        >
+                          <Button
+                            size="large"
+                            onClick={() => setIsModalVisible(true)}
+                            style={{
+                              width: "100%",
+                              height: "50px",
+                              border: "1px solid #d9d9d9",
+                            }}
+                          >
+                            Select Activities ({numDays} Days)
+                          </Button>
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Accessibility Tags"
+                          name="accessibility"
+                          tooltip="Add accessibility options such as wheelchair access, braille, etc."
+                        >
+                          <Select
+                            mode="tags"
+                            size="large"
+                            style={{
+                              width: "100%",
+                              height: "50px"
+                            }}
+                            placeholder="Enter accessibility options"
+                          >
+                            {AccessibilityTags.map((tag) => (
+                              <Option key={tag} value={tag}>
+                                {tag}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
+                    <Row gutter={24}>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Pickup Location"
+                          name="pickupLocation"
+                          rules={[{ required: !pickupLocation, message: "Please select pickup location" }]}
+                        >
+                          <LocationMap
+                            markerPosition={pickupMarkerPosition}
+                            setMarkerPosition={setPickUpMarkerPosition}
+                            setSelectedLocation={setPickUpLocation}
+                            selectedLocation={pickupLocation}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          label="Drop Off Location"
+                          name="dropoffLocation"
+                          rules={[{ required: !dropoffLocation, message: "Please select drop off location" }]}
+                        >
+                          <LocationMap
+                            markerPosition={dropoffMarkerPosition}
+                            setMarkerPosition={setDropOffMarkerPosition}
+                            setSelectedLocation={setDropOffLocation}
+                            selectedLocation={dropoffLocation}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
-                    {/* Submit Button */}
                     <Form.Item>
                       <Button
                         type="primary"
-                        htmlType="submit"
+                        size="large"
                         loading={loading}
-                        className="custom-button"
-                        style={{ width: "100%", height: "50px" }}
                         onClick={handleSubmit}
+                        style={{ width: "100%" }}
                       >
                         Create Itinerary
                       </Button>
                     </Form.Item>
                   </Form>
-                  <style>{`
-                    .custom-button {
-                      background-color: var(--color-dark-purple) !important;
-                      border-color: var(--color-dark-purple) !important;
-                    }
-                    .custom-button:hover {
-                      background-color: var(--color-light-purple) !important;
-                      border-color: var(--color-light-purple) !important;
-                    }
-                  `}</style>
+
+                  <ActivitySelectionModal
+                    isVisible={isModalVisible}
+                    onClose={() => setIsModalVisible(false)}
+                    onSelectActivities={handleSelectActivities}
+                    preSelectedActivities={selectedActivities}
+                    maxActivities={numDays}
+                  />
                 </Card>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-        <style>{`
-          .full-height-container {
-            height: 250vh !important;
-            margin-left: 2% !important;
-            margin-top: 10vh !important;
-            margin-right:-15% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            // justify-content: center !important;
-            // align-items: center !important;
-            position: relative !important;
-          }
-  
-          .images-container {
-          position: relative;
-          width: 100%;
-          height: auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-  
-          .background-image {
-            width: 80%;
-            height: auto;
-          }
-  
-          .images-container img:nth-child(1) {
-            grid-column: 1 / 2;
-            grid-row: 1 / 2;
-          }
-  
-          .images-container img:nth-child(2) {
-            grid-column: 1 / 2;
-            grid-row: 2 / 3;
-          }
-
-                    /* Apply border color globally for hover and focus states */
-            .ant-input:hover, .ant-input:focus, 
-            .ant-select-selector:hover, .ant-select-selector:focus, 
-            .ant-picker:hover, .ant-picker:focus {
-                border-color: #5a9ea0 !important;
-                box-shadow: none !important; /* Optional: Disable default shadow */
-            }
-
-            /* For error state (red border), you can override this too */
-            .ant-input-status-error:hover, .ant-input-status-error:focus,
-            .ant-select-selector-status-error:hover, .ant-select-selector-status-error:focus,
-            .ant-picker-status-error:hover, .ant-picker-status-error:focus {
-                border-color: #5a9ea0 !important;
-            }
-
-            
-          .images-container img:nth-child(3) {
-            grid-column: 2 / 3;
-            grid-row: 1 / 3;
-          }
-  
-          .itinerary-form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-          }
-  
-          .form-title {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-          }
-           
-          .form-submit-button {
-            width: 100%;
-            background-color: #ff5722;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-          }
-        `}</style>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
       </div>
-    );
-  }
+
+      <style>{`
+        .dashboard__content {
+          flex: 1;
+          background: linear-gradient(135deg, #e5f8f8 0%, #dac4d0 100%);
+          min-height: 100vh;
+          padding: 2rem 0;
+        }
+
+        .dashboard__content_wrapper {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+
+        .sticky-sidebar {
+          position: sticky;
+          top: 2rem;
+          padding: 2rem;
+        }
+
+        .hero-image {
+          max-width: 80%;
+          height: auto;
+          margin: 1rem 0;
+        }
+
+        .hero__subtitle {
+          color: #8f5774;
+          font-size: 1.4rem;
+          margin: 1.5rem 0;
+        }
+
+        .hero__title {
+          color: #e0829d;
+          font-size: 2.5rem;
+          font-weight: bold;
+          line-height: 1.3;
+          margin: 1rem 0;
+        }
+
+        .form-card {
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 20px rgba(143, 87, 116, 0.1);
+          padding: 2rem;
+          border: none;
+        }
+
+        .ant-form-item {
+          margin-bottom: 1.5rem;
+        }
+
+        .ant-form-item-label > label {
+          color: #8f5774;
+          font-weight: 500;
+        }
+
+        .ant-input,
+        .ant-input-number,
+        .ant-picker,
+        .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+          border: 1px solid #dac4d0;
+          border-radius: 8px;
+          min-height: 42px;
+        }
+
+        .ant-input:focus,
+        .ant-select-focused .ant-select-selector,
+        .ant-picker-focused {
+          border-color: #e0829d !important;
+          box-shadow: 0 0 0 2px rgba(224, 130, 157, 0.1) !important;
+        }
+
+        .ant-btn-primary {
+          background: #8f5774;
+          border-color: #8f5774;
+        }
+
+        .ant-btn-primary:hover {
+          background: #e0829d;
+          border-color: #e0829d;
+        }
+
+        .ant-typography {
+          color: #8f5774;
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .map-container {
+          height: 250px;
+          border: 1px solid #dac4d0;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+          .dashboard__content_wrapper {
+            padding: 0 1rem;
+          }
+
+          .form-card {
+            padding: 1rem;
+          }
+
+          .sticky-sidebar {
+            position: static;
+            padding: 1rem;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
