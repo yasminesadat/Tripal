@@ -6,7 +6,8 @@ import { createActivity, updateActivity } from '../../api/ActivityService'
 import ActivityCategoryService from '../../api/ActivityCategoryService'
 import { getTags } from '../../api/PreferenceTagService'
 import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
-
+import AdvertiserHeader from '../layout/header/AdvertiserHeader';
+import FooterThree from '../layout/footers/FooterThree';
 const { TextArea } = Input;
 
 const ActivityForm = ({ isUpdate }) => {
@@ -82,6 +83,7 @@ const ActivityForm = ({ isUpdate }) => {
 
   const handleTagChange = (value) => {
     setActivityData({ ...activityData, tags: value });
+    console.log("new tags are", value);
   };
 
   const handleSubmit = async () => {
@@ -117,53 +119,57 @@ const ActivityForm = ({ isUpdate }) => {
   };
 
   return (
-    <main className="page-content-hana">
-      <div className="dashboard__content" style={{ background: '#e5f8f8', minHeight: '100vh' }}>
-        <MDBContainer fluid>
-          <MDBRow className="h-100">
-            {/* Left Column - Hero Section */}
-            <MDBCol md="4" style={{
-              minHeight: '100vh',
-              background: 'linear-gradient(135deg, #036264 0%, #11302a 100%)',
-              padding: '2rem'
-            }}>
-              <div className="sticky-top pt-5" style={{ top: '20px' }}>
-                <div className="text-center mb-5">
-                  <img
-                    src="/img/hero/3/1.png"
-                    alt="hero"
-                    className="img-fluid mb-4"
-                    style={{ maxWidth: '80%' }}
-                  />
-                  <h2 className="display-6 fw-bold mb-3" style={{ color: '#e5f8f8' }}>
-                    Create Your Activity
-                  </h2>
-                  <p style={{ color: '#dac4d0' }} className="lead">
-                    Plan and manage memorable adventures for your customers
-                  </p>
-                </div>
-                <div className="text-center mt-5">
-                  <img
-                    src="/img/hero/3/2.png"
-                    alt="hero"
-                    className="img-fluid"
-                    style={{ maxWidth: '70%' }}
-                  />
-                </div>
-              </div>
-            </MDBCol>
+    <div>
+      {isUpdate && <AdvertiserHeader />}
 
-            {/* Right Column - Form */}
-            <MDBCol md="8" className="p-4">
-              <div className="bg-white rounded-4 shadow-sm p-4 mb-4">
-                <h1 className="h3 mb-4" style={{ color: '#036264' }}>Activity Management</h1>
-                <Form
-                  layout="vertical"
-                  onFinish={handleSubmit}
-                  className="activity-form"
-                >
-                  <style>
-                    {`
+      <main className="page-content-hana">
+        <div className="dashboard__content" style={{ minHeight: '100vh' }}>
+          <MDBContainer fluid>
+            <MDBRow className="h-100">
+              {/* Left Column - Hero Section */}
+              <MDBCol md="4" style={{
+                minHeight: '100vh',
+                background: 'linear-gradient(135deg, #036264 0%, #11302a 100%)',
+                padding: '2rem'
+              }}>
+                <div className="sticky-top pt-5" style={{ top: '20px' }}>
+                  <div className="text-center mb-5">
+                    <img
+                      src="/img/hero/3/1.png"
+                      alt="hero"
+                      className="img-fluid mb-4"
+                      style={{ maxWidth: '80%' }}
+                    />
+                    <h2 className="display-6 fw-bold mb-3" style={{ color: '#e5f8f8' }}>
+                      {isUpdate && existingActivity ? 'Update Activity' : 'Create Activity'}
+                    </h2>
+                    <p style={{ color: '#dac4d0' }} className="lead">
+                      Plan and manage memorable adventures for your customers
+                    </p>
+                  </div>
+                  <div className="text-center mt-5">
+                    <img
+                      src="/img/hero/3/2.png"
+                      alt="hero"
+                      className="img-fluid"
+                      style={{ maxWidth: '70%' }}
+                    />
+                  </div>
+                </div>
+              </MDBCol>
+
+              {/* Right Column - Form */}
+              <MDBCol md="8" className="p-4">
+                <div className="bg-white rounded-4 shadow-sm p-4 mb-4">
+                  <h1 className="h3 mb-4" style={{ color: '#036264' }}>Activity Management</h1>
+                  <Form
+                    layout="vertical"
+                    onFinish={handleSubmit}
+                    className="activity-form"
+                  >
+
+                    <style>
+                      {`
                     .activity-form .ant-form-item {
                       margin-bottom: 24px;
                     }
@@ -355,179 +361,181 @@ const ActivityForm = ({ isUpdate }) => {
                       filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
                     }
                   `}
-                  </style>
+                    </style>
 
-                  {/* Your existing form fields but with improved layout */}
-                  <MDBRow>
-                    <MDBCol md="12">
-                      <Form.Item label="Title" required>
-                        <Input
-                          value={activityData.title}
-                          onChange={(e) => handleChange('title', e.target.value)}
-                          placeholder="Enter activity title"
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-                  <MDBRow>
-                    <MDBCol md="12">
-                      <Form.Item label="Description" required>
-                        <TextArea
-                          value={activityData.description}
-                          onChange={(e) => handleChange('description', e.target.value)}
-                          placeholder="Enter activity description"
-                          rows={4}
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-                  <MDBRow>
-                    <MDBCol md="6">
-                      <Form.Item label="Date" required>
-                        <input
-                          type="date"
-                          name="date"
-                          value={activityData.date}
-                          onChange={(e) => handleChange(e.target.name, e.target.value)}
-                          min={new Date().toISOString().split("T")[0]}
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                    <MDBCol md="6">
-                      <Form.Item label="Time" required>
-                        <input
-                          type="time"
-                          name="time"
-                          value={activityData.time}
-                          onChange={(e) => handleChange(e.target.name, e.target.value)}
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-
-                  <MDBRow>
-                    <MDBCol md="6">
-                      <Form.Item
-                        label="Price"
-                        required
-                        className="form-group"
-                      >
-                        <InputNumber
-                          value={activityData.price}
-                          onChange={(value) => handleChange('price', value)}
-                          min={0}
-                          style={{ width: '100%' }}
-                          required
-                          className="custom-input-number"
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                    <MDBCol md="6">
-                      <Form.Item
-                        label="Category"
-                        required
-                        className="form-group"
-                      >
-                        <Select
-                          value={activityData.category}
-                          onChange={(value) => handleChange('category', value)}
-                          placeholder="Select category"
-                          required
-                          className="custom-select"
-                        >
-                          {categories?.map((category) => (
-                            <Select.Option key={category._id} value={isUpdate ? category.Name : category._id}>
-                              {category.Name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-                  <MDBRow>
-                    <MDBCol md="12">
-                      <Form.Item
-                        label="Tags"
-                        required
-                        className="form-group"
-                      >
-                        <Select
-                          mode="multiple"
-                          value={activityData.tags}
-                          onChange={handleTagChange}
-                          placeholder="Select tags"
-                          className="custom-select-multiple"
-                        >
-                          {tags.map((tag) => (
-                            <Select.Option key={tag._id} value={tag._id}>
-                              {tag.name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-                  <MDBRow>
-                    <MDBCol md="12">
-                      <Form.Item
-                        label="Special Discounts"
-                        className="form-group"
-                      >
-                        <Input
-                          value={activityData.specialDiscounts}
-                          onChange={(e) => handleChange('specialDiscounts', e.target.value)}
-                          placeholder="Enter special discounts (if any)"
-                          className="custom-input"
-                        />
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
-
-                  <Form.Item label="Booking Open">                     <Checkbox checked={activityData.isBookingOpen} onChange={(e) => handleChange('isBookingOpen', e.target.checked)}                      >                       Is Booking Open?                     </Checkbox>                   </Form.Item>
-
-                  <MDBRow>
-                    <MDBCol md="12">
-                      <Form.Item
-                        label="Location (search for your desired location)"
-                        className="form-group map-group"
-                      >
-                        <div className="map-container">
-                          <LocationMap
-                            markerPosition={markerPosition}
-                            setMarkerPosition={setMarkerPosition}
-                            setSelectedLocation={setSelectedLocation}
+                    {/* Your existing form fields but with improved layout */}
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <Form.Item label="Title" required>
+                          <Input
+                            value={activityData.title}
+                            onChange={(e) => handleChange('title', e.target.value)}
+                            placeholder="Enter activity title"
                           />
-                        </div>
-                        <div className="location-info">
-                          <strong>Selected Location:</strong> {selectedLocation || 'No location selected yet'}
-                        </div>
-                      </Form.Item>
-                    </MDBCol>
-                  </MDBRow>
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
 
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      block
-                      size="large"
-                    >
-                      {isUpdate ? 'Update Activity' : 'Create Activity'}
-                    </Button>
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <Form.Item label="Description" required>
+                          <TextArea
+                            value={activityData.description}
+                            onChange={(e) => handleChange('description', e.target.value)}
+                            placeholder="Enter activity description"
+                            rows={4}
+                          />
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
 
-                  </Form.Item>
-                </Form>
-              </div>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-      </div>
-    </main>
+                    <MDBRow>
+                      <MDBCol md="6">
+                        <Form.Item label="Date" required>
+                          <input
+                            type="date"
+                            name="date"
+                            value={activityData.date}
+                            onChange={(e) => handleChange(e.target.name, e.target.value)}
+                            min={new Date().toISOString().split("T")[0]}
+                          />
+                        </Form.Item>
+                      </MDBCol>
+                      <MDBCol md="6">
+                        <Form.Item label="Time" required>
+                          <input
+                            type="time"
+                            name="time"
+                            value={activityData.time}
+                            onChange={(e) => handleChange(e.target.name, e.target.value)}
+                          />
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
+
+
+                    <MDBRow>
+                      <MDBCol md="6">
+                        <Form.Item
+                          label="Price"
+                          required
+                          className="form-group"
+                        >
+                          <InputNumber
+                            value={activityData.price}
+                            onChange={(value) => handleChange('price', value)}
+                            min={0}
+                            style={{ width: '100%' }}
+                            required
+                            className="custom-input-number"
+                          />
+                        </Form.Item>
+                      </MDBCol>
+                      <MDBCol md="6">
+                        <Form.Item
+                          label="Category"
+                          required
+                          className="form-group"
+                        >
+                          <Select
+                            value={activityData.category}
+                            onChange={(value) => handleChange('category', value)}
+                            placeholder="Select category"
+                            required
+                            className="custom-select"
+                          >
+                            {categories?.map((category) => (
+                              <Select.Option key={category._id} value={isUpdate ? category.Name : category._id}>
+                                {category.Name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
+
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <Form.Item
+                          label="Tags"
+                          required
+                          className="form-group"
+                        >
+                          <Select
+                            mode="multiple"
+                            value={activityData.tags}
+                            onChange={handleTagChange}
+                            placeholder="Select tags"
+                            className="custom-select-multiple"
+                          >
+                            {tags.map((tag) => (
+                              <Select.Option key={tag._id} value={tag._id}>
+                                {tag.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
+
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <Form.Item
+                          label="Special Discounts"
+                          className="form-group"
+                        >
+                          <Input
+                            value={activityData.specialDiscounts}
+                            onChange={(e) => handleChange('specialDiscounts', e.target.value)}
+                            placeholder="Enter special discounts (if any)"
+                            className="custom-input"
+                          />
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
+
+                    <Form.Item label="Booking Open">                     <Checkbox checked={activityData.isBookingOpen} onChange={(e) => handleChange('isBookingOpen', e.target.checked)}                      >                       Is Booking Open?                     </Checkbox>                   </Form.Item>
+
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <Form.Item
+                          label="Location (search for your desired location)"
+                          className="form-group map-group"
+                        >
+                          <div className="map-container">
+                            <LocationMap
+                              markerPosition={markerPosition}
+                              setMarkerPosition={setMarkerPosition}
+                              setSelectedLocation={setSelectedLocation}
+                            />
+                          </div>
+                          <div className="location-info">
+                            <strong>Selected Location:</strong> {selectedLocation || 'No location selected yet'}
+                          </div>
+                        </Form.Item>
+                      </MDBCol>
+                    </MDBRow>
+
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        block
+                        size="large"
+                      >
+                        {isUpdate ? 'Update Activity' : 'Create Activity'}
+                      </Button>
+
+                    </Form.Item>
+                  </Form>
+                </div>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
+      </main>
+      {isUpdate && <FooterThree />}
+    </div>
   );
 };
 
