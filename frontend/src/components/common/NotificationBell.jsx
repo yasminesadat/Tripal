@@ -149,15 +149,20 @@ color: var(--color-stone);
                                                     <div className="flex-1">
                                                         <div className="text-xs text-[#8f5774] mb-1 flex items-center justify-between">
                                                             <span>{notification.message} </span>
-                                                            {/* {!notification.read && (
-                                                                <span className="text-[9px] bg-[#e0829d] text-black px-1.5 py-0.5 rounded-full">
-                                                                    New
-                                                                </span>
-                                                            )} */}
+
                                                         </div>
                                                         <p className="text-[10px] text-[#036264] mb-1">{notification.content}</p>
                                                         <span className="text-[9px] text-[#5a9ea0]">
                                                             {format(new Date(notification.createdAt), 'h:mm a')}
+                                                        </span>
+                                                        <span
+                                                            className="text-[9px] bg-[#e0829d] text-black px-1.5 py-0.5 rounded-full cursor-pointer"
+                                                            onClick={() => {
+                                                                // Mark the notification as read
+                                                                setNotification({ ...notification, read: true });
+                                                            }}
+                                                        >
+                                                            Mark as Read
                                                         </span>
                                                     </div>
                                                 </div>
