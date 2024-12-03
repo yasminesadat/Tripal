@@ -825,8 +825,6 @@ const completeFlightBooking = async (req, res) => {
   }
 };
 
-
-
 const addToCart = asyncHandler(async (req, res) => {
   const { touristId, productId, quantity } = req.body;
   try{
