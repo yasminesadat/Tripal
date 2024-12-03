@@ -254,10 +254,8 @@ export default function AddHistoricalPlace() {
         <GovernorHeader />
         <main className="page-content">
           <div
-            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
-              } js-dashboard`}
+
           >
-            {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
 
             <div className="dashboard__content">
               {/* <Header setSideBarOpen={setSideBarOpen} /> */}
