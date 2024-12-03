@@ -155,7 +155,7 @@ color: var(--color-stone);
                                                         <span className="text-[9px] text-[#5a9ea0]">
                                                             {format(new Date(notification.createdAt), 'h:mm a')}
                                                         </span>
-                                                        <span
+                                                        {/* <span
                                                             className="text-[9px] bg-[#e0829d] text-black px-1.5 py-0.5 rounded-full cursor-pointer"
                                                             onClick={() => {
                                                                 // Mark the notification as read
@@ -163,7 +163,7 @@ color: var(--color-stone);
                                                             }}
                                                         >
                                                             Mark as Read
-                                                        </span>
+                                                        </span> */}
                                                     </div>
                                                 </div>
                                             </div>

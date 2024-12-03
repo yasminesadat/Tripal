@@ -12,6 +12,7 @@ const cron = require('node-cron');
 const { sendEmail } = require('./Mailer');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
+const Tourist = require("../models/users/Tourist");
 
 cron.schedule('00 00 * * *', async () => {
   const today = new Date();
@@ -189,10 +190,12 @@ const getTouristInfo = async (req, res) => {
 };
 
 const updateTouristProfile = async (req, res) => {
+
+
   try {
     const id = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
-
+    const currTourist = Tourist.findById(id);
     if (tags) {
       updateParameters.tags = tags;
     }
@@ -213,6 +216,17 @@ const updateTouristProfile = async (req, res) => {
         message: "You cannot update your balance",
       });
     }
+    const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
+
+
+    if (existingEmail) {
+      console.log("exists alreadyy");
+      return res.status(400).json({ error: "Email already exists" });
+    }
+    const existingEmailRequests = await Request.findOne({ email: updateParameters.email, status: { $ne: 'rejected' } });
+    if (existingEmailRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this email" });
+    }
     if (updateParameters.dateOfBirth) {
       res.status(400).json({
         status: "error",
@@ -220,6 +234,14 @@ const updateTouristProfile = async (req, res) => {
           "You cannot update your date of birth, dont you know when you were born??",
       });
     }
+    if (updateParameters.email && updateParameters.email !== currTourist.email) {
+      await User.findOneAndUpdate(
+        { email: currTourist.email },
+        { email: email },
+        { new: true, runValidators: true }
+      );
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
         status: "error",
@@ -822,7 +844,7 @@ const completeFlightBooking = async (req, res) => {
 
 const addToCart = asyncHandler(async (req, res) => {
   const { touristId, productId, quantity } = req.body;
-  try{
+  try {
     const product = await productModel.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found." });
@@ -840,7 +862,7 @@ const addToCart = asyncHandler(async (req, res) => {
       cartItem.quantity += quantity;
       cartItem.price += price;
     } else {
-      tourist.cart.push({ product: productId, quantity, price});
+      tourist.cart.push({ product: productId, quantity, price });
     }
     await tourist.save();
 
@@ -875,10 +897,10 @@ const removeFromCart = asyncHandler(async (req, res) => {
 });
 
 const getCart = asyncHandler(async (req, res) => {
-  const touristId = req.userId; 
-  
+  const touristId = req.userId;
+
   try {
-    const tourist = await touristModel.findById(touristId).populate('cart.product'); 
+    const tourist = await touristModel.findById(touristId).populate('cart.product');
 
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
