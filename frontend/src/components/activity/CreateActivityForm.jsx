@@ -132,7 +132,7 @@ const ActivityForm = ({ isUpdate }) => {
                 background: 'linear-gradient(135deg, #036264 0%, #11302a 100%)',
                 padding: '2rem'
               }}>
-                <div className="sticky-top pt-5" style={{ top: '20px' }}>
+                <div className="sticky-top pt-5" style={{ top: '20px', marginTop: '3rem' }}>
                   <div className="text-center mb-5">
                     <img
                       src="/img/hero/3/1.png"
@@ -152,7 +152,7 @@ const ActivityForm = ({ isUpdate }) => {
                       src="/img/hero/3/2.png"
                       alt="hero"
                       className="img-fluid"
-                      style={{ maxWidth: '70%' }}
+                      style={{ maxWidth: '80%' }}
                     />
                   </div>
                 </div>
