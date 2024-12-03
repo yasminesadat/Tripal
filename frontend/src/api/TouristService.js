@@ -210,3 +210,42 @@ export async function getTouristNotifications() {
     throw error;
   }
 }
+
+export async function addToCart(touristId, productId, quantity){
+  try{
+    const response = await axios.post('/tourist/cart', {
+      touristId,
+      productId,
+      quantity,
+    });    
+    return response.data;
+  }catch(error){
+    console.error("Error adding product to cart:", error);
+    throw error;
+  }
+}
+
+export async function getCart() {
+  try {
+    const response = await axios.get(`/tourist/cart`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    throw error;
+  }
+}
+
+export async function removeFromCart(touristId, productId){
+  try{
+    const response = await axios.delete('/tourist/cart', {
+      data: {
+        touristId,
+        productId,
+      },
+    });    
+    return response.data;
+  }catch(error){
+    console.error("Error removing product from cart:", error);
+    throw error;
+  }
+}
