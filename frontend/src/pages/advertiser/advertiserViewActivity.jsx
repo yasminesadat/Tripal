@@ -49,6 +49,7 @@ export default function AdvertiserActivityDetails() {
        <AdvertiserGallery />
         <section className="">
           <div className="container">
+            <br/>
             <h2 className="text-40 sm:text-30 lh-14 mt-20">
               {activity?.title.split(" ").slice(0, 7).join(" ")}
 
@@ -77,8 +78,19 @@ export default function AdvertiserActivityDetails() {
             <div className="row y-gap-30 justify-between">
               <div className="col-lg-12">
 
-
+             
                 <div className="row y-gap-20 col-lg-8 justify-between items-center layout-pb-md" style={{ margin: "0 auto", display: "flex", justifyContent: "center" }}>
+                <div 
+  className="grey-box" 
+  style={{ 
+    backgroundColor: "#f5f5f5", 
+    borderRadius: "12px", 
+    padding: "20px", 
+    display: "flex", 
+    justifyContent: "center", 
+    margin: "0 auto" 
+  }}
+>
                   <div className="col-lg-3 col-6">
                     <div className="d-flex items-center">
                       <div className="flex-center size-50 rounded-12 border-1">
@@ -129,6 +141,7 @@ export default function AdvertiserActivityDetails() {
                       </div>
                     </div>
                   </div>
+                </div>
                 </div>
 
 
