@@ -1,25 +1,22 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Card,
-  Row,
-  Typography,
-  message,
-} from "antd";
+import {Form,Input,Button,Checkbox,Card,Row,Typography,message,} from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { login } from "../../../api/UserService";
-
+import OtpModal from "./OtpEmailModal";
 const { Title, Text } = Typography;
 
 export default function UserForm() {
+
+  //#region user State
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [error, setError] = useState("");
+  //#endregion
 
-  const handleLogin = (role) => {
+  //#region functions
+  const  handleLogin = (role) => {
     if (role === "Admin") {
       window.location.href = "/admin";
     } else if (role === "Tourist") {
@@ -57,6 +54,18 @@ export default function UserForm() {
     console.log("Failed:", errorInfo);
   };
 
+  const showOtpModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+  const clearError = () => {
+    setError("");
+  };
+  //#endregion
+  
   return (
     <>
       <Card
@@ -140,11 +149,16 @@ export default function UserForm() {
           <Form.Item>
             <Row justify="space-between" align="middle">
               <Checkbox>Remember me</Checkbox>
-              <Link to="/forgot-password" className="sign-up-link">
+              <Link to="#" className="sign-up-link" onClick={showOtpModal}>
                 Forgot password?
               </Link>
             </Row>
           </Form.Item>
+
+          {/* OTP Modal */}
+          <OtpModal visible={isModalVisible} 
+          onClose={handleCloseModal} 
+          clearError={clearError}  />
 
           {/* Submit Button */}
           <Form.Item>
