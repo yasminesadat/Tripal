@@ -411,8 +411,11 @@ export default function CreateItineraryForm() {
           height: 250px;
           border: 1px solid #dac4d0;
           border-radius: 8px;
-          overflow: hidden;
-        }
+          overflow: hidden;   
+  position: relative;
+  z-index: 1;  
+}
+        
 
         @media (max-width: 768px) {
           .dashboard__content_wrapper {
