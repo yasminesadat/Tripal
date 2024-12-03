@@ -34,21 +34,17 @@ const NotificationTab = () => {
     return (
         <div className="relative">
             <style jsx>{`
-               .notification-panel {
-                   box-shadow: 0 15px 35px rgba(143, 87, 116, 0.15);
-                   transform: translateY(10px);
-                   opacity: 0;
-                   animation: slideIn 0.3s ease forwards;
-                   width: 320px !important;
-                   max-height: 70vh;
-               }
+     .notification-panel {
+  box-shadow: 0 15px 35px rgba(143, 87, 116, 0.15);
+  transform: translateX(-230px) translateY(20px); /* Slide in from left and down */
+  opacity: 1; /* Make it fully visible */
+  width: 320px !important;
+  max-height: 70vh;
+background: var(--color-footer);
+background-color: var(--color-footer);
 
-               @keyframes slideIn {
-                   to {
-                       transform: translateY(0);
-                       opacity: 1;
-                   }
-               }
+color: var(--color-stone);
+}
 
                .notification-badge {
                    animation: pulse 2s infinite;
@@ -153,11 +149,11 @@ const NotificationTab = () => {
                                                     <div className="flex-1">
                                                         <div className="text-xs text-[#8f5774] mb-1 flex items-center justify-between">
                                                             <span>{notification.message} </span>
-                                                            {!notification.read && (
-                                                                <span className="text-[9px] bg-[#e0829d] text-white px-1.5 py-0.5 rounded-full">
+                                                            {/* {!notification.read && (
+                                                                <span className="text-[9px] bg-[#e0829d] text-black px-1.5 py-0.5 rounded-full">
                                                                     New
                                                                 </span>
-                                                            )}
+                                                            )} */}
                                                         </div>
                                                         <p className="text-[10px] text-[#036264] mb-1">{notification.content}</p>
                                                         <span className="text-[9px] text-[#5a9ea0]">
