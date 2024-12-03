@@ -6,6 +6,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
 import { addToCart } from "../../api/TouristService";
+import { addToCart } from "../../api/TouristService";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -59,6 +60,20 @@ const steps = [
 
     fetchRatings();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!selectedQuantity || selectedQuantity < 1) {
+      message.error("Please select a valid quantity.");
+      return;
+    }
+    try {
+      const response = await addToCart(userId, id, selectedQuantity);
+      message.success("Product added to cart successfully!");
+      
+    } catch (error) {
+      message.error("Error adding product to cart.");
+    }
+  };
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;

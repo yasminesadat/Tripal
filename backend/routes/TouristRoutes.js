@@ -155,6 +155,27 @@ router.get(
 );
 
 router.post(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addToCart
+);
+
+router.delete(
+  "/tourist/cart",
+  verifyToken, 
+  authorizeRoles("Tourist"), 
+  removeFromCart 
+);
+
+router.get(
+  "/tourist/cart",
+  verifyToken, 
+  authorizeRoles("Tourist"), 
+  getCart 
+);
+
+router.post(
   "/tourist/book-flight",
   verifyToken,
   authorizeRoles("Tourist"),
