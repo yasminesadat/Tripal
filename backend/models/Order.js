@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const orderSchema = new Schema(
   {
-    tourist: {
+    touristId: {
       type: Schema.Types.ObjectId,
       ref: "Tourist",
       required: [true, "Tourist is required"],
@@ -35,10 +35,6 @@ const orderSchema = new Schema(
       enum: [ "Wallet", "Credit Card", "Cash on Delivery"],
       default: "Wallet",
       required: true,
-    },
-    placedAt: {
-      type: Date,
-      default: Date.now,
     },
   },
   { timestamps: true }

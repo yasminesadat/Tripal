@@ -4,10 +4,11 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 
 const createOrder = asyncHandler(async (req, res) => {
-    const { touristId, deliveryAddress, paymentMethod } = req.body;
+  const touristId = req.userId;
+  const {deliveryAddress, paymentMethod } = req.body;
   
     try {
-        const tourist = await Tourist.findById(touristId).populate("cart.product");
+        const tourist = await Tourist.findById({_id: touristId}).populate("cart.product");
         if (!tourist) {
         return res.status(404).json({ message: "Tourist not found." });
         }
@@ -22,7 +23,7 @@ const createOrder = asyncHandler(async (req, res) => {
         }
 
         const newOrder = new Order({
-        tourist: touristId,
+        touristId: touristId,
         products: tourist.cart,
         totalPrice: totalPrice,
         deliveryAddress: {
@@ -49,6 +50,49 @@ const createOrder = asyncHandler(async (req, res) => {
     }
 });
 
+const cancelOrder = asyncHandler(async (req,res) =>{
+    const { id } = req.params;;
+    try {
+        const order = await Order.findById(id);
+        if (!order) {
+          return res.status(404).json({ message: "Order not found." });
+        }
+        if (order.status === "Cancelled"){
+          return res.status(400).json({ message: "Order is already cancelled." });
+        }
+        if(order.status === "Shipped"){
+          return res.status(400).json({ message: "Can't cancel order. Order is already shipped." });
+        }
+        if(order.status === "Delivered"){
+          return res.status(400).json({ message: "Can't cancel order. Order is already delivered." });
+        }
+    
+        order.status = "Cancelled";
+        await order.save();
+    
+        res.status(200).json({ message: "Order cancelled successfully.", order });
+      } catch (error) {
+        res.status(500).json({ message: "An error occurred while cancelling the order.", error: error.message });
+      }
+})
+
+const getOrders = asyncHandler(async (req, res) => {
+  const touristId = req.userId; 
+  try {
+    const orders = await Order.find({ touristId });
+
+    if (!orders || orders.length === 0) {
+        return res.status(404).json({ message: "No orders found for this user." });
+      }
+    res.status(200).json({ orders });
+    } 
+    catch (error) {
+      res.status(500).json({ message: "Failed to fetch orders. Please try again later." });
+    }
+});
+
 module.exports = {
     createOrder,
-}
+    cancelOrder,
+    getOrders
+};

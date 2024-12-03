@@ -860,7 +860,6 @@ const addToCart = asyncHandler(async (req, res) => {
 
 const removeFromCart = asyncHandler(async (req, res) => {
   const { touristId, productId } = req.body;
-
   try {
     const tourist = await touristModel.findById(touristId);
     if (!tourist) {
@@ -883,11 +882,11 @@ const removeFromCart = asyncHandler(async (req, res) => {
 });
 
 const getCart = asyncHandler(async (req, res) => {
-  const { touristId } = req.params; 
+  const touristId = req.userId; 
   
   try {
     const tourist = await touristModel.findById(touristId).populate('cart.product'); 
-    
+
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
