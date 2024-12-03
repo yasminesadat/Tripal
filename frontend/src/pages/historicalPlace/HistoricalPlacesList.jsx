@@ -6,6 +6,8 @@ import Stars from "../../components/common/Stars";
 import { getUserData } from "@/api/UserService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { message, Tour } from "antd";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
 export default function HistoricalPlacesList({ searchTerm }) {
   const [sortOption, setSortOption] = useState("");
@@ -22,15 +24,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const location = useLocation();
   const refHPDetails = useRef(null);
   const [open, setOpen] = useState(false);
-  
+
   const steps = [
     {
       title: "Read More",
       description: "Learn more about the place.",
-      target: () => refHPDetails.current, 
+      target: () => refHPDetails.current,
       onFinish: () => {
         setOpen(false);
-        localStorage.setItem('currentStep', 6); 
+        localStorage.setItem('currentStep', 6);
         navigate('/tourist', { state: { fromTour: true, targetStep: 6 } });
       }
     },
@@ -38,14 +40,14 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
-  
+
     const timer = setTimeout(() => {
       if (isFromTour) {
-        setOpen(true); 
+        setOpen(true);
       }
     }, 1000);
-  
-    return () => clearTimeout(timer); 
+
+    return () => clearTimeout(timer);
   }, [location]);
 
   useEffect(() => {
@@ -64,46 +66,46 @@ export default function HistoricalPlacesList({ searchTerm }) {
     };
   }, []);
 
- useEffect(()=>{
-  const getHistoricalPlacesByGoverner = async () => {
-    setLoading(true);
-    try {
-      const result = await getAllHistoricalPlacesByTourismGoverner();
-      if (result) {
-        console.log("result: ", result);
-        setPlaces(result);
-        setFilteredPlaces(result);
+  useEffect(() => {
+    const getHistoricalPlacesByGoverner = async () => {
+      setLoading(true);
+      try {
+        const result = await getAllHistoricalPlacesByTourismGoverner();
+        if (result) {
+          console.log("result: ", result);
+          setPlaces(result);
+          setFilteredPlaces(result);
+        }
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        //toast.error('Error while fetching')
       }
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      //toast.error('Error while fetching')
     }
-  }
-  const fetchPlaces = async () => {
-    try {
-      const response = await getAllHistoricalPlaces();
-      setPlaces(response);
-      setFilteredPlaces(response);
-    } catch (err) {
-      setError(
-        err.response?.data?.error || "Error fetching historical places"
-      );
-    } finally {
-      setLoading(false);
+    const fetchPlaces = async () => {
+      try {
+        const response = await getAllHistoricalPlaces();
+        setPlaces(response);
+        setFilteredPlaces(response);
+      } catch (err) {
+        setError(
+          err.response?.data?.error || "Error fetching historical places"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (userRole !== null) {
+      if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
+        fetchPlaces();
+      }
+      if (userRole === "Tourism Governor") {
+        getHistoricalPlacesByGoverner();
+      }
     }
-  };
-  if(userRole!==null){
-    if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
-      fetchPlaces();
-    }
-    if (userRole === "Tourism Governor") {
-      getHistoricalPlacesByGoverner();
-    }  
-  }
 
 
- },userRole)
+  }, userRole)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -125,9 +127,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
         }
       }
     };
-   
+
     fetchUserData();
-   
+
 
 
   }, []);
@@ -322,15 +324,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
                   Filter
                 </button> */}
 
-                {/* <div
+            {/* <div
                   className="accordion__content"
                   style={sidebarActive ? { maxHeight: "2000px" } : {}}
                 > */}
-                  {/* <div className="pt-20">
+            {/* <div className="pt-20">
                     <Sidebar setFilters={setFilters} />
                   </div> */}
-                {/* </div> */}
-              {/* </div> */}
+            {/* </div> */}
+            {/* </div> */}
             {/* </div> */}
           </div>
 
@@ -340,8 +342,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
                 <div>{filteredPlaces?.length} results</div>
               </div>
 
-             
-             
+
+
             </div>
 
             <div className="row y-gap-30 pt-30">
@@ -349,9 +351,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
-                      {elm?.images?.length > 0 && elm.images[0]?.url&& <img src={elm.images[0].url} alt="image" />}
+                      {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
                     </div>
-                   
+
 
 
                     <div className="tourCard__content">
@@ -364,16 +366,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
                         <span>{elm.name}</span>
                       </h3>
 
-                  
+
 
                       <p className="tourCard__text mt-5">{elm.description}</p>
 
-                     
+
                     </div>
 
                     <div className="tourCard__info">
                       <div>
-                       
+
 
                         <div className="tourCard__price">
                           <div></div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ActivityForm from "../../components/activity/CreateActivityForm";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
-
+import FooterThree from '@/components/layout/footers/FooterThree';
 
 const CreateActivity = () => {
 
@@ -9,6 +9,7 @@ const CreateActivity = () => {
     <div>
       <AdvertiserHeader />
       <ActivityForm />
+      <FooterThree />
     </div>
   );
 };
