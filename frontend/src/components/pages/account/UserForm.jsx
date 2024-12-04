@@ -20,7 +20,7 @@ export default function UserForm() {
     if (role === "Admin") {
       window.location.href = "/admin";
     } else if (role === "Tourist") {
-      window.location.href = "/tourist";
+      window.location.href = "/tourist/preferences";
     } else if (role === "Advertiser") {
       window.location.href = "/advertiser";
     } else if (role === "Tour Guide") {
