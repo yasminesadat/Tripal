@@ -76,12 +76,22 @@ const loginUser = async (req, res) => {
     // Find the user in the relevant schema
     const roleUser = await userSchema.findOne({ userName });
     if (roleUser && (await bcrypt.compare(password, roleUser.password))) {
+      let isFirstTime = false;
+
+      if (user.role === "Tourist") {
+        isFirstTime = roleUser.isFirstTime;
+        if (isFirstTime) {
+          roleUser.isFirstTime = false;
+          await roleUser.save();
+        }
+      }
+
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
         maxAge: 3600 * 1000, //changed to session cookie
       });
-      res.status(200).json({ role: user.role });
+      res.status(200).json({ role: user.role, isFirstTime});
     } else {
       res.status(400).json({ message: "Invalid username or password" });
     }

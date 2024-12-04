@@ -7,6 +7,7 @@ export async function login(userName, password) {
       status: "success",
       message: "Logged in successfully!",
       role: response.data.role,
+      isFirstTime: response.data.isFirstTime
     };
   } catch (error) {
     console.log(error);

@@ -16,11 +16,15 @@ export default function UserForm() {
   //#endregion
 
   //#region functions
-  const  handleLogin = (role) => {
+  const handleLogin = (role, isFirstTime) => {
     if (role === "Admin") {
       window.location.href = "/admin";
     } else if (role === "Tourist") {
-      window.location.href = "/tourist/preferences";
+      if (isFirstTime) {
+        window.location.href = "/tourist/preferences";
+      } else {
+        window.location.href = "/tourist";
+      }
     } else if (role === "Advertiser") {
       window.location.href = "/advertiser";
     } else if (role === "Tour Guide") {
@@ -39,10 +43,12 @@ export default function UserForm() {
       form.getFieldValue("password")
     );
     setLoading(false);
-    if (response.status == "success") {
+    console.log(response);
+    if (response.status === "success") {
       message.success(response.message);
-      handleLogin(response.role);
-    } else if (response.status == "warning") {
+      handleLogin(response.role, response.isFirstTime);
+      console.log("isFirstTime:", response.isFirstTime);
+    } else if (response.status === "warning") {
       message.warning(response.message);
     } else {
       message.error(response.message);
