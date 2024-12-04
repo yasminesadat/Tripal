@@ -1,8 +1,13 @@
-import { faqData } from "@/data/tourSingleContent";
 import React, { useState } from "react";
+import { faqData } from "@/data/tourSingleContent";
+
+
+
+
 
 export default function Faq() {
   const [currentActiveFaq, setCurrentActiveFaq] = useState(0);
+
   return (
     <section className="layout-pt-xl layout-pb-xl">
       <div className="container">
@@ -18,9 +23,8 @@ export default function Faq() {
               {faqData.map((elm, i) => (
                 <div key={i} className="col-12">
                   <div
-                    className={`accordion__item px-20 py-15 border-1 rounded-12 ${
-                      currentActiveFaq == i ? "is-active" : ""
-                    } `}
+                    className={`accordion__item px-20 py-15 border-1 rounded-12 ${currentActiveFaq == i ? "is-active" : ""
+                      } `}
                   >
                     <div
                       className="accordion__button d-flex items-center justify-between"
@@ -32,7 +36,7 @@ export default function Faq() {
                         {elm.question}
                       </div>
 
-                      <div className="accordion__icon size-30 flex-center bg-light-2 rounded-full">
+                      <div className="accordion__icon size-30 flex-center  rounded-full">
                         <i className="icon-plus"></i>
                         <i className="icon-minus"></i>
                       </div>
@@ -57,4 +61,179 @@ export default function Faq() {
       </div>
     </section>
   );
+}
+
+// Styles
+const styles = `
+:root {
+  --color-dark-purple: #8f5774;
+  --color-light-purple: #dac4d0;
+  --color-pink: #e0829d;
+  --color-stone: #036264;
+  --color-stone-light: #5a9ea0;
+  --color-footer: #e5f8f8;
+  --color-dark-green: #11302a;
+}
+
+.accordion.-simple {
+  --accordion-bg: var(--color-footer);
+  --accordion-active: var(--color-stone);
+  --accordion-text: var(--color-dark-green);
+  --accordion-icon-bg: var(--color-light-purple);
+  --accordion-hover: var(--color-stone-light);
+}
+
+.accordion.-simple .accordion__item {
+  background-color: var(--accordion-bg);
+  transition: all 0.3s ease;
+  border-color: var(--color-stone) !important;
+}
+
+.accordion.-simple .accordion__item.is-active {
+  background-color: white;
+  border: 2px solid var(--accordion-active) !important;
+}
+
+.accordion.-simple .accordion__button {
+  cursor: pointer;
+}
+
+.accordion.-simple .accordion__button .button {
+  color: var(--accordion-text);
+  font-weight: 500;
+}
+
+.accordion.-simple .accordion__icon {
+  background-color: var(--accordion-icon-bg);
+  transition: all 0.3s ease;
+  color: var(--color-dark-purple); !important /* Changed icon color to dark purple */
+}
+
+.accordion.-simple .accordion__item.is-active .accordion__icon {
+  background-color: var(--color-dark-purple); !important /* Changed active background to dark purple */
+  color: white;
+}
+
+.accordion.-simple .accordion__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.accordion.-simple .accordion__content p {
+  color: var(--color-dark-green);
+  line-height: 1.6;
+}
+
+.accordion.-simple .accordion__item:hover:not(.is-active) {
+  background-color: var(--color-footer) !important;
+  border-color: var(--accordion-hover) !important;
+}
+
+/* Header Styles */
+.text-30 {
+  color: var(--color-dark-purple) ;
+  font-weight: 600;
+}
+
+/* Icon Styles */
+.accordion__item .icon-plus {
+  display: block;
+}
+
+.accordion__item .icon-minus {
+  display: none;
+}
+
+.accordion__item.is-active .icon-plus {
+  display: none;
+}
+
+.accordion__item.is-active .icon-minus {
+  display: block;
+}
+
+/* Layout utilities */
+.layout-pt-xl {
+  padding-top: 60px;
+}
+
+.layout-pb-xl {
+  padding-bottom: 60px;
+}
+
+.pt-40 {
+  padding-top: 40px;
+}
+
+.rounded-12 {
+  border-radius: 12px;
+}
+
+.size-30 {
+  width: 30px;
+  height: 30px;
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .md\\:text-24 {
+    font-size: 24px;
+  }
+}
+  .accordion__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--color-stone-light) !important;
+  transition: all 0.3s ease;
+}
+
+.accordion__icon i {
+  color: var(--color-dark-purple) !important;
+  font-size: 14px;
+}
+  
+
+/* Hover state */
+.accordion__icon:hover {
+  background-color: var(--color-stone) !important;
+}
+
+.accordion__icon:hover i {
+  color: var(--color-stone) !important;
+}
+
+
+/* When accordion is active */
+.is-active .accordion__icon {
+  background-color: var(--color-dark-purple) !important;
+}
+
+.accordion__item.is-active .accordion__icon i {
+  color: var(--color-stone) !important;
+}
+.is-active .accordion__icon i {
+  color: var(--color-light-purple) !important;
+}
+`;
+
+// Create style element and append to head
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = styles;
+  document.head.appendChild(styleElement);
 }
