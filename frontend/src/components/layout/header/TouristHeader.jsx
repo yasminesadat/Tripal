@@ -136,6 +136,8 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
               />
             </div>
 
+            <NotificationTab />
+
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
@@ -164,10 +166,6 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
                 </ul>
               </div>
             )}
-            <NotificationTab />
-
-
-
           </div>
 
         </div>
