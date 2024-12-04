@@ -102,7 +102,6 @@ export const sidebarItems = [
   },
   {
     id: 8,
-    href: "/",
     icon: <LogOut size={26} />,
     label: "Logout"
   },
