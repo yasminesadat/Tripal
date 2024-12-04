@@ -117,7 +117,7 @@ const touristSchema = new Schema({
   }],
   bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: [] }],
   bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: [] }],
-
+  isFirstTime: { type: Boolean, default: true },
 }, { timestamps: true });
 
 touristSchema.methods.calculateAge = function () {
