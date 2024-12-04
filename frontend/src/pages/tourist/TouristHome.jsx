@@ -55,7 +55,10 @@ export default function TouristHome() {
       title: "Book a hotel",
       description: "Where are you gonna stay?",
       target: () => refHotels.current,
-      // onNext: () => localStorage.setItem('currentStep', 2),
+      onNext: () => {
+        localStorage.setItem('currentStep', 2);
+        navigate("/hotel2", { state: { fromTour: true } });
+      }
     },
     {
       title: "Book an activity",
