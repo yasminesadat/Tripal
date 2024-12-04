@@ -21,6 +21,7 @@
     "moment": "^2.30.1",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
-    "react-credit-cards": "^0.8.3"
+    "react-credit-cards": "^0.8.3",
+    "stripe": "^17.4.0"
   }
 }
