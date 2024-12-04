@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
 import { saveFlightBooking } from "../../api/TouristService";
-//import { getHotelHistory } from "";
-//import TransportationBookingPopUp from './TransportationBooking';
-//import moment from "moment";
+import { getHotelHistory } from "../../api/HotelService";
+import TransportationBookingPopUp from './TransportationBooking'
+import moment from "moment";
 import { Checkbox } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
@@ -46,30 +46,30 @@ const FlightBookingDetails = () => {
     fetchTouristInfo();
   }, []);
   const [hotels, setHotels] = useState([]);
-//   useEffect(() => {
-//     const getBookedHotels = async (id) => {
-//       try {
-//         const hotels = await getHotelHistory(id);
-//         console.log("result:in booking ", hotels);
-//         setHotels(hotels.bookedHotels);
-//       } catch (err) {
-//         console.log(err);
-//       }
-//     };
-//     getBookedHotels(touristId);
+  useEffect(() => {
+    const getBookedHotels = async () => {
+      try {
+        const hotels = await getHotelHistory();
+        console.log("result:in booking ", hotels);
+        setHotels(hotels.bookedHotels);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getBookedHotels();
     
-//   },[]);
+  },[]);
   useEffect(() => {
   function showTransportationOffer() {
     for (let i = 0; i < flight.itineraries.length; i++) {
       console.log("hello");
-      //const flightDepartureTime = moment(flight.itineraries[i]?.segments[0]?.departure?.at);
-      //const flightArrivalTime = moment(flight.itineraries[i]?.segments[flight.itineraries[i]?.segments.length - 1]?.arrival?.at);
+      const flightDepartureTime = moment(flight.itineraries[i]?.segments[0]?.departure?.at);
+      const flightArrivalTime = moment(flight.itineraries[i]?.segments[flight.itineraries[i]?.segments.length - 1]?.arrival?.at);
       console.log(hotels);
       for (let j = 0; j < hotels.length; j++) {
 
-        //const hotelCheckIn = moment(hotels[j].checkIn);
-        //const hotelCheckOut = moment(hotels[j].checkOut);
+        const hotelCheckIn = moment(hotels[j].checkIn);
+        const hotelCheckOut = moment(hotels[j].checkOut);
         const hotelCity = hotels[j].cityCode;
         
         const diffInMilliseconds1 = Math.abs(flightDepartureTime - hotelCheckOut);
