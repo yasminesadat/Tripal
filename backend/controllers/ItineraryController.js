@@ -2,6 +2,8 @@ const itineraryModel = require('../models/Itinerary');
 const activityModel = require('../models/Activity');
 const preferenceTagModel = require('../models/PreferenceTag');
 const {sendEmail} = require('./Mailer');
+const Admin = require("../models/users/Admin.js");
+
 
 const createItinerary = async (req, res) => {
     try {
@@ -241,17 +243,29 @@ const adminFlagItinerary = async (req, res) => {
         const admin = await Admin.findById(adminId);
         if (!admin) 
             return res.status(403).json({ message: 'Access denied. Admins only.' });
-        const itinerary= await itineraryModel.findById(req.params.itineraryId);
-        const userData  = req.body;
-        sendAnEmailForItineraryFlag(userData,itinerary.title);
+        const itinerary= await itineraryModel.findById(req.params.itineraryId).populate('tourGuide');
+         
         if(!itinerary)
             return res.status(404).json({error: 'Itinerary not found'});
+
+        const userData  = req.body;
+        sendAnEmailForItineraryFlag(userData,itinerary.title);
+       
         itinerary.flagged = !itinerary.flagged;
         await itinerary.save();
 
         //SEND NOTIFICATION TO TOUR GUIDE ON SYSTEM 
-        itinerary.tourGuide.notificationList.push({message:`Your itinerary ${itinerary.title} has been flagged inappropriate by the admin.`})
+    
+        if (itinerary.flagged){
+        itinerary.tourGuide.notificationList.push({message:`Your itinerary ${itinerary.title} has been flagged as inappropriate by the admin.`})
+        }
+        else{
+            itinerary.tourGuide.notificationList.push({message:`Your itinerary ${itinerary.title} has been flagged as appropriate by the admin.`})
+        } 
+        
 
+        //console.log(itinerary.tourGuide);
+        await itinerary.tourGuide.save();
         res.status(200).json({message: 'Itinerary flagged successfully'});
     }
     catch(error){

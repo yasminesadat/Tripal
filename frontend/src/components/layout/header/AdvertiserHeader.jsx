@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Menu from "../components/AdvertiserMenu";
 import { profile } from "@/data/advertiserMenu";
+import AdvertiserNotification from "@/components/common/NotificationsAdvertiser";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -84,6 +85,8 @@ export default function AdvertiserHeader() {
               {/*/help-center*/}
               Help
             </Link>
+
+            <AdvertiserNotification/>
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}

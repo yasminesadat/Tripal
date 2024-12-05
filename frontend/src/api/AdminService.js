@@ -25,6 +25,17 @@ export async function changeAdminPassword(id, oldPassword, newPassword) {
   }
 }
 
+export async function getTotalUsers(){
+  try {
+   
+    const response = await axios.get(`/admin/getTotalUsers`);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
 export async function deleteUser(role, userId) {
   try {
     console.log("delete userr")

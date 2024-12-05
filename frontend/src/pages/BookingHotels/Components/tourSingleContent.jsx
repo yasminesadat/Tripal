@@ -1,10 +1,9 @@
 export const included = [
-    { id: 1, text: "Beverages, drinking water, morning tea and buffet lunch" },
+   
     { id: 2, text: "Local taxes" },
     { id: 3, text: "Hotel pickup and drop-off by air-conditioned minivan" },
-    { id: 4, text: "InsuranceTransfer to a private pier" },
+    { id: 1, text: "Beverages, drinking water, morning tea and buffet lunch" },
     { id: 5, text: "Soft drinks" },
-    { id: 6, text: "Tour Guide" },
   ];
   
   export const excluded = [
@@ -79,22 +78,18 @@ export const included = [
     {
       question: "Can I get the refund?",
       answer:
-        "Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat cancellation policy: For a full refund, cancel at least 24 hours in advance of the start date of the experience. Discover and book Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat",
+        "For a full refund, cancel at least 24 hours in advance of the start date of the experience.                                   50% will be discounted when cancelling 24 hours before the reservation. No refund is applicable from the date of the reservation.",
     },
     {
       question: "Can I change the travel date?",
       answer:
-        "Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat cancellation policy: For a full refund, cancel at least 24 hours in advance of the start date of the experience. Discover and book Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat",
+        "Travel Dates can be changed for free at least a week in advance of the start date of the reservation. Hotel cannot guarantee the availability at the new chosen dates.",
     },
-    {
-      question: "When and where does the tour end?",
-      answer:
-        "Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat cancellation policy: For a full refund, cancel at least 24 hours in advance of the start date of the experience. Discover and book Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat",
-    },
+    
     {
       question: "Do you arrange airport transfers?",
       answer:
-        "Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat cancellation policy: For a full refund, cancel at least 24 hours in advance of the start date of the experience. Discover and book Phang Nga Bay Sea Cave Canoeing & James Bond Island w/ Buffet Lunch by Big Boat",
+        "Yes, airport transfers can be arranged. Please contact the hotel at 19456 for more details.",
     },
   ];
   
@@ -103,49 +98,49 @@ export const included = [
       id: 1,
       category: "Overall Rating",
       icon: "icon-star-2",
-      rating: "5.0",
+      rating: "4.2",
       comment: "Excellent",
     },
     {
       id: 2,
       category: "Location",
       icon: "icon-pin-2",
-      rating: "5.0",
+      rating: "4.6",
       comment: "Excellent",
     },
     {
       id: 3,
       category: "Amenities",
       icon: "icon-application",
-      rating: "5.0",
+      rating: "4.8",
       comment: "Excellent",
     },
     {
       id: 4,
       category: "Food",
       icon: "icon-utensils",
-      rating: "5.0",
+      rating: "3.6",
       comment: "Excellent",
     },
     {
       id: 5,
       category: "Price",
       icon: "icon-price-tag",
-      rating: "5.0",
+      rating: "2.7",
       comment: "Excellent",
     },
     {
       id: 6,
       category: "Rooms",
       icon: "icon-bed-2",
-      rating: "5.0",
+      rating: "4.7",
       comment: "Excellent",
     },
     {
       id: 7,
-      category: "Tour Operator",
+      category: "Service",
       icon: "icon-online-support-2",
-      rating: "5.0",
+      rating: "4.6",
       comment: "Excellent",
     },
   ];
@@ -155,10 +150,10 @@ export const included = [
       id: 1,
       avatar: "/img/reviews/avatars/1.png",
       name: "Ali Tufan",
-      date: "April 2023",
+      date: "October 2024",
       stars: 5,
-      reviewText: "Take this tour! Its fantastic!",
-      desc: `Great for 4-5 hours to explore. Really a lot to see and tons of photo spots. Even have a passport for you to collect all the stamps as a souvenir. Must see for a Harry Potter fan.`,
+      reviewText: "Visit this hotel, it's fantastic!",
+      desc: ` Really a lot to see and tons of photo spots. Even have a passport for you to collect all the stamps as a souvenir. `,
       images: [
         "/img/reviews/1/1.png",
         "/img/reviews/1/2.png",
@@ -168,11 +163,11 @@ export const included = [
     {
       id: 2,
       avatar: "/img/reviews/avatars/1.png",
-      name: "Ali Tufan",
-      date: "April 2023",
+      name: "Merna Senger",
+      date: "September 2024",
       stars: 5,
-      reviewText: "Take this tour! Its fantastic!",
-      desc: `Great for 4-5 hours to explore. Really a lot to see and tons of photo spots. Even have a passport for you to collect all the stamps as a souvenir. Must see for a Harry Potter fan.`,
+      reviewText: "Loved this hotel!",
+      desc: `Very comfortable, excellent service, very friendly people. Would definetely come again!`,
       images: [
         "/img/reviews/1/1.png",
         "/img/reviews/1/2.png",
@@ -182,11 +177,11 @@ export const included = [
     {
       id: 3,
       avatar: "/img/reviews/avatars/1.png",
-      name: "Ali Tufan",
-      date: "April 2023",
+      name: "Kareem",
+      date: "June 2024",
       stars: 5,
-      reviewText: "Take this tour! Its fantastic!",
-      desc: `Great for 4-5 hours to explore. Really a lot to see and tons of photo spots. Even have a passport for you to collect all the stamps as a souvenir. Must see for a Harry Potter fan.`,
+      reviewText: "Definitely Recommend this Hotel!",
+      desc: `This is my thid time visiting this hotel. Perfect as always!`,
       images: [
         "/img/reviews/1/1.png",
         "/img/reviews/1/2.png",

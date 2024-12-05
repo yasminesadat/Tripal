@@ -1,6 +1,6 @@
 import { axios } from "./axios";
 
-export async function createTourGuide(newUser) {
+export const createTourGuide= async (newUser) => {
   try {
     const response = await axios.post("/tourGuide", newUser);
     return response;
@@ -45,6 +45,27 @@ export const getNotifications = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching notifications in service file:", error);
+    throw error;
+  }
+};
+
+
+export const deleteNotifications = async (id) => {
+  try {
+    const response = await axios.delete(`/tourGuide/deleteNotificationList/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting notifications in service file:", error);
+    throw error;
+  }
+};
+
+export const markNotification = async (id) => {
+  try {
+    const response = await axios.patch(`/tourGuide/markNotification/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error marking notifications in service file:", error);
     throw error;
   }
 };

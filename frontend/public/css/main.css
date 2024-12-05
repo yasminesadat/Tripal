@@ -628,7 +628,19 @@ textarea {
   outline: none;
   width: 100%;
   background-color: transparent;
+ 
 }
+
+selectcalendar,
+inputcalendar:not([type="range"]),
+textarea {
+  border: 0;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  cursor:pointer
+}
+
 
 main {
   overflow: hidden;
@@ -764,6 +776,10 @@ button:focus {
   background-color: var(--color-dark-purple) !important;
   color: white !important;
 }
+.button.-accent-Hotelsss:hover {
+  background-color: var(--color-stone-light) !important;
+  color: white !important;
+}
 
 .button.-outline-accent-1 {
   border-color: var(--color-stone);
@@ -810,6 +826,12 @@ button:focus {
 .button.-dark-1:hover {
   border-color: var(--color-dark-1);
   background-color: var(--color-dark-1) !important;
+  color: white !important;
+}
+
+.button.-lightpurple:hover {
+  border-color: var(--color-light-purple);
+  background-color: var(--color-light-purple) !important;
   color: white !important;
 }
 
@@ -4706,7 +4728,7 @@ h6 {
 }
 
 .searchForm.-type-1 .searchFormItem__button {
-  cursor: pointer;
+  /* cursor: pointer; */
   display: flex;
   align-items: center;
   text-align: left;
@@ -6861,7 +6883,7 @@ h6 {
 }
 
 .accordion.-simple .accordion__icon {
-  background-color: rgba(235, 102, 43, 0.05) !important;
+  background-color: var(--color-dark-purple) !important;
   color: var(--color-accent-1) !important;
   transition: all 0.2s ease-out;
 }
@@ -6883,7 +6905,7 @@ h6 {
 }
 
 .accordion.-simple .accordion__item.is-active .accordion__icon {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-dark-purple) !important;
   color: white !important;
 }
 
@@ -11401,7 +11423,7 @@ h6 {
 }
 
 .bg-dark-1 {
-  background-color: var(--color-dark-1) !important;
+  background-color: var(--color-stone) !important;
 }
 
 .bg-blue-1 {
@@ -11520,6 +11542,10 @@ h6 {
   background-color: rgba(235, 102, 43, 0.05);
 }
 
+.bg-accent-hotelsss {
+  background-color: #5a9ea06a;
+}
+
 .bg-accent-2-05 {
   background-color: rgba(74, 67, 196, 0.05);
 }
@@ -11542,6 +11568,10 @@ h6 {
 
 .text-accent-1 {
   color: var(--color-dark-purple);
+}
+
+.text-accent-green {
+  color: var(--color-stone-light);
 }
 
 .text-accent-1-dark {
@@ -11569,7 +11599,7 @@ h6 {
 }
 
 .text-red-3 {
-  color: var(--color-red-3);
+  color: var(--color-pink);
 }
 
 .text-red-4 {
@@ -11585,7 +11615,7 @@ h6 {
 }
 
 .text-yellow-2 {
-  color: var(--color-yellow-2);
+  color: var(--color-pink);
 }
 
 .text-yellow-3 {

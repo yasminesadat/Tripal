@@ -34,7 +34,6 @@ export default function Profile() {
         const user = await getUserData();
         setUserData(user.data.id);
         setUserRole(user.data.role);
-        console.log("id is ", user.data.id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -94,12 +93,12 @@ export default function Profile() {
         return;
       }
 
-      console.log("user", userData);
-      console.log(
-        "old pass, new pass",
-        PasswordForm.oldPassword,
-        PasswordForm.newPassword
-      );
+      // console.log("user", userData);
+      // console.log(
+      //   "old pass, new pass",
+      //   PasswordForm.oldPassword,
+      //   PasswordForm.newPassword
+      // );
       // await changeTouristPassword(userData, PasswordForm.oldPassword, PasswordForm.newPassword);
       // message.success("Password changed successfully");
 
@@ -130,7 +129,7 @@ export default function Profile() {
       const response = await getSellerDetails();
 
       setProfileInformation(response.data);
-      console.log("profileinfo", profileInformation);
+     // console.log("profileinfo", profileInformation);
       setEditedProfile({
         email: response.data.email,
         description: response.data.description,
@@ -257,14 +256,14 @@ export default function Profile() {
                     </div>
 
                     <div className="col-md-6">
-                      <div className="form-input">
+                      <div className="form-input description-width">
                         <input
                           type="text"
                           name="description"
                           value={editedProfile.description}
                           onChange={handleInputChange}
                         />
-                        <label className="lh-1 text-16 text-light-1">
+                        <label className="lh-1 text-16 text-light-1 description-height">
                           Description
                         </label>
                       </div>
@@ -545,7 +544,28 @@ export default function Profile() {
           border: 1px solid var(--color-light-purple);
           outline: none;
           border-radius: 8px;
-          height: 44px;
+          height: 64x;
+        }
+
+        .contactForm .form-input input,
+        .contactForm .form-input textarea {
+          padding: 10px;
+          font-size: 16px;
+          width: 100%;
+          border: 1px solid var(--color-light-purple);
+          outline: none;
+          border-radius: 8px;
+        
+        }
+
+        .description-width{ 
+          width:205%;
+         
+         
+        }
+
+        .description-height{ 
+           transform: translateY(-50px);
         }
 
         /* Select Styles */

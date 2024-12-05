@@ -36,6 +36,8 @@ export default function Statistics() {
       </LineChart>
     </ResponsiveContainer>
   );
+
+  
   return (
     <div className="col-xl-8 col-lg-12 col-md-6">
       <div className="rounded-12 bg-white shadow-2 h-full">

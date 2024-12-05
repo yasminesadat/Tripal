@@ -51,20 +51,7 @@ export default function Reviews() {
               ))}
           </div>
 
-          <div className="d-flex x-gap-30 items-center mt-20">
-            <div>
-              <a href="#" className="d-flex items-center">
-                <i className="icon-like text-16 mr-10"></i>
-                Helpful
-              </a>
-            </div>
-            <div>
-              <a href="#" className="d-flex items-center">
-                <i className="icon-dislike text-16 mr-10"></i>
-                Not helpful
-              </a>
-            </div>
-          </div>
+         
         </div>
       ))}
     </>

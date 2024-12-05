@@ -4,7 +4,9 @@ const {
   createTourGuide,
   updateTourguideData,
   getTourguideInfo,
-  getTourguideNotifications
+  getTourguideNotifications,
+  deleteTourguideNotification,
+  markNotificationRead
 } = require("../controllers/TourGuideController");
 const validateIDs = require("../middleware/IDMiddleware");
 const TourGuide = require("../models/users/TourGuide");
@@ -23,6 +25,20 @@ router.get(
   verifyToken,
   authorizeRoles("Tour Guide"),
   getTourguideNotifications
+);
+
+router.delete(
+  "/tourGuide/deleteNotificationList/:id",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  deleteTourguideNotification
+);
+
+router.patch(
+  "/tourGuide/markNotification/:id",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  markNotificationRead
 );
 
 
