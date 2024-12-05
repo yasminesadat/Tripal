@@ -190,4 +190,15 @@ const getDataForEventOwner = async (req, res) => {
   }
 };
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner };
+const getTotalUsersCount= async(req,res)=>{
+  try{
+    const totalUsers = await User.countDocuments();
+    res.status(200).json(totalUsers);
+  }
+  catch(error){
+      res.status(500).json({ message: 'Server error', error: error.message });
+    
+  }
+}
+
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner,getTotalUsersCount };
