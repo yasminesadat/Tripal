@@ -26,7 +26,9 @@ const {
   completeFlightBooking, getTouristNotifications,
   addToCart,
   removeFromCart, checkTouristPromocode,
-  getCart
+  getCart,
+  getAddresses,
+  addAddress
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -186,4 +188,19 @@ router.post(
   authorizeRoles("Tourist"),
   checkTouristPromocode
 );
+
+router.get(
+  "/tourist/address",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getAddresses
+);
+
+router.post(
+  "/tourist/address",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addAddress
+);
+
 module.exports = router;

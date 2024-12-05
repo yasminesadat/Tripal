@@ -27,7 +27,7 @@ import WishListPage from "@/pages/tourist/WishList";
 import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
 import PreferenceSelection from "@/pages/tourist/PreferenceSelection";
 import CategorySelection from "@/pages/tourist/CategorySelection";
-
+import Checkout from "../pages/tourist/Checkout";
 const touristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
   { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
@@ -56,6 +56,9 @@ const touristRoutes = [
    {
     path: "/tourist/view-products/product/:id",
     element: <TouristViewProduct />,
+  },
+  {path:"/checkout",
+    element:<Checkout/>
   },
   // { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   // { path: "/tourist/view-Complaints", element: <MyComplaints /> },

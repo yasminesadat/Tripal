@@ -20,6 +20,7 @@ const Cart = () => {
     const [cart, setCart] = useState([]);
     const [userData, setUserData] = useState("");
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); 
 
     const fetchUserData = async () => {
         try {
@@ -118,6 +119,16 @@ const Cart = () => {
                                                 ))}
                                             </tbody>
                                         </table>
+                                        {cart.length>0 &&(
+                                        <Button
+                                            type="primary"
+                                            className="custom-button"
+                                            onClick={() => navigate("/checkout")}
+                                            style={{marginLeft:"83%"}}
+                                        >
+                                            Proceed to Checkout
+                                        </Button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
