@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-import { updateTouristInformation, getTouristUserName } from '../../api/TouristService';
+import { updateTouristInformation, getTouristUserName, getWalletAndTotalPoints } from '../../api/TouristService';
 import { saveFlightBooking } from "../../api/TouristService";
 import { getHotelHistory } from "../../api/HotelService";
 import TransportationBookingPopUp from './TransportationBooking'
 import moment from "moment";
-import { Checkbox } from 'antd';
+import { Checkbox, Modal, Button} from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -32,7 +32,13 @@ const FlightBookingDetails = () => {
   const [isBookedReturnTransportation,setIsBookedReturnTransportation]=useState(false);
   const [isBookedAccepted,setIsBookedAccepted]=useState(false);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
+  const [isModalVisible, setIsModalVisible] = useState(false); 
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null); 
+  const [totalPoints, setTotalPoints] = useState(null); 
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+
   const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
+
   useEffect(() => {
     const fetchTouristInfo = async () => {
       try {
@@ -43,7 +49,18 @@ const FlightBookingDetails = () => {
         console.error("Error fetching tourist information:", error);
       }
     };
+
+    const fetchWalletData = async () => {
+      try {
+        const data = await getWalletAndTotalPoints();
+        setUpdatedWalletInfo(data.wallet);
+        setTotalPoints(data.totalPoints);
+      } catch (error) {
+        console.error("Error fetching wallet data:", error);
+      }
+    };
     fetchTouristInfo();
+    fetchWalletData();
   }, []);
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
@@ -135,7 +152,15 @@ const FlightBookingDetails = () => {
       if (paymentMethod === 'wallet') {
         const response = await saveFlightBooking(body);
         console.log("Tourist updated with flight info:", response);
-        navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate, isBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation } });
+        const updatedWalletData = await getWalletAndTotalPoints();
+        setTotalPoints (updatedWalletData.totalPoints);
+      setUpdatedWalletInfo(updatedWalletData); // Store the wallet data
+      setIsConfirmationModalVisible(true);
+      setIsModalVisible(true); // Show the modal
+        console.log (updatedWalletData)
+        console.log ("updateddd points", updatedWalletData.totalPoints)
+      message.success("Payment successful! Wallet updated."); // Optional notification
+        //navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate, isBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation } });
       }
       
       // If payment method is card, create a Stripe checkout session
@@ -362,11 +387,165 @@ const FlightBookingDetails = () => {
               </div>
             </div>
           </div>
+          {/* <Modal
+  title="Wallet Updated!"
+  visible={isModalVisible}
+  onOk={() => {
+    setIsModalVisible(false);
+    navigate('/tourist'); // Navigate to /tourist when clicking OK
+  }}
+  onCancel={() => {
+    setIsModalVisible(false);
+    navigate('/tourist'); // Navigate to /tourist when clicking Cancel
+  }}
+  okText="Close"
+>
+  <p><strong>New Wallet Balance:</strong> {updatedWalletInfo?.wallet} EGP</p>
+  <p><strong>Total Points:</strong> {updatedWalletInfo?.totalPoints} points</p>
+</Modal> */}
         </div>
       </section>
-      
-      <FooterThree />
-    </>
+      <Modal
+    title={null}
+    visible={isModalVisible}
+    onOk={() => {
+        setIsModalVisible(false);
+        navigate('/tourist/invoice', { 
+            state: { 
+                flight, 
+                touristInfo, 
+                currency, 
+                exchangeRate, 
+                isBookedAccepted, 
+                isBookedOriginatingTransportation, 
+                isBookedReturnTransportation 
+            } 
+        });
+    }}
+    onCancel={() => {
+      setIsModalVisible(false);
+      navigate('/tourist/invoice', { 
+          state: { 
+              flight, 
+              touristInfo, 
+              currency, 
+              exchangeRate, 
+              isBookedAccepted, 
+              isBookedOriginatingTransportation, 
+              isBookedReturnTransportation 
+          } 
+      });
+  }}
+    footer={[
+        <Button 
+            key="submit" 
+            className="modal-ok-button"
+            onClick={() => {
+                setIsModalVisible(false);
+                navigate('/tourist/invoice', { 
+                    state: { 
+                        flight, 
+                        touristInfo, 
+                        currency, 
+                        exchangeRate, 
+                        isBookedAccepted, 
+                        isBookedOriginatingTransportation, 
+                        isBookedReturnTransportation 
+                    } 
+                });
+            }}
+        >
+            OK
+        </Button>
+    ]}
+    closeIcon={<div className="modal-close-icon" onClick={() => setIsModalVisible(false)}>✕</div>}
+    style={{ 
+        top: '50%', 
+        transform: 'translateY(-50%)',
+        width: '350px',
+        borderRadius: '12px',
+        overflow: 'hidden'
+    }}
+    bodyStyle={{
+        backgroundColor: '#ffffff',
+        color: '#ffffff',
+        textAlign: 'center',
+        padding: '30px 20px',
+    }}
+>
+    <div className="wallet-modal-content">
+    <p>
+        <strong>New Wallet Balance:</strong> {updatedWalletInfo?.wallet?.amount ? updatedWalletInfo.wallet.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+    </p>
+    <p>
+        <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+    </p>
+    </div>
+
+    <style jsx>{`
+        .modal-close-icon {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #8f5774;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close-icon:hover {
+            color: #036264;
+        }
+
+        .ant-modal-footer {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            background-color: #e5f8f8;
+            border-top: none;
+        }
+
+        .modal-ok-button {
+            background-color: #8f5774 !important;
+            color: white !important;
+            border: none !important;
+            padding: 10px 20px !important;
+            border-radius: 8px !important;
+            font-weight: bold !important;
+            transition: background-color 0.3s ease !important;
+        }
+
+        .modal-ok-button:hover {
+            background-color: #036264 !important;
+        }
+
+        .wallet-modal-content {
+            font-family: inherit;
+        }
+
+        .wallet-modal-content p {
+            margin: 10px 0;
+            color: #11302a;
+        }
+    `}</style>
+</Modal>
+<Modal
+        title="Confirm Payment"
+        visible={isConfirmationModalVisible}
+        onOk={() => {
+          setIsConfirmationModalVisible(false);
+          processWalletPayment(); // Proceed with wallet payment
+        }}
+        onCancel={() => setIsConfirmationModalVisible(false)}
+        okText="Yes, Pay"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to pay from your wallet? This will decrement your wallet amount.</p>
+      </Modal>
+
+     <FooterThree />
+   </>
+  
   );
 };
 
