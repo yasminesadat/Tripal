@@ -20,14 +20,14 @@ const metadata = {
 
 export default function TouristHome() {
   const [open, setOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0); 
+  const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
   const refHeader = useRef(null);
   const refFlights = useRef(null);
   const refHotels = useRef(null);
-  const refActivities = useRef(null); 
+  const refActivities = useRef(null);
   const refItineraries = useRef(null);
   const refHisPlaces = useRef(null);
   const refProducts = useRef(null);
@@ -110,29 +110,29 @@ export default function TouristHome() {
 
   useEffect(() => {
     const storedStep = localStorage.getItem('currentStep');
-    
+
     if (storedStep === '6') {
       localStorage.setItem('currentStep', 0);
       setCurrentStep(0);
     } else if (storedStep) {
-      setCurrentStep(parseInt(storedStep, 10)); 
+      setCurrentStep(parseInt(storedStep, 10));
     } else {
-      setCurrentStep(0); 
+      setCurrentStep(0);
     }
   }, []);
-  
+
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
     const targetStep = location.state?.targetStep;
-  
+
     if (isFromTour && targetStep !== undefined) {
-      setCurrentStep(targetStep);  
-      localStorage.setItem('currentStep', targetStep);  
-  
+      setCurrentStep(targetStep);
+      localStorage.setItem('currentStep', targetStep);
+
       const timer = setTimeout(() => {
         setOpen(true);
-      }, 1000);  
-  
+      }, 1000);
+
       return () => clearTimeout(timer);
     } else {
       const storedStep = localStorage.getItem('currentStep');
@@ -142,8 +142,8 @@ export default function TouristHome() {
         setCurrentStep(0);
       }
     }
-  }, [location]);  
-  
+  }, [location]);
+
   const handleStepChange = (newStep) => {
     setCurrentStep(newStep);
     localStorage.setItem('currentStep', newStep);
@@ -185,7 +185,13 @@ export default function TouristHome() {
           color: #5a9ea0;
           font-weight: 600;
         }
+    .ant-tour {
+  z-index: 2000 !important;
+}
 
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         .ant-tour .ant-tour-close {
           color: #5a9ea0;
           opacity: 0.8;
@@ -229,16 +235,16 @@ export default function TouristHome() {
       `}</style>
       <MetaComponent meta={metadata} />
       <main>
-        <TouristHeader 
-          setOpen={setOpen} 
-          refFlights={refFlights} 
-          refHotels={refHotels} 
+        <TouristHeader
+          setOpen={setOpen}
+          refFlights={refFlights}
+          refHotels={refHotels}
           refActivities={refActivities}
           refItineraries={refItineraries}
           refHisPlaces={refHisPlaces}
           refProducts={refProducts}
         />
-        <Tour 
+        <Tour
           open={open}
           onClose={() => setOpen(false)}
           steps={steps}

@@ -86,7 +86,7 @@ export default function GuestHeader({ refLogin, setOpen }) {
                 Log in
               </Link>
             </div>
-            
+
           </div>
         </div>
       </header>
@@ -120,6 +120,13 @@ export default function GuestHeader({ refLogin, setOpen }) {
         .dropdown-menu a {
           text-decoration: none;
           color: inherit;
+          .ant-tour {
+  z-index: 2000 !important;
+}
+
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         }`}</style>
     </>
   );

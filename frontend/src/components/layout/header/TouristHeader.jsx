@@ -200,6 +200,13 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
         .dropdown-menu a {
           text-decoration: none;
           color: inherit;
+          .ant-tour {
+  z-index: 2000 !important;
+}
+
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         }`}</style>
     </>
   );
