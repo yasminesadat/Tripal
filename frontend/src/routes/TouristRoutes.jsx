@@ -25,6 +25,8 @@ import Hero6 from "../pages/BookingHotels/SearchHotel2";
 import BookmarkedEvents from "../pages/tourist/bookmarked"
 import WishListPage from "@/pages/tourist/WishList";
 import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
+import PreferenceSelection from "@/pages/tourist/PreferenceSelection";
+import CategorySelection from "@/pages/tourist/CategorySelection";
 
 const touristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -74,7 +76,10 @@ const touristRoutes = [
   {path:"/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2", element:<HotelDetails/>},
   {path:"/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate",element:<BookingPages/>},
   { path: "/wishlist", element:<WishListPage/> },
-  {path:"/success", element: <FlightCheckout/>}
+  {path:"/success", element: <FlightCheckout/>},
+  {path:"/tourist/preferences", element: <PreferenceSelection/>},
+  {path:"/tourist/select-categories", element: <CategorySelection/>},
+  
 ];
 
 export default touristRoutes;
