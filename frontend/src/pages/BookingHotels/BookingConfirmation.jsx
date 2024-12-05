@@ -65,12 +65,15 @@ export default function BookingPages() {
             <div className="container">
               <div className="row">
                 <div className="col-lg-8">
-                  <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
-                    {bookingStage === 2 && (
-                      <div>
-                        <h2 className="text-30 md:text-24 fw-700 mb-30">
-                          How do you want to pay?
-                        </h2>
+                <div
+  className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30 flex justify-center items-center"
+  style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}
+>
+  {bookingStage === 2 && (
+    <div>
+      <h2 className="text-30 md:text-24 fw-700 mb-30">
+        How do you want to pay?
+      </h2>
 
                         <div className="tabs -pills-3 js-tabs">
                           <CreditCard

@@ -223,13 +223,12 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
 
             <style jsx>{`
                 .payment-container {
-                    font-family: 'Arial', sans-serif;
                     max-width: 400px;
                     margin: 30px auto 0;
                 }
 
                 .payment-form {
-                    background-color: #e5f8f8;
+                    background-color: #dac4d0;
                     border-radius: 12px;
                     padding: 20px;
                     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
