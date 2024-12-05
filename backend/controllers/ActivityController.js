@@ -232,12 +232,26 @@ const getAllActivities = async (req, res) => {
 
 const adminFlagActivity = async (req, res) => {
   try {
-    const activity = await Activity.findById(req.params.activityId);
+    const activity = await Activity.findById(req.params.activityId).populate('advertiser');
     const userData  = req.body;
-    sendAnEmailForActivityFlag(userData, activity.title);
+   
     if (!activity) return res.status(404).json({ error: "Activity not found" });
     activity.flagged = !activity.flagged;
-    await activity.save();
+    
+   
+
+    sendAnEmailForActivityFlag(userData, activity.title);
+    console.log("hii55",activity.advertiser.notificationList);
+    if (activity.flagged){
+      activity.advertiser.notificationList.push({message:`Your activity ${activity.title} has been flagged as inappropriate by the admin.`})
+      }
+      else{
+          activity.advertiser.notificationList.push({message:`Your activity ${activity.title} has been flagged as appropriate by the admin.`})
+      } 
+
+      await activity.save();
+      await activity.advertiser.save();
+
     res.status(200).json({ message: "Activity flagged successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });

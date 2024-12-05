@@ -393,7 +393,7 @@ export default function TourSingleSidebar({
       </div>
       {canBook ? (
         <button
-          className="button -md -dark-1 col-12 bg-accent-1 text-white mt-20"
+          className="button -md -lightpurple col-12 bg-accent-1 text-white mt-20"
           onClick={() => {
             // Navigate to the confirmation page
             window.location.href = `/confirmBooking/${cityCode}/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}/${exchangeRate}`;

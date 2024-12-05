@@ -122,30 +122,26 @@ const fetchTourData = async () => {
                         </div>
                       )}
 
-                      <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
-                          <i className="icon-heart text-15"></i>
-                        </button>
-                      </div>
+                      
                     </div>
 
                     <div className="tourCard__content">
-                      <div className="tourCard__location">
+                      <div className="tourCard__location" style={{cursor:'default'}}>
                         <i className="icon-pin"></i>
                         {elm.location}
                       </div>
 
-                      <h3 className="tourCard__title mt-5">
+                      <h3 className="tourCard__title mt-5" style={{cursor:'default'}}>
                         <span>{elm.title}</span>
                       </h3>
 
-                      <p className="tourCard__text mt-5">{elm.description}</p>
+                      <p className="tourCard__text mt-5 " style={{cursor:'default'}}>{elm.description}</p>
 
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.features?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className="text-14 text-accent-1">
-                              <i className={`${elm2.icon} mr-10`}></i>
+                            <div className="text-14" style={{color:'var(--color-stone)', cursor:'default'}}>
+                              <i className={`${elm2.icon} mr-10`} ></i>
                               {elm2.name}
                             </div>
                           </div>
@@ -156,23 +152,23 @@ const fetchTourData = async () => {
                     <div className="tourCard__info">
                       <div>
                         <div className="d-flex items-center text-14">
-                          <i className="icon-clock mr-10"></i>
+                          <i className="icon-clock mr-10" style={{cursor:'default'}}></i>
                           {elm.duration}
                         </div>
 
-                        <div className="tourCard__price">
+                        <div className="tourCard__price" style={{cursor:'default'}}>
                           <div>EGP {elm.fromPrice}</div>
 
                           <div className="d-flex items-center">
                             From{" "}
-                            <span className="text-20 fw-500 ml-5">
+                            <span className="text-20 fw-500 ml-5" style={{cursor:'default'}}>
                               EGP {elm.price}
                             </span>
                           </div>
                         </div>
                       </div>
 
-                      <button className="button -outline-accent-1 text-accent-1" onClick={() => window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`} >
+                      <button className="button -outline-accent-1 " style={{color:'var(--color-stone)'}} onClick={() => window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`} >
                         {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>

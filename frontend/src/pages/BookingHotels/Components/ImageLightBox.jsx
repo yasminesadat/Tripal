@@ -6,6 +6,7 @@ export default function ImageLightBox({
   activeLightBox,
   currentSlideIndex,
   setCurrentSlideIndex,
+  onSeeAllPhotosClick
 }) {
   return (
     <div
@@ -17,6 +18,8 @@ export default function ImageLightBox({
         style={{ zIndex: 1000 }}
         onClick={() => {
           setActiveLightBox(false);
+          onSeeAllPhotosClick();
+
         }}
       >
         <span>&times;</span>

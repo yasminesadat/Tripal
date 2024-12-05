@@ -245,16 +245,18 @@ export default function Hero6() {
                               }
                             >
                               <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                                <i className="text-20 icon-calendar"></i>
+                                <i className="text-20 icon-calendar"  onClick={() =>
+                                setCurrentActiveDD("calender",
+                                )
+                              }></i>
                               </div>
-                              <div className="searchFormItem__content">
+                              <div className="searchFormItem__content" >
                                 <div>
-                                  <span className="js-first-date">
+                                  <span className="js-first-date" style={{cursor:"pointer"}}>
                                     <Calender dates={dates} setDates={setDates}
                                       active={currentActiveDD === "calender"}
                                     />
                                   </span>
-                                  <span className="js-last-date"></span>
                                 </div>
                               </div>
                             </div>

@@ -6,6 +6,8 @@ import img from "./Components/HotelsImages/bookingicon2.png";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
+import moment from "moment";
+
 
 export default function BookingPages() {
   const metadata = {
@@ -34,6 +36,7 @@ export default function BookingPages() {
     currency,
     exchangeRate,
   } = useParams();
+
 
   useEffect(() => {
     const calculatedTotal = (
@@ -96,7 +99,7 @@ export default function BookingPages() {
 
                       <div>
                         <div className="d-flex flex-column items-center text-center">
-                          <div className="size-80 rounded-full flex-center bg-accent-1 text-white">
+                          <div className="size-80 rounded-full flex-center bg-accent-1 text-white" >
                             <i className="icon-check text-26"></i>
                           </div>
 
@@ -108,30 +111,30 @@ export default function BookingPages() {
                           </div>
                         </div>
 
-                        <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30">
+                        <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30"  style={{color:"var(--color-light-purple"}}>
                           <div className="row y-gap-15">
-                            <div className="col-md-3 col-6">
+                            <div className="col-md-3 col-6" >
                               <div>Order Number</div>
-                              <div className="text-accent-2">13119</div>
+                              <div className="text-accent-2"  style={{color:"var(--color-dark-purple"}}>13119</div>
                             </div>
 
                             <div className="col-md-3 col-6">
                               <div>Date of Booking</div>
-                              <div className="text-accent-2">
+                              <div className="text-accent-2" style={{color:"var(--color-dark-purple"}}>
                                 {format(today, "MMMM dd, yyyy")}
                               </div>
                             </div>
 
                             <div className="col-md-3 col-6">
                               <div>Total</div>
-                              <div className="text-accent-2">
+                              <div className="text-accent-2" style={{color:"var(--color-dark-purple"}}>
                                 {currency} {total}
                               </div>
                             </div>
 
                             <div className="col-md-3 col-6">
                               <div>Payment Method</div>
-                              <div className="text-accent-2">Online Payment</div>
+                              <div className="text-accent-2" style={{color:"var(--color-dark-purple"}}>Online Payment</div>
                             </div>
                           </div>
                         </div>
@@ -221,25 +224,27 @@ export default function BookingPages() {
                 <div className="col-lg-4">
                   <div className="pl-50 md:pl-0">
                     <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
-                      <h2 className="text-20 fw-500">Your booking details</h2>
+                      <h2 className="text-20 fw-500" style={{color:"var(--color-dark-purple"}}>Your Booking Details</h2>
 
                       <div className="d-flex mt-30">
                         <img src={img} alt="image" />
-                        <div className="ml-20">{name}</div>
+                        <div className="ml-20"  >{name}</div>
                       </div>
 
                       <div className="line mt-20 mb-20"></div>
 
                       <div className="">
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckInDate:</div>
-                          <div className="">{checkIn}</div>
+                          <div className="fw-500">CheckInDate: {checkIn}</div>
+                          <div className="">{}</div>
                         </div>
 
+                        <div className="line mt-10 mb-10"></div>
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckOut</div>
-                          <div className="">{checkOut}</div>
+                          <div className="fw-500">CheckOut: {checkOut}</div>
+                          <div className="">{}</div>
                         </div>
+                        <div className="line mt-10 mb-10"></div>
 
                         {singleNumber > 0 && (
                           <div className="d-flex items-center justify-between">
@@ -270,6 +275,7 @@ export default function BookingPages() {
                             </div>
                           </div>
                         )}
+                        <div className="line mt-10 mb-10"></div>
 
                         <div className="d-flex items-center justify-between">
                           <div className="fw-500">Board Type:</div>
