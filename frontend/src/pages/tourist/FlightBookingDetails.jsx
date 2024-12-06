@@ -11,6 +11,7 @@ import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { loadStripe } from "@stripe/stripe-js";
+import { AlertCircle } from 'lucide-react';
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -36,6 +37,7 @@ const FlightBookingDetails = () => {
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null); 
   const [totalPoints, setTotalPoints] = useState(null); 
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
   const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
@@ -132,6 +134,60 @@ const FlightBookingDetails = () => {
   const convertPrice = (price) => {
     return (price * exchangeRate).toFixed(2);
   };
+
+  const confirmBooking = (body) => {
+    if (!body) {
+      console.error("Body is not provided for payment.");
+      return;
+    }
+    setPendingPaymentBody(body); // Store the payment details
+    setIsConfirmationModalVisible(true); // Show confirmation modal
+  };
+  
+  // Function to handle wallet payment after user confirms
+  const handleWalletPayment = async () => {
+    try {
+      if (!pendingPaymentBody) {
+        message.error("No payment details available.");
+        return;
+      }
+  
+      const response = await saveFlightBooking(pendingPaymentBody);
+      console.log("Tourist updated with flight info:", response);
+  
+      const updatedWalletData = await getWalletAndTotalPoints();
+      setTotalPoints(updatedWalletData.totalPoints);
+      setUpdatedWalletInfo(updatedWalletData);
+  
+      message.success("Payment successful! Wallet updated.");
+      setIsConfirmationModalVisible(false);
+      setIsModalVisible(true);
+      setPendingPaymentBody(null);
+    } catch (error) {
+      console.error("Error processing wallet payment:", error);
+      message.error("There was an issue updating your information.");
+    }
+  };
+  
+  const cancelPayment = () => {
+    setIsConfirmationModalVisible(false);
+    setPendingPaymentBody(null);
+  };
+  
+  const handleCardPayment = async (body) => {
+    try {
+      const response = await saveFlightBooking(body);
+  
+      const stripe = await stripePromise;
+      const { sessionId } = response;
+  
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.error("Error processing card payment:", error);
+      message.error("There was an issue updating your information.");
+    }
+  };
+  
   const handlePaymentSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -149,36 +205,28 @@ const FlightBookingDetails = () => {
         useWallet: paymentMethod === "wallet",
         paymentMethod,
       };
-      if (paymentMethod === 'wallet') {
-        const response = await saveFlightBooking(body);
-        console.log("Tourist updated with flight info:", response);
-        const updatedWalletData = await getWalletAndTotalPoints();
-        setTotalPoints (updatedWalletData.totalPoints);
-      setUpdatedWalletInfo(updatedWalletData); // Store the wallet data
-      setIsConfirmationModalVisible(true);
-      setIsModalVisible(true); // Show the modal
-        console.log (updatedWalletData)
-        console.log ("updateddd points", updatedWalletData.totalPoints)
-      message.success("Payment successful! Wallet updated."); // Optional notification
-        //navigate('/tourist/invoice', { state: { flight, touristInfo, currency, exchangeRate, isBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation } });
+  
+      if (paymentMethod === "wallet") {
+        await handleWalletPayment(body);
+      } else if (paymentMethod === "card") {
+        await handleCardPayment(body);
       }
-      
-      // If payment method is card, create a Stripe checkout session
-      else if (paymentMethod === 'card') {
-        const response = await saveFlightBooking(body);
-  
-        const stripe = await stripePromise;
-        const { sessionId } = response;
-  
-        const stripeSession = await stripe.redirectToCheckout({ sessionId });
-  
-      }
-  
     } catch (error) {
-      console.error("Error updating tourist information:", error);
-      message.error("There was an issue updating your information.");
+      console.error("Error submitting payment:", error);
+      message.error("There was an issue submitting your payment.");
     }
   };
+
+  const showConfirmationModal = () => {
+    setIsConfirmationModalVisible(true);
+  };
+
+  const handleConfirmationYes = () => {
+    setIsConfirmationModalVisible(false);
+    setIsModalVisible(true);
+    handlePaymentSubmit();
+  };
+  
   return (
     <>
       <MetaComponent title="Flight Booking Details" />
@@ -246,81 +294,98 @@ const FlightBookingDetails = () => {
                     </div>
 
                     <button 
-                        type="submit" 
-                        className="button -md text-white mt-30 w-100"
-                        onClick={handlePaymentSubmit}
-                        style={{
-                          backgroundColor: '#8f5774',
-                          border: '2px solid #8f5774',
-                          transition: 'all 0.3s ease',
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = '#dac4d0';
-                          e.currentTarget.style.color = '#8f5774';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = '#8f5774';
-                          e.currentTarget.style.color = 'white';
-                        }}
+                      type="submit" 
+                      className="button -md text-white mt-30 w-100"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent the default form submission
+                        const body = {
+                          bookedFlights: flight.itineraries.map((itinerary, index) => ({
+                            flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
+                            airline: flight.validatingAirlineCodes[0] || "Unknown",
+                            departureTime: new Date(itinerary?.segments[0]?.departure?.at).toISOString(),
+                            arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
+                            origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
+                            destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
+                            price: flight.price?.total.toString() || "0.00",
+                            currency: flight.price?.currency || "EGP",
+                          })),
+                          useWallet: paymentMethod === "wallet",
+                          paymentMethod,
+                        };
+                        confirmBooking(body); // Now `body` is passed correctly
+                      }}
+                      style={{
+                        backgroundColor: '#8f5774',
+                        border: '2px solid #8f5774',
+                        transition: 'all 0.3s ease',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#dac4d0';
+                        e.currentTarget.style.color = '#8f5774';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = '#8f5774';
+                        e.currentTarget.style.color = 'white';
+                      }}
                       >
                       Complete Payment
                       <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
+                      </button>
                   </form>
                 </div>
               </div>
 
               <div className="col-lg-6">
-  <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
-    <h2 className="text-20 fw-500">Flight Details</h2>
+                <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
+                  <h2 className="text-20 fw-500">Flight Details</h2>
 
-    {flight.itineraries.map((itinerary, idx) => (
-      <div key={idx} className="mt-20">
-        <div className="d-flex items-center justify-between">
-          <div className="fw-500">Flight Number</div>
-          <div>
-            {itinerary?.segments[0]?.carrierCode} {itinerary?.segments[0]?.number}
-          </div>
-        </div>
+                  {flight.itineraries.map((itinerary, idx) => (
+                    <div key={idx} className="mt-20">
+                      <div className="d-flex items-center justify-between">
+                        <div className="fw-500">Flight Number</div>
+                        <div>
+                          {itinerary?.segments[0]?.carrierCode} {itinerary?.segments[0]?.number}
+                        </div>
+                      </div>
 
-        <div className="d-flex items-center justify-between">
-          <div className="fw-500">Airline</div>
-          <div>{flight.validatingAirlineCodes[0] || "Unknown Airline"}</div>
-        </div>
+                      <div className="d-flex items-center justify-between">
+                        <div className="fw-500">Airline</div>
+                        <div>{flight.validatingAirlineCodes[0] || "Unknown Airline"}</div>
+                      </div>
 
-        <div className="d-flex items-center justify-between">
-          <div className="fw-500">Departure</div>
-          <div>
-            {itinerary?.segments[0]?.departure?.iataCode} - {" "}
-            {new Date(itinerary?.segments[0]?.departure?.at).toLocaleString()}
-          </div>
-        </div>
+                      <div className="d-flex items-center justify-between">
+                        <div className="fw-500">Departure</div>
+                        <div>
+                          {itinerary?.segments[0]?.departure?.iataCode} - {" "}
+                          {new Date(itinerary?.segments[0]?.departure?.at).toLocaleString()}
+                        </div>
+                      </div>
 
-        <div className="d-flex items-center justify-between">
-          <div className="fw-500">Arrival</div>
-          <div>
-            {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} - {" "}
-            {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}
-          </div>
-        </div>
+                      <div className="d-flex items-center justify-between">
+                        <div className="fw-500">Arrival</div>
+                        <div>
+                          {itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.iataCode} - {" "}
+                          {new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toLocaleString()}
+                        </div>
+                      </div>
 
-        <div className="d-flex items-center justify-between">
-          <div className="fw-500">Duration</div>
-          <div>
-            {parseDuration(itinerary?.segments[0]?.duration)}
-          </div>
-        </div>
-      </div>
-    ))}
+                      <div className="d-flex items-center justify-between">
+                        <div className="fw-500">Duration</div>
+                        <div>
+                          {parseDuration(itinerary?.segments[0]?.duration)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
 
-    {/* Total Price - Appears only once */}
-    <div className="line mt-20 mb-20"></div>
-    <div className="d-flex items-center justify-between">
-      <div className="fw-500">Total Flight Price</div>
-      <div>{currency} {convertPrice(flight.price?.total)}</div>
-    </div>
-  </div>
-</div>
+                  {/* Total Price - Appears only once */}
+                  <div className="line mt-20 mb-20"></div>
+                  <div className="d-flex items-center justify-between">
+                    <div className="fw-500">Total Flight Price</div>
+                    <div>{currency} {convertPrice(flight.price?.total)}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -529,20 +594,34 @@ const FlightBookingDetails = () => {
         }
     `}</style>
 </Modal>
-<Modal
-        title="Confirm Payment"
-        visible={isConfirmationModalVisible}
-        onOk={() => {
-          setIsConfirmationModalVisible(false);
-          processWalletPayment(); // Proceed with wallet payment
-        }}
-        onCancel={() => setIsConfirmationModalVisible(false)}
-        okText="Yes, Pay"
-        cancelText="Cancel"
-      >
-        <p>Are you sure you want to pay from your wallet? This will decrement your wallet amount.</p>
-      </Modal>
-
+      {isConfirmationModalVisible && (
+        <Modal
+          visible={isConfirmationModalVisible}
+          onOk={handleWalletPayment}
+          onCancel={cancelPayment}
+          okText="Yes, Pay"
+          cancelText="Cancel"
+          className="custom-confirmation-modal"
+          okButtonProps={{
+            className: "bg-[#036264] hover:bg-[#04494b] text-white !important",
+            style: { backgroundColor: '#036264', color: 'white' }
+          }}
+          cancelButtonProps={{
+            className: "text-gray-600 hover:text-gray-800"
+          }}
+        >
+          <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+            <AlertCircle className="text-[#036264] w-12 h-12" />
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+              <p className="text-gray-600">
+                Are you sure you want to proceed with this payment? 
+                Please review the details before confirming.
+              </p>
+            </div>
+          </div>
+        </Modal>
+      )}
      <FooterThree />
    </>
   
