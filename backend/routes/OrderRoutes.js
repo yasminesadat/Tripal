@@ -5,7 +5,8 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 const {
   createOrder,
   cancelOrder,
-  getOrders
+  getOrders,
+  completeOrder
 } = require("../controllers/OrderController");
 
 router.post(
@@ -28,6 +29,13 @@ router.delete(
     verifyToken, 
     authorizeRoles("Tourist"), 
     getOrders 
+  );
+
+  router.post(
+    "/tourist/stripe/payment",
+    verifyToken,
+    authorizeRoles("Tourist"),
+    completeOrder
   );
 
 module.exports = router;
