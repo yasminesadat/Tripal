@@ -26,7 +26,7 @@ const bookResource = async (req, res) => {
       return res.status(403).json({ error: 'You must be at least 18 years old to book' });
 
     let totalAmount = resource.price * tickets + (resource.serviceFee ? resource.serviceFee : 0);
-    
+
     if (myPromoCode) {
       const code = await promoCode.findOne({ name: myPromoCode });
       if (code) {
@@ -49,7 +49,7 @@ const bookResource = async (req, res) => {
                 name: `${resourceType} Booking: ${resource.title}`,
                 description: `Booking Description: ${resource.description}`,
               },
-              unit_amount: totalAmount * 100, // Stripe expects amount in the smallest unit (cents)
+              unit_amount: (totalAmount * 100) / tickets, // Stripe expects amount in the smallest unit (cents)
             },
             quantity: tickets,
           },
@@ -109,6 +109,7 @@ const bookResource = async (req, res) => {
         <p>Tickets Booked: ${tickets}</p>
         <p>Total Cost: ${totalAmount}</p>
         <p>Wallet Balance: ${tourist.wallet.amount}</p>
+             <p> Payment Method: Wallet</p>
         <p>Points Earned: ${pointsToReceive}</p>
         <p>Thank you for booking with us!</p>
       `;
@@ -278,10 +279,10 @@ cron.schedule('6 22 * * *', async () => {
             console.log("SENT!")
             tourist.notificationList.push({
 
-                message: `This is a reminder that your booked activity, ${activity.title}, is coming up in 3 days!`,
-                notifType: "events"
-              });
-              await tourist.save(); 
+              message: `This is a reminder that your booked activity, ${activity.title}, is coming up in 3 days!`,
+              notifType: "events"
+            });
+            await tourist.save();
 
           }
         }
@@ -349,14 +350,14 @@ const completeBooking = async (req, res) => {
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   console.log("im here in complete booking");
-  
+
   if (session.payment_status !== "paid") {
     return res.status(400).json({ error: "Payment not successful" });
   }
 
   try {
     const model = resourceType === 'activity' ? Activity : itineraryModel;
-    const resource = await model.findById(resourceId); 
+    const resource = await model.findById(resourceId);
 
     if (!resource) {
       return res.status(404).json({ error: `${resourceType} not found` });
@@ -387,9 +388,11 @@ const completeBooking = async (req, res) => {
       <p>Dear ${tourist.userName},</p>
       <p>Your booking for ${resource.title} has been confirmed.</p>
       <p>Tickets Booked: ${tickets}</p>
-      <p>Total Cost: ${resource.price * tickets}</p>
+      <p>Total Cost: ${resource.price * tickets + (resource.serviceFee ? resource.serviceFee : 0)}</p>
       <p>Wallet Balance: ${tourist.wallet.amount}</p>
-      <p>Thank you for booking with us!</p>
+      <p>Payment Method: Credit Card</p>
+    <p>Thank you for booking with us!</p>
+
     `;
 
     try {
