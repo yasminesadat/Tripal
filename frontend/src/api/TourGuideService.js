@@ -1,6 +1,6 @@
 import { axios } from "./axios";
 
-export const createTourGuide= async (newUser) => {
+export const createTourGuide = async (newUser) => {
   try {
     const response = await axios.post("/tourGuide", newUser);
     return response;
@@ -88,14 +88,14 @@ export const addRating = async (tourGuideID, ratingData) => {
   }
 };
 
-export async function changeTourGuidePassword(id, oldPassword, newPassword) {
+export async function changeTourGuidePassword(oldPassword, newPassword) {
   try {
     const body = {
       oldPassword: oldPassword,
       newPassword: newPassword,
     };
-    console.log(`/tourGuide-change-pass/${id}`);
-    const response = await axios.put(`/tourGuide-change-pass/${id}`, body);
+    console.log(`/tourGuide-change-pass`);
+    const response = await axios.put(`/tourGuide-change-pass`, body);
     return response.data;
   } catch (error) {
     console.error("error", error);
