@@ -974,8 +974,8 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
 
 
 const addAddress = asyncHandler(async (req, res) => {
-  const touristId = req.userId;  
-  const { street, city, zipCode, country } = req.body; 
+  const touristId = req.userId;
+  const { street, city, zipCode, country } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
@@ -1016,10 +1016,10 @@ const addAddress = asyncHandler(async (req, res) => {
 
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred while adding the address.",
-
-    
-
+      message: "An error occurred while adding the address."
+    })
+  }
+});
 
 
 module.exports = {
@@ -1049,7 +1049,7 @@ module.exports = {
   saveFlightBooking,
   completeFlightBooking,
   getAddresses,
-  addAddress
+  addAddress,
   getWalletAndTotalPoints
 
 };

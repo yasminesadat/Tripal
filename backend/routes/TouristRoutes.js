@@ -207,7 +207,7 @@ router.post(
   addAddress
 );
 
-
+router.get(
   "/tourist/wallet",
   verifyToken,
   authorizeRoles("Tourist"),
