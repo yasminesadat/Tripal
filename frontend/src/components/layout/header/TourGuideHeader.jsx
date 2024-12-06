@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import Menu from "../components/TourGuideMenu";
 import { profile } from "@/data/tourGuideMenu";
 import { Link, useNavigate } from "react-router-dom";
@@ -57,28 +57,28 @@ export default function TourGuideHeader() {
   };
 
   // Notification handling methods
-  const handleNotificationRead = async(id) => {
-    try{
-    setNotifications(
-      notifications.map((n) =>
-        n.id === id ? { ...n, read: true } : n
-      )
-    );
-    const response= await markNotification(id);
-  }
-  catch(error){
-    message.error(error);
-  }
+  const handleNotificationRead = async (id) => {
+    try {
+      setNotifications(
+        notifications.map((n) =>
+          n.id === id ? { ...n, read: true } : n
+        )
+      );
+      const response = await markNotification(id);
+    }
+    catch (error) {
+      message.error(error);
+    }
   };
 
-  const handleNotificationRemove = async(id) => {
-    try{
-     setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
-     const response= await deleteNotifications(id);
+  const handleNotificationRemove = async (id) => {
+    try {
+      setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
+      const response = await deleteNotifications(id);
 
-        } catch(error){
-          message.error(error);
-            }
+    } catch (error) {
+      message.error(error);
+    }
   };
 
   const handleLogout = async () => {
@@ -118,7 +118,7 @@ export default function TourGuideHeader() {
           </div>
 
           <div className="header__right">
-            <Link to="/" className="ml-20">
+            <Link to="/help-center" className="ml-20">
               Help
             </Link>
 
@@ -143,35 +143,35 @@ export default function TourGuideHeader() {
                     {notifications.length === 0 ? (
                       <p className="text-gray-500">No notifications</p>
                     ) : (
-          <ul>
-            {notifications.map((notification) => (
-             <li key={notification.id} className={`flex justify-between items-center p-4 mb-2 border rounded-md ${!notification.read ? 'bg-gray-100' : ''}`}>
-             <div className="flex-grow">
-               <span className={notification.read ? '' : 'font-boldNotification'}>
-                {notification.message}
-                </span>
-             </div>
-           
-             {/* Flex container for the check and X icons */}
-             <div className="check-x-container">
-               <Check
-                 className="h-4 w-4 text-red-500 cursor-pointer hover:text-green-500"
-                 onClick={() => handleNotificationRead(notification.id)}
-               />
-               <X
-                 className="h-4 w-4 text-red-500 cursor-pointer hover:text-red-700"
-                 onClick={() => handleNotificationRemove(notification.id)}
-               />
-             </div>
-           </li>
-           
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  )}
-</div>
+                      <ul>
+                        {notifications.map((notification) => (
+                          <li key={notification.id} className={`flex justify-between items-center p-4 mb-2 border rounded-md ${!notification.read ? 'bg-gray-100' : ''}`}>
+                            <div className="flex-grow">
+                              <span className={notification.read ? '' : 'font-boldNotification'}>
+                                {notification.message}
+                              </span>
+                            </div>
+
+                            {/* Flex container for the check and X icons */}
+                            <div className="check-x-container">
+                              <Check
+                                className="h-4 w-4 text-red-500 cursor-pointer hover:text-green-500"
+                                onClick={() => handleNotificationRead(notification.id)}
+                              />
+                              <X
+                                className="h-4 w-4 text-red-500 cursor-pointer hover:text-red-700"
+                                onClick={() => handleNotificationRemove(notification.id)}
+                              />
+                            </div>
+                          </li>
+
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <button onClick={() => setMobileMenuOpen(true)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""}`}>
               <i className="icon-person text-18"></i>

@@ -28,6 +28,8 @@ import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
 import PreferenceSelection from "@/pages/tourist/PreferenceSelection";
 import CategorySelection from "@/pages/tourist/CategorySelection";
 import BookingPagesStripe from "@/pages/BookingHotels/HotelStripeSuccess";
+import SuccessPage from "@/components/activity/activitySingle/SuccessPage";
+
 
 const touristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -81,6 +83,8 @@ const touristRoutes = [
   {path:"/tourist/preferences", element: <PreferenceSelection/>},
   {path:"/tourist/select-categories", element: <CategorySelection/>},
   {path: "/successHotel", element: <BookingPagesStripe/>}
+  {path:"/success/resource", element: <SuccessPage/>}
+
   
 ];
 

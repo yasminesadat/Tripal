@@ -259,3 +259,15 @@ export async function removeFromCart(touristId, productId) {
     throw error;
   }
 }
+
+export async function getWalletAndTotalPoints() {
+  try {
+    const response = await axios.get(`/tourist/wallet`);
+    console.log("Incoming", response.data);
+    return response.data;
+    
+  } catch (error) {
+    console.error("Error fetching wallet:", error);
+    throw error;
+  }
+}

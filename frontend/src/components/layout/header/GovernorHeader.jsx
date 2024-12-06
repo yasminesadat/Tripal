@@ -77,17 +77,16 @@ export default function GovernorHeader() {
           </div>
 
           <div className="header__right">
-            <Link to="/" className="ml-20">
-              {/*/help-center*/}
+            <Link to="/help-center" className="ml-20">
+
               Help
             </Link>
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""
+                }`}
             >
               <i className="icon-person text-18"></i>
             </button>
