@@ -64,6 +64,14 @@ router.post(
   authorizeRoles("Admin"),
   createPromoCode
 );
+router.get(
+  "/admin/promocode",
+  verifyToken,
+  authorizeRoles("Admin"),
+  getPromoCodes
+);
+
+
 
 router.get(
   "/admin/getDataForEventOwner/:userId",

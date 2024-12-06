@@ -1,7 +1,7 @@
 const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
-const {sendEmail} = require('./Mailer');
+const { sendEmail } = require('./Mailer');
 const cron = require('node-cron');
 const moment = require('moment'); // Use moment.js for date manipulation
 const promoCode = require('../models/PromoCode');
@@ -132,25 +132,25 @@ const bookResource = async (req, res) => {
 
 
 const cancelResource = async (req, res) => {
-const { resourceType, resourceId } = req.params;
-const touristId  = req.userId;
-const model = resourceType === 'activity' ? Activity : itineraryModel;
-const currentTime = new Date();
+  const { resourceType, resourceId } = req.params;
+  const touristId = req.userId;
+  const model = resourceType === 'activity' ? Activity : itineraryModel;
+  const currentTime = new Date();
 
-var ticketsForPoints;
+  var ticketsForPoints;
 
-try {
+  try {
     const resource = await model.findById(resourceId);
     const tourist = await Tourist.findById(touristId);
 
-    if (!resource) 
-    return res.status(404).json({ error: `${resourceType} not founddd` });
+    if (!resource)
+      return res.status(404).json({ error: `${resourceType} not founddd` });
 
     let cancellationDeadline;
     if (resourceType === 'activity') {
       cancellationDeadline = new Date(resource.date);
     } else if (resourceType === 'itinerary') {
-        cancellationDeadline = new Date(resource.startDate);
+      cancellationDeadline = new Date(resource.startDate);
     }
     cancellationDeadline.setHours(0, 0, 0, 0);
     currentTime.setHours(0, 0, 0, 0);
@@ -161,70 +161,70 @@ try {
     }
 
     if (resourceType === 'activity') {
-            const bookingIndex = resource.bookings.findIndex(
-                booking => booking.touristId.toString() === touristId
-            );
-            
-            if (bookingIndex === -1) 
-                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-                        
-    
-            if (tourist){
-                tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
-                ticketsForPoints=resource.bookings[bookingIndex].tickets;
-                await tourist.save();
-            } 
-            resource.bookings.splice(bookingIndex, 1);   
-            resource.markModified('bookings');
-    } 
-    else if (resourceType === 'itinerary') {
-        
-        const bookingIndex = resource.bookings.findIndex(
-            booking => booking.touristId.toString() === touristId
-        );
-        if (bookingIndex === -1) {
-            return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-        }            
+      const bookingIndex = resource.bookings.findIndex(
+        booking => booking.touristId.toString() === touristId
+      );
 
-        if (tourist){
-            tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets+resource.serviceFee;
-            ticketsForPoints=resource.bookings[bookingIndex].tickets;   
-            await tourist.save();
-        } 
-        resource.bookings.splice(bookingIndex, 1);   
-        resource.markModified('bookings');
+      if (bookingIndex === -1)
+        return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+
+
+      if (tourist) {
+        tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets;
+        ticketsForPoints = resource.bookings[bookingIndex].tickets;
+        await tourist.save();
+      }
+      resource.bookings.splice(bookingIndex, 1);
+      resource.markModified('bookings');
+    }
+    else if (resourceType === 'itinerary') {
+
+      const bookingIndex = resource.bookings.findIndex(
+        booking => booking.touristId.toString() === touristId
+      );
+      if (bookingIndex === -1) {
+        return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+      }
+
+      if (tourist) {
+        tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets + resource.serviceFee;
+        ticketsForPoints = resource.bookings[bookingIndex].tickets;
+        await tourist.save();
+      }
+      resource.bookings.splice(bookingIndex, 1);
+      resource.markModified('bookings');
     }
     await resource.save();
 
-        if (!tourist) 
-            return res.status(404).json({ error: 'Tourist not found' });
+    if (!tourist)
+      return res.status(404).json({ error: 'Tourist not found' });
 
-    let pointsToDecrement=0;
-    if(tourist.totalPoints<=100000){
-        pointsToDecrement=resource.price*0.5*ticketsForPoints;
+    let pointsToDecrement = 0;
+    if (tourist.totalPoints <= 100000) {
+      pointsToDecrement = resource.price * 0.5 * ticketsForPoints;
 
-    }else if(tourist.totalPoints<=500000){
-        pointsToDecrement=resource.price*ticketsForPoints;
+    } else if (tourist.totalPoints <= 500000) {
+      pointsToDecrement = resource.price * ticketsForPoints;
 
     } else {
-        pointsToDecrement=resource.price*1.5*ticketsForPoints;
+      pointsToDecrement = resource.price * 1.5 * ticketsForPoints;
     }
 
     await Tourist.findByIdAndUpdate(
-        touristId,
-        {
-            $inc: {
-                totalPoints: -pointsToDecrement,
-                currentPoints: -pointsToDecrement,
-            },
+      touristId,
+      {
+        $inc: {
+          totalPoints: -pointsToDecrement,
+          currentPoints: -pointsToDecrement,
         },
-        { new: true }
+      },
+      { new: true }
     );
 
     res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.` });
-} catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Error canceling booking', error });
-}
+  }
 };
 
 
@@ -251,23 +251,23 @@ cron.schedule('6 22 * * *', async () => {
   console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
   console.log('End of day (UTC):', endOfDay.toString());
 
-    try {
-      // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
-      const activities = await Activity.find({
-        date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-        isBookingOpen: true,  
-      });
-      //console.log('Found activities:', activities); 
-      if (activities.length > 0) {
-        for (let activity of activities) {
-          // Iterate over the tourists who booked the activity
-          for (let booking of activity.bookings) {
-            const tourist = await Tourist.findById(booking.touristId);
-            if (tourist && tourist.email) {
-              const subject = `Your upcoming activity: ${activity.title}`;
-              const html = `
+  try {
+    // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
+    const activities = await Activity.find({
+      date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+      isBookingOpen: true,
+    });
+    //console.log('Found activities:', activities); 
+    if (activities.length > 0) {
+      for (let activity of activities) {
+        // Iterate over the tourists who booked the activity
+        for (let booking of activity.bookings) {
+          const tourist = await Tourist.findById(booking.touristId);
+          if (tourist && tourist.email) {
+            const subject = `Your upcoming activity: ${activity.title}`;
+            const html = `
                 <p>Dear ${tourist.userName},</p>
-                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 5 days!</p>
+                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!</p>
                 <p>Location: ${activity.location}</p>
                 <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
                 <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
@@ -296,19 +296,19 @@ cron.schedule('6 22 * * *', async () => {
 });
 
 cron.schedule('41 17 * * *', async () => {
-    const today = moment().utc();  // Current date and time in UTC
-    const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
-    const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
-  
-    console.log('Today:', today.toString());
-    console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
-    console.log('End of day (UTC):', endOfDay.toString());
+  const today = moment().utc();  // Current date and time in UTC
+  const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
+  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+
+  console.log('Today:', today.toString());
+  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+  console.log('End of day (UTC):', endOfDay.toString());
 
   try {
     // Find itineraries that start in exactly 3 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
     const itineraries = await itineraryModel.find({
-        startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-        isActive: true,  // Only consider active itineraries
+      startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+      isActive: true,  // Only consider active itineraries
     });
 
     //console.log('Found itineraries:', itineraries); 
@@ -331,7 +331,7 @@ cron.schedule('41 17 * * *', async () => {
               <p>Best regards,</p>
               <p>Tripal Team</p>
             `;
-            
+
             await sendEmail(tourist.email, subject, html);
             console.log("SENT!");
           }

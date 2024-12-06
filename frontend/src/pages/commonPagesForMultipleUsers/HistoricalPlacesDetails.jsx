@@ -14,11 +14,13 @@ const metadata = {
   title: "HistoricalPlaces || Tripal",
   description: "HistoricalPlaces || Tripal",
 };
+
 export default function HistoricalPlacesDetails() {
   const [userRole, setUserRole] = useState(null); 
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState(""); 
   const errorDisplayed = useRef(false);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
