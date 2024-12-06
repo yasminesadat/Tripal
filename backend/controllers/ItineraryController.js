@@ -342,6 +342,26 @@ const sendAnEmailForItineraryFlag = async (userData,itineraryTitle) => {
     }
 };  
 
+const revenue = async (req, res) => {
+    try {
+      const  id  = req.userId;
+      const itineraries = await itineraryModel.find({ tourGuide: id });
+      let totalRevenue = 0;
+      itineraries.forEach((itinerary) => {
+        const itinRevenue = itinerary.bookings.reduce(
+          (sum, booking) => sum + booking.tickets * itinerary.price,
+          0
+        );
+        totalRevenue += itinRevenue;
+      });
+  
+      res.status(200).json({ totalRevenue });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to fetch revenue" });
+    }
+  };
+
 module.exports = {
     createItinerary,
     getItinerariesForTourguide,
@@ -353,5 +373,6 @@ module.exports = {
     adminFlagItinerary,
     getAllItinerariesForAdmin,
     toggleItineraryStatus,
-    getItineraryById
+    getItineraryById,
+    revenue
 };

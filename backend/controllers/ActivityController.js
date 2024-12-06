@@ -280,6 +280,28 @@ const sendAnEmailForActivityFlag = async (userData, activityTitle) => {
   }
 };
 
+const revenue = async (req, res) => {
+  try {
+    const  advertiserId  = req.userId;
+   console.log(advertiserId)
+    const activities = await Activity.find({ advertiser: advertiserId });
+    let totalRevenue = 0;
+    activities.forEach((activity) => {
+      const activityRevenue = activity.bookings.reduce(
+        (sum, booking) => sum + booking.tickets * activity.price,
+        0
+      );
+      //console.log("Activity revenue: ", activityRevenue)
+      totalRevenue += activityRevenue;
+    });
+
+    res.status(200).json({ totalRevenue });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch revenue" });
+  }
+};
+
 module.exports = {
   createActivity,
   getActivityById,
@@ -291,5 +313,6 @@ module.exports = {
   getTouristActivities,
   getAllActivitiesForAdmin,
   getAllActivities,
-  adminFlagActivity
+  adminFlagActivity,
+  revenue,
 };
