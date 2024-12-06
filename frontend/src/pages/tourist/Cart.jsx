@@ -8,9 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
-import ComplaintsForm from "./ComplaintsForm";
 import { Button } from "antd";
-import { PlusOutlined } from '@ant-design/icons';
 
 const metadata = {
     title: "My Cart || Tripal",
@@ -20,6 +18,7 @@ const Cart = () => {
     const [cart, setCart] = useState([]);
     const [userData, setUserData] = useState("");
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); 
 
     const fetchUserData = async () => {
         try {
@@ -118,6 +117,16 @@ const Cart = () => {
                                                 ))}
                                             </tbody>
                                         </table>
+                                        {cart.length>0 &&(
+                                        <Button
+                                            type="primary"
+                                            className="custom-button"
+                                            onClick={() => navigate("/checkout", { state: { cart } })}
+                                            style={{marginLeft:"83%"}}
+                                        >
+                                            Proceed to Checkout
+                                        </Button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

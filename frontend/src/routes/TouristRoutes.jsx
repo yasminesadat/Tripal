@@ -27,8 +27,11 @@ import WishListPage from "@/pages/tourist/WishList";
 import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
 import PreferenceSelection from "@/pages/tourist/PreferenceSelection";
 import CategorySelection from "@/pages/tourist/CategorySelection";
+
+import Checkout from "../pages/tourist/Checkout";
 import BookingPagesStripe from "@/pages/BookingHotels/HotelStripeSuccess";
 import SuccessPage from "@/components/activity/activitySingle/SuccessPage";
+
 
 
 const touristRoutes = [
@@ -59,6 +62,9 @@ const touristRoutes = [
   {
     path: "/tourist/view-products/product/:id",
     element: <TouristViewProduct />,
+  },
+  {path:"/checkout",
+    element:<Checkout/>
   },
   // { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   // { path: "/tourist/view-Complaints", element: <MyComplaints /> },
