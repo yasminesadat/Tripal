@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 
 function Info({ cart }) {
   const totalPrice = cart
-    .reduce((total, item) => total + item.price * item.quantity, 0)
+    .reduce((total, item) => total + item.price , 0)
     .toFixed(2);
 
   return (
