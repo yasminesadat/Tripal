@@ -1,6 +1,6 @@
 import SellerHeader from "../../components/layout/header/SellerHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-
+import ProductRevenue from "../seller/Revenue"
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
@@ -13,8 +13,7 @@ const SellerHome = () => {
       <div className="page-wrapper">
         <SellerHeader />
         <main className="page-content">
-          <h1>Welcome Seller</h1>
-          <p>This is a dummy component.</p>
+          <ProductRevenue/>
           <div className="admin-content-details"></div>
         </main>
         <FooterThree />

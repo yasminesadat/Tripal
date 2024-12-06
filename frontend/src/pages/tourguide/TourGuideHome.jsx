@@ -1,6 +1,6 @@
 import TourGuideHeader from "../../components/layout/header/TourGuideHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-
+import ItineraryRevenue from "../tourguide/Revenue"
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
@@ -14,8 +14,7 @@ const TourGuideHome = () => {
       <div className="page-wrapper">
         <TourGuideHeader />
         <main className="page-content">
-          <h1>Welcome Tour Guide</h1>
-          <p>This is a dummy component.</p>
+          <ItineraryRevenue/>
           <div className="admin-content-details"></div>
         </main>
         <FooterThree />
