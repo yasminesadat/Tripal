@@ -8,7 +8,7 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import HeaderSerch from "./Components/SearchEngine";
-import  { DateObject } from "react-multi-date-picker";
+import { DateObject } from "react-multi-date-picker";
 const metadata = {
   title: "Hotels Search || Tripal",
   description: "Hotels Search || Tripal",
@@ -29,11 +29,11 @@ export default function Hero6() {
     {
       title: "Enter a city & specify your stay dates",
       description: "Explore the available accommodation options.",
-      target: () => refHotelsSearch.current, 
+      target: () => refHotelsSearch.current,
       onFinish: () => {
         localStorage.setItem("currentStep", 3);
         setOpen(false);
-        navigate("/tourist", {state: {fromTour: true, targetStep: 3}});
+        navigate("/tourist", { state: { fromTour: true, targetStep: 3 } });
       }
     }
   ]
@@ -41,38 +41,38 @@ export default function Hero6() {
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
 
-    if ( isFromTour && refHotelsSearch.current) {
+    if (isFromTour && refHotelsSearch.current) {
       refHotelsSearch.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
-  
+
     const timer = setTimeout(() => {
       if (isFromTour) {
-        setOpen(true); 
+        setOpen(true);
       }
     }, 1000);
-  
-    return () => clearTimeout(timer); 
+
+    return () => clearTimeout(timer);
   }, [location]);
 
   const [dates, setDates] = useState([
-    new DateObject().setDay(today.getDate()+1),
-      new DateObject().setDay(today.getDate() + 3),
+    new DateObject().setDay(today.getDate() + 1),
+    new DateObject().setDay(today.getDate() + 3),
   ]);
 
-  const validate = ()=>{
-    if(!selected ){
+  const validate = () => {
+    if (!selected) {
       message.error("Please search for a city.")
     }
-    else if(!dates){
+    else if (!dates) {
       message.error("Please enter dates.")
     }
     else navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
   }
-  
+
   useEffect(() => {
     setCurrentActiveDD("");
   }, [location, calender, tourType, setCurrentActiveDD]);
@@ -177,7 +177,7 @@ export default function Hero6() {
       <div className="page-wrapper">
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <TouristHeader />
-        <main className="page-content">
+        <main className="page-content-hana">
           <section className="hero -type-6" style={{ paddingBottom: '500px' }}>
             <div className="hero__bg">
               <img src={image} alt="background" />
@@ -191,18 +191,16 @@ export default function Hero6() {
                       data-aos-delay="100"
                       className="hero__title"
                     >
-                      Travel Memories
+                      Luxurious Stay Experiences
                       <br className="md:d-none" />
                       You'll Never <span className="text-accent-1">Forget</span>
                     </h1>
 
                     <p data-aos="fade-up" data-aos-delay="250" className="mt-20">
-                      From local escapes to far-flung adventures, find what makes you
-                      happy
+                      From cozy rooms to luxury suites, discover your perfect sanctuary
                       <br className="md:d-none" />
-                      anytime, anywhere
+                      at our world-class hotel
                     </p>
-
                     <div
                       // data-aos="fade-up"
                       // data-aos-delay="400"
@@ -227,8 +225,8 @@ export default function Hero6() {
                             </div>
 
                             <div className="xl:d-none ml-30" >
-                                <HeaderSerch selected={selected} setSelected={setSelected}/>
-                              </div>
+                              <HeaderSerch selected={selected} setSelected={setSelected} />
+                            </div>
                             <Location
                               setLocation={setSelected}
                               active={currentActiveDD === "location"}
@@ -245,14 +243,14 @@ export default function Hero6() {
                               }
                             >
                               <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                                <i className="text-20 icon-calendar"  onClick={() =>
-                                setCurrentActiveDD("calender",
-                                )
-                              }></i>
+                                <i className="text-20 icon-calendar" onClick={() =>
+                                  setCurrentActiveDD("calender",
+                                  )
+                                }></i>
                               </div>
                               <div className="searchFormItem__content" >
                                 <div>
-                                  <span className="js-first-date" style={{cursor:"pointer"}}>
+                                  <span className="js-first-date" style={{ cursor: "pointer" }}>
                                     <Calender dates={dates} setDates={setDates}
                                       active={currentActiveDD === "calender"}
                                     />
@@ -278,7 +276,7 @@ export default function Hero6() {
               </div>
             </div>
           </section>
-          <FooterThree/>
+          <FooterThree />
         </main>
       </div>
     </>

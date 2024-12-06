@@ -16,9 +16,9 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 
 
 export default function HotelDetails() {
-    const {cityCode,name,hotelID,dates1,dates2}  = useParams();
-    console.log("1111",name);
-    const [headerVisible, setHeaderVisible] = useState(true);  // State to manage header visibility
+  const { cityCode, name, hotelID, dates1, dates2 } = useParams();
+  console.log("1111", name);
+  const [headerVisible, setHeaderVisible] = useState(true);  // State to manage header visibility
 
   // Function to hide the header
   const handleSeeAllPhotosClick = () => {
@@ -26,74 +26,74 @@ export default function HotelDetails() {
   };
 
 
-    const metadata = {
-      title: "Home || Tripal - Travel Agency",
+  const metadata = {
+    title: "Home || Tripal - Travel Agency",
   };
 
   return (
     <>
-    <MetaComponent meta={metadata} />
-    <div className="page-wrapper">
-    {headerVisible && <TouristHeader />}
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
+        {headerVisible && <TouristHeader />}
         <main className="page-content">
-        <>
+          <>
             <section>
-                <div className="container">
-                    <MainInformation name={name} /> {/* Pass hotelID as a prop */}
-                    <Gallery1 onSeeAllPhotosClick={handleSeeAllPhotosClick} />
-                </div>
+              <div className="container">
+                <MainInformation name={name} /> {/* Pass hotelID as a prop */}
+                <Gallery1 onSeeAllPhotosClick={handleSeeAllPhotosClick} />
+              </div>
             </section>
 
-      <section className="layout-pt-md js-pin-container">
-        <div className="container">
-          <div className="row y-gap-30 justify-between">
-            <div className="col-lg-8">
-              {/* <div className="row y-gap-20 justify-between items-center layout-pb-md">
+            <section className="layout-pt-md js-pin-container">
+              <div className="container">
+                <div className="row y-gap-30 justify-between">
+                  <div className="col-lg-8">
+                    {/* <div className="row y-gap-20 justify-between items-center layout-pb-md">
                 <OthersInformation />
               </div> */}
 
-              <Overview name={name}/>
+                    <Overview name={name} />
 
-              <div className="line mt-60 mb-60"></div>
+                    <div className="line mt-60 mb-60"></div>
 
-              <h2 className="text-30">What's included</h2>
+                    <h2 className="text-30">What's included</h2>
 
-              <Included />
+                    <Included />
 
-              <div className="line mt-60 mb-60"></div>
+                    <div className="line mt-60 mb-60"></div>
 
-              <h2 className="text-30">Customer Reviews</h2>
+                    <h2 className="text-30">Customer Reviews</h2>
 
-              <div className="mt-30">
-                <Rating />
+                    <div className="mt-30">
+                      <Rating />
+                    </div>
+
+                    <Reviews />
+
+
+                    <div className="line mt-60 mb-60"></div>
+
+                    <h2 className="text-30">FAQ</h2>
+
+                    <div className="accordion -simple row y-gap-20 mt-30 js-accordion">
+                      <Faq />
+                    </div>
+
+
+
+                  </div>
+
+                  <div className="col-lg-4">
+                    <div className="d-flex justify-end js-pin-content">
+                      <TourSingleSidebar cityCode={cityCode} hotelID={hotelID} name={name} dates1={dates1} dates2={dates2} />
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              <Reviews />  
-              
-              
-              <div className="line mt-60 mb-60"></div>
-
-              <h2 className="text-30">FAQ</h2>
-
-              <div className="accordion -simple row y-gap-20 mt-30 js-accordion">
-                <Faq />
-              </div>
-
-              
-            
-            </div>
-
-            <div className="col-lg-4">
-              <div className="d-flex justify-end js-pin-content">
-                <TourSingleSidebar cityCode={cityCode} hotelID={hotelID} name={name} dates1={dates1} dates2={dates2}/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>        </main>
+            </section>
+          </>        </main>
         <FooterThree />
-    </div>
-</>
+      </div>
+    </>
   );
 }
