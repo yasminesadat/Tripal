@@ -113,3 +113,14 @@ export async function getAllActivities() {
     throw error;
   }
 }
+
+export async function getRevenue() {
+  try {
+    const response = await axios.get(`/activities/revenue`);
+    console.log(response.data)
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching revenue:", error);
+    throw error;
+  }
+}
