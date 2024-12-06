@@ -8,9 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
-import ComplaintsForm from "./ComplaintsForm";
 import { Button } from "antd";
-import { PlusOutlined } from '@ant-design/icons';
 
 const metadata = {
     title: "My Cart || Tripal",
@@ -123,7 +121,7 @@ const Cart = () => {
                                         <Button
                                             type="primary"
                                             className="custom-button"
-                                            onClick={() => navigate("/checkout")}
+                                            onClick={() => navigate("/checkout", { state: { cart } })}
                                             style={{marginLeft:"83%"}}
                                         >
                                             Proceed to Checkout

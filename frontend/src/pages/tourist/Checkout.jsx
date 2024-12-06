@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -11,18 +9,21 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import AddressForm from './components/AddressForm';
 import PaymentForm from './components/PaymentForm';
-import Review from './components/Review';
 import AppTheme from './shared-theme/AppTheme';
-
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+import Info from './components/Info';
+import { useLocation } from 'react-router-dom';
+import Header from '../../components/layout/header/TouristHeader';
+import Footer from '../../components/layout/footers/CheckoutFooter';
+const steps = ['Shipping address', 'Payment details'];
 
 export default function Checkout(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [address, setAddress] = React.useState(null);
   const [paymentType, setPaymentType] = React.useState(null);
+  const location = useLocation();
+  const cart = location.state?.cart || [];
 
   const handleNextAddress = (newAddress) => {
     setAddress(newAddress);  
@@ -30,6 +31,7 @@ export default function Checkout(props) {
   };
 
   const handleNextPayment = (newPaymentType) => {
+    console.log("address: ",address);
     setPaymentType(newPaymentType);  
     if (newPaymentType === 'creditCard') {
       console.log("Redirecting to Stripe...");
@@ -52,8 +54,6 @@ export default function Checkout(props) {
         return <AddressForm onNext={handleNextAddress} />;
       case 1:
         return <PaymentForm onNext={handleNextPayment} />;
-      case 2:
-        return <Review />;
       default:
         throw new Error('Unknown step');
     }
@@ -62,9 +62,59 @@ export default function Checkout(props) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <div style={{ marginLeft: "20%", marginTop: "-8%" }}>
+      <Header />
+      <Grid
+        container
+        sx={{
+          height: 'auto', 
+          mt: {
+            xs: 4,
+            sm: 0,
+          },
+          marginBottom:'8%'
+        }}
+      >
         <Grid
-          size={{ sm: 12, md: 7, lg: 8 }}
+          item
+          xs={12}
+          sm={5}
+          lg={4}
+          sx={{
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'column',
+            backgroundColor: '#8f5774',
+            borderRight: { sm: 'none', md: '1px solid' },
+            borderColor: { sm: 'none', md: 'divider' },
+            alignItems: 'start',
+            pt: 16,
+            px: 10,
+            gap: 4,
+            width: '300px',
+            position: 'relative',
+            marginTop: '3%',
+            height: 'auto', 
+            marginBottom:'-8%'
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+              width: '100%',
+              maxWidth: 'none',
+              height: 'auto', 
+            }}
+          >
+            <Info totalPrice={'0'} cart={cart} />
+          </Box>
+        </Grid>
+  
+        <Grid
+          item
+          sm={12}
+          md={7}
+          lg={8}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -72,10 +122,13 @@ export default function Checkout(props) {
             width: '100%',
             backgroundColor: { xs: 'transparent', sm: 'background.default' },
             alignItems: 'start',
-            marginTop:"5%",
             pt: { xs: 0, sm: 16 },
             px: { xs: 2, sm: 10 },
             gap: { xs: 4, md: 8 },
+            marginTop: '3%',
+            marginLeft: '0%',
+            flexGrow: 1, 
+            height: 'auto', 
           }}
         >
           <Box
@@ -85,21 +138,29 @@ export default function Checkout(props) {
               alignItems: 'center',
               width: '100%',
               maxWidth: { sm: '100%', md: 600 },
+              height: 'auto', // Adjust height dynamically
             }}
           >
-            <Stepper
-              id="desktop-stepper"
-              activeStep={activeStep}
-              sx={{ width: '100%', height: 40 }}
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                flexGrow: 1,
+                height: 'auto', // Ensure height adjusts to content
+              }}
             >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+              <Stepper id="desktop-stepper" activeStep={activeStep} sx={{ width: '100%', height: 40 }}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
           </Box>
-
+  
           <Box
             sx={{
               display: 'flex',
@@ -107,8 +168,8 @@ export default function Checkout(props) {
               flexGrow: 1,
               width: '100%',
               maxWidth: { sm: '100%', md: 600 },
-              maxHeight: '720px',
               gap: { xs: 5, md: 'none' },
+              height: 'auto', // Let the content adjust its height as needed
             }}
           >
             {activeStep === steps.length ? (
@@ -116,7 +177,7 @@ export default function Checkout(props) {
                 <Typography variant="h1">📦</Typography>
                 <Typography variant="h5">Thank you for your order!</Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  Your order number is <strong>&nbsp;#140396</strong>. We have emailed your order confirmation and will update you once its shipped.
+                  Your order number is <strong>&nbsp;#140396</strong>. We have emailed your order confirmation and will update you once it's shipped.
                 </Typography>
                 <Button variant="contained" sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}>
                   Go to my orders
@@ -124,49 +185,42 @@ export default function Checkout(props) {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)} 
+                {getStepContent(activeStep)}
                 <Box
-                  sx={[
-                    {
-                      display: 'flex',
-                      flexDirection: { xs: 'column-reverse', sm: 'row' },
-                      alignItems: 'end',
-                      flexGrow: 1,
-                      gap: 1,
-                      pb: { xs: 12, sm: 0 },
-                      mt: { xs: 2, sm: 0 },
-                      mb: '60px',
-                    },
-                    activeStep !== 0
-                      ? { justifyContent: 'space-between' }
-                      : { justifyContent: 'flex-end' },
-                  ]}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column-reverse', sm: 'row' },
+                    alignItems: 'end',
+                    flexGrow: 1,
+                    gap: 1,
+                    pb: { xs: 12, sm: 0 },
+                    mt: { xs: 2, sm: 0 },
+                    mb: '60px',
+                    justifyContent: 'space-between',
+                  }}
                 >
                   {activeStep !== 0 && (
                     <Button
                       startIcon={<ChevronLeftRoundedIcon />}
                       onClick={handleBack}
                       variant="text"
-                      sx={{ display: { xs: 'none', sm: 'flex' } }}
+                      sx={{
+                        display: { xs: 'none', sm: 'flex' },
+                        position: 'relative',
+                        top: '-210%',
+                      }}
                     >
                       Previous
                     </Button>
-                  )}
-                  {activeStep !== 0 && activeStep !== 1 && (
-                  <Button
-                    variant="contained"
-                    endIcon={<ChevronRightRoundedIcon />}
-                    sx={{ width: { xs: '100%', sm: 'fit-content' } }}
-                  >
-                    {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-                  </Button>
                   )}
                 </Box>
               </React.Fragment>
             )}
           </Box>
         </Grid>
-      </div>
+      </Grid>
+      <Footer />
     </AppTheme>
   );
+  
 }

@@ -119,6 +119,22 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
                 },
               },
             },
+            MuiListItemText: {
+              styleOverrides: {
+                root: {
+                  color: '#ffffff', 
+                  '& .MuiAlert-icon': {
+                    color: '#8f5774', 
+                  },
+                  '& .MuiAlert-action': {
+                    color: '#8f5774', 
+                  },
+                },
+                secondary:{
+                  color: '#ffffff', 
+                }
+              },
+            },
             
           },
         });

@@ -10,11 +10,14 @@ import {
   OutlinedInput,
   Select,
   Button,
+  Box
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { getAddresses , addAddress} from '../../../api/TouristService';  
 import {message} from "antd";
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
+import { useNavigate } from "react-router-dom";
 
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
@@ -31,6 +34,7 @@ export default function AddressForm({ onNext }) {
     country: '',
     zipCode: '',
   });
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -204,14 +208,42 @@ export default function AddressForm({ onNext }) {
           </Grid>
         </>
       )}
-        <br/>
-        <Button variant="contained"
-        endIcon={<ChevronRightRoundedIcon />} 
-        color="primary" 
-        style={{marginLeft:"85%"}}
-        onClick={handleNext} sx={{ width: { xs: '100%', sm: 'fit-content' } }}>
-          Next
-        </Button>
+      <br/>
+      <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2,
+            width: '100%',
+          }}
+        >
+          <Button
+            startIcon={<ChevronLeftRoundedIcon />}
+            onClick={() => navigate("/cart")}           
+            variant="text"
+            sx={{
+              display: { xs: 'none', sm: 'flex' }, 
+              position: 'relative',
+              top: '-10%', 
+            }}
+          >
+            Back to cart
+          </Button>
+
+          <Button
+            variant="contained"
+            endIcon={<ChevronRightRoundedIcon />}
+            color="primary"
+            onClick={handleNext}
+            sx={{
+              width: { xs: '100%', sm: 'fit-content' }, 
+            }}
+          >
+            Next
+          </Button>
+        </Box>
+
     </Grid>
   );
 }
