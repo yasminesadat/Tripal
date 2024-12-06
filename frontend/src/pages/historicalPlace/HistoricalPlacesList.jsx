@@ -112,7 +112,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
   }, userRole)
-  }, userRole)
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {

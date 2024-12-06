@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Tourist = require("../models/users/Tourist.js");
 const validateIDs = require("../middleware/IDMiddleware");
+const { getRandomPromoCode } = require("../controllers/TouristController.js");
+
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 const {
   createTourist,

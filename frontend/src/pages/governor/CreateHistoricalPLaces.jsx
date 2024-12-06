@@ -248,7 +248,7 @@ export default function AddHistoricalPlace() {
 
   return (
     <>
-      <div classname="page-wrapper">
+      <div className="page-wrapper">
         <GovernorHeader />
         <main className="page-content">
           <div
