@@ -939,21 +939,39 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
+
 const getAddresses = asyncHandler(async (req, res) => {
   const touristId = req.userId;
 
   try {
     const tourist = await touristModel.findById(touristId);
 
-    if (!tourist) {
-      return res.status(404).json({ message: "Tourist not found." });
-    }
 
     res.status(200).json({ addresses: tourist.deliveryAddresses });
   } catch (error) {
     res.status(500).json({ message: "An error occurred while retrieving the addresses.", error: error.message });
   }
 });
+const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+
+  try {
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+    const { wallet, totalPoints } = tourist;
+    res.status(200).json({ wallet, totalPoints });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while retrieving wallet and total points.",
+
+      error: error.message,
+    });
+  }
+});
+
 
 const addAddress = asyncHandler(async (req, res) => {
   const touristId = req.userId;  
@@ -999,10 +1017,8 @@ const addAddress = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while adding the address.",
-      error: error.message,
-    });
-  }
-});
+
+    
 
 
 
@@ -1034,4 +1050,6 @@ module.exports = {
   completeFlightBooking,
   getAddresses,
   addAddress
+  getWalletAndTotalPoints
+
 };

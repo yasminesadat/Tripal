@@ -260,6 +260,7 @@ export async function removeFromCart(touristId, productId) {
   }
 }
 
+
 export async function getAddresses() {
   try {
     const response = await axios.get(`/tourist/address`);
@@ -278,6 +279,15 @@ export async function addAddress(street, city, country, zipCode) {
     return response.data;
   } catch (error) {
     console.error("Error adding address:", error);
+
+export async function getWalletAndTotalPoints() {
+  try {
+    const response = await axios.get(`/tourist/wallet`);
+    console.log("Incoming", response.data);
+    return response.data;
+    
+  } catch (error) {
+    console.error("Error fetching wallet:", error);
     throw error;
   }
 }
