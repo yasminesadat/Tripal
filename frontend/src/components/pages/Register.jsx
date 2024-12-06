@@ -555,7 +555,7 @@ export default function Register() {
         } else if (role === "tourist") {
           response = await createTourist(newUser);
           const touristId = response.data.id || response.data._id;
-          // navigate(`/tourist/select-preferences/${touristId}`, { state: { touristId } });
+          navigate("/login");
           //MENNAH ADD UR STUFF HEREEE !
         }
 
@@ -1084,7 +1084,7 @@ export default function Register() {
         }
 
         .ant-btn-primary:hover {
-          background: linear-gradient(135deg, #7a4363 0%, #d16c89 100%);
+          background: linear-gradient(135deg, #7a4363 0%, #d16c89 100%) !important;
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(143, 87, 116, 0.2);
         }
