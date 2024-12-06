@@ -13,8 +13,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { Button, message, Upload } from "antd";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
-
-
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { changeAdvertiserPassword } from "../../api/AdvertiserService";
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
   //const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -25,7 +25,52 @@ export default function AdvertiserProfile() {
   //   const [image4, setImage4] = useState("/img/dashboard/addtour/3.jpg");
   const [advertiser, setAdvertiser] = useState(null);
   const [formData, setFormData] = useState({ currentLogo: null });
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+  const togglePasswordVisibility = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+  const [PasswordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const handlePasswordInput = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleChangePassword = async () => {
+    try {
+      if (PasswordForm.newPassword.length < 6) {
+        message.error("Password must be at least 6 characters long");
+        return;
+      }
+      if (PasswordForm.newPassword !== PasswordForm.confirmPassword) {
+        message.error("Passwords don't match");
+        return;
+      }
 
+
+      await changeAdvertiserPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
+      message.success("Password changed successfully");
+
+
+    } catch (error) {
+      message.error(
+        error.response?.data?.message || "Failed to change password"
+      );
+      console.error("Password change error:", error);
+    }
+  };
   //   const handleImageChange = (event, func) => {
   //     const file = event.target.files[0];
 
@@ -326,6 +371,24 @@ export default function AdvertiserProfile() {
         <AdvertiserHeader />
         <style>
           {`
+           .password-toggle {
+                              position: absolute;
+                              right: 10px;
+                              top: 50%;
+                              transform: translateY(-50%);
+                              background: none;
+                              border: none;
+                              cursor: pointer;
+                              color: var(--color-stone);
+                              z-index: 2;
+                              padding: 5px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                            }
+                            .password-toggle:hover {
+                              color: var(--color-stone-light);
+                            }
           .contactForm .form-input {
             position: relative;
             margin-bottom: 20px;
@@ -877,10 +940,32 @@ export default function AdvertiserProfile() {
                 <div className="row y-gap-30">
                   <div className="col-md-6">
                     <div className="form-input ">
-                      <input type="text" required />
+                      <input
+                        type={
+                          showPassword.oldPassword ? "text" : "password"
+                        }
+                        name="oldPassword"
+                        value={PasswordForm.oldPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
                       <label className="lh-1 text-16 text-light-1">
                         Old password
                       </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("oldPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.oldPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -888,10 +973,32 @@ export default function AdvertiserProfile() {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-input ">
-                      <input type="text" required />
+                      <input
+                        type={
+                          showPassword.newPassword ? "text" : "password"
+                        }
+                        name="newPassword"
+                        value={PasswordForm.newPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
                       <label className="lh-1 text-16 text-light-1">
                         New password
                       </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("newPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.newPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -899,17 +1006,39 @@ export default function AdvertiserProfile() {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-input ">
-                      <input type="text" required />
+                      <input
+                        type={
+                          showPassword.confirmPassword ? "text" : "password"
+                        }
+                        name="confirmPassword"
+                        value={PasswordForm.confirmPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
                       <label className="lh-1 text-16 text-light-1">
                         Confirm new password
                       </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("confirmPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.confirmPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col-12">
-                    <button className="button -md -dark-1 bg-accent-1 text-white">
+                    <button onClick={handleChangePassword} className="button -md -dark-1 bg-accent-1 text-white">
                       Save Changes
                       <i className="icon-arrow-top-right text-16 ml-10"></i>
                     </button>

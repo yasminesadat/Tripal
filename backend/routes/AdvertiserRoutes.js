@@ -27,10 +27,9 @@ router.put(
   updateAdvertiser
 );
 router.put(
-  "/advertiser-change-pass/:id",
-  validateIDs(["id"]),
+  "/advertiser-change-pass",
   verifyToken,
-  authorizeRoles("Admin"),
+  authorizeRoles("Advertiser"),
   changePassword(Advertiser)
 );
 
