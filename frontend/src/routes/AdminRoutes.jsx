@@ -13,7 +13,7 @@ import AdminChangePassword from "../pages/admin/AdminProfile";
 import Requests from "../pages/admin/Requests";
 import Activities from "../pages/commonPagesForMultipleUsers/Activities";
 import Itineraries from "../pages/commonPagesForMultipleUsers/Itineraries";
-
+import PromoCodeDetails from "@/pages/admin/AdminPromoCodes";
 const adminRoutes = [
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/activity-categories", element: <ActivityCategoryDetails /> },
@@ -28,8 +28,9 @@ const adminRoutes = [
   { path: "/revenue", element: <Revenue /> },
   { path: "/admin/changepassword", element: <AdminChangePassword /> },
   { path: "/admin/requests", element: <Requests /> },
-  {path: "/admin/activities", element: <Activities />},
-  {path: "/admin/itineraries", element: <Itineraries />}
+  { path: "/admin/activities", element: <Activities /> },
+  { path: "/admin/itineraries", element: <Itineraries /> },
+  { path: "/admin/promo-codes", element: <PromoCodeDetails /> }
 ];
 
 export default adminRoutes;

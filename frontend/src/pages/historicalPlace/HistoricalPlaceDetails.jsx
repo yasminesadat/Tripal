@@ -9,8 +9,10 @@ import { getHistoricalPlaceDetails } from '../../api/HistoricalPlaceService'
 import { useLocation } from 'react-router-dom';
 const HistoricalPlaceDetails = ({userRole}) => {
   const location = useLocation();
+  const props = location.state?.governerHistoricalPlace;
   const prices = location.state?.ticketPrices;
   const currency = location.state?.currency;
+  console.log(props);
   const { id } = useParams();
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState([51.505, -0.09,]);
@@ -34,7 +36,7 @@ const HistoricalPlaceDetails = ({userRole}) => {
       }
     }
     getHistoricalPlaceDetail(id);
-    
+    console.log(props);
   }, [id]);
   return (
     <>
@@ -44,6 +46,7 @@ const HistoricalPlaceDetails = ({userRole}) => {
           <MainInformation historicalPlace={historicalPlace} userRole={userRole} />
         </div>
       </section>
+
       <section className="layout-pt-md js-pin-container">
         <div className="container">
           <div className="row y-gap-30 justify-between">
@@ -70,11 +73,11 @@ const HistoricalPlaceDetails = ({userRole}) => {
 
               <h2 className="text-30 mt-60 mb-30">Location</h2>
               <div className="mapTourSingle">
-              <LocationMap
+                <LocationMap
                   markerPosition={coordinates}
-                  search={"dont search bro"}
+                  setMarkerPosition={setCoordinates}
+                  setSelectedLocation={setAddress}
                 />
-                
               </div>
 
               {/* <div className="line mt-60 mb-60"></div>

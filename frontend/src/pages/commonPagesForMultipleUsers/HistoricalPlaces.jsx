@@ -10,7 +10,6 @@ import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
 import HistoricalPlacesList from "../historicalPlace/HistoricalPlacesList";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-
 const metadata = {
   title: "HistoricalPlaces || Tripal",
   description: "HistoricalPlaces || Tripal",
@@ -45,7 +44,7 @@ export default function HistoricalPlaces() {
     };
     fetchUserData();
   }, []);
- 
+
   const handleSearch = (term) => {
     setSearchTerm(term); 
   };

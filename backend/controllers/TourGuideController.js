@@ -122,8 +122,7 @@ const markNotificationRead = async (req, res) => {
 
 const updateTourguideData = async (req, res) => {
   try {
-    console.log(req);
-    const  id  = req.userId;
+    const { id } = req.userId;
     const { currProfilePicture, initialProfilePicture, ...data } = req.body;
 
     if (initialProfilePicture) {
@@ -156,19 +155,17 @@ const updateTourguideData = async (req, res) => {
           .json({ error: "Failed to upload new profile picture" });
       }
     }
-    console.log("helo")
+
     const updatedTourGuide = await tourGuideModel.findByIdAndUpdate(id, data, {
       new: true,
     });
 
     if (!updatedTourGuide) {
-      console.log("helo2")
       return res.status(404).json("Tour Guide not found");
     }
-    console.log("helo3")
+
     return res.status(200).json({ updatedTourGuide });
   } catch (error) {
-    console.log("helo4")
     res.status(400).json({ error: error.message });
   }
 };

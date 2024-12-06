@@ -321,10 +321,10 @@ const redeemPoints = async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-    
-    const amount=tourist.currentPoints-(tourist.currentPoints%10000);
-    tourist.wallet.amount = tourist.wallet.amount + amount*100;
-    tourist.currentPoints = tourist.currentPoints%10000;
+
+    const amount = tourist.currentPoints - (tourist.currentPoints % 10000);
+    tourist.wallet.amount = tourist.wallet.amount + amount * 100;
+    tourist.currentPoints = tourist.currentPoints % 10000;
 
     await tourist.save();
 
@@ -582,7 +582,7 @@ const getBookmarkedEvents = async (req, res) => {
 
 const saveProduct = async (req, res) => {
   const touristId = req.userId;
-  const { productId } = req.body; 
+  const { productId } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
@@ -602,7 +602,6 @@ const saveProduct = async (req, res) => {
 
     tourist.wishlist.push(productId);
     await tourist.save();
-
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {
     console.error(error);
@@ -611,7 +610,7 @@ const saveProduct = async (req, res) => {
 };
 
 const getWishList = async (req, res) => {
-  const touristId = req.userId; 
+  const touristId = req.userId;
 
   try {
     const tourist = await touristModel.findById(touristId)
@@ -636,11 +635,11 @@ const getWishList = async (req, res) => {
 
 const removeFromWishList = async (req, res) => {
   const touristId = req.userId;
-  const { productId } = req.body; 
+  const { productId } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
-    
+
     let product = await productModel.findById(productId);
 
 
