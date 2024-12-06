@@ -15,7 +15,6 @@ const {
   viewHistoryActivities,
   getActivityById,
   getAllActivities,
-  revenue,
 } = require("../controllers/ActivityController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
@@ -64,13 +63,6 @@ router.get(
   "/activities/:id/ratings",
   validateIDs(["id"]),
   getRatings(Activity, ActivityRating, "activityID")
-);
-
-router.get(
-  "/activities/revenue",
-  verifyToken,
-  authorizeRoles("Advertiser"),
-  revenue
 );
 
 router.get("/all-activities",verifyToken,authorizeRoles("Admin"), getAllActivities);

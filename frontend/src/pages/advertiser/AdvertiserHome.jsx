@@ -1,6 +1,6 @@
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import ActivityRevenue from "../advertiser/Revenue";
+
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
@@ -13,7 +13,8 @@ const AdvertiserHome = () => {
       <div className="page-wrapper">
         <AdvertiserHeader />
         <main className="page-content">
-          <ActivityRevenue/ >
+          <h1>Welcome Advertiser</h1>
+          <p>This is a dummy component.</p>
           <div className="admin-content-details"></div>
         </main>
         <FooterThree />
