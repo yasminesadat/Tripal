@@ -939,6 +939,26 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
+const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+
+  try {
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const { wallet, totalPoints } = tourist;
+    res.status(200).json({ wallet, totalPoints });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while retrieving wallet and total points.",
+      error: error.message,
+    });
+  }
+});
+
 
 module.exports = {
   createTourist,
@@ -965,5 +985,6 @@ module.exports = {
   getTouristNotifications,
   checkTouristPromocode,
   saveFlightBooking,
-  completeFlightBooking
+  completeFlightBooking,
+  getWalletAndTotalPoints
 };
