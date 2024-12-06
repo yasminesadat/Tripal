@@ -9,15 +9,14 @@ export const getUsers = async () => {
     throw error;
   }
 }
-
-export async function changeAdminPassword(id, oldPassword, newPassword) {
+export async function changeAdminPassword(oldPassword, newPassword) {
   try {
     const body = {
       "oldPassword": oldPassword,
       "newPassword": newPassword
     }
-    console.log(`/admin-change-pass/${id}`);
-    const response = await axios.put(`/admin-change-pass/${id}`, body);
+    console.log("the body in admin change pass is ", body);
+    const response = await axios.patch("/admin-change-pass", body);
     return response.data;
   } catch (error) {
     console.error("error", error);
@@ -25,9 +24,9 @@ export async function changeAdminPassword(id, oldPassword, newPassword) {
   }
 }
 
-export async function getTotalUsers(){
+export async function getTotalUsers() {
   try {
-   
+
     const response = await axios.get(`/admin/getTotalUsers`);
     return response.data;
   } catch (error) {
