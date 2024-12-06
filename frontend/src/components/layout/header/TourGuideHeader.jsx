@@ -4,8 +4,7 @@ import { profile } from "@/data/tourGuideMenu";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { logout } from "@/api/UserService";
-import { Bell, Check, X } from "lucide-react";
-import { deleteNotifications, getNotifications, markNotification } from "@/api/TourGuideService";
+import TourGuideNotification from "@/components/common/NotificationsTourGuide";
 
 export default function TourGuideHeader() {
   const navigate = useNavigate();
@@ -122,56 +121,7 @@ export default function TourGuideHeader() {
               Help
             </Link>
 
-            {/* Notifications Button */}
-            <div className="relative ml-30">
-              <button onClick={() => setNotificationsOpen(!notificationsOpen)} className="d-flex">
-                <Bell className="text-18" style={{ color: 'var(--color-dark-purple)' }} />
-                {unreadCount > 0 && (
-                  <span className="absolute countposition text-black rounded-full px-3 py-1 text-xs countposition2" style={{ color: 'var(--color-dark-purple)' }}>
-                    {unreadCount}
-                  </span>
-                )}
-              </button>
-
-              {notificationsOpen && (
-                <div className="dropdown-menu2">
-                  <div className="p-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold" style={{ color: 'var(--color-dark-purple)' }} >Notifications</h3>
-                      <span className="text-sm text-gray-500" style={{ color: 'var(--color-dark-purple)' }} >{unreadCount} unread</span>
-                    </div>
-                    {notifications.length === 0 ? (
-                      <p className="text-gray-500">No notifications</p>
-                    ) : (
-                      <ul>
-                        {notifications.map((notification) => (
-                          <li key={notification.id} className={`flex justify-between items-center p-4 mb-2 border rounded-md ${!notification.read ? 'bg-gray-100' : ''}`}>
-                            <div className="flex-grow">
-                              <span className={notification.read ? '' : 'font-boldNotification'}>
-                                {notification.message}
-                              </span>
-                            </div>
-
-                            {/* Flex container for the check and X icons */}
-                            <div className="check-x-container">
-                              <Check
-                                className="h-4 w-4 text-red-500 cursor-pointer hover:text-green-500"
-                                onClick={() => handleNotificationRead(notification.id)}
-                              />
-                              <X
-                                className="h-4 w-4 text-red-500 cursor-pointer hover:text-red-700"
-                                onClick={() => handleNotificationRemove(notification.id)}
-                              />
-                            </div>
-                          </li>
-
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+          <TourGuideNotification/>
 
             <button onClick={() => setMobileMenuOpen(true)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""}`}>
               <i className="icon-person text-18"></i>

@@ -679,6 +679,27 @@ const getTouristNotifications = async (req, res) => {
 
   }
 }
+
+const markTouristNotificationsRead = async (req, res) => {
+  try {
+    const userid=req.userId;
+
+    const tourist = await touristModel.findById(userid);  
+      if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+     
+
+    tourist.notificationList.forEach((n)=>{(n.read=true)})
+
+    await tourist.save();    
+    
+    res.status(200).json(tourist.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 const checkTouristPromocode = async (req, res) => {
   const touristId = req.userId;
   const { promoCode } = req.body;
@@ -1050,6 +1071,7 @@ module.exports = {
   completeFlightBooking,
   getAddresses,
   addAddress,
-  getWalletAndTotalPoints
+  getWalletAndTotalPoints,
+  markTouristNotificationsRead
 
 };
