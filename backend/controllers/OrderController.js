@@ -5,7 +5,7 @@ const Order = require("../models/Order");
 
 const createOrder = asyncHandler(async (req, res) => {
   const touristId = req.userId;
-  const {deliveryAddress, paymentMethod } = req.body;
+  const {deliveryAddress, paymentMethod} = req.body;
   
     try {
         const tourist = await Tourist.findById({_id: touristId}).populate("cart.product");
@@ -22,33 +22,110 @@ const createOrder = asyncHandler(async (req, res) => {
            totalPrice += cartItem.price; 
         }
 
-        const newOrder = new Order({
-        touristId: touristId,
-        products: tourist.cart,
-        totalPrice: totalPrice,
-        deliveryAddress: {
-            street: deliveryAddress.street,
-            city: deliveryAddress.city,
-            zipCode: deliveryAddress.zipCode,
-            country: deliveryAddress.country,
-        },
-        paymentMethod: paymentMethod,
-        status: "Pending", 
-        });
+        if (paymentMethod === "Wallet") {
+          tourist.wallet.amount = tourist.wallet.amount || 0;
+    
+          if (tourist.wallet.amount < totalPrice) {
+            return res.status(400).json({ error: "Insufficient wallet balance." });
+          }
+    
+          tourist.wallet.amount -= totalPrice;
+    
+          let pointsToReceive = 0;
+          if (tourist.totalPoints <= 100000) {
+            pointsToReceive = totalPrice * 0.5;
+          } else if (tourist.totalPoints <= 500000) {
+            pointsToReceive = totalPrice * 1;
+          } else {
+            pointsToReceive = totalPrice * 1.5;
+          }
+    
+          tourist.totalPoints = tourist.totalPoints || 0;
+          tourist.currentPoints = tourist.currentPoints || 0;
+          tourist.totalPoints += pointsToReceive;
+          tourist.currentPoints += pointsToReceive;
+    
+          await tourist.save();
+    
+          const newOrder = new Order({
+            touristId: touristId,
+            products: tourist.cart,
+            totalPrice: totalPrice,
+            deliveryAddress: {
+              street: deliveryAddress.street,
+              city: deliveryAddress.city,
+              zipCode: deliveryAddress.zipCode,
+              country: deliveryAddress.country,
+            },
+            paymentMethod: paymentMethod,
+            status: "Pending",
+          });
+    
+          await newOrder.save();
+    
+          tourist.cart = [];
+          await tourist.save();
+    
+          return res.status(201).json({
+            message: "Order created successfully.",
+            order: newOrder,
+          });
+        }
 
-        await newOrder.save();
-
-        tourist.cart = [];
-        await tourist.save();
-
-        res.status(201).json({
-        message: "Order created successfully.",
-        order: newOrder,
-        });
-    } catch (error) {
+        else if (paymentMethod === "Cash on Delivery") {
+          const newOrder = new Order({
+            touristId: touristId,
+            products: tourist.cart,
+            totalPrice: totalPrice,
+            deliveryAddress: {
+              street: deliveryAddress.street,
+              city: deliveryAddress.city,
+              zipCode: deliveryAddress.zipCode,
+              country: deliveryAddress.country,
+            },
+            paymentMethod: paymentMethod,
+            status: "Pending",
+          });
+    
+          await newOrder.save();
+    
+          tourist.cart = [];
+          await tourist.save();
+    
+          return res.status(201).json({
+            message: "Order created successfully. Payment will be collected upon delivery.",
+            order: newOrder,
+          });
+        } else if (paymentMethod === "Credit Card") {
+          const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+          const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            line_items: tourist.cart.map((product) => ({
+              price_data: {
+                currency: "egp",
+                product_data: {
+                  name: product.product.name,
+                },
+                unit_amount: product.price * 100,
+              },
+              quantity: product.quantity,
+            })),
+            mode: "payment",
+            success_url: `${process.env.CLIENT_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
+            cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
+          });
+    
+          return res.status(200).json({
+            message: "Redirecting to payment.",
+            sessionId: session.id,
+          });
+        } else {
+          return res.status(400).json({ message: "Invalid payment method." });
+        }
+      } catch (error) {
         res.status(500).json({ message: "An error occurred while creating the order.", error: error.message });
-    }
-});
+      }
+    });
 
 const cancelOrder = asyncHandler(async (req,res) =>{
     const { id } = req.params;;
@@ -91,8 +168,73 @@ const getOrders = asyncHandler(async (req, res) => {
     }
 });
 
+const completeOrder = asyncHandler(async (req, res) => {
+  const { sessionId, touristId, totalPrice, deliveryAddress } = req.body;
+
+  try {
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status !== "paid") {
+      return res.status(400).json({ error: "Payment not successful." });
+    }
+
+    const tourist = await Tourist.findById(touristId).populate("cart.product");
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found." });
+    }
+
+    let pointsToReceive = 0;
+          if (tourist.totalPoints <= 100000) {
+            pointsToReceive = totalPrice * 0.5;
+          } else if (tourist.totalPoints <= 500000) {
+            pointsToReceive = totalPrice * 1;
+          } else {
+            pointsToReceive = totalPrice * 1.5;
+          }
+    
+          tourist.totalPoints = tourist.totalPoints || 0;
+          tourist.currentPoints = tourist.currentPoints || 0;
+          tourist.totalPoints += pointsToReceive;
+          tourist.currentPoints += pointsToReceive;
+
+          await tourist.save();
+
+    const newOrder = new Order({
+      touristId: touristId,
+      products: tourist.cart,
+      totalPrice: totalPrice,
+      deliveryAddress: {
+        street: deliveryAddress.street,
+        city: deliveryAddress.city,
+        zipCode: deliveryAddress.zipCode,
+        country: deliveryAddress.country,
+      },
+      paymentMethod: paymentMethod,
+      status: "Pending",
+    });
+
+    await newOrder.save();
+
+    tourist.cart = [];
+    await tourist.save();
+
+    return res.status(201).json({
+      message: "Order created successfully. Payment will be collected upon delivery.",
+      order: newOrder,
+    });
+  } catch (error) {
+    console.error("Error completing order:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
 module.exports = {
     createOrder,
     cancelOrder,
-    getOrders
+    getOrders,
+    completeOrder
 };

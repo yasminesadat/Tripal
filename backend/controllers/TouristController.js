@@ -939,6 +939,19 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
+
+const getAddresses = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+
+
+    res.status(200).json({ addresses: tourist.deliveryAddresses });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while retrieving the addresses.", error: error.message });
+  }
+});
 const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
   const touristId = req.userId;
 
@@ -948,14 +961,63 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
-
     const { wallet, totalPoints } = tourist;
     res.status(200).json({ wallet, totalPoints });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while retrieving wallet and total points.",
+
       error: error.message,
     });
+  }
+});
+
+
+const addAddress = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+  const { street, city, zipCode, country } = req.body;
+
+  try {
+    const tourist = await touristModel.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const addressExists = tourist.deliveryAddresses.some(
+      (address) =>
+        address.street === street &&
+        address.city === city &&
+        address.zipCode === zipCode &&
+        address.country === country
+    );
+
+    if (addressExists) {
+      return res.status(400).json({
+        message: "Address already exists.",
+      });
+    }
+
+    const newAddress = {
+      street,
+      city,
+      zipCode,
+      country,
+    };
+
+    tourist.deliveryAddresses.push(newAddress);
+
+    await tourist.save();
+
+    res.status(200).json({
+      message: "Address added successfully.",
+      address: newAddress,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while adding the address."
+    })
   }
 });
 
@@ -986,5 +1048,8 @@ module.exports = {
   checkTouristPromocode,
   saveFlightBooking,
   completeFlightBooking,
+  getAddresses,
+  addAddress,
   getWalletAndTotalPoints
+
 };
