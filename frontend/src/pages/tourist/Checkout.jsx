@@ -16,6 +16,10 @@ import Info from './components/Info';
 import { useLocation } from 'react-router-dom';
 import Header from '../../components/layout/header/TouristHeader';
 import Footer from '../../components/layout/footers/FooterThree';
+import { createOrder } from '@/api/OrderService';
+import { loadStripe } from "@stripe/stripe-js";
+import { message } from 'antd';
+
 const steps = ['Shipping address', 'Payment details'];
 
 export default function Checkout(props) {
@@ -24,25 +28,73 @@ export default function Checkout(props) {
   const [paymentType, setPaymentType] = React.useState(null);
   const location = useLocation();
   const cart = location.state?.cart || [];
+  const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
   const handleNextAddress = (newAddress) => {
     setAddress(newAddress);
     setActiveStep(activeStep + 1);
   };
 
-  const handleNextPayment = (newPaymentType) => {
-    console.log("address: ", address);
-    setPaymentType(newPaymentType);
-    if (newPaymentType === 'creditCard') {
+  const processCreditCardPayment = async (orderData) => {
+    try {
+      const stripe = await stripePromise; // Initialize stripe here
       console.log("Redirecting to Stripe...");
-    } else if (newPaymentType === 'wallet') {
-      console.log("Deducting from wallet...");
-    } else if (newPaymentType === 'cashOnDelivery') {
-      console.log("Proceeding with cash on delivery...");
+      
+      const response = await createOrder(orderData);
+      const sessionId = response?.sessionId; // Safely access sessionId
+  
+      if (sessionId) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) {
+          console.error("Stripe redirection error:", error);
+          message.error("Failed to redirect to payment. Please try again.");
+        }
+      } else {
+        console.error("Session ID not received.");
+        message.error("Failed to initiate payment session.");
+      }
+    } catch (error) {
+      console.error("Error processing credit card payment:", error.message);
+      message.error("Payment processing failed. Please try again.");
     }
+  };
+  
 
+  
+  
+  const processWalletPayment = async (orderData) => {
+    console.log("Deducting from wallet...");
+    const response = await createOrder(orderData);
+    message.success ("Payment with wallet successfull!")
     setActiveStep(activeStep + 1);
   };
+  
+  const processCashOnDelivery = async (orderData) => {
+    console.log("Proceeding with cash on delivery...");
+    const response = await createOrder(orderData);
+    message.success ("COD successfull!")
+    setActiveStep(activeStep + 1);
+  };
+  
+  const handleNextPayment = async (newPaymentType) => {
+    setPaymentType(newPaymentType);
+    const orderData = { deliveryAddress: address, paymentMethod: newPaymentType };
+  
+    try {
+      if (newPaymentType === "Credit Card") {
+        await processCreditCardPayment(orderData);
+      } else if (newPaymentType === "Wallet") {
+        await processWalletPayment(orderData);
+      } else if (newPaymentType === "Cash On Delivery") {
+        await processCashOnDelivery(orderData);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+    console.error("Full Error Object:", error.response || error.message);
+    message.error("Failed to create the order. Please try again.");
+    }
+  };
+  
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
