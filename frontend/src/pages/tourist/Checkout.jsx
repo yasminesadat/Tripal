@@ -15,7 +15,7 @@ import AppTheme from './shared-theme/AppTheme';
 import Info from './components/Info';
 import { useLocation } from 'react-router-dom';
 import Header from '../../components/layout/header/TouristHeader';
-import Footer from '../../components/layout/footers/CheckoutFooter';
+import Footer from '../../components/layout/footers/FooterThree';
 const steps = ['Shipping address', 'Payment details'];
 
 export default function Checkout(props) {
@@ -61,7 +61,7 @@ export default function Checkout(props) {
 
   return (
     <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
+      {/* <CssBaseline enableColorScheme /> */}
       <Header />
       <Grid
         container
@@ -120,7 +120,7 @@ export default function Checkout(props) {
             flexDirection: 'column',
             maxWidth: '100%',
             width: '100%',
-            backgroundColor: { xs: 'transparent', sm: 'background.default' },
+            backgroundColor: { xs: 'transparent', },
             alignItems: 'start',
             pt: { xs: 0, sm: 16 },
             px: { xs: 2, sm: 10 },
