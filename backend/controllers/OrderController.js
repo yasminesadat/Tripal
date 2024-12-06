@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
-
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const createOrder = asyncHandler(async (req, res) => {
   const touristId = req.userId;
   const {deliveryAddress, paymentMethod} = req.body;
@@ -97,9 +97,10 @@ const createOrder = asyncHandler(async (req, res) => {
             order: newOrder,
           });
         } else if (paymentMethod === "Credit Card") {
-          const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+          
           const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
+            customer_email: tourist.email,
             line_items: tourist.cart.map((product) => ({
               price_data: {
                 currency: "egp",
@@ -111,10 +112,10 @@ const createOrder = asyncHandler(async (req, res) => {
               quantity: product.quantity,
             })),
             mode: "payment",
-            success_url: `${process.env.CLIENT_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
-            cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
+            success_url: `${process.env.FRONTEND_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
+            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
           });
-    
+          console.log (session.id);
           return res.status(200).json({
             message: "Redirecting to payment.",
             sessionId: session.id,

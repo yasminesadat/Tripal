@@ -52,7 +52,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 
 export default function PaymentForm({ onNext }) {
-  const [paymentType, setPaymentType] = React.useState('creditCard');
+  const [paymentType, setPaymentType] = React.useState('Credit Card');
 
   const handlePaymentTypeChange = (event) => {
     setPaymentType(event.target.value);
@@ -76,9 +76,9 @@ export default function PaymentForm({ onNext }) {
             gap: 2,
           }}
         >
-          <Card selected={paymentType === 'creditCard'}>
+          <Card selected={paymentType === 'Credit Card'}>
             <CardActionArea
-              onClick={() => setPaymentType('creditCard')}
+              onClick={() => setPaymentType('Credit Card')}
               sx={{
                 '.MuiCardActionArea-focusHighlight': {
                   backgroundColor: 'transparent',
@@ -98,7 +98,7 @@ export default function PaymentForm({ onNext }) {
                         color: 'grey.600',
                       }),
                     }),
-                    paymentType === 'creditCard' && {
+                    paymentType === 'Credit Card' && {
                       color: 'primary.main',
                     },
                   ]}
@@ -107,9 +107,9 @@ export default function PaymentForm({ onNext }) {
               </CardContent>
             </CardActionArea>
           </Card>
-          <Card selected={paymentType === 'wallet'}>
+          <Card selected={paymentType === 'Wallet'}>
             <CardActionArea
-              onClick={() => setPaymentType('wallet')}
+              onClick={() => setPaymentType('Wallet')}
               sx={{
                 '.MuiCardActionArea-focusHighlight': {
                   backgroundColor: 'transparent',
@@ -129,7 +129,7 @@ export default function PaymentForm({ onNext }) {
                         color: 'grey.600',
                       }),
                     }),
-                    paymentType === 'wallet' && {
+                    paymentType === 'Wallet' && {
                       color: 'primary.main',
                     },
                   ]}
@@ -138,9 +138,9 @@ export default function PaymentForm({ onNext }) {
               </CardContent>
             </CardActionArea>
           </Card>
-          <Card selected={paymentType === 'cashOnDelivery'}>
+          <Card selected={paymentType === 'Cash on Delivery'}>
             <CardActionArea
-              onClick={() => setPaymentType('cashOnDelivery')}
+              onClick={() => setPaymentType('Cash on Delivery')}
               sx={{
                 '.MuiCardActionArea-focusHighlight': {
                   backgroundColor: 'transparent',
@@ -160,7 +160,7 @@ export default function PaymentForm({ onNext }) {
                         color: 'grey.600',
                       }),
                     }),
-                    paymentType === 'cashOnDelivery' && {
+                    paymentType === 'Cash on Delivery' && {
                       color: 'primary.main',
                     },
                   ]}
@@ -172,19 +172,19 @@ export default function PaymentForm({ onNext }) {
         </RadioGroup>
       </FormControl>
 
-      {paymentType === 'creditCard' && (
+      {paymentType === 'Credit Card' && (
         <Alert severity="info">
           You will be redirected to stripe page.
         </Alert>
       )}
 
-      {paymentType === 'wallet' && (
+      {paymentType === 'Wallet' && (
         <Alert severity="info">
           Money will be deducted from wallet.
         </Alert>
       )}
 
-      {paymentType === 'cashOnDelivery' && (
+      {paymentType === 'Cash on Delivery' && (
         <Alert severity="info">You can pay cash when the order is delivered.</Alert>
       )}
       
