@@ -5,130 +5,130 @@ const { sendEmail } = require('./Mailer');
 const cron = require('node-cron');
 const moment = require('moment'); // Use moment.js for date manipulation
 const promoCode = require('../models/PromoCode');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const bookResource = async (req, res) => {
   const { resourceType, resourceId } = req.params;
-  const { tickets, myPromoCode } = req.body;
+  const { tickets, paymentMethod, myPromoCode } = req.body;
   const touristId = req.userId;
   const model = resourceType === 'activity' ? Activity : itineraryModel;
 
   try {
     const resource = await model.findById(resourceId);
-    if (!resource)
-      return res.status(404).json({ error: `${resourceType} not found` });
+    if (!resource) return res.status(404).json({ error: `${resourceType} not found` });
 
-    if (resourceType === 'activity' && resource.isBookingOpen === false)
+    if (resourceType === 'activity' && !resource.isBookingOpen)
       return res.status(400).json({ error: 'Booking is closed for this activity' });
 
     const tourist = await Tourist.findById(touristId);
-    if (!tourist)
-      return res.status(404).json({ error: 'Tourist not found' });
-
+    if (!tourist) return res.status(404).json({ error: 'Tourist not found' });
     if (tourist.calculateAge() < 18)
       return res.status(403).json({ error: 'You must be at least 18 years old to book' });
 
-    if (resourceType === 'itinerary') {
+    let totalAmount = resource.price * tickets + (resource.serviceFee ? resource.serviceFee : 0);
+    
+    if (myPromoCode) {
+      const code = await promoCode.findOne({ name: myPromoCode });
+      if (code) {
+        const discountValue = code.discountPercentage / 100 * totalAmount;
+        totalAmount -= discountValue;
+      } else {
+        return res.status(400).json({ error: 'Invalid promo code' });
+      }
+    }
 
-      const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+    if (paymentMethod === 'card') {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        customer_email: tourist.email,
+        line_items: [
+          {
+            price_data: {
+              currency: 'egp',
+              product_data: {
+                name: `${resourceType} Booking: ${resource.title}`,
+                description: `Booking Description: ${resource.description}`,
+              },
+              unit_amount: totalAmount * 100, // Stripe expects amount in the smallest unit (cents)
+            },
+            quantity: tickets,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${process.env.FRONTEND_URL}/success/resource?session_id={CHECKOUT_SESSION_ID}&tourist_id=${touristId}&resource_type=${resourceType}&tickets=${tickets}&resource_id=${resourceId}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+      });
+      return res.status(200).json({ sessionId: session.id });
+    }
+
+    if (paymentMethod === 'wallet') {
+      if (tourist.wallet.amount < totalAmount) {
+        return res.status(400).json({ error: 'Insufficient funds in wallet' });
+      }
+
+      tourist.wallet.amount -= totalAmount;
+
+      const existingBooking = resource.bookings.find(
+        (booking) => booking.touristId.toString() === touristId
+      );
       if (existingBooking) {
         existingBooking.tickets += tickets;
       } else {
         resource.bookings.push({ touristId, tickets });
       }
 
-      const originalPrice = resource.price * tickets + resource.serviceFee;
+      await tourist.save();
+      await resource.save();
 
-      console.log("BACKEND promoCode", myPromoCode);
-
-      console.log("PROMO CODE");
-      if (myPromoCode) {
-        const code = await promoCode.findOne({ name: myPromoCode });
-        const discountValue = code.discountPercentage / 100 * (originalPrice);
-
-        tourist.wallet.amount -= (originalPrice - discountValue)
+      let pointsToReceive = 0;
+      if (tourist.totalPoints <= 100000) {
+        pointsToReceive = resource.price * 0.5 * tickets;
+      } else if (tourist.totalPoints <= 500000) {
+        pointsToReceive = resource.price * 1 * tickets;
       } else {
-
-        tourist.wallet.amount -= originalPrice;
-
-
+        pointsToReceive = resource.price * 1.5 * tickets;
       }
 
-    }
-    else {
-      const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
-      if (existingBooking)
-        existingBooking.tickets += tickets;
-
-      else
-        resource.bookings.push({ touristId, tickets });
-      const originalPrice = resource.price * tickets;
-      console.log("BACKEND promoCode", myPromoCode);
-      if (myPromoCode) {
-        console.log("BACKEND promoCode2 ", myPromoCode);
-        const code = await promoCode.findOne({ name: myPromoCode });
-        console.log("BACKEND promoCode2 ", code);
-        const discountValue = code.discountPercentage / 100 * (originalPrice);
-
-        tourist.wallet.amount -= (originalPrice - discountValue)
-      }
-      else {
-
-        tourist.wallet.amount -= originalPrice;
-
-
-      }
-
-
-    }
-    if (tourist.wallet.amount < 0)
-      return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
-
-    await tourist.save();
-    await resource.save();
-
-    let pointsToReceive = 0;
-
-    if (tourist.totalPoints <= 100000) {
-      pointsToReceive = resource.price * 0.5 * tickets;
-    } else if (tourist.totalPoints <= 500000) {
-      pointsToReceive = resource.price * 1 * tickets;
-    } else {
-      pointsToReceive = resource.price * 1.5 * tickets;
-    }
-
-    await Tourist.findByIdAndUpdate(
-      touristId,
-      {
-        $inc: {
-          totalPoints: pointsToReceive,
-          currentPoints: pointsToReceive,
+      await Tourist.findByIdAndUpdate(
+        touristId,
+        {
+          $inc: {
+            totalPoints: pointsToReceive,
+            currentPoints: pointsToReceive,
+          },
         },
-      },
-      { new: true }
-    );
+        { new: true }
+      );
 
-    const subject = `Booking Confirmation for ${resource.title}`;
-    const html = `
-              <h1>Booking Successful!</h1>
-              <p>Dear ${tourist.userName},</p>
-              <p>Your booking for ${resource.title} has been confirmed.</p>
-              <p>Tickets Booked: ${tickets}</p>
-              <p>Total Cost: ${resource.price * tickets}</p>
-              <p>Wallet Balance: ${tourist.wallet.amount}</p>
-              <p>Points Earned: ${pointsToReceive}</p>
-              <p>Thank you for booking with us!</p>
-            `;
-    try {
-      await sendEmail(tourist.email, subject, html);
-      res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully, Booking confirmation email sent` });
-    } catch (error) {
-      console.error('Error sending booking confirmation:', error.message);
+      // Send booking confirmation email
+      const subject = `Booking Confirmation for ${resource.title}`;
+      const html = `
+        <h1>Booking Successful!</h1>
+        <p>Dear ${tourist.userName},</p>
+        <p>Your booking for ${resource.title} has been confirmed.</p>
+        <p>Tickets Booked: ${tickets}</p>
+        <p>Total Cost: ${totalAmount}</p>
+        <p>Wallet Balance: ${tourist.wallet.amount}</p>
+        <p>Points Earned: ${pointsToReceive}</p>
+        <p>Thank you for booking with us!</p>
+      `;
+      try {
+        await sendEmail(tourist.email, subject, html);
+        res.status(200).json({
+          message: `Congratulations, ${resourceType} booked successfully.`,
+          totalAmount: totalAmount,
+          paymentStatus: 'Wallet payment successful',
+        });
+      } catch (error) {
+        console.error('Error sending booking confirmation:', error.message);
+      }
     }
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const cancelResource = async (req, res) => {
   const { resourceType, resourceId } = req.params;
@@ -343,4 +343,68 @@ cron.schedule('41 17 * * *', async () => {
     console.error('Error checking itineraries for 5 days later:', error);
   }
 });
-module.exports = { cancelResource, bookResource };
+
+const completeBooking = async (req, res) => {
+  const { sessionId, touristId, resourceType, tickets, resourceId } = req.body;
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  console.log("im here in complete booking");
+  
+  if (session.payment_status !== "paid") {
+    return res.status(400).json({ error: "Payment not successful" });
+  }
+
+  try {
+    const model = resourceType === 'activity' ? Activity : itineraryModel;
+    const resource = await model.findById(resourceId); 
+
+    if (!resource) {
+      return res.status(404).json({ error: `${resourceType} not found` });
+    }
+
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    const existingBooking = resource.bookings.find(
+      (booking) => booking.touristId.toString() === touristId
+    );
+    if (existingBooking) {
+      existingBooking.tickets += tickets; // Update tickets if the booking exists
+    } else {
+      resource.bookings.push({ touristId, tickets });
+    }
+
+    await resource.save();
+    await tourist.save();
+
+    // Send booking confirmation email
+    const subject = `Booking Confirmation for ${resource.title}`;
+    const html = `
+      <h1>Booking Successful!</h1>
+      <p>Dear ${tourist.userName},</p>
+      <p>Your booking for ${resource.title} has been confirmed.</p>
+      <p>Tickets Booked: ${tickets}</p>
+      <p>Total Cost: ${resource.price * tickets}</p>
+      <p>Wallet Balance: ${tourist.wallet.amount}</p>
+      <p>Thank you for booking with us!</p>
+    `;
+
+    try {
+      await sendEmail(tourist.email, subject, html);
+      res.status(200).json({
+        message: "Booking completed successfully, confirmation email sent",
+      });
+    } catch (error) {
+      console.error('Error sending booking confirmation:', error.message);
+      res.status(500).json({ error: 'Error sending booking confirmation email' });
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { cancelResource, bookResource, completeBooking };
