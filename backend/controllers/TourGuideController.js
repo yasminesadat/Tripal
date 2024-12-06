@@ -122,7 +122,7 @@ const markNotificationRead = async (req, res) => {
 
 const updateTourguideData = async (req, res) => {
   try {
-    const { id } = req.userId;
+    const id = req.userId;
     const { currProfilePicture, initialProfilePicture, ...data } = req.body;
 
     if (initialProfilePicture) {
