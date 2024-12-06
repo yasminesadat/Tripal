@@ -164,14 +164,10 @@ export default function Profile() {
 
       console.log("user", userData);
       console.log("old pass, new pass", PasswordForm.oldPassword, PasswordForm.newPassword);
-      await changeTouristPassword(userData, PasswordForm.oldPassword, PasswordForm.newPassword);
+      await changeTouristPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
       message.success("Password changed successfully");
 
-      setPasswordForm({
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
+
 
     } catch (error) {
       message.error(error.response?.data?.message || "Failed to change password");
@@ -490,7 +486,7 @@ export default function Profile() {
                             onClick={() => togglePasswordVisibility('oldPassword')}
                             className="password-toggle"
                           >
-                            {showPassword.oldPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                            {showPassword.oldPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </button>
                           <style jsx>{`
         .form-input {
@@ -539,7 +535,7 @@ export default function Profile() {
                             onClick={() => togglePasswordVisibility('newPassword')}
                             className="password-toggle"
                           >
-                            {showPassword.newPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                            {showPassword.newPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </button>
                         </div>
                       </div>
@@ -562,7 +558,7 @@ export default function Profile() {
                             onClick={() => togglePasswordVisibility('confirmPassword')}
                             className="password-toggle"
                           >
-                            {showPassword.confirmPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                            {showPassword.confirmPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </button>
                         </div>
                       </div>

@@ -366,9 +366,9 @@ export default function Profile() {
                             className="password-toggle"
                           >
                             {showPassword.oldPassword ? (
-                              <EyeInvisibleOutlined />
-                            ) : (
                               <EyeOutlined />
+                            ) : (
+                              <EyeInvisibleOutlined />
                             )}
                           </button>
                           <style>{`
@@ -425,9 +425,9 @@ export default function Profile() {
                             className="password-toggle"
                           >
                             {showPassword.newPassword ? (
-                              <EyeInvisibleOutlined />
-                            ) : (
                               <EyeOutlined />
+                            ) : (
+                              <EyeInvisibleOutlined />
                             )}
                           </button>
                         </div>
@@ -458,9 +458,9 @@ export default function Profile() {
                             className="password-toggle"
                           >
                             {showPassword.confirmPassword ? (
-                              <EyeInvisibleOutlined />
-                            ) : (
                               <EyeOutlined />
+                            ) : (
+                              <EyeInvisibleOutlined />
                             )}
                           </button>
                         </div>
