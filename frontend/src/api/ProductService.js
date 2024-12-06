@@ -105,14 +105,3 @@ export const completeOrder = async (orderData) => {
     throw error;
   }
 };
-
-export async function getRevenue() {
-  try {
-    const response = await axios.get(`/products/revenue`);
-    console.log(response.data)
-    return response.data; 
-  } catch (error) {
-    console.error("Error fetching revenue:", error);
-    throw error;
-  }
-}

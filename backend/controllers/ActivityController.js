@@ -280,31 +280,6 @@ const sendAnEmailForActivityFlag = async (userData, activityTitle) => {
   }
 };
 
-const revenue = async (req, res) => {
-  try {
-    const  advertiserId  = req.userId;
-   console.log(advertiserId)
-    const activities = await Activity.find({ advertiser: advertiserId });
-    let totalRevenue = 0;
-    let appRevenue = 0; // To store app's total revenue
-    activities.forEach((activity) => {
-      const activityRevenue = activity.bookings.reduce(
-        (sum, booking) => sum + booking.tickets * activity.price,
-        0
-      );
-      totalRevenue += activityRevenue;
-    });
-
-    appRevenue = totalRevenue * 0.10; // App takes 10% of the total revenue
-    totalRevenue-=appRevenue
-
-    res.status(200).json({ totalRevenue });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch revenue" });
-  }
-};
-
 module.exports = {
   createActivity,
   getActivityById,
@@ -316,6 +291,5 @@ module.exports = {
   getTouristActivities,
   getAllActivitiesForAdmin,
   getAllActivities,
-  adminFlagActivity,
-  revenue,
+  adminFlagActivity
 };
