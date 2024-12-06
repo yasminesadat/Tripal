@@ -4,13 +4,17 @@ import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 import { checkTouristPromoCode } from "@/api/TouristService";
-
+import { loadStripe } from "@stripe/stripe-js";
 export default function TourSingleSidebar({ itinerary, activity, refActivityBook, refItineraryBook }) {
   const [userRole, setUserRole] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState("EGP");
   const selectedRef = refActivityBook || refItineraryBook;
   const [myPromoCode, setPromoCode] = useState('');
+  
+  const [paymentMethod, setPaymentMethod] = useState("wallet");
+  const [ticketNumber, setTicketCount] = useState(1);
+  const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
   const handlePromoCodeChange = (e) => {
     setPromoCode(e.target.value);
@@ -76,7 +80,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
     return `${currency} ${convertedPrice}`;
   };
 
-  const [ticketNumber, setTicketCount] = useState(1);
 
   const handleBookClick = async () => {
     try {
@@ -84,14 +87,37 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
         itinerary ? "itinerary" : "activity",
         itinerary ? itinerary._id : activity._id,
         ticketNumber,
-        myPromoCode
+        myPromoCode,
+        paymentMethod
       );
-      message.success(response.message);
-      console.log(activity?.bookings)
+      if (paymentMethod === "wallet") {
+        message.success(response.message);
+      } else if (paymentMethod === "card") {
+
+        const stripe = await stripePromise;
+        const { sessionId } = response;
+  
+        const stripeSession = await stripe.redirectToCheckout({ sessionId });
+  
+        // if (stripeSession) {
+        //   // Use sessionId and other required details to call the completeBooking route
+        //   const completeBookingResponse = await axios.post(`/api/${itinerary ? "itinerary" : "activity"}/${itinerary ? itinerary._id : activity._id}/complete-booking`, {
+        //     sessionId,
+        //     touristId: userId,
+        //     tickets: ticketNumber,
+        //     resourceType: itinerary ? "itinerary" : "activity",
+        //     resourceId: itinerary ? itinerary._id : activity._id
+        //   });
+  
+        //   message.success(completeBookingResponse.data.message);
+        // }
+      }
     } catch (error) {
+      console.error("Booking error:", error);
       message.error(error.response?.data?.error || "Booking failed");
     }
   };
+
 
   return (
     <>
@@ -184,6 +210,27 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
       </div> */}
 
           <div className="line mt-20 mb-20" />
+                <h5 className="text-18 fw-500 mb-20">Select Payment Method</h5>
+            <div className="d-flex items-center justify-between">
+              <label>
+                <input
+                  type="radio"
+                  value="wallet"
+                  checked={paymentMethod === "wallet"}
+                  onChange={() => setPaymentMethod("wallet")}
+                />
+                Wallet Payment
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="card"
+                  checked={paymentMethod === "card"}
+                  onChange={() => setPaymentMethod("card")}
+                />
+                Credit Card (via Stripe)
+              </label>
+            </div>
 
 
           {itinerary && <div className="text-14 ">
