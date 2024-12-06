@@ -348,7 +348,8 @@ const completeBooking = async (req, res) => {
   const { sessionId, touristId, resourceType, tickets, resourceId } = req.body;
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
-  console.log ("im here in complete booking");
+  console.log("im here in complete booking");
+  
   if (session.payment_status !== "paid") {
     return res.status(400).json({ error: "Payment not successful" });
   }
@@ -379,9 +380,31 @@ const completeBooking = async (req, res) => {
     await resource.save();
     await tourist.save();
 
-    res.status(200).json({ message: "Booking completed successfully" });
+    // Send booking confirmation email
+    const subject = `Booking Confirmation for ${resource.title}`;
+    const html = `
+      <h1>Booking Successful!</h1>
+      <p>Dear ${tourist.userName},</p>
+      <p>Your booking for ${resource.title} has been confirmed.</p>
+      <p>Tickets Booked: ${tickets}</p>
+      <p>Total Cost: ${resource.price * tickets}</p>
+      <p>Wallet Balance: ${tourist.wallet.amount}</p>
+      <p>Thank you for booking with us!</p>
+    `;
+
+    try {
+      await sendEmail(tourist.email, subject, html);
+      res.status(200).json({
+        message: "Booking completed successfully, confirmation email sent",
+      });
+    } catch (error) {
+      console.error('Error sending booking confirmation:', error.message);
+      res.status(500).json({ error: 'Error sending booking confirmation email' });
+    }
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 module.exports = { cancelResource, bookResource, completeBooking };
