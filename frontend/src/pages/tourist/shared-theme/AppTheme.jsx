@@ -18,8 +18,17 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
           cssVariables: {
             colorSchemeSelector: 'data-mui-color-scheme',
             cssVarPrefix: 'template',
+            colorScheme: 'light', 
           },
-          colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
+         
+          colorSchemes: {
+            light: {
+              palette: {
+                mode: 'light',
+                primary: { main: '#8f5774' },
+              },
+            },
+          },          
           typography,
           shadows,
           shape,
@@ -45,6 +54,20 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
                 },
               },
             },
+            MuiMenuItem: {
+              styleOverrides: {
+                root: {
+                  '&:hover': {
+                    backgroundColor: '#F1E0E0', 
+                  },
+                  '&.Mui-selected, &.Mui-selected:hover': {
+                    backgroundColor: '#8f5774 !important', 
+                    color: '#ffffff',
+                  },
+                },
+              },
+            },
+            
             MuiCheckbox: {
               styleOverrides: {
                 root: {
@@ -135,7 +158,24 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
                 }
               },
             },
-            
+            MuiStepper: {
+              styleOverrides: {
+                root: {
+                  '& .MuiStepIcon-root': {
+                    '&.Mui-active': {
+                      color: '#8f5774', 
+                    },  
+                  },
+                },
+              },
+            },
+            MuiStepConnector: {
+              styleOverrides: {
+                line: {
+                  borderColor: '#8f5774', 
+                },
+              },
+            },   
           },
         });
   }, [disableCustomTheme, themeComponents]);

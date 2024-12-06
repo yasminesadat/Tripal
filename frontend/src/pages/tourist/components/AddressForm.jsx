@@ -100,23 +100,43 @@ export default function AddressForm({ onNext }) {
       <Grid spacing={3} item xs={12}>
         <FormGrid>
           <FormLabel htmlFor="address-selection">Select Address</FormLabel>
-          <FormControl fullWidth>
-            <Select
-              id="address-selection"
-              value={selectedAddress}
-              onChange={handleAddressChange}
-              displayEmpty
-            >
-              <MenuItem value="" disabled>
-                Select an existing address
+          <FormControl fullWidth sx={{ 
+          '& .MuiOutlinedInput-root': { 
+            '& fieldset': { borderColor: '#ccc' }, 
+            '&:hover fieldset': { borderColor: '#b77c94' }, 
+            '&.Mui-focused fieldset': { borderColor: '#b77c94' }, 
+          } 
+        }}>
+          <Select
+            id="address-selection"
+            value={selectedAddress}
+            onChange={handleAddressChange}
+            displayEmpty
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#ccc', 
+                },
+                '&:hover fieldset': {
+                  borderColor: '#b77c94', 
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#b77c94', 
+                },
+              },
+            }}
+          >
+            <MenuItem value="" disabled>
+              Select an existing address
+            </MenuItem>
+            {deliveryAddresses.map((address, index) => (
+              <MenuItem key={index} value={index}>
+                {`${address.street}, ${address.city}, ${address.country}`}
               </MenuItem>
-              {deliveryAddresses.map((address, index) => (
-                <MenuItem key={index} value={index}>
-                  {`${address.street}, ${address.city}, ${address.country}`}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            ))}
+          </Select>
+        </FormControl>
+
         </FormGrid>
         <br/>
 

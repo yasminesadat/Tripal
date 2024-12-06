@@ -15,6 +15,7 @@ const {
   toggleItineraryStatus,
   getAllItinerariesForAdmin,
   getItineraryById,
+  revenue,
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
@@ -88,6 +89,12 @@ router.patch(
   verifyToken,
   authorizeRoles("Tour Guide"),
   toggleItineraryStatus
+);
+router.get(
+  "/itineraries/revenue",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  revenue
 );
 
 module.exports = router;
