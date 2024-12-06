@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
-const { deleteUser, addAdmin, getAllUsers, createPromoCode,getDataForEventOwner } = require("../controllers/AdminController");
+
+const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes, getDataForEventOwner } = require("../controllers/AdminController");
+
 const { changePassword } = require("../controllers/PasswordController.js");
 const Admin = require("../models/users/Admin.js");
 const { adminFlagItinerary, getAllItinerariesForAdmin, } = require("../controllers/ItineraryController.js");
@@ -62,6 +64,14 @@ router.post(
   authorizeRoles("Admin"),
   createPromoCode
 );
+router.get(
+  "/admin/promocode",
+  verifyToken,
+  authorizeRoles("Admin"),
+  getPromoCodes
+);
+
+
 
 router.get(
   "/admin/getDataForEventOwner/:userId",

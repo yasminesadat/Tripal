@@ -34,7 +34,7 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
           <div className="desktopNav__item" ref={refProducts}>
             <Link to="/tourist/view-products">Products</Link>
           </div>
-          
+
         </div>
       </div>
     </>

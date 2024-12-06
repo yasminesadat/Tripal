@@ -211,6 +211,20 @@ const createPromoCode = async (req, res) => {
   }
 };
 
+
+const getPromoCodes = async (req, res) => {
+  try {
+    const promoCodes = await PromoCode.find()
+
+
+
+
+    res.status(201).json(promoCodes);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 const getDataForEventOwner = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -224,4 +238,4 @@ const getDataForEventOwner = async (req, res) => {
   }
 };
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode, getDataForEventOwner };
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner };
