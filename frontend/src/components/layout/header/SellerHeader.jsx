@@ -78,7 +78,7 @@ export default function SellerHeader() {
           </div>
 
           <div className="header__right">
-            <Link to="/" className="ml-20">
+            <Link to="/help-center" className="ml-20">
               {/*/help-center*/}
               Help
             </Link>
@@ -86,9 +86,8 @@ export default function SellerHeader() {
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""
+                }`}
             >
               <i className="icon-person text-18"></i>
             </button>
