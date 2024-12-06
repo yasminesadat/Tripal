@@ -9,6 +9,7 @@ const {
   editProduct,
   archiveProduct,
   unArchiveProduct,
+  revenue,
 } = require("../controllers/ProductController");
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
@@ -53,6 +54,12 @@ router.patch(
   verifyToken,
   authorizeRoles("Admin", "Seller"),
   unArchiveProduct
+);
+router.get(
+  "/products/revenue",
+  verifyToken,
+  authorizeRoles("Seller"),
+  revenue
 );
 
 module.exports = router;
