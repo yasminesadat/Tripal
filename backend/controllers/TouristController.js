@@ -92,6 +92,45 @@ cron.schedule('59 23 * * *', async () => {
 });
 
 
+// // ADD TIMESTAMP TO USERS
+// const getRandomDate = (startDate, endDate) => {
+//   const randomTimestamp = Math.floor(Math.random() * (endDate.getTime() - startDate.getTime())) + startDate.getTime();
+//   return new Date(randomTimestamp);
+// };
+
+
+// cron.schedule('37 23 * * *', async () => {
+//   try {
+//     const users = await User.find({ timestamp: { $exists: false } });
+
+//     console.log ("HIIIIIIIII1")
+
+//     if (users.length > 0) {
+//       const startDate = new Date(2024, 0, 1);  
+//       const endDate = new Date();  // Current date and time
+
+//       console.log ("HIIIIIIIII2")
+
+//       for (let user of users) {
+//         const randomDate = getRandomDate(startDate, endDate);
+//         user.timestamp = randomDate;
+
+//         await user.save();
+//         console.log(`Updated timestamp is ${user.timestamp}`);
+//       }
+
+//       console.log ("HIIIIIIIII3")
+
+//       console.log('Cron job completed: timestamp updated for users without a timestamp.');
+//     } else {
+//       console.log('No users need to be updated.');
+//     }
+//   } catch (error) {
+//     console.error('Error updating timestamp:', error);
+//   }
+// });
+
+
 
 const createTourist = async (req, res) => {
   try {

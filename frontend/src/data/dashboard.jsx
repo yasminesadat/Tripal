@@ -222,6 +222,40 @@ export const tabContentStaticties = [
   },
 ];
 
+export var StatictiesAdminUsers = [
+  {
+    id: 0,
+    label: "Monthly",
+    data: [
+      { name: "Jan", value: 158 },
+      { name: "Feb", value: 100 },
+      { name: "Marc", value: 235 },
+      { name: "April", value: 210 },
+      { name: "May", value: 165 },
+      { name: "Jun", value: 145 },
+      { name: "July", value: 190 },
+      { name: "Agust", value: 156 },
+      { name: "Sept", value: 148 },
+      { name: "Oct", value: 210 },
+      { name: "Now", value: 180 },
+      { name: "Dec", value: 235 },
+    ],
+  },
+  {
+    id: 1,
+    label: "Year",
+    data: [
+      { name: "2019", value: 0 },
+      { name: "2020", value: 0 },
+      { name: "2021", value: 0 },
+      { name: "2022", value: 0 },
+      { name: "2023", value: 0 },
+      { name: "2024", value: 0 },
+    ],
+  },
+ 
+];
+
 export const bookingData = [
   {
     id: 1,
