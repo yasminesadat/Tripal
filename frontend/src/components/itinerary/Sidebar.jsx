@@ -9,35 +9,15 @@ import {
 } from "@/data/tourFilteringOptions";
 import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
-import { getTags } from "@/api/PreferenceTagService";
 
-export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryFilter, setLanguageFilter,setRatingFilter, priceRange, setPriceRange }) {
+export default function Sidebar({ userRole,setStartDate, setEndDate, setRatingFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [priceRangeState, setPriceRangeState] = useState([0, 2000000]); 
-  const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
 
-  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getTags();
-        setCategories(response.data);
-      } catch (err) {
-        setError("Error fetching categories");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     setRatingFilter(selectedRatings); 
@@ -59,26 +39,6 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
   const handlePriceRangeChange = (newRange) => {
     setPriceRangeState(newRange);
     setPriceRange(newRange);
-  };
-
-  const handleLanguageChange = (event) => {
-    const language = event.target.value;
-    setSelectedLanguage(language);
-    setLanguageFilter(language);
-  };
-
-  useEffect(() => {
-    setCategoryFilter(selectedCategories);
-  }, [selectedCategories, setCategoryFilter]);
-
-  const handleCheckboxChange = (categoryName) => {
-    setSelectedCategories((prevSelected) => {
-      if (prevSelected.includes(categoryName)) {
-        return prevSelected.filter((cat) => cat !== categoryName);
-      } else {
-        return [...prevSelected, categoryName];
-      }
-    });
   };
 
   return (
@@ -142,28 +102,7 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
               >
                 <div className="pt-15">
                   <div className="d-flex flex-column y-gap-15">
-                  {categories.map((elm, i) => (
-                      <div key={i}>
-                        <div className="d-flex items-center">
-                          <div className="form-checkbox ">
-                            <input 
-                              type="checkbox" 
-                              name="name" 
-                              checked={selectedCategories.includes(elm.name)} 
-                              onChange={() => handleCheckboxChange(elm.name)}
-                            />
-                            <div className="form-checkbox__mark">
-                              <div className="form-checkbox__icon">
-                                <img src="/img/icons/check.svg" alt="icon" />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="lh-11 ml-10">{elm.name}</div>
-                        </div>
-                      </div>
-                    ))}
-
+                   
                   </div>
                 </div>
               </div>
@@ -253,47 +192,6 @@ export default function Sidebar({ userRole,setStartDate, setEndDate,setCategoryF
                         </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="sidebar__item">
-                <div className="divider" style={{ height: "1px", backgroundColor: "#e0e0e0", margin: "15px 0",marginTop: "25px", marginBottom: "25px"  }}></div>
-              </div>
-
-              <div className="sidebar__item">
-                <div className="accordion -simple-2 js-accordion">
-                  <div className={`accordion__item js-accordion-item-active ${ddActives.includes("language") ? "is-active" : ""}`}>
-                    <div
-                      className="accordion__button d-flex items-center justify-between"
-                      onClick={() =>
-                        setDdActives((pre) =>
-                          pre.includes("language")
-                            ? [...pre.filter((elm) => elm != "language")]
-                            : [...pre, "language"],
-                        )
-                      }
-                    >
-                      <h5 className="text-18 fw-500">Language</h5>
-                      <div className="accordion__icon flex-center">
-                        <i className="icon-chevron-down"></i>
-                        <i className="icon-chevron-down"></i>
-                      </div>
-                    </div>
-                    <div
-                      className="accordion__content"
-                      style={ddActives.includes("language") ? { maxHeight: "300px" } : {}}
-                    >
-                      <div className="pt-15">
-                        <input
-                          type="text"
-                          className="form-input"
-                          placeholder="Enter language"
-                          value={selectedLanguage}
-                          onChange={handleLanguageChange}
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

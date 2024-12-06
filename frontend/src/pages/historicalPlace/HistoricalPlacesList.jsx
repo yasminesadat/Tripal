@@ -1,49 +1,41 @@
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
 import { getUserData } from "@/api/UserService";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { message, Tour } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
 export default function HistoricalPlacesList({ searchTerm }) {
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
-  const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const [userRole, setUserRole] = useState(null);
-  const [searchKey, setSearchKey] = useState(searchTerm);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
-  const errorDisplayed = useRef(false);
-  const location = useLocation();
-  const refHPDetails = useRef(null);
-  const [open, setOpen] = useState(false);
-  
-  const steps = [
-    {
-      title: "Read More",
-      description: "Learn more about the place.",
-      target: () => refHPDetails.current, 
-      onFinish: () => {
-        setOpen(false);
-        localStorage.setItem('currentStep', 6); 
-        navigate('/tourist', { state: { fromTour: true, targetStep: 6 } });
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
       }
-    },
-  ]
+    }
+  };
+
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
+
 
   useEffect(() => {
-    const isFromTour = location.state?.fromTour;
-  
-    const timer = setTimeout(() => {
-      if (isFromTour) {
-        setOpen(true); 
-      }
-    }, 1000);
-  
-    return () => clearTimeout(timer); 
-  }, [location]);
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1); return () => clearInterval(intervalId);
+  }, [currency]);
+
+
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -60,44 +52,51 @@ export default function HistoricalPlacesList({ searchTerm }) {
       document.removeEventListener("click", handleClick);
     };
   }, []);
+  const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+  const [searchKey, setSearchKey] = useState(searchTerm);
+  const errorDisplayed = useRef(false);
 
- useEffect(()=>{
-  const getHistoricalPlacesByGoverner = async () => {
-    setLoading(true);
-    try {
-      const result = await getAllHistoricalPlacesByTourismGoverner();
-      if (result) {
-        console.log("result: ", result);
-        setPlaces(result);
-        setFilteredPlaces(result);
+  useEffect(() => {
+    const getHistoricalPlacesByGoverner = async () => {
+
+      setLoading(true);
+      try {
+        const result = await getAllHistoricalPlacesByTourismGoverner();
+        if (result) {
+          console.log("result: ", result);
+          setPlaces(result);
+          setFilteredPlaces(result);
+        }
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+
       }
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      //toast.error('Error while fetching')
     }
-  }
-  const fetchPlaces = async () => {
-    try {
-      const response = await getAllHistoricalPlaces();
-      setPlaces(response);
-      setFilteredPlaces(response);
-    } catch (err) {
-      setError(
-        err.response?.data?.error || "Error fetching historical places"
-      );
-    } finally {
-      setLoading(false);
+    const fetchPlaces = async () => {
+      try {
+        const response = await getAllHistoricalPlaces();
+        setPlaces(response);
+        setFilteredPlaces(response);
+      } catch (err) {
+        setError(
+          err.response?.data?.error || "Error fetching historical places"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (userRole !== null) {
+      if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
+        fetchPlaces();
+      }
+      if (userRole === "Tourism Governor") {
+        getHistoricalPlacesByGoverner();
+      }
     }
-  };
-  if(userRole!==null){
-    if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
-      fetchPlaces();
-    }
-    if (userRole === "Tourism Governor") {
-      getHistoricalPlacesByGoverner();
-    }  
-  }
 
 
   }, userRole)
@@ -244,83 +243,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
     <section className="layout-pb-xl">
-      <style jsx global>{`
-        /* Base style for all dots */
-        /* Try multiple selectors and approaches */
-        .ant-tour .ant-tour-indicators > span {
-          width: 8px !important;
-          height: 8px !important;
-          border-radius: 50% !important;
-          background: #dac4d0 !important;
-        }
-        .ant-tour .ant-tour-indicators > span[class*="active"] {
-          background: #036264 !important;
-        }
-
-        /* Additional specificity */
-        .ant-tour-indicators span[role="dot"][aria-current="true"] {
-          background: #036264 !important;
-        }
-
-        .ant-tour .ant-tour-inner {
-          border: 1px solid #5a9ea0;
-          box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
-        }
-
-        .ant-tour .ant-tour-content {
-          color: #8f5774;
-          font-weight: 500 !important;
-          letter-spacing: 0.3px !important;
-          text-rendering: optimizeLegibility !important;
-        }
-
-        .ant-tour .ant-tour-title {
-          color: #5a9ea0;
-          font-weight: 600;
-        }
-
-        .ant-tour .ant-tour-close {
-          color: #5a9ea0;
-          opacity: 0.8;
-          transition: opacity 0.2s;
-        }
-
-        .ant-tour .ant-tour-close:hover {
-          opacity: 1;
-          color: #e5f8f8;
-        }
-
-        .ant-tour .ant-tour-buttons .ant-btn {
-          transition: all 0.3s ease;
-        }
-
-        .ant-tour .ant-tour-buttons .ant-btn-primary
-        {
-          background: #036264;
-          border: none;
-          color: white;
-          transition: all 0.2s;
-        }
-        .ant-tour .ant-tour-buttons .ant-btn-default{
-          background: #036264;
-          border: none;
-          color: white;
-          transition: all 0.2s;
-        }
-        
-        .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
-        .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-          color:white;
-          background: #5a9ea0;
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
-        }
-        .ant-tour .ant-tour-arrow-content {
-          background: white;
-          border: 1px solid rgba(0, 0, 0, 0.06);
-        }  
-      `}</style>
-      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <div className="container">
         <div className="row">
           <div className="col-xl-3 col-lg-4">
@@ -428,8 +350,18 @@ export default function HistoricalPlacesList({ searchTerm }) {
                         </div>
                       </div>
 
-                      <button ref={i === 0 ? refHPDetails : null} className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/historical-places/${elm._id}`}>
+                      <button className="button -outline-accent-1 text-accent-1">
+                        <Link to={{
+                          pathname: `/historical-places/${elm._id}`,
+                          state: {
+                            ticketPrices: {
+                              foreigner: convertPrice(elm.ticketPrices.foreigner),
+                              native: convertPrice(elm.ticketPrices.native),
+                              student: convertPrice(elm.ticketPrices.student),
+                            },
+                            currency: currency,
+                          },
+                        }}>
                           View Details
                           <i className="icon-arrow-top-right ml-10"></i>
                         </Link>

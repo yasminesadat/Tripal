@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Tourist = require("../models/users/Tourist.js");
 const validateIDs = require("../middleware/IDMiddleware");
-const { getRandomPromoCode } = require("../controllers/TouristController.js");
-
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 const {
   createTourist,
@@ -21,9 +19,7 @@ const {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList,
-  saveFlightBooking,
-  completeFlightBooking, getTouristNotifications
+  removeFromWishList
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -130,29 +126,4 @@ router.post(
   removeFromWishList
 );
 
-router.post(
-  "/tourist/book-flight",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  saveFlightBooking
-);
-
-router.post(
-  "/tourist/flight-payment",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  completeFlightBooking
-);
-
-router.get(
-  "/promoCode",
-
-  getRandomPromoCode
-);
-router.get(
-  "/tourist/notifications",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  getTouristNotifications
-);
 module.exports = router;

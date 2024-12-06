@@ -1,84 +1,84 @@
 const Activity = require("../models/Activity");
 const itineraryModel = require('../models/Itinerary');
 const Tourist = require('../models/users/Tourist');
-const { sendEmail } = require('./Mailer');
+const {sendEmail} = require('./Mailer');
 const cron = require('node-cron');
 const moment = require('moment'); // Use moment.js for date manipulation
 
 
 const bookResource = async (req, res) => {
-  const { resourceType, resourceId } = req.params;
-  const { tickets } = req.body;
-  const touristId = req.userId;
-  const model = resourceType === 'activity' ? Activity : itineraryModel;
+    const { resourceType, resourceId } = req.params;
+    const { tickets} = req.body;
+    const touristId = req.userId;
+    const model = resourceType === 'activity' ? Activity : itineraryModel;
+  
+    try {
+        const resource = await model.findById(resourceId);
+        if (!resource) 
+            return res.status(404).json({ error: `${resourceType} not found` });
+        
+        if (resourceType === 'activity' && resource.isBookingOpen === false) 
+            return res.status(400).json({ error: 'Booking is closed for this activity' });
+        
+        const tourist = await Tourist.findById(touristId);
+        if (!tourist) 
+            return res.status(404).json({ error: 'Tourist not found' });
+        
+        if (tourist.calculateAge() < 18) 
+            return res.status(403).json({ error: 'You must be at least 18 years old to book' });
+    
+        if (resourceType === 'itinerary') {
+                 
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
+            if (existingBooking) {
+                existingBooking.tickets += tickets;
+            } else {
+                resource.bookings.push({ touristId, tickets});
+            }
 
-  try {
-    const resource = await model.findById(resourceId);
-    if (!resource)
-      return res.status(404).json({ error: `${resourceType} not found` });
+            tourist.wallet.amount -= resource.price*tickets+resource.serviceFee;
 
-    if (resourceType === 'activity' && resource.isBookingOpen === false)
-      return res.status(400).json({ error: 'Booking is closed for this activity' });
+            
+        } 
+        else{
+            const existingBooking = resource.bookings.find(booking => booking.touristId.toString() ===touristId );
+            if (existingBooking) 
+                existingBooking.tickets += tickets;
+            
+            else 
+                resource.bookings.push({ touristId,tickets});
+            
+            tourist.wallet.amount -= resource.price*tickets;
+        }
+        if(tourist.wallet.amount<0)
+            return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
+        
+        await tourist.save();
+        await resource.save();
 
-    const tourist = await Tourist.findById(touristId);
-    if (!tourist)
-      return res.status(404).json({ error: 'Tourist not found' });
+        let pointsToReceive=0;
 
-    if (tourist.calculateAge() < 18)
-      return res.status(403).json({ error: 'You must be at least 18 years old to book' });
+        if(tourist.totalPoints<=100000){
+            pointsToReceive=resource.price*0.5*tickets;
+        }else if(tourist.totalPoints<=500000){
+            pointsToReceive=resource.price*1*tickets;
+        } else {
+            pointsToReceive=resource.price*1.5*tickets;
+        }
 
-    if (resourceType === 'itinerary') {
+        await Tourist.findByIdAndUpdate(
+            touristId,
+            {
+                $inc: {
+                    totalPoints: pointsToReceive,
+                    currentPoints: pointsToReceive,
+                },
+            },
+            { new: true }
+        );
 
-      const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
-      if (existingBooking) {
-        existingBooking.tickets += tickets;
-      } else {
-        resource.bookings.push({ touristId, tickets });
-      }
-
-      tourist.wallet.amount -= resource.price * tickets + resource.serviceFee;
-
-
-    }
-    else {
-      const existingBooking = resource.bookings.find(booking => booking.touristId.toString() === touristId);
-      if (existingBooking)
-        existingBooking.tickets += tickets;
-
-      else
-        resource.bookings.push({ touristId, tickets });
-
-      tourist.wallet.amount -= resource.price * tickets;
-    }
-    if (tourist.wallet.amount < 0)
-      return res.status(400).json({ error: 'Insufficient money in wallet, Why are you so poor?' });
-
-    await tourist.save();
-    await resource.save();
-
-    let pointsToReceive = 0;
-
-    if (tourist.totalPoints <= 100000) {
-      pointsToReceive = resource.price * 0.5 * tickets;
-    } else if (tourist.totalPoints <= 500000) {
-      pointsToReceive = resource.price * 1 * tickets;
-    } else {
-      pointsToReceive = resource.price * 1.5 * tickets;
-    }
-
-    await Tourist.findByIdAndUpdate(
-      touristId,
-      {
-        $inc: {
-          totalPoints: pointsToReceive,
-          currentPoints: pointsToReceive,
-        },
-      },
-      { new: true }
-    );
-
-    const subject = `Booking Confirmation for ${resource.title}`;
-    const html = `
+            const subject = `Booking Confirmation for ${resource.title}`;
+            const html = `
               <h1>Booking Successful!</h1>
               <p>Dear ${tourist.userName},</p>
               <p>Your booking for ${resource.title} has been confirmed.</p>
@@ -88,38 +88,38 @@ const bookResource = async (req, res) => {
               <p>Points Earned: ${pointsToReceive}</p>
               <p>Thank you for booking with us!</p>
             `;
-    try {
-      await sendEmail(tourist.email, subject, html);
-      res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully, Booking confirmation email sent` });
-    } catch (error) {
-      console.error('Error sending booking confirmation:', error.message);
-    }
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+            try {
+              await sendEmail(tourist.email, subject, html);
+              res.status(200).json({ message: `Congratulations, ${resourceType} booked successfully, Booking confirmation email sent` });
+            } catch (error) {
+              console.error('Error sending booking confirmation:', error.message);
+            }
+          
+        } catch (error) {
+        res.status(500).json({ error: error.message });
+        }
+  };
 
 const cancelResource = async (req, res) => {
-  const { resourceType, resourceId } = req.params;
-  const touristId = req.userId;
-  const model = resourceType === 'activity' ? Activity : itineraryModel;
-  const currentTime = new Date();
+const { resourceType, resourceId } = req.params;
+const touristId  = req.userId;
+const model = resourceType === 'activity' ? Activity : itineraryModel;
+const currentTime = new Date();
 
-  var ticketsForPoints;
+var ticketsForPoints;
 
-  try {
+try {
     const resource = await model.findById(resourceId);
     const tourist = await Tourist.findById(touristId);
 
-    if (!resource)
-      return res.status(404).json({ error: `${resourceType} not founddd` });
+    if (!resource) 
+    return res.status(404).json({ error: `${resourceType} not founddd` });
 
     let cancellationDeadline;
     if (resourceType === 'activity') {
       cancellationDeadline = new Date(resource.date);
     } else if (resourceType === 'itinerary') {
-      cancellationDeadline = new Date(resource.startDate);
+        cancellationDeadline = new Date(resource.startDate);
     }
     cancellationDeadline.setHours(0, 0, 0, 0);
     currentTime.setHours(0, 0, 0, 0);
@@ -130,70 +130,70 @@ const cancelResource = async (req, res) => {
     }
 
     if (resourceType === 'activity') {
-      const bookingIndex = resource.bookings.findIndex(
-        booking => booking.touristId.toString() === touristId
-      );
-
-      if (bookingIndex === -1)
-        return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-
-
-      if (tourist) {
-        tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets;
-        ticketsForPoints = resource.bookings[bookingIndex].tickets;
-        await tourist.save();
-      }
-      resource.bookings.splice(bookingIndex, 1);
-      resource.markModified('bookings');
-    }
+            const bookingIndex = resource.bookings.findIndex(
+                booking => booking.touristId.toString() === touristId
+            );
+            
+            if (bookingIndex === -1) 
+                return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+                        
+    
+            if (tourist){
+                tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets;
+                ticketsForPoints=resource.bookings[bookingIndex].tickets;
+                await tourist.save();
+            } 
+            resource.bookings.splice(bookingIndex, 1);   
+            resource.markModified('bookings');
+    } 
     else if (resourceType === 'itinerary') {
+        
+        const bookingIndex = resource.bookings.findIndex(
+            booking => booking.touristId.toString() === touristId
+        );
+        if (bookingIndex === -1) {
+            return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
+        }            
 
-      const bookingIndex = resource.bookings.findIndex(
-        booking => booking.touristId.toString() === touristId
-      );
-      if (bookingIndex === -1) {
-        return res.status(400).json({ error: `You have no booking for this ${resourceType}` });
-      }
-
-      if (tourist) {
-        tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets + resource.serviceFee;
-        ticketsForPoints = resource.bookings[bookingIndex].tickets;
-        await tourist.save();
-      }
-      resource.bookings.splice(bookingIndex, 1);
-      resource.markModified('bookings');
+        if (tourist){
+            tourist.wallet.amount += resource.price*resource.bookings[bookingIndex].tickets+resource.serviceFee;
+            ticketsForPoints=resource.bookings[bookingIndex].tickets;   
+            await tourist.save();
+        } 
+        resource.bookings.splice(bookingIndex, 1);   
+        resource.markModified('bookings');
     }
     await resource.save();
 
-    if (!tourist)
-      return res.status(404).json({ error: 'Tourist not found' });
+        if (!tourist) 
+            return res.status(404).json({ error: 'Tourist not found' });
 
-    let pointsToDecrement = 0;
-    if (tourist.totalPoints <= 100000) {
-      pointsToDecrement = resource.price * 0.5 * ticketsForPoints;
+    let pointsToDecrement=0;
+    if(tourist.totalPoints<=100000){
+        pointsToDecrement=resource.price*0.5*ticketsForPoints;
 
-    } else if (tourist.totalPoints <= 500000) {
-      pointsToDecrement = resource.price * ticketsForPoints;
+    }else if(tourist.totalPoints<=500000){
+        pointsToDecrement=resource.price*ticketsForPoints;
 
     } else {
-      pointsToDecrement = resource.price * 1.5 * ticketsForPoints;
+        pointsToDecrement=resource.price*1.5*ticketsForPoints;
     }
 
     await Tourist.findByIdAndUpdate(
-      touristId,
-      {
-        $inc: {
-          totalPoints: -pointsToDecrement,
-          currentPoints: -pointsToDecrement,
+        touristId,
+        {
+            $inc: {
+                totalPoints: -pointsToDecrement,
+                currentPoints: -pointsToDecrement,
+            },
         },
-      },
-      { new: true }
+        { new: true }
     );
 
     res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.` });
-  } catch (error) {
+} catch (error) {
     res.status(500).json({ message: 'Error canceling booking', error });
-  }
+}
 };
 
 
@@ -211,8 +211,8 @@ const cancelResource = async (req, res) => {
 //LAW ANA YOOM 1 EL EMAIL HAYETBE3ET LAW EL EVENT YOOM 4
 
 // Cron job to run every day at midnight
-cron.schedule('54 1 * * *', async () => {
-  const today = moment().utc();  // Current date and time in UTC
+cron.schedule('39 17 * * *', async () => {
+    const today = moment().utc();  // Current date and time in UTC
   const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
   const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
 
@@ -220,62 +220,57 @@ cron.schedule('54 1 * * *', async () => {
   console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
   console.log('End of day (UTC):', endOfDay.toString());
 
-  try {
-    // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
-    const activities = await Activity.find({
-      date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-      isBookingOpen: true,
-    });
-    //console.log('Found activities:', activities); 
-    if (activities.length > 0) {
-      for (let activity of activities) {
-        // Iterate over the tourists who booked the activity
-        for (let booking of activity.bookings) {
-          const tourist = await Tourist.findById(booking.touristId);
-          if (tourist && tourist.email) {
-            const subject = `Your upcoming activity: ${activity.title}`;
-            const html = `
+    try {
+      // Find activities that are exactly 3 days away, ensuring the activity date falls between midnight and 11:59:59.999
+      const activities = await Activity.find({
+        date: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isBookingOpen: true,  
+      });
+      //console.log('Found activities:', activities); 
+      if (activities.length > 0) {
+        for (let activity of activities) {
+          // Iterate over the tourists who booked the activity
+          for (let booking of activity.bookings) {
+            const tourist = await Tourist.findById(booking.touristId);
+            if (tourist && tourist.email) {
+              const subject = `Your upcoming activity: ${activity.title}`;
+              const html = `
                 <p>Dear ${tourist.userName},</p>
-                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!</p>
+                <p>This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 5 days!</p>
                 <p>Location: ${activity.location}</p>
                 <p>Date: ${moment(activity.date).format('MMMM Do YYYY')}</p>
                 <p>We hope you're excited! If you have any questions, feel free to contact us.</p>
                 <p>Best regards,</p>
                 <p>Tripal Team</p>
               `;
-
-            await sendEmail(tourist.email, subject, html);
-            console.log("SENT!")
-            tourist.notificationList.push({
-                message: `This is a reminder that your booked activity, <strong>${activity.title}</strong>, is coming up in 3 days!`,
-                notifType: "events"
-              });
-              await tourist.save(); 
+              
+              await sendEmail(tourist.email, subject, html);
+              console.log("SENT!")
+            }
           }
         }
+      } else {
+        console.log('No activities found for 5 days.');
       }
-    } else {
-      console.log('No activities found for 5 days.');
+    } catch (error) {
+      console.error('Error checking activities for 5 days later:', error);
     }
-  } catch (error) {
-    console.error('Error checking activities for 5 days later:', error);
-  }
-});
+  });
 
 cron.schedule('41 17 * * *', async () => {
-  const today = moment().utc();  // Current date and time in UTC
-  const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
-  const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
-
-  console.log('Today:', today.toString());
-  console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
-  console.log('End of day (UTC):', endOfDay.toString());
+    const today = moment().utc();  // Current date and time in UTC
+    const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
+    const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
+  
+    console.log('Today:', today.toString());
+    console.log('Five days later (start of day, UTC):', fiveDaysLater.toString());
+    console.log('End of day (UTC):', endOfDay.toString());
 
   try {
     // Find itineraries that start in exactly 3 days, ensuring the itinerary start date falls between midnight and 11:59:59.999 UTC
     const itineraries = await itineraryModel.find({
-      startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
-      isActive: true,  // Only consider active itineraries
+        startDate: { $gte: fiveDaysLater.toDate(), $lt: endOfDay.toDate() }, // Date range: start of the day to the end of the day (UTC)
+        isActive: true,  // Only consider active itineraries
     });
 
     //console.log('Found itineraries:', itineraries); 
@@ -298,7 +293,7 @@ cron.schedule('41 17 * * *', async () => {
               <p>Best regards,</p>
               <p>Tripal Team</p>
             `;
-
+            
             await sendEmail(tourist.email, subject, html);
             console.log("SENT!");
           }
@@ -311,4 +306,6 @@ cron.schedule('41 17 * * *', async () => {
     console.error('Error checking itineraries for 5 days later:', error);
   }
 });
-module.exports = { cancelResource, bookResource };
+
+
+module.exports = {cancelResource, bookResource};

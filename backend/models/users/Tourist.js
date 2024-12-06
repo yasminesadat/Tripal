@@ -9,7 +9,8 @@ const touristSchema = new Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -85,26 +86,16 @@ const touristSchema = new Schema({
   bookedHotels: [{
     type: Schema.Types.ObjectId
   }],
-  cart: [{
+  cart:[{
     type: Schema.Types.ObjectId,
     ref: "Product",
   }],
-  wishlist: [{
+  wishlist:[{
     type: Schema.Types.ObjectId,
     ref: "Product",
   }],
-  promoCodes: [{
-    type: Schema.Types.ObjectId,
-    ref: "PromoCode",
-  }],
-  notificationList: [{
-    message: String,
-    read: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now },
-    notifType: String
-  }],
-  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: [] }],
-  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: [] }],
+  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: []}],
+  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: []}],
 
 }, { timestamps: true });
 
