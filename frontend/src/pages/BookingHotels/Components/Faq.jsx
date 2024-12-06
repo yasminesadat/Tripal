@@ -18,9 +18,9 @@ export default function Faq() {
             >
               <div className="button text-16 text-dark-1">{elm.question}</div>
 
-              <div className="accordion__icon size-30 flex-center bg-light-2 rounded-full">
-                <i className="icon-plus"></i>
-                <i className="icon-minus"></i>
+              <div className="accordion__icon size-30 flex-center bg-light-2 rounded-full"style={{color:'var(--color-stone)'}}>
+                <i className="icon-plus" style={{color:'var(--color-light-purple)'}}></i>
+                <i className="icon-minus"style={{color:'var(--color-light-purple)'}}></i>
               </div>
             </div>
 

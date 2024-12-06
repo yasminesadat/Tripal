@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Menu from "../components/AdvertiserMenu";
 import { profile } from "@/data/advertiserMenu";
+import AdvertiserNotification from "@/components/common/NotificationsAdvertiser";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -80,17 +81,18 @@ export default function AdvertiserHeader() {
           </div>
 
           <div className="header__right">
-            <Link to="/" className="ml-20">
+            <Link to="/help-center" className="ml-20">
               {/*/help-center*/}
               Help
             </Link>
+
+            <AdvertiserNotification />
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""
+                }`}
             >
               <i className="icon-person text-18"></i>
             </button>

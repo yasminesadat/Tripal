@@ -1,7 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
-
   return (
     <>
       <div className="xl:d-none ">
@@ -10,7 +9,6 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
           <div className="desktopNav__item">
             <Link to="/tourist">Home</Link>
           </div>
-
           <div className="desktopNav__item" ref={refFlights}>
             <Link to="/tourist/book-flight" >Flights</Link>
           </div>

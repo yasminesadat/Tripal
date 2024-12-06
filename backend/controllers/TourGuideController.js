@@ -62,6 +62,64 @@ const getTourguideNotifications = async (req, res) => {
   }
 };
 
+const deleteTourguideNotification = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const notificationID=req.params;   
+   
+   
+    const tourGuide = await tourGuideModel.findById(userid);
+    if (!tourGuide) {
+      return res.status(404).json({ error: "Tour Guide not found" });
+    }
+     
+    
+    const updatedNotificationList = tourGuide.notificationList.filter(
+      notification => (notification._id).toString() !== notificationID.id
+    );
+
+    tourGuide.notificationList=updatedNotificationList;
+    await tourGuide.save();
+    
+    
+    res.status(200).json(tourGuide.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const markNotificationRead = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const notificationID=req.params;   
+   
+   
+    const tourGuide = await tourGuideModel.findById(userid);
+    if (!tourGuide) {
+      return res.status(404).json({ error: "Tour Guide not found" });
+    }
+     
+   
+    const notification = tourGuide.notificationList.find(
+      notification => (notification._id).toString() === notificationID.id
+    );
+
+    notification.read=true;
+
+    
+    await tourGuide.save();
+
+    console.log(tourGuide.notificationList)
+    
+    
+    res.status(200).json(tourGuide.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const updateTourguideData = async (req, res) => {
   try {
     console.log(req);
@@ -114,4 +172,4 @@ const updateTourguideData = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-module.exports = { createTourGuide, updateTourguideData, getTourguideInfo, getTourguideNotifications };
+module.exports = { createTourGuide, updateTourguideData, getTourguideInfo, getTourguideNotifications, deleteTourguideNotification,markNotificationRead };

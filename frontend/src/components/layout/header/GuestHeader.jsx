@@ -73,20 +73,25 @@ export default function GuestHeader({ refLogin, setOpen }) {
                 Guide
               </button>
             )}
-            <Currency />
             < div className="header__right" ref={refLogin} >
-              <Link to="/register" className="ml-10">
-                Sign up
-              </Link>
 
-              <Link
-                to="/login"
-                className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
-              >
-                Log in
+              <Currency />
+              < div className="header__right" ref={refLogin} >
+                <Link to="/register" className="ml-10">
+                  Sign up
+                </Link>
+
+                <Link
+                  to="/login"
+                  className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
+                >
+                  Log in
+                </Link>
+              </div>
+              <Link to="/help-center" className="ml-10">
+                Help
               </Link>
             </div>
-            
           </div>
         </div>
       </header>
@@ -120,6 +125,13 @@ export default function GuestHeader({ refLogin, setOpen }) {
         .dropdown-menu a {
           text-decoration: none;
           color: inherit;
+          .ant-tour {
+  z-index: 2000 !important;
+}
+
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         }`}</style>
     </>
   );

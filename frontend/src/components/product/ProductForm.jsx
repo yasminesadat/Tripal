@@ -1,15 +1,14 @@
-//form 2
 import { useState } from "react";
 import { Form, Input, Button, message, Upload, InputNumber } from "antd";
 import { createProduct, editProduct } from "../../api/ProductService";
-// import { currUser } from "../../IDs";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import MetaComponent from "../common/MetaComponent";
-// import "../../components/product/product.css";
+
 const metadata = {
   title: "Products || Tripal",
 };
+
 const ProductForm = () => {
   const { id } = useParams();
   const isCreate = id === undefined;
@@ -35,7 +34,7 @@ const ProductForm = () => {
     picture: isCreate ? null : initialPicture,
   });
 
-  const [loading, setLoading] = useState(false); // State for loading
+  const [loading, setLoading] = useState(false);
   const [buttonText, setButtonText] = useState(
     isCreate ? "Create Product" : "Update Product"
   );
@@ -89,7 +88,7 @@ const ProductForm = () => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true); // Set loading to true before form submission
+    setLoading(true);
     try {
       if (isCreate) {
         setButtonText("Submitting...");
@@ -99,7 +98,7 @@ const ProductForm = () => {
           price: product.price,
           description: product.description,
           quantity: product.quantity,
-          picture: product.picture, // Picture is now a Base64 string
+          picture: product.picture,
         };
         await createProduct(productData);
         message.success("Product created successfully");
@@ -138,13 +137,12 @@ const ProductForm = () => {
       setTimeout(() => navigate("/seller/view-products"), 1000);
     } catch (error) {
       message.error(
-        `${
-          isCreate ? "Error creating product: " : "Error updating product: "
+        `${isCreate ? "Error creating product: " : "Error updating product: "
         } Please try again later.`
       );
       setButtonText("Failed");
     } finally {
-      setLoading(false); // Set loading to false after form submission
+      setLoading(false);
       setTimeout(() => {
         setButtonText(isCreate ? "Create Product" : "Update Product");
       }, 1000);
@@ -169,28 +167,26 @@ const ProductForm = () => {
               },
             ]}
           >
-            {/* logo */}
-
             <div className="col-12">
               <Upload
                 name="logo"
                 listType="picture"
                 accept=".png,.jpeg,.jpg"
-                beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                beforeUpload={handleBeforeUpload}
                 onChange={handleImageChange}
-                onRemove={handleRemove} // Allow removal of the logo
+                onRemove={handleRemove}
                 fileList={
                   product.picture
                     ? [
-                        {
-                          uid: "-1",
-                          name: "image.png",
-                          status: "done",
-                          url: product.picture,
-                        },
-                      ]
+                      {
+                        uid: "-1",
+                        name: "image.png",
+                        status: "done",
+                        url: product.picture,
+                      },
+                    ]
                     : []
-                } // Ensure only one file is shown
+                }
               >
                 {product.picture ? (
                   <div className="uploaded-image-container">
@@ -215,8 +211,6 @@ const ProductForm = () => {
                 )}
               </Upload>
             </div>
-
-            {/* end logo */}
           </Form.Item>
           <Form.Item
             label="Name"
@@ -232,6 +226,11 @@ const ProductForm = () => {
               value={product.name}
               onChange={handleInputChange}
               placeholder="Enter product name"
+              style={{
+                padding: "8px",
+                borderColor: "var(--color-light-purple)",
+                boxShadow: "0 0 0 2px rgba(128, 0, 128, 0.2)",
+              }}
             />
           </Form.Item>
 
@@ -249,7 +248,12 @@ const ProductForm = () => {
               value={product.price}
               onChange={(value) => handleNumberChange("price", value)}
               placeholder="Enter price"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderColor: "var(--color-light-purple)",
+                boxShadow: "0 0 0 2px rgba(128, 0, 128, 0.2)",
+              }}
             />
           </Form.Item>
 
@@ -270,6 +274,11 @@ const ProductForm = () => {
               value={product.description}
               onChange={handleInputChange}
               placeholder="Enter product description"
+              style={{
+                padding: "8px",
+                borderColor: "var(--color-light-purple)",
+                boxShadow: "0 0 0 2px rgba(128, 0, 128, 0.2)",
+              }}
             />
           </Form.Item>
 
@@ -290,7 +299,12 @@ const ProductForm = () => {
               value={product.quantity}
               onChange={(value) => handleNumberChange("quantity", value)}
               placeholder="Enter quantity"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderColor: "var(--color-light-purple)",
+                boxShadow: "0 0 0 2px rgba(128, 0, 128, 0.2)",
+              }}
             />
           </Form.Item>
 
@@ -298,7 +312,11 @@ const ProductForm = () => {
             <Button
               type="primary"
               htmlType="submit"
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                backgroundColor: "var(--color-stone)",
+                borderColor: "var(--color-stone)",
+              }}
               loading={loading}
               className="submit-button"
             >
@@ -328,6 +346,8 @@ const ProductForm = () => {
     .ant-input-affix-wrapper,
     .ant-input-password {
       padding: 8px !important; 
+      border-color: var(--color-light-purple) !important;
+      box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
     }
 
     .ant-input:focus,

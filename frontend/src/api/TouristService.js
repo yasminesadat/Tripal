@@ -23,6 +23,16 @@ export async function changeTouristPassword(oldPassword, newPassword) {
     throw error;
   }
 }
+export async function checkTouristPromoCode(promocode) {
+  try {
+
+    const response = await axios.post(`/tourist/checkPromoCode`, promocode);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 
 export async function getTouristInformation() {
   try {
@@ -178,6 +188,86 @@ export async function getWishList() {
     return response.data;
   } catch (error) {
     console.error("Error fetching wishlist:", error);
+    throw error;
+  }
+}
+
+export async function saveFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/book-flight', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
+
+export async function completeFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/flight-payment', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
+export async function getTouristNotifications() {
+  try {
+    const response = await axios.get('/tourist/notifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+}
+
+export async function addToCart(touristId, productId, quantity) {
+  try {
+    const response = await axios.post('/tourist/cart', {
+      touristId,
+      productId,
+      quantity,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    throw error;
+  }
+}
+
+export async function getCart() {
+  try {
+    const response = await axios.get(`/tourist/cart`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    throw error;
+  }
+}
+
+export async function removeFromCart(touristId, productId) {
+  try {
+    const response = await axios.delete('/tourist/cart', {
+      data: {
+        touristId,
+        productId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    throw error;
+  }
+}
+
+export async function getWalletAndTotalPoints() {
+  try {
+    const response = await axios.get(`/tourist/wallet`);
+    console.log("Incoming", response.data);
+    return response.data;
+    
+  } catch (error) {
+    console.error("Error fetching wallet:", error);
     throw error;
   }
 }

@@ -40,3 +40,34 @@ export async function updateAdvertiser( updatedUser) {
     throw error
   }
 }
+
+export const getNotifications = async () => {
+  try {
+    const response = await axios.get(`/advertiser/notificationList`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications in service file:", error);
+    throw error;
+  }
+};
+
+
+export const deleteNotifications = async (id) => {
+  try {
+    const response = await axios.delete(`/advertiser/deleteNotificationList/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting notifications in service file:", error);
+    throw error;
+  }
+};
+
+export const markNotification = async (id) => {
+  try {
+    const response = await axios.patch(`/advertiser/markNotification/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error marking notifications in service file:", error);
+    throw error;
+  }
+};

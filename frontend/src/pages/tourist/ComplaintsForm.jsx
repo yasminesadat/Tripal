@@ -21,13 +21,7 @@ const ComplaintsForm = ({ open, onCancel, onSubmitSuccess }) => {  // Add onSubm
             const response = await createComplaint(complaintData);
 
             // Create complete data object to pass to parent
-            const completeData = {
-                title: values.title,
-                body: values.body,
-                date: new Date().toISOString(),
-                _id: response._id, // or response._id depending on your database
-                status: response.status
-            };
+            const completeData = response;
 
             message.success("Complaint submitted successfully");
             setButtonText("Success!");

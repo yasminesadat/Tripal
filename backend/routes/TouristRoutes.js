@@ -19,7 +19,13 @@ const {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList
+  removeFromWishList,
+  saveFlightBooking,
+  completeFlightBooking, getTouristNotifications,
+  addToCart,
+  removeFromCart, checkTouristPromocode,
+  getCart,
+  getWalletAndTotalPoints
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -126,4 +132,64 @@ router.post(
   removeFromWishList
 );
 
+router.post(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addToCart
+);
+
+router.delete(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  removeFromCart
+);
+
+router.get(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getCart
+);
+
+router.post(
+  "/tourist/book-flight",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  saveFlightBooking
+);
+
+router.post(
+  "/tourist/flight-payment",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  completeFlightBooking
+);
+
+router.get(
+  "/promoCode",
+
+  getRandomPromoCode
+);
+router.get(
+  "/tourist/notifications",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getTouristNotifications
+);
+
+router.post(
+  "/tourist/checkPromoCode",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  checkTouristPromocode
+);
+
+router.get(
+  "/tourist/wallet",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getWalletAndTotalPoints
+);
 module.exports = router;

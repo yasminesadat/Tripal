@@ -4,9 +4,94 @@ const mongoose = require("mongoose");
 const User = require('../models/users/User.js')
 const Request = require('../models/Request.js');
 const hotelBookings = require("../models/BookingHotel.js");
-const activityModel= require("../models/Activity.js");
-const itineraryModel= require("../models/Itinerary.js");
-const productModel= require("../models/Product.js");
+const activityModel = require("../models/Activity.js");
+const itineraryModel = require("../models/Itinerary.js");
+const productModel = require("../models/Product.js");
+const PromoCode = require("../models/PromoCode.js")
+const cron = require('node-cron');
+const { sendEmail } = require('./Mailer');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const asyncHandler = require("express-async-handler");
+const Tourist = require("../models/users/Tourist");
+
+cron.schedule('16 01 * * *', async () => {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  const birthdayUsers = await touristModel.find({
+    $expr: {
+      $and: [
+        { $eq: [{ $month: "$dateOfBirth" }, month] },
+        { $eq: [{ $dayOfMonth: "$dateOfBirth" }, day] }
+      ]
+    }
+  })
+
+
+  for (const user of birthdayUsers) {
+    try {
+      const promocode = await getRandomPromoCode();
+      const name = promocode.name;
+      const discount = promocode.discountPercentage;
+
+      const subject = `🎉 Happy Birthday from Tripal!`;
+      const html = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h1 style="color: #5a9ea0;">Happy Birthday, ${user.userName}! 🎂</h1>
+
+                        <div style="background-color: #f8f8f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h2 style="color: #036264; margin: 0;">🎁 Your Birthday Gift</h2>
+                            <p style="font-size: 18px;">Enjoy <strong>${discount}% OFF</strong> your next adventure!</p>
+                            <div style="background: #ffffff; padding: 15px; border-radius: 4px; text-align: center; margin: 15px 0;">
+                                <p style="font-size: 24px; font-weight: bold; color: #5a9ea0; margin: 0;">
+                                    ${name}
+                                </p>
+                            </div>
+                            <p style="color: #666; font-size: 14px;">Valid for the next 24 hours</p>
+                        </div>
+
+                        <p>Don't miss out on this exclusive birthday offer! 
+                            Book your next trip today and make your birthday month even more special.</p>
+
+                        <p style="color: #666; font-size: 12px;">
+                            * Promo code expires in 24 hours • Cannot be combined with other offers
+                        </p>
+
+                        <p style="margin-top: 30px;">
+                            Happy Travels!<br/>
+                            The Tripal Team ✈️
+                        </p>
+                    </div>
+                `;
+
+      await sendEmail(user.email, subject, html);
+      user.promoCodes.push(promocode);
+      user.notificationList.push({
+        message: `Happy birthday! Use promo code ${name} for a discount of ${discount}%  today only!`,
+        notifType: "birthday"
+      });
+      await user.save();
+      console.log(`Birthday email sent to ${user.userName}`);
+    } catch (error) {
+      console.error(`Error processing birthday email for ${user.userName}:`, error.message);
+      continue;
+    }
+  }
+});
+
+cron.schedule('59 23 * * *', async () => {
+  try {
+    const result = await touristModel.updateMany(
+      {},
+      { $set: { promoCodes: [] } }
+    );
+    console.log(`Cleared promo codes for ${result.modifiedCount} users`);
+  } catch (error) {
+    console.error('Error clearing promo codes:', error.message);
+  }
+});
+
+
 
 const createTourist = async (req, res) => {
   try {
@@ -105,10 +190,12 @@ const getTouristInfo = async (req, res) => {
 };
 
 const updateTouristProfile = async (req, res) => {
+
+
   try {
     const id = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
-
+    const currTourist = Tourist.findById(id);
     if (tags) {
       updateParameters.tags = tags;
     }
@@ -129,6 +216,18 @@ const updateTouristProfile = async (req, res) => {
         message: "You cannot update your balance",
       });
     }
+    console.log("email ", updateParameters.email);
+    const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
+
+
+    if (existingEmail) {
+      console.log("exists alreadyy");
+      return res.status(400).json({ error: "Email already exists" });
+    }
+    const existingEmailRequests = await Request.findOne({ email: updateParameters.email, status: { $ne: 'rejected' } });
+    if (existingEmailRequests) {
+      return res.status(400).json({ error: "Request has been submitted with this email" });
+    }
     if (updateParameters.dateOfBirth) {
       res.status(400).json({
         status: "error",
@@ -136,6 +235,14 @@ const updateTouristProfile = async (req, res) => {
           "You cannot update your date of birth, dont you know when you were born??",
       });
     }
+    if (updateParameters.email && updateParameters.email !== currTourist.email) {
+      await User.findOneAndUpdate(
+        { email: currTourist.email },
+        { email: updateParameters.email },
+        { new: true, runValidators: true }
+      );
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
         status: "error",
@@ -546,6 +653,313 @@ const removeFromWishList = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+const getRandomPromoCode = async (req, res) => {
+  try {
+    const randomPromoCode = await PromoCode.aggregate([
+      { $sample: { size: 1 } }  // Get 1 random document
+    ]);
+
+
+    if (!randomPromoCode || randomPromoCode.length === 0) {
+      return res.status(404).json({ message: "No promo codes available" });
+    }
+    return randomPromoCode[0];
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+const getTouristNotifications = async (req, res) => {
+  try {
+    const touristId = req.userId;
+    const tourist = await touristModel.findById(touristId);
+    const notifications = tourist.notificationList;
+    return res.status(200).json(notifications);
+
+  }
+  catch (error) {
+
+  }
+}
+const checkTouristPromocode = async (req, res) => {
+  const touristId = req.userId;
+  const { promoCode } = req.body;
+
+  try {
+    const tourist = await touristModel
+      .findById(touristId)
+      .populate('promoCodes');
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    // Now promoCodes will be the full objects, not just IDs
+    const isPromoCodeValid = tourist.promoCodes.some(promoCodeObj =>
+      promoCodeObj.name === promoCode
+    );
+    console.log("valueee", isPromoCodeValid);
+    console.log(tourist.promoCodes);
+    console.log("promo", promoCode);
+    if (!isPromoCodeValid) {
+      return res.status(200).json({ status: "no", message: "Invalid promo code!" });
+    }
+    else {
+      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!" });
+    }
+    // return res.status(200).json({ isPromoCodeValid });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+
+const saveFlightBooking = async (req, res) => {
+  try {
+    const { bookedFlights, useWallet, paymentMethod } = req.body;
+    const userId = req.userId;
+
+    const existingTourist = await touristModel.findById(userId);
+    if (!existingTourist) {
+      return res.status(400).json({ error: "User ID doesn't exist!" });
+    }
+
+
+    if (paymentMethod === 'wallet') {
+      existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
+      const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+      let pointsToReceive = 0;
+
+      if (existingTourist.totalPoints <= 100000) {
+        pointsToReceive = totalCost * 0.5;
+      } else if (existingTourist.totalPoints <= 500000) {
+        pointsToReceive = totalCost * 1;
+      } else {
+        pointsToReceive = totalCost * 1.5;
+      }
+
+      if (useWallet) {
+        if (existingTourist.wallet.amount < totalCost) {
+          return res.status(400).json({ error: "Insufficient wallet balance." });
+        }
+        existingTourist.wallet.amount -= totalCost;
+      }
+
+      bookedFlights.forEach(flight => {
+        const newFlightBooking = {
+          flightNumber: flight.flightNumber,
+          airline: flight.airline,
+          departureTime: new Date(flight.departureTime),
+          arrivalTime: new Date(flight.arrivalTime),
+          origin: flight.origin,
+          destination: flight.destination,
+          price: flight.price,
+          currency: flight.currency || "EGP",
+          bookingDate: new Date(),
+        };
+
+        existingTourist.bookedFlights.push(newFlightBooking);
+      });
+
+      existingTourist.totalPoints = existingTourist.totalPoints || 0;
+      existingTourist.currentPoints = existingTourist.currentPoints || 0;
+      existingTourist.totalPoints += pointsToReceive;
+      existingTourist.currentPoints += pointsToReceive;
+      await existingTourist.save();
+
+      return res.status(200).json({
+        message: "Flight booked successfully with wallet payment.",
+        bookedFlights: existingTourist.bookedFlights,
+      });
+    }
+
+    if (paymentMethod === 'card') {
+      // Calculate the total cost of flights
+      const totalAmount = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+
+
+      const lineItems = bookedFlights.map(flight => ({
+        price_data: {
+          currency: 'egp',
+          product_data: {
+            name: `Your Flight Number: ${flight.flightNumber}`,
+          },
+          unit_amount: Math.round(parseFloat(flight.price) * 100),  // Stripe requires amount in cents
+        },
+        quantity: 1,
+      }));
+
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        customer_email: existingTourist.email,
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}&userId=${userId}&bookedFlights=${encodeURIComponent(JSON.stringify(bookedFlights))}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+      });
+
+      return res.status(200).json({
+        sessionId: session.id,
+      });
+    }
+
+    return res.status(400).json({ error: 'Invalid payment method selected.' });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const completeFlightBooking = async (req, res) => {
+  const { sessionId, userId, bookedFlights } = req.body;
+
+  try {
+    // Retrieve the Stripe session
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // Check if the payment was successful
+    if (session.payment_status !== "paid") {
+      return res.status(400).json({ error: "Payment not successful" });
+    }
+
+    // Find the tourist based on the userId
+    const existingTourist = await touristModel.findById(userId);
+    if (!existingTourist) {
+      return res.status(404).json({ error: "Tourist not found" });
+    }
+
+    // Process the booking for each flight
+    bookedFlights.forEach(flight => {
+      const newFlightBooking = {
+        flightNumber: flight.flightNumber,
+        airline: flight.airline,
+        departureTime: new Date(flight.departureTime),
+        arrivalTime: new Date(flight.arrivalTime),
+        origin: flight.origin,
+        destination: flight.destination,
+        price: flight.price,
+        currency: flight.currency || "EGP",
+        bookingDate: new Date(),
+      };
+
+      // Add the flight booking to the tourist's bookedFlights array
+      existingTourist.bookedFlights.push(newFlightBooking);
+    });
+
+    // Calculate the total price and update wallet if using wallet payment
+    const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
+    if (req.body.paymentMethod === 'wallet') {
+      if (existingTourist.wallet.amount < totalCost) {
+        return res.status(400).json({ error: "Insufficient wallet balance" });
+      }
+      existingTourist.wallet.amount -= totalCost;
+    }
+
+    // Save the tourist's updated details
+    await existingTourist.save();
+
+    // Respond with success
+    return res.status(200).json({
+      message: "Flight booking completed successfully.",
+      bookedFlights: existingTourist.bookedFlights,
+    });
+
+  } catch (error) {
+    console.error("Error completing flight booking:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const addToCart = asyncHandler(async (req, res) => {
+  const { touristId, productId, quantity } = req.body;
+  try {
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const cartItem = tourist.cart.find((item) => item.product.toString() === productId);
+    const price = product.price * quantity;
+
+    if (cartItem) {
+      cartItem.quantity += quantity;
+      cartItem.price += price;
+    } else {
+      tourist.cart.push({ product: productId, quantity, price });
+    }
+    await tourist.save();
+
+    res.status(200).json({ message: "Product added to cart successfully.", cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while adding product to cart.", error: error.message });
+  }
+
+});
+
+const removeFromCart = asyncHandler(async (req, res) => {
+  const { touristId, productId } = req.body;
+  try {
+    const tourist = await touristModel.findById(touristId);
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const cartIndex = tourist.cart.findIndex((item) => item.product.toString() === productId);
+    if (cartIndex === -1) {
+      return res.status(404).json({ message: "Product not found in the cart." });
+    }
+
+    tourist.cart.splice(cartIndex, 1);
+
+    await tourist.save();
+
+    res.status(200).json({ message: "Product removed from cart successfully.", cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while removing product from cart.", error: error.message });
+  }
+});
+
+const getCart = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+
+  try {
+    const tourist = await touristModel.findById(touristId).populate('cart.product');
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    res.status(200).json({ cart: tourist.cart });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while retrieving the cart.", error: error.message });
+  }
+});
+
+const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+
+  try {
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const { wallet, totalPoints } = tourist;
+    res.status(200).json({ wallet, totalPoints });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while retrieving wallet and total points.",
+      error: error.message,
+    });
+  }
+});
+
 
 module.exports = {
   createTourist,
@@ -564,5 +978,14 @@ module.exports = {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList
+  removeFromWishList,
+  addToCart,
+  removeFromCart,
+  getCart,
+  getRandomPromoCode,
+  getTouristNotifications,
+  checkTouristPromocode,
+  saveFlightBooking,
+  completeFlightBooking,
+  getWalletAndTotalPoints
 };

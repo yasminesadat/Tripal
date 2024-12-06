@@ -28,21 +28,21 @@ export default function CreateNewGovernor() {
 
   const onFinish = async () => {
     setLoading(true);
-    console.log("username+",form.getFieldValue("username"));
-    console.log("password+",form.getFieldValue("password"));
-try{
-    const response = await createGovernor(
-      form.getFieldValue("username"),
-      form.getFieldValue("password")
-    );
-    setLoading(false);
-    form.setFieldValue("username","");
-    form.setFieldValue("password","");
-    message.success(`Governor ${response.userName} created successfully!`)
-  }
+    console.log("username+", form.getFieldValue("username"));
+    console.log("password+", form.getFieldValue("password"));
+    try {
+      const response = await createGovernor(
+        form.getFieldValue("username"),
+        form.getFieldValue("password")
+      );
+      setLoading(false);
+      form.setFieldValue("username", "");
+      form.setFieldValue("password", "");
+      message.success(`Governor ${response.userName} created successfully!`)
+    }
     catch (error) {
       message.error(error.message);
-     
+
     }
   };
 
@@ -51,115 +51,117 @@ try{
     console.log("Failed:", errorInfo);
   };
 
- 
-  
+
+
 
   return (
 
     <div
-      className={`dashboard ${
-        sideBarOpen ? "-is-sidebar-visible" : ""
-      } js-dashboard`}
+      className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+        } js-dashboard`}
     >
 
       <Sidebar setSideBarOpen={setSideBarOpen} />
       <div className="dashboard__content" style={{ minHeight: '100vh', paddingBottom: '0' }}>
         <Header setSideBarOpen={setSideBarOpen} />
         <div className="dashboard__content_content">
-         <>
-      <Card
-        bordered={false}
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          maxWidth: "55%",
-          marginLeft: "23%",
-          marginTop: "8%",
-        }}
-      >
-        <Title level={3} style={{ textAlign: "center",  fontWeight: 'bold' }}>
-       Add New Governor
-        </Title>
-        <Text
-          type="secondary"
-          style={{
-            display: "block",
-            textAlign: "center",
-            marginBottom: "1rem",
-            color: "black", // Custom color for the "Sign Up" text
-          }}
-        >
-       
-        </Text>
-
-        <Form
-          form={form}
-          name="login"
-          layout="vertical"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          initialValues={{ remember: true }}
-          requiredMark={false}
-          style={{ width: "100%", padding: "30px", }}
-        >
-          {/* Username Field */}
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please enter your username" }]}
-            labelCol={{ style: { fontWeight: 'bold' } }}
-          >
-            <Input
-              size="large"
+          <>
+            <Card
+              bordered={false}
               style={{
-                height: "50px",
-                borderColor: "#d9d9d9",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                maxWidth: "55%",
+                marginLeft: "23%",
+                marginTop: "8%",
               }}
-            />
-          </Form.Item>
-
-          {/* Password Field */}
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              { required: true, message: "Please enter your password" },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters",
-              },
-            ]}
-            labelCol={{ style: { fontWeight: 'bold' } }}
-          >
-            <Input.Password
-              size="large"
-              style={{ height: "50px" }}
-              iconRender={(visible) =>
-                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-
-          {/* Remember Me and Forgot Password */}
-        
-
-          {/* Submit Button */}
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-          //    loading={loading}
-              className="custom-button"
-              style={{ width: "100%", height: "50px" ,  marginTop:"35px"}}
             >
-              Create
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-      
-      <style>{`
+              <Title level={3} style={{ textAlign: "center", fontWeight: 'bold' }}>
+                Add New Governor
+              </Title>
+              <Text
+                type="secondary"
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  marginBottom: "1rem",
+                  color: "black", // Custom color for the "Sign Up" text
+                }}
+              >
+
+              </Text>
+
+              <Form
+                form={form}
+                name="login"
+                layout="vertical"
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+                initialValues={{ remember: true }}
+                requiredMark={false}
+                style={{ width: "100%", padding: "30px", }}
+              >
+                {/* Username Field */}
+                <Form.Item
+                  label="Username"
+                  name="username"
+                  rules={[{ required: true, message: "Please enter your username" }]}
+                  labelCol={{ style: { fontWeight: 'bold' } }}
+                >
+                  <Input
+                    size="large"
+                    style={{
+                      height: "50px",
+                      border: "1px solid #d9d9d9",
+                      outline: "none",
+                      width: "100%",
+                      backgroundColor: "transparent"
+                    }}
+                  />
+                </Form.Item>
+
+                {/* Password Field */}
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please enter your password" },
+                    {
+                      min: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  ]}
+                  labelCol={{ style: { fontWeight: 'bold' } }}
+                >
+                  <Input.Password
+                    size="large"
+                    style={{ height: "50px" }}
+                    iconRender={(visible) =>
+                      visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                    }
+                  />
+                </Form.Item>
+
+                {/* Remember Me and Forgot Password */}
+
+
+                {/* Submit Button */}
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    //    loading={loading}
+                    className="custom-button"
+                    style={{ width: "100%", height: "50px", marginTop: "35px" }}
+                  >
+                    Create
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+
+            <style>{`
         .sign-up-link {
           color: var(--color-stone)!important;
           font-weight: bold;
@@ -240,10 +242,10 @@ try{
           color: var(--color-light-purple) !important;  /* Enforce light purple for the eye icon */
         }
       `}</style>
-    </>
-   
-    </div>
-    </div>
+          </>
+
+        </div>
+      </div>
     </div>
   );
 }

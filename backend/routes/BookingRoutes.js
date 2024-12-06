@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   bookResource,
   cancelResource,
+  completeBooking
 } = require("../controllers/BookingController");
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
@@ -17,6 +18,13 @@ router.post(
   verifyToken,
   authorizeRoles("Tourist"),
   cancelResource
+);
+
+router.post(
+  "/:resourceType/:resourceId/complete-booking",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  completeBooking
 );
 
 module.exports = router;

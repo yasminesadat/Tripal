@@ -1,4 +1,3 @@
-import React from "react";
 import ProductDetails from "../../components/product/ProductDetails";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";

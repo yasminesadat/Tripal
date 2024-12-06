@@ -96,7 +96,6 @@ export const sidebarItems = [
   },
   {
     id: 8,
-    href: "/",
     icon: <LogOut size={26} />,
     label: "Logout"
   },
@@ -105,9 +104,9 @@ export const sidebarItems = [
 export const states = [
   {
     id: 1,
-    title: "Total Earnings",
+    title: "Total Users",
     amount: "$10,800",
-    today: "$50",
+    
     iconClass: "icon-wallet text-accent-1",
   },
   {

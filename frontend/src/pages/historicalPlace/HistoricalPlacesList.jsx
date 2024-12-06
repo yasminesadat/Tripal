@@ -24,14 +24,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const location = useLocation();
   const refHPDetails = useRef(null);
   const [open, setOpen] = useState(false);
-  
+
   const steps = [
     {
       title: "Read More",
       description: "Learn more about the place.",
       target: () => refHPDetails.current,
+      target: () => refHPDetails.current,
       onFinish: () => {
         setOpen(false);
+        localStorage.setItem('currentStep', 6);
         localStorage.setItem('currentStep', 6);
         navigate('/tourist', { state: { fromTour: true, targetStep: 6 } });
       }
@@ -41,11 +43,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
 
+
     const timer = setTimeout(() => {
       if (isFromTour) {
         setOpen(true);
+        setOpen(true);
       }
     }, 1000);
+
+    return () => clearTimeout(timer);
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -106,6 +112,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
   }, userRole)
+  }, userRole)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -128,7 +135,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
       }
     };
 
+
     fetchUserData();
+
 
 
 
@@ -402,6 +411,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
 
+
                     <div className="tourCard__content">
                       <div className="tourCard__location">
                         <i className="icon-pin"></i>
@@ -414,13 +424,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
 
+
                       <p className="tourCard__text mt-5">{elm.description}</p>
+
 
 
                     </div>
 
                     <div className="tourCard__info">
                       <div>
+
 
 
                         <div className="tourCard__price">
