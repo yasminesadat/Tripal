@@ -9,7 +9,6 @@ import {
 } from "@/data/tourFilteringOptions";
 import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
-import { getTags } from "@/api/PreferenceTagService";
 
 export default function Sidebar({ userRole, setStartDate, setEndDate, setCategoryFilter, setLanguageFilter, setRatingFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
@@ -23,21 +22,6 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getTags();
-        setCategories(response.data);
-      } catch (err) {
-        setError("Error fetching categories");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     setRatingFilter(selectedRatings);
@@ -59,26 +43,6 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
   const handlePriceRangeChange = (newRange) => {
     setPriceRangeState(newRange);
     setPriceRange(newRange);
-  };
-
-  const handleLanguageChange = (event) => {
-    const language = event.target.value;
-    setSelectedLanguage(language);
-    setLanguageFilter(language);
-  };
-
-  useEffect(() => {
-    setCategoryFilter(selectedCategories);
-  }, [selectedCategories, setCategoryFilter]);
-
-  const handleCheckboxChange = (categoryName) => {
-    setSelectedCategories((prevSelected) => {
-      if (prevSelected.includes(categoryName)) {
-        return prevSelected.filter((cat) => cat !== categoryName);
-      } else {
-        return [...prevSelected, categoryName];
-      }
-    });
   };
 
   return (

@@ -43,16 +43,13 @@ export default function TouristHome() {
       },
     },
     {
-      title: "Book your flight",
+      title: "Book your flight.",
       description: "Let's plan-e your next getaway.",
       target: () => refFlights.current,
-      onNext: () => {
-        localStorage.setItem('currentStep', 1);
-        navigate("/tourist/book-flight", { state: { fromTour: true } });
-      }
+      // onNext: () => navigate("/tourist/book-flight"),
     },
     {
-      title: "Book a hotel",
+      title: "Book a hotel.",
       description: "Where are you gonna stay?",
       target: () => refHotels.current,
       onNext: () => {
@@ -61,7 +58,7 @@ export default function TouristHome() {
       }
     },
     {
-      title: "Book an activity",
+      title: "Book an activity.",
       description: "Explore activities you can do there.",
       target: () => refActivities.current,
       onNext: () => {
@@ -70,7 +67,7 @@ export default function TouristHome() {
       },
     },
     {
-      title: "Book an itinerary",
+      title: "Book an itinerary.",
       description: "Check out pre-designed programs.",
       target: () => refItineraries.current,
       onNext: () => {
@@ -79,16 +76,16 @@ export default function TouristHome() {
       },
     },
     {
-      title: "View historical places",
+      title: "View historical places.",
       description: "Get to know where to go.",
       target: () => refHisPlaces.current,
       onNext: () => {
         localStorage.setItem('currentStep', 5);
-        navigate("/historicalPlaces", { state: { fromTour: true } });
+        // navigate("/hist", { state: { fromTour: true } });
       }
     },
     {
-      title: "Buy a product",
+      title: "Buy a product.",
       description: "Get yourself & your loved ones a souvenir.",
       target: () => refProducts.current,
       onNext: () => {
@@ -98,7 +95,7 @@ export default function TouristHome() {
     },
     {
       title: "That's it!",
-      description: "Now you can start your journey for an unforgettable experience.",
+      description: "Now you can start your journey to an unforgettable experience",
       target: () => refFinish.current,
       onFinish: () => {
         localStorage.setItem('currentStep', 0);

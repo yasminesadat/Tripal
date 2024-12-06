@@ -12,7 +12,7 @@ import {
   LogOut,
   Martini,
   ShoppingCart,
-  FerrisWheel, CirclePercent
+  FerrisWheel 
 } from 'lucide-react';
 
 export const sidebarItems = [
@@ -93,12 +93,6 @@ export const sidebarItems = [
     href: "/revenue",
     icon: <LineChart size={26} />,
     label: "Revenue",
-  },
-  {
-    id: 15,
-    href: "/admin/promo-codes",
-    icon: <CirclePercent />,
-    label: "Promo Codes",
   },
   {
     id: 8,

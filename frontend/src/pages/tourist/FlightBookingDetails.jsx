@@ -240,36 +240,47 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
             <div className="row">
               <div className="col-lg-6">
                 <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20">
-                <h2 className="text-30 md:text-24 fw-700 mb-30">
-                    How would you like to pay?
+                  <h2 className="text-30 md:text-24 fw-700 mb-30">
+                    Payment Information
                   </h2>
 
                   <form className="contactForm">
                     <div className="row y-gap-30">
-                      <h5 className="text-18 fw-500 mb-20">Select Payment Method</h5>
-                      <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
-                            <input
-                              type="radio"
-                              value="wallet"
-                              checked={paymentMethod === "wallet"}
-                              onChange={() => setPaymentMethod("wallet")}
-                              style={{ marginRight: "5px", transform: "scale(0.4)" }}
-                            />
-                            Wallet Payment
-                          </label>
-                          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
-                            <input
-                              type="radio"
-                              value="card"
-                              checked={paymentMethod === "card"}
-                              onChange={() => setPaymentMethod("card")}
-                              style={{ marginRight: "5px", transform: "scale(0.4)" }}
-                            />
-                            Credit Card (via Stripe)
+                      <div className="col-12">
+                        <div className="form-input">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            Card Holder Name *
                           </label>
                         </div>
+                      </div>
 
+                      <div className="col-12">
+                        <div className="form-input">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            Card Number *
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form-input">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            Expiry Date *
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="form-input">
+                          <input type="text" required />
+                          <label className="lh-1 text-16 text-light-1">
+                            CVV *
+                          </label>
+                        </div>
+                      </div>
 
                       {(isBookedOriginatingTransportation || isBookedReturnTransportation) && (
                         <div className="col-12">

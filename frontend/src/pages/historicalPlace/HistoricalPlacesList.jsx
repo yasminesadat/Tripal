@@ -5,7 +5,7 @@ import Stars from "../../components/common/Stars";
 // import {Pagination} from  "../../components/common/Pagination";
 import { getUserData } from "@/api/UserService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { message, Tour } from "antd";
+import { message , Tour } from "antd";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
@@ -14,7 +14,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [ddActives, setDdActives] = useState(false);
   const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
-  const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
+  
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
@@ -30,8 +30,10 @@ export default function HistoricalPlacesList({ searchTerm }) {
       title: "Read More",
       description: "Learn more about the place.",
       target: () => refHPDetails.current,
+      target: () => refHPDetails.current,
       onFinish: () => {
         setOpen(false);
+        localStorage.setItem('currentStep', 6);
         localStorage.setItem('currentStep', 6);
         navigate('/tourist', { state: { fromTour: true, targetStep: 6 } });
       }
@@ -41,11 +43,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
 
+
     const timer = setTimeout(() => {
       if (isFromTour) {
         setOpen(true);
+        setOpen(true);
       }
     }, 1000);
+
+    return () => clearTimeout(timer);
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -65,7 +71,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
       document.removeEventListener("click", handleClick);
     };
   }, []);
-
+ 
   useEffect(() => {
     const getHistoricalPlacesByGoverner = async () => {
       setLoading(true);
@@ -106,6 +112,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
   }, userRole)
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -128,7 +135,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
       }
     };
 
+
     fetchUserData();
+
 
 
 
@@ -137,11 +146,13 @@ export default function HistoricalPlacesList({ searchTerm }) {
     try {
       const response = await deleteHistoricalPlace(id);
       if (response) {
-        setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
+        setPlaces(places.filter(place => place._id !== id));
+        setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
+        message.success("Deleted Successfully");
       }
     }
     catch (e) {
-      // error msg
+      message.error("Failed to delete");
     }
   }
   const getMinPrice = (Place) => {
@@ -150,12 +161,10 @@ export default function HistoricalPlacesList({ searchTerm }) {
     return minValue;
 
   }
-
-
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
-  const [error, setError] = useState(null);
   const [currency, setCurrency] = useState("EGP");
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({ historicType: [], historicalTagPeriod: [] });
   useEffect(() => {
     const curr = sessionStorage.getItem("currency");
@@ -187,7 +196,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
     setFilteredPlaces(results);
   };
 
-  const handleFilter = (filters) => {
+  const handleFilter = () => {
     const { historicType, historicalTagPeriod } = filters;
 
     if (historicType.length == 0 && historicalTagPeriod.length == 0) {
@@ -221,119 +230,121 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
     setFilteredPlaces(filtered);
   };
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this historical place!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
+    }
+  };
+
 
   return (
+
     <section className="layout-pb-xl">
-      <style jsx global>{`
-        /* Base style for all dots */
-        /* Try multiple selectors and approaches */
-        .ant-tour .ant-tour-indicators > span {
-          width: 8px !important;
-          height: 8px !important;
-          border-radius: 50% !important;
-          background: #dac4d0 !important;
-        }
-        .ant-tour .ant-tour-indicators > span[class*="active"] {
-          background: #036264 !important;
-        }
+    <style jsx global>{`
+      /* Base style for all dots */
+      /* Try multiple selectors and approaches */
+      .ant-tour .ant-tour-indicators > span {
+        width: 8px !important;
+        height: 8px !important;
+        border-radius: 50% !important;
+        background: #dac4d0 !important;
+      }
+      .ant-tour .ant-tour-indicators > span[class*="active"] {
+        background: #036264 !important;
+      }
 
-        /* Additional specificity */
-        .ant-tour-indicators span[role="dot"][aria-current="true"] {
-          background: #036264 !important;
-        }
+      /* Additional specificity */
+      .ant-tour-indicators span[role="dot"][aria-current="true"] {
+        background: #036264 !important;
+      }
 
-        .ant-tour .ant-tour-inner {
-          border: 1px solid #5a9ea0;
-          box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
-        }
+      .ant-tour .ant-tour-inner {
+        border: 1px solid #5a9ea0;
+        box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
+      }
 
-        .ant-tour .ant-tour-content {
-          color: #8f5774;
-          font-weight: 500 !important;
-          letter-spacing: 0.3px !important;
-          text-rendering: optimizeLegibility !important;
-        }
+      .ant-tour .ant-tour-content {
+        color: #8f5774;
+        font-weight: 500 !important;
+        letter-spacing: 0.3px !important;
+        text-rendering: optimizeLegibility !important;
+      }
 
-        .ant-tour .ant-tour-title {
-          color: #5a9ea0;
-          font-weight: 600;
-        }
+      .ant-tour .ant-tour-title {
+        color: #5a9ea0;
+        font-weight: 600;
+      }
 
-        .ant-tour .ant-tour-close {
-          color: #5a9ea0;
-          opacity: 0.8;
-          transition: opacity 0.2s;
-        }
+      .ant-tour .ant-tour-close {
+        color: #5a9ea0;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
 
-        .ant-tour .ant-tour-close:hover {
-          opacity: 1;
-          color: #e5f8f8;
-        }
+      .ant-tour .ant-tour-close:hover {
+        opacity: 1;
+        color: #e5f8f8;
+      }
 
-        .ant-tour .ant-tour-buttons .ant-btn {
-          transition: all 0.3s ease;
-        }
+      .ant-tour .ant-tour-buttons .ant-btn {
+        transition: all 0.3s ease;
+      }
 
-        .ant-tour .ant-tour-buttons .ant-btn-primary
-        {
-          background: #036264;
-          border: none;
-          color: white;
-          transition: all 0.2s;
-        }
-        .ant-tour .ant-tour-buttons .ant-btn-default{
-          background: #036264;
-          border: none;
-          color: white;
-          transition: all 0.2s;
-        }
-        
-        .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
-        .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-          color:white;
-          background: #5a9ea0;
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
-        }
-        .ant-tour .ant-tour-arrow-content {
-          background: white;
-          border: 1px solid rgba(0, 0, 0, 0.06);
-        }  
-      `}</style>
-      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
-      <div className="container">
-        <div className="row">
-          <div className="col-xl-3 col-lg-4">
-            <div className="lg:d-none">
-              <Sidebar setFilters={setFilters} />
-            </div>
+      .ant-tour .ant-tour-buttons .ant-btn-primary
+      {
+        background: #036264;
+        border: none;
+        color: white;
+        transition: all 0.2s;
+      }
+      .ant-tour .ant-tour-buttons .ant-btn-default{
+        background: #036264;
+        border: none;
+        color: white;
+        transition: all 0.2s;
+      }
+      
+      .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
+      .ant-tour .ant-tour-buttons .ant-btn-default:hover {
+        color:white;
+        background: #5a9ea0;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
+      }
+      .ant-tour .ant-tour-arrow-content {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }  
+    `}</style>
+    <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
+    <div className="container">
+      <div className="row">
+        <div className="col-xl-3 col-lg-4">
+          <div className="lg:d-none">
+            <Sidebar setFilters={setFilters} />
+          </div>
 
-            {/* <div className="accordion d-none mb-30 lg:d-flex js-accordion">
-              <div
-                className={`accordion__item col-12 ${sidebarActive ? "is-active" : ""
-                  } `}
-              >
-                <button
-                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
-                  onClick={() => setSidebarActive((pre) => !pre)}
-                >
-                  <i className="icon-sort-down mr-10 text-16"></i>
-                  Filter
-                </button> */}
 
-            {/* <div
-                  className="accordion__content"
-                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                > */}
-            {/* <div className="pt-20">
-                    <Sidebar setFilters={setFilters} />
-                  </div> */}
-            {/* </div> */}
-            {/* </div> */}
-            {/* </div> */}
           </div>
 
           <div className="col-xl-9 col-lg-8">
@@ -341,18 +352,63 @@ export default function HistoricalPlacesList({ searchTerm }) {
               <div className="col-auto">
                 <div>{filteredPlaces?.length} results</div>
               </div>
-
-
-
             </div>
+            <style>
+              {`
+.tourCard.-type-2 .tourCard__favorite2 {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  z-index: 1;
+}
+`}
 
+            </style>
             <div className="row y-gap-30 pt-30">
               {filteredPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
                       {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+
+                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace: elm } });
+
+                        }}>
+                          <i className="icon-pencil text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+                          handleDelete(elm._id);
+
+                        }}>
+                          <i className="icon-delete text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleCopyLink(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-clipboard text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleShare(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-share text-15"></i>
+                        </button>
+                      </div>}
+
+
                     </div>
+
 
 
 
@@ -368,13 +424,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
 
+
                       <p className="tourCard__text mt-5">{elm.description}</p>
+
 
 
                     </div>
 
                     <div className="tourCard__info">
                       <div>
+
 
 
                         <div className="tourCard__price">

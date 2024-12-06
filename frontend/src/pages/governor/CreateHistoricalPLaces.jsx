@@ -1,17 +1,15 @@
-// import Sidebar from "./Sidebar";
-// import Header from "./Header";
-// import Map from "../pages/contact/Map";
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-// import MapPopUp from "../../components/common/MapPopUp";
 import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
 import LocationMap from '../../components/common/MapComponent';
-// import { toast } from "react-toastify";
+import {message} from "antd";
+import { useNavigate } from "react-router-dom";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
@@ -19,9 +17,9 @@ const tabs = ["Content", "Timings", "Location", "Pricing"];
 export default function AddHistoricalPlace() {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Content");
-
   const location = useLocation();
   const props = location.state?.historicalPlace;
+  const navigate = useNavigate();
   const handleImageChange = (event, func) => {
     const file = event.target.files[0];
     if (file) {
@@ -97,6 +95,7 @@ export default function AddHistoricalPlace() {
     const getHistoricalTags = async () => {
       setLoading(true);
       const typeTagsData = await getAllTypeTags();
+      console.log(formData);
       if (typeTagsData) {
         setTagsOption(typeTagsData);
       }
@@ -155,11 +154,12 @@ export default function AddHistoricalPlace() {
         const result = await CreateNewHistoricalPlace(newHistoricalPlace);
         if (result) {
           setLoading(false);
-          // toast.success('Historical place created successfully')
+          navigate(`/my-historical-places`);
+         message.success("Created Successfully");
         }
       }
       catch (err) {
-        // toast.error(err);
+        message.error("Error while creating");
         setLoading(false);
       }
     }
@@ -234,23 +234,21 @@ export default function AddHistoricalPlace() {
       //   label: tag.name,
       //   value: tag._id
       // }))],
-      weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-      weekendClosingTime: formData.openingHours?.weekends?.closingTime
-        ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
-        : null,
-      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-      weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-        ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-        : null,
-      foreignerPrice: formData.ticketPrices.foreigner,
-      nativePrice: formData.ticketPrices.native,
-      studentPrice: formData.ticketPrices.student,
+      weekendOpeningTime: formData.openingHours.weekends.openingTime? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null ,
+      weekendClosingTime: formData.openingHours?.weekends?.closingTime? moment(formData.openingHours?.weekends?.closingTime, "HH:mm:ss") : null 
+        ,
+      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss") : null ,
+      weekdayClosingTime: formData.openingHours?.weekdays?.closingTime? moment(formData.openingHours?.weekdays?.closingTime, "HH:mm:ss") : null 
+        ,
+        foreignerPrice: formData.ticketPrices.foreigner,
+        nativePrice: formData.ticketPrices.native,
+        studentPrice:formData.ticketPrices.student,
     });
   }, [formData, form]);
 
   return (
     <>
-      <div classname="page-wrapper">
+      <div className="page-wrapper">
         <GovernorHeader />
         <main className="page-content">
           <div
@@ -285,75 +283,76 @@ export default function AddHistoricalPlace() {
                       ))}
                     </div>
 
-                    <div className="row pt-40">
-                      <div className="col-xl-9 col-lg-10">
-                        <div className="tabs__content js-tabs-content">
-                          <Form className=" row y-gap-30"
-                            form={form}
-                            layout="vertical"
-                            name="validate_other"
-                            onFinish={() => {
-                              handleSubmission()
-                            }
-                            }
-                            initialValues={{
-                              upload: fileList,
-                              name: formData.name,
-                              description: formData.description,
-                              historicalPeriod: [...formData.historicalPeriod.map((period) => ({
-                                label: period.name,
-                                value: period._id
-                              }))],
-                              tags: [...formData.tags.map((tag) => ({
-                                label: tag.name,
-                                value: tag._id
-                              }))],
-                              weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-                              weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
-                              weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-                              weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-                                ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-                                : null,
-                              foreignerPrice: formData.ticketPrices.foreigner,
-                              nativePrice: formData.ticketPrices.native,
-                              studentPrice: formData.ticketPrices.student,
+                <div className="row pt-40">
+                  <div className="col-xl-9 col-lg-10">
+                    <div className="tabs__content js-tabs-content">
+                      <Form className=" row y-gap-30"
+                        form={form}
+                        layout="vertical"
+                        name="validate_other"
+                        onFinish={() => {
+                          handleSubmission()
+                        }
+                        }
+                        initialValues={{
+                          upload: fileList,
+                          name: formData.name,
+                          description: formData.description,
+                          historicalPeriod: [...formData.historicalPeriod.map((period) => ({
+                            label: period.name,
+                            value: period._id
+                          }))],
+                          tags: [...formData.tags.map((tag) => ({
+                            label: tag.name,
+                            value: tag._id
+                          }))],
+                          weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null,
+                          weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm:ss"): null,
+                          weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss"): null,
+                          weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
+                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm:ss')
+                            : null,
+                          foreignerPrice: formData.ticketPrices.foreigner,
+                          nativePrice: formData.ticketPrices.native,
+                          studentPrice:formData.ticketPrices.student,
 
 
-                            }}
-                            onValuesChange={(changedValues, allValues) => {
-                              setFormData({
-                                ...formData,
-                                name: allValues.name,
-                                description: allValues.description,
-                                // historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
-                                //   const period = periodTagsOptions.find((p) => p._id === tagValue);
-                                //   return {
-                                //     name: period ? period.name : tagValue,
-                                //     _id: period ? period._id : ''
-                                //   };
-                                // }),
-                                // tags: allValues.tags.map((tagValue) => {
-                                //   const tag = tagsOptions.find((p) => p._id === tagValue);
-                                //   return {
-                                //     name: tag ? tag.name : tagValue,
-                                //     _id: tag ? tag._id : ''
-                                //   };
-                                //}),
-                                openingHours: {
-                                  weekdays: {
-                                    openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
-                                    closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
-                                  },
-                                  weekends: {
-                                    openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
-                                    closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
-                                  }
-                                },
-                                ticketPrices: {
-                                  foreigner: allValues.foreignerPrice,
-                                  native: allValues.nativePrice,
-                                  student: allValues.studentPrice,
-                                },
+                        }}
+                        onValuesChange={(changedValues, allValues) => {
+                          console.log(allValues)
+                          setFormData({
+                            ...formData,
+                            name: allValues.name,
+                            description: allValues.description,
+                            // historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
+                            //   const period = periodTagsOptions.find((p) => p._id === tagValue);
+                            //   return {
+                            //     name: period ? period.name : tagValue,
+                            //     _id: period ? period._id : ''
+                            //   };
+                            // }),
+                            // tags: allValues.tags.map((tagValue) => {
+                            //   const tag = tagsOptions.find((p) => p._id === tagValue);
+                            //   return {
+                            //     name: tag ? tag.name : tagValue,
+                            //     _id: tag ? tag._id : ''
+                            //   };
+                            //}),
+                            // openingHours: {
+                            //   weekdays: {
+                            //     openingTime: allValues.weekdayOpeningTime?.toString(),
+                            //     closingTime: allValues.weekdayClosingTime?.toString(),
+                            //   },
+                            //   weekends: {
+                            //     openingTime: allValues.weekendOpeningTime?.toString(),
+                            //     closingTime: allValues.weekendClosingTime?.toString(),
+                            //   }
+                            // },
+                            ticketPrices: {
+                              foreigner: allValues.foreignerPrice,
+                               native:allValues.nativePrice,
+                              student: allValues.studentPrice,
+                            },
 
                               });
                             }}
@@ -606,67 +605,92 @@ export default function AddHistoricalPlace() {
                                 </Form.Item>
                               </div>
 
-                              <div className="col-12">
-                                <Button className="button -md -dark-1 bg-accent-1 text-white"
-                                  onClick={() => {
-                                    setActiveTab("Timings")
-                                  }}>
-                                  Next
-                                  <i className="icon-arrow-top-right text-16 ml-10"></i>
-                                </Button>
-                              </div>
+                          <div className="col-12">
+                            <Button className="button -md -dark-1 bg-accent-1 text-white"
+                              onClick={() => {
+                                setActiveTab("Timings")
+                              }}>
+                              Next
+                              <i className="icon-arrow-top-right text-16 ml-10"></i>
+                            </Button>
+                          </div>
+                        </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Opening Time
+                              </label>
+                              <Form.Item className="form-input " name="weekendOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekends opening time" 
+                                   onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekends: {
+                                        ...data.openingHours.weekends,
+                                        openingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                                 />
+                              </Form.Item>
                             </div>
-                            <div
-                              className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
-                                }`}
-                            >
-                              <div className=" row y-gap-30">
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekends Opening Time
-                                  </label>
-                                  <Form.Item className="form-input " name="weekendOpeningTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekends opening time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekends opening time" />
-                                  </Form.Item>
-                                </div>
 
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekends Closing Time
-                                  </label>
-                                  <Form.Item className="form-input " name="weekendClosingTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekends closing time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekends closing time" />
-                                  </Form.Item>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Closing Time
+                              </label>
+                              <Form.Item className="form-input " name="weekendClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekends closing time" 
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekends: {
+                                                ...data.openingHours.weekends,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }}/>
+                              </Form.Item>
 
                                 </div>
                                 <div className="col-12">
@@ -674,49 +698,73 @@ export default function AddHistoricalPlace() {
                                     Weekdays Opening Time
                                   </label>
 
-                                  <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekdays opening time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekdays opening time" />
-                                  </Form.Item>
-                                </div>
+                              <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays opening time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                openingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
+                              </Form.Item>
+                            </div>
 
                                 <div className="col-12">
                                   <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
                                     Weekdays Closing Time
                                   </label>
 
-                                  <Form.Item className="form-input " name="weekdayClosingTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekdays closing time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekdays closing time" />
-                                  </Form.Item>
+                              <Form.Item className="form-input " name="weekdayClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays closing time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
+                              </Form.Item>
 
                                 </div>
 

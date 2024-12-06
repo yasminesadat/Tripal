@@ -1,30 +1,10 @@
+import  { useEffect, useState } from "react";
 
-import  { useState } from "react";
-
+import  {deleteHistoricalPlace} from "../../api/HistoricalPlaceService";
 import { useNavigate } from "react-router-dom";
 import {message} from "antd";
-
 export default function MainInformation({historicalPlace, userRole}) {
-  const [exchangeRate, setExchangeRate] = useState(1);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const fetchExchangeRate = async () => {
-  //     if (curr) {
-  //       try {
-  //         const rate = await getConversionRate(curr);
-  //         setExchangeRate(rate);
-  //       } catch (error) {
-  //         message.error("Failed to fetch exchange rate.");
-  //       }
-  //     }
-  //   };
-
-  //   fetchExchangeRate();
-  // }, [curr]);
-
-  // const convertPrice = (price) => {
-  //   return (price * exchangeRate).toFixed(2);
-  // };
 
   const handleCopyLink = (link) => {
     navigator.clipboard
@@ -51,7 +31,18 @@ export default function MainInformation({historicalPlace, userRole}) {
       window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
     }
   };
-
+  const handleDelete = async () => {
+    try {
+      const response = await deleteHistoricalPlace(historicalPlace._id);
+      if (response) {
+        navigate(`/my-historical-places`);
+        message.success("Deleted Successfully");
+      }
+    }
+    catch (e) {
+      message.error("Failed to Delete");
+    }
+  }
 
   
   return (
@@ -109,15 +100,24 @@ export default function MainInformation({historicalPlace, userRole}) {
           
         <div className="col-auto">
           <div className="d-flex x-gap-30 y-gap-10">
-           {userRole==="Tourism Governor" &&<a href="#" className="d-flex items-center"
-            onClick={() => (
-              navigate(`/update-historical-place/${historicalPlace._id}`,{state:{historicalPlace}})
-
-  )}>
+           {userRole==="Tourism Governor" &&<a  className="d-flex items-center"
+            onClick={() => {
+              console.log("before navigate",historicalPlace);
+              navigate(`/update-historical-place/${historicalPlace._id}`,{state:{historicalPlace}});
+           
+            }}>
               <i className="icon-pencil flex-center text-16 mr-10"></i>
               Edit
             </a> }
-            {userRole==="Tourist" && <a href="#" className="d-flex items-center" onClick={() =>
+            {userRole==="Tourism Governor" &&<a  className="d-flex items-center"
+            onClick={() => {
+              handleDelete();
+             
+            }}>
+              <i className="icon-delete flex-center text-16 mr-10"></i>
+              Delete
+            </a> }
+            {userRole==="Tourist" && <a  className="d-flex items-center" onClick={() =>
                   handleCopyLink(
                     `${window.location.origin}/historical-places/${historicalPlace._id}`
                   )
@@ -125,7 +125,7 @@ export default function MainInformation({historicalPlace, userRole}) {
               <i className="icon-clipboard flex-center text-16 mr-10"></i>
               Copy
             </a> }
-            {userRole==="Tourist" && <a href="#" className="d-flex items-center" onClick={() =>
+            {userRole==="Tourist" && <a  className="d-flex items-center" onClick={() =>
                   handleShare(
                     `${window.location.origin}/historical-places/${historicalPlace._id}`
                   )
