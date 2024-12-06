@@ -10,6 +10,8 @@ const TourGuideNotification = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    var unreadCount = notifications.filter(n => !n.read).length;
+
     const fetchNotifications = async () => {
         setLoading(true);
         try {
@@ -23,6 +25,8 @@ const TourGuideNotification = () => {
                         new Date(b.createdAt) - new Date(a.createdAt)
                     );
                     setNotifications(sortedNotifications);
+                     unreadCount = notifications.filter(n => !n.read).length;
+
           }
 
         } catch (error) {
@@ -31,13 +35,11 @@ const TourGuideNotification = () => {
         setLoading(false);
     };
 
-    const unreadCount = notifications.filter(n => !n.read).length;
 
 
     useEffect(() => {
-        if (isOpen) {
             fetchNotifications();
-        }
+        
     }, [isOpen]);
 
     return (

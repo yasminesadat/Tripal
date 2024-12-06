@@ -10,7 +10,10 @@ const AdvertiserNotification = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    var unreadCount = notifications.filter(n => !n.read).length;
+
     const fetchNotifications = async () => {
+        console.log("hi");
         setLoading(true);
         try {
             const notifications = await getNotifications();
@@ -21,6 +24,7 @@ const AdvertiserNotification = () => {
                 new Date(b.createdAt) - new Date(a.createdAt)
             );
             setNotifications(sortedNotifications);
+            unreadCount = notifications.filter(n => !n.read).length;
         }
 
         } catch (error) {
@@ -29,14 +33,15 @@ const AdvertiserNotification = () => {
         setLoading(false);
     };
 
-    const unreadCount = notifications.filter(n => !n.read).length;
 
 
+ 
     useEffect(() => {
-        if (isOpen) {
-            fetchNotifications();
-        }
+            fetchNotifications();     
     }, [isOpen]);
+
+
+ 
 
     return (
         <div className="relative">

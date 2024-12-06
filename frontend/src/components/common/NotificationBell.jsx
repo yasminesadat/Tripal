@@ -8,6 +8,9 @@ const NotificationTab = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    var unreadCount = notifications.filter(n => !n.read).length;
+
+
     const fetchNotifications = async () => {
         setLoading(true);
         try {
@@ -19,6 +22,8 @@ const NotificationTab = () => {
                     new Date(b.createdAt) - new Date(a.createdAt)
                 );
                 setNotifications(sortedNotifications);
+                unreadCount = notifications.filter(n => !n.read).length;
+
             }    
         } catch (error) {
             console.error('Error fetching notifications:', error);
@@ -26,12 +31,11 @@ const NotificationTab = () => {
         setLoading(false);
     };
 
-    const unreadCount = notifications.filter(n => !n.read).length;
 
     useEffect(() => {
-        if (isOpen) {
+        // if (isOpen) {
             fetchNotifications();
-        }
+      //  }
     }, [isOpen]);
 
     return (
