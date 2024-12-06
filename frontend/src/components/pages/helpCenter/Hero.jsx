@@ -1,5 +1,5 @@
 import React from "react";
-
+import SearchComponent from './SearchComponent';
 export default function Hero() {
   return (
     <section className="pageHeader -type-2">
@@ -12,22 +12,18 @@ export default function Hero() {
         <div className="row justify-center">
           <div className="col-12">
             <div className="pageHeader__content">
-              <h1 className="pageHeader__title">Welcome to the Help Center</h1>
-
               <p className="pageHeader__text">
-                Lorem ipsum is placeholder text commonly used in site.
-              </p>
+                <h1 className="pageHeader__title">Welcome to Our Travel Help Center</h1>
+                <p className="pageHeader__text">
+                  Find answers, guides, and expert assistance for all your travel questions. Whether you're planning your first trip or seeking destination advice, we're here to help you create your perfect getaway.
+                </p>              </p>
 
-              <div className="pageHeader__search">
-                <input type="text" placeholder="Search for a topic" />
-                <button>
-                  <i className="icon-search text-15 text-white"></i>
-                </button>
-              </div>
+              <SearchComponent />
             </div>
           </div>
         </div>
       </div>
     </section>
+
   );
 }
