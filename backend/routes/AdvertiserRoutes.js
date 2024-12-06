@@ -50,7 +50,7 @@ router.delete(
 );
 
 router.patch(
-  "/advertiser/markNotification/:id",
+  "/advertiser/markNotifications",
   verifyToken,
   authorizeRoles("Advertiser"),
   markNotificationAdvertiser

@@ -21,6 +21,17 @@ router.patch("/tourGuide",verifyToken,
   authorizeRoles("Tour Guide"), updateTourguideData);
 
 
+router.patch(
+  "/tourGuide/markNotifications",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  markNotificationRead
+);
+
+router.patch("/tourGuide", updateTourguideData);
+
+
+
 router.get(
   "/tourGuide/notificationList",
   verifyToken,
@@ -35,12 +46,6 @@ router.delete(
   deleteTourguideNotification
 );
 
-router.patch(
-  "/tourGuide/markNotification/:id",
-  verifyToken,
-  authorizeRoles("Tour Guide"),
-  markNotificationRead
-);
 
 
 router.get(

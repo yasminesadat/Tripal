@@ -261,6 +261,7 @@ export async function removeFromCart(touristId, productId) {
 }
 
 
+
 export async function getAddresses() {
   try {
     const response = await axios.get(`/tourist/address`);
@@ -292,3 +293,14 @@ export async function getWalletAndTotalPoints() {
     throw error;
   }
 }
+
+export async function markNotifications() {
+  try {
+    const response = await axios.patch('/tourist/markNotifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    throw error;
+  }
+}
+

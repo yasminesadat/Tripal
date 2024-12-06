@@ -192,7 +192,6 @@ const updateAdvertiser = async (req, res) => {
   const markNotificationAdvertiser = async (req, res) => {
     try {
       const userid=req.userId;
-      const notificationID=req.params;   
      
      
       const advertiser = await advertiserModel.findById(userid);
@@ -200,14 +199,9 @@ const updateAdvertiser = async (req, res) => {
         return res.status(404).json({ error: "Advertiser not found" });
       }
        
-      
-      const notification = advertiser.notificationList.find(
-        notification => (notification._id).toString() === notificationID.id
-      );
   
-      notification.read=true;
+      advertiser.notificationList.forEach((n)=>{(n.read=true)})
   
-      
       await advertiser.save();
   
       console.log(advertiser.notificationList)
