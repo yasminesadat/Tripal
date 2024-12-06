@@ -7,13 +7,12 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { Form, Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-
 //import { changeTouristPassword } from '../../api/TouristService';
 import { getUserData } from "@/api/UserService";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
 import Spinner from "@/components/common/Spinner";
-import { getSellerDetails, updateSeller } from "@/api/SellerService";
+import { changeSellerPassword, getSellerDetails, updateSeller } from "@/api/SellerService";
 
 import { logout } from "@/api/UserService";
 
@@ -93,20 +92,16 @@ export default function Profile() {
         return;
       }
 
-      // console.log("user", userData);
-      // console.log(
-      //   "old pass, new pass",
-      //   PasswordForm.oldPassword,
-      //   PasswordForm.newPassword
-      // );
-      // await changeTouristPassword(userData, PasswordForm.oldPassword, PasswordForm.newPassword);
-      // message.success("Password changed successfully");
+      console.log("user", userData);
+      console.log(
+        "old pass, new pass",
+        PasswordForm.oldPassword,
+        PasswordForm.newPassword
+      );
+      await changeSellerPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
+      message.success("Password changed successfully");
 
-      setPasswordForm({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
+
     } catch (error) {
       message.error(
         error.response?.data?.message || "Failed to change password"
@@ -129,7 +124,7 @@ export default function Profile() {
       const response = await getSellerDetails();
 
       setProfileInformation(response.data);
-     // console.log("profileinfo", profileInformation);
+      // console.log("profileinfo", profileInformation);
       setEditedProfile({
         email: response.data.email,
         description: response.data.description,
@@ -205,9 +200,8 @@ export default function Profile() {
         <SellerHeader />
         <main className="page-content">
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+              } js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
@@ -283,13 +277,13 @@ export default function Profile() {
                           fileList={
                             editedProfile.logo
                               ? [
-                                  {
-                                    uid: "-1",
-                                    name: "logo.png",
-                                    status: "done",
-                                    url: editedProfile.logo,
-                                  },
-                                ]
+                                {
+                                  uid: "-1",
+                                  name: "logo.png",
+                                  status: "done",
+                                  url: editedProfile.logo,
+                                },
+                              ]
                               : []
                           } // Ensure only one file is shown
                         >
