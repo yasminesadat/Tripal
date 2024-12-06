@@ -347,6 +347,7 @@ const revenue = async (req, res) => {
       const  id  = req.userId;
       const itineraries = await itineraryModel.find({ tourGuide: id });
       let totalRevenue = 0;
+      let appRevenue = 0; // To store app's total revenue
       itineraries.forEach((itinerary) => {
         const itinRevenue = itinerary.bookings.reduce(
           (sum, booking) => sum + booking.tickets * itinerary.price,
@@ -355,6 +356,8 @@ const revenue = async (req, res) => {
         totalRevenue += itinRevenue;
       });
   
+      appRevenue = totalRevenue * 0.10; // App takes 10% of the total revenue
+      totalRevenue-=appRevenue
       res.status(200).json({ totalRevenue });
     } catch (error) {
       console.error(error);

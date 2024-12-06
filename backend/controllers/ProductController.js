@@ -235,6 +235,23 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const revenue = async (req, res) => {
+  try {
+    const  id  = req.userId;
+    const products = await Product.find({ seller: id });
+    let totalRevenue = 0;
+    products.forEach((product) => {
+      const productRevenue = product.sales * product.price;
+      totalRevenue += productRevenue;
+    });
+
+    res.status(200).json({ totalRevenue });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch revenue" });
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
@@ -244,4 +261,5 @@ module.exports = {
   editProduct,
   archiveProduct,
   unArchiveProduct,
+  revenue,
 };
