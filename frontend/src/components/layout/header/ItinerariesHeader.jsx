@@ -12,6 +12,7 @@ export default function PageHeader({onSearch, title,  userRole}) {
                 {userRole==='Admin'&& <Link to="/admin">Home</Link> }
                {userRole==='Tourist'&& <Link to="/tourist">Home</Link> }
               {userRole==='Tour Guide'&& <Link to="/tourguide">Home</Link> }
+              {userRole==='Guest'&& <Link to="/">Home</Link> }
               </span>
 
               <span>{">"}</span>
@@ -19,6 +20,7 @@ export default function PageHeader({onSearch, title,  userRole}) {
               {userRole==='Admin'&&<Link to="/admin/itineraries">Itineraries</Link> }
                 {userRole==='Tourist'&&<Link to="/upcoming-itineraries">Itineraries</Link> }
                 {userRole==='Tour Guide'&&<Link to="/my-itineraries">Itineraries</Link> }
+                {userRole==='Guest'&&<Link to="/upcoming-itineraries">Itineraries</Link> }
               </span>
             </div>
           </div>
