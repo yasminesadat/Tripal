@@ -50,6 +50,7 @@ const ItineraryReviews = ({ itineraryId }) => {
 
   return (
     <>
+      {reviews.length === 0 && <p>Be the first to review</p>}
       {reviews.map((elm, i) => (
         <div key={i} className="pt-30">
           <div className="row justify-between">
