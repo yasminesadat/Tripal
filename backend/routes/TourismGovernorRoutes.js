@@ -25,8 +25,7 @@ router.get(
   getTourismGovernors
 );
 router.put(
-  "/governor-change-pass/:id",
-  validateIDs(["id"]),
+  "/governor-change-pass",
   verifyToken,
   authorizeRoles("Tourism Governor"),
   changePassword(TourismGovernor)

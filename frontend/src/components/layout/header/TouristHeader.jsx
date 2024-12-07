@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Menu from "../components/TouristMenu";
 import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";

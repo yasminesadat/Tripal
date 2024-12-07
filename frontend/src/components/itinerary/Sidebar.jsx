@@ -88,7 +88,7 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
         {userRole === 'Tour Guide' && <div className="text-15 text-white fw-450">Pick a Start date and an End date.</div>}
 
         <div className="mt-10">
-          <div className="searchForm -type-1 -col-1 -narrow">
+          <div>
             <div className="searchForm__form">
               <div className="searchFormItem js-select-control js-form-dd js-calendar">
                 <div className="searchFormItem__button" data-x-click="calendar">
