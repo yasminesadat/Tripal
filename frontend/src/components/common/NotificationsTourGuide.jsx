@@ -1,30 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, X, Heart } from 'lucide-react';
-import { getTouristNotifications,markNotifications } from '@/api/TouristService';
+import { Bell} from 'lucide-react';
 import { format } from 'date-fns';
+import {message } from 'antd';
+import { markNotification, getNotifications } from "@/api/TourGuideService";
 
-const NotificationTab = () => {
+
+const TourGuideNotification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
     var unreadCount = notifications.filter(n => !n.read).length;
 
-
     const fetchNotifications = async () => {
         setLoading(true);
         try {
-            const notifications = await getTouristNotifications();
-            // Sort notifications by date in descending order (most recent first)
+            const notifications = await getNotifications();
+            console.log("hi1")
             if (notifications){
-                await markNotifications();
-                const sortedNotifications = [...notifications].sort((a, b) =>
-                    new Date(b.createdAt) - new Date(a.createdAt)
-                );
-                setNotifications(sortedNotifications);
-                unreadCount = notifications.filter(n => !n.read).length;
+                await markNotification();
+                console.log("hi2")
+                    // Sort notifications by date in descending order (most recent first)
+                    const sortedNotifications = [...notifications].sort((a, b) =>
+                        new Date(b.createdAt) - new Date(a.createdAt)
+                    );
+                    setNotifications(sortedNotifications);
+                     unreadCount = notifications.filter(n => !n.read).length;
 
-            }    
+          }
+
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -32,10 +36,10 @@ const NotificationTab = () => {
     };
 
 
+
     useEffect(() => {
-        // if (isOpen) {
             fetchNotifications();
-      //  }
+        
     }, [isOpen]);
 
     return (
@@ -192,4 +196,4 @@ color: var(--color-stone);
     );
 };
 
-export default NotificationTab;
+export default TourGuideNotification;

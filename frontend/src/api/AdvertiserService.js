@@ -62,9 +62,9 @@ export const deleteNotifications = async (id) => {
   }
 };
 
-export const markNotification = async (id) => {
+export const markNotification = async () => {
   try {
-    const response = await axios.patch(`/advertiser/markNotification/${id}`);
+    const response = await axios.patch(`/advertiser/markNotifications`);
     return response.data;
   } catch (error) {
     console.error("Error marking notifications in service file:", error);

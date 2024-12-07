@@ -92,19 +92,7 @@ export const unArchiveProduct = async (id) => {
   }
 };
 
-export const completeOrder = async (orderData) => {
-  try {
-    const response = await axios.post("/tourist/stripe/payment", orderData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error completing order:", error);
-    throw error;
-  }
-};
+
 
 export async function getRevenue() {
   try {

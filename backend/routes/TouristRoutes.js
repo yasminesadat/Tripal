@@ -27,7 +27,7 @@ const {
   addToCart,
   removeFromCart, checkTouristPromocode,
   getCart,
-
+  markTouristNotificationsRead,
   getAddresses,
   addAddress,
   getWalletAndTotalPoints
@@ -213,4 +213,12 @@ router.get(
   authorizeRoles("Tourist"),
   getWalletAndTotalPoints
 );
+
+router.patch(
+  "/tourist/markNotifications",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  markTouristNotificationsRead
+);
+
 module.exports = router;

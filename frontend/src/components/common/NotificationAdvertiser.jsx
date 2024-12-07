@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, X, Heart } from 'lucide-react';
-import { getTouristNotifications,markNotifications } from '@/api/TouristService';
+import { Bell} from 'lucide-react';
 import { format } from 'date-fns';
+import {message } from 'antd';
+import { markNotification, getNotifications } from "@/api/AdvertiserService";
 
-const NotificationTab = () => {
+
+const AdvertiserNotification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
     var unreadCount = notifications.filter(n => !n.read).length;
 
-
     const fetchNotifications = async () => {
+        console.log("hi");
         setLoading(true);
         try {
-            const notifications = await getTouristNotifications();
-            // Sort notifications by date in descending order (most recent first)
+            const notifications = await getNotifications();
             if (notifications){
-                await markNotifications();
-                const sortedNotifications = [...notifications].sort((a, b) =>
-                    new Date(b.createdAt) - new Date(a.createdAt)
-                );
-                setNotifications(sortedNotifications);
-                unreadCount = notifications.filter(n => !n.read).length;
+           await markNotification();
+            // Sort notifications by date in descending order (most recent first)
+            const sortedNotifications = [...notifications].sort((a, b) =>
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setNotifications(sortedNotifications);
+            unreadCount = notifications.filter(n => !n.read).length;
+        }
 
-            }    
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -32,11 +34,14 @@ const NotificationTab = () => {
     };
 
 
+
+ 
     useEffect(() => {
-        // if (isOpen) {
-            fetchNotifications();
-      //  }
+            fetchNotifications();     
     }, [isOpen]);
+
+
+ 
 
     return (
         <div className="relative">
@@ -192,4 +197,4 @@ color: var(--color-stone);
     );
 };
 
-export default NotificationTab;
+export default AdvertiserNotification;

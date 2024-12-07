@@ -23,8 +23,6 @@ const FlightBookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-  const currency = location.state?.currency;
-  const exchangeRate = location.state?.exchangeRate;
   const originCityCode = location.state?.originCityCode;
   const destCityCode = location.state?.destCityCode;
   const [touristInfo, setTouristInfo] = useState({ userName: '', email: '' });
@@ -64,6 +62,31 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
     fetchTouristInfo();
     fetchWalletData();
   }, []);
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
+
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
     const getBookedHotels = async () => {
@@ -131,20 +154,16 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
 },[hotels, flight.itineraries, isBookedOriginatingTransportation, isBookedReturnTransportation, originCityCode, destCityCode]);
   if (!flight) return <p>No flight selected</p>;
-  const convertPrice = (price) => {
-    return (price * exchangeRate).toFixed(2);
-  };
 
   const confirmBooking = (body) => {
     if (!body) {
       console.error("Body is not provided for payment.");
       return;
     }
-    setPendingPaymentBody(body); // Store the payment details
-    setIsConfirmationModalVisible(true); // Show confirmation modal
+    setPendingPaymentBody(body);
+    setIsConfirmationModalVisible(true);
   };
   
-  // Function to handle wallet payment after user confirms
   const handleWalletPayment = async () => {
     try {
       if (!pendingPaymentBody) {
@@ -199,18 +218,20 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
           arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
           origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
           destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
-          price: flight.price?.total.toString() || "0.00",
-          currency: flight.price?.currency || "EGP",
+          price: (flight.price?.total*exchangeRate).toString() || "0.00",
+          currency: currency || "EGP",
         })),
         useWallet: paymentMethod === "wallet",
         paymentMethod,
       };
   
       if (paymentMethod === "wallet") {
-        await handleWalletPayment(body);
-      } else if (paymentMethod === "card") {
+
+        confirmBooking(body);
+    } else if (paymentMethod === "card") {
+
         await handleCardPayment(body);
-      }
+    }
     } catch (error) {
       console.error("Error submitting payment:", error);
       message.error("There was an issue submitting your payment.");
@@ -294,43 +315,26 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                     </div>
 
                     <button 
-                      type="submit" 
-                      className="button -md text-white mt-30 w-100"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent the default form submission
-                        const body = {
-                          bookedFlights: flight.itineraries.map((itinerary, index) => ({
-                            flightNumber: `${itinerary?.segments[0]?.carrierCode || "N/A"}${itinerary?.segments[0]?.number || ""}`,
-                            airline: flight.validatingAirlineCodes[0] || "Unknown",
-                            departureTime: new Date(itinerary?.segments[0]?.departure?.at).toISOString(),
-                            arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
-                            origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
-                            destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
-                            price: flight.price?.total.toString() || "0.00",
-                            currency: flight.price?.currency || "EGP",
-                          })),
-                          useWallet: paymentMethod === "wallet",
-                          paymentMethod,
-                        };
-                        confirmBooking(body); // Now `body` is passed correctly
-                      }}
-                      style={{
-                        backgroundColor: '#8f5774',
-                        border: '2px solid #8f5774',
-                        transition: 'all 0.3s ease',
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#dac4d0';
-                        e.currentTarget.style.color = '#8f5774';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8f5774';
-                        e.currentTarget.style.color = 'white';
-                      }}
-                      >
-                      Complete Payment
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                      </button>
+    type="submit" 
+    className="button -md text-white mt-30 w-100"
+    onClick={handlePaymentSubmit} // Call handlePaymentSubmit directly
+    style={{
+        backgroundColor: '#8f5774',
+        border: '2px solid #8f5774',
+        transition: 'all 0.3s ease',
+    }}
+    onMouseOver={(e) => {
+        e.currentTarget.style.backgroundColor = '#dac4d0';
+        e.currentTarget.style.color = '#8f5774';
+    }}
+    onMouseOut={(e) => {
+        e.currentTarget.style.backgroundColor = '#8f5774';
+        e.currentTarget.style.color = 'white';
+    }}
+>
+    Complete Payment
+    <i className="icon-arrow-top-right text-16 ml-10"></i>
+</button>
                   </form>
                 </div>
               </div>
@@ -382,7 +386,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                   <div className="line mt-20 mb-20"></div>
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Total Flight Price</div>
-                    <div>{currency} {convertPrice(flight.price?.total)}</div>
+                    <div>{currency} {(flight.price?.total*exchangeRate)}</div>
                   </div>
                 </div>
               </div>
@@ -397,7 +401,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
               <div className="d-flex items-center justify-between">
                 <div className="fw-500">Subtotal</div>
-                <div>{currency} {convertPrice(flight.price?.total)}</div>
+                <div>{currency} {flight.price?.total*exchangeRate}</div>
               </div>
 
               <div className="d-flex items-center justify-between">
@@ -410,7 +414,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                 <div className="d-flex items-center justify-between">
                   <div className="fw-500 text-18">Total</div>
                   <div className="fw-500 text-18">
-                    {currency} {convertPrice(flight.price?.total + 50)}
+                    {currency} {(flight.price?.total*exchangeRate+ 50)}
                   </div>
                 </div>
               </div>
@@ -596,31 +600,31 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 </Modal>
       {isConfirmationModalVisible && (
         <Modal
-          visible={isConfirmationModalVisible}
-          onOk={handleWalletPayment}
-          onCancel={cancelPayment}
-          okText="Yes, Pay"
-          cancelText="Cancel"
-          className="custom-confirmation-modal"
-          okButtonProps={{
+        visible={isConfirmationModalVisible}
+        onOk={handleWalletPayment}
+        onCancel={cancelPayment}
+        okText="Yes, Pay"
+        cancelText="Cancel"
+        className="custom-confirmation-modal"
+        okButtonProps={{
             className: "bg-[#036264] hover:bg-[#04494b] text-white !important",
             style: { backgroundColor: '#036264', color: 'white' }
-          }}
-          cancelButtonProps={{
+        }}
+        cancelButtonProps={{
             className: "text-gray-600 hover:text-gray-800"
-          }}
-        >
-          <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+        }}
+    >
+        <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
             <AlertCircle className="text-[#036264] w-12 h-12" />
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
-              <p className="text-gray-600">
-                Are you sure you want to proceed with this payment? 
-                Please review the details before confirming.
-              </p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <p className="text-gray-600">
+                    Are you sure you want to proceed with this payment? 
+                    Please review the details before confirming.
+                </p>
             </div>
-          </div>
-        </Modal>
+        </div>
+    </Modal>
       )}
      <FooterThree />
    </>

@@ -5,9 +5,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
-function Info({ cart }) {
+function Info({ cart,currency,exchangeRate }) {
   const totalPrice = cart
-    .reduce((total, item) => total + item.price * item.quantity, 0)
+    .reduce((total, item) => total + item.price , 0)
     .toFixed(2);
 
   return (
@@ -16,7 +16,7 @@ function Info({ cart }) {
         Total
       </Typography>
       <Typography variant="h4" sx={{ color: '#ffffff' }} gutterBottom>
-        ${totalPrice}
+        {currency} {(totalPrice*exchangeRate).toFixed(2)}
       </Typography>
 
       <List disablePadding>
@@ -33,7 +33,7 @@ function Info({ cart }) {
                 secondary={`Quantity: ${item.quantity}`}
               />
               <Typography variant="body1" sx={{ fontWeight: 'medium',color:"#ffffff" }}>
-                ${item.price.toFixed(2)}
+                {currency} {(item.price*exchangeRate).toFixed(2)}
               </Typography>
             </ListItem>
         ))}

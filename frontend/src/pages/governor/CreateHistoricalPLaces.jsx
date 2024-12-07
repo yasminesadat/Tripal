@@ -1,17 +1,14 @@
-// import Sidebar from "./Sidebar";
-// import Header from "./Header";
-// import Map from "../pages/contact/Map";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Upload, Select, TimePicker, Input, InputNumber, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-// import MapPopUp from "../../components/common/MapPopUp";
 import { getAllPeriodTags } from '../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../api/HistoricalPlaceTagService';
 import { useLocation } from 'react-router-dom';
 import moment from 'moment';
+import {message} from "antd";
+import { useNavigate } from "react-router-dom";
 import LocationMap from '../../components/common/MapComponent';
-// import { toast } from "react-toastify";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
@@ -22,6 +19,7 @@ export default function AddHistoricalPlace() {
 
   const location = useLocation();
   const props = location.state?.historicalPlace;
+  const navigate = useNavigate();
   const handleImageChange = (event, func) => {
     const file = event.target.files[0];
     if (file) {
@@ -155,11 +153,14 @@ export default function AddHistoricalPlace() {
         const result = await CreateNewHistoricalPlace(newHistoricalPlace);
         if (result) {
           setLoading(false);
-          // toast.success('Historical place created successfully')
+          navigate(`/my-historical-places`);
+          message.success("Created Successfully");
+          
         }
       }
       catch (err) {
-        // toast.error(err);
+        message.error("Error while creating");
+        setLoading(false);
         setLoading(false);
       }
     }
@@ -234,13 +235,13 @@ export default function AddHistoricalPlace() {
       //   label: tag.name,
       //   value: tag._id
       // }))],
-      weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
+      weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null,
       weekendClosingTime: formData.openingHours?.weekends?.closingTime
-        ? moment(formData.openingHours.weekends.closingTime, 'HH:mm')
+        ? moment(formData.openingHours.weekends.closingTime, "HH:mm:ss")
         : null,
-      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
+      weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss") : null,
       weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-        ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
+        ? moment(formData.openingHours.weekdays.closingTime, "HH:mm:ss")
         : null,
       foreignerPrice: formData.ticketPrices.foreigner,
       nativePrice: formData.ticketPrices.native,
@@ -250,7 +251,7 @@ export default function AddHistoricalPlace() {
 
   return (
     <>
-      <div classname="page-wrapper">
+      <div className="page-wrapper">
         <GovernorHeader />
         <main className="page-content">
           <div
@@ -308,12 +309,12 @@ export default function AddHistoricalPlace() {
                                 label: tag.name,
                                 value: tag._id
                               }))],
-                              weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm") : null,
-                              weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm") : null,
-                              weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm") : null,
-                              weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
-                                ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm')
-                                : null,
+                              weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null,
+                          weekendClosingTime: formData.openingHours.weekends.closingTime ? moment(formData.openingHours.weekends.closingTime, "HH:mm:ss"): null,
+                          weekdayOpeningTime: formData.openingHours.weekdays.openingTime ? moment(formData.openingHours.weekdays.openingTime, "HH:mm:ss"): null,
+                          weekdayClosingTime: formData.openingHours?.weekdays?.closingTime
+                            ? moment(formData.openingHours.weekdays.closingTime, 'HH:mm:ss')
+                            : null,
                               foreignerPrice: formData.ticketPrices.foreigner,
                               nativePrice: formData.ticketPrices.native,
                               studentPrice: formData.ticketPrices.student,
@@ -339,16 +340,16 @@ export default function AddHistoricalPlace() {
                                 //     _id: tag ? tag._id : ''
                                 //   };
                                 //}),
-                                openingHours: {
-                                  weekdays: {
-                                    openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
-                                    closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
-                                  },
-                                  weekends: {
-                                    openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
-                                    closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
-                                  }
-                                },
+                                // openingHours: {
+                                //   weekdays: {
+                                //     openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
+                                //     closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
+                                //   },
+                                //   weekends: {
+                                //     openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
+                                //     closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
+                                //   }
+                                // },
                                 ticketPrices: {
                                   foreigner: allValues.foreignerPrice,
                                   native: allValues.nativePrice,
@@ -395,52 +396,245 @@ export default function AddHistoricalPlace() {
                           `}
                             </style>
                             <div
-                              className={`tabs__pane  ${activeTab == "Content" ? "is-tab-el-active" : ""
-                                }`}
+                          className={`tabs__pane  ${activeTab == "Content" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Name
+                            </label>
+                            <Form.Item className="form-input "
+                              name="name"
+                              rules={[
+                                {
+                                  required: id === undefined,
+                                  message: 'Please enter the place name!',
+                                },
+                              ]}
                             >
+                              <Input
+                                type="text"
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  padding: '10px 15px', // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                              />
+                            </Form.Item>
+                          </div>
 
-                              <div className="col-12">
-                                <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                  Name
-                                </label>
-                                <Form.Item className="form-input "
-                                  name="name"
-                                  rules={[
-                                    {
-                                      required: id === undefined,
-                                      message: 'Please enter the place name!',
-                                    },
-                                  ]}
-                                >
-                                  <Input
-                                    type="text"
-                                    style={{
-                                      width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      padding: '10px 15px', // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
-                                      border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
-                                    }}
-                                  />
-                                </Form.Item>
-                              </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Description
+                            </label>
+                            <Form.Item
 
-                              <div className="col-12">
-                                <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                  Description
-                                </label>
-                                <Form.Item
+                              name="description"
+                              rules={[
+                                {
+                                  required: id === undefined,
+                                  message: 'Please enter the place description!',
+                                },
+                              ]}>
 
-                                  name="description"
-                                  rules={[
-                                    {
-                                      required: id === undefined,
-                                      message: 'Please enter the place description!',
-                                    },
-                                  ]}>
+                              <Input.TextArea style={{
+                                width: '100%',
+                                height: '50px', // Adjust the height as needed
+                                padding: '10px 15px', // Increase padding for taller appearance
+                                fontSize: '18px', // Increase font size for better readability
+                                border: '1px solid #ccc',
+                                borderRadius: '10px', // Optional for a rounded look
+                              }}
+                                type="text"
+                              />
 
-                                  <Input.TextArea style={{
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Historical Periods
+                            </label>
+                            <Form.Item
+                              name="historicalPeriod"
+                              rules={[{ required: false, message: "Please select or create historical periods" }]}>
+                              <Select
+                                mode="tags"
+                                placeholder="Please select or create period tags"
+                                // defaultValue={[...formData.historicalPeriod.map((period) => ({
+                                //     label: period.name,
+                                //     value: period._id
+                                // }))]}
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                                onChange={(selectedTags) => {
+                                  const selectedPeriods = selectedTags.map((tagValue) => {
+                                    const period = periodTagsOptions.find((p) => p._id === tagValue);
+                                    return {
+                                      name: period ? period.name : tagValue,
+                                      _id: period ? period._id : ''
+                                    };
+                                  });
+                                  console.log(selectedPeriods);
+                                  setFormData((data) => ({
+                                    ...data,
+                                    historicalPeriod: selectedPeriods,
+                                  }));
+                                }}
+
+                                options={periodTagsOptions.map((period) => (
+                                  {
+                                    label: period.name,
+                                    value: period._id
+                                  }
+                                )
+                                )}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                              Tags
+                            </label>
+                            <Form.Item
+                              name="tags"
+                              rules={[{ required: false, message: "Please select or create tags" }]}>
+                              <Select
+                                mode="tags"
+                                placeholder="Please select or new tags"
+                                // defaultValue={[...formData.tags.map((tag) => ({
+                                //     label: tag.name,
+                                //     value: tag._id
+                                // }))]}
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                                onChange={(selectedTags) => {
+                                  console.log("helo", selectedTags);
+                                  const tags = selectedTags.map((tagValue) => {
+                                    const tag = tagsOptions.find((p) => p._id === tagValue);
+                                    return {
+                                      name: tag ? tag.name : tagValue,
+                                      _id: tag ? tag._id : ''
+                                    };
+                                  });
+                                  console.log(tags);
+                                  setFormData((data) => ({
+                                    ...data,
+                                    tags: tags,
+                                  }));
+                                }}
+
+                                options={tagsOptions.map((tag) => (
+                                  {
+                                    label: tag.name,
+                                    value: tag._id,
+                                  }
+                                )
+                                )}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="col-12">
+                            <label style={{
+                              color: 'black',
+                              marginBottom: '10px',
+                            }} className="lh-1 text-16 text-light-1">
+                              Upload Place Images
+                            </label>
+                            <Form.Item
+                              name="upload"
+                              valuePropName="fileList"
+                              getValueFromEvent={normFile}
+                              extra="You can select one or more images"
+                            >
+                              <Upload.Dragger
+                                multiple
+                                onChange={handleChoosingImage}
+                                onRemove={(file) => {
+                                  console.log("the file to be removed", file);
+                                  if ('url' in file) {
+                                    setDeletedImages((oldImages) => new Set([...oldImages]).add({
+                                      public_id: file.uid,
+                                      url: file.url,
+                                    }))
+                                    console.log("deleted images set", deletedImages)
+                                  } else {
+                                    setNewImages((oldData) => {
+                                      const reader = new FileReader();
+                                      reader.readAsDataURL(file.originFileObj);
+                                      reader.onloadend = () => {
+                                        const encodedImage = reader.result;
+                                        return new Set([...oldData].filter((image) => image !== encodedImage))
+                                      }
+                                    });
+                                    console.log("the new images set", newImages)
+                                  }
+                                }}
+                                listType="picture"
+                                style={{
+                                  width: '100%',
+                                  height: '50px', // Adjust the height as needed
+                                  padding: '10px 15px', // Increase padding for taller appearance
+                                  fontSize: '18px', // Increase font size for better readability
+                                  border: '1px solid #ccc',
+                                  borderRadius: '10px', // Optional for a rounded look
+                                }}
+                              >
+                                <p >
+                                  <InboxOutlined />
+                                </p>
+                                <p >Click or drag files to this area to upload</p>
+                                <p >
+                                  Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files.
+                                </p>
+                              </Upload.Dragger>
+
+                            </Form.Item>
+                          </div>
+
+                          <div className="col-12">
+                            <Button className="button -md -dark-1 bg-accent-1 text-white"
+                              onClick={() => {
+                                setActiveTab("Timings")
+                              }}>
+                              Next
+                              <i className="icon-arrow-top-right text-16 ml-10"></i>
+                            </Button>
+                          </div>
+                        </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Opening Time
+                              </label>
+                              <Form.Item className="form-input " name="weekendOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
                                     width: '100%',
                                     height: '50px', // Adjust the height as needed
                                     padding: '10px 15px', // Increase padding for taller appearance
@@ -448,406 +642,262 @@ export default function AddHistoricalPlace() {
                                     border: '1px solid #ccc',
                                     borderRadius: '10px', // Optional for a rounded look
                                   }}
-                                    type="text"
-                                  />
+                                  placeholder="please select the weekends opening time" 
+                                   onChange={(time, timeString) => {
+                            setFormData((data) => ({
+                                ...data,
+                                openingHours: {
+                                    ...data.openingHours,
+                                    weekends: {
+                                        ...data.openingHours.weekends,
+                                        openingTime: timeString,
+                                    },
+                                },
+                            }))
+                        }}
+                                 />
+                              </Form.Item>
+                            </div>
 
-                                </Form.Item>
-                              </div>
-                              <div className="col-12">
-                                <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                  Historical Periods
-                                </label>
-                                <Form.Item
-                                  name="historicalPeriod"
-                                  rules={[{ required: false, message: "Please select or create historical periods" }]}>
-                                  <Select
-                                    mode="tags"
-                                    placeholder="Please select or create period tags"
-                                    // defaultValue={[...formData.historicalPeriod.map((period) => ({
-                                    //     label: period.name,
-                                    //     value: period._id
-                                    // }))]}
-                                    style={{
-                                      width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
-                                      border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
-                                    }}
-                                    onChange={(selectedTags) => {
-                                      const selectedPeriods = selectedTags.map((tagValue) => {
-                                        const period = periodTagsOptions.find((p) => p._id === tagValue);
-                                        return {
-                                          name: period ? period.name : tagValue,
-                                          _id: period ? period._id : ''
-                                        };
-                                      });
-                                      console.log(selectedPeriods);
-                                      setFormData((data) => ({
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekends Closing Time
+                              </label>
+                              <Form.Item className="form-input " name="weekendClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekends closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekends closing time" 
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
                                         ...data,
-                                        historicalPeriod: selectedPeriods,
-                                      }));
-                                    }}
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekends: {
+                                                ...data.openingHours.weekends,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }}/>
+                              </Form.Item>
 
-                                    options={periodTagsOptions.map((period) => (
-                                      {
-                                        label: period.name,
-                                        value: period._id
-                                      }
-                                    )
-                                    )}
-                                  />
-                                </Form.Item>
-                              </div>
-                              <div className="col-12">
-                                <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                  Tags
-                                </label>
-                                <Form.Item
-                                  name="tags"
-                                  rules={[{ required: false, message: "Please select or create tags" }]}>
-                                  <Select
-                                    mode="tags"
-                                    placeholder="Please select or new tags"
-                                    // defaultValue={[...formData.tags.map((tag) => ({
-                                    //     label: tag.name,
-                                    //     value: tag._id
-                                    // }))]}
-                                    style={{
-                                      width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
-                                      border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
-                                    }}
-                                    onChange={(selectedTags) => {
-                                      console.log("helo", selectedTags);
-                                      const tags = selectedTags.map((tagValue) => {
-                                        const tag = tagsOptions.find((p) => p._id === tagValue);
-                                        return {
-                                          name: tag ? tag.name : tagValue,
-                                          _id: tag ? tag._id : ''
-                                        };
-                                      });
-                                      console.log(tags);
-                                      setFormData((data) => ({
+                            </div>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekdays Opening Time
+                              </label>
+
+                              <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays opening time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays opening time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
                                         ...data,
-                                        tags: tags,
-                                      }));
-                                    }}
-
-                                    options={tagsOptions.map((tag) => (
-                                      {
-                                        label: tag.name,
-                                        value: tag._id,
-                                      }
-                                    )
-                                    )}
-                                  />
-                                </Form.Item>
-                              </div>
-                              <div className="col-12">
-                                <label style={{
-                                  color: 'black',
-                                  marginBottom: '10px',
-                                }} className="lh-1 text-16 text-light-1">
-                                  Upload Place Images
-                                </label>
-                                <Form.Item
-                                  name="upload"
-                                  valuePropName="fileList"
-                                  getValueFromEvent={normFile}
-                                  extra="You can select one or more images"
-                                >
-                                  <Upload.Dragger
-                                    multiple
-                                    onChange={handleChoosingImage}
-                                    onRemove={(file) => {
-                                      console.log("the file to be removed", file);
-                                      if ('url' in file) {
-                                        setDeletedImages((oldImages) => new Set([...oldImages]).add({
-                                          public_id: file.uid,
-                                          url: file.url,
-                                        }))
-                                        console.log("deleted images set", deletedImages)
-                                      } else {
-                                        setNewImages((oldData) => {
-                                          const reader = new FileReader();
-                                          reader.readAsDataURL(file.originFileObj);
-                                          reader.onloadend = () => {
-                                            const encodedImage = reader.result;
-                                            return new Set([...oldData].filter((image) => image !== encodedImage))
-                                          }
-                                        });
-                                        console.log("the new images set", newImages)
-                                      }
-                                    }}
-                                    listType="picture"
-                                    style={{
-                                      width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      padding: '10px 15px', // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
-                                      border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
-                                    }}
-                                  >
-                                    <p >
-                                      <InboxOutlined />
-                                    </p>
-                                    <p >Click or drag files to this area to upload</p>
-                                    <p >
-                                      Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files.
-                                    </p>
-                                  </Upload.Dragger>
-
-                                </Form.Item>
-                              </div>
-
-                              <div className="col-12">
-                                <Button className="button -md -dark-1 bg-accent-1 text-white"
-                                  onClick={() => {
-                                    setActiveTab("Timings")
-                                  }}>
-                                  Next
-                                  <i className="icon-arrow-top-right text-16 ml-10"></i>
-                                </Button>
-                              </div>
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                openingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
+                              </Form.Item>
                             </div>
-                            <div
-                              className={`tabs__pane  ${activeTab == "Timings" ? "is-tab-el-active" : ""
-                                }`}
-                            >
-                              <div className=" row y-gap-30">
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekends Opening Time
-                                  </label>
-                                  <Form.Item className="form-input " name="weekendOpeningTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekends opening time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekends opening time" />
-                                  </Form.Item>
-                                </div>
 
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekends Closing Time
-                                  </label>
-                                  <Form.Item className="form-input " name="weekendClosingTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekends closing time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekends closing time" />
-                                  </Form.Item>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Weekdays Closing Time
+                              </label>
 
-                                </div>
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekdays Opening Time
-                                  </label>
+                              <Form.Item className="form-input " name="weekdayClosingTime" rules={[
+                                {
+                                  type: 'object',
+                                  required: id === undefined,
+                                  message: 'Please select weekdays closing time!',
+                                },
+                              ]}>
+                                <TimePicker
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="please select the weekdays closing time"
+                                  onChange={(time, timeString) => {
+                                    setFormData((data) => ({
+                                        ...data,
+                                        openingHours: {
+                                            ...data.openingHours,
+                                            weekdays: {
+                                                ...data.openingHours.weekdays,
+                                                closingTime: timeString,
+                                            },
+                                        },
+                                    }))
+                                }} />
+                              </Form.Item>
 
-                                  <Form.Item className="form-input " name="weekdayOpeningTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekdays opening time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekdays opening time" />
-                                  </Form.Item>
-                                </div>
-
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Weekdays Closing Time
-                                  </label>
-
-                                  <Form.Item className="form-input " name="weekdayClosingTime" rules={[
-                                    {
-                                      type: 'object',
-                                      required: id === undefined,
-                                      message: 'Please select weekdays closing time!',
-                                    },
-                                  ]}>
-                                    <TimePicker
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="please select the weekdays closing time" />
-                                  </Form.Item>
-
-                                </div>
-
-                                <div className="col-12">
-                                  <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
-                                    setActiveTab("Location")
-                                  }}>
-                                    Next
-                                    <i className="icon-arrow-top-right text-16 ml-10"></i>
-                                  </Button>
-                                </div>
-                              </div>
                             </div>
-                            <div
-                              className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
-                                }`}
-                            >
-                              <div className=" row y-gap-30">
-                                <div className="col-12" >
-                                  <h2 style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Historical Place Location
-                                  </h2>
-                                  <div className="map relative mt-20">
-                                    <LocationMap
-                                      markerPosition={coordinates}
-                                      setMarkerPosition={setCoordinates}
-                                      setSelectedLocation={setAddress}
-                                    />
-                                  </div>
-                                </div>
 
-                                <div className="col-12" >
-                                  <strong>Selected Location:</strong> {address || 'No location selected yet'}
-                                </div>
-                                <div className="col-12" >
-                                  <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
-                                    setActiveTab("Pricing")
-                                  }}>
-                                    Next
-                                    <i className="icon-arrow-top-right text-16 ml-10"></i>
-                                  </Button>
-                                </div>
-                              </div>
+                            <div className="col-12">
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
+                                setActiveTab("Location")
+                              }}>
+                                Next
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
                             </div>
-                            <div
-                              className={`tabs__pane  ${activeTab == "Pricing" ? "is-tab-el-active" : ""
-                                }`}
-                            >
-                              <div className=" row y-gap-30">
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Foreigner Ticket Price
-                                  </label>
-                                  <Form.Item
-                                    name="foreignerPrice"
-                                    rules={[{ required: id === undefined, message: "Please enter the foreigner ticket price" }]}
-                                  >
-                                    <InputNumber
-                                      min={0}
-                                      placeholder="Enter foreigner ticket price"
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                    />
-                                  </Form.Item>
-
-                                </div>
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Native Ticket Price
-                                  </label>
-                                  <Form.Item
-                                    name="nativePrice"
-                                    rules={[{ required: id === undefined, message: "Please enter the native ticket price" }]}
-                                  >
-                                    <InputNumber
-                                      min={0}
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                      placeholder="Enter native ticket price"
-
-                                    />
-                                  </Form.Item>
-                                </div>
-                                <div className="col-12">
-                                  <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
-                                    Student Ticket Price
-                                  </label>
-                                  <Form.Item
-                                    name="studentPrice"
-                                    rules={[{ required: id === undefined, message: "Please enter the student ticket price" }]}
-                                  >
-                                    <InputNumber
-                                      min={0}
-                                      placeholder="Enter student ticket price"
-                                      style={{
-                                        width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
-                                        border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
-                                      }}
-                                    />
-                                  </Form.Item>
-
-                                </div>
-                                <div className="col-12">
-                                  <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" htmlType="submit" loading={loading} type="primary">
-                                    {id === undefined ? "Create" : "Update"}
-                                    <i className="icon-arrow-top-right text-16 ml-10"></i>
-                                  </Button>
-                                </div></div>
-                            </div>
-                          </Form>
+                          </div>
                         </div>
-                      </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12" >
+                              <h2 style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Historical Place Location
+                              </h2>
+                              <div className="map relative mt-20">
+                                <LocationMap
+                                  markerPosition={coordinates}
+                                  setMarkerPosition={setCoordinates}
+                                  setSelectedLocation={setAddress}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-12" >
+                              <strong>Selected Location:</strong> {address || 'No location selected yet'}
+                            </div>
+                            <div className="col-12" >
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
+                                setActiveTab("Pricing")
+                              }}>
+                                Next
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`tabs__pane  ${activeTab == "Pricing" ? "is-tab-el-active" : ""
+                            }`}
+                        >
+                          <div className=" row y-gap-30">
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Foreigner Ticket Price
+                              </label>
+                              <Form.Item
+                                name="foreignerPrice"
+                                rules={[{ required: id === undefined, message: "Please enter the foreigner ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  placeholder="Enter foreigner ticket price"
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                />
+                              </Form.Item>
+
+                            </div>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Native Ticket Price
+                              </label>
+                              <Form.Item
+                                name="nativePrice"
+                                rules={[{ required: id === undefined, message: "Please enter the native ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                  placeholder="Enter native ticket price"
+                                  
+                                />
+                              </Form.Item>
+                            </div>
+                            <div className="col-12">
+                              <label style={{ color: 'black', marginBottom: '10px', }} className="lh-1 text-16 text-light-1">
+                                Student Ticket Price
+                              </label>
+                              <Form.Item
+                                name="studentPrice"
+                                rules={[{ required: id === undefined, message: "Please enter the student ticket price" }]}
+                              >
+                                <InputNumber
+                                  min={0}
+                                  placeholder="Enter student ticket price"
+                                  style={{
+                                    width: '100%',
+                                    height: '50px', // Adjust the height as needed
+                                    padding: '10px 15px', // Increase padding for taller appearance
+                                    fontSize: '18px', // Increase font size for better readability
+                                    border: '1px solid #ccc',
+                                    borderRadius: '10px', // Optional for a rounded look
+                                  }}
+                                />
+                              </Form.Item>
+
+                            </div>
+                            <div className="col-12">
+                              <Button className="button -md -dark-1 bg-accent-1 text-white mt-30" htmlType="submit" loading={loading} type="primary">
+                                {id === undefined ? "Create" : "Update"}
+                                <i className="icon-arrow-top-right text-16 ml-10"></i>
+                              </Button>
+                            </div></div>
+                        </div>
+                      </Form>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
 
               </div>

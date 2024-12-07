@@ -1,25 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
-// import { speedFeatures } from "@/data/tourFilteringOptions";
-import Stars from "../../components/common/Stars";
-// import {Pagination} from  "../../components/common/Pagination";
 import { getUserData } from "@/api/UserService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { message, Tour } from "antd";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
 export default function HistoricalPlacesList({ searchTerm }) {
-  const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
-  const [sidebarActive, setSidebarActive] = useState(false);
   const dropDownContainer = useRef();
-  const [governerHistoricalPlace, setGovernerHistoricalPlace] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currency, setCurrency] = useState("EGP");
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
   const [searchKey, setSearchKey] = useState(searchTerm);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
   const errorDisplayed = useRef(false);
   const location = useLocation();
   const refHPDetails = useRef(null);
@@ -37,6 +32,32 @@ export default function HistoricalPlacesList({ searchTerm }) {
       }
     },
   ]
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  const convertPrice = (price) => {
+    return (price * exchangeRate).toFixed(2);
+  };
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1); return () => clearInterval(intervalId);
+  }, [currency]);
+
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
@@ -137,13 +158,41 @@ export default function HistoricalPlacesList({ searchTerm }) {
     try {
       const response = await deleteHistoricalPlace(id);
       if (response) {
-        setGovernerHistoricalPlace(governerHistoricalPlace.filter(place => place._id !== id));
+        setPlaces(places.filter(place => place._id !== id));
+        setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
+        message.success("Deleted Successfully");
       }
     }
     catch (e) {
-      // error msg
+      message.error("Failed to delete");
     }
   }
+
+  const handleCopyLink = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        message.success("Link copied to clipboard!");
+      })
+      .catch((error) => {
+        message.error("Failed to copy link");
+      });
+  };
+
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this historical place!",
+          url: link,
+        })
+        .catch((error) => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
+    }
+  };
   const getMinPrice = (Place) => {
 
     const minValue = Math.min(Place.ticketPrices.foreigner, Place.ticketPrices.native, Place.ticketPrices.student);
@@ -155,7 +204,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [error, setError] = useState(null);
-  const [currency, setCurrency] = useState("EGP");
   const [filters, setFilters] = useState({ historicType: [], historicalTagPeriod: [] });
   useEffect(() => {
     const curr = sessionStorage.getItem("currency");
@@ -341,10 +389,18 @@ export default function HistoricalPlacesList({ searchTerm }) {
               <div className="col-auto">
                 <div>{filteredPlaces?.length} results</div>
               </div>
-
-
-
             </div>
+            <style>
+              {`
+.tourCard.-type-2 .tourCard__favorite2 {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  z-index: 1;
+}
+`}
+
+            </style>
 
             <div className="row y-gap-30 pt-30">
               {filteredPlaces.map((elm, i) => (
@@ -352,6 +408,42 @@ export default function HistoricalPlacesList({ searchTerm }) {
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
                       {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+
+                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace: elm } });
+
+                        }}>
+                          <i className="icon-pencil text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourism Governor" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
+                          handleDelete(elm._id);
+
+                        }}>
+                          <i className="icon-delete text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite2">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleCopyLink(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-clipboard text-15"></i>
+                        </button>
+                      </div>}
+                      {userRole === "Tourist" && <div className="tourCard__favorite">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
+                          handleShare(
+                            `${window.location.origin}/historical-places/${elm._id}`
+                          )
+                        }>
+                          <i className="icon-share text-15"></i>
+                        </button>
+                      </div>}
+                    
                     </div>
 
 

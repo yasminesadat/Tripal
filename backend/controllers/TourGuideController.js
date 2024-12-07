@@ -92,8 +92,9 @@ const deleteTourguideNotification = async (req, res) => {
 const markNotificationRead = async (req, res) => {
   try {
     const userid=req.userId;
-    const notificationID=req.params;   
-   
+    // const notificationID=req.params;   
+   console.log("Alive");
+
    
     const tourGuide = await tourGuideModel.findById(userid);
     if (!tourGuide) {
@@ -101,11 +102,12 @@ const markNotificationRead = async (req, res) => {
     }
      
    
-    const notification = tourGuide.notificationList.find(
-      notification => (notification._id).toString() === notificationID.id
-    );
+    // const notification = tourGuide.notificationList.find(
+    //   notification => (notification._id).toString() === notificationID.id
+    // );
 
-    notification.read=true;
+    // notification.read=true;
+    tourGuide.notificationList.forEach((n)=>{(n.read=true)})
 
     
     await tourGuide.save();
@@ -122,7 +124,7 @@ const markNotificationRead = async (req, res) => {
 
 const updateTourguideData = async (req, res) => {
   try {
-    const { id } = req.userId;
+    const id = req.userId;
     const { currProfilePicture, initialProfilePicture, ...data } = req.body;
 
     if (initialProfilePicture) {

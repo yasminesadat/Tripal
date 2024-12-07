@@ -2,6 +2,43 @@ const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+const updateProductQuantity = async (productId, quantity) => {
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    if (product.quantity < quantity) {
+      return res.status(400).json({ message:`Not enough stock for ${product.name}.` });
+    }
+
+    product.quantity -= quantity;
+
+    await product.save();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const updateProductSales = async (productId, quantity) => {
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    product.sales += quantity;
+
+    await product.save();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 const createOrder = asyncHandler(async (req, res) => {
   const touristId = req.userId;
@@ -27,6 +64,15 @@ const createOrder = asyncHandler(async (req, res) => {
     
           if (tourist.wallet.amount < totalPrice) {
             return res.status(400).json({ error: "Insufficient wallet balance." });
+          }
+
+          for (let cartItem of tourist.cart) {
+            try {
+              await updateProductQuantity(cartItem.product._id, cartItem.quantity);
+              await updateProductSales(cartItem.product._id, cartItem.quantity);
+            } catch (error) {
+              return res.status(400).json({ message: error.message });
+            }
           }
     
           tourist.wallet.amount -= totalPrice;
@@ -62,7 +108,7 @@ const createOrder = asyncHandler(async (req, res) => {
           });
     
           await newOrder.save();
-    
+         
           tourist.cart = [];
           await tourist.save();
     
@@ -73,6 +119,16 @@ const createOrder = asyncHandler(async (req, res) => {
         }
 
         else if (paymentMethod === "Cash on Delivery") {
+
+          for (let cartItem of tourist.cart) {
+            try {
+              await updateProductQuantity(cartItem.product._id, cartItem.quantity);
+              await updateProductSales(cartItem.product._id, cartItem.quantity);
+            } catch (error) {
+              return res.status(400).json({ message: error.message });
+            }
+          }
+
           const newOrder = new Order({
             touristId: touristId,
             products: tourist.cart,
@@ -88,7 +144,7 @@ const createOrder = asyncHandler(async (req, res) => {
           });
     
           await newOrder.save();
-    
+         
           tourist.cart = [];
           await tourist.save();
     
@@ -97,9 +153,10 @@ const createOrder = asyncHandler(async (req, res) => {
             order: newOrder,
           });
         } else if (paymentMethod === "Credit Card") {
-          const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+          
           const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
+            customer_email: tourist.email,
             line_items: tourist.cart.map((product) => ({
               price_data: {
                 currency: "egp",
@@ -111,10 +168,18 @@ const createOrder = asyncHandler(async (req, res) => {
               quantity: product.quantity,
             })),
             mode: "payment",
-            success_url: `${process.env.CLIENT_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
-            cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
+            success_url: `${process.env.FRONTEND_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
+            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
           });
-    
+          console.log (session.id);
+          // for (let cartItem of tourist.cart) {
+          //   try {
+          //     await updateProductQuantity(cartItem.product._id, cartItem.quantity);
+          //     await updateProductSales(cartItem.product._id, cartItem.quantity);
+          //   } catch (error) {
+          //     return res.status(400).json({ message: error.message });
+          //   }
+          // }
           return res.status(200).json({
             message: "Redirecting to payment.",
             sessionId: session.id,
@@ -169,7 +234,7 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
 const completeOrder = asyncHandler(async (req, res) => {
-  const { sessionId, touristId, totalPrice, deliveryAddress } = req.body;
+  const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod } = req.body;
 
   try {
 

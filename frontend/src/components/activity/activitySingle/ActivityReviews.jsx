@@ -11,7 +11,7 @@ const ActivityReviews = ({ activityId }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -20,7 +20,7 @@ const ActivityReviews = ({ activityId }) => {
     }
     return color;
   };
-  
+
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
@@ -53,6 +53,7 @@ const ActivityReviews = ({ activityId }) => {
 
   return (
     <>
+      {reviews.length === 0 && <p>Be the first to review</p>}
       {reviews.map((elm, i) => (
         <div key={i} className="pt-30">
           <div className="row justify-between">
