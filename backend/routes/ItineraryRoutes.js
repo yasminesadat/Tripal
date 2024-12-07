@@ -16,12 +16,25 @@ const {
   getAllItinerariesForAdmin,
   getItineraryById,
   revenue,
+  getItineraryBookings,
+  getTourguideBookings
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.get("/itinerary/:id", getItineraryById);
-
+router.get(
+  "/itinerary-bookings/:id",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getItineraryBookings
+);
+router.get(
+  "/my-itineraries-bookings",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getTourguideBookings
+);
 router.post(
   "/create-itinerary",
   verifyToken,

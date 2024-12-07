@@ -467,6 +467,7 @@ export default function ActivitiesList({
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>
                       </button>
+                      
                     </div>
                   </div>
                 </div>

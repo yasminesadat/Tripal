@@ -42,6 +42,25 @@ export const getAllItineraries = async () => {
   }
 };
 
+export async function getItineraryBookings(id) {
+  try {
+    const response = await axios.get(`/itinerary-bookings/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't get itinerary bookings", error);
+    throw error;
+  }
+}
+export async function getTourGuideBookings() {
+  try {
+    const response = await axios.get(`/my-itineraries-bookings`);
+    return response;
+  } catch (error) {
+    console.error("Can't get tourguide bookings", error);
+    throw error;
+  }
+}
+
 export const createItinerary = async (itinerary) => {
   try {
     const response = await axios.post("/create-itinerary",itinerary);

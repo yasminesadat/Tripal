@@ -66,6 +66,25 @@ const getAdvertiserActivities = async (req, res) => {
     res.status(400).json({ error: error.message })
   }
 };
+const getAdvertiserBookings= async (req, res) => {
+  const id = req.userId;
+  try {
+    const bookings = await Activity.find({ advertiser: id }).select("bookings")
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+};
+const getActivityBookings = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await Activity.findById(id).select("booking");
+    return res.status(200).json(result);
+  }
+  catch (err) {
+    return res.status(400).json(err);
+  }
+};
 
 const notifyTouristsOnBookingOpen = async (activityId) => {
   try {
@@ -317,5 +336,7 @@ module.exports = {
   getAllActivitiesForAdmin,
   getAllActivities,
   adminFlagActivity,
+  getActivityBookings,
+  getAdvertiserBookings,
   revenue,
 };
