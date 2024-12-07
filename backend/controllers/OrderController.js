@@ -234,7 +234,7 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
 const completeOrder = asyncHandler(async (req, res) => {
-  const { sessionId, touristId, totalPrice, deliveryAddress } = req.body;
+  const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod } = req.body;
 
   try {
 
