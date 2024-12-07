@@ -22,7 +22,6 @@ async function getConversionRate(currency) {
   return exchangeRates.conversion_rates[currency];
 }
 
-
 function getTouristCurrency() {
   return touristCurrency;
 }

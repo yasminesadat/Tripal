@@ -1,7 +1,5 @@
-
-import React from "react";
 import moment from "moment";
-export default function OthersInformation({ OpeningHours, ticketPrices, currency }) {
+export default function OthersInformation({ OpeningHours, ticketPrices, currency ,exchangerate}) {
   return (
     <>
       <div className="col-lg-3 col-6">
@@ -37,7 +35,7 @@ export default function OthersInformation({ OpeningHours, ticketPrices, currency
 
           <div className="ml-10">
             <div className="lh-16">Foreigner ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{currency} {ticketPrices?.foreigner} </div>
+            <div className="text-14 text-light-2 lh-16">{currency||'EGP'} {(ticketPrices?.foreigner*exchangerate).toFixed(2)} </div>
           </div>
         </div>
       </div>
@@ -61,7 +59,7 @@ export default function OthersInformation({ OpeningHours, ticketPrices, currency
 
           <div className="ml-10">
             <div className="lh-16">Student ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{currency}  {ticketPrices?.student} </div>
+            <div className="text-14 text-light-2 lh-16">{currency||'EGP'}  {(ticketPrices?.student*exchangerate).toFixed(2)} </div>
           </div>
         </div>
       </div>

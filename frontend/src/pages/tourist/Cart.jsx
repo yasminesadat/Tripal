@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getCart , removeFromCart} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -9,6 +9,8 @@ import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
 import { Button } from "antd";
+import { getTouristCurrency,getConversionRate } from "@/api/ExchangeRatesService";
+
 
 const metadata = {
     title: "My Cart || Tripal",
@@ -19,6 +21,28 @@ const Cart = () => {
     const [userData, setUserData] = useState("");
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
+
+    const [currency, setCurrency] = useState( "EGP");
+    const [exchangeRate, setExchangeRate] = useState(1);
+
+    const getExchangeRate = async () => {
+    if (currency) {
+        try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+        } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+    }
+  }
+};
+
+useEffect(() => {
+  const intervalId = setInterval(() => {
+    const newCurrency = getTouristCurrency();
+    setCurrency(newCurrency);
+    getExchangeRate();
+  }, 1);  return () => clearInterval(intervalId);
+}, [currency]);
 
     const fetchUserData = async () => {
         try {
@@ -96,9 +120,9 @@ const Cart = () => {
                                                             style={{ width: "70px", height: "70px" }}
                                                             />
                                                         </td>
-                                                        <td>{item.product.price.toFixed(2)}</td>
+                                                        <td>{currency} {(item.product.price*exchangeRate).toFixed(2)}</td>
                                                         <td>{item.quantity}</td>
-                                                        <td>{item.price.toFixed(2)}</td>
+                                                        <td>{currency} {(item.price*exchangeRate).toFixed(2)}</td>
                                                         <td>
                                                         <button
                                                           style={{
@@ -121,7 +145,7 @@ const Cart = () => {
                                         <Button
                                             type="primary"
                                             className="custom-button"
-                                            onClick={() => navigate("/checkout", { state: { cart } })}
+                                            onClick={() => navigate("/checkout", { state: { cart,currency,exchangeRate } })}
                                             style={{marginLeft:"83%"}}
                                         >
                                             Proceed to Checkout

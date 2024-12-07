@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -6,8 +6,6 @@ import img from "./Components/HotelsImages/bookingicon2.png";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-import moment from "moment";
-
 
 export default function BookingPages() {
   const metadata = {

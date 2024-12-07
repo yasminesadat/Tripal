@@ -31,6 +31,8 @@ export default function Checkout(props) {
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
   const cart = location.state?.cart || [];
+  const currency=location.state?.currency||'EGP';
+  const exchangeRate=location.state?.exchangeRate||1;
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);
@@ -198,7 +200,7 @@ export default function Checkout(props) {
                   height: 'auto',
                 }}
               >
-                <Info totalPrice={'0'} cart={cart} />
+                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate}/>
               </Box>
             </Grid>
 

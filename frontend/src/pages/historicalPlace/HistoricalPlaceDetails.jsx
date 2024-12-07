@@ -7,15 +7,38 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getHistoricalPlaceDetails } from '../../api/HistoricalPlaceService'
 import { useLocation } from 'react-router-dom';
+import { getTouristCurrency,getConversionRate } from '@/api/ExchangeRatesService';
+
 const HistoricalPlaceDetails = ({userRole}) => {
   const location = useLocation();
-  const prices = location.state?.ticketPrices;
-  const currency = location.state?.currency;
   const { id } = useParams();
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState([51.505, -0.09,]);
   const [historicalPlace, setHistoricalPlace] = useState({});
   const [loading, setLoading] = useState(false);
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
   useEffect(() => {
     const getHistoricalPlaceDetail = async (historicalPLaceId) => {
       setLoading(true);
@@ -50,7 +73,7 @@ const HistoricalPlaceDetails = ({userRole}) => {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation OpeningHours={historicalPlace.openingHours} ticketPrices={prices} currency={currency} />
+                <OthersInformation OpeningHours={historicalPlace.openingHours} ticketPrices={historicalPlace.ticketPrices} currency={currency} exchangerate={exchangeRate}/>
               </div>
 
               <Overview Description={historicalPlace?.description} />
