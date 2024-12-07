@@ -116,8 +116,6 @@ return (
       <div className="pt-20 px-30">
       <div className="tabs -underline-2 js-tabs">
       <div className="d-flex items-center justify-between">
-        
-        
         <div className="tabs__controls row x-gap-20 y-gap-10 lg:x-gap-20 js-tabs-controls">
           {tabs.map((elm, i) => (
             <div
