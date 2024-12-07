@@ -28,7 +28,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   } = location.state || {}; 
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedQuantity, setSelectedQuantity] = useState(1); // New state for selected quantity
+  const [selectedQuantity, setSelectedQuantity] = useState(1); 
   const refProdToCart = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -58,7 +58,7 @@ const steps = [
     };
 
     fetchRatings();
-  }, [id]);
+  }, []);
 
   const handleAddToCart = async () => {
     if (!selectedQuantity || selectedQuantity < 1) {
@@ -95,14 +95,15 @@ const steps = [
   }, [location]);
 
 
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+  const getColorForUser = (userId) => {
+    if (!userId || typeof userId !== "string") {
+      return "#CCCCCC"; 
     }
-    return color;
+    const colors = ["#8f5774", "#dac4d0", "#e0829d", "#036264", "#5a9ea0","#11302a"];
+    const hash = userId.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
   };
+  
 
   return (
     <>
@@ -255,35 +256,34 @@ const steps = [
                   <span style={{ marginLeft: "5%" }}>({averageRating?.toFixed(2)})</span>{" "}
                 </Paragraph>
               </div>
-              <Space
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "20px",
-                }}
-              >
+             <div style={{display: "flex",
+                  alignItems: "center"}} >
                 {userRole === "Tourist" && (
                   <>
-                    <InputNumber
-                      defaultValue={1}
-                      min={1}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      onChange={(value) => setSelectedQuantity(value)} 
-                      style={{ textAlign: "center", width: "100px" }}
-                    />
-                    <Button
-                      className="button purple-button"
-                      type="primary"
-                      style={{ marginLeft: "10px" }}
-                      onClick={handleAddToCart} // Call handleAddToCart on button click
-                      ref={refProdToCart}
-                    >
-                      Add to Cart
-                    </Button>
-
+                    {quantity === 0 ? (
+                      <Paragraph style={{ color: "red", fontWeight: "bold", marginTop:"-5%" }}>
+                        Product out of stock
+                      </Paragraph>
+                    ) : (
+                      <>
+                        <InputNumber
+                          min={1}
+                          max={quantity}
+                          value={selectedQuantity}
+                          onChange={(value) => setSelectedQuantity(value)}
+                          style={{ marginRight: "10px", marginTop:"5%" }}
+                        />
+                        <Button
+                          className="button purple-button"
+                          type="primary"
+                          style={{ marginLeft: "10px", marginTop:"5%" }}
+                          onClick={handleAddToCart} 
+                          ref={refProdToCart}
+                        >
+                          Add to Cart
+                        </Button>
+                      </>
+                    )}
                     <style>{`
                   .purple-button {
                       background-color: #8f5774 !important;  /* Purple-600 */
@@ -297,8 +297,8 @@ const steps = [
                   `}</style>
                   </>
                 )}
-              </Space>
-            </Content>
+        </div>            
+        </Content>
           </div>
         </div>
         <Divider
@@ -319,7 +319,7 @@ const steps = [
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        style={{ backgroundColor: getRandomColor() }}
+                        style={{ backgroundColor: getColorForUser(item.userID._id) }}
                         icon={<UserOutlined />}
                       />
                     }
