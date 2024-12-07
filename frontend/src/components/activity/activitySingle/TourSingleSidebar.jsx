@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
-import { message } from "antd";
+import { message, Modal } from "antd";
 import { getUserData } from "@/api/UserService";
 import { bookResource } from "@/api/BookingService";
 import { checkTouristPromoCode } from "@/api/TouristService";
 import { loadStripe } from "@stripe/stripe-js";
+import { getWalletAndTotalPoints } from "@/api/TouristService";
+import { AlertCircle } from 'lucide-react';
 export default function TourSingleSidebar({ itinerary, activity, refActivityBook, refItineraryBook }) {
   const [userRole, setUserRole] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(1);
@@ -14,6 +16,11 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
   
   const [paymentMethod, setPaymentMethod] = useState("wallet");
   const [ticketNumber, setTicketCount] = useState(1);
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
+  
   const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
   const handlePromoCodeChange = (e) => {
@@ -54,6 +61,21 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
   }, []);
 
   useEffect(() => {
+    const fetchWalletData = async () => {
+      try {
+        const data = await getWalletAndTotalPoints();
+        console.log("Fetched Wallet Data:", data); // Debug log
+        setUpdatedWalletInfo(data.wallet);
+        setTotalPoints(data.totalPoints);
+      } catch (error) {
+        console.error("Error fetching wallet data:", error);
+      }
+    };
+
+    fetchWalletData();
+  }, []);
+
+  useEffect(() => {
     const intervalId = setInterval(async () => {
       const curr = getTouristCurrency();
       if (curr) {
@@ -80,20 +102,21 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
     return `${currency} ${convertedPrice}`;
   };
 
-
   const handleBookClick = async () => {
     try {
-      const response = await bookResource(
-        itinerary ? "itinerary" : "activity",
-        itinerary ? itinerary._id : activity._id,
-        ticketNumber,
-        myPromoCode,
-        paymentMethod
-      );
+      
       if (paymentMethod === "wallet") {
-        message.success(response.message);
-      } else if (paymentMethod === "card") {
+        showConfirmationModal();
 
+
+      } else if (paymentMethod === "card") {
+        const response = await bookResource(
+          itinerary ? "itinerary" : "activity",
+          itinerary ? itinerary._id : activity._id,
+          ticketNumber,
+          myPromoCode,
+          paymentMethod
+        );
         const stripe = await stripePromise;
         const { sessionId } = response;
   
@@ -117,6 +140,51 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
       message.error(error.response?.data?.error || "Booking failed");
     }
   };
+
+  const showConfirmationModal = () => setConfirmationModalVisible(true);
+  const cancelConfirmationModal = () => setConfirmationModalVisible(false);
+
+  const showWalletInfoModal = () => setWalletInfoModalVisible(true);
+  const closeWalletInfoModal = () => setWalletInfoModalVisible(false);
+
+ 
+  const handleWallet = async () => {
+    try {
+      const response = await bookResource(
+        itinerary ? "itinerary" : "activity",
+        itinerary ? itinerary._id : activity._id,
+        ticketNumber,
+        myPromoCode,
+        "wallet"
+      );
+
+      //message.success(response.message);
+    } catch (error) {
+      console.error("Booking error:", error);
+      message.error(error.response?.data?.error || "Booking failed");
+    }
+  };
+
+  const handleWalletPayment = async () => {
+    try {
+      const response = await bookResource(
+        itinerary ? "itinerary" : "activity",
+        itinerary ? itinerary._id : activity._id,
+        ticketNumber,
+        myPromoCode,
+        "wallet"
+      );
+      cancelConfirmationModal();
+      showWalletInfoModal();
+      
+      
+      message.success(response.message);
+    } catch (error) {
+      console.error("Booking error:", error);
+      message.error(error.response?.data?.error || "Booking failed");
+    }
+  };
+
 
 
   return (
@@ -286,7 +354,61 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
             Apply
           </button>
         </div>
-
+        <Modal
+            visible={isConfirmationModalVisible}
+            onOk={handleWalletPayment}
+            onCancel={cancelConfirmationModal}
+            okText="Yes, Pay"
+            cancelText="Cancel"
+            className="custom-confirmation-modal"
+            okButtonProps={{
+              className: "bg-[#036264] hover:bg-[#04494b] text-white",
+              style: { backgroundColor: '#036264', color: 'white' },
+            }}
+            cancelButtonProps={{
+              className: "text-gray-600 hover:text-gray-800",
+            }}
+          >
+            <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+              <AlertCircle className="text-[#036264] w-12 h-12" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <p className="text-gray-600">
+                  Are you sure you want to proceed with this payment? 
+                  Please review the details before confirming.
+                </p>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            title={null}
+            visible={isWalletInfoModalVisible}
+            onOk={closeWalletInfoModal}
+            footer={null}
+            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
+            style={{ 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              width: '350px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+            bodyStyle={{
+              backgroundColor: '#ffffff',
+              color: '#333',
+              textAlign: 'center',
+              padding: '30px 20px',
+            }}
+          >
+            <div className="wallet-modal-content">
+              <p>
+                <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+              </p>
+              <p>
+                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+              </p>
+            </div>
+          </Modal>
       </div>
       <style>{`
   .form-input {
