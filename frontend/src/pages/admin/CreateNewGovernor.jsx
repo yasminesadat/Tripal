@@ -163,23 +163,23 @@ export default function CreateNewGovernor() {
 
             <style>{`
         .sign-up-link {
-          color: var(--color-stone)!important;
+          color: var(--color-dark-purple)!important;
           font-weight: bold;
         }
         .sign-up-link:hover {
-          color: var(--color-stone-light)!important;
+          color: var(--color-light-purple)!important;
           font-weight: bold;
         }
-        .custom-button {
-          background-color: var(--color-stone-light) !important;
-          border-color: var(--color-stone-light)!important;
+       .custom-button {
+          background-color: var(--color-dark-purple) !important;
+          border-color: var(--color-light-purple)!important;
         }
         .custom-button:hover,
         .custom-button.ant-btn:hover,
         .custom-button.ant-btn:focus,
         .custom-button.ant-btn-primary:hover {
-          background-color:--color-stone !important;
-          border-color: var(--color-stone) !important;
+          background-color:--color-light-purple !important;
+          border-color: var(--color-light-purple) !important;
         }
 
         /* Custom outline color for input fields */
@@ -193,7 +193,25 @@ export default function CreateNewGovernor() {
           box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
         }
 
-        
+       .ant-form-item-label {
+          font-weight: bold;
+          font-size: 16px;
+          color: #4A4A4A;
+        }
+
+/* Specific label styling for 'Username' */
+        .ant-form-item-label[for="userName"] {
+          font-size: 18px;
+          color: #9b3d6d; /* Use a custom color */
+        }
+       
+        /* Fix for input hover color issue in password field */
+        .ant-input .ant-input-affix-wrapper:hover {
+          border-color: var(--color-light-purple) !important;
+          box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2) !important;
+        }
+
+       
 
         /* Username input default border color to gray */
         .ant-input {

@@ -37,6 +37,12 @@ export default function BookingPages() {
     exchangeRate,
   } = useParams();
 
+  const date1=  format((new Date(checkIn)), 'dd MMMM yyyy');
+  const date2=  format((new Date(checkOut)), 'dd MMMM yyyy');
+
+
+
+
 
   useEffect(() => {
     const calculatedTotal = (
@@ -45,6 +51,7 @@ export default function BookingPages() {
       (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber
     ).toFixed(2);
     setTotal(calculatedTotal); // Update the total
+    
   }, [
     singleNumber,
     doubleNumber,
@@ -107,7 +114,7 @@ export default function BookingPages() {
                           </div>
 
                           <h2 className="text-30 md:text-24 fw-700 mt-20">
-                            System, your order was submitted successfully!
+                            Your order was submitted successfully!
                           </h2>
                           <div className="mt-10">
                             Booking details has been sent to: booking@tourz.com
@@ -238,13 +245,13 @@ export default function BookingPages() {
 
                       <div className="">
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckInDate: {checkIn}</div>
+                          <div className="fw-500">CheckInDate: {date1}</div>
                           <div className="">{}</div>
                         </div>
 
                         <div className="line mt-10 mb-10"></div>
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckOut: {checkOut}</div>
+                          <div className="fw-500">CheckOut: {date2}</div>
                           <div className="">{}</div>
                         </div>
                         <div className="line mt-10 mb-10"></div>
@@ -301,32 +308,7 @@ export default function BookingPages() {
                           </div>
                         </div>
                       </div>
-                    </div>
-
-                    {/* <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
-                <h2 className="text-20 fw-500">Do you have a promo code?</h2>
-
-                <div className="contactForm mt-25">
-                  <div className="form-input ">
-                    <input type="text" required />
-                    <label className="lh-1 text-16 text-light-1">
-                      Promo code
-                    </label>
-                  </div>
-                </div>
-
-                <button className="button -md -outline-accent-1 text-accent-1 mt-30">
-                  Apply
-                  <i className="icon-arrow-top-right text-16 ml-10"></i>
-                </button>
-              </div> */}
-
-                    {/* <div className="mt-30">
-                <button className="button -md -dark-1 bg-accent-1 text-white col-12">
-                  Complete My Order
-                  <i className="icon-arrow-top-right text-16 ml-10"></i>
-                </button>
-              </div> */}
+                    </div> 
                   </div>
                 </div>
               </div>

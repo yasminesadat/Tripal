@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "./Components/Sidebar.jsx";
-import { speedFeatures } from "./Components/TourFilteringOptions.jsx";
-import Pagination from "./Components/pagination.jsx";
+import  { useState, useEffect, useRef } from "react";
+
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -22,57 +20,53 @@ import {  getHotels } from "../../api/HotelService.js";
 
 
 export default function TourList1() {
-  const [ setDdActives] = useState(false);
+  const [setDdActives] = useState(false);
   const [filteredHotels, setFilteredHotels] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); // New state for search query
   const dropDownContainer = useRef();
-  const {cityCode,dates1,dates2}  = useParams();
-  
-  const images=[img1,img2,img3,img4,img5,img6]
+  const { cityCode, dates1, dates2 } = useParams();
 
- 
- 
+  const images = [img1, img2, img3, img4, img5, img6];
 
-
-const fetchTourData = async () => {
-   try {
-       // console.log("hiiiiiiiiii",cityCode);
+  const fetchTourData = async () => {
+    try {
+      // Fetch hotel data
       const response = await getHotels(cityCode);
-  
-  
-      const transformedData = response.map((hotel,index) => ({
+
+      // Transform the data as before
+      const transformedData = response.map((hotel, index) => ({
         id: hotel.hotelId,
         title: hotel.name,
-        location: hotel.iataCode, 
-        description: "A beautiful hotel for a remarkable holiday.", 
-       price: 10000, // Default or mock price
-       fromPrice: 15000, // Default starting price
-       features: [
-        {
-          icon:`icon-price-tag`,
-          name: "Best Price Guarantee",
-        },
-        {
-          icon: `icon-check`,
-          name: "Free Cancellation",
-        },
-      ],
-        imageSrc: images[index % images.length], 
-        // featured: true,
-        // badgeText: "Best Seller",
+        location: hotel.iataCode,
+        description: "A beautiful hotel for a remarkable holiday.",
+        price: 10000, // Default or mock price
+        fromPrice: 15000, // Default starting price
+        features: [
+          {
+            icon: `icon-price-tag`,
+            name: "Best Price Guarantee",
+          },
+          {
+            icon: `icon-check`,
+            name: "Free Cancellation",
+          },
+        ],
+        imageSrc: images[index % images.length],
         duration: "1 night", // Default duration
       }));
-  
+
       // Set the transformed data to the component's state
       setFilteredHotels(transformedData);
-      }
-      catch (error) {
+    } catch (error) {
       console.error("Error fetching tours:", error);
     }
-  }; 
+  };
 
- 
+  // Filter the hotels based on the search query
+  const filteredHotelList = filteredHotels.filter(hotel =>
+    hotel.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Fetch tours on component mount and when sortOption changes
   useEffect(() => {
     fetchTourData();
   }, [cityCode]);
@@ -95,7 +89,7 @@ const fetchTourData = async () => {
 
   const metadata = {
     title: "Home || Tripal - Travel Agency",
-};
+  };
 
   return (
     <>
@@ -104,11 +98,20 @@ const fetchTourData = async () => {
         <TouristHeader />
         <main className="page-content">
         <section className="layout-pb-xl">
-      <div className="container" style={{placeItems:'center',marginRight:"10px"}}>
+        <div>
+          {/* Search bar */}
+          <input
+            type="text"
+            placeholder="Search for hotels..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+          />
+        </div>
+        <div className="container" style={{placeItems:'center',marginRight:"10px"}}>
           <div className="col-xl-9 col-lg-8" style={{}}>
             
             <div className="row y-gap-30 pt-30">
-              {filteredHotels.map((elm, i) => (
+              {filteredHotelList.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -180,13 +183,7 @@ const fetchTourData = async () => {
               ))}
             </div>
 
-            <div className="d-flex justify-center flex-column mt-60">
-              <Pagination />
-
-              <div className="text-14 text-center mt-20">
-                Showing results 1-30 of 1,415
-              </div>
-            </div>
+        
           </div>
         </div>
     </section>        </main>
