@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Menu from "../components/GuestMenu";
 import Currency from "../components/Currency";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -14,19 +14,6 @@ export default function GuestHeader({ refLogin, setOpen }) {
   };
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
-
-  const handleCurrencyChange = async (currency) => {
-    // const updatedProfileData = {
-    //   choosenCurrency: currency,
-    // };
-    // try {
-    //   await updateTouristInformation(updatedProfileData);
-    //   // sessionStorage.removeItem("currency");
-    //   // sessionStorage.setItem("currency", currency);
-    // } catch (error) {
-    //   message.error("Failed to update user information:", error);
-    // }
-  };
 
   return (
     <>
