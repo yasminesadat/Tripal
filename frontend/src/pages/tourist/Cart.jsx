@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getCart , removeFromCart} from "../../api/TouristService"
+import { getCart , removeFromCart, updateQuantity} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
-import { Button } from "antd";
+import { Button , InputNumber} from "antd";
 
 const metadata = {
     title: "My Cart || Tripal",
@@ -59,6 +59,24 @@ const Cart = () => {
 
     }, []);
 
+    const handleQuantityChange = async (productId, newQuantity) => {
+        try {
+          setCart((prevCart) =>
+            prevCart.map((item) =>
+              item.product._id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+            )
+          );
+      
+          await updateQuantity(productId, newQuantity);
+          fetchCart();
+        } catch (error) {
+          message.error("Failed to update product's quantity in cart.");
+        }
+      };
+      
+      
 
     if (loading) {
         return <Spinner />;
@@ -76,47 +94,71 @@ const Cart = () => {
                                 <h1 className="text-30">My Cart</h1>
                                 <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
                                     <div className="overflowAuto">
-                                        <table className="tableTest mb-30">
-                                            <thead className="bg-light-1 rounded-12">
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Price</th>
-                                                    <th>Quantity</th>
-                                                    <th>Total Price</th>
-                                                    <th></th>
+                                    <table className="tableTest mb-30">
+                                        <thead className="bg-light-1 rounded-12">
+                                            <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total Price</th>
+                                            <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {cart.map((item) => (
+                                                <tr key={item.product._id}>
+                                                    <td>
+                                                    <span style={{ marginRight: "20px" }}>
+                                                        {item.product.name}
+                                                    </span>
+                                                    <img
+                                                        src={item.product.picture}
+                                                        alt=""
+                                                        style={{ width: "70px", height: "70px" }}
+                                                    />
+                                                    </td>
+                                                    <td>{item.product.price.toFixed(2)}</td>
+                                                    <td>
+                                                    <InputNumber
+                                                        value={item.quantity}
+                                                        min={1}
+                                                        formatter={(value) =>
+                                                        `${value}`.replace(
+                                                            /\B(?=(\d{3})+(?!\d))/g,
+                                                            ","
+                                                        )
+                                                        }
+                                                        parser={(value) =>
+                                                        value?.replace(/\$\s?|(,*)/g, "")
+                                                        }
+                                                        onChange={(value) =>
+                                                        handleQuantityChange(item.product._id, value)
+                                                        }
+                                                        style={{ textAlign: "center", width: "100px" }}
+                                                    />
+                                                    </td>
+                                                    <td>
+                                                    {(item.product.price * item.quantity).toFixed(2)}
+                                                    </td>
+                                                    <td>
+                                                    <button
+                                                        style={{
+                                                        background: "none",
+                                                        border: "none",
+                                                        color: "red",
+                                                        textDecoration: "underline",
+                                                        cursor: "pointer",
+                                                        }}
+                                                        onClick={() => removeItem(item.product._id)}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {cart.map((item, i) => (
-                                                    <tr key={item.product._id}>
-                                                        <td><span style={{ marginRight: "20px" }}>{item.product.name}</span>
-                                                            <img
-                                                            src={item.product.picture}
-                                                            alt=""
-                                                            style={{ width: "70px", height: "70px" }}
-                                                            />
-                                                        </td>
-                                                        <td>{item.product.price.toFixed(2)}</td>
-                                                        <td>{item.quantity}</td>
-                                                        <td>{item.price.toFixed(2)}</td>
-                                                        <td>
-                                                        <button
-                                                          style={{
-                                                              background: "none",
-                                                              border: "none",
-                                                              color: "red",
-                                                              textDecoration: "underline",
-                                                              cursor: "pointer",
-                                                          }}
-                                                          onClick={() => removeItem(item.product._id)}
-                                                          >
-                                                              Remove
-                                                          </button>
-                                                        </td>
-                                                    </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+
                                         {cart.length>0 &&(
                                         <Button
                                             type="primary"
