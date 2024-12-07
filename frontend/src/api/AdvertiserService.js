@@ -18,21 +18,21 @@ export async function getAdvertiser() {
     throw error;
   }
 }
-export async function changeAdvertiserPassword(id, oldPassword, newPassword) {
+export async function changeAdvertiserPassword(oldPassword, newPassword) {
   try {
     const body = {
       "oldPassword": oldPassword,
       "newPassword": newPassword
     }
-    console.log(`/advertiser-change-pass/${id}`);
-    const response = await axios.put(`/advertiser-change-pass/${id}`, body);
+    console.log(`/advertiser-change-pass`);
+    const response = await axios.put(`/advertiser-change-pass`, body);
     return response.data;
   } catch (error) {
     console.error("error", error);
     throw error;
   }
 }
-export async function updateAdvertiser( updatedUser) {
+export async function updateAdvertiser(updatedUser) {
   try {
     const response = await axios.put(`/advertiser`, updatedUser);
     return response.data;

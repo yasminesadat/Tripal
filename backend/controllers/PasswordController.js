@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const changePassword = (userModel) => async (req, res) => {
     try {
+        console.log("first line");
         console.log("IM HERE TRYING TO CHANGE PASSWORD AS A ", userModel);
         const id = req.userId;
         const { oldPassword, newPassword } = req.body;
