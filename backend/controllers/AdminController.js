@@ -224,5 +224,20 @@ const getUsersPerMonth= async (req,res)=>{
   }
 }
 
+const getAdminNotifications = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const admin = await Admin.findById(userid);
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner,getTotalUsersCount,getUsersPerMonth };
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+    res.status(200).json(admin.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner,getTotalUsersCount,getUsersPerMonth, getAdminNotifications };

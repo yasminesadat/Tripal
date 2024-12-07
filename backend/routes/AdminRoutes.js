@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const validateIDs = require("../middleware/IDMiddleware");
 
-const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes, getDataForEventOwner, getTotalUsersCount, getUsersPerMonth } = require("../controllers/AdminController");
+const { deleteUser, addAdmin, getAllUsers, createPromoCode, getPromoCodes, getDataForEventOwner, getTotalUsersCount, getUsersPerMonth, getAdminNotifications } = require("../controllers/AdminController");
 
 const { changePassword } = require("../controllers/PasswordController.js");
 const Admin = require("../models/users/Admin.js");
@@ -92,5 +92,12 @@ router.get(
   verifyToken,
   authorizeRoles("Admin"),
   getUsersPerMonth
+);
+
+router.get(
+  "/admin/notifications",
+  verifyToken,
+  authorizeRoles("Admin"),
+  getAdminNotifications
 );
 module.exports = router;

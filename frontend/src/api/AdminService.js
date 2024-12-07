@@ -160,3 +160,13 @@ export const getEventOwnerData = async (userId) => {
     throw error;
   }
 };
+
+export async function getAdminNotifications() {
+  try {
+    const response = await axios.get('/admin/notifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+}

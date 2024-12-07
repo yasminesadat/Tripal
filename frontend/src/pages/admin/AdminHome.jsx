@@ -46,12 +46,7 @@ export default function AdminDashboard() {
 
                   <Activities />
 
-                  <div className="pt-40">
-                    <button className="button -md -outline-accent-1 col-12 text-accent-1">
-                      View More
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
             </div>

@@ -81,12 +81,15 @@ export default function AdvertiserHeader() {
           </div>
 
           <div className="header__right">
+
+          <AdvertiserNotification />
+
+
             <Link to="/help-center" className="ml-20">
               {/*/help-center*/}
               Help
             </Link>
 
-            <AdvertiserNotification />
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}

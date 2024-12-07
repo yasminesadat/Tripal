@@ -2,11 +2,38 @@ const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Admin = require("../models/users/Admin")
+const {sendEmail} = require('./Mailer');
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+
+const sendEmailProduct = async (mail, productname,productid) => {
+ 
+  const userName = userData.userName;
+
+  const subject = `Product Out of Stock`;
+  const html = `
+    <p>Dear ${userName},</p>
+    <p>We wanted to inform you that your product: <strong>${productname}</strong> id: <strong>${productid}</strong> is out of stock. Please try to restock as soon as possible.</p>
+    <p>If you have any questions or believe this email was a mistake, please <a href="mailto:support@tripal.com">contact support</a>.</p>
+    <p>Thank you for your understanding.</p>
+    <p>Best regards,</p>
+    <p>Your Support Team</p>
+  `;
+
+  try {
+    await sendEmail(mail, subject, html);
+    console.log('Product flag notification email sent successfully');
+  } catch (error) {
+    console.error('Failed to send activity flag notification email:', error);
+  }
+};
+
 
 const updateProductQuantity = async (productId, quantity) => {
   try {
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("seller");
 
     if (!product) {
       return res.status(404).json({ message: "Product not found." });
@@ -17,6 +44,25 @@ const updateProductQuantity = async (productId, quantity) => {
     }
 
     product.quantity -= quantity;
+
+    if (product.quantity==0){
+
+      //Seller Part
+      product.seller.notificationList.push({message:`Product ${product._id} is out of stock!`});
+      sendEmailProduct(product.seller.email,product.name,product._id);
+      
+
+      //Admin Part
+      const admins= await Admin.find();
+      admins.forEach((admin)=>{
+        admin.notificationList.push({message:`Product ${product._id} by Seller ${product.seller.name} id ${product.seller._id}   is out of stock!`});
+      })
+      
+      await product.seller.save();
+      await Admin.save();
+    }
+
+    
 
     await product.save();
   } catch (error) {

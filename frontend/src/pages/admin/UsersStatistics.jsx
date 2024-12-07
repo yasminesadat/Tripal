@@ -43,7 +43,7 @@ export default function UserStatistics({totalUsers}) {
         console.log("hi1")
         StatictiesAdminUsers[1].data[5].value=totalUsers;
 
-        console.log(totalUsers)
+        console.log( StatictiesAdminUsers[1].data[5].value)
        
       } catch (error) {
         console.error("Error fetching revenue data:", error);
@@ -53,7 +53,7 @@ export default function UserStatistics({totalUsers}) {
     
 
     fetchMonths();
-  },[]);
+  },[totalUsers]);
 
 
   const chart = (interval) => (
