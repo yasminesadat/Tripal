@@ -6,6 +6,9 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
 import { addToCart } from "../../api/TouristService";
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getUserData } from "@/api/UserService";
+
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -23,14 +26,52 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     picture,
     averageRating,
     sales,
-    userRole,
-    userId
+    //userRole,
+    //userId
   } = location.state || {}; 
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedQuantity, setSelectedQuantity] = useState(1); // New state for selected quantity
   const refProdToCart = useRef(null);
   const [open, setOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [userRole, setUserRole] = useState("");
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [currency, setCurrency] = useState( "EGP");
+  
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData();
+        setUserRole(userData.data.role);
+        setUserId(userData.data.id);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
 const steps = [
   {
@@ -66,7 +107,7 @@ const steps = [
       return;
     }
     try {
-      const response = await addToCart(userId, id, selectedQuantity);
+      await addToCart(userId, id, selectedQuantity);
       message.success("Product added to cart successfully!");
       
     } catch (error) {
@@ -231,7 +272,7 @@ const steps = [
               <div style={{ minHeight: 280 }}>
                 <Title level={1}>{name}</Title>
                 <Paragraph>
-                  <strong>Price:</strong> {price}
+                  <strong>Price:</strong> {}{currency||'EGP'} {(price*exchangeRate).toFixed(2)}
                 </Paragraph>
                 <Paragraph>
                   <strong>Seller:</strong> {seller}
