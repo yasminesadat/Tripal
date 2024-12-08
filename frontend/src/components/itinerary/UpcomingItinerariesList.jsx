@@ -259,7 +259,7 @@ export default function ItinerariesList({
     return `${day}/${month}/${year}`;
   };
 //#endregion
-  
+if(loading)return <Spinner/>
   return (
     <section className="layout-pb-xl">
       <div className="container">
@@ -326,11 +326,9 @@ export default function ItinerariesList({
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                  {loading ? (
-                    <span><Spinner/></span>
-                  ) : (
+                 
                     <span>{filteredItineraries?.length} results</span>
-                  )}
+                
                 </div>
               </div>
 

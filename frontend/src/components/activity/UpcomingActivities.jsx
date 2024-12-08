@@ -8,6 +8,7 @@ import { getUserData } from "@/api/UserService";
 import {viewUpcomingActivities,} from "@/api/ActivityService";
 import { getAdminActivities} from "@/api/AdminService";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+import Spinner from "../common/Spinner";
 
 
 export default function ActivitiesList({
@@ -259,6 +260,7 @@ export default function ActivitiesList({
     return `${day}/${month}/${year}`;
   };
   //#endregion
+  if(loading)return <Spinner/>
 
   return (
     <section className="layout-pb-xl">
@@ -323,11 +325,8 @@ export default function ActivitiesList({
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                  {loading ? (
-                    <span>Loading results...</span>
-                  ) : (
                     <span>{filteredActivities?.length} results</span>
-                  )}
+                  
                 </div>
               </div>
 
