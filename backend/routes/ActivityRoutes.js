@@ -15,7 +15,9 @@ const {
   viewHistoryActivities,
   getActivityById,
   getAllActivities,
+  getActivityBookings,
   revenue,
+  getAdvertiserBookings,
 } = require("../controllers/ActivityController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
@@ -31,6 +33,18 @@ router.get(
   verifyToken,
   authorizeRoles("Advertiser"),
   getAdvertiserActivities
+);
+router.get(
+  "/activity-bookings:id",
+  verifyToken,
+  authorizeRoles("Advertiser"),
+  getActivityBookings
+);
+router.get(
+  "/my-activities-bookings",
+  verifyToken,
+  authorizeRoles("Advertiser"),
+  getAdvertiserBookings
 );
 router.get("/activity/:id", getActivityById);
 router.post(
