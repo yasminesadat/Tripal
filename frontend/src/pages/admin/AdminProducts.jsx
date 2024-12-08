@@ -1,5 +1,4 @@
 import ProductList from "../../components/product/ProductList";
-import FooterThree from "@/components/layout/footers/FooterThree";
 import Header from "@/components/dasboard/Header";
 import Sidebar from "@/components/dasboard/Sidebar";
 import { useState } from "react";
@@ -16,7 +15,9 @@ const AdminProducts = () => {
           <Header setSideBarOpen={setSideBarOpen} />
           <div>
             <ProductList />
-            <FooterThree/>
+            <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>
           </div>
         </div>
     </div>
