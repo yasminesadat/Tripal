@@ -27,11 +27,11 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [error, setError] = useState(null);
   const [filterHistoricType, setFilterHistoricType] = useState([]);
   const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState([]);
-  const placesPerPage = 1;
+  const placesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastPlace = currentPage * placesPerPage;
   const indexOfFirstPlace = indexOfLastPlace - placesPerPage;
-  const currentPlaces = viewedPlaces.slice(indexOfFirstPlace,indexOfLastPlace);
+  const currentPlaces = viewedPlaces.slice(indexOfFirstPlace, indexOfLastPlace);
 
   const steps = [
     {
@@ -397,13 +397,13 @@ export default function HistoricalPlacesList({ searchTerm }) {
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                 
-                    <span>{viewedPlaces?.length} results</span>
-                
+
+                  <span>{viewedPlaces?.length} results</span>
+
                 </div>
               </div>
-              {loading&&
-                    <span><Spinner /></span>
+              {loading &&
+                <span><Spinner /></span>
               }
             </div>
             <style>
@@ -480,19 +480,19 @@ export default function HistoricalPlacesList({ searchTerm }) {
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10"style={{backgroundColor: '#8f5774'}}>
+                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
                               {elm2.name}
                             </div>
                           </div>
                         ))}
                         {elm.historicalPeriod?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                             <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{backgroundColor: '#8f5774'}}>
-                               {elm2.name}
-                            </div> 
+                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
+                              {elm2.name}
+                            </div>
                           </div>
                         ))}
-                       </div>
+                      </div>
 
                     </div>
 
@@ -505,7 +505,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5">
-                              {currency} {getMinPrice(elm)}
+                              From  {currency ? currency : "EGP"} {getMinPrice(elm)}
                             </span>
                           </div>
                         </div>
