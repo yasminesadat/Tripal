@@ -317,7 +317,7 @@ export default function Checkout(props) {
                         alignSelf: "start",
                         width: { xs: "100%", sm: "auto" },
                       }}
-                      onAbort={() => {
+                      onClick={() => {
                         navigate("/orders");
                       }}
                     >
