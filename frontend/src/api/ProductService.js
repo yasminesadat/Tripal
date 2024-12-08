@@ -30,7 +30,7 @@ export const fetchProducts = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error;
+    throw new Error("Failed to fetch products");
   }
 };
 
@@ -42,7 +42,7 @@ export const fetchProductImages = async (productIds) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching product images:", error);
-    throw error;
+    throw new Error("Failed to fetch product images");
   }
 };
 

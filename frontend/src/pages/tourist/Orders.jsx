@@ -7,6 +7,8 @@ import Pagination from "../../components/common/Pagination";
 import { getOrders } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -39,7 +41,6 @@ const Orders = () => {
         );
         setOrders(ordersWithImages);
       } catch (error) {
-        console.error("Error fetching orders:", error);
         message.error(error.message);
       }
     };
@@ -109,17 +110,20 @@ const Orders = () => {
                             <td>#{order._id.slice(-6)}</td>
                             <td className="min-w-300">
                               <div className="d-flex items-center">
-                                {/* Display the first product image as a placeholder */}
-                                <img
-                                  src={order.images[0] || "/placeholder.jpg"}
-                                  alt="Order"
-                                  style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    borderRadius: "4px",
-                                    objectFit: "cover",
-                                  }}
-                                />
+                                {order.images.slice(0, 5).map((image, idx) => (
+                                  <img
+                                    key={idx}
+                                    src={image || "/placeholder.jpg"}
+                                    alt="Order"
+                                    style={{
+                                      width: "70px", // Increased size
+                                      height: "70px", // Increased size
+                                      borderRadius: "4px",
+                                      objectFit: "cover",
+                                      marginRight: "10px", // Increased spacing
+                                    }}
+                                  />
+                                ))}
                               </div>
                             </td>
                             <td>
@@ -136,16 +140,24 @@ const Orders = () => {
                             </td>
                             <td>${order.totalPrice.toFixed(2)}</td>
                             <td>
-                              <div className="d-flex items-center">
+                              <div
+                                className={`d-flex items-center ${
+                                  order.status !== "Pending"
+                                    ? "justify-center"
+                                    : ""
+                                }`}
+                              >
+                                {order.status === "Pending" && (
+                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10 cancel-button">
+                                    <FontAwesomeIcon icon={faTimesCircle} />
+                                  </button>
+                                )}
                                 <Link
                                   to={`/order-details/${order._id}`}
-                                  className="button -dark-1 size-35 bg-light-1 rounded-full flex-center"
+                                  className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10 info-button"
                                 >
-                                  <i className="icon-pencil text-14"></i>
+                                  <FontAwesomeIcon icon={faInfoCircle} />
                                 </Link>
-                                <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                  <i className="icon-delete text-14"></i>
-                                </button>
                               </div>
                             </td>
                           </tr>
@@ -165,6 +177,29 @@ const Orders = () => {
         </main>
         <FooterThree />
       </div>
+      <style>{`
+        .cancel-button {
+          background-color: red !important;
+          color: white;
+        }
+
+        .info-button {
+          background-color: var(--color-dark-purple) !important;
+          color: white;
+        }
+
+        .cancel-button:hover {
+          background-color: darkred !important;
+        }
+
+        .info-button-hover {
+          background-color: var(--color-light-purple) !important;
+        }
+
+        .justify-center {
+          justify-content: center;
+        }
+      `}</style>
     </>
   );
 };
