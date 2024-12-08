@@ -361,18 +361,18 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                           value={selectedQuantity}
                           onChange={(value) => setSelectedQuantity(value)}
                         />
-                         <Button
-                      className="button purple-button"
-                      type="primary"
-                      onClick={handleAddToCart}
-                      ref={refProdToCart}
-                    >
-                      Add to Cart
-                    </Button>
+                        <Button
+                          className="button purple-button"
+                          type="primary"
+                          onClick={handleAddToCart}
+                          ref={refProdToCart}
+                        >
+                          Add to Cart
+                        </Button>
                       </div>
                     )}
-                     <style>
-                  {`
+                    <style>
+                      {`
                   .purple-button {
                     background-color: #8f5774 !important; /* Purple-600 */
                     color: white !important;
@@ -383,7 +383,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                     background-color: #5d384d !important; /* Purple-700 */
                   }
                   `}
-                </style>
+                    </style>
                   </>
                 )}
               </div>
@@ -432,7 +432,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
           ) : (
             <p>No reviews available for this product.</p>
           )}
-          {userId === product.productSeller && (
+          {(userId === product.productSeller || userRole === "Admin") && (
             <>
               <Divider orientation="left" style={{ borderColor: "#aaa" }}>
                 Revenue

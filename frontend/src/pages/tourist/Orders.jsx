@@ -68,7 +68,11 @@ const Orders = () => {
         )
       );
       setSuccessMessage(
-        `Order canceled successfully. <strong>${response.orderPrice} EGP</strong> have been redeemed into your wallet. Your new wallet balance is <strong>${response.newWalletAmount} EGP</strong>.`
+        `Order canceled successfully. <strong>${response.orderPrice.toFixed(
+          2
+        )} EGP</strong> have been redeemed into your wallet. Your new wallet balance is <strong>${response.newWalletAmount.toFixed(
+          2
+        )} EGP</strong>.`
       );
       setIsSuccessModalVisible(true);
     } catch (error) {
@@ -239,6 +243,7 @@ const Orders = () => {
         title="Order Cancellation"
         open={isSuccessModalVisible}
         onOk={() => setIsSuccessModalVisible(false)}
+        onCancel={() => setIsSuccessModalVisible(false)}
         footer={[
           <button
             key="Ok"

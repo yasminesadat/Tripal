@@ -22,7 +22,12 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post("/products", verifyToken, authorizeRoles("Seller"), createProduct);
 router.get("/products", getProducts);
-router.get("/product/:id", verifyToken, authorizeRoles("Tourist"), getProduct);
+router.get(
+  "/product/:id",
+  verifyToken,
+  authorizeRoles("Tourist", "Seller", "Admin"),
+  getProduct
+);
 router.get("/products/search", searchProductsByName);
 router.get("/products/filter", filterProductsByPrice);
 router.get("/products/sort", sortProductsByRatings);

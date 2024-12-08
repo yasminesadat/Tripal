@@ -192,7 +192,6 @@ export default function ItinerariesList({
     selectedLanguage,
   ]);
 
-
   useEffect(() => {}, [filteredItineraries]);
 
   useEffect(() => {
