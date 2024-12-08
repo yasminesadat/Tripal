@@ -71,7 +71,7 @@ const amadeus = new Amadeus({
     const { hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, pricing, singlePricing, doublePricing, triplePricing, status, paymentMethod } = req.body;
     console.log("REQUEST", req.body);
     const userId = req.userId;
-  
+    
     try {
       const existingTourist = await Tourist.findById(userId);
       if (!existingTourist) {
@@ -79,7 +79,7 @@ const amadeus = new Amadeus({
       }
       console.log('Received payment method:', paymentMethod);
   
-  
+
       if (paymentMethod === 'wallet') {
         existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
   
@@ -125,7 +125,7 @@ const amadeus = new Amadeus({
                   name: `${hotelname} - ${cityCode}`,
                   description: `Hotel ID: ${hotelid} | ${checkIn} - ${checkOut}`,
                 },
-                unit_amount: pricing * 100, // Convert to smallest currency unit (e.g., EGP cents)
+                unit_amount: Math.round (pricing * 100), // Convert to smallest currency unit (e.g., EGP cents)
               },
               quantity: 1,
             },
