@@ -116,7 +116,9 @@ const OrderDetails = () => {
                     <div
                       className="product-details"
                       onClick={() =>
-                        (window.location.href = `/tourist/view-products/product/${item._id}`)
+                        item.isArchived
+                          ? message.error("Product no longer exists")
+                          : (window.location.href = `/tourist/view-products/product/${item._id}`)
                       }
                     >
                       <h3>{item.product.name}</h3>
