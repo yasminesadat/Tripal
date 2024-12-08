@@ -12,6 +12,13 @@ const AdminSchema = new Schema(
       type: String,
       required: true,
     },
+    notificationList:[ {
+      message: String,
+      read: {type:Boolean , default: false} ,
+      createdAt:{type:Date , default: Date.now} ,
+      icon: {type:String, default:"icon-home"}
+    }]
+
 
   },
   { timestamps: true }

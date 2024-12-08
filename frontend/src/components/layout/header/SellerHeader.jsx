@@ -5,6 +5,7 @@ import { profile } from "@/data/sellerMenu";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { logout } from "@/api/UserService";
+import SellerNotification from "@/components/common/NotificationSeller";
 export default function SellerHeader() {
   const navigate = useNavigate();
 
@@ -77,11 +78,19 @@ export default function SellerHeader() {
             </button>
           </div>
 
+        
+
           <div className="header__right">
+
+          <SellerNotification/>
+
+
             <Link to="/help-center" className="ml-20">
               {/*/help-center*/}
               Help
             </Link>
+
+
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}

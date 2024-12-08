@@ -241,6 +241,9 @@ const Requests = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>
                 </div>
             </div>
 

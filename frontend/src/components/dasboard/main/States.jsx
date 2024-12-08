@@ -3,7 +3,7 @@ import { states as initialStates} from "@/data/dashboard";
 import React,{useEffect, useState} from "react";
 import {message} from 'antd';
 
-export default function States() {
+export default function States({setTotalUsers}) {
 
   const [states, setStates] = useState(initialStates);
 
@@ -15,6 +15,7 @@ export default function States() {
       // Update the state using setStates to trigger a re-render
       const updatedStates = [...states]; // Create a copy of the states array
       updatedStates[0].amount = response; // Update the amount in the first state
+      setTotalUsers(response);
       setStates(updatedStates); // Set the updated states
 
     } catch (error) {
