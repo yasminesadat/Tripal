@@ -69,7 +69,10 @@ EMAIL_PASS=
 * **Reviews & Ratings:** Users can rate and review activities, products, and tour guides.
 * **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
+<img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
 
+
+<img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/e933a77e-fd44-4349-8a52-5ecf584bcd5c">
 ##  API References
 
 
