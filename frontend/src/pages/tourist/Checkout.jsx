@@ -22,6 +22,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { message, Modal } from 'antd';
 import { getWalletAndTotalPoints } from '@/api/TouristService';
 import { AlertCircle } from 'lucide-react';
+import { getTouristCurrency,getConversionRate } from '@/api/ExchangeRatesService';
 
 const steps = ['Shipping address', 'Payment details'];
 
@@ -30,9 +31,30 @@ export default function Checkout(props) {
   const [address, setAddress] = useState(null);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
+
+  const [currency, setCurrency] = useState( "EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const getExchangeRate = async () => {
+  if (currency) {
+      try {
+      const rate = await getConversionRate(currency);
+      setExchangeRate(rate);
+      } catch (error) {
+      message.error("Failed to fetch exchange rate.");
+  }
+}
+};
+
+useEffect(() => {
+const intervalId = setInterval(() => {
+  const newCurrency = getTouristCurrency();
+  setCurrency(newCurrency);
+  getExchangeRate();
+}, 1);  return () => clearInterval(intervalId);
+}, [currency]);
+
   const cart = location.state?.cart || [];
-  const currency=location.state?.currency||'EGP';
-  const exchangeRate=location.state?.exchangeRate||1;
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Tour, Card, Rate, message, Input, Select, Slider } from "antd";
-import { fetchProducts, archiveProduct, unArchiveProduct } from "../../api/ProductService";
+import { Tour, message, Input, Slider } from "antd";
+import { fetchProducts } from "../../api/ProductService";
 import { getUserData } from "../../api/UserService";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
@@ -29,7 +29,6 @@ export default function ProductList() {
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  const [exchangeRate, setExchangeRate] = useState(1);
   const errorDisplayedRef = useRef(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -116,6 +115,7 @@ export default function ProductList() {
     }
   };
 
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState( "EGP");
 
   const getExchangeRate = async () => {
@@ -533,7 +533,7 @@ export default function ProductList() {
                     productSeller={product.seller._id}
                     name={product.name}
                     description={product.description}
-                    price={`${currency||"EGP"} ${(product.price*exchangeRate).toFixed(2)}`}
+                    price={product.price}
                     picture={product.picture}
                     seller={product.seller.name}
                     quantity={product.quantity}

@@ -102,6 +102,7 @@ export default function ProductRevenue({ productSales, price }) {
           tickCount={7}
           interval={interval}
         />
+
         <Tooltip />
         <Line
           type="monotone"

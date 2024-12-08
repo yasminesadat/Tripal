@@ -29,7 +29,7 @@ const handleBookmark = async (eventId, eventType) => {
   try {
     await bookmarkEvent(eventId, eventType);
     //setIsBookmarked(true);
-    message.success("Added to Bookmarked Events")
+    message.success("Added Event to Bookmark")
   } catch (error) {
     console.error('Error bookmarking event:', error);
   }
@@ -76,13 +76,9 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       const response = await getActivityById(activityId);
       setActivity(response.data);
     } catch (error) {
-      message.error("Failed to fetch activities.");
+      // message.error("Failed to fetch activities.");
     }
   };
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
   //#endregion
   
   if (loading || !activity) return <div><Spinner/></div>; 
@@ -163,7 +159,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
                 style={{ cursor: "pointer" }}
                 onClick={() => handleBookmark(activity._id, "activity")}
               ></i>
-              Add to Wishlist
+              Add to Bookmark
             </div>
           </div>
 

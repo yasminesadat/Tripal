@@ -7,6 +7,8 @@ import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
 import { addToCart } from "../../api/TouristService";
 import ProductRevenue from "./ProductRevenue";
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getUserData } from "@/api/UserService";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -24,14 +26,52 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     picture,
     averageRating,
     sales,
-    userRole,
-    userId
+    //userRole,
+    //userId
   } = location.state || {}; 
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedQuantity, setSelectedQuantity] = useState(1); // New state for selected quantity
+  const [selectedQuantity, setSelectedQuantity] = useState(1); 
   const refProdToCart = useRef(null);
   const [open, setOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [userRole, setUserRole] = useState("");
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [currency, setCurrency] = useState( "EGP");
+  
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData();
+        setUserRole(userData.data.role);
+        setUserId(userData.data.id);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
 const steps = [
   {
@@ -59,7 +99,7 @@ const steps = [
     };
 
     fetchRatings();
-  }, [id]);
+  }, []);
 
   const handleAddToCart = async () => {
     if (!selectedQuantity || selectedQuantity < 1) {
@@ -67,7 +107,7 @@ const steps = [
       return;
     }
     try {
-      const response = await addToCart(userId, id, selectedQuantity);
+      await addToCart(userId, id, selectedQuantity);
       message.success("Product added to cart successfully!");
       
     } catch (error) {
@@ -96,14 +136,15 @@ const steps = [
   }, [location]);
 
 
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+  const getColorForUser = (userId) => {
+    if (!userId || typeof userId !== "string") {
+      return "#CCCCCC"; 
     }
-    return color;
+    const colors = ["#8f5774", "#dac4d0", "#e0829d", "#036264", "#5a9ea0","#11302a"];
+    const hash = userId.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
   };
+  
 
   return (
     <>
@@ -232,7 +273,7 @@ const steps = [
               <div style={{ minHeight: 280 }}>
                 <Title level={1}>{name}</Title>
                 <Paragraph>
-                  <strong>Price:</strong> {price}
+                  <strong>Price:</strong> {}{currency||'EGP'} {(price*exchangeRate).toFixed(2)}
                 </Paragraph>
                 <Paragraph>
                   <strong>Seller:</strong> {seller}
@@ -256,35 +297,34 @@ const steps = [
                   <span style={{ marginLeft: "5%" }}>({averageRating?.toFixed(2)})</span>{" "}
                 </Paragraph>
               </div>
-              <Space
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "20px",
-                }}
-              >
+             <div style={{display: "flex",
+                  alignItems: "center"}} >
                 {userRole === "Tourist" && (
                   <>
-                    <InputNumber
-                      defaultValue={1}
-                      min={1}
-                      formatter={(value) =>
-                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      }
-                      parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-                      onChange={(value) => setSelectedQuantity(value)} 
-                      style={{ textAlign: "center", width: "100px" }}
-                    />
-                    <Button
-                      className="button purple-button"
-                      type="primary"
-                      style={{ marginLeft: "10px" }}
-                      onClick={handleAddToCart} // Call handleAddToCart on button click
-                      ref={refProdToCart}
-                    >
-                      Add to Cart
-                    </Button>
-
+                    {quantity === 0 ? (
+                      <Paragraph style={{ color: "red", fontWeight: "bold", marginTop:"-5%" }}>
+                        Product out of stock
+                      </Paragraph>
+                    ) : (
+                      <>
+                        <InputNumber
+                          min={1}
+                          max={quantity}
+                          value={selectedQuantity}
+                          onChange={(value) => setSelectedQuantity(value)}
+                          style={{ marginRight: "10px", marginTop:"5%" }}
+                        />
+                        <Button
+                          className="button purple-button"
+                          type="primary"
+                          style={{ marginLeft: "10px", marginTop:"5%" }}
+                          onClick={handleAddToCart} 
+                          ref={refProdToCart}
+                        >
+                          Add to Cart
+                        </Button>
+                      </>
+                    )}
                     <style>{`
                   .purple-button {
                       background-color: #8f5774 !important;  /* Purple-600 */
@@ -298,8 +338,8 @@ const steps = [
                   `}</style>
                   </>
                 )}
-              </Space>
-            </Content>
+        </div>            
+        </Content>
           </div>
         </div>
         <Divider
@@ -320,7 +360,7 @@ const steps = [
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        style={{ backgroundColor: getRandomColor() }}
+                        style={{ backgroundColor: getColorForUser(item.userID._id) }}
                         icon={<UserOutlined />}
                       />
                     }
