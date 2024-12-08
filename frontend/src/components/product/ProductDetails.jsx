@@ -6,9 +6,9 @@ import { UserOutlined } from "@ant-design/icons";
 import { InputNumber } from "antd";
 import ReviewBox from "../common/ReviewBox";
 import { addToCart } from "../../api/TouristService";
+import ProductRevenue from "./ProductRevenue";
 import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getUserData } from "@/api/UserService";
-
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -384,6 +384,18 @@ const steps = [
           ) : (
             <p>No reviews available for this product.</p>
           )}
+          <Divider
+            orientation="left"
+            style={{ borderColor: "#aaa" }}
+          >
+            Revenue
+          </Divider>
+
+          <ProductRevenue 
+            productSales={sales} 
+            price={price}
+          />
+
           <Divider />
           {userRole === "Tourist" && <ReviewBox id={id} type={"products"} />}
 

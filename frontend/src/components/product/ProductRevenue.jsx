@@ -9,20 +9,29 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+const extractPrice = (priceString) => {
+  const numericValue = parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+  return numericValue;
+};
+
 export default function ProductRevenue({ productSales, price }) {
-  const [tabs, setTabs] = useState([{ label: "Sales Revenue", data: [] }, { label: "Product Sales", data: [] }]);
+  const [tabs, setTabs] = useState([
+    { label: "Revenue", data: [] },
+    { label: "Product Sales", data: [] },
+  ]);
+
+  const priceNoCurrency = price ? extractPrice(price) : 0;
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [revenue, setRevenue] = useState([]);
+  const [sortOption, setSortOption] = useState("monthly");
   const sortOptions = [
     { label: "Monthly", order: "month" },
     { label: "Daily", order: "date" },
   ];
   const [ddActives, setDdActives] = useState(false);
-  const [sortOption, setSortOption] = useState("");
-  
+
   const dropDownContainer = useRef();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -38,66 +47,62 @@ export default function ProductRevenue({ productSales, price }) {
     };
   }, []);
 
-  // Generate a random past date for sales (for demonstration purposes)
-  const generateRandomPastDate = (start, end) => {
-    const startDate = new Date(start.getTime());
-    const randomDate = new Date(startDate.getTime() + Math.random() * (end.getTime() - startDate.getTime()));
-    return randomDate.toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
-  };
-
-  // Setup revenue and sales data
   useEffect(() => {
-    const startDate = new Date();
-    startDate.setFullYear(startDate.getFullYear() - 1); // 1 year in the past
-    const endDate = new Date(); // Today
+    if (productSales && priceNoCurrency > 0) {
+      const updatedSales = [
+        {
+          name: new Date().toISOString().split("T")[0],
+          value: productSales,
+        },
+      ];
 
-    // Generate random sales data
-    let updatedSales = productSales.map((sale) => ({
-      name: generateRandomPastDate(startDate, endDate),
-      value: sale.quantity,
-    }));
+      const salesRevenue = updatedSales.map((sale) => ({
+        fullDate: new Date(sale.name).toISOString().split("T")[0],
+        monthDate: new Date(sale.name).toLocaleString("default", { month: "long" }),
+        value: sale.value * priceNoCurrency,
+      }));
 
-    // Revenue based on sales * price
-    let salesRevenue = updatedSales.map((sale) => ({
-      fullDate: generateRandomPastDate(startDate, endDate),
-      monthDate: new Date(sale.name).toLocaleString('default', { month: 'long' }),
-      value: sale.value * price,
-    }));
+      setRevenue(salesRevenue);
+      setTabs([
+        { label: "Revenue", data: salesRevenue },
+        { label: "Product Sales", data: updatedSales },
+      ]);
+    }
+  }, [productSales, priceNoCurrency]);
 
-    setRevenue(salesRevenue);
-
-    // Update tabs with sales and revenue data
-    setTabs([
-      { label: "Sales Revenue", data: salesRevenue },
-      { label: "Product Sales", data: updatedSales },
-    ]);
-  }, [productSales, price]);
-
-  // Update revenue chart when sorting option changes
   useEffect(() => {
-    setTabs((prevTabs) => (
-      prevTabs.map((tab) =>
-        tab.label === "Sales Revenue"
-          ? {
-              ...tab,
-              data: revenue.map((sale) => ({
-                name: sortOption.order === "month" ? sale.monthDate : sale.fullDate,
-                value: sale.value,
-              })),
-            }
-          : tab
-      )
-    ));
-    setActiveTab((prevTab) => (prevTab.label === "Sales Revenue" ? tabs[0] : tabs[1]));
-  }, [sortOption]);
+    if (revenue.length > 0) {
+      setTabs((prevTabs) =>
+        prevTabs.map((tab) =>
+          tab.label === "Revenue"
+            ? {
+                ...tab,
+                data: revenue.map((sale) => ({
+                  name: sortOption === "month" ? sale.monthDate : sale.fullDate,
+                  value: sale.value,
+                })),
+              }
+            : tab
+        )
+      );
+      setActiveTab((prevTab) =>
+        prevTab.label === "Revenue" ? tabs[0] : tabs[1]
+      );
+    }
+  }, [sortOption, revenue]);
 
-  // Chart rendering logic
   const chart = (interval) => (
     <ResponsiveContainer height={500} width="100%">
       <LineChart data={activeTab.data}>
         <CartesianGrid strokeDasharray="" />
         <XAxis tick={{ fontSize: 12 }} dataKey="name" interval={interval} />
-        <YAxis tick={{ fontSize: 12 }} domain={[0, 300]} tickCount={7} interval={interval} />
+        <YAxis
+          tick={{ fontSize: 12 }}
+          domain={[0, 300]}
+          tickCount={7}
+          interval={interval}
+        />
+
         <Tooltip />
         <Line
           type="monotone"
@@ -131,12 +136,15 @@ export default function ProductRevenue({ productSales, price }) {
               </div>
             </div>
 
-            {activeTab.label === "Sales Revenue" && (
+            {activeTab.label === "Revenue" && (
               <div ref={dropDownContainer} className="col-auto">
-                <div className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""}`} data-main-value="">
+                <div
+                  className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""}`}
+                  data-main-value=""
+                >
                   <div className="dropdown__button js-button" onClick={() => setDdActives((prev) => !prev)}>
                     <span>View Revenue</span>
-                    <span className="js-title">{sortOption.label ? sortOption.label : ""}</span>
+                    <span className="js-title">{sortOption ? sortOption : ""}</span>
                     <i className="icon-chevron-down"></i>
                   </div>
 
@@ -144,7 +152,7 @@ export default function ProductRevenue({ productSales, price }) {
                     {sortOptions.map((elm, i) => (
                       <div
                         onClick={() => {
-                          setSortOption(elm);
+                          setSortOption(elm.order);
                           setDdActives(false);
                         }}
                         key={i}
