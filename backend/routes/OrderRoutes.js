@@ -33,6 +33,11 @@ router.post(
   completeOrder
 );
 
-router.patch("/tourist/order/:id/cancel", cancelOrder);
+router.patch(
+  "/tourist/order/:id/cancel",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  cancelOrder
+);
 
 module.exports = router;
