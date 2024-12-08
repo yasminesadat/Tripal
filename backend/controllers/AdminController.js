@@ -12,6 +12,7 @@ const Itinerary = require("../models/Itinerary");
 const Product = require("../models/Product");
 const Seller = require("../models/users/Seller.js")
 
+
 const addAdmin = async (req, res) => {
   try {
     const { userName, password } = req.body;
@@ -61,7 +62,8 @@ const deleteUser = async (req, res) => {
   console.log("role",role,"userid",userId);
 
   try {
-      const user = await User.findOne({ userId }); // userid references tourist, seller etc 
+      const user = await User.findOne({ userId }); // userid references tourist, seller etc
+      console.log(user) 
       if (!user) {
           return res.status(404).json({ message: "User not found" });
       }
@@ -73,13 +75,12 @@ const deleteUser = async (req, res) => {
               return res.status(400).json({ message: "Cannot request deletion. Advertiser has booked activities." });
           }
       }
-      else if (role === "TourGuide") {
-          // if he has one itienrary with future bookings 
-          const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
-          if (hasBookedItineraries) {
-              return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
-          }
-      }
+      else if (role === "Tour Guide") {
+        const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
+        if (hasBookedItineraries) {
+            return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
+        }
+    }
       else if (role === "Tourist") {
           const hasFutureBookedActivities = await Activity.exists({
               "bookings.touristId": userId,
@@ -94,10 +95,11 @@ const deleteUser = async (req, res) => {
       }
      // console.log("hi1");
       switch (role) {
-          case "TourGuide":
+          case "Tour Guide":
               //   await Itinerary.updateMany( { tourGuide: userId }, { $set: { isActive: true } });
               //  itinerary 3ndaha booking 10/3/2024 w 10/12/2024 causes a problem : 
               //should be visible in history for the old person but not visible for the upcoming person
+              console.log("hi2")
               await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } }); // deactivate all
               // , handle in controller functions when to view which (history vs upcoming)
 

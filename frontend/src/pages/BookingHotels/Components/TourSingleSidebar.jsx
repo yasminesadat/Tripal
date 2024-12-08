@@ -35,6 +35,13 @@ export default function TourSingleSidebar({
     }
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return;
