@@ -10,6 +10,7 @@ const {
   archiveProduct,
   unArchiveProduct,
   revenue,
+  getProductImages,
 } = require("../controllers/ProductController");
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
@@ -55,11 +56,7 @@ router.patch(
   authorizeRoles("Admin", "Seller"),
   unArchiveProduct
 );
-router.get(
-  "/products/revenue",
-  verifyToken,
-  authorizeRoles("Seller"),
-  revenue
-);
+router.get("/products/revenue", verifyToken, authorizeRoles("Seller"), revenue);
+router.post("/products/images", getProductImages);
 
 module.exports = router;

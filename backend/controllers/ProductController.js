@@ -237,7 +237,7 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
 
 const revenue = async (req, res) => {
   try {
-    const  id  = req.userId;
+    const id = req.userId;
     const products = await Product.find({ seller: id });
     let totalRevenue = 0;
     products.forEach((product) => {
@@ -252,6 +252,25 @@ const revenue = async (req, res) => {
   }
 };
 
+const getProductImages = asyncHandler(async (req, res) => {
+  const { ids } = req.body; // Expecting an array of product IDs in the request body
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400);
+    throw new Error("Invalid input: Please provide an array of product IDs");
+  }
+
+  const products = await Product.find({ _id: { $in: ids } }, "picture"); // Fetch products by IDs and select only the 'picture' field
+
+  if (!products || products.length === 0) {
+    res.status(404);
+    throw new Error("No products found");
+  }
+
+  const images = products.map((product) => product.picture); // Extract images from products
+  res.status(200).json(images);
+});
+
 module.exports = {
   createProduct,
   getProducts,
@@ -262,4 +281,5 @@ module.exports = {
   archiveProduct,
   unArchiveProduct,
   revenue,
+  getProductImages,
 };

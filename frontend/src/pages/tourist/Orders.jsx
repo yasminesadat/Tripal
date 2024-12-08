@@ -5,6 +5,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import MetaComponent from "@/components/common/MetaComponent";
 import Pagination from "../../components/common/Pagination";
 import { getOrders } from "@/api/OrderService";
+import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
 
 const metadata = {
@@ -16,6 +17,7 @@ const tabs = ["Current Orders", "Past Orders"];
 const statusClass = (status) => {
   if (status === "Delivered") return "text-purple-1";
   if (status === "Pending") return "text-yellow-1";
+  if (status === "Shipped") return "text-blue-1";
   if (status === "Cancelled") return "text-red-2";
   return "";
 };
@@ -28,7 +30,14 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         const response = await getOrders();
-        setOrders(response.orders);
+        const ordersWithImages = await Promise.all(
+          response.orders.map(async (order) => {
+            const productIds = order.products.map((product) => product.product);
+            const images = await fetchProductImages(productIds);
+            return { ...order, images };
+          })
+        );
+        setOrders(ordersWithImages);
       } catch (error) {
         console.error("Error fetching orders:", error);
         message.error(error.message);
@@ -40,7 +49,7 @@ const Orders = () => {
 
   const filteredOrders = orders.filter((order) => {
     if (currentTab === "Current Orders") {
-      return order.status === "Pending";
+      return order.status === "Pending" || order.status === "Shipped";
     }
     return order.status === "Delivered" || order.status === "Cancelled";
   });
@@ -80,7 +89,7 @@ const Orders = () => {
                     <thead className="bg-light-1 rounded-12">
                       <tr>
                         <th>Order ID</th>
-                        <th>Title</th>
+                        <th>Products</th>
                         <th>Date</th>
                         <th>Status</th>
                         <th>Total Price</th>
@@ -100,9 +109,9 @@ const Orders = () => {
                             <td>#{order._id.slice(-6)}</td>
                             <td className="min-w-300">
                               <div className="d-flex items-center">
-                                {/* Placeholder for Image */}
+                                {/* Display the first product image as a placeholder */}
                                 <img
-                                  src={order.imageUrl || "/placeholder.jpg"}
+                                  src={order.images[0] || "/placeholder.jpg"}
                                   alt="Order"
                                   style={{
                                     width: "50px",

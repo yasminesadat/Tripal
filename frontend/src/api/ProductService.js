@@ -8,7 +8,14 @@ export const createProduct = (productData) => {
   });
 };
 
-export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortOrder, userRole) => {
+export const fetchProducts = async (
+  page,
+  searchValue,
+  minPrice,
+  maxPrice,
+  sortOrder,
+  userRole
+) => {
   try {
     const response = await axios.get("/products", {
       params: {
@@ -17,7 +24,7 @@ export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortO
         minPrice,
         maxPrice,
         sortOrder,
-        userRole
+        userRole,
       },
     });
     return response.data;
@@ -27,6 +34,17 @@ export const fetchProducts = async (page, searchValue, minPrice, maxPrice, sortO
   }
 };
 
+export const fetchProductImages = async (productIds) => {
+  try {
+    const response = await axios.post("/products/images", {
+      ids: productIds,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product images:", error);
+    throw error;
+  }
+};
 
 export const editProduct = async (id, productData) => {
   try {
@@ -41,7 +59,6 @@ export const editProduct = async (id, productData) => {
   }
 };
 
-
 export const getRatings = async (id) => {
   try {
     const response = await axios.get(`/products/${id}/ratings`);
@@ -54,12 +71,16 @@ export const getRatings = async (id) => {
 
 export const addRating = async (productID, ratingData) => {
   try {
-    const response = await axios.post(`/products/${productID}/ratings`, ratingData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data; 
+    const response = await axios.post(
+      `/products/${productID}/ratings`,
+      ratingData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
   } catch (error) {
     console.error("Error adding rating:", error);
     throw error;
@@ -92,13 +113,11 @@ export const unArchiveProduct = async (id) => {
   }
 };
 
-
-
 export async function getRevenue() {
   try {
     const response = await axios.get(`/products/revenue`);
-    console.log(response.data)
-    return response.data; 
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching revenue:", error);
     throw error;
