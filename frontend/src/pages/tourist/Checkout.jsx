@@ -29,7 +29,7 @@ const steps = ['Shipping address', 'Payment details'];
 export default function Checkout(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [address, setAddress] = useState(null);
-  const [discount, setDiscount] = React.useState(0.0);
+  const [discount, setDiscount] = useState(0.0);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
 

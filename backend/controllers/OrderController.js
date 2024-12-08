@@ -58,7 +58,10 @@ const createOrder = asyncHandler(async (req, res) => {
     for (let cartItem of tourist.cart) {
       totalPrice += cartItem.price;
     }
-    totalPrice -= totalPrice * (discountPercentage / 100);
+    console.log("discount", discountPercentage);
+    if (discountPercentage) {
+      totalPrice -= totalPrice * (discountPercentage / 100);
+    }
     if (paymentMethod === "Wallet") {
       tourist.wallet.amount = tourist.wallet.amount || 0;
 
@@ -163,7 +166,7 @@ const createOrder = asyncHandler(async (req, res) => {
             product_data: {
               name: product.product.name,
             },
-            unit_amount: product.price * 100,
+            unit_amount: product.price * 100 / product.quantity,
           },
           quantity: product.quantity,
         })),
@@ -234,7 +237,7 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
 const completeOrder = asyncHandler(async (req, res) => {
-  const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod } = req.body;
+  const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod, discountPercentage } = req.body;
 
   try {
 
