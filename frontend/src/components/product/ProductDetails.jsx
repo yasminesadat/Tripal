@@ -25,6 +25,8 @@ import {
 } from "@/api/ExchangeRatesService";
 import { getUserData } from "@/api/UserService";
 import { addToCart } from "../../api/TouristService";
+import { getOrders } from "../../api/OrderService";
+import { LetterTextIcon } from "lucide-react";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -56,7 +58,8 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState("EGP");
   const [open, setOpen] = useState(false);
-
+  const [orders,setOrders] = useState([]);
+  const [hasOrderedProduct, setHasOrderedProduct] = useState(false);
   const refProdToCart = useRef(null);
 
   // Memoize complex calculations
@@ -143,6 +146,30 @@ const ProductDetails = ({ homeURL, productsURL }) => {
 
     fetchRatings();
   }, [product.id]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await getOrders();
+        setOrders(response.orders || []);
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      } finally {
+        setLoading(false);
+        console.log("this product: ",product.id);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  useEffect(() =>{
+    setHasOrderedProduct((orders.some(order =>
+      order.products.some(product1 =>  product1.product === product.id))
+    ));
+    console.log("ordersss: ",orders);
+  },[orders,product]);
+ 
 
   // Tour steps
   const steps = [
@@ -444,7 +471,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
             </>
           )}
           <Divider />
-          {userRole === "Tourist" && (
+          {userRole === "Tourist" && hasOrderedProduct && (
             <ReviewBox id={product.id} type={"products"} />
           )}
           <br />

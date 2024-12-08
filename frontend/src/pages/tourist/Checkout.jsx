@@ -36,7 +36,7 @@ export default function Checkout(props) {
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [order,setOrder] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -96,7 +96,7 @@ export default function Checkout(props) {
       console.log("Redirecting to Stripe...");
       const response = await createOrder(orderData);
       const sessionId = response?.sessionId;
-
+      setOrder(response.order);      
       if (sessionId) {
         const { error } = await stripe.redirectToCheckout({ sessionId });
         if (error) {
@@ -123,8 +123,9 @@ export default function Checkout(props) {
     //showConfirmationModal();
     console.log("Deducting from wallet...");
     try {
-      await createOrder(orderData);
-    } catch (error) {
+      const response = await createOrder(orderData);
+      setOrder(response.order);
+        } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         message.error(error.response.data.error);
       } else {
@@ -151,7 +152,8 @@ export default function Checkout(props) {
 
   const processCashOnDelivery = async (orderData) => {
     console.log("Proceeding with cash on delivery...");
-    await createOrder(orderData);
+    const response = await createOrder(orderData);
+    setOrder(response.order);
     //message.success("COD successful!");
     setActiveStep(activeStep + 1);
   };
@@ -331,7 +333,7 @@ export default function Checkout(props) {
                       variant="body1"
                       sx={{ color: "text.secondary" }}
                     >
-                      Your order number is <strong>&nbsp;#140396</strong>. We
+                      Your order number is <strong>&nbsp;#{order._id.slice(-6)}</strong>. We
                       have emailed your order confirmation and will update you
                       once it's shipped.
                     </Typography>
