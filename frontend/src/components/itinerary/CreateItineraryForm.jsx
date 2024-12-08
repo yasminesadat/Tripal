@@ -232,7 +232,7 @@ export default function CreateItineraryForm() {
                       name="serviceFee"
                       rules={[{ required: true, message: "Please enter the service fee" }]}
                     >
-                      <Input prefix="$" size="large" placeholder="0" />
+                      <Input prefix="EGP" size="large" placeholder="0" />
                     </Form.Item>
                   </Col>
 
