@@ -28,7 +28,7 @@ const handleShare = (link) => {
 const handleBookmark = async (eventId, eventType) => {
   try {
     await bookmarkEvent(eventId, eventType);
-    message.success("Added to Bookmarked Events")
+    message.success("Added Event to Bookmark")
   } catch (error) {
     console.error('Error bookmarking event:', error);
   }
@@ -229,7 +229,7 @@ export default function ItineraryMainInformation({
                     style={{ cursor: "pointer" }}
                     onClick={() => handleBookmark(itinerary._id, "itinerary")}
                   ></i>
-                  Add to Wishlist
+                  Add to Bookmark
               </div>
             </div>
           </div>

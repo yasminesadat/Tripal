@@ -119,9 +119,6 @@ export default function TestimonialsFour() {
                     currentSlideIndex == i ? "is-active" : ""
                   } `}
                 >
-                  <div>
-                    <img src={elm.imgSrc} alt="person" />
-                  </div>
                 </div>
               ))}
             </div>

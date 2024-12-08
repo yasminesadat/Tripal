@@ -30,7 +30,8 @@ const {
   markTouristNotificationsRead,
   getAddresses,
   addAddress,
-  getWalletAndTotalPoints
+  getWalletAndTotalPoints,
+  updateQuantity
 
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
@@ -219,6 +220,13 @@ router.patch(
   verifyToken,
   authorizeRoles("Tourist"),
   markTouristNotificationsRead
+);
+
+router.put(
+  "/tourist/product-quantity",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  updateQuantity
 );
 
 module.exports = router;

@@ -52,8 +52,6 @@ const ActivityDetailsPage = () => {
           setUserRole(response.data.role);
         } else if (response.data.message === "No token found.") {
           setUserRole("Guest");
-        } else {
-          message.error(response.data.message);
         }
       } catch (error) {
         message.error("Failed to fetch user data.");
@@ -213,6 +211,7 @@ const ActivityDetailsPage = () => {
               <PageHeader
                 activityId={activityId}
                 activityTitle={activity.title}
+                admin={"ana admin"}
               />
               <ActivityDetails
                 activity={activity}

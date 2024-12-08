@@ -18,6 +18,10 @@ import AdvertiserGallery from "../../components/tourSingle/Galleries/AdvertiserG
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import ActivityBooking from "@/components/activity/ActivityBooking";
 
+import FooterThree from "@/components/layout/footers/FooterThree";
+
+
+
 export default function AdvertiserActivityDetails() {
   const location = useLocation();
   const activity = location.state?.activity;
@@ -204,6 +208,8 @@ export default function AdvertiserActivityDetails() {
           </div>
         </section>
       </div>
+      <FooterThree />
+
     </div>
   );
 }
