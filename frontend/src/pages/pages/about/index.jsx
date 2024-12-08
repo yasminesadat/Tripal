@@ -9,7 +9,6 @@ import Banner from "@/components/pages/about/Banner";
 import Hero from "@/components/pages/about/Hero";
 import Information from "@/components/pages/about/Information";
 import Team from "@/components/pages/about/Team";
-import React from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 
