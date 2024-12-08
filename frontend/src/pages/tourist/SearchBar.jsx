@@ -178,7 +178,7 @@ export default function FlightsList() {
       }
 
       const response = await axios.get(`http://localhost:5050/api/flightSearch?${queryParams.toString()}`);
-      navigate('/tourist/search-flights', { state: { flights: response.data, originLocationCode, destinationLocationCode } });
+      navigate('/tourist/search-flights', { state: { flights: response.data, originLocationCode, destinationLocationCode, cabinType } });
     } catch (error) {
       message.error('Error fetching flights', error);
     }
