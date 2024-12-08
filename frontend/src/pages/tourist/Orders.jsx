@@ -101,14 +101,14 @@ const Orders = () => {
       <MetaComponent meta={metadata} />
       <div>
         <TouristHeader />
-        <main className="page-content-hana">
+        <main>
           <div className="dashboard js-dashboard">
             <div className="dashboard__content">
-              <div className="dashboard__content_content">
-                <h1 className="text-30 ml-80">My Orders</h1>
-                <div className="dashboard__content">
+              <div className="page-content-hana">
+                <div className="dashboard__content_content">
+                  <h1 className="text-30 ml-80">My Orders</h1>
                   <div className="dashboard__content_content">
-                    <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20">
+                    <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20">
                       <div className="tabs -underline-2 js-tabs">
                         <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20">
                           {tabs.map((tab, index) => (
