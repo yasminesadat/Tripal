@@ -17,7 +17,7 @@ const guestRoutes = [
   { path: "/historical-places/:id", element: <HistoricalPlacesDetails /> },
   { path:"/reset-password", element:<ResetPassword/>},
   { path: "/itineraries/:itineraryId", element: <ItineraryDetailsPage /> },
-  {path : "/upcoming-itineraries", element: <Itineraries/>},
+  {path : "/upcomingitineraries", element: <Itineraries/>},
 ];
 
 export default guestRoutes;
