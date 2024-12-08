@@ -14,13 +14,10 @@ const { addRating, getRatings } = require("../controllers/RatingController");
 const TourGuideRating = require("../models/TourGuideRating");
 const { changePassword } = require("../controllers/PasswordController");
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
-// defining tour-guide routes
 
 router.post("/tourGuide", createTourGuide);
 router.patch("/tourGuide",verifyToken,
   authorizeRoles("Tour Guide"), updateTourguideData);
-
-
 router.patch(
   "/tourGuide/markNotifications",
   verifyToken,

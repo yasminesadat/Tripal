@@ -73,7 +73,6 @@ const loginUser = async (req, res) => {
         break;
     }
 
-    // Find the user in the relevant schema
     const roleUser = await userSchema.findOne({ userName });
     if (roleUser && (await bcrypt.compare(password, roleUser.password))) {
       let isFirstTime = false;
@@ -89,7 +88,7 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        maxAge: 3600 * 1000, //changed to session cookie
+        maxAge: 3600 * 1000,
       });
       res.status(200).json({ role: user.role, isFirstTime});
     } else {

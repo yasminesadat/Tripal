@@ -23,9 +23,7 @@ const sendEmailProduct = async (name, mail, productname,productid) => {
 
   try {
     await sendEmail(mail, subject, html);
-    console.log('Product flag notification email sent successfully');
   } catch (error) {
-    console.error('Failed to send activity flag notification email:', error);
   }
 };
 
@@ -33,7 +31,6 @@ const sendEmailProduct = async (name, mail, productname,productid) => {
 const updateProductQuantity = async (productId, quantity) => {
   try {
     const product = await Product.findById(productId).populate("seller");
-    console.log("I am here!")
     if (!product) {
       return res.status(404).json({ message: "Product not found." });
     }
@@ -45,20 +42,14 @@ const updateProductQuantity = async (productId, quantity) => {
     product.quantity -= quantity;
 
     if (product.quantity==0){
-      console.log("in quantity0")
-      //Seller Part
       product.seller.notificationList.push({message:`Your product "${product.name}" is out of stock!`});
       sendEmailProduct(product.seller.userName,product.seller.email,product.name,product._id);
       
-      //console.log("seller not:",product.seller.notificationList)
-
-      //Admin Part
       const admins= await Admin.find();
       for (const admin of admins) {
         admin.notificationList.push({
           message: `Product "${product.name}" by Seller "${product.seller.userName}" is out of stock!`
         });
-        //console.log("admin notif.", admin.notificationList);
         await admin.save();
       }
       await product.seller.save();
@@ -66,10 +57,7 @@ const updateProductQuantity = async (productId, quantity) => {
        console.log("finished quantity0")
     }
 
-    
-
     await product.save();
-    console.log("DONE")
   } catch (error) {
     throw new Error(error.message);
   }
@@ -109,10 +97,11 @@ const createOrder = asyncHandler(async (req, res) => {
     for (let cartItem of tourist.cart) {
       totalPrice += cartItem.price;
     }
-    console.log("discount", discountPercentage);
+
     if (discountPercentage) {
       totalPrice -= totalPrice * (discountPercentage / 100);
     }
+    
     if (paymentMethod === "Wallet") {
       tourist.wallet.amount = tourist.wallet.amount || 0;
 
@@ -206,6 +195,7 @@ const createOrder = asyncHandler(async (req, res) => {
         message: "Order created successfully. Payment will be collected upon delivery.",
         order: newOrder,
       });
+
     } else if (paymentMethod === "Credit Card") {
       const chosenCurrency = tourist.choosenCurrency || "EGP";
       const session = await stripe.checkout.sessions.create({
@@ -225,15 +215,7 @@ const createOrder = asyncHandler(async (req, res) => {
         success_url: `${process.env.FRONTEND_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
         cancel_url: `${process.env.FRONTEND_URL}/cart`,
       });
-      console.log(session.id);
-      // for (let cartItem of tourist.cart) {
-      //   try {
-      //     await updateProductQuantity(cartItem.product._id, cartItem.quantity);
-      //     await updateProductSales(cartItem.product._id, cartItem.quantity);
-      //   } catch (error) {
-      //     return res.status(400).json({ message: error.message });
-      //   }
-      // }
+      
       return res.status(200).json({
         message: "Redirecting to payment.",
         sessionId: session.id,
@@ -343,7 +325,6 @@ const completeOrder = asyncHandler(async (req, res) => {
       order: newOrder,
     });
   } catch (error) {
-    console.error("Error completing order:", error);
     res.status(500).json({ error: error.message });
   }
 });

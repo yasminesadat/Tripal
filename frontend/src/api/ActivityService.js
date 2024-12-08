@@ -30,15 +30,7 @@ export async function getAdvertiserActivities() {
     throw error;
   }
 }
-export async function getActivityBookings(id) {
-  try {
-    const response = await axios.get(`/activity-bookings/${id}`);
-    return response;
-  } catch (error) {
-    console.error("Can't get activity bookings", error);
-    throw error;
-  }
-}
+
 export async function getAdvertiserBookings() {
   try {
     const response = await axios.get(`/my-activities-bookings`);
@@ -48,7 +40,6 @@ export async function getAdvertiserBookings() {
     throw error;
   }
 }
-
                                
 export async function getActivityById(id) {
   try {
@@ -83,16 +74,6 @@ export async function searchActivities() {
 export async function viewUpcomingActivities() {
   try {
     const response = await axios.get("/activities/upcoming");
-    return response;
-  } catch (error) {
-    console.error("Can't view activities", error);
-    throw error;
-  }
-}
-
-export async function viewHistoryActivities() {
-  try {
-    const response = await axios.get("/activities/history");
     return response;
   } catch (error) {
     console.error("Can't view activities", error);
