@@ -9,8 +9,6 @@ Traveling is about creating unforgettable memories, exploring new destinations, 
   
 Our mission is to empower travelers with a seamless, enjoyable, and enriched journey, transforming how they explore the world.  
 
-## what is code styles??
-
 ## Frameworks/Libraries used
 [![MongoDB][MongoDB]][MongoDB-url]
 [![Express.js][Express.js]][Express-url]
@@ -634,7 +632,8 @@ EMAIL_PASS=
 
 </details>
 
-
+## Code style
+This project uses  [Prettier](https://prettier.io/)  to ensure consistent code formatting.
 
 ## Contribute
 To contribute:
