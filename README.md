@@ -16,6 +16,10 @@ Our mission is to empower travelers with a seamless, enjoyable, and enriched jou
 [![Node.js][Node.js]][Node-url]
 [![npm][npm]][npm-url]
 
+## Build Status
+- This project is actively under development and is built and tested locally.
+- No automated CI/CD tests are currently configured.
+- Additional documentation and automation workflows should be added in the future.
 ## Setup the project locally:
 ### 1. Clone the repository
 ```
