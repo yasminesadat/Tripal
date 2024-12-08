@@ -47,7 +47,7 @@ const updateProductQuantity = async (productId, quantity) => {
     if (product.quantity==0){
       console.log("in quantity0")
       //Seller Part
-      product.seller.notificationList.push({message:`Product ${product.name} is out of stock!`});
+      product.seller.notificationList.push({message:`Your product "${product.name}" is out of stock!`});
       sendEmailProduct(product.seller.userName,product.seller.email,product.name,product._id);
       
       //console.log("seller not:",product.seller.notificationList)
@@ -56,7 +56,7 @@ const updateProductQuantity = async (productId, quantity) => {
       const admins= await Admin.find();
       for (const admin of admins) {
         admin.notificationList.push({
-          message: `Product ${product.name} by Seller ${product.seller.userName} is out of stock!`
+          message: `Product "${product.name}" by Seller "${product.seller.userName}" is out of stock!`
         });
         //console.log("admin notif.", admin.notificationList);
         await admin.save();
