@@ -36,7 +36,8 @@ const UserListComponent = () => {
             setUsers(updatedData);
             message.success(`${name} deleted successfully`, "success");
         } catch (error) {
-            message.error("Failed to delete user!", "error");
+            message.error("Failed to delete user!", error);
+            console.log(error)
         }
         setDeleteConfirm(null);
     };

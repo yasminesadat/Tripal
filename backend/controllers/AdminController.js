@@ -7,6 +7,10 @@ const PromoCode = require("../models/PromoCode.js")
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary");
 const Product = require("../models/Product");
+const Advertiser = require("../models/users/Advertiser.js");
+const TourGuide = require("../models/users/TourGuide.js");
+const Seller = require("../models/users/Seller.js");
+const Tourist = require("../models/users/Tourist.js");
 
 const addAdmin = async (req, res) => {
   try {
@@ -65,13 +69,15 @@ const deleteUser = async (req, res) => {
               return res.status(200).json({ message: "Cannot request deletion. Advertiser has booked activities." });
           }
       }
-      else if (role === "TourGuide") {
+      
+      if (role === "Tour Guide") {
           const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, bookings: { $ne: [] }, endDate: { $gt: new Date() } });
           if (hasBookedItineraries) {
               return res.status(200).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
           }
       }
-      else if (role === "Tourist") {
+
+      if (role === "Tourist") {
           const hasFutureBookedActivities = await Activity.exists({
               "bookings.touristId": userId,
               date: { $gt: new Date() }
@@ -84,8 +90,8 @@ const deleteUser = async (req, res) => {
           }
       }
       switch (role) {
-          case "TourGuide":
-              await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } });
+          case "Tour Guide":
+              // await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } });
               await Itinerary.deleteMany({ tourGuide: userId, endDate: { $gt: new Date() } });
               await TourGuide.findByIdAndDelete(userId)
               break;
@@ -148,10 +154,6 @@ const createPromoCode = async (req, res) => {
 const getPromoCodes = async (req, res) => {
   try {
     const promoCodes = await PromoCode.find()
-
-
-
-
     res.status(201).json(promoCodes);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
