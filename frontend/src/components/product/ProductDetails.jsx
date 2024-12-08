@@ -280,6 +280,10 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                   border: "2px solid #ccc",
                   padding: "2%",
                   borderRadius: "1%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
                 }}
               >
                 <img
@@ -289,6 +293,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                     maxWidth: "100%",
                     maxHeight: "70%",
                     borderRadius: "5%",
+                    boxSizing: "border-box",
                   }}
                 />
               </div>
@@ -319,6 +324,16 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                 <Paragraph>
                   <strong>Description:</strong> {product.description}
                 </Paragraph>
+                {(userId === product.productSeller || userRole === "Admin") && (
+                  <div>
+                    <Paragraph>
+                      <strong>Quantity:</strong> {product.quantity}
+                    </Paragraph>
+                    <Paragraph>
+                      <strong>Sales:</strong> {product.sales}
+                    </Paragraph>
+                  </div>
+                )}
                 <Paragraph>
                   <strong>Average Rating:</strong>{" "}
                   <Rate value={product.averageRating} disabled allowHalf />
@@ -346,22 +361,29 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                           value={selectedQuantity}
                           onChange={(value) => setSelectedQuantity(value)}
                         />
-                        <Button
-                          type="primary"
-                          onClick={handleAddToCart}
-                          ref={refProdToCart}
-                          className="custom-button"
-                          style={{
-                            backgroundColor: "#8f5774",
-                            borderColor: "#8f5774",
-                            color: "white",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Add to Cart
-                        </Button>
+                         <Button
+                      className="button purple-button"
+                      type="primary"
+                      onClick={handleAddToCart}
+                      ref={refProdToCart}
+                    >
+                      Add to Cart
+                    </Button>
                       </div>
                     )}
+                     <style>
+                  {`
+                  .purple-button {
+                    background-color: #8f5774 !important; /* Purple-600 */
+                    color: white !important;
+                    transition: background-color 0.3s ease !important;
+                  }
+
+                  .purple-button:hover {
+                    background-color: #5d384d !important; /* Purple-700 */
+                  }
+                  `}
+                </style>
                   </>
                 )}
               </div>
