@@ -15,6 +15,17 @@ Our mission is to empower travelers with a seamless, enjoyable, and enriched jou
 [![React][React.js]][React-url]
 [![Node.js][Node.js]][Node-url]
 [![npm][npm]][npm-url]
+[![Nodemailer][Nodemailer]][Nodemailer-url]
+[![Mongoose][Mongoose]][Mongoose-url]
+[![JSON Web Token][jsonwebtoken]][jsonwebtoken-url]
+[![React Router][ReactRouter]][ReactRouter-url]
+[![MUI][MUI]][MUI-url]
+[![Firebase Storage][FirebaseStorage]][FirebaseStorage-url]
+[![Bcrypt][Bcrypt]][Bcrypt-url]
+[![Ant Design][AntDesign]][AntDesign-url]
+[![Node Cron][NodeCron]][NodeCron-url]
+[![ESLint][ESLint]][ESLint-url]
+[![Prettier][Prettier]][Prettier-url]
 
 ## Build Status
 - This project is actively under development and is built and tested locally.
@@ -654,7 +665,7 @@ EMAIL_PASS=
 </details>
 
 ## Code style
-This project uses  [Prettier](https://prettier.io/)  to ensure consistent code formatting.
+This project uses  [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) to ensure consistent code formatting.
 
 ## Contribute
 To contribute:
@@ -698,3 +709,36 @@ See the LICENSE file for detailed terms and conditions.
 
 [npm]: https://img.shields.io/badge/npm-8C150D?style=for-the-badge&logo=npm&logoColor=white
 [npm-url]: https://www.npmjs.com/
+
+[Nodemailer]: https://img.shields.io/badge/Nodemailer-4ea94b?style=for-the-badge&logo=nodemailer&logoColor=white
+[Nodemailer-url]: https://nodemailer.com/
+
+[Mongoose]: https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white
+[Mongoose-url]: https://mongoosejs.com/
+
+[jsonwebtoken]: https://img.shields.io/badge/JSON_Web_Token-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white
+[jsonwebtoken-url]: https://github.com/auth0/node-jsonwebtoken
+
+[ReactRouter]: https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white
+[ReactRouter-url]: https://reactrouter.com/
+
+[MUI]: https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white
+[MUI-url]: https://mui.com/
+
+[FirebaseStorage]: https://img.shields.io/badge/Firebase_Storage-FFCA28?style=for-the-badge&logo=firebase&logoColor=white
+[FirebaseStorage-url]: https://firebase.google.com/products/storage
+
+[Bcrypt]: https://img.shields.io/badge/Bcrypt-6C757D?style=for-the-badge&logo=none&logoColor=white
+[Bcrypt-url]: https://github.com/kelektiv/node.bcrypt.js
+
+[AntDesign]: https://img.shields.io/badge/Ant_Design-0170FE?style=for-the-badge&logo=antdesign&logoColor=white
+[AntDesign-url]: https://ant.design/
+
+[NodeCron]: https://img.shields.io/badge/Node_Cron-000000?style=for-the-badge&logo=node&logoColor=white
+[NodeCron-url]: https://www.npmjs.com/package/node-cron
+
+[ESLint]: https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white
+[ESLint-url]: https://eslint.org/
+
+[Prettier]: https://img.shields.io/badge/Prettier-FF69B4?style=for-the-badge&logo=prettier&logoColor=white
+[Prettier-url]: https://prettier.io/
