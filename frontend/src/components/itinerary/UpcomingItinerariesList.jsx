@@ -38,7 +38,7 @@ export default function ItinerariesList({
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itinerariesPerPage = 3;
+  const itinerariesPerPage = 5;
 
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },

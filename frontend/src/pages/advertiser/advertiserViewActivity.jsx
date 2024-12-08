@@ -16,6 +16,7 @@ import { deleteActivity } from "../../api/ActivityService";
 import { DollarOutlined ,TagOutlined,PartitionOutlined ,WalletOutlined,PercentageOutlined } from '@ant-design/icons';
 import AdvertiserGallery from "../../components/tourSingle/Galleries/AdvertiserGallery";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
 
 
 export default function AdvertiserActivityDetails() {
@@ -202,6 +203,8 @@ export default function AdvertiserActivityDetails() {
           </div>
         </section>
       </div>
+      <FooterThree />
+
     </div>
   );
 }
