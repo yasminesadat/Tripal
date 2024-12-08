@@ -54,7 +54,6 @@ export default function Itineraries() {
           setUserRole("Guest");
         } else {
           if (!errorDisplayed.current) {
-            message.error(response.data.message);
             errorDisplayed.current = true;
           }
         }

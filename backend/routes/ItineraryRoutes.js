@@ -62,8 +62,6 @@ router.delete(
 );
 
 router.get("/itinerary/upcoming/view",
-  verifyToken,
-  authorizeRoles("Tourist"),
   viewUpcomingItineraries);
 
 router.get(

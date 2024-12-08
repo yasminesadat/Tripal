@@ -40,7 +40,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
     catch (error) {
       console.log("error", error);
       message.error(error.response.data.error);
-      ;
     }
 
   };
@@ -50,9 +49,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
         const response = await getUserData();
         if (response.data.status === "success") {
           setUserRole(response.data.role);
-        } else {
-          message.error(response.data.message);
-        }
+        } 
       } catch (error) {
         message.error("Failed to fetch user data.");
       }
@@ -64,7 +61,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
     const fetchWalletData = async () => {
       try {
         const data = await getWalletAndTotalPoints();
-        console.log("Fetched Wallet Data:", data); // Debug log
         setUpdatedWalletInfo(data.wallet);
         setTotalPoints(data.totalPoints);
       } catch (error) {
@@ -76,6 +72,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
   }, []);
 
   useEffect(() => {
+    if(userRole!=='Tourist') return;
     const intervalId = setInterval(async () => {
       const curr = getTouristCurrency();
       if (curr) {
@@ -120,20 +117,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
         const stripe = await stripePromise;
         const { sessionId } = response;
   
-        const stripeSession = await stripe.redirectToCheckout({ sessionId });
-  
-        // if (stripeSession) {
-        //   // Use sessionId and other required details to call the completeBooking route
-        //   const completeBookingResponse = await axios.post(`/api/${itinerary ? "itinerary" : "activity"}/${itinerary ? itinerary._id : activity._id}/complete-booking`, {
-        //     sessionId,
-        //     touristId: userId,
-        //     tickets: ticketNumber,
-        //     resourceType: itinerary ? "itinerary" : "activity",
-        //     resourceId: itinerary ? itinerary._id : activity._id
-        //   });
-  
-        //   message.success(completeBookingResponse.data.message);
-        // }
+         await stripe.redirectToCheckout({ sessionId });
       }
     } catch (error) {
       console.error("Booking error:", error);
@@ -146,24 +130,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
 
   const showWalletInfoModal = () => setWalletInfoModalVisible(true);
   const closeWalletInfoModal = () => setWalletInfoModalVisible(false);
-
- 
-  const handleWallet = async () => {
-    try {
-      const response = await bookResource(
-        itinerary ? "itinerary" : "activity",
-        itinerary ? itinerary._id : activity._id,
-        ticketNumber,
-        myPromoCode,
-        "wallet"
-      );
-
-      //message.success(response.message);
-    } catch (error) {
-      console.error("Booking error:", error);
-      message.error(error.response?.data?.error || "Booking failed");
-    }
-  };
 
   const handleWalletPayment = async () => {
     try {
@@ -184,8 +150,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
       message.error(error.response?.data?.error || "Booking failed");
     }
   };
-
-
 
   return (
     <>

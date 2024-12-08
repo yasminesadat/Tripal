@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import Calendar from "@/components/activity/Calendar";
-import {
-  durations,
-  languages,
-  toursTypes,
-  features,
-  rating,
-} from "@/data/tourFilteringOptions";
+import {rating,} from "@/data/tourFilteringOptions";
 import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
 import { getTags } from "@/api/PreferenceTagService";

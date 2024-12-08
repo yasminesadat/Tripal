@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import{ useEffect, useState } from "react";
 import { getRatings } from "../../../api/RatingService";
 import Stars from "../../common/Stars";
-import {
-  Avatar,
-
-} from "antd";
+import {Avatar,} from "antd";
 import { UserOutlined } from "@ant-design/icons";
 const ItineraryReviews = ({ itineraryId }) => {
   const [reviews, setReviews] = useState([]);
@@ -25,7 +22,6 @@ const ItineraryReviews = ({ itineraryId }) => {
         const data = await getRatings(itineraryId, "itinerary");
         console.log(data);
         const transformedReviews = data.ratings.map((rating) => ({
-          // avatar: rating.userID.avatar, 
           name: rating.userID?.userName || "Unknown User",
           date: new Date(rating.createdAt).toLocaleDateString(),
           stars: rating.rating,
@@ -78,31 +74,6 @@ const ItineraryReviews = ({ itineraryId }) => {
           </div>
 
           <p className="mt-10">{elm.comment}</p>
-
-          {/* <div className="row x-gap-20 y-gap-20 pt-20">
-            {elm.images.map((imgSrc, i2) => (
-              <div key={i2} className="col-auto">
-                <div className="size-130">
-                  <img src={imgSrc} alt="image" className="img-cover rounded-12" />
-                </div>
-              </div>
-            ))}
-          </div> */}
-
-          {/* <div className="d-flex x-gap-30 items-center mt-20">
-            <div>
-              <a href="#" className="d-flex items-center">
-                <i className="icon-like text-16 mr-10"></i>
-                Helpful
-              </a>
-            </div>
-            <div>
-              <a href="#" className="d-flex items-center">
-                <i className="icon-dislike text-16 mr-10"></i>
-                Not helpful
-              </a>
-            </div>
-          </div> */}
         </div>
       ))}
     </>
