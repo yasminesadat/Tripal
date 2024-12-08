@@ -23,9 +23,8 @@ const OrderDetails = () => {
       try {
         const response = await getOrderById(id);
         setOrder(response);
-        const productIds = response.order.products.map(
-          (product) => product.product
-        );
+        const productIds = response.products.map((product) => product.product);
+        console.log("product ids", productIds);
         const images = await fetchProductImages(productIds);
         setImages(images);
       } catch (error) {
@@ -141,170 +140,181 @@ const OrderDetails = () => {
         </main>
         <FooterThree />
       </div>
-      <style>
-        {`
-          .order-details-container {
-            margin: 0 auto;
-            padding: 20px;
-            font-family: 'Inter', sans-serif;
-          }
+      <style>{`
+  .order-details-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+  }
 
-          h1 {
-            color: var(--color-dark-purple);
-            text-align: center;
-            margin-bottom: 24px;
-          }
+  h1 {
+    color: var(--color-dark-purple);
+    text-align: center;
+    margin-bottom: 24px;
+  }
 
-          .order-summary {
-            background: var(--color-light-purple);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          }
+  .order-summary {
+    background: var(--color-light-purple);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-          .order-timeline {
-            margin: 24px 0;
-          }
+  .order-timeline {
+    margin: 24px 0;
+  }
 
-          .timeline {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-          }
+  .timeline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
 
-          .timeline-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            flex: 1;
-          }
+  .timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+  }
 
-          .timeline-circle {
-            width: 48px;
-            height: 48px;
-            border: 2px solid var(--color-stone-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-          }
+  .timeline-circle {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--color-stone-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+  }
 
-          .timeline-circle.active {
-            border-color: var(--color-stone);
-            background-color: var(--color-stone);
-            color: white;
-          }
+  .timeline-circle.active {
+    border-color: var(--color-stone);
+    background-color: var(--color-stone);
+    color: white;
+  }
 
-          .status-icon {
-            font-size: 24px;
-          }
+  .status-icon {
+    font-size: 24px;
+  }
 
-          .timeline-line {
-            height: 2px;
-            background: var(--color-stone-light);
-            width: 100%;
-            position: absolute;
-            top: 24px;
-            left: 50%;
-            z-index: -1;
-          }
+  .timeline-line {
+    height: 2px;
+    background: var(--color-stone-light);
+    width: 94%;
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    z-index: -1;
+  }
 
-          .timeline-line.active {
-            background: var(--color-stone);
-          }
+  .timeline-line.active {
+    background: var(--color-stone);
+  }
 
-          .timeline-item span {
-            font-size: 14px;
-            color: var(--color-stone-light);
-            text-align: center;
-          }
+  .timeline-item span {
+    font-size: 14px;
+    color: var(--color-stone-light);
+    text-align: center;
+  }
 
-          .timeline-item .active-text {
-            color: var(--color-stone);
-            font-weight: 600;
-          }
+  .timeline-item .active-text {
+    color: var(--color-stone);
+    font-weight: 600;
+  }
 
-          .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-          }
+  .products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 
-          .product-card {
-            border: 1px solid var(--color-stone-light);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-          }
+  .product-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid var(--color-stone-light);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1;
+    max-width: calc(50% - 20px); /* Adjust for two columns */
+  }
 
-          .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-          }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
 
-          .product-image-container {
-            height: 250px;
-            overflow: hidden;
-          }
+  .product-image-container {
+    width: 40%; /* Image takes up 40% of the card width */
+    height: 100%;
+    overflow: hidden;
+  }
 
-          .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-          }
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
 
-          .product-card:hover .product-image {
-            transform: scale(1.05);
-          }
+  .product-card:hover .product-image {
+    transform: scale(1.05);
+  }
 
-          .product-details {
-            padding: 16px;
-            background-color: white;
-          }
+  .product-details {
+    width: 60%; /* Text takes up 60% of the card width */
+    padding: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-          .product-details h3 {
-            margin-bottom: 12px;
-            font-size: 18px;
-            color: var(--color-dark-purple);
-          }
+  .product-details h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: var(--color-dark-purple);
+  }
 
-          .product-meta {
-            display: flex;
-            justify-content: space-between;
-          }
+  .product-meta {
+    display: flex;
+    flex-direction: column; /* Stack quantity and price */
+    gap: 8px;
+  }
 
-          .product-meta > div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
+  .product-meta > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align to the left */
+  }
 
-          .product-meta span {
-            font-size: 12px;
-            color: var(--color-stone-light);
-            margin-bottom: 4px;
-          }
+  .product-meta span {
+    font-size: 12px;
+    color: var(--color-stone-light);
+    margin-bottom: 4px;
+  }
 
-          .product-meta strong {
-            font-size: 16px;
-            color: var(--color-dark-purple);
-          }
+  .product-meta strong {
+    font-size: 16px;
+    color: var(--color-dark-purple);
+  }
 
-          .grand-total {
-            margin-top: 24px;
-            text-align: right;
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--color-dark-purple);
-          }
-        `}
-      </style>
+  .grand-total {
+    margin-top: 24px;
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--color-dark-purple);
+  }
+`}</style>
     </>
   );
 };

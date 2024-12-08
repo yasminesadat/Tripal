@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { message, Modal } from "antd";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -27,6 +27,7 @@ const Orders = () => {
   const [currentTab, setCurrentTab] = useState("Current Orders");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
+  const showError = useRef(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -41,7 +42,10 @@ const Orders = () => {
         );
         setOrders(ordersWithImages);
       } catch (error) {
-        message.error(error.message);
+        if (!showError.current) {
+          message.error(error.message);
+          showError.current = true;
+        }
       }
     };
 
