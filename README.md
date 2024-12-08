@@ -817,6 +817,17 @@ export default SellerHome;
 ## Code style
 This project uses  [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) to ensure consistent code formatting.
 
+## Tests
+## Tests
+<details>
+<summary>We use Postman to manually test all our API references by making sure the response is as expected. Below are examples of the testing:</summary>
+
+![Test 1](https://github.com/user-attachments/assets/faf58e2b-7fb0-48e8-8b6b-69e967fe922f)
+![Test 2](https://github.com/user-attachments/assets/1d89f1b2-3043-472f-a784-d81d064b02a5)
+
+</details>
+
+
 ## Contribute
 To contribute:
 1. Fork the repo
@@ -839,6 +850,10 @@ To contribute:
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [Stripe](https://stripe.com/docs)
   
+**Youtube Videos**
+
+- [Create a REST API with Node.js and Express](https://youtu.be/O3BUHwfHf84?si=RhnzgbodBxzWAL8b)
+- [MERN Stack Tutorial](https://youtu.be/-0exw-9YJBo?si=_7WHciKbByTxXlTV)  
 ## License
 
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
