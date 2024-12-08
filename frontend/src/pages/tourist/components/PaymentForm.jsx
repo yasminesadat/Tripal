@@ -9,14 +9,15 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {
-  Button,
+  Button, Box, TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import WalletIcon from '@mui/icons-material/Wallet';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-
+import { checkTouristPromoCode } from '@/api/TouristService';
+import { message } from "antd"
 const Card = styled(MuiCard)(({ theme }) => ({
   border: '1px solid',
   borderColor: (theme.vars || theme).palette.divider,
@@ -51,17 +52,36 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 
-export default function PaymentForm({ onNext }) {
+export default function PaymentForm({ onNext, onApplyPromo }) {
   const [paymentType, setPaymentType] = React.useState('Credit Card');
-
+  const [promoCode, setPromoCode] = React.useState('');
   const handlePaymentTypeChange = (event) => {
     setPaymentType(event.target.value);
   };
 
   const handleNext = () => {
-    onNext(paymentType);  
+    onNext(paymentType);
   };
+  const handleApplyPromo = async () => {
+    try {
+      const promoCodeNew = await checkTouristPromoCode({ promoCode: promoCode });
+      if (promoCodeNew.status === "yes") {
+        message.success(promoCodeNew.message);
+        console.log("promo code object", promoCodeNew);
+        console.log("discount in payment form", promoCodeNew.promo[0].discountPercentage);
+        onApplyPromo(promoCodeNew.promo[0].discountPercentage);
 
+      }
+      else {
+        message.error(promoCodeNew.message);
+      }
+    }
+    catch (error) {
+      console.log("error", error);
+      message.error(error.response.data.error);
+      ;
+    }
+  };
   return (
     <Stack spacing={{ xs: 3, sm: 6 }} useFlexGap>
       <FormControl component="fieldset" fullWidth>
@@ -179,22 +199,40 @@ export default function PaymentForm({ onNext }) {
       )}
 
       {paymentType === 'Wallet' && (
-        <Alert severity="info">
-          Money will be deducted from wallet.
-        </Alert>
+        <>
+          <Alert severity="info">
+            Money will be deducted from wallet.
+          </Alert>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <TextField
+              label="Promo Code"
+              variant="outlined"
+              size="small"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              sx={{ flexGrow: 1 }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleApplyPromo}
+              sx={{ height: '40px' }}
+            >
+              Apply
+            </Button>
+          </Box>
+        </>
       )}
-
       {paymentType === 'Cash on Delivery' && (
         <Alert severity="info">You can pay cash when the order is delivered.</Alert>
       )}
-      
-        <Button variant="contained"
-                endIcon={<ChevronRightRoundedIcon />} color="primary" 
-                onClick={handleNext} sx={{ width: { xs: '100%', sm: 'fit-content' }}}
-                style={{marginLeft:"73%"}}
-         >
-          Place Order
-        </Button>
+
+      <Button variant="contained"
+        endIcon={<ChevronRightRoundedIcon />} color="primary"
+        onClick={handleNext} sx={{ width: { xs: '100%', sm: 'fit-content' } }}
+        style={{ marginLeft: "73%" }}
+      >
+        Place Order
+      </Button>
     </Stack>
   );
 }
