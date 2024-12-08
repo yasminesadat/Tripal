@@ -7,6 +7,7 @@ import { getOrderById } from "@/api/OrderService";
 import { message } from "antd";
 import { fetchProductImages } from "@/api/ProductService";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import defaultPlace from "../../assets/images/defaultPlace.png";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -24,7 +25,6 @@ const OrderDetails = () => {
         const response = await getOrderById(id);
         setOrder(response);
         const productIds = response.products.map((product) => product.product);
-        console.log("product ids", productIds);
         const images = await fetchProductImages(productIds);
         setImages(images);
       } catch (error) {
@@ -108,12 +108,17 @@ const OrderDetails = () => {
                   <div key={index} className="product-card">
                     <div className="product-image-container">
                       <img
-                        src={images[index] || "/placeholder.jpg"}
+                        src={images[index] || defaultPlace}
                         alt={item.product.name}
                         className="product-image"
                       />
                     </div>
-                    <div className="product-details">
+                    <div
+                      className="product-details"
+                      onClick={() =>
+                        (window.location.href = `/tourist/view-products/product/${item._id}`)
+                      }
+                    >
                       <h3>{item.product.name}</h3>
                       <div className="product-meta">
                         <div className="product-quantity">

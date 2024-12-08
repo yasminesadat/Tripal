@@ -7,6 +7,7 @@ import Pagination from "../../components/common/Pagination";
 import { getOrders, cancelOrder } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
+import defaultPlace from "../../assets/images/defaultPlace.png";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -153,7 +154,7 @@ const Orders = () => {
                                         .map((image, idx) => (
                                           <img
                                             key={idx}
-                                            src={image || "/placeholder.jpg"}
+                                            src={image || defaultPlace}
                                             alt="Order"
                                             style={{
                                               width: "70px", // Increased size
