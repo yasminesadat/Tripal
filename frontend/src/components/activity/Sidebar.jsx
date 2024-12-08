@@ -19,7 +19,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRangeState, setPriceRangeState] = useState([0, 2000000]);
+  const [priceRangeState, setPriceRangeState] = useState([0, 10000]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
