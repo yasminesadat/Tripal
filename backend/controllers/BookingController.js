@@ -56,7 +56,7 @@ const bookResource = async (req, res) => {
         ],
         mode: 'payment',
         success_url: `${process.env.FRONTEND_URL}/success/resource?session_id={CHECKOUT_SESSION_ID}&tourist_id=${touristId}&resource_type=${resourceType}&tickets=${tickets}&resource_id=${resourceId}`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+        cancel_url: `${process.env.FRONTEND_URL}/upcoming-activities`,
       });
       return res.status(200).json({ sessionId: session.id });
     }

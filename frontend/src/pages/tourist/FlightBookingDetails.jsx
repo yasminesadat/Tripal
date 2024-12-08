@@ -32,8 +32,8 @@ const FlightBookingDetails = () => {
   const [isBookedAccepted,setIsBookedAccepted]=useState(false);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
   const [isModalVisible, setIsModalVisible] = useState(false); 
-  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null); 
-  const [totalPoints, setTotalPoints] = useState(null); 
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0); 
+  const [totalPoints, setTotalPoints] = useState(0); 
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
 const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
