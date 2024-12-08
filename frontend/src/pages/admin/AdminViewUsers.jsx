@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
-import {message} from "antd";
+import {message} from 'antd';
 import Sidebar from '@/components/dasboard/Sidebar';
 import Header from '@/components/dasboard/Header';
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const [initLoading, setInitLoading] = useState(true);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [notification, setNotification] = useState(null);
+    const [notification, ] = useState(null);
     const [sideBarOpen, setSideBarOpen] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
@@ -16,9 +16,14 @@ const UserList = () => {
                 setUsers(response.users);
                 setInitLoading(false);
             } catch (error) {
+                const key = 'updatable';
                 console.error("Error fetching users:", error);
                 setInitLoading(false);
-                showNotification("Failed to fetch users!", "error");
+                message.error({ content: 'Failed to fetch users', key });
+                setTimeout(() => {
+                message.destroy(key); // Destroy the message after timeout
+                }, 2500);
+                message.error("Failed to fetch users!", "error");
             }
         };
 
@@ -33,10 +38,24 @@ const UserList = () => {
             await deleteUser(role, id);    
             const updatedData = users.filter((item) => item.userId !== id);
             setUsers(updatedData);
-            message.success(`${name} deleted successfully`, "success");
+            const key3="updated3"
+           // message.success(`${name} deleted successfully`, "success");
+            message.success({ content: `${name} deleted successfully`, key3 });
+
+            // Set timeout to close the message after 3 seconds (3000 ms)
+            setTimeout(() => {
+            message.destroy(key3); // Destroy the message after timeout
+            }, 2500);
         } catch (error) {
             console.error(`00Error deleting user with id ${ id }:`, error);
-            message.error("Failed to delete user!", "error");
+            const key2 = 'updatable2';
+            message.error({ content: 'Failed to delete user!', key2 });
+            // Set timeout to close the message after 3 seconds (3000 ms)
+            setTimeout(() => {
+            message.destroy(key2); // Destroy the message after timeout
+            }, 2500);
+
+
         }
         setDeleteConfirm(null);
     };

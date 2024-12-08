@@ -49,13 +49,6 @@ export default function TourSingleSidebar({
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const newCurrency = getTouristCurrency();
-      setCurrency(newCurrency);
-      getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
-  }, [currency]);
 
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return; // Only call API if both dates are selected
@@ -146,7 +139,12 @@ export default function TourSingleSidebar({
   // useEffect to call fetchHotelPrices when dates change
   useEffect(() => {
     fetchHotelPrices();
-  }, [hotelID, currency, dates, boardType, fetchHotelPrices]); // Fetch data when hotelID or dates change
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [hotelID, currency, dates, boardType, fetchHotelPrices,currency]); // Fetch data when hotelID or dates change
 
   const canBook =
     (

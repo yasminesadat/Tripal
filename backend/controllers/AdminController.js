@@ -1,12 +1,16 @@
 const bcrypt = require("bcrypt");
 const Admin = require("../models/users/Admin.js");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
+const Advertiser = require("../models/users/Advertiser.js");
+const Tourist = require("../models/users/Tourist.js");
+const TourGuide = require("../models/users/TourGuide.js");
 const User = require("../models/users/User.js");
 const Request = require('../models/Request.js')
 const PromoCode = require("../models/PromoCode.js")
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary");
 const Product = require("../models/Product");
+const Seller = require("../models/users/Seller.js")
 
 const addAdmin = async (req, res) => {
   try {

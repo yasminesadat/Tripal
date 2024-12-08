@@ -190,7 +190,7 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
         }, 6000);
         } catch (error) {
           console.error("Failed to save booking:", error);
-          message.error("Booking failed. Please try again.");
+          message.error( error.message );
         }
       };
     
