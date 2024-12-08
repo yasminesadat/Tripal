@@ -1,11 +1,10 @@
  ![logo](https://github.com/user-attachments/assets/2d83d299-a3b9-4a42-a6f0-091d3e7add52)
 --------
 Traveling is about creating unforgettable memories, exploring new destinations, and experiencing diverse cultures. However, planning a trip can often be overwhelming and time-consuming. Tripal was created to simplify the travel experience by providing tourists with a comprehensive platform to:
-
-Book activities and itineraries tailored to their preferences.
-Explore historical places with detailed insights and recommendations.
-Shop for unique products and souvenirs directly from the app.
-Whether you are an adventurous solo traveler, a family on vacation, or someone seeking a leisurely escape, Tripal is your ultimate travel companion. Our mission is to empower travelers with a seamless, enjoyable, and enriched journey, transforming how they explore the world.
+## Book activities and itineraries tailored to their preferences.
+## Explore historical places with detailed insights and recommendations.
+## Shop for unique products and souvenirs directly from the app.
+Our mission is to empower travelers with a seamless, enjoyable, and enriched journey, transforming how they explore the world.
 
 ## edit to add screenshots
 
