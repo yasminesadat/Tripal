@@ -4,9 +4,8 @@ import { getUserData } from "@/api/UserService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { message, Tour } from "antd";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
-import FooterThree from "@/components/layout/footers/FooterThree";
-import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
+import Spinner from "../../components/common/Spinner";
 export default function HistoricalPlacesList({ searchTerm }) {
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
@@ -95,6 +94,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
         if (result) {
           console.log("result: ", result);
           setPlaces(result);
+          setSearchedPlaces(result);
+          setViewedPlaces(result)
           setFilteredPlaces(result);
         }
         setLoading(false);
@@ -104,11 +105,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
       }
     }
     const fetchPlaces = async () => {
+      setLoading(true);
       try {
         const response = await getAllHistoricalPlaces();
         setPlaces(response);
+        setSearchedPlaces(response);
+        setViewedPlaces(response);
         setFilteredPlaces(response);
       } catch (err) {
+        setLoading(false);
         setError(
           err.response?.data?.error || "Error fetching historical places"
         );
@@ -126,7 +131,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
     }
 
 
-  }, userRole)
+  }, [userRole])
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -150,9 +155,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
     };
 
     fetchUserData();
-
-
-
   }, []);
   const handleDelete = async (id) => {
     try {
@@ -160,6 +162,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
       if (response) {
         setPlaces(places.filter(place => place._id !== id));
         setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
+        setViewedPlaces(viewedPlaces.filter(place => place._id !== id));
+        setSearchedPlaces(searchedPlaces.filter(place => place._id !== id));
         message.success("Deleted Successfully");
       }
     }
@@ -193,83 +197,101 @@ export default function HistoricalPlacesList({ searchTerm }) {
       window.location.href = `mailto:?subject=Check out this historical place!&body=Check out this link: ${link}`;
     }
   };
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + "...";
+  };
   const getMinPrice = (Place) => {
 
     const minValue = Math.min(Place.ticketPrices.foreigner, Place.ticketPrices.native, Place.ticketPrices.student);
     return minValue;
 
   }
-
-
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [searchedPlaces, setSearchedPlaces] = useState([]);
+  const [viewedPlaces, setViewedPlaces] = useState([]);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({ historicType: [], historicalTagPeriod: [] });
+  const [filterHistoricType, setFilterHistoricType] = useState([]);
+  const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState([]);
   useEffect(() => {
     const curr = sessionStorage.getItem("currency");
     if (curr) {
       setCurrency(curr);
     }
   }, []);
+  useEffect(() => {
+    const handleSearch = () => {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const results = places.filter((place) => {
+        const matchesName = place.name
+          .toLowerCase()
+          .includes(lowerCaseSearchTerm);
+        const matchesTags =
+          place.tags &&
+          place.tags.some(
+            (tag) =>
+              tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          );
+        const matchesPeriods = place.historicalPeriod &&
+          place.historicalPeriod.some(
+            (tag) =>
+              tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
+          );
 
-  const handleSearch = () => {
-    const lowerCaseSearchTerm = searchKey.toLowerCase();
-    const results = places.filter((place) => {
-      const matchesName = place.name
-        .toLowerCase()
-        .includes(lowerCaseSearchTerm);
-      const matchesTags =
-        place.tags &&
-        place.tags.some(
-          (tag) =>
-            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
-        );
-      const matchesPeriods = place.historicalPeriod &&
-        place.historicalPeriod.some(
-          (tag) =>
-            tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
-        );
+        return matchesName || matchesTags || matchesPeriods;
+      });
+      setSearchedPlaces(results);
 
-      return matchesName || matchesTags || matchesPeriods;
-    });
-    setFilteredPlaces(results);
-  };
-
-  const handleFilter = (filters) => {
-    const { historicType, historicalTagPeriod } = filters;
-
-    if (historicType.length == 0 && historicalTagPeriod.length == 0) {
-      setFilteredPlaces(places);
-      return;
-    }
-
-    const filtered = places.filter((place) => {
-      const matchesHistoricType = historicType.length > 0
-        ? place.tags &&
-        place.tags.some(placeTag =>
-          historicType.some(
-            historicTag =>
-              placeTag.name &&
-              historicTag &&
-              placeTag.name.toLowerCase().includes(historicTag.toLowerCase())
+    };
+    handleSearch();
+  }, [searchTerm, places]);
+  useEffect(() => {
+    const handleFilter = () => {
+      const historicType = filterHistoricType;
+      const historicalTagPeriod = filterHistoricalTagPeriod;
+      console.log("tags", filterHistoricType)
+      console.log("periods", filterHistoricalTagPeriod)
+      if (historicType.length == 0 && historicalTagPeriod.length == 0) {
+        setFilteredPlaces(places);
+        return;
+      }
+      const filteredType = places.filter((place) => {
+        const matchesHistoricType = historicType.length > 0
+          ? place.tags?.some(tag =>
+            historicType.some(historicTag =>
+              tag.name?.toLowerCase() === historicTag.name.toLowerCase()
+            )
           )
-        )
-        : true;
-      const matchesHistoricalTag = historicalTagPeriod > 0
-        ? place.historicalPeriod && place.historicalPeriod.some(tag => historicalTagPeriod.some(
-          historicPeriod =>
-            tag.name &&
-            historicPeriod &&
-            tag.name.toLowerCase().includes(historicPeriod.toLowerCase())
-        ))
-        : true;
+          : true;
+        return matchesHistoricType;
+      });
+      const filteredPeriod = places.filter((place) => {
+        const matchesHistoricalTag = historicalTagPeriod.length > 0
+          ? place.historicalPeriod?.some(tag =>
+            historicalTagPeriod.some(historicPeriod =>
+              tag.name?.toLowerCase() === historicPeriod.name.toLowerCase()
+            )
+          )
+          : true;
+        return matchesHistoricalTag;
+      });
+      const commonPlaces = filteredType.filter(place1 =>
+        filteredPeriod.some(place2 => place1._id === place2._id)
+      );
+      setFilteredPlaces(commonPlaces);
+    };
+    handleFilter();
+  }, [filterHistoricType, filterHistoricalTagPeriod, places]);
+  useEffect(() => {
+    const commonPlaces = filteredPlaces.filter(place1 =>
+      searchedPlaces.some(place2 => place1._id === place2._id)
+    );
+    setViewedPlaces(commonPlaces)
 
-      return matchesHistoricType && matchesHistoricalTag;
-    });
-
-    setFilteredPlaces(filtered);
-  };
-
+  }, [searchedPlaces, filteredPlaces]);
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
 
@@ -356,7 +378,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-              <Sidebar setFilters={setFilters} />
+              <Sidebar setFilterHistoricType={setFilterHistoricType} setFilterHistoricalTagPeriod={setFilterHistoricalTagPeriod} />
             </div>
 
             {/* <div className="accordion d-none mb-30 lg:d-flex js-accordion">
@@ -387,8 +409,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
           <div className="col-xl-9 col-lg-8">
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
-                <div>{filteredPlaces?.length} results</div>
+                <div>
+                 
+                    <span>{viewedPlaces?.length} results</span>
+                
+                </div>
               </div>
+              {loading&&
+                    <span><Spinner /></span>
+              }
             </div>
             <style>
               {`
@@ -403,7 +432,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
             </style>
 
             <div className="row y-gap-30 pt-30">
-              {filteredPlaces.map((elm, i) => (
+              {viewedPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -443,7 +472,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
                           <i className="icon-share text-15"></i>
                         </button>
                       </div>}
-                    
+
                     </div>
 
 
@@ -460,8 +489,23 @@ export default function HistoricalPlacesList({ searchTerm }) {
 
 
 
-                      <p className="tourCard__text mt-5">{elm.description}</p>
-
+                      <p className="tourCard__text mt-5"> {truncateText(elm.description, 50)}</p>
+                      <div className="row x-gap-20 y-gap-5 pt-30">
+                        {elm.tags?.map((elm2, i2) => (
+                          <div key={i2} className="col-auto">
+                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10"style={{backgroundColor: '#8f5774'}}>
+                              {elm2.name}
+                            </div>
+                          </div>
+                        ))}
+                        {elm.historicalPeriod?.map((elm2, i2) => (
+                          <div key={i2} className="col-auto">
+                             <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{backgroundColor: '#8f5774'}}>
+                               {elm2.name}
+                            </div> 
+                          </div>
+                        ))}
+                       </div>
 
                     </div>
 
