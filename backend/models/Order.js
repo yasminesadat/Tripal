@@ -10,7 +10,11 @@ const orderSchema = new Schema(
     },
     products: [
       {
-        product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
       },
@@ -32,7 +36,7 @@ const orderSchema = new Schema(
     },
     paymentMethod: {
       type: String,
-      enum: [ "Wallet", "Credit Card", "Cash on Delivery"],
+      enum: ["Wallet", "Credit Card", "Cash on Delivery"],
       default: "Wallet",
       required: true,
     },

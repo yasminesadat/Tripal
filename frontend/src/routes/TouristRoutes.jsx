@@ -22,7 +22,7 @@ import BookingPages from "../pages/BookingHotels/BookingConfirmation";
 import HotelDetails from "../pages/BookingHotels/HotelDetails";
 import TourList1 from "../pages/BookingHotels/HotelList";
 import Hero6 from "../pages/BookingHotels/SearchHotel2";
-import BookmarkedEvents from "../pages/tourist/bookmarked"
+import BookmarkedEvents from "../pages/tourist/bookmarked";
 import WishListPage from "@/pages/tourist/WishList";
 import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
 import PreferenceSelection from "@/pages/tourist/PreferenceSelection";
@@ -32,8 +32,8 @@ import Checkout from "../pages/tourist/Checkout";
 import BookingPagesStripe from "@/pages/BookingHotels/HotelStripeSuccess";
 import SuccessPage from "@/components/activity/activitySingle/SuccessPage";
 import OrderSuccessPage from "@/pages/tourist/OrderSuccessPage";
-
-
+import Orders from "@/pages/tourist/Orders";
+import OrderDetails from "@/pages/tourist/OrderDetails";
 
 const touristRoutes = [
   { path: "/tourist", element: <TouristHome /> },
@@ -64,9 +64,7 @@ const touristRoutes = [
     path: "/tourist/view-products/product/:id",
     element: <TouristViewProduct />,
   },
-  {path:"/checkout",
-    element:<Checkout/>
-  },
+  { path: "/checkout", element: <Checkout /> },
   // { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
   // { path: "/tourist/view-Complaints", element: <MyComplaints /> },
   // {
@@ -83,17 +81,23 @@ const touristRoutes = [
   { path: "/tourist/booking-history", element: <DbBooking /> },
   { path: "/hotel2", element: <Hero6 /> },
   { path: "/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 /> },
-  { path: "/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2", element: <HotelDetails /> },
-  { path: "/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate", element: <BookingPages /> },
+  {
+    path: "/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2",
+    element: <HotelDetails />,
+  },
+  {
+    path: "/confirmBooking/:cityCode/:hotelID/:name/:singlePrice/:singleNumber/:doublePrice/:doubleNumber/:triplePrice/:tripleNumber/:boardType/:checkIn/:checkOut/:currency/:exchangeRate",
+    element: <BookingPages />,
+  },
   { path: "/wishlist", element: <WishListPage /> },
   { path: "/success", element: <FlightCheckout /> },
   { path: "/tourist/preferences", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories", element: <CategorySelection /> },
   { path: "/successHotel", element: <BookingPagesStripe /> },
   { path: "/success/resource", element: <SuccessPage /> },
-  { path: "products-payment-success", element: <OrderSuccessPage /> }
-
-
+  { path: "products-payment-success", element: <OrderSuccessPage /> },
+  { path: "/orders", element: <Orders /> },
+  { path: "/orders/:id", element: <OrderDetails /> },
 ];
 
 export default touristRoutes;

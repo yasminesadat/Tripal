@@ -1,43 +1,47 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
-import Typography from '@mui/material/Typography';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import AddressForm from './components/AddressForm';
-import PaymentForm from './components/PaymentForm';
-import AppTheme from './shared-theme/AppTheme';
-import Info from './components/Info';
-import { useLocation } from 'react-router-dom';
-import Header from '../../components/layout/header/TouristHeader';
-import Footer from '../../components/layout/footers/FooterThree';
-import { createOrder } from '@/api/OrderService';
+import * as React from "react";
+import { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import Typography from "@mui/material/Typography";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import AddressForm from "./components/AddressForm";
+import PaymentForm from "./components/PaymentForm";
+import AppTheme from "./shared-theme/AppTheme";
+import Info from "./components/Info";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../../components/layout/header/TouristHeader";
+import Footer from "../../components/layout/footers/FooterThree";
+import { createOrder } from "@/api/OrderService";
 import { loadStripe } from "@stripe/stripe-js";
-import { message, Modal } from 'antd';
-import { getWalletAndTotalPoints } from '@/api/TouristService';
-import { AlertCircle } from 'lucide-react';
+import { message, Modal } from "antd";
+import { getWalletAndTotalPoints } from "@/api/TouristService";
+import { AlertCircle } from "lucide-react";
 
-const steps = ['Shipping address', 'Payment details'];
+const steps = ["Shipping address", "Payment details"];
 
 export default function Checkout(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [address, setAddress] = useState(null);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const cart = location.state?.cart || [];
-  const currency=location.state?.currency||'EGP';
-  const exchangeRate=location.state?.exchangeRate||1;
-  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const currency = location.state?.currency || "EGP";
+  const exchangeRate = location.state?.exchangeRate || 1;
+  const [isConfirmationModalVisible, setConfirmationModalVisible] =
+    useState(false);
   const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);
   const [totalPoints, setTotalPoints] = useState(0);
-  const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
+  const stripePromise = loadStripe(
+    "pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb"
+  );
 
   useEffect(() => {
     const fetchWalletData = async () => {
@@ -91,19 +95,34 @@ export default function Checkout(props) {
   const processWalletPayment = async (orderData) => {
     //showConfirmationModal();
     console.log("Deducting from wallet...");
-    await createOrder(orderData);
-    const updatedData = await getWalletAndTotalPoints();
-    setUpdatedWalletInfo(updatedData.wallet);
-    setTotalPoints(updatedData.totalPoints);
-    showWalletInfoModal();
+    try {
+      await createOrder(orderData);
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        message.error(error.response.data.error);
+      } else {
+        message.error(
+          "There was an issue processing your payment. Please try again."
+        );
+      }
+      return;
+    }
     message.success("Payment with wallet successful!");
-    
-    
-    setActiveStep(activeStep + 1);
+    try {
+      const updatedData = await getWalletAndTotalPoints();
+      setUpdatedWalletInfo(updatedData.wallet);
+      setTotalPoints(updatedData.totalPoints);
+      showWalletInfoModal();
+      setActiveStep(activeStep + 1);
+    } catch (error) {
+      message.error(
+        "There was an issue updating your wallet. Please try again."
+      );
+    }
   };
   const handleConfirmPayment = async () => {
     cancelConfirmationModal(); // Close the confirmation modal
-  
+
     // Process wallet payment after confirmation
     const orderData = { deliveryAddress: address, paymentMethod: "Wallet" };
     await processWalletPayment(orderData);
@@ -118,7 +137,10 @@ export default function Checkout(props) {
 
   const handleNextPayment = async (newPaymentType) => {
     setPaymentType(newPaymentType);
-    const orderData = { deliveryAddress: address, paymentMethod: newPaymentType };
+    const orderData = {
+      deliveryAddress: address,
+      paymentMethod: newPaymentType,
+    };
 
     try {
       if (newPaymentType === "Credit Card") {
@@ -147,7 +169,7 @@ export default function Checkout(props) {
       case 1:
         return <PaymentForm onNext={handleNextPayment} />;
       default:
-        throw new Error('Unknown step');
+        throw new Error("Unknown step");
     }
   };
 
@@ -160,12 +182,12 @@ export default function Checkout(props) {
           <Grid
             container
             sx={{
-              height: 'auto',
+              height: "auto",
               mt: {
                 xs: 4,
                 sm: 0,
               },
-              marginBottom: '8%'
+              marginBottom: "8%",
             }}
           >
             <Grid
@@ -174,33 +196,38 @@ export default function Checkout(props) {
               sm={5}
               lg={4}
               sx={{
-                display: { xs: 'none', md: 'flex' },
-                flexDirection: 'column',
-                backgroundColor: '#8f5774',
-                borderRight: { sm: 'none', md: '1px solid' },
-                borderColor: { sm: 'none', md: 'divider' },
-                alignItems: 'start',
+                display: { xs: "none", md: "flex" },
+                flexDirection: "column",
+                backgroundColor: "#8f5774",
+                borderRight: { sm: "none", md: "1px solid" },
+                borderColor: { sm: "none", md: "divider" },
+                alignItems: "start",
                 pt: 16,
                 px: 10,
                 gap: 4,
-                width: '300px',
-                position: 'relative',
-                marginTop: '1.3%',
-                height: 'auto',
-                marginBottom: '-8%'
+                width: "300px",
+                position: "relative",
+                marginTop: "1.3%",
+                height: "auto",
+                marginBottom: "-8%",
               }}
             >
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: "flex",
+                  flexDirection: "column",
                   flexGrow: 1,
-                  width: '100%',
-                  maxWidth: 'none',
-                  height: 'auto',
+                  width: "100%",
+                  maxWidth: "none",
+                  height: "auto",
                 }}
               >
-                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate}/>
+                <Info
+                  totalPrice={"0"}
+                  cart={cart}
+                  currency={currency}
+                  exchangeRate={exchangeRate}
+                />
               </Box>
             </Grid>
 
@@ -210,42 +237,46 @@ export default function Checkout(props) {
               md={7}
               lg={8}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                maxWidth: '100%',
-                width: '100%',
-                backgroundColor: { xs: 'transparent', },
-                alignItems: 'start',
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "100%",
+                width: "100%",
+                backgroundColor: { xs: "transparent" },
+                alignItems: "start",
                 pt: { xs: 0, sm: 16 },
                 px: { xs: 2, sm: 10 },
                 gap: { xs: 4, md: 8 },
-                marginTop: '3%',
-                marginLeft: '0%',
+                marginTop: "3%",
+                marginLeft: "0%",
                 flexGrow: 1,
-                height: 'auto',
+                height: "auto",
               }}
             >
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: { sm: 'space-between', md: 'flex-end' },
-                  alignItems: 'center',
-                  width: '100%',
-                  maxWidth: { sm: '100%', md: 600 },
-                  height: 'auto', // Adjust height dynamically
+                  display: "flex",
+                  justifyContent: { sm: "space-between", md: "flex-end" },
+                  alignItems: "center",
+                  width: "100%",
+                  maxWidth: { sm: "100%", md: 600 },
+                  height: "auto", // Adjust height dynamically
                 }}
               >
                 <Box
                   sx={{
-                    display: { xs: 'none', md: 'flex' },
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
+                    display: { xs: "none", md: "flex" },
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
                     flexGrow: 1,
-                    height: 'auto', // Ensure height adjusts to content
+                    height: "auto", // Ensure height adjusts to content
                   }}
                 >
-                  <Stepper id="desktop-stepper" activeStep={activeStep} sx={{ width: '100%', height: 40 }}>
+                  <Stepper
+                    id="desktop-stepper"
+                    activeStep={activeStep}
+                    sx={{ width: "100%", height: 40 }}
+                  >
                     {steps.map((label) => (
                       <Step key={label}>
                         <StepLabel>{label}</StepLabel>
@@ -257,23 +288,39 @@ export default function Checkout(props) {
 
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: "flex",
+                  flexDirection: "column",
                   flexGrow: 1,
-                  width: '100%',
-                  maxWidth: { sm: '100%', md: 600 },
-                  gap: { xs: 5, md: 'none' },
-                  height: 'auto', // Let the content adjust its height as needed
+                  width: "100%",
+                  maxWidth: { sm: "100%", md: 600 },
+                  gap: { xs: 5, md: "none" },
+                  height: "auto", // Let the content adjust its height as needed
                 }}
               >
                 {activeStep === steps.length ? (
                   <Stack spacing={2} useFlexGap>
                     <Typography variant="h1">📦</Typography>
-                    <Typography variant="h5">Thank you for your order!</Typography>
-                    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                      Your order number is <strong>&nbsp;#140396</strong>. We have emailed your order confirmation and will update you once it's shipped.
+                    <Typography variant="h5">
+                      Thank you for your order!
                     </Typography>
-                    <Button variant="contained" sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      Your order number is <strong>&nbsp;#140396</strong>. We
+                      have emailed your order confirmation and will update you
+                      once it's shipped.
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        alignSelf: "start",
+                        width: { xs: "100%", sm: "auto" },
+                      }}
+                      onAbort={() => {
+                        navigate("/orders");
+                      }}
+                    >
                       Go to my orders
                     </Button>
                   </Stack>
@@ -282,15 +329,15 @@ export default function Checkout(props) {
                     {getStepContent(activeStep)}
                     <Box
                       sx={{
-                        display: 'flex',
-                        flexDirection: { xs: 'column-reverse', sm: 'row' },
-                        alignItems: 'end',
+                        display: "flex",
+                        flexDirection: { xs: "column-reverse", sm: "row" },
+                        alignItems: "end",
                         flexGrow: 1,
                         gap: 1,
                         pb: { xs: 12, sm: 0 },
                         mt: { xs: 2, sm: 0 },
-                        mb: '60px',
-                        justifyContent: 'space-between',
+                        mb: "60px",
+                        justifyContent: "space-between",
                       }}
                     >
                       {activeStep !== 0 && (
@@ -299,9 +346,9 @@ export default function Checkout(props) {
                           onClick={handleBack}
                           variant="text"
                           sx={{
-                            display: { xs: 'none', sm: 'flex' },
-                            position: 'relative',
-                            top: '-210%',
+                            display: { xs: "none", sm: "flex" },
+                            position: "relative",
+                            top: "-210%",
                           }}
                         >
                           Previous
@@ -322,7 +369,7 @@ export default function Checkout(props) {
             className="custom-confirmation-modal"
             okButtonProps={{
               className: "bg-[#036264] hover:bg-[#04494b] text-white",
-              style: { backgroundColor: '#036264', color: 'white' },
+              style: { backgroundColor: "#036264", color: "white" },
             }}
             cancelButtonProps={{
               className: "text-gray-600 hover:text-gray-800",
@@ -331,10 +378,12 @@ export default function Checkout(props) {
             <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
               <AlertCircle className="text-[#036264] w-12 h-12" />
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Confirm Payment
+                </h3>
                 <p className="text-gray-600">
-                  Are you sure you want to proceed with this payment? 
-                  Please review the details before confirming.
+                  Are you sure you want to proceed with this payment? Please
+                  review the details before confirming.
                 </p>
               </div>
             </div>
@@ -344,27 +393,36 @@ export default function Checkout(props) {
             visible={isWalletInfoModalVisible}
             onOk={closeWalletInfoModal}
             footer={null}
-            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
-            style={{ 
-              top: '50%', 
-              transform: 'translateY(-50%)',
-              width: '350px',
-              borderRadius: '12px',
-              overflow: 'hidden',
+            closeIcon={
+              <div className="modal-close-icon" onClick={closeWalletInfoModal}>
+                ✕
+              </div>
+            }
+            style={{
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "350px",
+              borderRadius: "12px",
+              overflow: "hidden",
             }}
             bodyStyle={{
-              backgroundColor: '#ffffff',
-              color: '#333',
-              textAlign: 'center',
-              padding: '30px 20px',
+              backgroundColor: "#ffffff",
+              color: "#333",
+              textAlign: "center",
+              padding: "30px 20px",
             }}
           >
             <div className="wallet-modal-content">
               <p>
-                <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+                <strong>New Wallet Balance:</strong>{" "}
+                {updatedWalletInfo?.amount
+                  ? updatedWalletInfo.amount.toLocaleString()
+                  : "0"}{" "}
+                {updatedWalletInfo?.wallet?.currency}
               </p>
               <p>
-                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+                <strong>Total Points:</strong>{" "}
+                {totalPoints ? totalPoints.toLocaleString() : "0"} points!
               </p>
             </div>
           </Modal>
@@ -374,5 +432,4 @@ export default function Checkout(props) {
       </AppTheme>
     </div>
   );
-
 }
