@@ -27,8 +27,6 @@ router.patch(
 
 router.patch("/tourGuide", updateTourguideData);
 
-
-
 router.get(
   "/tourGuide/notificationList",
   verifyToken,
