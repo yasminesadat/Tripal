@@ -213,6 +213,7 @@ const ActivityDetailsPage = () => {
               <PageHeader
                 activityId={activityId}
                 activityTitle={activity.title}
+                admin={"ana admin"}
               />
               <ActivityDetails
                 activity={activity}

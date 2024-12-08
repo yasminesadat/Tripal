@@ -210,7 +210,7 @@ const ItineraryDetailsPage = () => {
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
-              <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title} userRole={userRole} />
+              <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title} admin={"ana admin"} />
               <ItineraryDetails itinerary={itinerary} userRole={userRole} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
@@ -223,7 +223,7 @@ const ItineraryDetailsPage = () => {
           <>
             <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
             <Header1 />
-            <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  userRole={userRole}/>
+            <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  tourist={"ana tourist"}/>
             <ItineraryDetails 
               itinerary={itinerary} 
               userRole={userRole}
@@ -236,7 +236,7 @@ const ItineraryDetailsPage = () => {
         {userRole === "Tour Guide" && (
           <>
             <TourGuideHeader />
-            <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  userRole={userRole}/>
+            <PageHeader itineraryId={itineraryId} itineraryTitle={itinerary.title}  tourguide={"ana tourguide"}/>
             <ItineraryDetails itinerary={itinerary} userRole={userRole} />
             <FooterThree />
           </>
