@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Menu from "../components/GuestMenu";
-import Currency from "../components/Currency";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function GuestHeader({ refLogin, setOpen }) {
@@ -62,7 +61,6 @@ export default function GuestHeader({ refLogin, setOpen }) {
             )}
             < div className="header__right" ref={refLogin} >
 
-              <Currency />
               < div className="header__right" ref={refLogin} >
                 <Link to="/register" className="ml-10">
                   Sign up

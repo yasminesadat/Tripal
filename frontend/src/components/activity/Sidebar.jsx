@@ -13,7 +13,7 @@ import {
 import RangeSlider from "./RangeSlider";
 import Stars from "../common/Stars";
 
-export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter, priceRange, setPriceRange }) {
+export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, setCategoryFilter,setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);

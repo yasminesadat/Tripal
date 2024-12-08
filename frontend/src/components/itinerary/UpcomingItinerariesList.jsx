@@ -58,7 +58,6 @@ export default function ItinerariesList({
   const [currency, setCurrency] = useState( "EGP");
 
   const getExchangeRate = async () => {
-    if(userRole!=='Tourist') return;
     if (currency) {
       try {
         const rate = await getConversionRate(currency);
@@ -70,7 +69,6 @@ export default function ItinerariesList({
   };
 
   useEffect(() => {
-    if(userRole!=='Tourist') return;
     const intervalId = setInterval(() => {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);

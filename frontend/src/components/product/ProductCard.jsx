@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useState,useEffect } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
 import { saveProduct } from "@/api/TouristService";
 import Stars from "../common/Stars";
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getUserData } from "@/api/UserService";
 
 const ProductCard = ({
   id,
@@ -44,6 +46,40 @@ const ProductCard = ({
     });
   };
 
+  
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [currency, setCurrency] = useState( "EGP");
+  
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData();
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
   const handleEditClick = (e) => {
     navigate(`/seller/edit-product/${id}`, {
       state: {
@@ -180,7 +216,7 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
-              <span className="text-16 fw-500">{price}</span>
+              <span className="text-16 fw-500">{currency} {(price*exchangeRate).toFixed(2)}</span>
             </div>
           </div>
         </div>
