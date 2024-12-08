@@ -176,7 +176,6 @@ export default function Activities() {
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
-              tourist={true}
             />
             <ActivitiesList 
               page={"upcoming"} 
@@ -195,7 +194,7 @@ export default function Activities() {
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
-              <PageHeader onSearch={handleSearch} title="View all activities" />
+              <PageHeader onSearch={handleSearch} title="View all activities" admin={"walahy admin"}/>
               <ActivitiesList 
                 page={"upcoming"} 
                 searchTerm={searchTerm} 
@@ -216,7 +215,7 @@ export default function Activities() {
             <PageHeader
               onSearch={handleSearch}
               title="Explore all upcoming activities"
-              tourist={true}
+              tourist={"ana tourist"}
             />
             <ActivitiesList 
               page={"upcoming"} 

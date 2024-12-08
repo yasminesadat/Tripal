@@ -35,9 +35,6 @@ export default function HomePage5() {
       title: "Sign up or Log in",
       description: "You are 1 step away from getting introduced to a rollercoaster of events.",
       target: () => refLogin.current,
-      // onFinish: () => {
-      //   setOpen(false)
-      // }
     },
   ];
 
@@ -121,17 +118,16 @@ export default function HomePage5() {
       `}</style>
       <MetaComponent meta={metadata} />
       <main >
-        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} />
+        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} homepage={"home"}/>
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />
-        <FeaturedTrips />
+        <br></br>
+        <br></br>
         <BannerEight />
         <DestinationsFive />
         <TestimonialsFour />
-        <ArticlesOne />
-        <Banner9 />
         <FooterThree />
       </main>
     </>

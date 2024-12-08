@@ -49,10 +49,10 @@ export default function FooterThree() {
                 <h4 className="text-20 fw-500">Contact</h4>
 
                 <div className="y-gap-10 mt-20">
-                  <a className="d-block" href="#">
+                  <a className="d-block" href="https://maps.app.goo.gl/ACsDjKTWb6Eb4xfN8">
                     123 Street, Cairo, Egypt
                   </a>
-                  <a className="d-block" href="#">
+                  <a className="d-block" href='mailto:support@tripal.com'>
                     support@tripal.com
                   </a>
                 </div>

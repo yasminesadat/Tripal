@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plane, Clock, Calendar } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getTouristAge } from '../../api/TouristService';
-import { getConversionRate } from '../../api/ExchangeRatesService';
+import { getConversionRate,getTouristCurrency } from '../../api/ExchangeRatesService';
 import { message } from 'antd';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
@@ -20,8 +20,28 @@ const FlightResults = () => {
   const destCityCode = location.state?.destinationLocationCode;
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [touristAge, setTouristAge] = useState(null);
+  const [touristAge, setTouristAge] = useState(0);
   const [selectedClass, setSelectedClass] = useState('economy');
+
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   useEffect(() => {
     const fetchCurrency = () => {

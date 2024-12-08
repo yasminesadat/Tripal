@@ -5,6 +5,8 @@ const {
   createSeller,
   updateSellerData,
   readSellerData,
+  markNotificationSeller,
+  getSellerNotifications,
 } = require("../controllers/SellerController");
 const { changePassword } = require("../controllers/PasswordController.js");
 const Seller = require("../models/users/Seller.js");
@@ -36,6 +38,20 @@ router.put(
   verifyToken,
   authorizeRoles("Seller"),
   changePassword(Seller)
+);
+
+router.patch(
+  "/seller/markNotifications",
+  verifyToken,
+  authorizeRoles("Seller"),
+  markNotificationSeller
+);
+
+router.get(
+  "/seller/notificationList",
+  verifyToken,
+  authorizeRoles("Seller"),
+  getSellerNotifications
 );
 
 module.exports = router;

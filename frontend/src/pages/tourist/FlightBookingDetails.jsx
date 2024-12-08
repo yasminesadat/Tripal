@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-import { updateTouristInformation, getTouristUserName, getWalletAndTotalPoints } from '../../api/TouristService';
+import { getTouristUserName, getWalletAndTotalPoints } from '../../api/TouristService';
 import { saveFlightBooking } from "../../api/TouristService";
 import { getHotelHistory } from "../../api/HotelService";
 import TransportationBookingPopUp from './TransportationBooking'
@@ -12,6 +12,7 @@ import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { loadStripe } from "@stripe/stripe-js";
 import { AlertCircle } from 'lucide-react';
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);
@@ -32,8 +33,8 @@ const FlightBookingDetails = () => {
   const [isBookedAccepted,setIsBookedAccepted]=useState(false);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
   const [isModalVisible, setIsModalVisible] = useState(false); 
-  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null); 
-  const [totalPoints, setTotalPoints] = useState(null); 
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0); 
+  const [totalPoints, setTotalPoints] = useState(0); 
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
 const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 

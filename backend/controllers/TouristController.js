@@ -92,6 +92,45 @@ cron.schedule('59 23 * * *', async () => {
 });
 
 
+// // ADD TIMESTAMP TO USERS
+// const getRandomDate = (startDate, endDate) => {
+//   const randomTimestamp = Math.floor(Math.random() * (endDate.getTime() - startDate.getTime())) + startDate.getTime();
+//   return new Date(randomTimestamp);
+// };
+
+
+// cron.schedule('37 23 * * *', async () => {
+//   try {
+//     const users = await User.find({ timestamp: { $exists: false } });
+
+//     console.log ("HIIIIIIIII1")
+
+//     if (users.length > 0) {
+//       const startDate = new Date(2024, 0, 1);  
+//       const endDate = new Date();  // Current date and time
+
+//       console.log ("HIIIIIIIII2")
+
+//       for (let user of users) {
+//         const randomDate = getRandomDate(startDate, endDate);
+//         user.timestamp = randomDate;
+
+//         await user.save();
+//         console.log(`Updated timestamp is ${user.timestamp}`);
+//       }
+
+//       console.log ("HIIIIIIIII3")
+
+//       console.log('Cron job completed: timestamp updated for users without a timestamp.');
+//     } else {
+//       console.log('No users need to be updated.');
+//     }
+//   } catch (error) {
+//     console.error('Error updating timestamp:', error);
+//   }
+// });
+
+
 
 const createTourist = async (req, res) => {
   try {
@@ -715,11 +754,12 @@ const checkTouristPromocode = async (req, res) => {
     console.log("valueee", isPromoCodeValid);
     console.log(tourist.promoCodes);
     console.log("promo", promoCode);
+    const promoCodeObject = await PromoCode.find({ name: promoCode });
     if (!isPromoCodeValid) {
       return res.status(200).json({ status: "no", message: "Invalid promo code!" });
     }
     else {
-      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!" });
+      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!", promo: promoCodeObject });
     }
     // return res.status(200).json({ isPromoCodeValid });
   } catch (error) {
@@ -1037,6 +1077,49 @@ const addAddress = asyncHandler(async (req, res) => {
   }
 });
 
+const updateQuantity = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+  const { productId, quantity } = req.body;
+
+  if (!quantity || quantity <= 0) {
+    return res.status(400).json({ message: "Invalid quantity provided." });
+  }
+
+  try {
+    const tourist = await touristModel
+      .findById(touristId)
+      .populate("cart.product");
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    const cartIndex = tourist.cart.findIndex(
+      (item) => item.product._id.toString() === productId
+    );
+
+    if (cartIndex === -1) {
+      return res.status(404).json({ message: "Product not found in the cart." });
+    }
+
+    tourist.cart[cartIndex].quantity = quantity;
+    tourist.cart[cartIndex].price =
+      quantity * tourist.cart[cartIndex].product.price;
+
+    await tourist.save();
+
+    res.status(200).json({
+      message: "Product's quantity in cart updated successfully.",
+      cart: tourist.cart,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while updating product's quantity in cart.",
+      error: error.message,
+    });
+  }
+});
+
 
 module.exports = {
   createTourist,
@@ -1067,6 +1150,7 @@ module.exports = {
   getAddresses,
   addAddress,
   getWalletAndTotalPoints,
-  markTouristNotificationsRead
+  markTouristNotificationsRead,
+  updateQuantity
 
 };

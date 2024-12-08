@@ -19,23 +19,44 @@ import Header from "../../components/layout/header/TouristHeader";
 import Footer from "../../components/layout/footers/FooterThree";
 import { createOrder } from "@/api/OrderService";
 import { loadStripe } from "@stripe/stripe-js";
-import { message, Modal } from "antd";
-import { getWalletAndTotalPoints } from "@/api/TouristService";
-import { AlertCircle } from "lucide-react";
+import { message, Modal } from 'antd';
+import { getWalletAndTotalPoints } from '@/api/TouristService';
+import { AlertCircle } from 'lucide-react';
+import { getTouristCurrency, getConversionRate } from '@/api/ExchangeRatesService';
 
 const steps = ["Shipping address", "Payment details"];
 
 export default function Checkout(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [address, setAddress] = useState(null);
+  const [discount, setDiscount] = useState(0.0);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
+
+  const [currency, setCurrency] = useState("EGP");
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1); return () => clearInterval(intervalId);
+  }, [currency]);
+
   const cart = location.state?.cart || [];
-  const currency = location.state?.currency || "EGP";
-  const exchangeRate = location.state?.exchangeRate || 1;
-  const [isConfirmationModalVisible, setConfirmationModalVisible] =
-    useState(false);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);
   const [totalPoints, setTotalPoints] = useState(0);
@@ -108,23 +129,13 @@ export default function Checkout(props) {
       return;
     }
     message.success("Payment with wallet successful!");
-    try {
-      const updatedData = await getWalletAndTotalPoints();
-      setUpdatedWalletInfo(updatedData.wallet);
-      setTotalPoints(updatedData.totalPoints);
-      showWalletInfoModal();
-      setActiveStep(activeStep + 1);
-    } catch (error) {
-      message.error(
-        "There was an issue updating your wallet. Please try again."
-      );
-    }
+    setActiveStep(activeStep + 1);
   };
   const handleConfirmPayment = async () => {
     cancelConfirmationModal(); // Close the confirmation modal
 
     // Process wallet payment after confirmation
-    const orderData = { deliveryAddress: address, paymentMethod: "Wallet" };
+    const orderData = { deliveryAddress: address, paymentMethod: "Wallet", discountPercentage: discount };
     await processWalletPayment(orderData);
   };
 
@@ -167,7 +178,7 @@ export default function Checkout(props) {
       case 0:
         return <AddressForm onNext={handleNextAddress} />;
       case 1:
-        return <PaymentForm onNext={handleNextPayment} />;
+        return <PaymentForm onNext={handleNextPayment} onApplyPromo={setDiscount} />;
       default:
         throw new Error("Unknown step");
     }
@@ -222,12 +233,7 @@ export default function Checkout(props) {
                   height: "auto",
                 }}
               >
-                <Info
-                  totalPrice={"0"}
-                  cart={cart}
-                  currency={currency}
-                  exchangeRate={exchangeRate}
-                />
+                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate} promo={discount} />
               </Box>
             </Grid>
 
@@ -382,8 +388,8 @@ export default function Checkout(props) {
                   Confirm Payment
                 </h3>
                 <p className="text-gray-600">
-                  Are you sure you want to proceed with this payment? Please
-                  review the details before confirming.
+                  Are you sure you want to proceed with this payment?
+                  Please review the details before confirming.
                 </p>
               </div>
             </div>
@@ -393,17 +399,13 @@ export default function Checkout(props) {
             visible={isWalletInfoModalVisible}
             onOk={closeWalletInfoModal}
             footer={null}
-            closeIcon={
-              <div className="modal-close-icon" onClick={closeWalletInfoModal}>
-                ✕
-              </div>
-            }
+            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
             style={{
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "350px",
-              borderRadius: "12px",
-              overflow: "hidden",
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '350px',
+              borderRadius: '12px',
+              overflow: 'hidden',
             }}
             bodyStyle={{
               backgroundColor: "#ffffff",

@@ -94,4 +94,49 @@ const updateSellerData = asyncHandler(async (req, res) => {
   res.status(200).json({ status: "success", data: updatedSeller });
 });
 
-module.exports = { createSeller, readSellerData, updateSellerData };
+
+const getSellerNotifications = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const seller = await Seller.findById(userid);
+    console.log("hi1")
+
+    if (!seller) {
+      return res.status(404).json({ error: "Seller not found" });
+    }
+    console.log(seller.notificationList)
+    res.status(200).json(seller.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+const markNotificationSeller = async (req, res) => {
+  try {
+    const userid=req.userId;
+   
+   
+    const seller = await Seller.findById(userid);
+    if (!seller) {
+      return res.status(404).json({ error: "Seller not found" });
+    }
+     
+
+    seller.notificationList.forEach((n)=>{(n.read=true)})
+
+    await seller.save();
+
+    console.log(seller.notificationList)
+    
+    
+    res.status(200).json(seller.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { createSeller, readSellerData, updateSellerData,getSellerNotifications,markNotificationSeller };
