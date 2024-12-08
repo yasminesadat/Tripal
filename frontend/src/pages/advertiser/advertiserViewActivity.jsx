@@ -16,7 +16,10 @@ import { deleteActivity } from "../../api/ActivityService";
 import { DollarOutlined ,TagOutlined,PartitionOutlined ,WalletOutlined,PercentageOutlined } from '@ant-design/icons';
 import AdvertiserGallery from "../../components/tourSingle/Galleries/AdvertiserGallery";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
+import ActivityBooking from "@/components/activity/ActivityBooking";
+
 import FooterThree from "@/components/layout/footers/FooterThree";
+
 
 
 export default function AdvertiserActivityDetails() {
@@ -181,7 +184,9 @@ export default function AdvertiserActivityDetails() {
               <ActivityReviews activityId={activityId} /> */}
 
               </div>
-
+              <div>
+              <ActivityBooking bookings={activity.bookings} price={activity.price}/>
+              </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                 <Button
