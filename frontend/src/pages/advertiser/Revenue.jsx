@@ -49,6 +49,11 @@ export default function ActivityRevenue() {
         console.error("Error fetching revenue data:", error);
       }
     };
+    fetchRevenue();
+   
+  },[]);
+  useEffect(() => {
+    
     const getAdvertiserBooking = async () => {
       try {
         const AdvertiserBooking = await getAdvertiserBookings();
@@ -82,9 +87,14 @@ export default function ActivityRevenue() {
 }
     };
 
-    fetchRevenue();
+    
     getAdvertiserBooking();
   },[]);
+  useEffect(() => {
+    setActiveTab((preTab)=>(
+     preTab.label==="Revenue"? tabs[0]:tabs[1]
+    ));
+   }, [tabs]);
 
   const chart = (interval) => (
     <ResponsiveContainer height={500} width="100%">

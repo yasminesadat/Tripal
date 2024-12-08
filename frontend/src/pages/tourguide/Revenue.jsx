@@ -49,6 +49,13 @@ export default function ItineraryRevenue() {
         console.error("Error fetching revenue data:", error);
       }
     };
+   
+
+fetchRevenue();
+  }, []);
+  useEffect(() => {
+
+   
     const getTourguideBooking = async () => {
       try {
         const TourGuideBooking = await getTourGuideBookings();
@@ -82,8 +89,13 @@ export default function ItineraryRevenue() {
 }
     };
 getTourguideBooking();
-fetchRevenue();
+
   }, []);
+  useEffect(() => {
+    setActiveTab((preTab)=>(
+     preTab.label==="Revenue"? tabs[0]:tabs[1]
+    ));
+   }, [tabs]);
 
 const chart = (interval) => (
   <ResponsiveContainer height={500} width="100%">

@@ -57,8 +57,8 @@ export default function ItineraryDetails({ itinerary, userRole, refItineraryBook
                   search={"dont search bro"}
                 />
               </div>
-              <div className="line mt-60 mb-60"></div>
-              <ItineraryBooking bookings={itinerary.bookings} price={itinerary.price+itinerary.serviceFee}/>
+             {userRole=== "Tour Guide"&& <div><div className="line mt-60 mb-60"></div>
+              <ItineraryBooking bookings={itinerary.bookings} price={itinerary.price+itinerary.serviceFee}/></div>}
               <div className="line mt-60 mb-60"></div>
               <h2 className="text-30">Customer Reviews</h2>
 

@@ -75,10 +75,12 @@ export default function ItineraryBooking({ bookings, price }) {
       } 
       : tab)
  ))
+}, [revenue, sortOption]);
+useEffect(() => {
  setActiveTab((preTab)=>(
   preTab.label==="Revenue"? tabs[0]:tabs[1]
  ));
-}, [sortOption]);
+}, [tabs]);
   const chart = (interval) => (
     <ResponsiveContainer height={500} width="100%">
       <LineChart data={activeTab.data}>
