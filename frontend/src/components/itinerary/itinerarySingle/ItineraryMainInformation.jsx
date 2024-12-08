@@ -126,7 +126,7 @@ export default function ItineraryMainInformation({
       }, 2000);
       navigate("/my-itineraries");
     } catch (error) {
-      message.error("Failed to delete itinerary.");
+      message.error(error.response?.data?.message ||error.response?.data?.error||"Failed to delete itinerary.");
       setModalVisible(false);
     } finally {
       setLoading(false);

@@ -57,6 +57,12 @@ router.patch(
   unArchiveProduct
 );
 router.get("/products/revenue", verifyToken, authorizeRoles("Seller"), revenue);
-router.post("/products/images", getProductImages);
+
+router.post(
+  "/products/images",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getProductImages
+);
 
 module.exports = router;
