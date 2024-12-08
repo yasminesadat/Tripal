@@ -265,18 +265,6 @@ const ProductDetails = ({ homeURL, productsURL }) => {
         .ant-tour .ant-tour-arrow-content {
           background: white;
           border: 1px solid rgba(0, 0, 0, 0.06);
-
-          .custom-button {
-            background-color: var(--color-dark-purple) !important;
-            border-color: var(--color-dark-purple) !important;
-          }
-          .custom-button:hover,
-          .custom-button.ant-btn:hover,
-          .custom-button.ant-btn:focus,
-          .custom-button.ant-btn-primary:hover {
-            background-color: var(--color-light-purple) !important;
-            border-color: var(--color-light-purple) !important;
-          }
         }
       `}</style>
       <div className="productDetails">
@@ -363,6 +351,12 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                           onClick={handleAddToCart}
                           ref={refProdToCart}
                           className="custom-button"
+                          style={{
+                            backgroundColor: "#8f5774",
+                            borderColor: "#8f5774",
+                            color: "white",
+                            fontWeight: "bold",
+                          }}
                         >
                           Add to Cart
                         </Button>

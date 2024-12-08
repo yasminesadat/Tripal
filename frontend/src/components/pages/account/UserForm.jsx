@@ -1,13 +1,21 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import {Form,Input,Button,Checkbox,Card,Row,Typography,message,} from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Card,
+  Row,
+  Typography,
+  message,
+} from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { login } from "../../../api/UserService";
 import OtpModal from "./OtpEmailModal";
 const { Title, Text } = Typography;
 
 export default function UserForm() {
-
   //#region user State
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -71,7 +79,7 @@ export default function UserForm() {
     setError("");
   };
   //#endregion
-  
+
   return (
     <>
       <Card
@@ -138,7 +146,7 @@ export default function UserForm() {
               { required: true, message: "Please enter your password" },
               {
                 min: 6,
-                message: "Password must be at least 6 characters",
+                message: "Password is at least 6 characters",
               },
             ]}
           >
@@ -162,9 +170,11 @@ export default function UserForm() {
           </Form.Item>
 
           {/* OTP Modal */}
-          <OtpModal visible={isModalVisible} 
-          onClose={handleCloseModal} 
-          clearError={clearError}  />
+          <OtpModal
+            visible={isModalVisible}
+            onClose={handleCloseModal}
+            clearError={clearError}
+          />
 
           {/* Submit Button */}
           <Form.Item>

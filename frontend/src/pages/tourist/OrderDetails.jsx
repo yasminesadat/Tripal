@@ -22,6 +22,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
+        if (id === undefined) return;
         const response = await getOrderById(id);
         setOrder(response);
         const productIds = response.products.map((product) => product.product);
