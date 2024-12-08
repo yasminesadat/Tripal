@@ -276,6 +276,19 @@ const isArchived = asyncHandler(async (req, res) => {
   } catch (error) {}
 });
 
+const getProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id).populate("seller");
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    } else {
+      res.status(200).json(product);
+    }
+  } catch (error) {}
+});
+
 module.exports = {
   createProduct,
   getProducts,
@@ -288,4 +301,5 @@ module.exports = {
   revenue,
   getProductImages,
   isArchived,
+  getProduct,
 };

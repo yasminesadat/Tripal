@@ -28,6 +28,9 @@ const OrderDetails = () => {
         const images = await fetchProductImages(productIds);
         setImages(images);
       } catch (error) {
+        if (id === undefined) {
+          return;
+        }
         if (!showError.current) {
           message.error("Failed to fetch order details.");
           showError.current = true;
@@ -36,7 +39,7 @@ const OrderDetails = () => {
     };
 
     fetchOrderDetails();
-  }, []);
+  }, [id]);
 
   const defaultTimeline = ["Pending", "Shipped", "Delivered"];
   const cancelledTimeline = ["Cancelled"];
@@ -224,10 +227,10 @@ const OrderDetails = () => {
   .timeline-line {
     height: 2px;
     background: var(--color-stone-light);
-    width: 94%;
+    width: 88%;
     position: absolute;
     top: 24px;
-    left: 50%;
+    left: 56%;
     z-index: -1;
   }
 
