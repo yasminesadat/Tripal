@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getAdvertiserActivities, getActivityById } from "../../api/ActivityService";
 import { message} from 'antd';
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
 
 
 const AdvertiserActivities = () => {
@@ -96,6 +97,8 @@ const AdvertiserActivities = () => {
     </div>
     </div>
     </div>
+    <FooterThree />
+
     </div>
   );
 };

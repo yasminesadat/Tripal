@@ -15,6 +15,8 @@ import { Button, message, Upload } from "antd";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { changeAdvertiserPassword } from "../../api/AdvertiserService";
+import FooterThree from "@/components/layout/footers/FooterThree";
+
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
   //const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -1051,10 +1053,7 @@ export default function AdvertiserProfile() {
         </div>
       </div>
 
-
-      <div className="text-center pt-30">
-        © Copyright Tripal {new Date().getFullYear()}
-      </div>
+      <FooterThree />
 
     </>
   );
