@@ -27,7 +27,6 @@ cron.schedule('43 00 * * *', async () => {
     }
   })
 
-
   for (const user of birthdayUsers) {
     try {
       const promocode = await getRandomPromoCode();
@@ -71,9 +70,7 @@ cron.schedule('43 00 * * *', async () => {
         notifType: "birthday"
       });
       await user.save();
-      console.log(`Birthday email sent to ${user.userName}`);
     } catch (error) {
-      console.error(`Error processing birthday email for ${user.userName}:`, error.message);
       continue;
     }
   }
@@ -81,69 +78,24 @@ cron.schedule('43 00 * * *', async () => {
 
 cron.schedule('59 23 * * *', async () => {
   try {
-    const result = await touristModel.updateMany(
+    await touristModel.updateMany(
       {},
       { $set: { promoCodes: [] } }
     );
-    console.log(`Cleared promo codes for ${result.modifiedCount} users`);
   } catch (error) {
-    console.error('Error clearing promo codes:', error.message);
   }
 });
-
-
-// // ADD TIMESTAMP TO USERS
-// const getRandomDate = (startDate, endDate) => {
-//   const randomTimestamp = Math.floor(Math.random() * (endDate.getTime() - startDate.getTime())) + startDate.getTime();
-//   return new Date(randomTimestamp);
-// };
-
-
-// cron.schedule('37 23 * * *', async () => {
-//   try {
-//     const users = await User.find({ timestamp: { $exists: false } });
-
-//     console.log ("HIIIIIIIII1")
-
-//     if (users.length > 0) {
-//       const startDate = new Date(2024, 0, 1);  
-//       const endDate = new Date();  // Current date and time
-
-//       console.log ("HIIIIIIIII2")
-
-//       for (let user of users) {
-//         const randomDate = getRandomDate(startDate, endDate);
-//         user.timestamp = randomDate;
-
-//         await user.save();
-//         console.log(`Updated timestamp is ${user.timestamp}`);
-//       }
-
-//       console.log ("HIIIIIIIII3")
-
-//       console.log('Cron job completed: timestamp updated for users without a timestamp.');
-//     } else {
-//       console.log('No users need to be updated.');
-//     }
-//   } catch (error) {
-//     console.error('Error updating timestamp:', error);
-//   }
-// });
-
-
 
 const createTourist = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const { userName, email, password, mobileNumber, nationality, dateOfBirth, job, tags = [], categories = [] } = req.body;
 
-    // Check unique username across all users
     const existingUserName = await User.findOne({ userName });
     if (existingUserName) {
       return res.status(400).json({ error: "Username already exists" });
     }
 
-    // Check unique email across all users
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ error: "Email already exists" });
@@ -157,7 +109,6 @@ const createTourist = async (req, res) => {
         error: "Request has been submitted with this username"
       });
     }
-    //check unique email across all requests
     const existingEmailRequests = await Request.findOne({
       email,
       status: { $ne: 'rejected' }
@@ -165,12 +116,9 @@ const createTourist = async (req, res) => {
     if (existingEmailRequests) {
       return res.status(400).json({ error: "Request has been submitted with this email" });
     }
-    // Validate required fields
     if (!userName || !email || !password || !mobileNumber || !nationality || !dateOfBirth || !job) {
       return res.status(400).json({ error: "Please add all fields" });
     }
-
-    // Create tourist
     const tourist = await touristModel.create({
       userName: req.body.userName,
       email: req.body.email,
@@ -189,7 +137,6 @@ const createTourist = async (req, res) => {
 
     const id = tourist._id;
 
-    // Create associated user role
     await User.create({
       userId: id,
       userName: tourist.userName,
@@ -207,7 +154,6 @@ const getTouristInfo = async (req, res) => {
   try {
     const id = req.userId;
 
-    // checks if the id is a valid one
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
         status: "error",
@@ -215,12 +161,10 @@ const getTouristInfo = async (req, res) => {
       });
     }
 
-    // retreives all the info beta3 el tourist by his id
     const touristInformation = await touristModel.findById(id);
     if (!touristInformation) {
       return res.status(404).json("Tourist profile doesn't exist");
     }
-
 
     return res.status(200).json(touristInformation);
   } catch (error) {
@@ -229,12 +173,9 @@ const getTouristInfo = async (req, res) => {
 };
 
 const updateTouristProfile = async (req, res) => {
-
-
   try {
     const id = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
-
     const currTourist = await Tourist.findById(id);
 
     if (tags) {
@@ -251,6 +192,7 @@ const updateTouristProfile = async (req, res) => {
         message: "You cannot update your username",
       });
     }
+
     if (updateParameters.walletBalance) {
       res.status(400).json({
         status: "error",
@@ -258,8 +200,6 @@ const updateTouristProfile = async (req, res) => {
       });
     }
 
-    console.log("email", updateParameters.email);
-    console.log("email 2", currTourist.email);
     if (updateParameters.email && updateParameters.email !== currTourist.email) {
       const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
       if (existingEmail && updateParameters.email !== currTourist.email) {
@@ -275,7 +215,6 @@ const updateTouristProfile = async (req, res) => {
         { email: updateParameters.email },
         { new: true, runValidators: true }
       );
-
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -329,7 +268,6 @@ const changePassword = async (req, res) => {
 
 const getTouristNameAndEmail = async (req, res) => {
   const id = req.userId;
-
   try {
     const tourist = await touristModel.findById(id).select('userName email');
 
@@ -342,7 +280,6 @@ const getTouristNameAndEmail = async (req, res) => {
       email: tourist.email
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -506,7 +443,7 @@ const getTouristCategories = async (req, res) => {
 
 const bookmarkEvent = async (req, res) => {
   const touristId = req.userId;
-  const { eventId, eventType } = req.body; // eventType can be activity or itinerary
+  const { eventId, eventType } = req.body;
 
   try {
     const tourist = await touristModel.findById(touristId);
@@ -527,14 +464,11 @@ const bookmarkEvent = async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
 
-    // Add the event to the tourist's bookmarked list (depending on event type)
     const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
-    if (!tourist[bookmarkArray].includes(eventId)) {   //prevents adding the same event more than once but should i handle removing bookmarked events?
+    if (!tourist[bookmarkArray].includes(eventId)) { 
       tourist[bookmarkArray].push(eventId);
       await tourist.save();
-    }                           //if bookmarkArray is 'bookmarkedActivities' yeb2a tourist['bookmarkedActivities'] will be accessed
-
-    // Add the tourist to the event's bookmarked list
+    }                           
     if (!event.bookmarked.includes(touristId)) {
       event.bookmarked.push(touristId);
       await event.save();
@@ -548,8 +482,7 @@ const bookmarkEvent = async (req, res) => {
 };
 
 const getBookmarkedEvents = async (req, res) => {
-  const touristId = req.userId; // Get the logged-in tourist's ID
-
+  const touristId = req.userId;
   try {
     const tourist = await touristModel.findById(touristId)
       .populate("bookmarkedActivities")
@@ -562,7 +495,7 @@ const getBookmarkedEvents = async (req, res) => {
     const bookmarkedEvents = [
       ...tourist.bookmarkedActivities.map(activity => ({
         ...activity.toObject(),
-        type: "activity"                   //so ik fel frontend which type it is 
+        type: "activity"                   
       })),
       ...tourist.bookmarkedItineraries.map(itinerary => ({
         ...itinerary.toObject(),
@@ -576,43 +509,6 @@ const getBookmarkedEvents = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-// const removeBookmarkEvent = async (req, res) => {
-//   const touristId = req.userId;
-//   const { eventId, eventType } = req.body;
-
-//   try {
-//     const tourist = await touristModel.findById(touristId);
-//     if (!tourist) {
-//       return res.status(404).json({ error: 'Tourist not found' });
-//     }
-
-//     let event;
-//     if (eventType === 'activity') {
-//       event = await activityModel.findById(eventId);
-//     } else if (eventType === 'itinerary') {
-//       event = await itineraryModel.findById(eventId);
-//     }
-
-//     if (!event) {
-//       return res.status(404).json({ error: 'Event not found' });
-//     }
-
-//     // Remove event from tourist's bookmarked list
-//     const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
-//     tourist[bookmarkArray] = tourist[bookmarkArray].filter(id => id.toString() !== eventId.toString());
-//     await tourist.save();
-
-//     // Remove tourist from the event's bookmarked list
-//     event.bookmarked = event.bookmarked.filter(id => id.toString() !== touristId.toString());
-//     await event.save();
-
-//     res.status(200).json({ message: 'Bookmark removed successfully' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// };
 
 const saveProduct = async (req, res) => {
   const touristId = req.userId;
@@ -638,7 +534,6 @@ const saveProduct = async (req, res) => {
     await tourist.save();
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -662,7 +557,6 @@ const getWishList = async (req, res) => {
 
     res.json(wishlist);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -674,22 +568,19 @@ const removeFromWishList = async (req, res) => {
   try {
     const tourist = await touristModel.findById(touristId);
 
-    let product = await productModel.findById(productId);
-
-
     tourist.wishlist = tourist.wishlist.filter(id => id.toString() !== productId.toString());
     await tourist.save();
 
     res.status(200).json({ message: 'Product removed from wishlist successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 const getRandomPromoCode = async (req, res) => {
   try {
     const randomPromoCode = await PromoCode.aggregate([
-      { $sample: { size: 1 } }  // Get 1 random document
+      { $sample: { size: 1 } } 
     ]);
 
 
@@ -701,16 +592,15 @@ const getRandomPromoCode = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 const getTouristNotifications = async (req, res) => {
   try {
     const touristId = req.userId;
     const tourist = await touristModel.findById(touristId);
     const notifications = tourist.notificationList;
     return res.status(200).json(notifications);
-
   }
   catch (error) {
-
   }
 }
 
@@ -723,7 +613,6 @@ const markTouristNotificationsRead = async (req, res) => {
       return res.status(404).json({ error: "Tourist not found" });
     }
 
-
     tourist.notificationList.forEach((n) => { (n.read = true) })
 
     await tourist.save();
@@ -734,6 +623,7 @@ const markTouristNotificationsRead = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 const checkTouristPromocode = async (req, res) => {
   const touristId = req.userId;
   const { promoCode } = req.body;
@@ -747,13 +637,10 @@ const checkTouristPromocode = async (req, res) => {
       return res.status(404).json({ error: 'Tourist not found' });
     }
 
-    // Now promoCodes will be the full objects, not just IDs
     const isPromoCodeValid = tourist.promoCodes.some(promoCodeObj =>
       promoCodeObj.name === promoCode
     );
-    console.log("valueee", isPromoCodeValid);
-    console.log(tourist.promoCodes);
-    console.log("promo", promoCode);
+
     const promoCodeObject = await PromoCode.find({ name: promoCode });
     if (!isPromoCodeValid) {
       return res.status(200).json({ status: "no", message: "Invalid promo code!" });
@@ -761,12 +648,10 @@ const checkTouristPromocode = async (req, res) => {
     else {
       return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!", promo: promoCodeObject });
     }
-    // return res.status(200).json({ isPromoCodeValid });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
-
 
 const saveFlightBooking = async (req, res) => {
   try {
@@ -777,7 +662,6 @@ const saveFlightBooking = async (req, res) => {
     if (!existingTourist) {
       return res.status(400).json({ error: "User ID doesn't exist!" });
     }
-
 
     if (paymentMethod === 'wallet') {
       existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
@@ -828,9 +712,7 @@ const saveFlightBooking = async (req, res) => {
     }
 
     if (paymentMethod === 'card') {
-      // Calculate the total cost of flights
       const totalAmount = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
-
 
       const lineItems = bookedFlights.map(flight => ({
         price_data: {
@@ -838,7 +720,7 @@ const saveFlightBooking = async (req, res) => {
           product_data: {
             name: `Your Flight Number: ${flight.flightNumber}`,
           },
-          unit_amount: Math.round(parseFloat(flight.price) * 100),  // Stripe requires amount in cents
+          unit_amount: Math.round(parseFloat(flight.price) * 100),  
         },
         quantity: 1,
       }));
@@ -869,21 +751,17 @@ const completeFlightBooking = async (req, res) => {
   const { sessionId, userId, bookedFlights } = req.body;
 
   try {
-    // Retrieve the Stripe session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    // Check if the payment was successful
     if (session.payment_status !== "paid") {
       return res.status(400).json({ error: "Payment not successful" });
     }
 
-    // Find the tourist based on the userId
     const existingTourist = await touristModel.findById(userId);
     if (!existingTourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
 
-    // Process the booking for each flight
     bookedFlights.forEach(flight => {
       const newFlightBooking = {
         flightNumber: flight.flightNumber,
@@ -897,11 +775,9 @@ const completeFlightBooking = async (req, res) => {
         bookingDate: new Date(),
       };
 
-      // Add the flight booking to the tourist's bookedFlights array
       existingTourist.bookedFlights.push(newFlightBooking);
     });
 
-    // Calculate the total price and update wallet if using wallet payment
     const totalCost = bookedFlights.reduce((total, flight) => total + parseFloat(flight.price), 0);
     if (req.body.paymentMethod === 'wallet') {
       if (existingTourist.wallet.amount < totalCost) {
@@ -910,17 +786,14 @@ const completeFlightBooking = async (req, res) => {
       existingTourist.wallet.amount -= totalCost;
     }
 
-    // Save the tourist's updated details
     await existingTourist.save();
 
-    // Respond with success
     return res.status(200).json({
       message: "Flight booking completed successfully.",
       bookedFlights: existingTourist.bookedFlights,
     });
 
   } catch (error) {
-    console.error("Error completing flight booking:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -995,7 +868,6 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
-
 const getAddresses = asyncHandler(async (req, res) => {
   const touristId = req.userId;
 
@@ -1008,6 +880,7 @@ const getAddresses = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "An error occurred while retrieving the addresses.", error: error.message });
   }
 });
+
 const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
   const touristId = req.userId;
 
@@ -1022,12 +895,10 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while retrieving wallet and total points.",
-
       error: error.message,
     });
   }
 });
-
 
 const addAddress = asyncHandler(async (req, res) => {
   const touristId = req.userId;
@@ -1152,5 +1023,4 @@ module.exports = {
   getWalletAndTotalPoints,
   markTouristNotificationsRead,
   updateQuantity
-
 };

@@ -4,7 +4,6 @@ const preferenceTagModel = require('../models/PreferenceTag');
 const {sendEmail} = require('./Mailer');
 const Admin = require("../models/users/Admin.js");
 
-
 const createItinerary = async (req, res) => {
     try {
         const tourGuideId = req.userId;
@@ -22,7 +21,7 @@ const createItinerary = async (req, res) => {
             longitude: fetchedActivities[0].longitude};
         
         const timeline = [];
-        const tags = new Set(); //to remove dups
+        const tags = new Set(); 
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
@@ -30,7 +29,8 @@ const createItinerary = async (req, res) => {
                 activityName: activity.title,
                 content:activity.description, 
                 time: activity.time,
-                date: activity.date});
+                date: activity.date
+            });
             activity.tags.forEach((tag) => tags.add(tag));
         })
         const uniqueTagIds = Array.from(tags);
@@ -80,7 +80,6 @@ const getItineraryBookings = async (req, res) => {
         const bookings = await itineraryModel.find({ tourGuide: tourGuideId}).select("bookings");
         res.status(200).json(bookings);
     } catch (error) {
-        console.error('Error fetching itineraries bookings:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -101,10 +100,8 @@ const getItinerariesForTourguide = async (req, res) => {
             ]
         }).populate("tags")
         .sort({ startDate: -1 });
-
         res.status(200).json(itineraries);
     } catch (error) {
-        console.error('Error fetching itineraries:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -128,7 +125,7 @@ const updateItinerary = async (req, res) => {
             longitude: fetchedActivities[0].longitude};
         
         const timeline = [];
-        const tags = new Set(); //to remove dups
+        const tags = new Set(); 
 
         fetchedActivities.forEach((activity) => {
             price += Number(activity.price);
@@ -144,7 +141,6 @@ const updateItinerary = async (req, res) => {
         const fetchedTags = await preferenceTagModel.find({ _id: { $in: uniqueTagIds } });
         const uniqueTags = fetchedTags.map(tag => tag.name);
         
-        //leave it like this for now
         const itinerary = await itineraryModel.findById(id);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
@@ -170,7 +166,6 @@ const deleteItinerary = async (req, res) => {
     try {
         const { id } = req.params;
         const itinerary = await itineraryModel.findById(id);
-        console.log(itinerary);
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
@@ -181,7 +176,6 @@ const deleteItinerary = async (req, res) => {
     }
 };
 
-//it should be updated to handle the date (upcoming)
 const viewUpcomingItineraries = async (req, res) => {
     try {
         const currentDate = new Date();
@@ -205,34 +199,12 @@ const viewUpcomingItineraries = async (req, res) => {
     }
 };
 
-const viewPaidItineraries = async (req, res) => {
-    try {
-        const itineraries = await itineraryModel.find({flagged: false}).populate({
-            path: 'activities',
-            populate: [
-                {
-                    path: 'tags',
-                },
-                {
-                    path: 'category',
-                }
-            ]
-        }).populate("tags")
-
-        res.status(200).json(itineraries);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
-
 const getTouristItineraries = async (req, res) => {
     try {
         const touristId = req.userId;
-        // const currentDate = new Date();
 
         const itineraries = await itineraryModel.find(
             { 'bookings.touristId': touristId,
-            // endDate: { $gte: currentDate },
             flagged: false }).populate({
 
             path: 'activities',
@@ -246,7 +218,7 @@ const getTouristItineraries = async (req, res) => {
             ]
         }).populate("tags")
         .populate('tourGuide bookings.touristId')
-        .select("-bookings") //exclude bookings from response
+        .select("-bookings")
         .sort({ startDate: -1 });
 
         if (!itineraries.length)
@@ -273,8 +245,6 @@ const adminFlagItinerary = async (req, res) => {
        
         itinerary.flagged = !itinerary.flagged;
         await itinerary.save();
-
-        //SEND NOTIFICATION TO TOUR GUIDE ON SYSTEM 
     
         if (itinerary.flagged){
         itinerary.tourGuide.notificationList.push({message:`Your itinerary ${itinerary.title} has been flagged as inappropriate by the admin.`})
@@ -283,8 +253,6 @@ const adminFlagItinerary = async (req, res) => {
             itinerary.tourGuide.notificationList.push({message:`Your itinerary ${itinerary.title} has been flagged as appropriate by the admin.`})
         } 
         
-
-        //console.log(itinerary.tourGuide);
         await itinerary.tourGuide.save();
         res.status(200).json({message: 'Itinerary flagged successfully'});
     }
@@ -297,11 +265,6 @@ const getAllItinerariesForAdmin = async (req, res) => {
     try {
         const itineraries = await itineraryModel.find()
         .sort({ startDate: -1 });
-            // .populate({
-            //     path: 'activities',
-            //     populate: [{path: 'tags'},{path: 'category', }]
-            // })
-            // .populate("tags");
         res.status(200).json(itineraries);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -367,7 +330,7 @@ const revenue = async (req, res) => {
       const  id  = req.userId;
       const itineraries = await itineraryModel.find({ tourGuide: id });
       let totalRevenue = 0;
-      let appRevenue = 0; // To store app's total revenue
+      let appRevenue = 0; 
       itineraries.forEach((itinerary) => {
         const itinRevenue = itinerary.bookings.reduce(
           (sum, booking) => sum + booking.tickets * itinerary.price,
@@ -376,11 +339,10 @@ const revenue = async (req, res) => {
         totalRevenue += itinRevenue;
       });
   
-      appRevenue = totalRevenue * 0.10; // App takes 10% of the total revenue
+      appRevenue = totalRevenue * 0.10; 
       totalRevenue-=appRevenue
       res.status(200).json({ totalRevenue });
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: "Failed to fetch revenue" });
     }
   };
@@ -391,7 +353,6 @@ module.exports = {
     updateItinerary,
     deleteItinerary,
     viewUpcomingItineraries,
-    viewPaidItineraries,
     getTouristItineraries,
     adminFlagItinerary,
     getAllItinerariesForAdmin,

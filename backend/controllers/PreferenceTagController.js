@@ -18,7 +18,6 @@ const createPrefTags = async (req, res) => {
 const getPrefTags = async (req, res) => {
     try {
         const tags = await preferenceTag.find();
-
         res.status(200).json(tags);
     }
     catch (error) {
@@ -31,15 +30,11 @@ const updatePrefTags = async (req, res) => {
         const { id } = req.params;
         const { name } = req.body;
 
-        const updatedPrefTag = await preferenceTag.findByIdAndUpdate(
-            id,
-            { name },
-            { new: true });
+        const updatedPrefTag = await preferenceTag.findByIdAndUpdate(id,{ name },{ new: true });
 
         if (!updatedPrefTag) {
             return res.status(404).json('Tag does not exist');
         }
-
         return res.status(200).json({ status: 'success', data: { updatedPrefTag } })
     }
     catch (error) {
@@ -47,16 +42,13 @@ const updatePrefTags = async (req, res) => {
     }
 }
 
-
 const deletePrefTags = async (req, res) => {
     const { id } = req.params;
     try {
         const deletedPrefTag = await preferenceTag.findByIdAndDelete(id);
-
         if (!deletedPrefTag) {
             return res.status(404).json('Tag does not exist');
         }
-
         return res.status(200).json('Tag deleted successfully')
     }
     catch (error) {

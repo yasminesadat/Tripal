@@ -41,49 +41,47 @@ try {
 
     return res.status(200).json({ message: "OTP validated successfully" });
 } catch (error) {
-    console.error("Error in validateOtp:", error);
     return res.status(500).json({ message: "Internal server error" });
 }
 }
 
 async function resetPassword(req, res) {
-    try {
-        const { email, newPassword } = req.body;
-    
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: "User not found" });
-    
-        let model;
-        if (user.role === "Tourist") {
-          model = Tourist;
-        } else if (user.role === "Seller") {
-          model = Seller;
-        }else if(user.role==='Tour Guide'){
-            model=TourGuide;
-        }else if(user.role==='Advertiser'){
-            model=Advertiser;
-        }else if(user.role==='Tourism Governor'){
-            model=TourismGovernor;
-        }else if(user.role==='Admin'){
-            model=Admin;
-        }
-         else {
-          return res.status(400).json({ message: "Invalid user role" });
-        }
-    
-        const targetUser = await model.findOne({ email });
-        if (!targetUser) return res.status(400).json({ message: `${user.role} not found` });
-    
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-        targetUser.password = hashedPassword;
-        await targetUser.save();
-    
-        return res.status(200).json({ message: "Password updated successfully" });
-      } catch (error) {
-        console.error("Error in changePassword:", error);
-        return res.status(500).json({ message: "Internal server error" });
-      }
+  try {
+    const { email, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    let model;
+    if (user.role === "Tourist") {
+      model = Tourist;
+    } else if (user.role === "Seller") {
+      model = Seller;
+    }else if(user.role==='Tour Guide'){
+        model=TourGuide;
+    }else if(user.role==='Advertiser'){
+        model=Advertiser;
+    }else if(user.role==='Tourism Governor'){
+        model=TourismGovernor;
+    }else if(user.role==='Admin'){
+        model=Admin;
+    }
+      else {
+      return res.status(400).json({ message: "Invalid user role" });
+    }
+
+    const targetUser = await model.findOne({ email });
+    if (!targetUser) return res.status(400).json({ message: `${user.role} not found` });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    targetUser.password = hashedPassword;
+    await targetUser.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 const sendOtpEmail = async (email, otp) => {
@@ -97,9 +95,7 @@ const sendOtpEmail = async (email, otp) => {
   
     try {
       await sendEmail(email, subject, html);
-      console.log("OTP email sent successfully to:", email);
     } catch (error) {
-      console.error("Failed to send OTP email:", error);
       return res.status(500).json({ message: "Failed to send OTP email" });
     }
 };

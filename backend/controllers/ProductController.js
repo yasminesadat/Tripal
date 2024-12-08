@@ -23,14 +23,8 @@ const createProduct = asyncHandler(async (req, res) => {
     console.log(error.message);
   }
 
-  const product = await Product.create({
-    name,
-    seller,
-    price,
-    description,
-    quantity,
-    picture: result.secure_url,
-  });
+  const product = await Product.create({name,seller,price,description,quantity,picture: result.secure_url});
+
   await product.save();
   if (product) {
     res.status(201).json(product);
@@ -93,7 +87,6 @@ const getProducts = asyncHandler(async (req, res) => {
         : undefined,
     });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
@@ -170,10 +163,8 @@ const editProduct = asyncHandler(async (req, res) => {
         .join("/")
         .split(".")[0];
 
-      // Delete old picture
       await cloudinary.uploader.destroy(oldPicturePublicId);
 
-      // Upload new picture
       result = await cloudinary.uploader.upload(picture, {
         folder: "products",
       });
@@ -184,7 +175,6 @@ const editProduct = asyncHandler(async (req, res) => {
         { new: true }
       );
     } catch (error) {
-      console.log(error.message);
     }
   } else {
     updatedProduct = await Product.findByIdAndUpdate(
@@ -211,7 +201,6 @@ const archiveProduct = asyncHandler(async (req, res) => {
 
     res.status(200).json({ message: "Product archived successfully", product });
   } catch (error) {
-    console.log(error.message);
   }
 });
 
@@ -231,7 +220,6 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
       .status(200)
       .json({ message: "Product unarchived successfully", product });
   } catch (error) {
-    console.log(error.message);
   }
 });
 

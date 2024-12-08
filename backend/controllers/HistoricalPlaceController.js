@@ -1,18 +1,8 @@
 const HistoricalPlace = require("../models/HistoricalPlace");
 const cloudinary = require('../cloudinary');
-const HistoricalTagsController = require("../controllers/HistoricalTagController");
 const TypeTag = require('../models/HistoricalTagType.js');
 const PeriodTag = require('../models/HistoricalTagPeriod.js');
-function isObjectId(id) {
-  const objectIdPattern = /^[0-9a-fA-F]{24}$/;
-  if (objectIdPattern.test(id)) {
-    return true;
-  }
-  else {
-    return false;
-  }
 
-}
 const createHistoricalPlace = async (req, res) => {
   let images = [...req.body.images];
   let imageBuffer = [];
@@ -21,15 +11,11 @@ const createHistoricalPlace = async (req, res) => {
   let tagsID = [];
   let historicalPeriodsID = [];
 
-  console.log("aa", historicalPeriod)
-  console.log("tags", tags)
   try {
     for (let i = 0; i < tags.length; i++) {
       if (tags[i]._id === '') {
-        console.log('aaaaaaaaa', tags[i].name);
         const result = await TypeTag.create({ name: tags[i].name });
         const resultData = await result._id;
-        console.log("new created tag", resultData);
         tagsID.push(resultData);
       }
       else {
@@ -40,10 +26,8 @@ const createHistoricalPlace = async (req, res) => {
     for (let i = 0; i < historicalPeriod.length; i++) {
       console.log("iteration,", i)
       if (historicalPeriod[i]._id === '') {
-        console.log("before create", historicalPeriod[i].name)
         const result = await PeriodTag.create({ name: historicalPeriod[i].name });
         const resultData = await result._id;
-        console.log("after period create", resultData);
         historicalPeriodsID.push(resultData);
       }
       else {
@@ -61,8 +45,6 @@ const createHistoricalPlace = async (req, res) => {
       );
     }
 
-    console.log("tagsss", tagsID)
-    console.log("periodss", historicalPeriodsID)
     req.body.images = imageBuffer;
     req.body.tags = tagsID;
     req.body.historicalPeriod = historicalPeriodsID;
@@ -85,8 +67,6 @@ const createHistoricalPlace = async (req, res) => {
       );
   }
   catch (e) {
-    console.log("errror", e)
-
     return res.status(400).json(e);
   }
 };
@@ -130,23 +110,11 @@ const getAllHistoricalPlaces = (req, res) => {
   HistoricalPlace.find().populate("tags").populate("historicalPeriod")
     .then((result) => {
       res.status(200).json(result);
-      // render the all historical view place and pass the result (array of historical places)
     })
     .catch((err) => {
       res.status(400).json(err);
     });
 };
-
-// const getTourismGovernerHistoricalPlaces = async (req, res) => {
-//   const { id: tourismGovernerID } = req.params;
-//   try{
-//     //const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: touridmGovernerID });
-//     const historicalPlaces = await HistoricalPlace.find({ tourismGovernor: mongoose.Types.ObjectId(tourismGovernerID) });
-//     res.status(200).json(historicalPlaces);
-//   }catch(error){
-//     res.status(400).json({ error: error.message })
-//   }
-// };
 
 const getTourismGovernerHistoricalPlaces = async (req, res) => {
   const id=req.userId;
@@ -158,8 +126,6 @@ const getTourismGovernerHistoricalPlaces = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-
 
 const updateHistoricalPlaces = async (req, res) => {
   const id = req.params.id;
@@ -175,10 +141,8 @@ const updateHistoricalPlaces = async (req, res) => {
   try {
     for (let i = 0; i < Requestedtags.length; i++) {
       if (Requestedtags[i]._id === '') {
-        console.log(Requestedtags[i]);
         const result = await TypeTag.create({ name: Requestedtags[i].name });
         const resultData = await result._id;
-        console.log('the new tag ', result, resultData);
         tagsID.push(resultData);
       }
 
@@ -191,7 +155,6 @@ const updateHistoricalPlaces = async (req, res) => {
       if (RequestedhistoricalPeriod[i]._id === '') {
         const result = await PeriodTag.create({ name: RequestedhistoricalPeriod[i].name });
         const resultData = await result._id;
-        console.log('the new historicalpERIOD', result, resultData);
         historicalPeriodsID.push(resultData);
       }
 
@@ -223,8 +186,6 @@ const updateHistoricalPlaces = async (req, res) => {
       }
       req.body.images = imageBuffer.concat(existedImages);
     }
-    console.log("tagsss", tagsID);
-    console.log("periodss", historicalPeriodsID);
     req.body.tags = tagsID;
     req.body.historicalPeriod = historicalPeriodsID;
     const { tourismGovernor, name, description, images, location, openingHours, ticketPrices, tags, historicalPeriod } = req.body;

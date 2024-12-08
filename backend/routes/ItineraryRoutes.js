@@ -10,7 +10,6 @@ const {
   updateItinerary,
   deleteItinerary,
   viewUpcomingItineraries,
-  viewPaidItineraries,
   getTouristItineraries,
   toggleItineraryStatus,
   getAllItinerariesForAdmin,
@@ -63,13 +62,6 @@ router.delete(
 
 router.get("/itinerary/upcoming/view",
   viewUpcomingItineraries);
-
-router.get(
-  "/itinerary/paid/view",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  viewPaidItineraries
-);
 
 router.get(
   "/itineraries/booked-itineraries",

@@ -15,14 +15,14 @@ router.post(
   verifyToken,
   authorizeRoles("Tourist"),
   createComplaint
-); //tourist id
+); 
 
 router.get(
   "/complaints/tourist",
   verifyToken,
   authorizeRoles("Tourist"),
   getComplaintsByTourist
-); //tourist id
+); 
 
 router.get(
   "/complaints",
@@ -36,20 +36,20 @@ router.get(
   verifyToken,
   authorizeRoles("Admin", "Tourist"),
   getComplaintById
-); //complaint id
+); 
 
 router.put(
   "/complaint/status/:id",
   verifyToken,
   authorizeRoles("Admin"),
   updateComplaintStatus
-); //complaint id
+); 
 
 router.put(
   "/complaint/reply/:id",
   verifyToken,
   authorizeRoles("Admin", "Tourist"),
   replyToComplaint
-); //complaint id
+); 
 
 module.exports = router;

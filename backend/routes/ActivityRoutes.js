@@ -12,10 +12,8 @@ const {
   deleteActivity,
   viewUpcomingActivities,
   getTouristActivities,
-  viewHistoryActivities,
   getActivityById,
   getAllActivities,
-  getActivityBookings,
   revenue,
   getAdvertiserBookings,
 } = require("../controllers/ActivityController");
@@ -28,37 +26,37 @@ router.get(
   authorizeRoles("Tourist"),
   getTouristActivities
 );
+
 router.get(
   "/activities/advertiser",
   verifyToken,
   authorizeRoles("Advertiser"),
   getAdvertiserActivities
 );
-router.get(
-  "/activity-bookings:id",
-  verifyToken,
-  authorizeRoles("Advertiser"),
-  getActivityBookings
-);
+
 router.get(
   "/my-activities-bookings",
   verifyToken,
   authorizeRoles("Advertiser"),
   getAdvertiserBookings
 );
+
 router.get("/activity/:id", getActivityById);
+
 router.post(
   "/activities",
   verifyToken,
   authorizeRoles("Advertiser"),
   createActivity
 );
+
 router.put(
   "/activities/:id",
   verifyToken,
   authorizeRoles("Advertiser"),
   updateActivity
 );
+
 router.delete(
   "/activities/:id",
   verifyToken,
@@ -66,7 +64,7 @@ router.delete(
   deleteActivity
 );
 router.get("/activities/upcoming", viewUpcomingActivities);
-router.get("/activities/history", viewHistoryActivities);
+
 router.post(
   "/activities/:id/ratings",
   validateIDs(["id", "userID"]),
@@ -74,6 +72,7 @@ router.post(
   authorizeRoles("Tourist"),
   addRating(Activity, ActivityRating, "activityID")
 );
+
 router.get(
   "/activities/:id/ratings",
   validateIDs(["id"]),
