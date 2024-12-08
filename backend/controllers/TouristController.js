@@ -890,8 +890,8 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
-    const { wallet, totalPoints } = tourist;
-    res.status(200).json({ wallet, totalPoints });
+    const { wallet, currentPoints } = tourist;
+    res.status(200).json({ wallet, currentPoints });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while retrieving wallet and total points.",
