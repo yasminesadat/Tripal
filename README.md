@@ -74,7 +74,10 @@ To contribute:
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [Stripe](https://stripe.com/docs)
 
+## License
 
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
+See the LICENSE file for detailed terms and conditions.
 
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
