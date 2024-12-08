@@ -49,6 +49,13 @@ export default function HomePage5() {
           border-radius: 50% !important;
           background: #dac4d0 !important;
         }
+           .ant-tour {
+  z-index: 2000 !important;
+}
+
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         .ant-tour .ant-tour-indicators > span[class*="active"] {
           background: #036264 !important;
         }
@@ -118,7 +125,7 @@ export default function HomePage5() {
       `}</style>
       <MetaComponent meta={metadata} />
       <main >
-        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} homepage={"home"}/>
+        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} homepage={"home"} />
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <Hero5 />
         <BrandsThree />

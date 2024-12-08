@@ -6,6 +6,8 @@ import { message, Tour } from "antd";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
 import Spinner from "../../components/common/Spinner";
+import Pagination from "@/components/activity/Pagination";
+
 export default function HistoricalPlacesList({ searchTerm }) {
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
@@ -18,6 +20,18 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const location = useLocation();
   const refHPDetails = useRef(null);
   const [open, setOpen] = useState(false);
+  const [places, setPlaces] = useState([]);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [searchedPlaces, setSearchedPlaces] = useState([]);
+  const [viewedPlaces, setViewedPlaces] = useState([]);
+  const [error, setError] = useState(null);
+  const [filterHistoricType, setFilterHistoricType] = useState([]);
+  const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState([]);
+  const placesPerPage = 3;
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastPlace = currentPage * placesPerPage;
+  const indexOfFirstPlace = indexOfLastPlace - placesPerPage;
+  const currentPlaces = viewedPlaces.slice(indexOfFirstPlace, indexOfLastPlace);
 
   const steps = [
     {
@@ -48,6 +62,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
     return (price * exchangeRate).toFixed(2);
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -209,13 +226,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
     return minValue;
 
   }
-  const [places, setPlaces] = useState([]);
-  const [filteredPlaces, setFilteredPlaces] = useState([]);
-  const [searchedPlaces, setSearchedPlaces] = useState([]);
-  const [viewedPlaces, setViewedPlaces] = useState([]);
-  const [error, setError] = useState(null);
-  const [filterHistoricType, setFilterHistoricType] = useState([]);
-  const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState([]);
+
   useEffect(() => {
     const curr = sessionStorage.getItem("currency");
     if (curr) {
@@ -380,43 +391,19 @@ export default function HistoricalPlacesList({ searchTerm }) {
             <div className="lg:d-none">
               <Sidebar setFilterHistoricType={setFilterHistoricType} setFilterHistoricalTagPeriod={setFilterHistoricalTagPeriod} />
             </div>
-
-            {/* <div className="accordion d-none mb-30 lg:d-flex js-accordion">
-              <div
-                className={`accordion__item col-12 ${sidebarActive ? "is-active" : ""
-                  } `}
-              >
-                <button
-                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
-                  onClick={() => setSidebarActive((pre) => !pre)}
-                >
-                  <i className="icon-sort-down mr-10 text-16"></i>
-                  Filter
-                </button> */}
-
-            {/* <div
-                  className="accordion__content"
-                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                > */}
-            {/* <div className="pt-20">
-                    <Sidebar setFilters={setFilters} />
-                  </div> */}
-            {/* </div> */}
-            {/* </div> */}
-            {/* </div> */}
           </div>
 
           <div className="col-xl-9 col-lg-8">
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                 
-                    <span>{viewedPlaces?.length} results</span>
-                
+
+                  <span>{viewedPlaces?.length} results</span>
+
                 </div>
               </div>
-              {loading&&
-                    <span><Spinner /></span>
+              {loading &&
+                <span><Spinner /></span>
               }
             </div>
             <style>
@@ -432,7 +419,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
             </style>
 
             <div className="row y-gap-30 pt-30">
-              {viewedPlaces.map((elm, i) => (
+              {currentPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
@@ -493,19 +480,19 @@ export default function HistoricalPlacesList({ searchTerm }) {
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10"style={{backgroundColor: '#8f5774'}}>
+                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
                               {elm2.name}
                             </div>
                           </div>
                         ))}
                         {elm.historicalPeriod?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                             <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{backgroundColor: '#8f5774'}}>
-                               {elm2.name}
-                            </div> 
+                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
+                              {elm2.name}
+                            </div>
                           </div>
                         ))}
-                       </div>
+                      </div>
 
                     </div>
 
@@ -517,9 +504,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
                           <div></div>
 
                           <div className="d-flex items-center">
-                            From{" "}
                             <span className="text-20 fw-500 ml-5">
-                              {currency}{getMinPrice(elm)}
+                              From  {currency ? currency : "EGP"} {getMinPrice(elm)}
                             </span>
                           </div>
                         </div>
@@ -540,11 +526,14 @@ export default function HistoricalPlacesList({ searchTerm }) {
             </div>
 
             <div className="d-flex justify-center flex-column mt-60">
-              {/* <Pagination /> */}
-
-              <div className="text-14 text-center mt-20">
-                {/* Showing results 1-30 of 1,415 */}
-              </div>
+              {viewedPlaces?.length > placesPerPage && (
+                <Pagination
+                  totalItems={viewedPlaces?.length}
+                  itemsPerPage={placesPerPage}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
             </div>
           </div>
         </div>

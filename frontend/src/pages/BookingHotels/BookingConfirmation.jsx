@@ -265,13 +265,13 @@ export default function BookingPages() {
 
                       <div className="">
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckInDate: {date1}</div>
+                          <div className="fw-500">CheckIn Date: {date1}</div>
                           <div className="">{}</div>
                         </div>
 
                         <div className="line mt-10 mb-10"></div>
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckOut: {date2}</div>
+                          <div className="fw-500">CheckOut Date: {date2}</div>
                           <div className="">{}</div>
                         </div>
                         <div className="line mt-10 mb-10"></div>

@@ -19,7 +19,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRangeState, setPriceRangeState] = useState([0, 2000000]);
+  const [priceRangeState, setPriceRangeState] = useState([0, 10000]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -155,14 +155,6 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                       </div>
                     ))}
                   </div>
-
-                  {/* <a
-                    href="#"
-                    className="d-flex text-15 fw-500 text-accent-2 mt-15"
-                  >
-                    See More
-                  </a> */}
-
                 </div>
               </div>
             </div>
