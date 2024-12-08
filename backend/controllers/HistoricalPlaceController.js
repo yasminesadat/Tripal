@@ -162,8 +162,11 @@ const updateHistoricalPlaces = async (req, res) => {
         historicalPeriodsID.push(RequestedhistoricalPeriod[i]._id);
       }
     }
-
+     let isImagesChanged=false;
+     let updatedImages=[];
     if (newImages.length > 0 || deletedImages.length > 0) {
+     isImagesChanged=true;
+     console.log("hii",isImagesChanged);
       const historicalPlace = await HistoricalPlace.findById(id);
       if (!historicalPlace) {
         return res.status(404).json({ msg: "Historical place not found" });
@@ -184,14 +187,23 @@ const updateHistoricalPlaces = async (req, res) => {
           }
         );
       }
-      req.body.images = imageBuffer.concat(existedImages);
+      updatedImages = imageBuffer.concat(existedImages);
+      console.log("updated",updatedImages)
     }
     req.body.tags = tagsID;
     req.body.historicalPeriod = historicalPeriodsID;
-    const { tourismGovernor, name, description, images, location, openingHours, ticketPrices, tags, historicalPeriod } = req.body;
+   
+    const { tourismGovernor, name, description,location, openingHours, ticketPrices, tags, historicalPeriod } = req.body;
     try {
-      const result = await HistoricalPlace.findByIdAndUpdate(id, { tourismGovernor, name, description, images, location, openingHours, ticketPrices, tags, historicalPeriod }, { new: true })
+      if(isImagesChanged){
+      const result = await HistoricalPlace.findByIdAndUpdate(id, { tourismGovernor, name, description, images:updatedImages, location, openingHours, ticketPrices, tags, historicalPeriod }, { new: true });
       return res.status(200).json(result);
+    }
+    else{
+      const result = await HistoricalPlace.findByIdAndUpdate(id, { tourismGovernor, name, description, location, openingHours, ticketPrices, tags, historicalPeriod }, { new: true });
+      return res.status(200).json(result);
+    }
+      
     }
     catch (err) {
       return res.status(400).json(err);
