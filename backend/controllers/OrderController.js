@@ -233,12 +233,10 @@ const createOrder = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Invalid payment method." });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while creating the order.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while creating the order.",
+      error: error.message,
+    });
   }
 });
 
@@ -266,14 +264,27 @@ const cancelOrder = asyncHandler(async (req, res) => {
     order.status = "Cancelled";
     await order.save();
 
-    res.status(200).json({ message: "Order cancelled successfully.", order });
+    const touristId = req.userId;
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    const newWalletAmount = tourist.wallet.amount + order.totalPrice;
+    tourist.wallet.amount = newWalletAmount;
+    await tourist.save();
+
+    res.status(200).json({
+      message: "Order cancelled successfully.",
+      orderPrice: order.totalPrice,
+      newWalletAmount,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while cancelling the order.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while cancelling the order.",
+      error: error.message,
+    });
   }
 });
 

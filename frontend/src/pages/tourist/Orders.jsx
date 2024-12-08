@@ -7,8 +7,6 @@ import Pagination from "../../components/common/Pagination";
 import { getOrders, cancelOrder } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -53,7 +51,13 @@ const Orders = () => {
   const handleCancelOrder = async () => {
     try {
       const response = await cancelOrder(orderToCancel._id);
-      setOrders(orders.filter((order) => order._id !== orderToCancel._id));
+      setOrders(
+        orders.map((order) =>
+          order._id === orderToCancel._id
+            ? { ...order, status: "Cancelled" }
+            : order
+        )
+      );
       message.success(
         `Order canceled successfully. ${response.orderPrice} EGP has been redeemed into your wallet. Your new wallet balance is ${response.newWalletAmount} EGP.`
       );
