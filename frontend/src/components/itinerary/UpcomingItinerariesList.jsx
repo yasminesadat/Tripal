@@ -32,7 +32,7 @@ export default function ItinerariesList({
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 2000000000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
