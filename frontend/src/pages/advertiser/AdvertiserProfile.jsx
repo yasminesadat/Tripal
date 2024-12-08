@@ -13,8 +13,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { Button, message, Upload } from "antd";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
-
-
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { changeAdvertiserPassword } from "../../api/AdvertiserService";
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
   //const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -25,7 +25,52 @@ export default function AdvertiserProfile() {
   //   const [image4, setImage4] = useState("/img/dashboard/addtour/3.jpg");
   const [advertiser, setAdvertiser] = useState(null);
   const [formData, setFormData] = useState({ currentLogo: null });
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+  const togglePasswordVisibility = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+  const [PasswordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const handlePasswordInput = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleChangePassword = async () => {
+    try {
+      if (PasswordForm.newPassword.length < 6) {
+        message.error("Password must be at least 6 characters long");
+        return;
+      }
+      if (PasswordForm.newPassword !== PasswordForm.confirmPassword) {
+        message.error("Passwords don't match");
+        return;
+      }
 
+
+      await changeAdvertiserPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
+      message.success("Password changed successfully");
+
+
+    } catch (error) {
+      message.error(
+        error.response?.data?.message || "Failed to change password"
+      );
+      console.error("Password change error:", error);
+    }
+  };
   //   const handleImageChange = (event, func) => {
   //     const file = event.target.files[0];
 
@@ -262,62 +307,62 @@ export default function AdvertiserProfile() {
   //   console.log(advertiser)
   const General = advertiser
     ? [
-        {
-          label: "Company Name",
-          value: advertiser.companyProfile?.companyName || "",
-        },
-        { label: "Industry", value: advertiser.companyProfile?.industry || "" },
-        {
-          label: "Description",
-          value: advertiser.companyProfile?.description || "",
-        },
-        {
-          label: "Founded Year",
-          value: advertiser.companyProfile?.foundedYear || "",
-        },
-        {
-          label: "Employees",
-          value: advertiser.companyProfile?.employees || "",
-        },
-        {
-          label: "Certifications",
-          value: formData.companyProfile?.certifications?.join(", ") || [],
-        },
-      ]
+      {
+        label: "Company Name",
+        value: advertiser.companyProfile?.companyName || "",
+      },
+      { label: "Industry", value: advertiser.companyProfile?.industry || "" },
+      {
+        label: "Description",
+        value: advertiser.companyProfile?.description || "",
+      },
+      {
+        label: "Founded Year",
+        value: advertiser.companyProfile?.foundedYear || "",
+      },
+      {
+        label: "Employees",
+        value: advertiser.companyProfile?.employees || "",
+      },
+      {
+        label: "Certifications",
+        value: formData.companyProfile?.certifications?.join(", ") || [],
+      },
+    ]
     : [];
 
   const Contact = advertiser
     ? [
-        { label: "Email", value: advertiser.email || "" },
-        { label: "Website", value: advertiser.website || "", isLink: true },
-        {
-          label: "LinkedIn",
-          value: advertiser.companyProfile?.socialMedia?.linkedin || "",
-          isLink: true,
-        },
-        {
-          label: "Twitter",
-          value: advertiser.companyProfile?.socialMedia?.twitter || "",
-          isLink: true,
-        },
-      ]
+      { label: "Email", value: advertiser.email || "" },
+      { label: "Website", value: advertiser.website || "", isLink: true },
+      {
+        label: "LinkedIn",
+        value: advertiser.companyProfile?.socialMedia?.linkedin || "",
+        isLink: true,
+      },
+      {
+        label: "Twitter",
+        value: advertiser.companyProfile?.socialMedia?.twitter || "",
+        isLink: true,
+      },
+    ]
     : [];
 
   const Location = advertiser
     ? [
-        {
-          label: "Address",
-          value: advertiser.companyProfile?.headquarters?.address || "",
-        },
-        {
-          label: "City",
-          value: advertiser.companyProfile?.headquarters?.city || "",
-        },
-        {
-          label: "Country",
-          value: advertiser.companyProfile?.headquarters?.country || "",
-        },
-      ]
+      {
+        label: "Address",
+        value: advertiser.companyProfile?.headquarters?.address || "",
+      },
+      {
+        label: "City",
+        value: advertiser.companyProfile?.headquarters?.city || "",
+      },
+      {
+        label: "Country",
+        value: advertiser.companyProfile?.headquarters?.country || "",
+      },
+    ]
     : [];
 
   return (
@@ -326,6 +371,24 @@ export default function AdvertiserProfile() {
         <AdvertiserHeader />
         <style>
           {`
+           .password-toggle {
+                              position: absolute;
+                              right: 10px;
+                              top: 50%;
+                              transform: translateY(-50%);
+                              background: none;
+                              border: none;
+                              cursor: pointer;
+                              color: var(--color-stone);
+                              z-index: 2;
+                              padding: 5px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                            }
+                            .password-toggle:hover {
+                              color: var(--color-stone-light);
+                            }
           .contactForm .form-input {
             position: relative;
             margin-bottom: 20px;
@@ -361,16 +424,16 @@ export default function AdvertiserProfile() {
 
         <div className="dashboard__content" style={{ marginTop: "70px" }}>
           <div className="dashboard__content_content">
-          <div className="d-flex justify-between items-center mb-20">
-            <h1 className="text-30">Profile</h1>
-            <button
-              className="button -md -dark-1 delete-btn"
-              onClick={handleDeletion}
-            >
-              Delete Account
-              <i className="icon-delete text-20 ml-10"></i>
-            </button>
-          </div>
+            <div className="d-flex justify-between items-center mb-20">
+              <h1 className="text-30">Profile</h1>
+              <button
+                className="button -md -dark-1 delete-btn"
+                onClick={handleDeletion}
+              >
+                Delete Account
+                <i className="icon-delete text-20 ml-10"></i>
+              </button>
+            </div>
             <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60">
               <div className="tabs -underline-2 js-tabs">
                 <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
@@ -381,9 +444,8 @@ export default function AdvertiserProfile() {
                       className="col-auto"
                     >
                       <button
-                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${
-                          activeTab == elm ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${activeTab == elm ? "is-tab-el-active" : ""
+                          }`}
                       >
                         {i + 1}. {elm}
                       </button>
@@ -395,9 +457,8 @@ export default function AdvertiserProfile() {
                   <div className="col-xl-9 col-lg-10">
                     <div className="tabs__content js-tabs-content">
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "General" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "General" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="contactForm row y-gap-30">
                           {/* logo */}
@@ -413,13 +474,13 @@ export default function AdvertiserProfile() {
                               fileList={
                                 formData.currentLogo
                                   ? [
-                                      {
-                                        uid: "-1",
-                                        name: "logo.png",
-                                        status: "done",
-                                        url: formData.currentLogo,
-                                      },
-                                    ]
+                                    {
+                                      uid: "-1",
+                                      name: "logo.png",
+                                      status: "done",
+                                      url: formData.currentLogo,
+                                    },
+                                  ]
                                   : []
                               } // Ensure only one file is shown
                             >
@@ -722,9 +783,8 @@ export default function AdvertiserProfile() {
                       </div>
 
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Location" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Location" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="contactForm row y-gap-30">
                           <div className="col-12">
@@ -791,9 +851,8 @@ export default function AdvertiserProfile() {
                       </div>
 
                       <div
-                        className={`tabs__pane  ${
-                          activeTab == "Contact" ? "is-tab-el-active" : ""
-                        }`}
+                        className={`tabs__pane  ${activeTab == "Contact" ? "is-tab-el-active" : ""
+                          }`}
                       >
                         <div className="contactForm row y-gap-30">
                           <div className="col-12">
@@ -869,19 +928,134 @@ export default function AdvertiserProfile() {
                           <i className="icon-arrow-top-right text-16 ml-10"></i>
                         </button>
                       </div>
-                     
+
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
+              <h5 className="text-20 fw-500 mb-30">Change Password</h5>
+              <div className="contactForm y-gap-30">
+                <div className="row y-gap-30">
+                  <div className="col-md-6">
+                    <div className="form-input ">
+                      <input
+                        type={
+                          showPassword.oldPassword ? "text" : "password"
+                        }
+                        name="oldPassword"
+                        value={PasswordForm.oldPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
+                      <label className="lh-1 text-16 text-light-1">
+                        Old password
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("oldPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.oldPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-            <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-input ">
+                      <input
+                        type={
+                          showPassword.newPassword ? "text" : "password"
+                        }
+                        name="newPassword"
+                        value={PasswordForm.newPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
+                      <label className="lh-1 text-16 text-light-1">
+                        New password
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("newPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.newPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-input ">
+                      <input
+                        type={
+                          showPassword.confirmPassword ? "text" : "password"
+                        }
+                        name="confirmPassword"
+                        value={PasswordForm.confirmPassword}
+                        onChange={handlePasswordInput}
+                        required
+                        minLength={6}
+                      />
+                      <label className="lh-1 text-16 text-light-1">
+                        Confirm new password
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("confirmPassword")
+                        }
+                        className="password-toggle"
+                      >
+                        {showPassword.confirmPassword ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <button onClick={handleChangePassword} className="button -md -dark-1 bg-accent-1 text-white">
+                      Save Changes
+                      <i className="icon-arrow-top-right text-16 ml-10"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
+
+
+      <div className="text-center pt-30">
+        © Copyright Tripal {new Date().getFullYear()}
+      </div>
+
     </>
   );
 }

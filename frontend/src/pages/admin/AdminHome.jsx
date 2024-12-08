@@ -16,6 +16,7 @@ const metadata = {
 
 
 export default function AdminDashboard() {
+  const [addClass] = useState(true);
   const [sideBarOpen, setSideBarOpen] = useState(true);
   return (
     <>
@@ -56,7 +57,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="text-center pt-30">
-            © Copyright Tripal {new Date().getFullYear()}
+              © Copyright Tripal {new Date().getFullYear()}
             </div>
           </div>
         </div>

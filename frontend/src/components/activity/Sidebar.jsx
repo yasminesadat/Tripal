@@ -19,13 +19,13 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRangeState, setPriceRangeState] = useState([0, 2000000]); 
+  const [priceRangeState, setPriceRangeState] = useState([0, 2000000]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setRatingFilter(selectedRatings); 
+    setRatingFilter(selectedRatings);
   }, [selectedRatings, setRatingFilter]);
 
   const handleRatingChange = (ratingValue) => {
@@ -35,11 +35,11 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
         : [...prevRatings, ratingValue]
     );
   };
-  
+
   useEffect(() => {
-    setRatingFilter(selectedRatings); 
+    setRatingFilter(selectedRatings);
   }, [selectedRatings, setRatingFilter]);
-  
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -80,7 +80,7 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
         <div className="text-15 text-white fw-500">When are you free?</div>
 
         <div className="mt-10">
-          <div className="searchForm -type-1 -col-1 -narrow">
+          <div className="searchForm  -col-1 -narrow">
             <div className="searchForm__form">
               <div className="searchFormItem js-select-control js-form-dd js-calendar">
                 <div className="searchFormItem__button" data-x-click="calendar">
@@ -104,9 +104,8 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
         <div className="sidebar__item">
           <div className="accordion -simple-2 js-accordion">
             <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("tourtype") ? "is-active" : ""
-              } `}
+              className={`accordion__item js-accordion-item-active ${ddActives.includes("tourtype") ? "is-active" : ""
+                } `}
             >
               <div
                 className="accordion__button d-flex items-center justify-between"
@@ -138,10 +137,10 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
                       <div key={i}>
                         <div className="d-flex items-center">
                           <div className="form-checkbox ">
-                            <input 
-                              type="checkbox" 
-                              name="name" 
-                              checked={selectedCategories.includes(elm.Name)} 
+                            <input
+                              type="checkbox"
+                              name="name"
+                              checked={selectedCategories.includes(elm.Name)}
                               onChange={() => handleCheckboxChange(elm.Name)}
                             />
                             <div className="form-checkbox__mark">
@@ -173,9 +172,8 @@ export default function Sidebar({ setStartDate, setEndDate, setRatingFilter, set
         <div className="sidebar__item">
           <div className="accordion -simple-2 js-accordion">
             <div
-              className={`accordion__item js-accordion-item-active ${
-                ddActives.includes("pricerange") ? "is-active" : ""
-              } `}
+              className={`accordion__item js-accordion-item-active ${ddActives.includes("pricerange") ? "is-active" : ""
+                } `}
             >
               <div
                 className="accordion__button mb-10 d-flex items-center justify-between"

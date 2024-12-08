@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getTags } from "../../api/PreferenceTagService";
 import { CloseOutlined } from "@ant-design/icons";
-import {  useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { updateTouristInformation } from "../../api/TouristService";
 import { message } from "antd";
-
+import TouristHeader from "@/components/layout/header/TouristHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
 export default function PreferenceSelection() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -99,8 +100,8 @@ export default function PreferenceSelection() {
     justifyContent: 'center',
     backgroundColor: '#374971', // Background color
     color: 'white', // Text color
-    borderRadius: '20px', 
-    padding: '5px 10px', 
+    borderRadius: '20px',
+    padding: '5px 10px',
     fontSize: '14px', // Font size
     position: 'relative', // For positioning the close icon
   };
@@ -111,73 +112,79 @@ export default function PreferenceSelection() {
   };
 
   return (
-    <section className="mt-header layout-pt-lg layout-pb-lg">
-      <div className="container">
-        <div className="row justify-center">
-          <div className="col-xl-6 col-lg-7 col-md-9">
-            <div className="text-center mb-lg">
-              <h1 className="text-30">Tell us more about your vacation preferences!</h1>
-            </div>
- 
-            <div style={ selectedTagContainerStyle}>
-              {selectedTags.map((tagId) => {
-                const tag = tags.find((tag) => tag._id === tagId);
-                return (
-                  tag && (
-                    <div key={tag._id} style={selectedTagStyle}>
-                      <span className="flex items-center">
-                        {tag.icon} {tag.name}
-                      </span>
-                      <CloseOutlined
-                        onClick={() => removeTag(tag._id)}
-                        style={closeIconStyle}
-                      />
-                    </div>
-                  )
-                );
-              })}
-            </div>
+    <div className="page-wrapper">
+      <TouristHeader />
+      <main className="page-content">
+        <section className="mt-header layout-pt-lg layout-pb-lg">
+          <div className="container">
+            <div className="row justify-center">
+              <div className="col-xl-6 col-lg-7 col-md-9">
+                <div className="text-center mb-lg">
+                  <h1 className="text-30">Tell us more about your vacation preferences!</h1>
+                </div>
 
-            <div className="preference-tags mb-lg border-1 rounded-12 px-20 py-20">
-              {tags.length > 0 ? (
-                tags.map((tag) => (
-                  <div
-                    key={tag._id}
-                    style={{
-                      ...tagItemStyle,
-                      ...(selectedTags.includes(tag._id) ? tagItemSelectedStyle : {}),
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = tagItemHoverStyle.backgroundColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = selectedTags.includes(tag._id) ? tagItemSelectedStyle.backgroundColor : 'transparent';
-                    }}
-                    onClick={() => handleTagChange(tag._id)}
-                  >
-                    <span>{tag.icon} {tag.name}</span>
-                  </div>
-                ))
-              ) : (
-                <p>No tags available</p>
-              )}
-            </div>
-            <br />
-            <button onClick={handleNext} className="button -md -dark-1 bg-accent-1 text-white col-12 mt-lg">
-              Next
-              <i className="icon-arrow-top-right ml-10"></i>
-            </button>
+                <div style={selectedTagContainerStyle}>
+                  {selectedTags.map((tagId) => {
+                    const tag = tags.find((tag) => tag._id === tagId);
+                    return (
+                      tag && (
+                        <div key={tag._id} style={selectedTagStyle}>
+                          <span className="flex items-center">
+                            {tag.icon} {tag.name}
+                          </span>
+                          <CloseOutlined
+                            onClick={() => removeTag(tag._id)}
+                            style={closeIconStyle}
+                          />
+                        </div>
+                      )
+                    );
+                  })}
+                </div>
 
-            <button 
-              onClick={handleSkip} 
-              className="skip-button col-12 mt-2" 
-              style={{ color: 'rgba(0, 0, 0, 0.4)', textDecoration: 'underline', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-            >
-              Skip
-            </button>
+                <div className="preference-tags mb-lg border-1 rounded-12 px-20 py-20">
+                  {tags.length > 0 ? (
+                    tags.map((tag) => (
+                      <div
+                        key={tag._id}
+                        style={{
+                          ...tagItemStyle,
+                          ...(selectedTags.includes(tag._id) ? tagItemSelectedStyle : {}),
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = tagItemHoverStyle.backgroundColor;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = selectedTags.includes(tag._id) ? tagItemSelectedStyle.backgroundColor : 'transparent';
+                        }}
+                        onClick={() => handleTagChange(tag._id)}
+                      >
+                        <span>{tag.icon} {tag.name}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No tags available</p>
+                  )}
+                </div>
+                <br />
+                <button onClick={handleNext} className="button -md -dark-1 bg-accent-1 text-white col-12 mt-lg">
+                  Next
+                  <i className="icon-arrow-top-right ml-10"></i>
+                </button>
+
+                <button
+                  onClick={handleSkip}
+                  className="skip-button col-12 mt-2"
+                  style={{ color: 'rgba(0, 0, 0, 0.4)', textDecoration: 'underline', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                >
+                  Skip
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      </main>
+      <FooterThree />
+    </div>
   );
 }

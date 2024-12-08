@@ -28,10 +28,10 @@ const ChangePassword = ({ id, userType }) => {
                     await changeAdvertiserPassword(id, values.oldPassword, values.newPassword);
                     break;
                 case 'governor':
-                    await changeGovernorPassword(id, values.oldPassword, values.newPassword);
+                    await changeGovernorPassword(values.oldPassword, values.newPassword);
                     break;
                 case 'admin':
-                    await changeAdminPassword(id, values.oldPassword, values.newPassword);
+                    await changeAdminPassword(values.oldPassword, values.newPassword);
                     break;
                 case 'seller':
                     await changeSellerPassword(id, values.oldPassword, values.newPassword);

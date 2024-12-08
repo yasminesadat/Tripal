@@ -1,8 +1,6 @@
-import { React, useState, useEffect } from "react";
-import { Rate } from "antd"; 
+import {useState, useEffect } from "react";
+import { Rate,message } from "antd"; 
 import { addRating } from "../../api/RatingService"; 
-// import "../style.css";
-// import { touristId } from "../../IDs";
 import { getUserData } from "@/api/UserService";
 
 export default function ReviewBox({ id, type }) {
@@ -20,9 +18,7 @@ export default function ReviewBox({ id, type }) {
             if (response.data.status === "success") {
               setUserRole(response.data.role);
               setUserId(response.data.id); 
-            } else {
-              message.error(response.data.message); 
-            }
+            } 
           } catch (error) {
             message.error("Failed to fetch user data.");
           }
@@ -33,7 +29,6 @@ export default function ReviewBox({ id, type }) {
     const handlePostReview = async () => {
         setLoading(true);
         setError(null); 
-        console.log("user ID: ",userId);
 
         const ratingData = {
             rating,

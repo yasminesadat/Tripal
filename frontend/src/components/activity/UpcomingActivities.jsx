@@ -452,7 +452,7 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {currency} {(elm.price*exchangeRate).toFixed(2)}
+                          {currency||'EGP'} {(elm.price*exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>

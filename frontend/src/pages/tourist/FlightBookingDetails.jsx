@@ -23,8 +23,6 @@ const FlightBookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const flight = location.state?.flight;
-  const currency = location.state?.currency;
-  const exchangeRate = location.state?.exchangeRate;
   const originCityCode = location.state?.originCityCode;
   const destCityCode = location.state?.destCityCode;
   const [touristInfo, setTouristInfo] = useState({ userName: '', email: '' });
@@ -34,8 +32,8 @@ const FlightBookingDetails = () => {
   const [isBookedAccepted,setIsBookedAccepted]=useState(false);
   const [paymentMethod, setPaymentMethod] = useState("wallet");
   const [isModalVisible, setIsModalVisible] = useState(false); 
-  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null); 
-  const [totalPoints, setTotalPoints] = useState(null); 
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0); 
+  const [totalPoints, setTotalPoints] = useState(0); 
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
 const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
@@ -64,6 +62,31 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
     fetchTouristInfo();
     fetchWalletData();
   }, []);
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
+
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
     const getBookedHotels = async () => {
@@ -131,9 +154,6 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
 },[hotels, flight.itineraries, isBookedOriginatingTransportation, isBookedReturnTransportation, originCityCode, destCityCode]);
   if (!flight) return <p>No flight selected</p>;
-  const convertPrice = (price) => {
-    return (price * exchangeRate).toFixed(2);
-  };
 
   const confirmBooking = (body) => {
     if (!body) {
@@ -198,8 +218,8 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
           arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
           origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
           destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
-          price: flight.price?.total.toString() || "0.00",
-          currency: flight.price?.currency || "EGP",
+          price: (flight.price?.total*exchangeRate).toString() || "0.00",
+          currency: currency || "EGP",
         })),
         useWallet: paymentMethod === "wallet",
         paymentMethod,
@@ -366,7 +386,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                   <div className="line mt-20 mb-20"></div>
                   <div className="d-flex items-center justify-between">
                     <div className="fw-500">Total Flight Price</div>
-                    <div>{currency} {convertPrice(flight.price?.total)}</div>
+                    <div>{currency} {(flight.price?.total*exchangeRate)}</div>
                   </div>
                 </div>
               </div>
@@ -381,7 +401,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
 
               <div className="d-flex items-center justify-between">
                 <div className="fw-500">Subtotal</div>
-                <div>{currency} {convertPrice(flight.price?.total)}</div>
+                <div>{currency} {flight.price?.total*exchangeRate}</div>
               </div>
 
               <div className="d-flex items-center justify-between">
@@ -394,7 +414,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                 <div className="d-flex items-center justify-between">
                   <div className="fw-500 text-18">Total</div>
                   <div className="fw-500 text-18">
-                    {currency} {convertPrice(flight.price?.total + 50)}
+                    {currency} {(flight.price?.total*exchangeRate+ 50)}
                   </div>
                 </div>
               </div>

@@ -3,7 +3,6 @@ let touristCurrency=null;
 
 async function fetchExchangeRates() {
   const savedRates = sessionStorage.getItem('exchangeRates');
-  
   if (savedRates) {
     exchangeRates = JSON.parse(savedRates);
   } else {
@@ -21,7 +20,6 @@ async function getConversionRate(currency) {
   }
   return exchangeRates.conversion_rates[currency];
 }
-
 
 function getTouristCurrency() {
   return touristCurrency;

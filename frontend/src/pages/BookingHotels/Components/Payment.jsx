@@ -7,8 +7,9 @@ import TransportationBookingPopUp from "@/pages/tourist/TransportationBooking";
 import moment from "moment";
 import { Checkbox, message } from 'antd';
 import { loadStripe } from '@stripe/stripe-js';
-
-
+import {Modal} from 'antd';
+import { AlertCircle } from 'lucide-react';
+import { getWalletAndTotalPoints } from "../../../api/TouristService";
 // Inline styles for the component
 const styles = {
     appcc: {
@@ -32,12 +33,16 @@ const styles = {
     },
 };
 
-const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
+const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singlePrice, doublePrice, triplePrice, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
     const [paymentMethod, setPaymentMethod] = useState("wallet");
     const navigate = useNavigate();
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
     const [isBooked, setBooked] = useState(false);
+    const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+    const [isWalletInfoModalVisible, setIsWalletInfoModalVisible] = useState(false);
+    const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0);
+    const [totalPoints, setTotalPoints] = useState(0);
     const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
     useEffect(() => {
@@ -50,7 +55,21 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
                 console.log("Error fetching flights:", err);
             }
         };
+
+        const fetchWalletData = async () => {
+            try {
+              const data = await getWalletAndTotalPoints();
+              console.log("Fetched Wallet Data:", data);
+              setUpdatedWalletInfo(data.wallet);
+              setTotalPoints(data.totalPoints);
+            } catch (error) {
+              console.error("Error fetching wallet data:", error);
+            }
+          };
+
+
         getBookedFlights();
+        fetchWalletData();
     }, []);
 
     useEffect(() => {
@@ -94,52 +113,146 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
         }
     }, [checkIn, checkOut, cityCode, isBookedOriginatingTransportation, isBookedReturnTransportation,touristFlights]);
 
-    const handleSubmit = async (e) => {
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log("Form submitted.");
+    
+    //     if (paymentMethod === "wallet") {
+    //         setBookingStage(3);
+    //     }
+        
+    //     try {
+    //         const response = await saveBooking(
+    //             hotelid,
+    //             hotelname,
+    //             cityCode,
+    //             singleNumber,
+    //             doubleNumber,
+    //             tripleNumber,
+    //             checkIn,
+    //             checkOut,
+    //             total,
+    //             "confirmed",
+    //             paymentMethod
+    //         );
+    //         console.log("Response from saveBooking:", response);
+    
+    //         if (paymentMethod === "card") {
+    //             const stripe = await stripePromise;
+    //             const sessionId = response?.sessionId;
+                
+    //             if (sessionId) {
+    //                 const { error } = await stripe.redirectToCheckout({ sessionId });
+    //                 if (error) {
+    //                     console.error("Stripe redirection error:", error);
+    //                     message.error("Failed to redirect to payment. Please try again.");
+    //                 }
+    //             } else {
+    //                 console.log("Session ID returned:", response.data?.sessionId);
+    //                 console.error("Session ID not received.");
+    //                 message.error("Failed to initiate payment session.");
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to save Booking", error);
+    //         message.error("Booking failed. Please try again.");
+    //     }
+    // };
+    
+               
+    const handleWalletPayment = async () => {
+        try {
+          const response = await saveBooking({
+            hotelid,
+            hotelname,
+            cityCode,
+            singleNumber,
+            doubleNumber,
+            tripleNumber,
+            checkIn,
+            checkOut,
+            pricing: total,
+            singlePrice,
+            doublePrice,
+            triplePrice,
+            status: "confirmed",
+            paymentMethod:"wallet"
+        });
+          const updatedData = await getWalletAndTotalPoints();
+        setUpdatedWalletInfo(updatedData.wallet);
+        setTotalPoints(updatedData.totalPoints);
+        setIsWalletInfoModalVisible(true);
+
+        message.success("Booking successful!");
+        
+        setTimeout(() => {
+            setBookingStage(3);
+        }, 6000);
+        } catch (error) {
+          console.error("Failed to save booking:", error);
+          message.error("Booking failed. Please try again.");
+        }
+      };
+    
+      const handleCreditCardPayment = async () => {
+        try {
+          const response = await saveBooking({
+            hotelid,
+            hotelname,
+            cityCode,
+            singleNumber,
+            doubleNumber,
+            tripleNumber,
+            checkIn,
+            checkOut,
+            pricing: total,
+            singlePrice,
+            doublePrice,
+            triplePrice,
+            status: "confirmed",
+            paymentMethod:"card"
+        });
+    
+          const stripe = await stripePromise;
+          const sessionId = response?.sessionId;
+    
+          if (sessionId) {
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) {
+              console.error("Stripe redirection error:", error);
+              message.error("Failed to redirect to payment. Please try again.");
+            }
+          } else {
+            message.error("Failed to initiate payment session.");
+          }
+        } catch (error) {
+          console.error("Failed to save booking:", error);
+          message.error("Booking failed. Please try again.");
+        }
+      };
+    
+      const handleConfirmPayment = () => {
+        setIsConfirmationModalVisible(false);
+        handleWalletPayment();
+      };
+    
+      const cancelConfirmationModal = () => {
+        setIsConfirmationModalVisible(false);
+      };
+    
+      const closeWalletInfoModal = () => {
+        setIsWalletInfoModalVisible(false);
+      };
+    
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted.");
     
         if (paymentMethod === "wallet") {
-            setBookingStage(3);
+          setIsConfirmationModalVisible(true);
+        } else if (paymentMethod === "card") {
+          handleCreditCardPayment();
         }
-        
-        try {
-            const response = await saveBooking(
-                hotelid,
-                hotelname,
-                cityCode,
-                singleNumber,
-                doubleNumber,
-                tripleNumber,
-                checkIn,
-                checkOut,
-                total,
-                "confirmed",
-                paymentMethod
-            );
-            console.log("Response from saveBooking:", response);
-    
-            if (paymentMethod === "card") {
-                const stripe = await stripePromise;
-                const sessionId = response?.sessionId;
-                
-                if (sessionId) {
-                    const { error } = await stripe.redirectToCheckout({ sessionId });
-                    if (error) {
-                        console.error("Stripe redirection error:", error);
-                        message.error("Failed to redirect to payment. Please try again.");
-                    }
-                } else {
-                    console.log("Session ID returned:", response.data?.sessionId);
-                    console.error("Session ID not received.");
-                    message.error("Failed to initiate payment session.");
-                }
-            }
-        } catch (error) {
-            console.error("Failed to save Booking", error);
-            message.error("Booking failed. Please try again.");
-        }
-    };
-    
+      };
 
     return (
         <div className="payment-container">
@@ -220,94 +333,149 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
                     Confirm Booking
                 </button>
             </form>
-
+            <Modal
+            visible={isConfirmationModalVisible}
+            onOk={handleConfirmPayment}
+            onCancel={cancelConfirmationModal}
+            okText="Yes, Pay"
+            cancelText="Cancel"
+            className="custom-confirmation-modal"
+            okButtonProps={{
+              className: "bg-[#036264] hover:bg-[#04494b] text-white",
+              style: { backgroundColor: '#036264', color: 'white' },
+            }}
+            cancelButtonProps={{
+              className: "text-gray-600 hover:text-gray-800",
+            }}
+          >
+            <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+              <AlertCircle className="text-[#036264] w-12 h-12" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <p className="text-gray-600">
+                  Are you sure you want to proceed with this payment? 
+                  Please review the details before confirming.
+                </p>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            title={null}
+            visible={isWalletInfoModalVisible}
+            onOk={closeWalletInfoModal}
+            footer={null}
+            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
+            style={{ 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              width: '350px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+            bodyStyle={{
+              backgroundColor: '#ffffff',
+              color: '#333',
+              textAlign: 'center',
+              padding: '30px 20px',
+            }}
+          >
+            <div className="wallet-modal-content">
+              <p>
+                <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+              </p>
+              <p>
+                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+              </p>
+            </div>
+          </Modal>
             <style jsx>{`
                 .payment-container {
-                    max-width: 400px;
-                    margin: 30px auto 0;
-                }
+    max-width: 400px;
+    margin: 30px auto 0;
+}
 
-                .payment-form {
-                    background-color: #dac4d0;
-                    border-radius: 12px;
-                    padding: 20px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                }
+.payment-form {
+    background-color: #dac4d0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
-                .payment-title {
-                    color: #036264;
-                    margin-bottom: 15px;
-                    font-weight: bold;
-                }
+.payment-title {
+    color: #036264;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
 
-                .radio-group {
-                    display: flex;
-                    gap: 15px;
-                    margin-bottom: 20px;
-                }
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
-                .radio-option {
-                    flex: 1;
-                    border: 2px solid #8f5774;
-                    border-radius: 8px;
-                    padding: 10px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    background-color: white;
-                }
+.radio-option {
+    flex: 1;
+    border: 2px solid #8f5774;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    color: #8f5774;
+}
 
-                .radio-option.selected {
-                    background-color: #dac4d0;
-                    border-color: #036264;
-                }
+.radio-option.selected {
+    background-color: #036264;
+    border-color: #036264;
+    color: white;
+}
 
-                .hidden-radio {
-                    position: absolute;
-                    opacity: 0;
-                    cursor: pointer;
-                }
+.hidden-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
 
-                .radio-label {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: #11302a;
-                    font-weight: 600;
-                }
+.radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
 
-                .radio-icon {
-                    width: 24px;
-                    height: 24px;
-                    margin-right: 8px;
-                    fill: #8f5774;
-                }
+.radio-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    fill: #8f5774;
+}
 
-                .radio-option.selected .radio-icon {
-                    fill: #036264;
-                }
+.radio-option.selected .radio-icon {
+    fill: white;
+}
 
-                .checkbox-container {
-                    margin-bottom: 20px;
-                }
+.checkbox-container {
+    margin-bottom: 20px;
+}
 
-                .transportation-checkbox {
-                    color: #11302a;
-                }
+.transportation-checkbox {
+    color: #11302a;
+}
 
-                .confirm-booking-button {
-                    width: 100%;
-                    padding: 12px;
-                    background-color: #8f5774;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    transition: background-color 0.3s ease;
-                }
+.confirm-booking-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #8f5774;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
 
-                .confirm-booking-button:hover {
-                    background-color: #8f5774;
-                }
+.confirm-booking-button:hover {
+    background-color: #8f5774;
+}
             `}</style>
         </div>
     );

@@ -37,9 +37,7 @@ export default function TourList1({
         if (response.data.status === "success") {
           setUserRole(response.data.role);
           setUserId(response.data.id); 
-        } else {
-          message.error(response.data.message); 
-        }
+        } 
       } catch (error) {
         message.error("Failed to fetch user data.");
       }
@@ -58,23 +56,6 @@ export default function TourList1({
       setFilteredActivities(activities); 
     }
   }, [startDate, endDate, activities]); 
-
-  // const handleSort = (field, order) => {
-  //   const sortedActivities = [...activities].sort((a, b) => {
-  //     let aValue, bValue;
-  
-  //     if (field === "price") {
-  //       aValue = a.price * exchangeRate;
-  //       bValue = b.price * exchangeRate;
-  //     } else if (field === "ratings") {
-  //       aValue = a.averageRating;
-  //       bValue = b.averageRating;
-  //     }
-  
-  //     return order === "asc" ? aValue - bValue : bValue - aValue;
-  //   });
-  //   setFilteredActivities(sortedActivities);
-  // };
 
   useEffect(() => {
     const handleClick = (event) => {
