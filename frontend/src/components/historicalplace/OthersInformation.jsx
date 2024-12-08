@@ -47,7 +47,7 @@ export default function OthersInformation({ OpeningHours, ticketPrices, currency
 
           <div className="ml-10">
             <div className="lh-16">Native ticket Price</div>
-            <div className="text-14 text-light-2 lh-16">{currency}  {ticketPrices?.native} </div>
+            <div className="text-14 text-light-2 lh-16">{currency||'EGP'}  {ticketPrices?.native} </div>
           </div>
         </div>
       </div>

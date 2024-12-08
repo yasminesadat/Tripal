@@ -38,7 +38,7 @@ export default function ItinerariesList({
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itinerariesPerPage = 3;
+  const itinerariesPerPage = 5;
 
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
@@ -58,7 +58,6 @@ export default function ItinerariesList({
   const [currency, setCurrency] = useState( "EGP");
 
   const getExchangeRate = async () => {
-    if(userRole!=='Tourist') return;
     if (currency) {
       try {
         const rate = await getConversionRate(currency);
@@ -70,7 +69,6 @@ export default function ItinerariesList({
   };
 
   useEffect(() => {
-    if(userRole!=='Tourist') return;
     const intervalId = setInterval(() => {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
