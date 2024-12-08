@@ -9,6 +9,7 @@ import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg"
 import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg"
 import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg"
 import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg"
+import { getTouristCurrency,getConversionRate } from "@/api/ExchangeRatesService.js";
 
 
 import { useParams } from "react-router-dom";
@@ -24,10 +25,34 @@ export default function TourList1() {
   const [filteredHotels, setFilteredHotels] = useState([]);
   const [searchQuery, setSearchQuery] = useState(''); // New state for search query
   const dropDownContainer = useRef();
-  const { cityCode, dates1, dates2 } = useParams();
+  const {cityCode,dates1,dates2}  = useParams();
   
+  const images=[img1,img2,img3,img4,img5,img6]
 
-  const images = [img1, img2, img3, img4, img5, img6];
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+ 
+
 
   const fetchTourData = async () => {
     try {
@@ -163,12 +188,12 @@ export default function TourList1() {
                         </div>
 
                         <div className="tourCard__price" style={{cursor:'default'}}>
-                          <div>EGP {elm.fromPrice}</div>
+                          <div>{currency||'EGP'} {(elm.fromPrice*exchangeRate).toFixed(2)}</div>
 
                           <div className="d-flex items-center">
                             From{" "}
                             <span className="text-20 fw-500 ml-5" style={{cursor:'default'}}>
-                              EGP {elm.price}
+                              {currency||'EGP'} {(elm.price*exchangeRate).toFixed(2)}
                             </span>
                           </div>
                         </div>

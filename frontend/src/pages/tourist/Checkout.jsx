@@ -22,37 +22,38 @@ import { loadStripe } from "@stripe/stripe-js";
 import { message, Modal } from 'antd';
 import { getWalletAndTotalPoints } from '@/api/TouristService';
 import { AlertCircle } from 'lucide-react';
-import { getTouristCurrency,getConversionRate } from '@/api/ExchangeRatesService';
+import { getTouristCurrency, getConversionRate } from '@/api/ExchangeRatesService';
 
 const steps = ['Shipping address', 'Payment details'];
 
 export default function Checkout(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [address, setAddress] = useState(null);
+  const [discount, setDiscount] = useState(0.0);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
 
-  const [currency, setCurrency] = useState( "EGP");
+  const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
 
   const getExchangeRate = async () => {
-  if (currency) {
+    if (currency) {
       try {
-      const rate = await getConversionRate(currency);
-      setExchangeRate(rate);
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
       } catch (error) {
-      message.error("Failed to fetch exchange rate.");
-  }
-}
-};
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
 
-useEffect(() => {
-const intervalId = setInterval(() => {
-  const newCurrency = getTouristCurrency();
-  setCurrency(newCurrency);
-  getExchangeRate();
-}, 1);  return () => clearInterval(intervalId);
-}, [currency]);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1); return () => clearInterval(intervalId);
+  }, [currency]);
 
   const cart = location.state?.cart || [];
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
@@ -119,15 +120,15 @@ const intervalId = setInterval(() => {
     setTotalPoints(updatedData.totalPoints);
     showWalletInfoModal();
     message.success("Payment with wallet successful!");
-    
-    
+
+
     setActiveStep(activeStep + 1);
   };
   const handleConfirmPayment = async () => {
     cancelConfirmationModal(); // Close the confirmation modal
-  
+
     // Process wallet payment after confirmation
-    const orderData = { deliveryAddress: address, paymentMethod: "Wallet" };
+    const orderData = { deliveryAddress: address, paymentMethod: "Wallet", discountPercentage: discount };
     await processWalletPayment(orderData);
   };
 
@@ -167,7 +168,7 @@ const intervalId = setInterval(() => {
       case 0:
         return <AddressForm onNext={handleNextAddress} />;
       case 1:
-        return <PaymentForm onNext={handleNextPayment} />;
+        return <PaymentForm onNext={handleNextPayment} onApplyPromo={setDiscount} />;
       default:
         throw new Error('Unknown step');
     }
@@ -222,7 +223,7 @@ const intervalId = setInterval(() => {
                   height: 'auto',
                 }}
               >
-                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate}/>
+                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate} promo={discount} />
               </Box>
             </Grid>
 
@@ -355,7 +356,7 @@ const intervalId = setInterval(() => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
                 <p className="text-gray-600">
-                  Are you sure you want to proceed with this payment? 
+                  Are you sure you want to proceed with this payment?
                   Please review the details before confirming.
                 </p>
               </div>
@@ -367,8 +368,8 @@ const intervalId = setInterval(() => {
             onOk={closeWalletInfoModal}
             footer={null}
             closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
-            style={{ 
-              top: '50%', 
+            style={{
+              top: '50%',
               transform: 'translateY(-50%)',
               width: '350px',
               borderRadius: '12px',

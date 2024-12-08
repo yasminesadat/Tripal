@@ -256,12 +256,11 @@ export default function TouristHome() {
         <Hero5 />
         <BrandsThree />
         <TourTypesTwo />
-        <FeaturedTrips />
+        <br></br>
+        <br></br>
         <BannerEight />
         <DestinationsFive />
         <TestimonialsFour />
-        <ArticlesOne />
-        <Banner9 />
         <FooterThree />
       </main>
     </>

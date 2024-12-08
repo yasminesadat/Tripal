@@ -1,12 +1,12 @@
 import ProductDetails from "../../components/product/ProductDetails";
-import FooterThree from "@/components/layout/footers/FooterThree";
 
 const AdminViewProduct = () => {
   return (
     <div>
       <ProductDetails homeURL={"/admin"} productsURL={"/admin/view-products"}/>
-      <FooterThree/>
-    </div>
+      <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>    </div>
   );
 };
 
