@@ -2,7 +2,7 @@ import { useState } from "react";
 import Menu from "../components/GuestMenu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function GuestHeader({ refLogin, setOpen }) {
+export default function GuestHeader({ refLogin, setOpen, homepage }) {
   const location = useLocation();
   const navigate = useNavigate();
   const isLoginPage = location.pathname === "/login";
@@ -54,7 +54,7 @@ export default function GuestHeader({ refLogin, setOpen }) {
           </div>
 
           <div className="header__right">
-            {!isLoginPage && !isSignupPage && (
+            {!isLoginPage && !isSignupPage && homepage && (
               <button type="primary" onClick={() => setOpen(true)}>
                 Guide
               </button>

@@ -12,7 +12,6 @@ const createItinerary = async (req, res) => {
             language, startDate,endDate, accessibility,
             pickupLocation, dropoffLocation } = req.body;
         const fetchedActivities = await activityModel.find({ _id: { $in: activities } });
-
         if (!fetchedActivities || fetchedActivities.length === 0) {
             return res.status(404).json({ error: 'No activities found' });
         }
@@ -63,6 +62,27 @@ const createItinerary = async (req, res) => {
     catch (error) {
         res.status(400).json({ error: error.message });
     };
+};
+
+const getItineraryBookings = async (req, res) => {
+    const id = req.params.id;
+    try {
+      const result = await itineraryModel.findById(id).select("bookings");
+      return res.status(200).json(result);
+    }
+    catch (err) {
+      return res.status(400).json(err);
+    }
+  };
+  const getTourguideBookings = async (req, res) => {
+    const tourGuideId = req.userId;
+    try {
+        const bookings = await itineraryModel.find({ tourGuide: tourGuideId}).select("bookings");
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.error('Error fetching itineraries bookings:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 const getItinerariesForTourguide = async (req, res) => {
@@ -377,5 +397,7 @@ module.exports = {
     getAllItinerariesForAdmin,
     toggleItineraryStatus,
     getItineraryById,
-    revenue
+    getItineraryBookings,
+    revenue,
+    getTourguideBookings
 };
