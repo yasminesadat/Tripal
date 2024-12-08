@@ -74,7 +74,6 @@ export default function SuccessPage() {
     hasCompletedBooking.current = true; // Set the ref to true after the first call
 
     const completeBookingAsync = async () => {
-      debugger
       const bookingParams = extractBookingParams();
       const completionStatus = await handleBookingCompletion(bookingParams);
       setBookingCompleted(completionStatus);

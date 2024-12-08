@@ -141,7 +141,13 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
         "wallet"
       );
       cancelConfirmationModal();
-      showWalletInfoModal();
+
+      const updatedData = await getWalletAndTotalPoints();
+      setUpdatedWalletInfo(updatedData.wallet);
+        setTotalPoints(updatedData.totalPoints);
+
+    showWalletInfoModal();
+      //showWalletInfoModal();
       
       
       message.success(response.message);
