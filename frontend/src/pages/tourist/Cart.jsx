@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getCart , removeFromCart, updateQuantity} from "../../api/TouristService"
+import { getCart , removeFromCart, updateQuantity} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
