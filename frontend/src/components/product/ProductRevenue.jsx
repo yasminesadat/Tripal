@@ -9,11 +9,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function ProductRevenue({ productSales , price}) {
+const extractPrice = (priceString) => {
+  const numericValue = parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+  return numericValue;
+};
+
+export default function ProductRevenue({ productSales, price }) {
   const [tabs, setTabs] = useState([
     { label: "Revenue", data: [] },
     { label: "Product Sales", data: [] },
   ]);
+
+  const priceNoCurrency = price ? extractPrice(price) : 0;
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [revenue, setRevenue] = useState([]);
   const [sortOption, setSortOption] = useState("monthly");
@@ -41,46 +48,47 @@ export default function ProductRevenue({ productSales , price}) {
   }, []);
 
   useEffect(() => {
-    const updatedSales = [
-      {
-        name: new Date().toISOString().split("T")[0],
-        value: productSales,
-      },
-    ];
+    if (productSales && priceNoCurrency > 0) {
+      const updatedSales = [
+        {
+          name: new Date().toISOString().split("T")[0],
+          value: productSales,
+        },
+      ];
 
-    const salesRevenue = updatedSales.map((sale) => ({
-      fullDate: new Date(sale.name).toISOString().split("T")[0],
-      monthDate: new Date(sale.name).toLocaleString("default", { month: "long" }),
-      value: sale.value * price, 
-    }));
+      const salesRevenue = updatedSales.map((sale) => ({
+        fullDate: new Date(sale.name).toISOString().split("T")[0],
+        monthDate: new Date(sale.name).toLocaleString("default", { month: "long" }),
+        value: sale.value * priceNoCurrency,
+      }));
 
-    setRevenue(salesRevenue);
+      setRevenue(salesRevenue);
+      setTabs([
+        { label: "Revenue", data: salesRevenue },
+        { label: "Product Sales", data: updatedSales },
+      ]);
+    }
+  }, [productSales, priceNoCurrency]);
 
-    // Set the tabs with updated revenue data
-    setTabs([
-      { label: "Revenue", data: salesRevenue },
-      { label: "Product Sales", data: updatedSales },
-    ]);
-  }, [productSales, price]);
-
-  // Update chart data when sorting option changes
   useEffect(() => {
-    setTabs((prevTabs) =>
-      prevTabs.map((tab) =>
-        tab.label === "Revenue"
-          ? {
-              ...tab,
-              data: revenue.map((sale) => ({
-                name: sortOption === "month" ? sale.monthDate : sale.fullDate,
-                value: sale.value,
-              })),
-            }
-          : tab
-      )
-    );
-    setActiveTab((prevTab) =>
-      prevTab.label === "Revenue" ? tabs[0] : tabs[1]
-    );
+    if (revenue.length > 0) {
+      setTabs((prevTabs) =>
+        prevTabs.map((tab) =>
+          tab.label === "Revenue"
+            ? {
+                ...tab,
+                data: revenue.map((sale) => ({
+                  name: sortOption === "month" ? sale.monthDate : sale.fullDate,
+                  value: sale.value,
+                })),
+              }
+            : tab
+        )
+      );
+      setActiveTab((prevTab) =>
+        prevTab.label === "Revenue" ? tabs[0] : tabs[1]
+      );
+    }
   }, [sortOption, revenue]);
 
   const chart = (interval) => (
