@@ -291,7 +291,6 @@ const completeOrder = asyncHandler(async (req, res) => {
   const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod, discountPercentage } = req.body;
 
   try {
-
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status !== "paid") {
@@ -339,7 +338,8 @@ const completeOrder = asyncHandler(async (req, res) => {
     await tourist.save();
 
     return res.status(201).json({
-      message: "Order created successfully. Payment will be collected upon delivery.",
+      message:
+        "Order created successfully. Payment will be collected upon delivery.",
       order: newOrder,
     });
   } catch (error) {
@@ -347,9 +347,6 @@ const completeOrder = asyncHandler(async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-
 
 module.exports = {
   createOrder,

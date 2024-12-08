@@ -6,7 +6,7 @@ const {
   createOrder,
   cancelOrder,
   getOrders,
-  completeOrder
+  completeOrder,
 } = require("../controllers/OrderController");
 
 router.post(
@@ -17,25 +17,22 @@ router.post(
 );
 
 router.delete(
-    "/tourist/order/:id",
-    validateIDs(["id"]),
-    verifyToken,
-    authorizeRoles("Tourist"),
-    cancelOrder
-  );
+  "/tourist/order/:id",
+  validateIDs(["id"]),
+  verifyToken,
+  authorizeRoles("Tourist"),
+  cancelOrder
+);
 
-  router.get(
-    "/tourist/order",
-    verifyToken, 
-    authorizeRoles("Tourist"), 
-    getOrders 
-  );
+router.get("/tourist/order", verifyToken, authorizeRoles("Tourist"), getOrders);
 
-  router.post(
-    "/tourist/stripe/payment",
-    verifyToken,
-    authorizeRoles("Tourist"),
-    completeOrder
-  );
+router.post(
+  "/tourist/stripe/payment",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  completeOrder
+);
+
+router.patch("/tourist/order/:id/cancel", cancelOrder);
 
 module.exports = router;

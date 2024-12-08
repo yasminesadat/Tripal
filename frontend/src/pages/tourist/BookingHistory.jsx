@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTouristActivities, getTouristFlights, getTouristItineraries } from "../../api/TouristService";
+import {
+  getTouristActivities,
+  getTouristFlights,
+  getTouristItineraries,
+} from "../../api/TouristService";
 import { getHotelHistory } from "../../api/HotelService";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { getConversionRate } from "../../api/ExchangeRatesService";
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -128,9 +132,8 @@ export default function DbBooking() {
 
   //#region useEffect and methods
   useEffect(() => {
-
     const fetchCurrency = () => {
-      const curr = sessionStorage.getItem('currency');
+      const curr = sessionStorage.getItem("currency");
       if (curr) {
         setCurrency(curr);
         fetchExchangeRate(curr);
@@ -165,7 +168,7 @@ export default function DbBooking() {
   const fetchBookedActivities = async () => {
     try {
       const response = await getTouristActivities();
-      console.log(response)
+      console.log(response);
       if (response.length === 0) {
         setBookedActivities([]);
         console.log("No booked activities found.");
@@ -211,7 +214,7 @@ export default function DbBooking() {
       const rate = await getConversionRate(curr);
       setExchangeRate(rate);
     } catch (error) {
-      console.error('Failed to fetch exchange rate:', error);
+      console.error("Failed to fetch exchange rate:", error);
     }
   };
 
@@ -288,8 +291,6 @@ export default function DbBooking() {
       setModalVisible(false);
     }
   };
-
-
 
   const handleCancelBooking = (resourceId, resourceType) => {
     setCurrentResource({ resourceId, resourceType });
@@ -442,7 +443,6 @@ export default function DbBooking() {
                                             </button>
                                           </div>
                                         </td> */}
-                                    </tr>
                                   ))}
                                 </tbody>
                               </table>
