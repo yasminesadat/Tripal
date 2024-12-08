@@ -46,3 +46,13 @@ export const getOrders = async () => {
     }
   }
 };
+
+export const cancelOrder = async (orderId) => {
+  try {
+    const response = await axios.patch(`/tourist/order/${orderId}/cancel`);
+    return response.data;
+  } catch (error) {
+    console.error("Error canceling order:", error);
+    throw new Error("Failed to cancel order");
+  }
+};

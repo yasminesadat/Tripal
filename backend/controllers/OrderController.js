@@ -4,6 +4,29 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+async function fetchExchangeRates() {
+  const savedRates = sessionStorage.getItem("exchangeRates");
+
+  if (savedRates) {
+    exchangeRates = JSON.parse(savedRates);
+  } else {
+    const response = await fetch(
+      `https://v6.exchangerate-api.com/v6/f975ea74aec709add4731646/latest/EGP`
+    );
+    exchangeRates = await response.json();
+    sessionStorage.setItem("exchangeRates", JSON.stringify(exchangeRates));
+  }
+
+  return exchangeRates;
+}
+
+async function getConversionRate(currency) {
+  if (!exchangeRates) {
+    await fetchExchangeRates();
+  }
+  return exchangeRates.conversion_rates[currency];
+}
+
 const updateProductQuantity = async (productId, quantity) => {
   try {
     const product = await Product.findById(productId);
@@ -195,12 +218,10 @@ const createOrder = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Invalid payment method." });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while creating the order.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while creating the order.",
+      error: error.message,
+    });
   }
 });
 
@@ -228,14 +249,44 @@ const cancelOrder = asyncHandler(async (req, res) => {
     order.status = "Cancelled";
     await order.save();
 
-    res.status(200).json({ message: "Order cancelled successfully.", order });
+    const touristId = req.userId;
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: "Tourist not found" });
+    }
+
+    const orderCurrency = order.currency;
+    const walletCurrency = tourist.wallet.currency;
+
+    let convertedAmount = order.totalPrice;
+
+    if (orderCurrency !== walletCurrency) {
+      const conversionRate = await getConversionRate(walletCurrency);
+      convertedAmount = order.totalPrice * conversionRate;
+    }
+
+    const newWalletAmount = tourist.wallet.amount + convertedAmount;
+    tourist.wallet.amount = newWalletAmount;
+    await tourist.save();
+
+    const formattedOrderPrice = `${orderCurrency} ${order.totalPrice.toFixed(
+      2
+    )}`;
+    const formattedNewWalletAmount = `${walletCurrency} ${newWalletAmount.toFixed(
+      2
+    )}`;
+
+    res.status(200).json({
+      message: "Order cancelled successfully.",
+      orderPrice: formattedOrderPrice,
+      newWalletAmount: formattedNewWalletAmount,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "An error occurred while cancelling the order.",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "An error occurred while cancelling the order.",
+      error: error.message,
+    });
   }
 });
 
@@ -245,9 +296,7 @@ const getOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ touristId });
 
     if (!orders || orders.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No orders found for this user." });
+      return res.status(200).json({ orders: [] });
     }
     res.status(200).json({ orders });
   } catch (error) {

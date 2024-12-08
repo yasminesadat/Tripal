@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { message } from "antd";
+import { message, Modal } from "antd";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import MetaComponent from "@/components/common/MetaComponent";
 import Pagination from "../../components/common/Pagination";
-import { getOrders } from "@/api/OrderService";
+import { getOrders, cancelOrder } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,6 +27,8 @@ const statusClass = (status) => {
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [currentTab, setCurrentTab] = useState("Current Orders");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -47,6 +49,31 @@ const Orders = () => {
 
     fetchOrders();
   }, []);
+
+  const handleCancelOrder = async () => {
+    try {
+      const response = await cancelOrder(orderToCancel._id);
+      setOrders(orders.filter((order) => order._id !== orderToCancel._id));
+      message.success(
+        `Order canceled successfully. ${response.orderPrice} has been redeemed into your wallet. Your new wallet balance is ${response.newWalletAmount}.`
+      );
+    } catch (error) {
+      message.error("Failed to cancel order");
+    } finally {
+      setIsModalVisible(false);
+      setOrderToCancel(null);
+    }
+  };
+
+  const showCancelModal = (order) => {
+    setOrderToCancel(order);
+    setIsModalVisible(true);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setOrderToCancel(null);
+  };
 
   const filteredOrders = orders.filter((order) => {
     if (currentTab === "Current Orders") {
@@ -138,7 +165,10 @@ const Orders = () => {
                                 {order.status}
                               </div>
                             </td>
-                            <td>${order.totalPrice.toFixed(2)}</td>
+                            <td>
+                              {order.currency}
+                              {order.totalPrice.toFixed(2)}
+                            </td>
                             <td>
                               <div
                                 className={`d-flex items-center ${
@@ -148,12 +178,15 @@ const Orders = () => {
                                 }`}
                               >
                                 {order.status === "Pending" && (
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10 cancel-button">
+                                  <button
+                                    className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10 cancel-button"
+                                    onClick={() => showCancelModal(order)}
+                                  >
                                     <FontAwesomeIcon icon={faTimesCircle} />
                                   </button>
                                 )}
                                 <Link
-                                  to={`/order-details/${order._id}`}
+                                  to={`/order/${order._id}`}
                                   className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10 info-button"
                                 >
                                   <FontAwesomeIcon icon={faInfoCircle} />
@@ -177,6 +210,17 @@ const Orders = () => {
         </main>
         <FooterThree />
       </div>
+      <Modal
+        title="Cancel Order"
+        visible={isModalVisible}
+        onOk={handleCancelOrder}
+        onCancel={handleModalCancel}
+        okText="Yes"
+        cancelText="No"
+        className="custom-modal"
+      >
+        <p>Are you sure you want to cancel the order?</p>
+      </Modal>
       <style>{`
         .cancel-button {
           background-color: red !important;
@@ -192,12 +236,33 @@ const Orders = () => {
           background-color: darkred !important;
         }
 
-        .info-button-hover {
+        .info-button:hover {
           background-color: var(--color-light-purple) !important;
         }
 
         .justify-center {
           justify-content: center;
+        }
+
+        .custom-modal .ant-modal-footer .ant-btn-primary {
+          background-color: var(--color-stone) !important;
+          border-color: var(--color-stone) !important;
+        }
+        
+        .custom-modal .ant-modal-footer .ant-btn-primary:hover {
+          background-color: var(--color-stone-light) !important;
+          border-color: var(--color-stone-light) !important;
+          color: white !important;
+        }
+        
+        .custom-modal .ant-modal-footer .ant-btn-default {
+          border-color: var(--color-stone) !important;
+          color: var(--color-stone) !important;
+        }
+        
+        .custom-modal .ant-modal-footer .ant-btn-default:hover {
+          border-color: var(--color-stone) !important;
+          color: var(--color-stone) !important;
         }
       `}</style>
     </>
