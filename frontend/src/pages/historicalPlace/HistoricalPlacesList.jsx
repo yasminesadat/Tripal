@@ -439,14 +439,15 @@ export default function HistoricalPlacesList({ searchTerm }) {
               {currentPlaces.map((elm, i) => (
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
-                    <div
-                      className="tourCard__image"
-                      onClick={() => {
-                        navigate(`/historical-places/${elm._id}`);
-                      }}
-                    >
+                    <div className="tourCard__image">
                       {elm?.images?.length > 0 && elm.images[0]?.url && (
-                        <img src={elm.images[0].url} alt="image" />
+                        <img
+                          src={elm.images[0].url}
+                          alt="image"
+                          onClick={() =>
+                            navigate(`/historical-places/${elm._id}`)
+                          }
+                        />
                       )}
                       {userRole === "Tourism Governor" && (
                         <div className="tourCard__favorite2">
@@ -474,34 +475,36 @@ export default function HistoricalPlacesList({ searchTerm }) {
                           </button>
                         </div>
                       )}
-                      {userRole === "Tourist" && (
-                        <div className="tourCard__favorite2">
-                          <button
-                            className="button -accent-1 size-35 bg-white rounded-full flex-center"
-                            onClick={() =>
-                              handleCopyLink(
-                                `${window.location.origin}/historical-places/${elm._id}`
-                              )
-                            }
-                          >
-                            <i className="icon-clipboard text-15"></i>
-                          </button>
-                        </div>
-                      )}
-                      {userRole === "Tourist" && (
-                        <div className="tourCard__favorite">
-                          <button
-                            className="button -accent-1 size-35 bg-white rounded-full flex-center"
-                            onClick={() =>
-                              handleShare(
-                                `${window.location.origin}/historical-places/${elm._id}`
-                              )
-                            }
-                          >
-                            <i className="icon-share text-15"></i>
-                          </button>
-                        </div>
-                      )}
+                      {userRole !== "Tourism Governor" &&
+                        userRole !== "Admin" && (
+                          <div className="tourCard__favorite2">
+                            <button
+                              className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                              onClick={() =>
+                                handleCopyLink(
+                                  `${window.location.origin}/historical-places/${elm._id}`
+                                )
+                              }
+                            >
+                              <i className="icon-clipboard text-15"></i>
+                            </button>
+                          </div>
+                        )}
+                      {userRole !== "Tourism Governor" &&
+                        userRole !== "Admin" && (
+                          <div className="tourCard__favorite">
+                            <button
+                              className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                              onClick={() =>
+                                handleShare(
+                                  `${window.location.origin}/historical-places/${elm._id}`
+                                )
+                              }
+                            >
+                              <i className="icon-share text-15"></i>
+                            </button>
+                          </div>
+                        )}
                     </div>
 
                     <div className="tourCard__content">
