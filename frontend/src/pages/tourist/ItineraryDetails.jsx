@@ -53,7 +53,7 @@ const ItineraryDetailsPage = () => {
           setUserRole(response.data.role);
           //setUserId(response.data.id);
         } else {
-          message.error(response.data.message);
+          // message.error(response.data.message);
           setUserRole("Guest");
         }
       } catch (error) {
