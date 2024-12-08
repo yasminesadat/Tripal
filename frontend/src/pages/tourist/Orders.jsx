@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { message, Modal } from "antd";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -7,6 +7,7 @@ import Pagination from "../../components/common/Pagination";
 import { getOrders, cancelOrder } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
+import defaultPlace from "../../assets/images/defaultPlace.png";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -27,6 +28,7 @@ const Orders = () => {
   const [currentTab, setCurrentTab] = useState("Current Orders");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
+  const showError = useRef(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -41,7 +43,10 @@ const Orders = () => {
         );
         setOrders(ordersWithImages);
       } catch (error) {
-        message.error(error.message);
+        if (!showError.current) {
+          message.error(error.message);
+          showError.current = true;
+        }
       }
     };
 
@@ -149,7 +154,7 @@ const Orders = () => {
                                         .map((image, idx) => (
                                           <img
                                             key={idx}
-                                            src={image || "/placeholder.jpg"}
+                                            src={image || defaultPlace}
                                             alt="Order"
                                             style={{
                                               width: "70px", // Increased size

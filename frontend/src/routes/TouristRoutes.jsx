@@ -44,8 +44,10 @@ const touristRoutes = [
   { path: "/upcoming-itineraries", element: <Itineraries /> },
   { path: "/bookmarked-events", element: <BookmarkedEvents /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
-  { path: "/tourist/view-products/product/:id",
-    element: <TouristViewProduct />,},
+  {
+    path: "/tourist/view-products/product/:id",
+    element: <TouristViewProduct />,
+  },
   { path: "/checkout", element: <Checkout /> },
   { path: "/tourist/booking-history", element: <DbBooking /> },
   { path: "/hotel2", element: <Hero6 /> },
@@ -62,7 +64,7 @@ const touristRoutes = [
   { path: "/success/resource", element: <SuccessPage /> },
   { path: "products-payment-success", element: <OrderSuccessPage /> },
   { path: "/orders", element: <Orders /> },
-  { path: "/orders/:id", element: <OrderDetails /> },
+  { path: "/order/:id", element: <OrderDetails /> },
 ];
 
 export default touristRoutes;
