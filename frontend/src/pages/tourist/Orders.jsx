@@ -55,7 +55,7 @@ const Orders = () => {
       const response = await cancelOrder(orderToCancel._id);
       setOrders(orders.filter((order) => order._id !== orderToCancel._id));
       message.success(
-        `Order canceled successfully. ${response.orderPrice} has been redeemed into your wallet. Your new wallet balance is ${response.newWalletAmount}.`
+        `Order canceled successfully. ${response.orderPrice} EGP has been redeemed into your wallet. Your new wallet balance is ${response.newWalletAmount} EGP.`
       );
     } catch (error) {
       message.error("Failed to cancel order");

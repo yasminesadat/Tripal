@@ -4,29 +4,6 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-async function fetchExchangeRates() {
-  const savedRates = sessionStorage.getItem("exchangeRates");
-
-  if (savedRates) {
-    exchangeRates = JSON.parse(savedRates);
-  } else {
-    const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/f975ea74aec709add4731646/latest/EGP`
-    );
-    exchangeRates = await response.json();
-    sessionStorage.setItem("exchangeRates", JSON.stringify(exchangeRates));
-  }
-
-  return exchangeRates;
-}
-
-async function getConversionRate(currency) {
-  if (!exchangeRates) {
-    await fetchExchangeRates();
-  }
-  return exchangeRates.conversion_rates[currency];
-}
-
 const updateProductQuantity = async (productId, quantity) => {
   try {
     const product = await Product.findById(productId);
@@ -256,31 +233,14 @@ const cancelOrder = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Tourist not found" });
     }
 
-    const orderCurrency = order.currency;
-    const walletCurrency = tourist.wallet.currency;
-
-    let convertedAmount = order.totalPrice;
-
-    if (orderCurrency !== walletCurrency) {
-      const conversionRate = await getConversionRate(walletCurrency);
-      convertedAmount = order.totalPrice * conversionRate;
-    }
-
-    const newWalletAmount = tourist.wallet.amount + convertedAmount;
+    const newWalletAmount = tourist.wallet.amount + order.totalPrice;
     tourist.wallet.amount = newWalletAmount;
     await tourist.save();
 
-    const formattedOrderPrice = `${orderCurrency} ${order.totalPrice.toFixed(
-      2
-    )}`;
-    const formattedNewWalletAmount = `${walletCurrency} ${newWalletAmount.toFixed(
-      2
-    )}`;
-
     res.status(200).json({
       message: "Order cancelled successfully.",
-      orderPrice: formattedOrderPrice,
-      newWalletAmount: formattedNewWalletAmount,
+      orderPrice: order.totalPrice,
+      newWalletAmount,
     });
   } catch (error) {
     res.status(500).json({
