@@ -123,3 +123,13 @@ export async function getRevenue() {
     throw error;
   }
 }
+
+export const getIsArchived = async (id) => {
+  try {
+    const response = await axios.get(`/product/${id}/isArchived`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching isArchived:", error);
+    throw new Error("Failed to Product");
+  }
+};

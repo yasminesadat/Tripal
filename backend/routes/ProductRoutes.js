@@ -11,6 +11,7 @@ const {
   unArchiveProduct,
   revenue,
   getProductImages,
+  isArchived,
 } = require("../controllers/ProductController");
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
@@ -64,5 +65,7 @@ router.post(
   authorizeRoles("Tourist"),
   getProductImages
 );
+
+router.get("/product/:id/isArchived", isArchived);
 
 module.exports = router;

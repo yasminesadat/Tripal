@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderById } from "@/api/OrderService";
 import { message } from "antd";
-import { fetchProductImages } from "@/api/ProductService";
+import { fetchProductImages, getIsArchived } from "@/api/ProductService";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import defaultPlace from "../../assets/images/defaultPlace.png";
 
@@ -36,10 +36,23 @@ const OrderDetails = () => {
     };
 
     fetchOrderDetails();
-  }, [id]);
+  }, []);
 
   const defaultTimeline = ["Pending", "Shipped", "Delivered"];
   const cancelledTimeline = ["Cancelled"];
+
+  const handleProductClick = async (productId) => {
+    try {
+      const isArchived = await getIsArchived(productId);
+      if (isArchived) {
+        message.warning("Product no longer exists");
+      } else {
+        window.location.href = `/tourist/view-products/product/${productId}`;
+      }
+    } catch (error) {
+      message.error("Failed to fetch product details.");
+    }
+  };
 
   const getOrderTimeline = () => {
     if (order?.status === "Cancelled") return cancelledTimeline;
@@ -105,7 +118,11 @@ const OrderDetails = () => {
               <h2>Ordered Products</h2>
               <div className="products-grid">
                 {order?.products.map((item, index) => (
-                  <div key={index} className="product-card">
+                  <div
+                    key={index}
+                    className="product-card"
+                    onClick={() => handleProductClick(item.product)}
+                  >
                     <div className="product-image-container">
                       <img
                         src={images[index] || defaultPlace}
@@ -113,14 +130,7 @@ const OrderDetails = () => {
                         className="product-image"
                       />
                     </div>
-                    <div
-                      className="product-details"
-                      onClick={() =>
-                        item.isArchived
-                          ? message.error("Product no longer exists")
-                          : (window.location.href = `/tourist/view-products/product/${item._id}`)
-                      }
-                    >
+                    <div className="product-details">
                       <h3>{item.product.name}</h3>
                       <div className="product-meta">
                         <div className="product-quantity">
@@ -252,6 +262,7 @@ const OrderDetails = () => {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     flex: 1;
     max-width: calc(50% - 20px); /* Adjust for two columns */
+    cursor: pointer;
   }
 
   .product-card:hover {
