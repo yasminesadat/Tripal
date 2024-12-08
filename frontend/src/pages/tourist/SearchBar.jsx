@@ -40,6 +40,8 @@ export default function FlightsList() {
   const refFlightsExplore = useRef(null);
   const refFlightsSearch = useRef(null);
   const [open, setOpen] = useState(false);
+  const [showPassengersDropdown, setShowPassengersDropdown] = useState(false);
+  const [showCabinDropdown, setShowCabinDropdown] = useState(false);
 
   const steps = [
     {
@@ -63,6 +65,18 @@ export default function FlightsList() {
       }
     },
   ]
+
+  const cabinOptions = [
+    { label: 'Economy', value: 'ECONOMY' },
+    { label: 'Premium Economy', value: 'PREMIUM_ECONOMY' },
+    { label: 'Business', value: 'BUSINESS' },
+    { label: 'First', value: 'FIRST' },
+  ];
+
+  const handleCabinSelect = (value) => {
+    setCabinType(value);
+    setShowCabinDropdown(false);
+  };
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
@@ -120,6 +134,11 @@ export default function FlightsList() {
     }, 50);
   };
 
+  const handlePassengerSelect = (count) => {
+    setPassengers(count);
+    setShowPassengersDropdown(false); // Close the dropdown after selection
+  };
+
   const handleSearch = async () => {
     const today = dayjs().format('YYYY-MM-DD');
 
@@ -143,7 +162,17 @@ export default function FlightsList() {
         cabin: cabinType,
         currencyCode: 'EGP',
       });
+      sessionStorage.setItem('flightSearchParams', JSON.stringify(queryParams));
 
+    const urlParams = new URLSearchParams({
+      originLocationCode,
+      destinationLocationCode,
+      departureDate,
+      adults: passengers,
+      max: 150,
+      cabin: cabinType,
+      currencyCode: 'EGP',
+    });
       if (tripType === 'roundTrip' && returnDate) {
         queryParams.append('returnDate', returnDate);
       }
@@ -166,6 +195,7 @@ export default function FlightsList() {
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
             max-width: 1200px;
             margin: 0 auto;
+            z-index: 2
           }
             
 
@@ -183,8 +213,8 @@ export default function FlightsList() {
             grid-template-columns: 1fr 1fr 2fr;
             gap: 12px;
             align-items: center;
+            overflow: visible; /* Ensure the dropdown is not clipped */
           }
-
           .input-group {
             position: relative;
             width: 100%;
@@ -313,27 +343,39 @@ export default function FlightsList() {
             transition: all 0.2s ease;
             margin-top: 24px;
             margin: 0 auto; /* Centers the button horizontally */
- display: block; /* Ensures margin auto works */
-}
+            display: block; /* Ensures margin auto works */
+            }
 
-          .search-button:hover {
-  transform: translateY(-2px);
-  background: #dac4d0;
-  color: #036264;
-  box-shadow: 0 4px 12px rgba(143, 87, 116, 0.2);
-}
+            .search-button:hover {
+              transform: translateY(-2px);
+              background: #dac4d0;
+              color: #036264;
+              box-shadow: 0 4px 12px rgba(143, 87, 116, 0.2);
+            }
 
-          .dropdown {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 0;
-            width: 100%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid #dac4d0;
-            z-index: 10;
-          }
+              .dropdown {
+              position: absolute; /* Use absolute positioning */
+              top: calc(100% + 8px); /* Adjust as needed */
+              left: 0;
+              width: 100%; 
+              background: white;
+              border-radius: 8px;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+              border: 1px solid #dac4d0;
+              z-index: 1; /* Important: Set a higher z-index */
+            }
+
+            .dropdowns {
+              position: absolute; /* Use absolute positioning */
+              top: 120px /* Adjust as needed */
+              left: 0;
+              width: 50%; 
+              background: white;
+              border-radius: 8px;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+              border: 1px solid #dac4d0;
+              z-index: 1; /* Important: Set a higher z-index */
+            }
 
           .dropdown-item {
             padding: 12px 16px;
@@ -347,18 +389,18 @@ export default function FlightsList() {
           }
 
           .hero__title {
-  position: relative;
-  right: -180px; /* Move to the right */
-  top: -50px;  /* Move up */
-  z-index: 10; /* Ensure it stays above other elements */
-}
+            position: relative;
+            right: -180px; /* Move to the right */
+            top: -50px;  /* Move up */
+            z-index: 10; /* Ensure it stays above other elements */
+          }
 
-.hero__subtitle {
-  position: relative;
-  right: -180px; /* Match the title's horizontal positioning */
-  top: -40px;   /* Match the title's vertical positioning */
-  z-index: 10;
-}
+          .hero__subtitle {
+            position: relative;
+            right: -180px; /* Match the title's horizontal positioning */
+            top: -40px;   /* Match the title's vertical positioning */
+            z-index: 10;
+          }
         `}
       </style>
       <style jsx global>{`
@@ -487,16 +529,39 @@ export default function FlightsList() {
               One way
             </button>
 
-            <button className="select-button" onClick={() => setShowPassengers(!showPassengers)}>
-              <Users size={16} />
-              {passengers} passenger{passengers > 1 ? 's' : ''}
-              <ChevronDown size={16} />
-            </button>
+            <button className="select-button" onClick={() => setShowPassengersDropdown(!showPassengersDropdown)}>
+          <Users size={16} />
+          {passengers} passenger{passengers > 1 ? 's' : ''}
+          <ChevronDown size={16} />
+        </button>
+        {showPassengersDropdown && (
+          <ul className="dropdowns">
+            {[1, 2, 3, 4, 5].map((count) => (
+              <li key={count} onClick={() => handlePassengerSelect(count)} className="dropdown-item">
+                {count} passenger{count > 1 ? 's' : ''}
+              </li>
+            ))}
+          </ul>
+        )}
 
-            <button className="select-button" onClick={() => setShowCabin(!showCabin)}>
-              {cabinType}
-              <ChevronDown size={16} />
-            </button>
+        {/* Cabin Dropdown */}
+        <button className="select-button" onClick={() => setShowCabinDropdown(!showCabinDropdown)}>
+        {cabinOptions.find(option => option.value === cabinType)?.label}
+        <ChevronDown size={16} />
+      </button>
+      {showCabinDropdown && (
+        <ul className="dropdowns">
+          {cabinOptions.map((option) => (
+            <li
+              key={option.value}
+              onClick={() => handleCabinSelect(option.value)}
+              className="dropdown-item"
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
           </div>
 
           <div className="search-grid" ref={refFlightsSearch} style={{ display: 'grid', justifyContent: 'center' }}>

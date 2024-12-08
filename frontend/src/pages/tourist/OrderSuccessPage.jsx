@@ -1,85 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
-import { completeBooking } from '../../../api/BookingService';
+import { completeOrder as completeOrderService } from '@/api/OrderService'; // Assuming this service handles order completion
 import MetaComponent from '@/components/common/MetaComponent';
 import TouristHeader from '@/components/layout/header/TouristHeader';
 import FooterThree from '@/components/layout/footers/FooterThree';
 
-// Function to extract URL parameters
-const extractBookingParams = () => {
+// Extract order parameters from URL
+const extractOrderParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
   return {
     sessionId: searchParams.get('session_id'),
-    touristId: searchParams.get('tourist_id'),
-    resourceType: searchParams.get('resource_type'),
-    tickets: searchParams.get('tickets'),
-    resourceId: searchParams.get('resource_id'),
+    touristId: searchParams.get('touristId'),
+    totalPrice: parseFloat(searchParams.get('totalPrice')),
+    deliveryAddress: JSON.parse(decodeURIComponent(searchParams.get('deliveryAddress')))
   };
 };
 
-// Function to handle booking completion
-const handleBookingCompletion = async ({
-  sessionId,
-  touristId,
-  resourceType,
-  tickets,
-  resourceId,
-}) => {
-  console.log('Received parameters:', { sessionId, touristId, resourceType, tickets, resourceId });
-
-  // Check if all parameters are provided
-  if (sessionId && touristId && resourceType && tickets && resourceId) {
-    console.log('Booking details:', { sessionId, touristId, resourceType, tickets, resourceId });
-
+// Handle order completion logic
+const handleOrderCompletion = async ({ sessionId, touristId, totalPrice, deliveryAddress }) => {
+  if (sessionId && touristId && totalPrice && deliveryAddress) {
     try {
-      // Call completeBooking API
-      await completeBooking(
-        sessionId,
-        touristId,
-        resourceType,
-        parseInt(tickets, 10),
-        resourceId
-      );
-      message.success('Booking completed successfully.');
+      await completeOrderService({ sessionId, touristId, totalPrice, deliveryAddress });
       return true;
     } catch (error) {
-      // Log and display the entire error
-      console.error('Error completing booking:', error);
-      
-      // Check if error has a message or other properties, and display them in the message.error
-      const errorMessage = error instanceof Error ? error.stack || error.message : error.toString();
-      message.error(`Failed to complete booking. Error: ${errorMessage}`);
-      
+      message.error('Failed to complete order. Please try again.');
       return false;
     }
   } else {
-    // Check and log the missing parameters
-    if (!sessionId) console.log('Missing sessionId');
-    if (!touristId) console.log('Missing touristId');
-    if (!resourceType) console.log('Missing resourceType');
-    if (!tickets) console.log('Missing tickets');
-    if (!resourceId) console.log('Missing resourceId');
-
-    // Display error message for missing information
-    message.error('Missing required booking information. Please check the URL parameters.');
+    message.error('Missing required order information.');
     return false;
   }
 };
-export default function SuccessPage() {
-  const [bookingCompleted, setBookingCompleted] = useState(false);
-  const hasCompletedBooking = useRef(false); // Ref to prevent multiple calls
+
+export default function OrderCheckout() {
+  const [orderCompleted, setOrderCompleted] = useState(false);
+  const hasCompletedOrder = useRef(false);
 
   useEffect(() => {
-    if (hasCompletedBooking.current) return; // Prevent second call
-    hasCompletedBooking.current = true; // Set the ref to true after the first call
+    if (hasCompletedOrder.current) return;
+    hasCompletedOrder.current = true;
 
-    const completeBookingAsync = async () => {
-      const bookingParams = extractBookingParams();
-      const completionStatus = await handleBookingCompletion(bookingParams);
-      setBookingCompleted(completionStatus);
+    const completeOrderAsync = async () => {
+      const orderParams = extractOrderParams();
+      const completionStatus = await handleOrderCompletion(orderParams);
+      setOrderCompleted(completionStatus);
     };
 
-    completeBookingAsync();
+    completeOrderAsync();
   }, []);
 
   return (
@@ -97,7 +64,7 @@ export default function SuccessPage() {
           fontFamily: 'Helvetica, Arial, sans-serif',
         }}
       >
-        {bookingCompleted ? (
+        {orderCompleted ? (
           <div
             style={{
               backgroundColor: 'white',
@@ -173,7 +140,7 @@ export default function SuccessPage() {
               textAlign: 'center',
             }}
           >
-            <p>Processing your booking, please wait...</p>
+            <p>Processing your order, please wait...</p>
             <div
               style={{
                 marginTop: '20px',

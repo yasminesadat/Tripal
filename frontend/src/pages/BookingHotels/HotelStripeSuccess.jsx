@@ -83,49 +83,49 @@ export default function BookingPagesStripe() {
                 <div className="col-lg-8">
                   <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
 
-                      <div>
-                        <div className="d-flex flex-column items-center text-center">
-                          <div className="size-80 rounded-full flex-center bg-accent-1 text-white">
-                            <i className="icon-check text-26"></i>
-                          </div>
-
-                          <h2 className="text-30 md:text-24 fw-700 mt-20">
-                            System, your order was submitted successfully!
-                          </h2>
-                          <div className="mt-10">
-                            Booking details have been sent to: booking@tourz.com
-                          </div>
+                    <div>
+                      <div className="d-flex flex-column items-center text-center">
+                        <div className="size-80 rounded-full flex-center bg-accent-1 text-white">
+                          <i className="icon-check text-26"></i>
                         </div>
 
-                        <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30">
-                          <div className="row y-gap-15">
-                            <div className="col-md-3 col-6">
-                              <div>Order Number</div>
-                              <div className="text-accent-2">13119</div>
-                            </div>
+                        <h2 className="text-30 md:text-24 fw-700 mt-20">
+                          System, your order was submitted successfully!
+                        </h2>
+                        <div className="mt-10">
+                          Booking details have been sent to: booking@tourz.com
+                        </div>
+                      </div>
 
-                            <div className="col-md-3 col-6">
-                              <div>Date of Booking</div>
-                              <div className="text-accent-2">
-                                {format(today, "MMMM dd, yyyy")}
-                              </div>
-                            </div>
+                      <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30">
+                        <div className="row y-gap-15">
+                          <div className="col-md-3 col-6">
+                            <div>Order Number</div>
+                            <div className="text-accent-2">13119</div>
+                          </div>
 
-                            <div className="col-md-3 col-6">
-                              <div>Total</div>
-                              <div className="text-accent-2">
-                                {currency} {total}
-                              </div>
+                          <div className="col-md-3 col-6">
+                            <div>Date of Booking</div>
+                            <div className="text-accent-2">
+                              {format(today, "MMMM dd, yyyy")}
                             </div>
+                          </div>
 
-                            <div className="col-md-3 col-6">
-                              <div>Payment Method</div>
-                              <div className="text-accent-2">Online Payment</div>
+                          <div className="col-md-3 col-6">
+                            <div>Total</div>
+                            <div className="text-accent-2">
+                              {currency} {total}
                             </div>
+                          </div>
+
+                          <div className="col-md-3 col-6">
+                            <div>Payment Method</div>
+                            <div className="text-accent-2">Online Payment</div>
                           </div>
                         </div>
                       </div>
-                    
+                    </div>
+
                   </div>
                 </div>
 

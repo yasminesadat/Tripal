@@ -31,6 +31,7 @@ import CategorySelection from "@/pages/tourist/CategorySelection";
 import Checkout from "../pages/tourist/Checkout";
 import BookingPagesStripe from "@/pages/BookingHotels/HotelStripeSuccess";
 import SuccessPage from "@/components/activity/activitySingle/SuccessPage";
+import OrderSuccessPage from "@/pages/tourist/OrderSuccessPage";
 
 
 
@@ -89,7 +90,8 @@ const touristRoutes = [
   { path: "/tourist/preferences", element: <PreferenceSelection /> },
   { path: "/tourist/select-categories", element: <CategorySelection /> },
   { path: "/successHotel", element: <BookingPagesStripe /> },
-  { path: "/success/resource", element: <SuccessPage /> }
+  { path: "/success/resource", element: <SuccessPage /> },
+  { path: "products-payment-success", element: <OrderSuccessPage /> }
 
 
 ];

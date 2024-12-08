@@ -70,8 +70,7 @@ router.get(
 );
 
 router.put(
-  "/tourGuide-change-pass/:id",
-  validateIDs(["id"]),
+  "/tourGuide-change-pass",
   verifyToken,
   authorizeRoles("Tour Guide"),
   changePassword(TourGuide)

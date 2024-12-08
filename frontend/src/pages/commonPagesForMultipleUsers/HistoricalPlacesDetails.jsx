@@ -4,7 +4,7 @@ import Header from "@/components/dasboard/Header";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
 import PageHeader from "@/components/layout/header/HistoricalPlacesHeader";
-import  { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
@@ -16,9 +16,9 @@ const metadata = {
 };
 
 export default function HistoricalPlacesDetails() {
-  const [userRole, setUserRole] = useState(null); 
+  const [userRole, setUserRole] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
   const errorDisplayed = useRef(false);
 
   useEffect(() => {
@@ -46,56 +46,60 @@ export default function HistoricalPlacesDetails() {
   }, []);
 
   const handleSearch = (term) => {
-    setSearchTerm(term); 
+    setSearchTerm(term);
   };
 
   return (
     <>
       <MetaComponent meta={metadata} />
-      <main>
-      {userRole === "Guest" && (
+      <div className="page-wrapper">
+        {userRole === "Guest" && (
           <>
-             <GuestHeader />
-           
-            <HistoricalPlaceDetails  userRole={userRole}/>
+            <GuestHeader />
+            <main className="page-content">
+              <HistoricalPlaceDetails userRole={userRole} />
+            </main>
             <FooterThree />
           </>
         )}
 
         {userRole === "Admin" && (
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+              } js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">
               <Header setSideBarOpen={setSideBarOpen} />
-            
-              <HistoricalPlaceDetails userRole={userRole}/>
+
+              <HistoricalPlaceDetails userRole={userRole} />
               <div className="text-center pt-30">
                 © Copyright Tripal {new Date().getFullYear()}
               </div>
             </div>
           </div>
         )}
-         {userRole === "Tourist" && (
+        {userRole === "Tourist" && (
           <>
             <TouristHeader />
-           
-            <HistoricalPlaceDetails  userRole={userRole}/>
+            <main className="page-content">
+
+              <HistoricalPlaceDetails userRole={userRole} />
+            </main>
             <FooterThree />
           </>
         )}
         {userRole === "Tourism Governor" && (
           <>
             <GovernorHeader />
-           
-            <HistoricalPlaceDetails  userRole={userRole}/>
+            <main className="page-content">
+              <HistoricalPlaceDetails userRole={userRole} />
+            </main>
             <FooterThree />
           </>
         )}
-      </main>
+      </div>
+
     </>
   );
 }

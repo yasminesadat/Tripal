@@ -58,6 +58,7 @@ export default function ItinerariesList({
   const [currency, setCurrency] = useState( "EGP");
 
   const getExchangeRate = async () => {
+    if(userRole!=='Tourist') return;
     if (currency) {
       try {
         const rate = await getConversionRate(currency);
@@ -69,6 +70,7 @@ export default function ItinerariesList({
   };
 
   useEffect(() => {
+    if(userRole!=='Tourist') return;
     const intervalId = setInterval(() => {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
@@ -89,13 +91,11 @@ export default function ItinerariesList({
           setUserRole("Guest");
         } else {
           if (!errorDisplayed.current) {
-            message.error(response.data.message);
             errorDisplayed.current = true;
           }
         }
       } catch (error) {
         if (!errorDisplayed.current) {
-          message.error("Failed to fetch user data.");
           errorDisplayed.current = true;
         }
       }

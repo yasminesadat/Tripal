@@ -23,8 +23,7 @@ router.post("/admin/addAdmin", verifyToken, authorizeRoles("Admin"), addAdmin);
 router.get("/admin/users", verifyToken, authorizeRoles("Admin"), getAllUsers);
 
 router.patch(
-  "/admin-change-pass/:id",
-  validateIDs(["id"]),
+  "/admin-change-pass",
   verifyToken,
   authorizeRoles("Admin"),
   changePassword(Admin)

@@ -2,7 +2,7 @@ const Activity = require("../models/Activity");
 const Advertiser = require("../models/users/Advertiser");
 const ActivityCategory = require("../models/ActivityCategory");
 const PreferenceTag = require("../models/PreferenceTag");
-const {sendEmail} = require('./Mailer');
+const { sendEmail } = require('./Mailer');
 const Tourist = require('../models/users/Tourist');
 
 
@@ -194,10 +194,10 @@ const getActivityById = async (req, res) => {
 };
 
 const getTouristActivities = async (req, res) => {
-  const  touristId  = req.userId;
+  const touristId = req.userId;
   try {
-    const activities = await Activity.find({ "bookings.touristId": touristId,  flagged: false, date: { $gte: new Date() } })
-    
+    const activities = await Activity.find({ "bookings.touristId": touristId, flagged: false })
+
       .sort({ date: -1 });
     res.status(200).json(activities);
   } catch (error) {
@@ -233,24 +233,24 @@ const getAllActivities = async (req, res) => {
 const adminFlagActivity = async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.activityId).populate('advertiser');
-    const userData  = req.body;
-   
+    const userData = req.body;
+
     if (!activity) return res.status(404).json({ error: "Activity not found" });
     activity.flagged = !activity.flagged;
-    
-   
+
+
 
     sendAnEmailForActivityFlag(userData, activity.title);
-    console.log("hii55",activity.advertiser.notificationList);
-    if (activity.flagged){
-      activity.advertiser.notificationList.push({message:`Your activity ${activity.title} has been flagged as inappropriate by the admin.`})
-      }
-      else{
-          activity.advertiser.notificationList.push({message:`Your activity ${activity.title} has been flagged as appropriate by the admin.`})
-      } 
+    console.log("hii55", activity.advertiser.notificationList);
+    if (activity.flagged) {
+      activity.advertiser.notificationList.push({ message: `Your activity ${activity.title} has been flagged as inappropriate by the admin.` })
+    }
+    else {
+      activity.advertiser.notificationList.push({ message: `Your activity ${activity.title} has been flagged as appropriate by the admin.` })
+    }
 
-      await activity.save();
-      await activity.advertiser.save();
+    await activity.save();
+    await activity.advertiser.save();
 
     res.status(200).json({ message: "Activity flagged successfully" });
   } catch (error) {
@@ -282,8 +282,8 @@ const sendAnEmailForActivityFlag = async (userData, activityTitle) => {
 
 const revenue = async (req, res) => {
   try {
-    const  advertiserId  = req.userId;
-   console.log(advertiserId)
+    const advertiserId = req.userId;
+    console.log(advertiserId)
     const activities = await Activity.find({ advertiser: advertiserId });
     let totalRevenue = 0;
     let appRevenue = 0; // To store app's total revenue
@@ -296,7 +296,7 @@ const revenue = async (req, res) => {
     });
 
     appRevenue = totalRevenue * 0.10; // App takes 10% of the total revenue
-    totalRevenue-=appRevenue
+    totalRevenue -= appRevenue
 
     res.status(200).json({ totalRevenue });
   } catch (error) {

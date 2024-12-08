@@ -15,7 +15,7 @@ const {
   authorizeRoles,
 } = require("../middleware/AuthMiddleware.js");
 
-router.post("/seller",  
+router.post("/seller",
   verifyToken,
   authorizeRoles("Admin"),
   createSeller);
@@ -35,7 +35,6 @@ router.get(
 );
 router.put(
   "/seller-change-pass",
-  validateIDs(["id"]),
   verifyToken,
   authorizeRoles("Seller"),
   changePassword(Seller)

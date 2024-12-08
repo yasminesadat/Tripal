@@ -14,7 +14,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 
-cron.schedule('16 01 * * *', async () => {
+cron.schedule('43 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -234,7 +234,9 @@ const updateTouristProfile = async (req, res) => {
   try {
     const id = req.userId;
     const { tags, categories, bookedFlights, ...updateParameters } = req.body;
-    const currTourist = Tourist.findById(id);
+
+    const currTourist = await Tourist.findById(id);
+
     if (tags) {
       updateParameters.tags = tags;
     }
@@ -255,31 +257,25 @@ const updateTouristProfile = async (req, res) => {
         message: "You cannot update your balance",
       });
     }
-    console.log("email ", updateParameters.email);
-    const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
 
-
-    if (existingEmail) {
-      console.log("exists alreadyy");
-      return res.status(400).json({ error: "Email already exists" });
-    }
-    const existingEmailRequests = await Request.findOne({ email: updateParameters.email, status: { $ne: 'rejected' } });
-    if (existingEmailRequests) {
-      return res.status(400).json({ error: "Request has been submitted with this email" });
-    }
-    if (updateParameters.dateOfBirth) {
-      res.status(400).json({
-        status: "error",
-        message:
-          "You cannot update your date of birth, dont you know when you were born??",
-      });
-    }
+    console.log("email", updateParameters.email);
+    console.log("email 2", currTourist.email);
     if (updateParameters.email && updateParameters.email !== currTourist.email) {
+      const existingEmail = await User.findOne({ email: updateParameters.email, _id: { $ne: req.userId } }); // same email but not her
+      if (existingEmail && updateParameters.email !== currTourist.email) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
+      const existingEmailRequests = await Request.findOne({ email: updateParameters.email, status: { $ne: 'rejected' } });
+      if (existingEmailRequests) {
+        return res.status(400).json({ error: "Request has been submitted with this email" });
+      }
+
       await User.findOneAndUpdate(
         { email: currTourist.email },
         { email: updateParameters.email },
         { new: true, runValidators: true }
       );
+
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -311,7 +307,6 @@ const updateTouristProfile = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 const changePassword = async (req, res) => {
   try {
     const id = req.userId;
@@ -721,20 +716,20 @@ const getTouristNotifications = async (req, res) => {
 
 const markTouristNotificationsRead = async (req, res) => {
   try {
-    const userid=req.userId;
+    const userid = req.userId;
 
-    const tourist = await touristModel.findById(userid);  
-      if (!tourist) {
+    const tourist = await touristModel.findById(userid);
+    if (!tourist) {
       return res.status(404).json({ error: "Tourist not found" });
     }
-     
 
-    tourist.notificationList.forEach((n)=>{(n.read=true)})
 
-    await tourist.save();    
-    
+    tourist.notificationList.forEach((n) => { (n.read = true) })
+
+    await tourist.save();
+
     res.status(200).json(tourist.notificationList);
-    
+
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

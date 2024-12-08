@@ -10,15 +10,17 @@ export default function PageHeader({onSearch, title,  userRole}) {
             <div className="breadcrumbs">
               <span className="breadcrumbs__item">
                 {userRole==='Admin'&& <Link to="/admin">Home</Link> }
-               {userRole==='Tourist'&& <Link to="/tourist">Home</Link> }
-              {userRole==='Tour Guide'&& <Link to="/tourguide">Home</Link> }
+                {userRole==='Tourist'&& <Link to="/tourist">Home</Link> }
+                {userRole==='Tour Guide'&& <Link to="/tourguide">Home</Link> }
+                {userRole==='Guest'&& <Link to="/">Home</Link> }
               </span>
 
-              <span>{">"}</span>
+              <span>{" > "}</span>
               <span className="breadcrumbs__item">
-              {userRole==='Admin'&&<Link to="/admin/itineraries">Itineraries</Link> }
+                {userRole==='Admin'&&<Link to="/admin/itineraries">Itineraries</Link> }
                 {userRole==='Tourist'&&<Link to="/upcoming-itineraries">Itineraries</Link> }
                 {userRole==='Tour Guide'&&<Link to="/my-itineraries">Itineraries</Link> }
+                {userRole==='Guest'&&<Link to="/upcomingitineraries">Itineraries</Link> }
               </span>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,17 +19,40 @@ import Header from '../../components/layout/header/TouristHeader';
 import Footer from '../../components/layout/footers/FooterThree';
 import { createOrder } from '@/api/OrderService';
 import { loadStripe } from "@stripe/stripe-js";
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { getWalletAndTotalPoints } from '@/api/TouristService';
+import { AlertCircle } from 'lucide-react';
 
 const steps = ['Shipping address', 'Payment details'];
 
 export default function Checkout(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [address, setAddress] = React.useState(null);
-  const [paymentType, setPaymentType] = React.useState(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [address, setAddress] = useState(null);
+  const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
   const cart = location.state?.cart || [];
+  const currency=location.state?.currency||'EGP';
+  const exchangeRate=location.state?.exchangeRate||1;
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
+  const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);
+  const [totalPoints, setTotalPoints] = useState(0);
   const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
+
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      try {
+        const data = await getWalletAndTotalPoints();
+        console.log("Fetched Wallet Data:", data); // Debug log
+        setUpdatedWalletInfo(data.wallet);
+        setTotalPoints(data.totalPoints);
+      } catch (error) {
+        console.error("Error fetching wallet data:", error);
+      }
+    };
+
+    fetchWalletData();
+  }, []);
 
   const handleNextAddress = (newAddress) => {
     setAddress(newAddress);
@@ -37,12 +61,11 @@ export default function Checkout(props) {
 
   const processCreditCardPayment = async (orderData) => {
     try {
-      const stripe = await stripePromise; // Initialize stripe here
+      const stripe = await stripePromise;
       console.log("Redirecting to Stripe...");
-      
       const response = await createOrder(orderData);
-      const sessionId = response?.sessionId; // Safely access sessionId
-  
+      const sessionId = response?.sessionId;
+
       if (sessionId) {
         const { error } = await stripe.redirectToCheckout({ sessionId });
         if (error) {
@@ -58,43 +81,60 @@ export default function Checkout(props) {
       message.error("Payment processing failed. Please try again.");
     }
   };
-  
 
-  
-  
+  const showConfirmationModal = () => setConfirmationModalVisible(true);
+  const cancelConfirmationModal = () => setConfirmationModalVisible(false);
+
+  const showWalletInfoModal = () => setWalletInfoModalVisible(true);
+  const closeWalletInfoModal = () => setWalletInfoModalVisible(false);
+
   const processWalletPayment = async (orderData) => {
+    //showConfirmationModal();
     console.log("Deducting from wallet...");
-    const response = await createOrder(orderData);
-    message.success ("Payment with wallet successfull!")
+    await createOrder(orderData);
+    const updatedData = await getWalletAndTotalPoints();
+    setUpdatedWalletInfo(updatedData.wallet);
+    setTotalPoints(updatedData.totalPoints);
+    showWalletInfoModal();
+    message.success("Payment with wallet successful!");
+    
+    
     setActiveStep(activeStep + 1);
   };
+  const handleConfirmPayment = async () => {
+    cancelConfirmationModal(); // Close the confirmation modal
   
+    // Process wallet payment after confirmation
+    const orderData = { deliveryAddress: address, paymentMethod: "Wallet" };
+    await processWalletPayment(orderData);
+  };
+
   const processCashOnDelivery = async (orderData) => {
     console.log("Proceeding with cash on delivery...");
-    const response = await createOrder(orderData);
-    message.success ("COD successfull!")
+    await createOrder(orderData);
+    //message.success("COD successful!");
     setActiveStep(activeStep + 1);
   };
-  
+
   const handleNextPayment = async (newPaymentType) => {
     setPaymentType(newPaymentType);
     const orderData = { deliveryAddress: address, paymentMethod: newPaymentType };
-  
+
     try {
       if (newPaymentType === "Credit Card") {
         await processCreditCardPayment(orderData);
       } else if (newPaymentType === "Wallet") {
-        await processWalletPayment(orderData);
-      } else if (newPaymentType === "Cash On Delivery") {
+        showConfirmationModal();
+        //await processWalletPayment(orderData);
+      } else if (newPaymentType === "Cash on Delivery") {
         await processCashOnDelivery(orderData);
       }
     } catch (error) {
       console.error("Error creating order:", error);
-    console.error("Full Error Object:", error.response || error.message);
-    message.error("Failed to create the order. Please try again.");
+      console.error("Full Error Object:", error.response || error.message);
+      message.error("Failed to create the order. Please try again.");
     }
   };
-  
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -160,7 +200,7 @@ export default function Checkout(props) {
                   height: 'auto',
                 }}
               >
-                <Info totalPrice={'0'} cart={cart} />
+                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate}/>
               </Box>
             </Grid>
 
@@ -273,6 +313,62 @@ export default function Checkout(props) {
               </Box>
             </Grid>
           </Grid>
+          <Modal
+            visible={isConfirmationModalVisible}
+            onOk={handleConfirmPayment}
+            onCancel={cancelConfirmationModal}
+            okText="Yes, Pay"
+            cancelText="Cancel"
+            className="custom-confirmation-modal"
+            okButtonProps={{
+              className: "bg-[#036264] hover:bg-[#04494b] text-white",
+              style: { backgroundColor: '#036264', color: 'white' },
+            }}
+            cancelButtonProps={{
+              className: "text-gray-600 hover:text-gray-800",
+            }}
+          >
+            <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+              <AlertCircle className="text-[#036264] w-12 h-12" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <p className="text-gray-600">
+                  Are you sure you want to proceed with this payment? 
+                  Please review the details before confirming.
+                </p>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            title={null}
+            visible={isWalletInfoModalVisible}
+            onOk={closeWalletInfoModal}
+            footer={null}
+            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
+            style={{ 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              width: '350px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+            bodyStyle={{
+              backgroundColor: '#ffffff',
+              color: '#333',
+              textAlign: 'center',
+              padding: '30px 20px',
+            }}
+          >
+            <div className="wallet-modal-content">
+              <p>
+                <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+              </p>
+              <p>
+                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+              </p>
+            </div>
+          </Modal>
+
           <Footer />
         </main>
       </AppTheme>
