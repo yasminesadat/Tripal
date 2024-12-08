@@ -118,7 +118,7 @@ export default function HomePage5() {
       `}</style>
       <MetaComponent meta={metadata} />
       <main >
-        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} />
+        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} homepage={"home"}/>
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <Hero5 />
         <BrandsThree />
