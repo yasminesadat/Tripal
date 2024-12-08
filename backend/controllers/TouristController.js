@@ -294,7 +294,7 @@ const redeemPoints = async (req, res) => {
     }
 
     const amount = tourist.currentPoints - (tourist.currentPoints % 10000);
-    tourist.wallet.amount = tourist.wallet.amount + amount * 100;
+    tourist.wallet.amount = tourist.wallet.amount + amount / 100;
     tourist.currentPoints = tourist.currentPoints % 10000;
 
     await tourist.save();
