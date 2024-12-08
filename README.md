@@ -51,6 +51,17 @@ npm start
 
 ##  API References
 
+
+## Contribute
+To contribute:
+1. Fork the repo
+2. Create a new branch ```git checkout -b feature```
+3. Add your changes
+4. Commit your changes ```git commit -m 'Add some feature```
+5. Push to the branch ```git push origin my-new-feature```
+6. Create a new Pull Request
+7. The PR is to be reviewed and merged
+
 ## add creditsss
 
 
@@ -69,8 +80,3 @@ npm start
 
 [npm]: https://img.shields.io/badge/npm-8C150D?style=for-the-badge&logo=npm&logoColor=white
 [npm-url]: https://www.npmjs.com/
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
