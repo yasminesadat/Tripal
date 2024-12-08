@@ -85,7 +85,157 @@ EMAIL_PASS=
 
 <img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/e933a77e-fd44-4349-8a52-5ecf584bcd5c">
 
-## Code examples
+## Code Examples
+<details>
+  <summary>BE Order Model Example</summary>
+  <pre><code>
+const orderSchema = new Schema(
+  {
+    touristId: {
+      type: Schema.Types.ObjectId,
+      ref: "Tourist",
+      required: [true, "Tourist is required"],
+    },
+    products: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    deliveryAddress: {
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      zipCode: { type: String, required: true },
+      country: { type: String, required: true },
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["Wallet", "Credit Card", "Cash on Delivery"],
+      default: "Wallet",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+  </code></pre>
+</details>
+
+<details>
+  <summary>BE Get Tourist Orders Controller Example</summary>
+  <pre><code>
+const getOrders = asyncHandler(async (req, res) => {
+  const touristId = req.userId;
+  try {
+    const orders = await Order.find({ touristId });
+
+    if (!orders || orders.length === 0) {
+      res.status(200).json([]);
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch orders. Please try again later." });
+  }
+});
+  </code></pre>
+</details>
+
+<details>
+  <summary>BE Common Users Routes Example</summary>
+  <pre><code>
+const express = require("express");
+const router = express.Router();
+const {
+  loginUser,
+  getUserData,
+  logoutUser,
+} = require("../controllers/UserController");
+
+router.post("/login", loginUser);
+router.get("/user-data", getUserData);
+router.post("/logout", logoutUser);
+
+module.exports = router;
+  </code></pre>
+</details>
+
+<details>
+  <summary>FE Create Complaint Service Example</summary>
+  <pre><code>
+export async function createComplaint(newComplaint) {
+  try {
+    const response = await axios.post(`/complaint`, newComplaint);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "An error occurred while creating the complaint.");
+  }
+}
+  </code></pre>
+</details>
+
+<details>
+  <summary>FE Guest Routes Example</summary>
+  <pre><code>
+const guestRoutes = [
+  { path: "/", element: <HomePage5 /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
+  { path: "/upcomingactivities", element: <Activities /> },
+  { path: "/historicalPlaces", element: <HistoricalPlaces  /> },
+  { path: "/historical-places/:id", element: <HistoricalPlacesDetails /> },
+  { path:"/reset-password", element:<ResetPassword/>},
+  { path: "/itineraries/:itineraryId", element: <ItineraryDetailsPage /> },
+  {path : "/upcomingitineraries", element: <Itineraries/>},
+];
+  </code></pre>
+</details>
+
+<details>
+  <summary>FE Seller Home Page Example</summary>
+  <pre><code>
+import SellerHeader from "../../components/layout/header/SellerHeader";
+import FooterThree from "@/components/layout/footers/FooterThree";
+import ProductRevenue from "../seller/Revenue"
+import MetaComponent from "@/components/common/MetaComponent";
+
+const metadata = {
+  title: "Home || Tripal",
+};
+
+const SellerHome = () => {
+  return (
+    <>
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
+        <SellerHeader />
+        <main className="page-content">
+          <ProductRevenue />
+          <div className="admin-content-details"></div>
+        </main>
+        <FooterThree />
+      </div>
+    </>
+  );
+};
+
+export default SellerHome;
+  </code></pre>
+</details>
+ 
 
 ##  API References
 <details>
