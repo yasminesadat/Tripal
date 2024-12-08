@@ -56,3 +56,13 @@ export const cancelOrder = async (orderId) => {
     throw new Error("Failed to cancel order");
   }
 };
+
+export const getOrderById = async (orderId) => {
+  try {
+    const response = await axios.get(`/order/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    throw new Error("Failed to fetch order");
+  }
+};
