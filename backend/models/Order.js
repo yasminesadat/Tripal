@@ -23,10 +23,6 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    currency: {
-      type: String,
-      required: true,
-    },
     deliveryAddress: {
       street: { type: String, required: true },
       city: { type: String, required: true },

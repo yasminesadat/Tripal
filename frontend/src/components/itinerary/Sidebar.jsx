@@ -9,7 +9,7 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
   const [ddActives, setDdActives] = useState(["tourtype"]);
 
   const [selectedRatings, setSelectedRatings] = useState([]);
-  const [priceRangeState, setPriceRangeState] = useState([0, 2000000]);
+  const [priceRangeState, setPriceRangeState] = useState([0, 10000]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getUserData } from "@/api/UserService";
 import MetaComponent from "@/components/common/MetaComponent";
 import Activity from "@/components/pages/helpCenter/Activity";
@@ -30,7 +30,7 @@ export default function HelpCenterPage() {
         setUserRole(user.data.role);
       } catch (error) {
         console.error("Error fetching user:", error);
-        setUserRole("guest"); // Set to guest on error
+        setUserRole("guest");
       } finally {
         setIsLoading(false);
       }
@@ -40,7 +40,7 @@ export default function HelpCenterPage() {
   }, []);
 
   const renderHeader = () => {
-    if (isLoading) return null; // Return nothing while loading
+    if (isLoading) return null;
 
     switch (userRole) {
       case "Tourist":
@@ -58,7 +58,6 @@ export default function HelpCenterPage() {
     }
   };
 
-  // Optional: You can add a loading state for the entire page
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">

@@ -35,12 +35,12 @@ const createRequest = async (req, res) => {
         });
 
         if (existingUserNameRequests) {
-            return res.status(400).json({ error: "Request has been submitted with this username" });
+            return res.status(400).json({ error: "Another request has been submitted with this username" });
         }
 
         const existingEmailRequests = await Request.findOne({ email, status: { $ne: 'rejected' } });
         if (existingEmailRequests) {
-            return res.status(400).json({ error: "Request has been submitted with this email" });
+            return res.status(400).json({ error: "Another request has been submitted with this email" });
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -189,7 +189,7 @@ const requestAccountDeletion = async (req, res) => {
                 return res.status(400).json({ message: "Cannot request deletion. Advertiser has booked activities." });
             }
         }
-        else if (role === "TourGuide") {
+        else if (role === "Tour Guide") {
             const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
             if (hasBookedItineraries) {
                 return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
@@ -208,7 +208,7 @@ const requestAccountDeletion = async (req, res) => {
         }
 
         switch (role) {
-            case "TourGuide":
+            case "Tour Guide":
                 await Itinerary.updateMany({ tourGuide: userId }, { $set: { isActive: false } });
                 await Itinerary.deleteMany({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
                 await TourGuide.findByIdAndDelete(userId)

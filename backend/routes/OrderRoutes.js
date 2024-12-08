@@ -7,6 +7,7 @@ const {
   cancelOrder,
   getOrders,
   completeOrder,
+  getOrderById,
 } = require("../controllers/OrderController");
 
 router.post(
@@ -33,6 +34,13 @@ router.post(
   completeOrder
 );
 
-router.patch("/tourist/order/:id/cancel", cancelOrder);
+router.patch(
+  "/tourist/order/:id/cancel",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  cancelOrder
+);
+
+router.get("/order/:id", verifyToken, authorizeRoles("Tourist"), getOrderById);
 
 module.exports = router;

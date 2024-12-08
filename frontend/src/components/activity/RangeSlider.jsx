@@ -6,24 +6,24 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#EB662B", // Change this color to your desired primary color
+      main: "#e0829d",
     },
     secondary: {
-      main: "#f50057", // Change this color to your desired secondary color
+      main: "#f50057",
     },
   },
 });
 
 export default function RangeSlider({ priceRange, setPriceRange }) {
-  const [value, setValue] = useState(priceRange); // Initialize with priceRange prop
+  const [value, setValue] = useState(priceRange);
 
   useEffect(() => {
-    setValue(priceRange); // Update local value when priceRange prop changes
+    setValue(priceRange);
   }, [priceRange]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setPriceRange(newValue); // Pass the updated value to the parent
+    setPriceRange(newValue);
   };
 
   return (
@@ -36,7 +36,7 @@ export default function RangeSlider({ priceRange, setPriceRange }) {
               value={value}
               onChange={handleChange}
               valueLabelDisplay="auto"
-              max={2000000}
+              max={10000}
               min={0}
               disableSwap
             />
