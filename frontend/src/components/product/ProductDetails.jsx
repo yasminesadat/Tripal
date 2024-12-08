@@ -432,7 +432,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
           ) : (
             <p>No reviews available for this product.</p>
           )}
-          {userId === product.productSeller && (
+          {(userId === product.productSeller || userRole === "Admin") && (
             <>
               <Divider orientation="left" style={{ borderColor: "#aaa" }}>
                 Revenue
