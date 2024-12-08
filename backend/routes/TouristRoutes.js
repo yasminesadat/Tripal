@@ -194,7 +194,6 @@ router.post(
 );
 
 router.get(
-
   "/tourist/address",
   verifyToken,
   authorizeRoles("Tourist"),

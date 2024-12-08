@@ -26,11 +26,7 @@ const createSeller = asyncHandler(async (req, res) => {
     email: email,
     password: hashedPassword,
   });
-  // const id = sellernew._id
-  // await userModel.create({
-  //     userID: id,
-  //     role: "Seller"
-  // })
+  
   res.status(201).json(sellernew);
 });
 
@@ -52,7 +48,6 @@ const updateSellerData = asyncHandler(async (req, res) => {
   const { initialLogo, currLogo, ...updateData } = req.body;
   let result;
 
-  // Delete old logo if provided
   if (initialLogo) {
     try {
       const oldPicturePublicId = initialLogo
@@ -61,7 +56,6 @@ const updateSellerData = asyncHandler(async (req, res) => {
         .join("/")
         .split(".")[0];
 
-      // Delete old picture
       await cloudinary.uploader.destroy(oldPicturePublicId);
       updateData.logo = "";
     } catch (error) {
@@ -69,7 +63,6 @@ const updateSellerData = asyncHandler(async (req, res) => {
     }
   }
 
-  // Check if new logo is provided for upload
   if (currLogo) {
     try {
       result = await cloudinary.uploader.upload(currLogo, {
@@ -84,7 +77,7 @@ const updateSellerData = asyncHandler(async (req, res) => {
   const updatedSeller = await Seller.findByIdAndUpdate(
     req.userId,
     updateData,
-    { new: true, runValidators: true } // Options: return updated document, run validation
+    { new: true, runValidators: true }
   );
 
   if (!updatedSeller) {
@@ -104,7 +97,6 @@ const getSellerNotifications = async (req, res) => {
     if (!seller) {
       return res.status(404).json({ error: "Seller not found" });
     }
-    console.log(seller.notificationList)
     res.status(200).json(seller.notificationList);
     
   } catch (error) {
@@ -112,25 +104,18 @@ const getSellerNotifications = async (req, res) => {
   }
 };
 
-
-
 const markNotificationSeller = async (req, res) => {
   try {
     const userid=req.userId;
-   
-   
+  
     const seller = await Seller.findById(userid);
     if (!seller) {
       return res.status(404).json({ error: "Seller not found" });
-    }
-     
+    }   
 
     seller.notificationList.forEach((n)=>{(n.read=true)})
 
     await seller.save();
-
-    console.log(seller.notificationList)
-    
     
     res.status(200).json(seller.notificationList);
     

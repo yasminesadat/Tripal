@@ -26,14 +26,13 @@ const amadeus = new Amadeus({
   const cityCode = req.query.cityCode;
     try {
       const response = await amadeus.referenceData.locations.hotels.byCity.get({
-        cityCode, // You can replace 'PAR' or make it dynamic based on user input
+        cityCode, 
       });
       res.json(response.data);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }; 
-
 
   const getHotelDetails= async(req,res)=>{
     const hotelIds= req.query.hotelID;
@@ -64,21 +63,17 @@ const amadeus = new Amadeus({
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-    
   };
 
   const saveBooking = async (req, res) => {
     const { hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, pricing, singlePricing, doublePricing, triplePricing, status, paymentMethod } = req.body;
-    console.log("REQUEST", req.body);
     const userId = req.userId;
   
     try {
       const existingTourist = await Tourist.findById(userId);
       if (!existingTourist) {
         return res.status(400).json({ error: "UserID doesn't exist!" });
-      }
-      console.log('Received payment method:', paymentMethod);
-  
+      }  
   
       if (paymentMethod === 'wallet') {
         existingTourist.wallet.amount = existingTourist.wallet.amount || 0;
@@ -125,7 +120,7 @@ const amadeus = new Amadeus({
                   name: `${hotelname} - ${cityCode}`,
                   description: `Hotel ID: ${hotelid} | ${checkIn} - ${checkOut}`,
                 },
-                unit_amount: pricing * 100, // Convert to smallest currency unit (e.g., EGP cents)
+                unit_amount: pricing * 100,
               },
               quantity: 1,
             },
@@ -137,7 +132,6 @@ const amadeus = new Amadeus({
           success_url: `${process.env.FRONTEND_URL}/successHotel?session_id={CHECKOUT_SESSION_ID}&hotelid=${encodeURIComponent(hotelid)}&hotelname=${encodeURIComponent(hotelname)}&cityCode=${encodeURIComponent(cityCode)}&singleNumber=${singleNumber}&singlePrice=${req.body.singlePrice}&doubleNumber=${doubleNumber}&doublePrice=${req.body.doublePrice}&tripleNumber=${tripleNumber}&triplePrice=${req.body.triplePrice}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}&pricing=${pricing}&paymentMethod=${paymentMethod}`,
           cancel_url: `${process.env.FRONTEND_URL}/hotel2`,
         });
-        //console.log("Stripe session created:", session);
   
         const newBooking = await hotelBookings.create({
           user: userId,
@@ -155,7 +149,6 @@ const amadeus = new Amadeus({
         });
         existingTourist.bookedHotels.push(newBooking._id);
         await existingTourist.save();
-  
         res.status(201).json({ sessionId: session.id });
       } else {
         res.status(400).json({ error: 'Invalid payment method' });

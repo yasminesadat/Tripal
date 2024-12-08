@@ -11,15 +11,16 @@ const {
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.get("/searchHotels",  
-            verifyToken,
-            authorizeRoles("Tourist"),
-            searchHotels);
+  verifyToken,
+  authorizeRoles("Tourist"),
+  searchHotels
+);
 
-  router.get("/getHotelDetails",  verifyToken,
-  authorizeRoles("Tourist"),getHotelDetails);
+router.get("/getHotelDetails",  verifyToken,
+authorizeRoles("Tourist"),getHotelDetails);
 
-  router.get("/getHotelPrices",  verifyToken,
-  authorizeRoles("Tourist"),getHotelPrices);
+router.get("/getHotelPrices",  verifyToken,
+authorizeRoles("Tourist"),getHotelPrices);
 
 router.get("/searchCity",  verifyToken,
   authorizeRoles("Tourist"),getCityCode);

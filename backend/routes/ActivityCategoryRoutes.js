@@ -8,15 +8,16 @@ const {
 } = require("../controllers/ActivityCategoryController.js");
 const validateIDs = require("../middleware/IDMiddleware");
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
-// create a new activity category
+
 router.post(
   "/activityCategory",
   verifyToken,
   authorizeRoles("Admin"),
   createActivityCategory
 );
-// get all activity categories
+
 router.get("/activityCategories", getActivityCategories);
+
 router.delete(
   "/activityCategory/:id",
   validateIDs(["id"]),

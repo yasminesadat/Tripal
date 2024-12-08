@@ -1,6 +1,5 @@
 import { axios } from "./axios";
 
-// for tourist
 export async function viewUpcomingItineraries() {
   try {
     const response = await axios.get("/itinerary/upcoming/view");
@@ -11,17 +10,6 @@ export async function viewUpcomingItineraries() {
   }
 }
 
-export async function viewPaidItineraries() {
-  try {
-    const response = await axios.get("/itinerary/paid/view");
-    return response.data;
-  } catch (error) {
-    console.error("Can't fetch itineraries", error);
-    throw error;
-  }
-}
-
-// for tourguide return all itineraries created by a tourguide 
 export const getItinerariesByTourGuide = async () => {
   try {
     const response = await axios.get("/my-itineraries");

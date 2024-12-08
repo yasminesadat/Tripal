@@ -67,12 +67,10 @@ const deleteTourguideNotification = async (req, res) => {
     const userid=req.userId;
     const notificationID=req.params;   
    
-   
     const tourGuide = await tourGuideModel.findById(userid);
     if (!tourGuide) {
       return res.status(404).json({ error: "Tour Guide not found" });
     }
-     
     
     const updatedNotificationList = tourGuide.notificationList.filter(
       notification => (notification._id).toString() !== notificationID.id
@@ -80,7 +78,6 @@ const deleteTourguideNotification = async (req, res) => {
 
     tourGuide.notificationList=updatedNotificationList;
     await tourGuide.save();
-    
     
     res.status(200).json(tourGuide.notificationList);
     
@@ -92,29 +89,16 @@ const deleteTourguideNotification = async (req, res) => {
 const markNotificationRead = async (req, res) => {
   try {
     const userid=req.userId;
-    // const notificationID=req.params;   
-   console.log("Alive");
-
    
     const tourGuide = await tourGuideModel.findById(userid);
     if (!tourGuide) {
       return res.status(404).json({ error: "Tour Guide not found" });
     }
      
-   
-    // const notification = tourGuide.notificationList.find(
-    //   notification => (notification._id).toString() === notificationID.id
-    // );
-
-    // notification.read=true;
     tourGuide.notificationList.forEach((n)=>{(n.read=true)})
 
-    
     await tourGuide.save();
 
-    console.log(tourGuide.notificationList)
-    
-    
     res.status(200).json(tourGuide.notificationList);
     
   } catch (error) {
@@ -135,7 +119,6 @@ const updateTourguideData = async (req, res) => {
           .join("/")
           .split(".")[0];
 
-        // Delete old picture
         await cloudinary.uploader.destroy(oldPicturePublicId);
         data.profilePicture = "";
       } catch (error) {

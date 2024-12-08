@@ -6,9 +6,6 @@ const Request = require('../models/Request.js')
 const addTourismGovernor = async (req, res) => {
   try {
     const { userName, password } = req.body;
-
-
-    //check unique userName across all users
     const existingUserName = await User.findOne({ userName });
     if (existingUserName) {
       return res.status(400).json({ error: "Username already exists" });
@@ -20,13 +17,9 @@ const addTourismGovernor = async (req, res) => {
     if (existingUserNameRequests) {
       return res.status(400).json({ error: "Request has been submitted with this username" });
     }
-    console.log("data", userName, password)
     if (!userName || !password) {
       return res.status(400).json({ error: "Missing required fields: username and password" });
     }
-
-
-
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
