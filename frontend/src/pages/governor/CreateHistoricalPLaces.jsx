@@ -14,9 +14,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import { CreateNewHistoricalPlace, updateHistoricalPlace } from '../../api/HistoricalPlaceService';
 const tabs = ["Content", "Timings", "Location", "Pricing"];
 export default function AddHistoricalPlace() {
-  const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Content");
-
   const location = useLocation();
   const props = location.state?.historicalPlace;
   const navigate = useNavigate();
@@ -568,6 +566,7 @@ export default function AddHistoricalPlace() {
                                   extra="You can select one or more images"
                                 >
                                   <Upload.Dragger
+                                  name="files"
                                     multiple
                                     onChange={handleChoosingImage}
                                     onRemove={(file) => {
