@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SearchComponent = () => {
@@ -8,8 +8,8 @@ const SearchComponent = () => {
 
     const searchableItems = [
         { title: 'Activities', path: '/upcomingactivities' },
-        { title: 'Itineraries', path: '/login' },
-        { title: 'Historical Places', path: '/login' }
+        { title: 'Itineraries', path: '/upcomingitineraries' },
+        { title: 'Historical Places', path: '/historicalPlaces' }
     ];
 
     const filteredItems = searchableItems.filter(item =>
@@ -23,7 +23,6 @@ const SearchComponent = () => {
     };
 
     const handleSearch = () => {
-        // If search term matches any item exactly, navigate to that path
         const exactMatch = searchableItems.find(
             item => item.title.toLowerCase() === searchTerm.toLowerCase()
         );
@@ -31,7 +30,6 @@ const SearchComponent = () => {
         if (exactMatch) {
             navigate(exactMatch.path);
         } else {
-            // Default to activities page if no exact match
             navigate('/upcomingactivities');
         }
         setSearchTerm('');
