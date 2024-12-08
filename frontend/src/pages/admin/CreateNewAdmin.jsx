@@ -23,9 +23,6 @@ export default function CreateNewAdmin() {
   const [loading, setLoading] = useState(false);
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
-
-
-
   const onFinish = async () => {
     setLoading(true);
     console.log("username+", form.getFieldValue("userName"));
@@ -50,10 +47,6 @@ export default function CreateNewAdmin() {
     message.error("Please check the form and try again.");
     console.log("Failed:", errorInfo);
   };
-
-
-
-
   return (
 
     <div
@@ -262,6 +255,9 @@ export default function CreateNewAdmin() {
           </>
 
         </div>
+        <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>
       </div>
     </div>
   );

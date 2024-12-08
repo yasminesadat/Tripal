@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
 import { useLocation } from "react-router-dom";  // Import useLocation for reading query params
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import img from "./Components/HotelsImages/bookingicon2.png";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
+import { getTouristUserName } from "@/api/TouristService";
+import {message} from 'antd';
 
 export default function BookingPagesStripe() {
   const metadata = {
@@ -31,6 +33,11 @@ export default function BookingPagesStripe() {
   const [checkOut, setCheckOut] = useState("");
   const [currency, setCurrency] = useState("");
   const [exchangeRate, setExchangeRate] = useState(1);
+  const [userName,setUserName]=useState("")
+  const [date1,setDate1]=useState("")
+  const [date2,setDate2]=useState("");
+
+
 
   const location = useLocation();
 
@@ -54,12 +61,35 @@ export default function BookingPagesStripe() {
   }, [location]);
 
   useEffect(() => {
+    if (checkIn) {
+      setDate1(format(new Date(checkIn), 'dd MMMM yyyy'));
+    }
+    if (checkOut) {
+      setDate2(format(new Date(checkOut), 'dd MMMM yyyy'));
+    }
+  }, [checkIn, checkOut]); // This will run when checkIn or checkOut changes
+
+  const fetchUserName= async() => {
+    try{
+    console.log("hi")  
+    const name = await getTouristUserName();
+    console.log("hi",name.userName)
+    setUserName(name.userName)
+    }
+    catch(error)
+    {
+     message.error(error.message)
+    }
+}
+
+  useEffect(() => {
     const calculatedTotal = (
       (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
       (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
       (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber
     ).toFixed(2);
     setTotal(calculatedTotal); // Update the total
+    fetchUserName();
   }, [
     singleNumber,
     doubleNumber,
@@ -90,7 +120,7 @@ export default function BookingPagesStripe() {
                         </div>
 
                         <h2 className="text-30 md:text-24 fw-700 mt-20">
-                          System, your order was submitted successfully!
+                          {userName}, your order was submitted successfully!
                         </h2>
                         <div className="mt-10">
                           Booking details have been sent to: booking@tourz.com
@@ -143,13 +173,13 @@ export default function BookingPagesStripe() {
 
                       <div className="">
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckInDate:</div>
-                          <div className="">{checkIn}</div>
+                          <div className="fw-500">CheckIn Date: {date1}</div>
+                          <div className=""></div>
                         </div>
 
                         <div className="d-flex items-center justify-between">
-                          <div className="fw-500">CheckOut</div>
-                          <div className="">{checkOut}</div>
+                          <div className="fw-500">CheckOut Date: {date2}</div>
+                          <div className=""></div>
                         </div>
 
                         {singleNumber > 0 && (

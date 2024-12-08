@@ -3,7 +3,7 @@ import ActivityCategoryDetails from "@/pages/admin/ActivityCategory";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AdminViewProduct from "../pages/admin/AdminViewProduct";
 import AdminViewUsers from "../pages/admin/AdminViewUsers";
-import CreateNewGovernor from "@/pages/governor/CreateNewGovernor";
+import CreateNewGovernor from "@/pages/admin/CreateNewGovernor";
 import CreateNewAdmin from "@/pages/admin/CreateNewAdmin";
 import ComplaintsPage from "@/pages/admin/Complaints";
 import ComplaintsReplies from "@/pages/admin/ComplaintsReplies";

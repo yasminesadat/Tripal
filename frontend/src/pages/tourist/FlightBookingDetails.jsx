@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-import { updateTouristInformation, getTouristUserName, getWalletAndTotalPoints } from '../../api/TouristService';
+import { getTouristUserName, getWalletAndTotalPoints } from '../../api/TouristService';
 import { saveFlightBooking } from "../../api/TouristService";
 import { getHotelHistory } from "../../api/HotelService";
 import TransportationBookingPopUp from './TransportationBooking'
@@ -12,6 +12,7 @@ import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import { loadStripe } from "@stripe/stripe-js";
 import { AlertCircle } from 'lucide-react';
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
 export const parseDuration = (duration) => {
   const regex = /^PT(\d+H)?(\d+M)?$/;
   const match = duration.match(regex);

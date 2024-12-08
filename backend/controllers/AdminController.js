@@ -201,4 +201,43 @@ const getTotalUsersCount= async(req,res)=>{
   }
 }
 
-module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner,getTotalUsersCount };
+const getUsersPerMonth= async (req,res)=>{
+  try{
+      const {searchYear}=req.params;
+      var count=[0,0,0,0,0,0,0,0,0,0,0,0];
+      const users = await User.find();
+      
+      users.forEach((user)=>{
+        var year=user.timestamp.getFullYear();
+        var month=user.timestamp.getMonth();
+        if (year==searchYear){
+          count[--month]++;
+      
+        }
+
+      })
+      res.status(200).json(count);
+  }
+  catch(error){
+    res.status(500).json({ message: 'Server error', error: error.message });
+
+  }
+}
+
+const getAdminNotifications = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const admin = await Admin.findById(userid);
+
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+    res.status(200).json(admin.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+module.exports = { addAdmin, deleteUser, getAllUsers, createPromoCode,getPromoCodes, getDataForEventOwner,getTotalUsersCount,getUsersPerMonth, getAdminNotifications };

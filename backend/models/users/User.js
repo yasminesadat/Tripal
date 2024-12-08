@@ -28,7 +28,14 @@ const userSchema = new Schema({
     type: Date,
     select: false,
   },
-});
+  timestamp: { // Custom field for storing the random timestamp
+    type: Date,
+    default: Date.now,
+    required: false,  // This field is not required since not all users might have it initially
+  }
+  
+},
+   );
 
 userSchema.methods.generateOtp = async function () {
   const otp = crypto.randomInt(100000, 999999).toString();
@@ -45,6 +52,7 @@ userSchema.methods.clearExpiredOtp = function () {
     this.otpExpiresAt = undefined;
   }
 };
+
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

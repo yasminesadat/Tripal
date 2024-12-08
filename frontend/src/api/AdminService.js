@@ -35,6 +35,17 @@ export async function getTotalUsers() {
   }
 }
 
+export async function getUsersPerMonth(searchYear){
+  try {
+   
+    const response = await axios.get(`/admin/getUsersPerMonth/${searchYear}`);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
+
 export async function deleteUser(role, userId) {
   try {
     console.log("delete userr")
@@ -148,3 +159,13 @@ export const getEventOwnerData = async (userId) => {
     throw error;
   }
 };
+
+export async function getAdminNotifications() {
+  try {
+    const response = await axios.get('/admin/notifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+}

@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { List, Button, Modal, Input } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import ActivityCategoryApi from "../../api/ActivityCategoryService";
-import FooterThree from "@/components/layout/footers/FooterThree";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
+
 const ActivityCategoryDetails = () => {
+
     const [nameValue, setNameValue] = useState("");
     const [data, setData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [updateCategoryName, setUpdateCategoryName] = useState("");
     const [updateCategoryID, setUpdateCategoryID] = useState("");
     const [sideBarOpen, setSideBarOpen] = useState(true);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -127,8 +129,6 @@ const ActivityCategoryDetails = () => {
         background-color: transparent !important;
     }
 `;
-
-
     const styles = {
         container: {
             padding: '40px 20px',
@@ -311,6 +311,9 @@ const ActivityCategoryDetails = () => {
                             />
                         </Modal>
                     </div>
+                    <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>
                 </div>
             </div>
         </>

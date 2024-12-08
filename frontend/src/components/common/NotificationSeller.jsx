@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Bell} from 'lucide-react';
 import { format } from 'date-fns';
-import { markNotification, getNotifications } from "@/api/AdvertiserService";
+import { markNotification, getNotifications } from "@/api/SellerService";
 
 
-const AdvertiserNotification = () => {
+const SellerNotification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -196,4 +196,4 @@ color: var(--color-stone);
     );
 };
 
-export default AdvertiserNotification;
+export default SellerNotification;

@@ -3,7 +3,7 @@ import {  Select } from "antd";
 import { getAllPeriodTags } from '../../../api/HistoricalPlacePeriodService';
 import { getAllTypeTags } from '../../../api/HistoricalPlaceTagService';
 
-export default function Sidebar({setFilters}) {
+export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPeriod}) {
   const [ddActives, setDdActives] = useState("");
   const [tagsOptions, setTagsOption] = useState([]);
   const [periodTagsOptions, setPeriodTagsOption] = useState([]);
@@ -80,7 +80,7 @@ export default function Sidebar({setFilters}) {
                             });
                             console.log(tags);
                             setSelectedTags(tags)
-                            setFilters( { historicType:selectedTags, historicalTagPeriod:selectedPeriods })
+                            setFilterHistoricType(tags);
                         }}
                         style={{
                             width: '100%',
@@ -143,7 +143,8 @@ export default function Sidebar({setFilters}) {
                             });
                             console.log(periods);
                             setSelectedPeriods(periods);
-                           setFilters( { historicType:selectedTags, historicalTagPeriod:selectedPeriods });
+                            setFilterHistoricalTagPeriod(periods);
+                            
                         }}
                         style={{
                             width: '100%',
