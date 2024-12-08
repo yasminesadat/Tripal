@@ -6,6 +6,7 @@ import languages from '../../assets/constants/Languages';
 import AccessibilityTags from '../../assets/constants/AccessibiltyTags';
 import ActivitySelectionModal from './ActivitySelectionModal';
 import { createItinerary } from '../../api/ItineraryService';
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -23,6 +24,8 @@ export default function CreateItineraryForm() {
   const [numDays, setNumDays] = useState(0); // Store the number of days
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+
   //#endregion
 
   //#region 2. Event Handlers
@@ -87,12 +90,14 @@ export default function CreateItineraryForm() {
       return message.error("Please select activities for the itinerary.");
     }
     try {
-
       setLoading(true);
       await createItinerary(itineraryData);
       message.success("Itinerary created successfully!");
       form.resetFields();
       setSelectedActivities([]);
+      setTimeout(() => {
+        navigate('/my-itineraries');
+      }, 1000);
     } catch (error) {
       message.error('Failed to create itinerary.');
     } finally {
@@ -227,7 +232,7 @@ export default function CreateItineraryForm() {
                       name="serviceFee"
                       rules={[{ required: true, message: "Please enter the service fee" }]}
                     >
-                      <Input prefix="$" size="large" placeholder="0" />
+                      <Input prefix="EGP" size="large" placeholder="0" />
                     </Form.Item>
                   </Col>
 

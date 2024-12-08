@@ -98,66 +98,75 @@ const MyComplaints = () => {
             {/* <TouristNavBar /> */}
             {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
             <div className="dashboard__content">
-              {/* <Header setSideBarOpen={setSideBarOpen} /> */}
-              <div className="dashboard__content_content">
-                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
-                  <h1 className="text-30">My Complaints</h1>
-                  <button
-                    className="add-complaint-btn"
-                    onClick={() => setIsModalOpen(true)}
-                    title="Add New Complaint"
-                  >
-                    <PlusOutlined />
-                  </button>
-                  <div className="overflowAuto">
-                    <table className="tableTest mb-30">
-                      <thead className="bg-light-1 rounded-12">
-                        <tr>
-                          <th>Title</th>
-                          <th>Status</th>
-                          <th>Date</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {complaints.map((complaint, i) => (
-                          <React.Fragment key={complaint._id}>
+              <div className="page-content-hana">
+                {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+                <div className="dashboard__content_content">
+                  <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
+                    <h1 className="text-30">My Complaints</h1>
+                    <button
+                      className="add-complaint-btn"
+                      onClick={() => setIsModalOpen(true)}
+                      title="Add New Complaint"
+                    >
+                      <PlusOutlined />
+                    </button>
+                    <div className="overflowAuto">
+                      <table className="tableTest mb-30">
+                        <thead className="bg-light-1 rounded-12">
+                          <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {complaints.length === 0 ? (
                             <tr>
-                              <td>{complaint.title}</td>
-                              <td
-                                className={`circle ${
-                                  complaint.status === "resolved"
-                                    ? "text-green-2"
-                                    : "text-red-2"
-                                }`}
-                              >
-                                {complaint.status}
-                              </td>
-                              <td>
-                                {new Date(complaint.date).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  }
-                                )}
-                              </td>
-                              <td>
-                                <button
-                                  className="custom-button"
-                                  onClick={() =>
-                                    toggleComplaintDetails(complaint._id)
-                                  }
-                                >
-                                  View Details
-                                </button>
+                              <td colSpan="6" style={{ textAlign: "center" }}>
+                                No complaints were made.
                               </td>
                             </tr>
-                          </React.Fragment>
-                        ))}
-                      </tbody>
-                    </table>
+                          ) : (
+                            complaints.map((complaint, i) => (
+                              <React.Fragment key={complaint._id}>
+                                <tr>
+                                  <td>{complaint.title}</td>
+                                  <td
+                                    className={`circle ${
+                                      complaint.status === "resolved"
+                                        ? "text-green-2"
+                                        : "text-red-2"
+                                    }`}
+                                  >
+                                    {complaint.status}
+                                  </td>
+                                  <td>
+                                    {new Date(
+                                      complaint.date
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="custom-button"
+                                      onClick={() =>
+                                        toggleComplaintDetails(complaint._id)
+                                      }
+                                    >
+                                      View Details
+                                    </button>
+                                  </td>
+                                </tr>
+                              </React.Fragment>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>

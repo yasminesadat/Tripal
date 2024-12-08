@@ -258,7 +258,7 @@ export default function TouristHome() {
         <TourTypesTwo />
         <br></br>
         <br></br>
-        <BannerEight />
+        <BannerEight tourist={true}/>
         <DestinationsFive />
         <TestimonialsFour />
         <FooterThree />

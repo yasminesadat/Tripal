@@ -732,7 +732,7 @@ const saveFlightBooking = async (req, res) => {
         line_items: lineItems,
         mode: 'payment',
         success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}&userId=${userId}&bookedFlights=${encodeURIComponent(JSON.stringify(bookedFlights))}`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+        cancel_url: `${process.env.FRONTEND_URL}/tourist/book-flight`,
       });
 
       return res.status(200).json({
@@ -890,8 +890,8 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
-    const { wallet, totalPoints } = tourist;
-    res.status(200).json({ wallet, totalPoints });
+    const { wallet, currentPoints } = tourist;
+    res.status(200).json({ wallet, currentPoints });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while retrieving wallet and total points.",
