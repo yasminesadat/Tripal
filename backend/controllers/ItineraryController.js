@@ -64,17 +64,7 @@ const createItinerary = async (req, res) => {
     };
 };
 
-const getItineraryBookings = async (req, res) => {
-    const id = req.params.id;
-    try {
-      const result = await itineraryModel.findById(id).select("bookings");
-      return res.status(200).json(result);
-    }
-    catch (err) {
-      return res.status(400).json(err);
-    }
-  };
-  const getTourguideBookings = async (req, res) => {
+const getTourguideBookings = async (req, res) => {
     const tourGuideId = req.userId;
     try {
         const bookings = await itineraryModel.find({ tourGuide: tourGuideId}).select("bookings");
@@ -358,7 +348,6 @@ module.exports = {
     getAllItinerariesForAdmin,
     toggleItineraryStatus,
     getItineraryById,
-    getItineraryBookings,
     revenue,
     getTourguideBookings
 };
