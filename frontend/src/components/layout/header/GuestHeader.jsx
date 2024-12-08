@@ -54,30 +54,35 @@ export default function GuestHeader({ refLogin, setOpen, homepage }) {
           </div>
 
           <div className="header__right">
-            {!isLoginPage && !isSignupPage && homepage && (
-              <button type="primary" onClick={() => setOpen(true)}>
-                Guide
-              </button>
-            )}
-            < div className="header__right" ref={refLogin} >
+            
+            <div className="header__right ml-10">
+              {!isLoginPage && !isSignupPage && homepage && (
+                <button type="primary" onClick={() => setOpen(true)}>
+                  Guide
+                </button>
+              )}
+            </div>
+            
+            <div className="header__right ml-30" ref={refLogin} >
+              <Link to="/register">
+                Sign up
+              </Link>
 
-              < div className="header__right" ref={refLogin} >
-                <Link to="/register" className="ml-10">
-                  Sign up
-                </Link>
+              <Link
+                to="/login"
+                className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
+              >
+                Log in
+              </Link>
+            </div>
 
-                <Link
-                  to="/login"
-                  className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
-                >
-                  Log in
-                </Link>
-              </div>
-              <Link to="/help-center" className="ml-10">
+            <div className="header__right ml-30" >
+              <Link to="/help-center">
                 Help
               </Link>
             </div>
           </div>
+
         </div>
       </header>
       <style>{`
