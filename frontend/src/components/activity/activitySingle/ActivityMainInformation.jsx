@@ -9,6 +9,8 @@ import { getActivityById } from "@/api/ActivityService";
 
 //const [isBookmarked, setIsBookmarked] = useState(false);
 
+const [updatePage, setUpdatePage] = useState(false);
+
 //#region 1. functions
 const handleShare = (link) => {
   if (navigator.share) {
@@ -53,6 +55,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
   const handleFlag = async (activityId, currentFlagStatus) => {
     const updatedFlagStatus = !currentFlagStatus;
     setLoading(true);
+    setUpdatePage(true);
     try {
       const userData = await getEventOwnerData(activity.advertiser);
       await flagActivity(activityId,userData);
@@ -76,13 +79,13 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       const response = await getActivityById(activityId);
       setActivity(response.data);
     } catch (error) {
-      message.error("Failed to fetch activities.");
+      // message.error("Failed to fetch activities.");
     }
   };
 
   useEffect(() => {
     fetchActivities();
-  }, []);
+  }, [updatePage]);
   //#endregion
   
   if (loading || !activity) return <div><Spinner/></div>; 
