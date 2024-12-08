@@ -66,6 +66,7 @@ const getAdvertiserActivities = async (req, res) => {
     res.status(400).json({ error: error.message })
   }
 };
+
 const getAdvertiserBookings = async (req, res) => {
   const id = req.userId;
   try {
@@ -73,16 +74,6 @@ const getAdvertiserBookings = async (req, res) => {
     res.status(200).json(bookings);
   } catch (error) {
     res.status(400).json({ error: error.message })
-  }
-};
-const getActivityBookings = async (req, res) => {
-  const id = req.params.id;
-  try {
-    const result = await Activity.findById(id).select("booking");
-    return res.status(200).json(result);
-  }
-  catch (err) {
-    return res.status(400).json(err);
   }
 };
 
@@ -182,21 +173,6 @@ const viewUpcomingActivities = async (req, res) => {
   }
 };
 
-//fix this date when there are entries
-const viewHistoryActivities = async (req, res) => {
-  try {
-    const currentDate = new Date();
-
-    const activities = await Activity.find({ date: { $gte: currentDate }, flagged: false })
-      .populate("category")
-      .populate("tags")
-
-    res.status(200).json(activities);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
 const getActivityById = async (req, res) => {
   const { id } = req.params;
 
@@ -259,8 +235,6 @@ const adminFlagActivity = async (req, res) => {
 
     if (!activity) return res.status(404).json({ error: "Activity not found" });
     activity.flagged = !activity.flagged;
-
-
 
     sendAnEmailForActivityFlag(userData, activity.title);
     console.log("hii55", activity.advertiser.notificationList);
@@ -334,12 +308,10 @@ module.exports = {
   updateActivity,
   deleteActivity,
   viewUpcomingActivities,
-  viewHistoryActivities,
   getTouristActivities,
   getAllActivitiesForAdmin,
   getAllActivities,
   adminFlagActivity,
-  getActivityBookings,
   getAdvertiserBookings,
   revenue,
 };

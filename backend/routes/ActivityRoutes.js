@@ -12,10 +12,8 @@ const {
   deleteActivity,
   viewUpcomingActivities,
   getTouristActivities,
-  viewHistoryActivities,
   getActivityById,
   getAllActivities,
-  getActivityBookings,
   revenue,
   getAdvertiserBookings,
 } = require("../controllers/ActivityController");
@@ -33,12 +31,6 @@ router.get(
   verifyToken,
   authorizeRoles("Advertiser"),
   getAdvertiserActivities
-);
-router.get(
-  "/activity-bookings:id",
-  verifyToken,
-  authorizeRoles("Advertiser"),
-  getActivityBookings
 );
 router.get(
   "/my-activities-bookings",
@@ -66,7 +58,6 @@ router.delete(
   deleteActivity
 );
 router.get("/activities/upcoming", viewUpcomingActivities);
-router.get("/activities/history", viewHistoryActivities);
 router.post(
   "/activities/:id/ratings",
   validateIDs(["id", "userID"]),

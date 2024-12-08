@@ -183,7 +183,6 @@ module.exports = {
     getComplaintById,
     updateComplaintStatus,
     replyToComplaint,
-
 };
 
 
