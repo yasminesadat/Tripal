@@ -1,49 +1,4 @@
-import React, { useState, useEffect } from "react";
-
 export default function MainInformation({name}) {
-
-  //   const [hotelDetails, setHotelDetails] = useState(null);
-  //   const [loading, setLoading] = useState(true);
-  //   const [error, setError] = useState(null);
-
-  //   // Fetch hotel data based on hotelID
-  //   const fetchHotelData = async () => {
-  //       try {
-
-  //           const response = await getHotelDetails(hotelID);
-  //           console.log("hiiiiiiiiiiiiiiiiiiiiii",response);
-
-  //           setHotelDetails(response);
-  //       } catch (error) {
-  //           console.error("Error fetching hotel details:", error);
-  //           setError("Failed to load hotel details.");
-  //       } finally {
-  //           setLoading(false);
-  //       }
-  //   };
-
-  //   useEffect(() => {
-  //       fetchHotelData();
-  //   }, [hotelID]); // Fetch data when hotelID changes
-
-  //   // Render loading state
-  //   if (loading) {
-  //       return <div>Loading hotel details...</div>;
-  //   }
-
-  //   // Render error state
-  //   if (error) {
-  //       return <div>{error}</div>;
-  //   }
-
-  //   // Handle case where hotel details might not be available
-  //   if (!hotelDetails) {
-  //       return <div> </div>; //No hotel details available.
-  //   }
-
-  //   const { name, overallRating, numberOfReviews, iataCode } = hotelDetails[0];
-  //   console.log(hotelDetails[0])
-
     return (
         <>
             <div className="row y-gap-20 justify-between items-end">
@@ -66,20 +21,6 @@ export default function MainInformation({name}) {
                     </h2>
 
                     <div className="row x-gap-20 y-gap-20 items-center pt-20">
-                        {/* <div className="col-auto">
-                            <div className="d-flex items-center">
-                                <Stars star={overallRating} font={12} />
-                                {overallRating} ({numberOfReviews})
-                            </div>
-                        </div>
-
-                        <div className="col-auto">
-                            <div className="d-flex items-center">
-                                <i className="icon-pin text-16 mr-5"></i>
-                                {iataCode}
-                            </div>
-                        </div> */}
-
                       
                     </div>
                 </div>

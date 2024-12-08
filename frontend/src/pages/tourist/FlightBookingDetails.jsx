@@ -219,7 +219,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
           arrivalTime: new Date(itinerary?.segments[itinerary?.segments.length - 1]?.arrival?.at).toISOString(),
           origin: index === 0 ? originCityCode || "Unknown" : destCityCode || "Unknown",
           destination: index === 0 ? destCityCode || "Unknown" : originCityCode || "Unknown",
-          price: (flight.price?.total*exchangeRate).toString() || "0.00",
+          price: (flight.price?.total/exchangeRate).toString() || "0.00",
           currency: currency || "EGP",
         })),
         useWallet: paymentMethod === "wallet",
@@ -415,13 +415,31 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                 <div className="d-flex items-center justify-between">
                   <div className="fw-500 text-18">Total</div>
                   <div className="fw-500 text-18">
-                    {currency} {(flight.price?.total*exchangeRate+ 50)}
+                    {currency} {(flight.price?.total*exchangeRate - 50)}
                   </div>
                 </div>
               </div>
 
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="none">
+  <path 
+    d="M20,50 L180,50 C190,50 195,45 190,40 L170,30 C165,25 155,20 145,20 L20,20 C10,20 5,30 10,40 L20,50 Z" 
+    fill="#8F5774"
+  />
+  <path 
+    d="M180,50 L170,60 C165,65 155,70 145,70 L100,70 L100,50" 
+    fill="#DAC4D0"
+  />
+  <path 
+    d="M20,50 L30,40 C35,35 45,30 55,30 L100,30 L100,50" 
+    stroke="#8F5774"
+    stroke-width="3"
+  />
+  <circle cx="70" cy="70" r="10" fill="#8F5774"/>
+  <circle cx="140" cy="70" r="10" fill="#8F5774"/>
+  <rect x="90" y="40" width="20" height="10" fill="#DAC4D0"/>
+</svg>
               {/* Promo Code Section */}
-              <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
+              {/* <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
                 <h2 className="text-20 fw-500">Do you have a promo code?</h2>
 
                 <div className="contactForm mt-25">
@@ -454,7 +472,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
                       Apply
                       <i className="icon-arrow-top-right text-16 ml-10"></i>
                     </button>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* <Modal

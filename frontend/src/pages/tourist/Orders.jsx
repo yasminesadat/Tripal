@@ -8,6 +8,7 @@ import { getOrders, cancelOrder } from "@/api/OrderService";
 import { fetchProductImages } from "@/api/ProductService";
 import { Link } from "react-router-dom";
 import defaultPlace from "../../assets/images/defaultPlace.png";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 const metadata = {
   title: "Orders || Tripal",
@@ -29,6 +30,9 @@ const Orders = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
   const showError = useRef(false);
+
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -63,9 +67,10 @@ const Orders = () => {
             : order
         )
       );
-      message.success(
-        `Order canceled successfully. ${response.orderPrice} EGP has been redeemed into your wallet. Your new wallet balance is ${response.newWalletAmount} EGP.`
+      setSuccessMessage(
+        `Order canceled successfully. <strong>${response.orderPrice} EGP</strong> have been redeemed into your wallet. Your new wallet balance is <strong>${response.newWalletAmount} EGP</strong>.`
       );
+      setIsSuccessModalVisible(true);
     } catch (error) {
       message.error("Failed to cancel order");
     } finally {
@@ -231,8 +236,36 @@ const Orders = () => {
         <FooterThree />
       </div>
       <Modal
+        title="Order Cancellation"
+        open={isSuccessModalVisible}
+        onOk={() => setIsSuccessModalVisible(false)}
+        footer={[
+          <button
+            key="Ok"
+            style={{
+              backgroundColor: "var(--color-stone)",
+              borderColor: "var(--color-stone)",
+              color: "white",
+              padding: "4px 8px",
+              borderRadius: "4px",
+            }}
+            onClick={() => setIsSuccessModalVisible(false)}
+          >
+            Ok
+          </button>,
+        ]}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <CheckCircleOutlined
+            style={{ color: "green", fontSize: "24px", marginRight: "8px" }}
+          />
+          <p dangerouslySetInnerHTML={{ __html: successMessage }}></p>
+        </div>
+      </Modal>
+      ;
+      <Modal
         title="Cancel Order"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleCancelOrder}
         onCancel={handleModalCancel}
         okText="Yes"

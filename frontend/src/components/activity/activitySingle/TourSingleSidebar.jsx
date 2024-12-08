@@ -62,7 +62,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
       try {
         const data = await getWalletAndTotalPoints();
         setUpdatedWalletInfo(data.wallet);
-        setTotalPoints(data.totalPoints);
+        setTotalPoints(data.currentPoints);
       } catch (error) {
         console.error("Error fetching wallet data:", error);
       }
@@ -140,7 +140,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
 
       const updatedData = await getWalletAndTotalPoints();
       setUpdatedWalletInfo(updatedData.wallet);
-        setTotalPoints(updatedData.totalPoints);
+        setTotalPoints(updatedData.currentPoints);
 
     showWalletInfoModal();
       //showWalletInfoModal();
@@ -371,7 +371,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
                 <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
               </p>
               <p>
-                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+                <strong>Your Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
               </p>
             </div>
           </Modal>

@@ -4,6 +4,7 @@ import {rating,} from "@/data/tourFilteringOptions";
 import RangeSlider from "@/components/activity/RangeSlider";
 import Stars from "../common/Stars";
 import { getTags } from "@/api/PreferenceTagService";
+import languages from "@/assets/constants/Languages";
 
 export default function Sidebar({ userRole, setStartDate, setEndDate, setCategoryFilter, setLanguageFilter, setRatingFilter, priceRange, setPriceRange }) {
   const [ddActives, setDdActives] = useState(["tourtype"]);
@@ -276,15 +277,18 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
                       className="accordion__content"
                       style={ddActives.includes("language") ? { maxHeight: "300px" } : {}}
                     >
-                      <div className="pt-15">
-                        <input
-                          type="text"
-                          className="form-input"
-                          placeholder="Enter language"
-                          value={selectedLanguage}
-                          onChange={handleLanguageChange}
-                        />
-                      </div>
+                                          <select
+                      value={selectedLanguage}
+                      onChange={handleLanguageChange}
+                      className="form-input"
+                    >
+                      <option value="">Select Language</option>
+                      {languages.map((lang, index) => (
+                        <option key={index} value={lang}>
+                          {lang}
+                        </option>
+                      ))}
+                    </select>
                     </div>
                   </div>
                 </div>
