@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { getCart , removeFromCart, updateQuantity} from "../../api/TouristService"
-import { getCart , removeFromCart, updateQuantity} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -142,7 +141,7 @@ useEffect(() => {
                                                         style={{ width: "70px", height: "70px" }}
                                                     />
                                                     </td>
-                                                    <td>{item.product.price.toFixed(2)}</td>
+                                                    <td>{currency} {(item.product.price*exchangeRate).toFixed(2)}</td>
                                                     <td>
                                                     <InputNumber
                                                         value={item.quantity}
@@ -163,7 +162,7 @@ useEffect(() => {
                                                     />
                                                     </td>
                                                     <td>
-                                                    {(item.product.price * item.quantity).toFixed(2)}
+                                                    <td>{currency} {(item.price*exchangeRate).toFixed(2)}</td>
                                                     </td>
                                                     <td>
                                                     <button
