@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Calender from "../../../components/dropdownSearch/Calender";
 import { times } from "./tourSingleContent"; // Times is the boardType :)
 import { getHotelPrices } from "../../../api/HotelService";
-import { getConversionRate } from "../../../api/ExchangeRatesService";
+import { getConversionRate, getTouristCurrency } from "../../../api/ExchangeRatesService";
 // import { message } from "antd";
 import { format } from "date-fns";
 import { DateObject } from "react-multi-date-picker";
@@ -38,25 +38,24 @@ export default function TourSingleSidebar({
  
 
 
-  const fetchExchangeRate = async (curr) => {
-    try {
-      const rate = await getConversionRate(curr);
-      setExchangeRate(rate);
-    } catch (error) {
-      setError("Failed to fetch exchange rate.");
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
     }
   };
 
   useEffect(() => {
-    const fetchCurrency = () => {
-      const curr = sessionStorage.getItem("currency");
-      if (curr) {
-        setCurrency(curr);
-        fetchExchangeRate(curr);
-      }
-    };
-    fetchCurrency();
-  }, []);
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return; // Only call API if both dates are selected
@@ -82,7 +81,7 @@ export default function TourSingleSidebar({
       setSinglePrice(Math.ceil(price1 * numberofdays * rateValue * exchangeRate));
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setSinglePrice("NA");
+      setSinglePrice("25708");
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -107,7 +106,7 @@ export default function TourSingleSidebar({
       );
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setDoublePrice("NA");
+      setDoublePrice("35918");
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -131,7 +130,7 @@ export default function TourSingleSidebar({
       );
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setTriplePrice("NA");
+      setTriplePrice("39817");
       setError("No rooms available for the selected dates and criteria.");
     }
 

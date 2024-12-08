@@ -63,7 +63,7 @@ const amadeus = new Amadeus({
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  };
+};
 
   const saveBooking = async (req, res) => {
     const { hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, pricing, singlePricing, doublePricing, triplePricing, status, paymentMethod } = req.body;
