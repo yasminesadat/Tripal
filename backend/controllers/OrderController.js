@@ -47,26 +47,29 @@ const updateProductQuantity = async (productId, quantity) => {
     if (product.quantity==0){
       console.log("in quantity0")
       //Seller Part
-      product.seller.notificationList.push({message:`Product ${product._id} is out of stock!`});
-      sendEmailProduct(product.seller.name,product.seller.email,product.name,product._id);
+      product.seller.notificationList.push({message:`Product ${product.name} is out of stock!`});
+      sendEmailProduct(product.seller.userName,product.seller.email,product.name,product._id);
       
-      console.log("seller not:",product.seller.notificationList)
+      //console.log("seller not:",product.seller.notificationList)
 
       //Admin Part
       const admins= await Admin.find();
-      admins.forEach((admin)=>{
-        admin.notificationList.push({message:`Product ${product._id} by Seller ${product.seller.name} id ${product.seller._id}   is out of stock!`});
-      })
-
-      console.log("admin notif.", Admin.notificationList)
-      
+      for (const admin of admins) {
+        admin.notificationList.push({
+          message: `Product ${product.name} by Seller ${product.seller.userName} is out of stock!`
+        });
+        //console.log("admin notif.", admin.notificationList);
+        await admin.save();
+      }
       await product.seller.save();
-      await Admin.save();
+
+       console.log("finished quantity0")
     }
 
     
 
     await product.save();
+    console.log("DONE")
   } catch (error) {
     throw new Error(error.message);
   }

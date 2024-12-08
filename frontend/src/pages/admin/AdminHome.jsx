@@ -42,7 +42,7 @@ export default function AdminDashboard() {
               <div className="col-xl-4 col-lg-12 col-md-6">
                 <div className="px-30 py-25 rounded-12 bg-white shadow-2">
                   <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Recent Activities</div>
+                    <div className="text-18 fw-500">Recent Notifications</div>
                   </div>
 
                   <Activities />
