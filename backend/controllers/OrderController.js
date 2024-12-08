@@ -217,7 +217,7 @@ const createOrder = asyncHandler(async (req, res) => {
             product_data: {
               name: product.product.name,
             },
-            unit_amount: product.price * 100 / product.quantity,
+            unit_amount: Math.round(product.price * 100 / product.quantity),
           },
           quantity: product.quantity,
         })),
