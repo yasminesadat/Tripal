@@ -24,18 +24,15 @@ export default function BannerEight() {
                   data-aos-delay=""
                   className="text-40 md:text-30  lh-13"
                 >
-                  Grab up to{" "}
-                  <span style={{ color: "var(--color-dark-purple)" }}>
-                    35% off
-                  </span>
+                  Search for a flight{" "}
                   <br className="lg:d-none" />
-                  on your favorite
+                  to your favorite
                   <br className="lg:d-none" />
                   destination
                 </h2>
 
                 <p data-aos="fade-up" data-aos-delay="" className="mt-10">
-                  Limited time offer, don't miss the opportunity
+                  What are you waiting for, start exploring now!
                 </p>
 
                 <div
@@ -51,7 +48,7 @@ export default function BannerEight() {
                       borderRadius: "8px",
                     }}
                   >
-                    <Link to="/login">
+                    <Link to="/tourist/book-flight">
                       Book Now
                       <i className="icon-arrow-top-right ml-10 text-16"></i>
                     </Link>

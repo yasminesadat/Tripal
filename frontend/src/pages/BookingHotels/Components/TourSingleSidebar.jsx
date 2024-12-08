@@ -81,7 +81,7 @@ export default function TourSingleSidebar({
       setSinglePrice(Math.ceil(price1 * numberofdays * rateValue * exchangeRate));
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setSinglePrice("25708");
+      setSinglePrice(25708*exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -106,7 +106,7 @@ export default function TourSingleSidebar({
       );
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setDoublePrice("35918");
+      setDoublePrice(35918*exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -130,7 +130,7 @@ export default function TourSingleSidebar({
       );
     } catch (error) {
       // console.error("No rooms available for the selected criteria.");
-      setTriplePrice("39817");
+      setTriplePrice(39817*exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
 
