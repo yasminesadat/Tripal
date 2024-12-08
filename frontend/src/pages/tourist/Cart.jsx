@@ -131,60 +131,71 @@ const Cart = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {cart.map((item) => (
-                        <tr key={item.product._id}>
-                          <td>
-                            <span style={{ marginRight: "20px" }}>
-                              {item.product.name}
-                            </span>
-                            <img
-                              src={item.product.picture}
-                              alt=""
-                              style={{ width: "70px", height: "70px" }}
-                            />
-                          </td>
-                          <td>
-                            {currency}{" "}
-                            {(item.product.price * exchangeRate).toFixed(2)}
-                          </td>
-                          <td>
-                            <InputNumber
-                              value={item.quantity}
-                              min={1}
-                              formatter={(value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                              }
-                              parser={(value) =>
-                                value?.replace(/\$\s?|(,*)/g, "")
-                              }
-                              onChange={(value) =>
-                                handleQuantityChange(item.product._id, value)
-                              }
-                              style={{ textAlign: "center", width: "100px" }}
-                            />
-                          </td>
-                          <td>
-                            <td>
-                              {currency}{" "}
-                              {(item.price * exchangeRate).toFixed(2)}
-                            </td>
-                          </td>
-                          <td>
-                            <button
-                              style={{
-                                background: "none",
-                                border: "none",
-                                color: "red",
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => removeItem(item.product._id)}
-                            >
-                              Remove
-                            </button>
+                      {cart?.length === 0 ? (
+                        <tr>
+                          <td colSpan="6" style={{ textAlign: "center" }}>
+                            No products found in the cart.
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        cart.map((item) => (
+                          <tr key={item.product._id}>
+                            <td>
+                              <span style={{ marginRight: "20px" }}>
+                                {item.product.name}
+                              </span>
+                              <img
+                                src={item.product.picture}
+                                alt=""
+                                style={{ width: "70px", height: "70px" }}
+                              />
+                            </td>
+                            <td>
+                              {currency}{" "}
+                              {(item.product.price * exchangeRate).toFixed(2)}
+                            </td>
+                            <td>
+                              <InputNumber
+                                value={item.quantity}
+                                min={1}
+                                formatter={(value) =>
+                                  `${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                  )
+                                }
+                                parser={(value) =>
+                                  value?.replace(/\$\s?|(,*)/g, "")
+                                }
+                                onChange={(value) =>
+                                  handleQuantityChange(item.product._id, value)
+                                }
+                                style={{ textAlign: "center", width: "100px" }}
+                              />
+                            </td>
+                            <td>
+                              <td>
+                                {currency}{" "}
+                                {(item.price * exchangeRate).toFixed(2)}
+                              </td>
+                            </td>
+                            <td>
+                              <button
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "red",
+                                  textDecoration: "underline",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => removeItem(item.product._id)}
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
 
