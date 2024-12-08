@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getCart,
-  removeFromCart,
-  updateQuantity,
-} from "../../api/TouristService";
+import { getCart , removeFromCart, updateQuantity, checkStock} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -88,26 +84,43 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  const handleQuantityChange = async (productId, newQuantity) => {
-    try {
-      setCart((prevCart) =>
-        prevCart.map((item) =>
-          item.product._id === productId
-            ? { ...item, quantity: newQuantity }
-            : item
-        )
-      );
-
-      await updateQuantity(productId, newQuantity);
-      fetchCart();
-    } catch (error) {
-      message.error("Failed to update product's quantity in cart.");
+    const handleQuantityChange = async (productId, newQuantity) => {
+        try {
+          setCart((prevCart) =>
+            prevCart.map((item) =>
+              item.product._id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+            )
+          );
+      
+          await updateQuantity(productId, newQuantity); 
+          fetchCart();  
+        } catch (error) {
+          message.error(error.response?.data?.message || "Failed to update product's quantity.");
+          fetchCart(); 
+        }
+      };
+     
+      const handleProceedToCheckout = async () => {
+        try {
+          const response = await checkStock(cart);  
+      
+          if (response.valid) {
+            navigate("/checkout", { state: { cart, currency, exchangeRate } });
+          }
+        } catch (error) {
+          if (error.response) {
+            message.error(error.response.data.message);
+          } else {
+            message.error("An error occurred while checking the stock.");
+          }
+        }
+      };
+      
+    if (loading) {
+        return <Spinner />;
     }
-  };
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   return (
     <>
@@ -155,23 +168,23 @@ const Cart = () => {
                               {(item.product.price * exchangeRate).toFixed(2)}
                             </td>
                             <td>
-                              <InputNumber
+                            <InputNumber
                                 value={item.quantity}
                                 min={1}
                                 formatter={(value) =>
-                                  `${value}`.replace(
+                                `${value}`.replace(
                                     /\B(?=(\d{3})+(?!\d))/g,
                                     ","
-                                  )
+                                )
                                 }
                                 parser={(value) =>
-                                  value?.replace(/\$\s?|(,*)/g, "")
+                                value?.replace(/\$\s?|(,*)/g, "")
                                 }
                                 onChange={(value) =>
-                                  handleQuantityChange(item.product._id, value)
+                                handleQuantityChange(item.product._id, value)
                                 }
                                 style={{ textAlign: "center", width: "100px" }}
-                              />
+                            />
                             </td>
                             <td>
                               <td>
@@ -199,28 +212,24 @@ const Cart = () => {
                     </tbody>
                   </table>
 
-                  {cart.length > 0 && (
-                    <Button
-                      type="primary"
-                      className="custom-button"
-                      onClick={() =>
-                        navigate("/checkout", {
-                          state: { cart, currency, exchangeRate },
-                        })
-                      }
-                      style={{ marginLeft: "83%" }}
-                    >
-                      Proceed to Checkout
-                    </Button>
-                  )}
+                            {cart.length>0 &&(
+                            <Button
+                                type="primary"
+                                className="custom-button"
+                                onClick={handleProceedToCheckout}
+                                style={{marginLeft:"83%"}}
+                            >
+                                Proceed to Checkout
+                            </Button>
+                            )}
+                            </div>
+                    </div>
+                    </div>
+                </main>
                 </div>
-              </div>
+                <FooterThree />
             </div>
-          </main>
-        </div>
-        <FooterThree />
-      </div>
-      {/* <ComplaintsForm
+            {/* <ComplaintsForm
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onSubmitSuccess={handleComplaintSubmit}

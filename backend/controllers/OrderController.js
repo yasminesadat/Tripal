@@ -294,7 +294,9 @@ const getOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ touristId });
 
     if (!orders || orders.length === 0) {
-      res.status(200).json([]);
+      res.status(200).json({ orders: [] });
+    } else {
+      res.status(200).json({ orders });
     }
   } catch (error) {
     res

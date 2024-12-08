@@ -36,10 +36,11 @@ export default function TouristHome() {
   const steps = [
     {
       title: "Welcome to TriPal!",
-      description: "This is your guide to hassle-free travel planning, from start to finish.",
+      description:
+        "This is your guide to hassle-free travel planning, from start to finish.",
       target: () => {
         refHeader.current;
-        localStorage.setItem('currentStep', 0);
+        localStorage.setItem("currentStep", 0);
       },
     },
     {
@@ -47,25 +48,25 @@ export default function TouristHome() {
       description: "Let's plan-e your next getaway.",
       target: () => refFlights.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 1);
+        localStorage.setItem("currentStep", 1);
         navigate("/tourist/book-flight", { state: { fromTour: true } });
-      }
+      },
     },
     {
       title: "Book a hotel",
       description: "Where are you gonna stay?",
       target: () => refHotels.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 2);
+        localStorage.setItem("currentStep", 2);
         navigate("/hotel2", { state: { fromTour: true } });
-      }
+      },
     },
     {
       title: "Book an activity",
       description: "Explore activities you can do there.",
       target: () => refActivities.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 3);
+        localStorage.setItem("currentStep", 3);
         navigate("/upcoming-activities", { state: { fromTour: true } });
       },
     },
@@ -74,7 +75,7 @@ export default function TouristHome() {
       description: "Check out pre-designed programs.",
       target: () => refItineraries.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 4);
+        localStorage.setItem("currentStep", 4);
         navigate("/upcoming-itineraries", { state: { fromTour: true } });
       },
     },
@@ -83,36 +84,37 @@ export default function TouristHome() {
       description: "Get to know where to go.",
       target: () => refHisPlaces.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 5);
+        localStorage.setItem("currentStep", 5);
         navigate("/historicalPlaces", { state: { fromTour: true } });
-      }
+      },
     },
     {
       title: "Buy a product",
       description: "Get yourself & your loved ones a souvenir.",
       target: () => refProducts.current,
       onNext: () => {
-        localStorage.setItem('currentStep', 6);
+        localStorage.setItem("currentStep", 6);
         navigate("/tourist/view-products", { state: { fromTour: true } });
-      }
+      },
     },
     {
       title: "That's it!",
-      description: "Now you can start your journey for an unforgettable experience.",
+      description:
+        "Now you can start your journey for an unforgettable experience.",
       target: () => refFinish.current,
       onFinish: () => {
-        localStorage.setItem('currentStep', 0);
-        setOpen(false)
+        localStorage.setItem("currentStep", 0);
+        setOpen(false);
         navigate("/tourist", { state: { fromTour: false, targetStep: 0 } });
-      }
+      },
     },
   ];
 
   useEffect(() => {
-    const storedStep = localStorage.getItem('currentStep');
+    const storedStep = localStorage.getItem("currentStep");
 
-    if (storedStep === '6') {
-      localStorage.setItem('currentStep', 0);
+    if (storedStep === "6") {
+      localStorage.setItem("currentStep", 0);
       setCurrentStep(0);
     } else if (storedStep) {
       setCurrentStep(parseInt(storedStep, 10));
@@ -127,7 +129,7 @@ export default function TouristHome() {
 
     if (isFromTour && targetStep !== undefined) {
       setCurrentStep(targetStep);
-      localStorage.setItem('currentStep', targetStep);
+      localStorage.setItem("currentStep", targetStep);
 
       const timer = setTimeout(() => {
         setOpen(true);
@@ -135,7 +137,7 @@ export default function TouristHome() {
 
       return () => clearTimeout(timer);
     } else {
-      const storedStep = localStorage.getItem('currentStep');
+      const storedStep = localStorage.getItem("currentStep");
       if (storedStep) {
         setCurrentStep(parseInt(storedStep, 10));
       } else {
@@ -146,7 +148,7 @@ export default function TouristHome() {
 
   const handleStepChange = (newStep) => {
     setCurrentStep(newStep);
-    localStorage.setItem('currentStep', newStep);
+    localStorage.setItem("currentStep", newStep);
   };
 
   return (
@@ -185,13 +187,13 @@ export default function TouristHome() {
           color: #5a9ea0;
           font-weight: 600;
         }
-    .ant-tour {
-  z-index: 2000 !important;
-}
+        .ant-tour {
+          z-index: 2000 !important;
+        }
 
-.ant-tour-mask {
-  z-index: 1999 !important; 
-}
+        .ant-tour-mask {
+          z-index: 1999 !important;
+        }
         .ant-tour .ant-tour-close {
           color: #5a9ea0;
           opacity: 0.8;
@@ -207,23 +209,22 @@ export default function TouristHome() {
           transition: all 0.3s ease;
         }
 
-        .ant-tour .ant-tour-buttons .ant-btn-primary
-        {
+        .ant-tour .ant-tour-buttons .ant-btn-primary {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        .ant-tour .ant-tour-buttons .ant-btn-default{
+        .ant-tour .ant-tour-buttons .ant-btn-default {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        
+
         .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
         .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-          color:white;
+          color: white;
           background: #5a9ea0;
           transform: translateY(-1px);
           box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
@@ -231,7 +232,7 @@ export default function TouristHome() {
         .ant-tour .ant-tour-arrow-content {
           background: white;
           border: 1px solid rgba(0, 0, 0, 0.06);
-        }  
+        }
       `}</style>
       <MetaComponent meta={metadata} />
       <main>
@@ -243,7 +244,7 @@ export default function TouristHome() {
           refItineraries={refItineraries}
           refHisPlaces={refHisPlaces}
           refProducts={refProducts}
-          homepage = {"homepage"}
+          homepage={"homepage"}
         />
         <Tour
           open={open}
@@ -258,7 +259,7 @@ export default function TouristHome() {
         <TourTypesTwo />
         <br></br>
         <br></br>
-        <BannerEight tourist={true}/>
+        <BannerEight tourist={true} />
         <DestinationsFive />
         <TestimonialsFour />
         <FooterThree />
