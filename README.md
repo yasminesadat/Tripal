@@ -35,10 +35,31 @@ cd frontend
 npm install
 cd ..
 ```
-### 3. Start the application
+
+## How to use 
+After installing all dependencies:
+1. Add .env to the backend directory with the following format and replace the variables values with your own
 ```
-npm start
+NODE_ENV = development
+PORT = 5050
+MONGO_URI =
+JWT_SECRET =
+CLOUD_NAME = 
+CLOUD_KEY =
+CLOUD_KEY_SECRET =
+AMADEUS_CLIENT_ID =
+AMADEUS_CLIENT_SECRET =
+clientId=
+clientSecret=
+STRIPE_SECRET_KEY=
+STRIPE_PUBLIC_KEY=
+FRONTEND_URL=
+EMAIL_USER=
+EMAIL_PASS=
 ```
+2. To start the application
+    ```npm start```
+
 ## Key features
 * **User Management:** secure sign up and login for tourist, tour guide, seller and advertiser
 * **Activities and Bookings:** Create, manage, and book activities, events, and itineraries with search and filter options for tourists.
@@ -63,7 +84,7 @@ To contribute:
 7. The PR is to be reviewed and merged
 
 ## Credits
-
+**Documentations**
 - [MongoDB](https://www.mongodb.com/docs/) 
 - [Mongoose](https://mongoosejs.com/docs/)
 - [Express.js](https://expressjs.com/)
@@ -73,7 +94,7 @@ To contribute:
 - [Postman](https://www.postman.com/)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [Stripe](https://stripe.com/docs)
-
+  
 ## License
 
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
