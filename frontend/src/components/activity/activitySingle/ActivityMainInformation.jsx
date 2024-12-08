@@ -79,10 +79,6 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       // message.error("Failed to fetch activities.");
     }
   };
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
   //#endregion
   
   if (loading || !activity) return <div><Spinner/></div>; 
