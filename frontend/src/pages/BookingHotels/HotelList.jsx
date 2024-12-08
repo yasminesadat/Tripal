@@ -25,6 +25,7 @@ export default function TourList1() {
   const [searchQuery, setSearchQuery] = useState(''); // New state for search query
   const dropDownContainer = useRef();
   const { cityCode, dates1, dates2 } = useParams();
+  
 
   const images = [img1, img2, img3, img4, img5, img6];
 
@@ -86,6 +87,8 @@ export default function TourList1() {
       document.removeEventListener("click", handleClick);
     };
   }, []);
+
+  
 
   const metadata = {
     title: "Home || Tripal - Travel Agency",

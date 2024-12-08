@@ -6,7 +6,9 @@ import img from "./Components/HotelsImages/bookingicon2.png";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-import moment from "moment";
+import {message} from 'antd';
+
+import { getTouristUserName } from "@/api/TouristService";
 
 
 export default function BookingPages() {
@@ -18,6 +20,7 @@ export default function BookingPages() {
   const [isBookedAccepted, setIsBookedAccepted] = useState(false);
   const [bookingStage, setBookingStage] = useState(2);
   const [total, setTotal] = useState(0);
+  const [userName,setUserName]=useState("")
 
   const today = new Date();
   const {
@@ -41,6 +44,19 @@ export default function BookingPages() {
   const date2=  format((new Date(checkOut)), 'dd MMMM yyyy');
 
 
+  const fetchUserName= async() => {
+    try{
+    console.log("hi")  
+    const name = await getTouristUserName();
+    console.log("hi",name.userName)
+    setUserName(name.userName)
+    }
+    catch(error)
+    {
+     message.error(error.message)
+    }
+}
+
 
 
 
@@ -51,6 +67,7 @@ export default function BookingPages() {
       (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber
     ).toFixed(2);
     setTotal(calculatedTotal); // Update the total
+    fetchUserName()
     
   }, [
     singleNumber,
@@ -117,7 +134,7 @@ export default function BookingPages() {
                           </div>
 
                           <h2 className="text-30 md:text-24 fw-700 mt-20">
-                            Your order was submitted successfully!
+                            {userName}, your order was submitted successfully!
                           </h2>
                           <div className="mt-10">
                             Booking details has been sent to: booking@tourz.com
