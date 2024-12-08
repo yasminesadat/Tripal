@@ -66,13 +66,15 @@ EMAIL_PASS=
 * **Hotels and flights:** tourist can book hotels, flights and transportation.
 * **Product Management:** Sellers can add, edit, and manage products. Tourists can browse, filter, and purchase products.
 * **Payments & Cancellations:** Tourists can book and pay for events and activities, with options for cancellations and loyalty points.
-* **Reviews & Ratings:** Users can rate and review activities, products, and tour guides.
+* **Reviews & Ratings:** Users can rate and review activities, itineraries, products, and tour guides.
 * **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 <img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
 
 
 <img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/e933a77e-fd44-4349-8a52-5ecf584bcd5c">
+
+## Code examples
 
 ##  API References
 <details>
@@ -351,6 +353,18 @@ EMAIL_PASS=
 #### 2. Cancel Order
 **Delete** `/tourist/order/:id`  
 
+#### 3. Cancel Order
+**Patch** `/tourist/order/:id/cancel`
+
+#### 4. Get order by ID
+**Get** `/order/:id`
+
+#### 5. Pay order via stripe 
+**post** `/tourist/stripe/payment`
+
+#### 6. Get tourist orders
+**Get** `/tourist/order`
+
 </details>
 
 <details>
@@ -418,13 +432,16 @@ EMAIL_PASS=
 **Patch** `/products/:id/unarchive`
 
 #### 11. Unarchive Product
-**Patch** `/products/:id/unarchive`
+**Get** `/products/:id/isArchived`
 
-#### 11. Revenue
+#### 12. Revenue
 **Get** `/products/revenue`
 
-#### 11. Get Product Images
+#### 13. Get Product Images
 **Get** `/products/images`
+#### 14. Get product by its ID
+**Get** `/product/:id`
+
 
 </details>
 
