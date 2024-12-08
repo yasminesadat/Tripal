@@ -31,7 +31,8 @@ const {
   getAddresses,
   addAddress,
   getWalletAndTotalPoints,
-  updateQuantity
+  updateQuantity,
+  checkStock
 
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
@@ -226,6 +227,13 @@ router.put(
   verifyToken,
   authorizeRoles("Tourist"),
   updateQuantity
+);
+
+router.post(
+  "/tourist/check-stock",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  checkStock
 );
 
 module.exports = router;
