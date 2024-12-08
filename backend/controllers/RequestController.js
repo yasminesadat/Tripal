@@ -35,12 +35,12 @@ const createRequest = async (req, res) => {
         });
 
         if (existingUserNameRequests) {
-            return res.status(400).json({ error: "Request has been submitted with this username" });
+            return res.status(400).json({ error: "Another request has been submitted with this username" });
         }
 
         const existingEmailRequests = await Request.findOne({ email, status: { $ne: 'rejected' } });
         if (existingEmailRequests) {
-            return res.status(400).json({ error: "Request has been submitted with this email" });
+            return res.status(400).json({ error: "Another request has been submitted with this email" });
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
