@@ -2,15 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
-const Admin = require("../models/users/Admin")
-const {sendEmail} = require('./Mailer');
+const Admin = require("../models/users/Admin");
+const { sendEmail } = require("./Mailer");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-
-const sendEmailProduct = async (name, mail, productname,productid) => {
- 
- 
+const sendEmailProduct = async (name, mail, productname, productid) => {
   const subject = `Product Out of Stock`;
   const html = `
     <p>Dear ${name},</p>
@@ -23,10 +20,8 @@ const sendEmailProduct = async (name, mail, productname,productid) => {
 
   try {
     await sendEmail(mail, subject, html);
-  } catch (error) {
-  }
+  } catch (error) {}
 };
-
 
 const updateProductQuantity = async (productId, quantity) => {
   try {
@@ -36,25 +31,34 @@ const updateProductQuantity = async (productId, quantity) => {
     }
 
     if (product.quantity < quantity) {
-      return res.status(400).json({ message: `Not enough stock for ${product.name}.` });
+      return res
+        .status(400)
+        .json({ message: `Not enough stock for ${product.name}.` });
     }
 
     product.quantity -= quantity;
 
-    if (product.quantity==0){
-      product.seller.notificationList.push({message:`Your product "${product.name}" is out of stock!`});
-      sendEmailProduct(product.seller.userName,product.seller.email,product.name,product._id);
-      
-      const admins= await Admin.find();
+    if (product.quantity == 0) {
+      product.seller.notificationList.push({
+        message: `Your product "${product.name}" is out of stock!`,
+      });
+      sendEmailProduct(
+        product.seller.userName,
+        product.seller.email,
+        product.name,
+        product._id
+      );
+
+      const admins = await Admin.find();
       for (const admin of admins) {
         admin.notificationList.push({
-          message: `Product "${product.name}" by Seller "${product.seller.userName}" is out of stock!`
+          message: `Product "${product.name}" by Seller "${product.seller.userName}" is out of stock!`,
         });
         await admin.save();
       }
       await product.seller.save();
 
-       console.log("finished quantity0")
+      console.log("finished quantity0");
     }
 
     await product.save();
@@ -84,13 +88,17 @@ const createOrder = asyncHandler(async (req, res) => {
   const { deliveryAddress, paymentMethod, discountPercentage } = req.body;
 
   try {
-    const tourist = await Tourist.findById({ _id: touristId }).populate("cart.product");
+    const tourist = await Tourist.findById({ _id: touristId }).populate(
+      "cart.product"
+    );
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
 
     if (tourist.cart.length === 0) {
-      return res.status(400).json({ message: "Cart is empty. Please add products to your cart." });
+      return res
+        .status(400)
+        .json({ message: "Cart is empty. Please add products to your cart." });
     }
 
     let totalPrice = 0;
@@ -101,7 +109,7 @@ const createOrder = asyncHandler(async (req, res) => {
     if (discountPercentage) {
       totalPrice -= totalPrice * (discountPercentage / 100);
     }
-    
+
     if (paymentMethod === "Wallet") {
       tourist.wallet.amount = tourist.wallet.amount || 0;
 
@@ -159,10 +167,7 @@ const createOrder = asyncHandler(async (req, res) => {
         message: "Order created successfully.",
         order: newOrder,
       });
-    }
-
-    else if (paymentMethod === "Cash on Delivery") {
-
+    } else if (paymentMethod === "Cash on Delivery") {
       for (let cartItem of tourist.cart) {
         try {
           await updateProductQuantity(cartItem.product._id, cartItem.quantity);
@@ -192,10 +197,10 @@ const createOrder = asyncHandler(async (req, res) => {
       await tourist.save();
 
       return res.status(201).json({
-        message: "Order created successfully. Payment will be collected upon delivery.",
+        message:
+          "Order created successfully. Payment will be collected upon delivery.",
         order: newOrder,
       });
-
     } else if (paymentMethod === "Credit Card") {
       const chosenCurrency = tourist.choosenCurrency || "EGP";
       const session = await stripe.checkout.sessions.create({
@@ -203,19 +208,23 @@ const createOrder = asyncHandler(async (req, res) => {
         customer_email: tourist.email,
         line_items: tourist.cart.map((product) => ({
           price_data: {
-            currency: 'egp',
+            currency: "egp",
             product_data: {
               name: product.product.name,
             },
-            unit_amount: Math.round(product.price * 100 / product.quantity),
+            unit_amount: Math.round((product.price * 100) / product.quantity),
           },
           quantity: product.quantity,
         })),
         mode: "payment",
-        success_url: `${process.env.FRONTEND_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
+        success_url: `${
+          process.env.FRONTEND_URL
+        }/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(
+          JSON.stringify(deliveryAddress)
+        )}`,
         cancel_url: `${process.env.FRONTEND_URL}/cart`,
       });
-      
+
       return res.status(200).json({
         message: "Redirecting to payment.",
         sessionId: session.id,
@@ -224,12 +233,17 @@ const createOrder = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Invalid payment method." });
     }
   } catch (error) {
-    res.status(500).json({ message: "An error occurred while creating the order.", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "An error occurred while creating the order.",
+        error: error.message,
+      });
   }
 });
 
 const cancelOrder = asyncHandler(async (req, res) => {
-  const { id } = req.params;;
+  const { id } = req.params;
   try {
     const order = await Order.findById(id);
     if (!order) {
@@ -239,10 +253,14 @@ const cancelOrder = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "Order is already cancelled." });
     }
     if (order.status === "Shipped") {
-      return res.status(400).json({ message: "Can't cancel order. Order is already shipped." });
+      return res
+        .status(400)
+        .json({ message: "Can't cancel order. Order is already shipped." });
     }
     if (order.status === "Delivered") {
-      return res.status(400).json({ message: "Can't cancel order. Order is already delivered." });
+      return res
+        .status(400)
+        .json({ message: "Can't cancel order. Order is already delivered." });
     }
 
     order.status = "Cancelled";
@@ -250,9 +268,14 @@ const cancelOrder = asyncHandler(async (req, res) => {
 
     res.status(200).json({ message: "Order cancelled successfully.", order });
   } catch (error) {
-    res.status(500).json({ message: "An error occurred while cancelling the order.", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "An error occurred while cancelling the order.",
+        error: error.message,
+      });
   }
-})
+});
 
 const getOrders = asyncHandler(async (req, res) => {
   const touristId = req.userId;
@@ -260,17 +283,27 @@ const getOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ touristId });
 
     if (!orders || orders.length === 0) {
-      return res.status(404).json({ message: "No orders found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No orders found for this user." });
     }
     res.status(200).json({ orders });
-  }
-  catch (error) {
-    res.status(500).json({ message: "Failed to fetch orders. Please try again later." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch orders. Please try again later." });
   }
 });
 
 const completeOrder = asyncHandler(async (req, res) => {
-  const { sessionId, touristId, totalPrice, deliveryAddress, paymentMethod, discountPercentage } = req.body;
+  const {
+    sessionId,
+    touristId,
+    totalPrice,
+    deliveryAddress,
+    paymentMethod,
+    discountPercentage,
+  } = req.body;
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -333,5 +366,5 @@ module.exports = {
   createOrder,
   cancelOrder,
   getOrders,
-  completeOrder
+  completeOrder,
 };
