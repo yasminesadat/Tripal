@@ -14,19 +14,22 @@ export default function ActivityBooking({ bookings, price }) {
   const [tabs, setTabs] = useState([{ label: "Revenue", data: [] }, { label: "Bookings", data: [] }]);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [revenue, setRevenue] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const sortOptions = [
     { label: "Monthly", order: "month" },
     { label: "Daily", order: "date" },
   ];
-  const [ddActives, setDdActives] = useState(false);
-  const [sortOption, setSortOption] = useState("");
+  const [ddActive1, setDdActives1] = useState(false);
+  const [ddActives2, setDdActives2] = useState(false);
+  const [filterRevenueOption, setFilterRevenueOption] = useState("");
+  const [filterTicketsOption, setFilterTicketsOption] = useState("");
   useEffect(() => {
     const handleClick = (event) => {
       if (
-        dropDownContainer.current &&
-        !dropDownContainer.current.contains(event.target)
+        dropDownContainer1.current &&
+        !dropDownContainer1.current.contains(event.target)
       ) {
-        setDdActives(false);
+        setDdActives1(false);
       }
     };
     document.addEventListener("click", handleClick);
@@ -34,7 +37,22 @@ export default function ActivityBooking({ bookings, price }) {
       document.removeEventListener("click", handleClick);
     };
   }, []);
-  const dropDownContainer = useRef();
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (
+        dropDownContainer2.current &&
+        !dropDownContainer2.current.contains(event.target)
+      ) {
+        setDdActives2(false);
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+  const dropDownContainer1 = useRef();
+  const dropDownContainer2 = useRef();
  
   const generateRandomPastDate = (start, end) => {
     const startDate = new Date(start.getTime());
@@ -49,16 +67,22 @@ export default function ActivityBooking({ bookings, price }) {
       name: generateRandomPastDate(startDate, endDate),
       value: booking.tickets,
     }));
-    let bookingRevenue = updatedBookings.map((booking) => ({
+    let bookingsTickets = updatedBookings.map((booking) => ({
       fullDate: generateRandomPastDate(startDate, endDate),
       monthDate: new Date(booking.name).toLocaleString('default', { month: 'long' }),
       value: booking.value,
     }));
+    let bookingRevenue = updatedBookings.map((booking) => ({
+      fullDate: generateRandomPastDate(startDate, endDate),
+      monthDate: new Date(booking.name).toLocaleString('default', { month: 'long' }),
+      value: booking.value*price- 0.1*price,
+    }));
     setRevenue(bookingRevenue);
+    setTickets(bookingsTickets)
     console.log(bookingRevenue)
     let AdvertiserRevenue = updatedBookings.map((booking) => ({
       name: booking.name,
-      value: booking.value * price,
+      value: booking.value * price- 0.1*price,
     }));
     setTabs([
       { label: "Revenue", data: AdvertiserRevenue },
@@ -70,16 +94,28 @@ export default function ActivityBooking({ bookings, price }) {
         ? {
           ...tab,
            data: revenue.map((booking) => ({
-            name: sortOption.order === "month" ? booking.monthDate : booking.fullDate,
+            name: filterRevenueOption.order === "month" ? booking.monthDate : booking.fullDate,
             value: booking.value,
           }))
         } 
         : tab)
    ))
   
-  }, [revenue, sortOption]);
+  }, [revenue, filterRevenueOption]);
   useEffect(() => {
- 
+    setTabs((prevTabs)=>(prevTabs.map((tab) =>
+      tab.label === "Bookings"
+        ? {
+          ...tab,
+           data: tickets.map((booking) => ({
+            name: filterTicketsOption.order === "month" ? booking.monthDate : booking.fullDate,
+            value: booking.value,
+          }))
+        } 
+        : tab)
+   ))
+  }, [tickets, filterTicketsOption]);
+  useEffect(() => {
    setActiveTab((preTab)=>(
     preTab.label==="Revenue"? tabs[0]:tabs[1]
    ));
@@ -134,19 +170,19 @@ export default function ActivityBooking({ bookings, price }) {
                   ))}
                 </div>
               </div>
-              {activeTab.label === "Revenue" && <div ref={dropDownContainer} className="col-auto" >
+              {activeTab.label === "Revenue" && <div ref={dropDownContainer1} className="col-auto" >
               <div
-                className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""
+                className={`dropdown -type-2 js-dropdown js-form-dd ${ddActive1 ? "is-active" : ""
                   } `}
                 data-main-value=""
               >
                 <div
                   className="dropdown__button js-button"
-                  onClick={() => setDdActives((pre) => !pre)}
+                  onClick={() => setDdActives1((pre) => !pre)}
                 >
                   <span>View Revenue</span>
                   <span className="js-title">
-                    {sortOption.label ? sortOption.label : ""}
+                    {filterRevenueOption.label ? filterRevenueOption.label : ""}
                   </span>
                   <i className="icon-chevron-down"></i>
                 </div>
@@ -155,12 +191,46 @@ export default function ActivityBooking({ bookings, price }) {
                   {sortOptions.map((elm, i) => (
                     <div
                       onClick={() => {
-                        setSortOption(elm);
-                        setDdActives(false);
-                        console.log("tabs",tabs)
-                        
-                          
-                          
+                        setFilterRevenueOption(elm);
+                        setDdActives1(false);
+                        console.log("tabs",tabs)   
+                        }}
+                  key={i}
+                  className="dropdown__item"
+                  data-value="fast"
+                      >
+                  {elm.label}
+                </div>
+                    ))}
+              </div>
+            </div>
+              </div>
+              
+                  }
+                    {activeTab.label === "Bookings" && <div ref={dropDownContainer2} className="col-auto" >
+              <div
+                className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives2 ? "is-active" : ""
+                  } `}
+                data-main-value=""
+              >
+                <div
+                  className="dropdown__button js-button"
+                  onClick={() => setDdActives2((pre) => !pre)}
+                >
+                  <span>View Tickets</span>
+                  <span className="js-title">
+                    {filterTicketsOption.label ? filterTicketsOption.label : ""}
+                  </span>
+                  <i className="icon-chevron-down"></i>
+                </div>
+
+                <div className="dropdown__menu js-menu-items">
+                  {sortOptions.map((elm, i) => (
+                    <div
+                      onClick={() => {
+                        setFilterTicketsOption(elm);
+                        setDdActives2(false);
+                        console.log("tabs",tabs)   
                         }}
                   key={i}
                   className="dropdown__item"
