@@ -68,7 +68,7 @@ const amadeus = new Amadeus({
   const saveBooking = async (req, res) => {
     const { hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, pricing, singlePricing, doublePricing, triplePricing, status, paymentMethod } = req.body;
     const userId = req.userId;
-  
+    
     try {
       const existingTourist = await Tourist.findById(userId);
       if (!existingTourist) {
@@ -120,7 +120,7 @@ const amadeus = new Amadeus({
                   name: `${hotelname} - ${cityCode}`,
                   description: `Hotel ID: ${hotelid} | ${checkIn} - ${checkOut}`,
                 },
-                unit_amount: pricing * 100,
+                unit_amount: Math.round (pricing * 100), // Convert to smallest currency unit (e.g., EGP cents)
               },
               quantity: 1,
             },

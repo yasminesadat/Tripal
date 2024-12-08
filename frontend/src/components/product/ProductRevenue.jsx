@@ -10,8 +10,14 @@ import {
 } from "recharts";
 
 const extractPrice = (priceString) => {
-  const numericValue = parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
-  return numericValue;
+  if (typeof priceString === "string") {
+    const numericValue = parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
+    return numericValue;
+  } else if (typeof priceString === "number") {
+    return priceString;
+  } else {
+    return 0; // Default to 0 if price is not a valid string or number
+  }
 };
 
 export default function ProductRevenue({ productSales, price }) {
@@ -20,7 +26,7 @@ export default function ProductRevenue({ productSales, price }) {
     { label: "Product Sales", data: [] },
   ]);
 
-  const priceNoCurrency = price ? extractPrice(price) : 0;
+  const priceNoCurrency = extractPrice(price);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [revenue, setRevenue] = useState([]);
   const [sortOption, setSortOption] = useState("monthly");
@@ -96,13 +102,7 @@ export default function ProductRevenue({ productSales, price }) {
       <LineChart data={activeTab.data}>
         <CartesianGrid strokeDasharray="" />
         <XAxis tick={{ fontSize: 12 }} dataKey="name" interval={interval} />
-        <YAxis
-          tick={{ fontSize: 12 }}
-          domain={[0, 300]}
-          tickCount={7}
-          interval={interval}
-        />
-
+        <YAxis tick={{ fontSize: 12 }} domain={[0, 300]} tickCount={7} interval={interval} />
         <Tooltip />
         <Line
           type="monotone"
@@ -138,10 +138,7 @@ export default function ProductRevenue({ productSales, price }) {
 
             {activeTab.label === "Revenue" && (
               <div ref={dropDownContainer} className="col-auto">
-                <div
-                  className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""}`}
-                  data-main-value=""
-                >
+                <div className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""}`} data-main-value="">
                   <div className="dropdown__button js-button" onClick={() => setDdActives((prev) => !prev)}>
                     <span>View Revenue</span>
                     <span className="js-title">{sortOption ? sortOption : ""}</span>

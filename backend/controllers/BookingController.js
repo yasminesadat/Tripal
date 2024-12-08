@@ -49,7 +49,7 @@ const bookResource = async (req, res) => {
                 name: `${resourceType} Booking: ${resource.title}`,
                 description: `Booking Description: ${resource.description}`,
               },
-              unit_amount: (totalAmount * 100) / tickets, // Stripe expects amount in the smallest unit (cents)
+              unit_amount: Math.round((totalAmount * 100) / tickets), // Stripe expects amount in the smallest unit (cents)
             },
             quantity: tickets,
           },
