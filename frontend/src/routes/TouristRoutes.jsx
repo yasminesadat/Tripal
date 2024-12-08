@@ -49,35 +49,12 @@ const touristRoutes = [
   { path: "/tourist/invoice", element: <FlightInvoice /> },
   { path: "/upcoming-itineraries", element: <Itineraries /> },
   { path: "/bookmarked-events", element: <BookmarkedEvents /> },
-  // { path: "/historical-places", element: <HistoricalPlaces /> },
   { path: "/tourist/view-products", element: <TouristProducts /> },
-  // {
-  //   path: "/tourist/select-preferences/:touristId",
-  //   element: <PreferenceSelection />,
-  // },
-  // {
-  //   path: "/tourist/select-categories/:touristId",
-  //   element: <CategorySelection />,
-  // },
-  // { path: "/itinerary/:itineraryId", element: <ItineraryDetailsPage /> },
   {
     path: "/tourist/view-products/product/:id",
     element: <TouristViewProduct />,
   },
   { path: "/checkout", element: <Checkout /> },
-  // { path: "/tourist/create-complaint", element: <ComplaintsForm /> },
-  // { path: "/tourist/view-Complaints", element: <MyComplaints /> },
-  // {
-  //   path: "/itineraries/booked-itineraries",
-  //   element: (
-  //     <UpcomingItineraries isTourist={"isTourist"} touristCancel={"cancel"} />
-  //   ),
-  // },
-  // { path: "/booked-activities", element: <BookedActivitiesPage /> },
-  // { path: "/tourist/book-flight", element: <FlightSearch /> },
-  // { path: "/tourist/search-flight", element: <Hero5 /> },
-  // { path: "/tourist/booking-summary", element: <BookingDetails /> },
-  // { path: "/tourist/invoice", element: <Invoice /> },
   { path: "/tourist/booking-history", element: <DbBooking /> },
   { path: "/hotel2", element: <Hero6 /> },
   { path: "/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 /> },
@@ -97,7 +74,7 @@ const touristRoutes = [
   { path: "/success/resource", element: <SuccessPage /> },
   { path: "products-payment-success", element: <OrderSuccessPage /> },
   { path: "/orders", element: <Orders /> },
-  { path: "/orders/:id", element: <OrderDetails /> },
+  { path: "/order/:id", element: <OrderDetails /> },
 ];
 
 export default touristRoutes;
