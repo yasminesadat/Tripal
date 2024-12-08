@@ -715,11 +715,12 @@ const checkTouristPromocode = async (req, res) => {
     console.log("valueee", isPromoCodeValid);
     console.log(tourist.promoCodes);
     console.log("promo", promoCode);
+    const promoCodeObject = await PromoCode.find({ name: promoCode });
     if (!isPromoCodeValid) {
       return res.status(200).json({ status: "no", message: "Invalid promo code!" });
     }
     else {
-      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!" });
+      return res.status(200).json({ status: "yes", message: "Promo Code applied successfully!", promo: promoCodeObject });
     }
     // return res.status(200).json({ isPromoCodeValid });
   } catch (error) {
