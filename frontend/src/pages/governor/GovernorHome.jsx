@@ -15,10 +15,8 @@ const GovernorHome = () => {
       <div className="page-wrapper">
         <GovernorHeader />
         <main className="page-content">
-          <div className="layout-pt-xl layout-pb-xl rounded-12">
           <FeturesTwo />
-          </div>
-          <div ><Information /></div>
+          <Information />
           <div className="admin-content-details"></div>
         </main>
         <FooterThree />
