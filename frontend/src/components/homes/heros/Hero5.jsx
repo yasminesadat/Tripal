@@ -57,8 +57,7 @@ export default function Hero5() {
                 data-aos-delay="100"
                 className="hero__subtitle mb-10"
               >
-                Search, compare and book 15,000+ multiday tours all over the
-                world.
+                Search, compare and book stays all over the world.
               </div>
 
               <h1
