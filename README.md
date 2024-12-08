@@ -816,8 +816,6 @@ export default SellerHome;
 
 ## Code style
 This project uses  [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) to ensure consistent code formatting.
-
-## Tests
 ## Tests
 <details>
 <summary>We use Postman to manually test all our API references by making sure the response is as expected. Below are examples of the testing:</summary>
