@@ -243,6 +243,7 @@ export default function TouristHome() {
           refItineraries={refItineraries}
           refHisPlaces={refHisPlaces}
           refProducts={refProducts}
+          homepage = {"homepage"}
         />
         <Tour
           open={open}

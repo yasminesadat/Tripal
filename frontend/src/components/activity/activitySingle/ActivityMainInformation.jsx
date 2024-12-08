@@ -76,7 +76,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
       const response = await getActivityById(activityId);
       setActivity(response.data);
     } catch (error) {
-      message.error("Failed to fetch activities.");
+      // message.error("Failed to fetch activities.");
     }
   };
 

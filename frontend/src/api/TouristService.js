@@ -304,3 +304,16 @@ export async function markNotifications() {
   }
 }
 
+export async function updateQuantity(productId, quantity) {
+  try {
+    console.log("product: ",productId);
+    console.log("quantity: ",quantity);
+    const response = await axios.put('/tourist/product-quantity', {
+      productId, quantity
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating quantity:", error);
+  }
+}
+

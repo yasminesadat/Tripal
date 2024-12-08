@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function PageHeader({ itineraryId, itineraryTitle, userRole }) {
+export default function PageHeader({ itineraryId, itineraryTitle, tourist, admin, tourguide }) {
   return (
     <section className="pageHeader -type-3">
       <div className="container">
@@ -8,15 +8,17 @@ export default function PageHeader({ itineraryId, itineraryTitle, userRole }) {
           <div className="col-auto">
             <div className="breadcrumbs">
               <span className="breadcrumbs__item">
-               {userRole==='Tourist'&& <Link to="/tourist">Home</Link> }
-                {userRole==='Admin'&& <Link to="/admin">Home</Link> }
-                {userRole==='Tour Guide'&& <Link to="/tourguide">Home</Link> }
+                {tourist && <Link to="/tourist">Home</Link> }
+                {admin && <Link to="/admin">Home</Link> }
+                {tourguide && <Link to="/tourguide">Home</Link> }
+                {!tourist && !admin && !tourguide && <Link to="/">Home</Link>}
               </span>
               <span>{"> "}</span>
               <span className="breadcrumbs__item">
-            {userRole==='Tourist'&& <Link to="/upcoming-itineraries">Itineraries</Link> }
-            {userRole==='Admin'&& <Link to="/admin/itineraries">Itineraries</Link> }
-             {userRole==='Tour Guide'&& <Link to="/my-itineraries">Itineraries</Link> }
+                {tourist && <Link to="/upcoming-itineraries">Itineraries</Link> }
+                {admin && <Link to="/admin/itineraries">Itineraries</Link> }
+                {tourguide && <Link to="/my-itineraries">Itineraries</Link> }
+                {!tourist && !admin && !tourguide && <Link to="/upcomingitineraries">Itineraries</Link>}
               </span>
               <span>{"> "}</span>
               <span className="breadcrumbs__item">
