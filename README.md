@@ -62,7 +62,18 @@ To contribute:
 6. Create a new Pull Request
 7. The PR is to be reviewed and merged
 
-## add creditsss
+## Credits
+
+- [MongoDB](https://www.mongodb.com/docs/) 
+- [Mongoose](https://mongoosejs.com/docs/)
+- [Express.js](https://expressjs.com/)
+- [React](https://react.dev/)
+- [Node.js](https://nodejs.org/)
+- [Nodemailer](https://nodemailer.com/about/)
+- [Postman](https://www.postman.com/)
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [Stripe](https://stripe.com/docs)
+
 
 
 
