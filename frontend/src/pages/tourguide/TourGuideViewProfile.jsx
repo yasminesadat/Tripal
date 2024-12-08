@@ -486,7 +486,7 @@ const TourGuideProfile = () => {
                                                                 <input type="text" value={formData.userName} readOnly />
 
                                                                 <label className="lh-1 text-16 text-light-1">
-                                                                    userName
+                                                                    Username
                                                                 </label>
 
                                                             </div>
@@ -496,7 +496,7 @@ const TourGuideProfile = () => {
                                                             <div className="form-input ">
 
                                                                 <input type="text" value={formData.mobileNumber} onChange={(e) => handelInputChange("mobileNumber", e.target.value)} />
-                                                                <label className="lh-1 text-16 text-light-1">PhoneNumber</label>
+                                                                <label className="lh-1 text-16 text-light-1">Phone Number</label>
 
                                                             </div>
                                                         </div>
