@@ -38,7 +38,7 @@ export default function ActivitiesList({
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const activitiesPerPage = 2;
+  const activitiesPerPage = 5;
   const navigate = useNavigate();
   const indexOfLastActivity = currentPage * activitiesPerPage;
   const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
