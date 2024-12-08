@@ -95,6 +95,78 @@ export default function ReviewBox({ id, type }) {
             .purple-button:hover {
                 background-color: #5d384d;  /* Purple-700 */
             }
+               .contactForm .form-input {
+                            position: relative;
+                            margin-bottom: 20px;
+                          }
+                          .contactForm .form-input label {
+                            position: absolute;
+                            left: 10px;
+                            top: 15%;
+                            transform: translateY(-15%);
+                            transition: 0.3s ease;
+                            color: #aaa;
+                          }
+                          .contactForm .form-input input:focus + label,
+                          .contactForm .form-input textarea:focus + label,
+                          .contactForm .form-input input:not(:placeholder-shown) + label,
+                          .contactForm .form-input textarea:not(:placeholder-shown) + label,
+                          .contactForm .form-input input.filled + label,
+                          .contactForm .form-input textarea.filled + label {
+                            transform: translateY(-29px);
+                            font-size: 12px;
+                            color: #333;
+                          }
+                            .password-toggle {
+                              position: absolute;
+                              right: 10px;
+                              top: 50%;
+                              transform: translateY(-50%);
+                              background: none;
+                              border: none;
+                              cursor: pointer;
+                              color: var(--color-stone);
+                              z-index: 2;
+                              padding: 5px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                            }
+                            .password-toggle:hover {
+                              color: var(--color-stone-light);
+                            }
+                          .contactForm .form-input input,
+                          .contactForm .form-input textarea {
+                            padding: 10px;
+                            font-size: 16px;
+                            width: 100%;
+                            border: 1px solid #ccc;
+                            outline: none;
+                          }
+
+
+                          .absoluteIcon1 {
+                              position: absolute;
+                              top: 10px;
+                              right: 10px;
+                              border-radius: 12px;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              background-color: white;
+                              width: 37px;
+                              height: 37px;
+                            }
+                              .absoluteIcon2 {
+                              bottom:5px
+                              border-radius: 12px;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              background-color: white;
+                              width: 37px;
+                              height: 37px;
+                            }
             `}
             </style>
             </div>
