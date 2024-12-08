@@ -18,10 +18,11 @@ const FlightResults = () => {
   const flights = location.state?.flights || [];
   const originCityCode = location.state?.originLocationCode;
   const destCityCode = location.state?.destinationLocationCode;
+  const selectedClass = location.state?.cabinType;
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
   const [touristAge, setTouristAge] = useState(0);
-  const [selectedClass, setSelectedClass] = useState('economy');
+  //const [selectedClass, setSelectedClass] = useState('economy');
 
 
   const getExchangeRate = async () => {
@@ -337,7 +338,7 @@ const FlightResults = () => {
                   <div className="ticket" key={index}>
                     <div className="ticket-header">
                       <h3>Flight Ticket</h3>
-                      <span>{selectedClass.charAt(0).toUpperCase() + selectedClass.slice(1)} Class</span>
+                      <span>{selectedClass.charAt(0).toUpperCase() + selectedClass.slice(1)} CLASS</span>
                     </div>
 
                     {flight.itineraries.flatMap((itinerary, itineraryIndex) =>
