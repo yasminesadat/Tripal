@@ -20,7 +20,7 @@ const FlightResults = () => {
   const destCityCode = location.state?.destinationLocationCode;
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [touristAge, setTouristAge] = useState(null);
+  const [touristAge, setTouristAge] = useState(0);
   const [selectedClass, setSelectedClass] = useState('economy');
 
   useEffect(() => {

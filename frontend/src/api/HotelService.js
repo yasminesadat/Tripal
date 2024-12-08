@@ -62,21 +62,16 @@ export const getHotels = async (cityCode) => {
   };
 
 
-  export const saveBooking =async(hotelid,hotelname,cityCode,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status, paymentMethod) =>{
-    // console.log("hiii",userid,hotelid,hotelname,singleRoom,doubleRoom,tripleRoom,checkIn,checkOut,pricing,status);
-    const requestBody = {
-     hotelid,hotelname,cityCode,singleNumber: singleRoom,doubleNumber: doubleRoom,tripleNumber: tripleRoom,checkIn,checkOut,pricing,status, paymentMethod
-    };
+  export const saveBooking = async (bookingData) => {   // Accept a single object parameter
     try {
-      console.log('Request body:', requestBody);
-      const response = await axios.post(`/saveBooking`, requestBody);
-      console.log('Sending payment method:', paymentMethod);
-      console.log('Request body:', requestBody);
+      console.log('Request body:', bookingData);
+  
+      const response = await axios.post(`/saveBooking`, bookingData);
+      console.log('Sending payment method:', bookingData.paymentMethod);
       return response.data;
-    }
-    catch (error) {
+    } catch (error) {
       const errorMessage = error.response?.data?.error || "An error occurred while creating the request.";
-      console.log("ERRPR MESSAGE", errorMessage)
+      console.log("ERROR MESSAGE", errorMessage)
       throw new Error(errorMessage);
     }
   }

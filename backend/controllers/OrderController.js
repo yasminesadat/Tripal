@@ -153,13 +153,13 @@ const createOrder = asyncHandler(async (req, res) => {
             order: newOrder,
           });
         } else if (paymentMethod === "Credit Card") {
-          
+          const chosenCurrency = tourist.choosenCurrency || "EGP"; 
           const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             customer_email: tourist.email,
             line_items: tourist.cart.map((product) => ({
               price_data: {
-                currency: "egp",
+                currency: chosenCurrency.toLowerCase(),
                 product_data: {
                   name: product.product.name,
                 },
@@ -169,7 +169,7 @@ const createOrder = asyncHandler(async (req, res) => {
             })),
             mode: "payment",
             success_url: `${process.env.FRONTEND_URL}/products-payment-success?session_id={CHECKOUT_SESSION_ID}&touristId=${touristId}&totalPrice=${totalPrice}&deliveryAddress=${encodeURIComponent(JSON.stringify(deliveryAddress))}`,
-            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+            cancel_url: `${process.env.FRONTEND_URL}/cart`,
           });
           console.log (session.id);
           // for (let cartItem of tourist.cart) {
