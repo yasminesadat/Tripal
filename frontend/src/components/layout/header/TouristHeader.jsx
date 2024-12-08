@@ -12,7 +12,7 @@ import {
 } from "@/api/TouristService";
 import { setTouristCurrency } from "@/api/ExchangeRatesService";
 
-export default function TouristHeader({ setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
+export default function TouristHeader({ setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts, homepage }) {
   const [profileInformation, setProfileInformation] = useState({});
   const navigate = useNavigate();
 
@@ -125,9 +125,10 @@ export default function TouristHeader({ setOpen, refFlights, refHotels, refActiv
           </div>
 
           <div className="header__right">
-            <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
+            
+            {homepage && <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
               Guide
-            </button>
+            </button>}
 
             <div className="ml-15">
               <Currency

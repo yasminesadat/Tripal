@@ -26,6 +26,12 @@ export default function BookmarkedEvents() {
     fetchBookmarked();
   }, []);
 
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + "...";
+  };
   return (
     <div>
     <TouristHeader />
@@ -35,7 +41,7 @@ export default function BookmarkedEvents() {
         <div className="row">
           
 
-          <div className="col-xl-9 col-lg-8" >
+          <div className="col-xl-15 col-lg-14" >
             <div className="row y-gap-30 pt-30">
             {bookmarkedEvents?.map((event, index) => (
                 <div className="col-12" key={index}>
@@ -55,7 +61,8 @@ export default function BookmarkedEvents() {
                         <span>{event.title}</span>
                       </h3>
 
-                      <p className="tourCard__text mt-5">{event.description}</p>
+                      <p className="tourCard__text mt-5">{truncateText(event.description, 700)}
+                      </p>
 
                       {/* <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.features?.map((elm2, i2) => (

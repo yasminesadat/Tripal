@@ -10,6 +10,7 @@ export async function createActivity(body) {
     throw error;
   }
 }
+                     
 export async function updateActivity(id,body) {
   try {
     const response =  await axios.put(`/activities/${id}`, body)
@@ -29,7 +30,26 @@ export async function getAdvertiserActivities() {
     throw error;
   }
 }
+export async function getActivityBookings(id) {
+  try {
+    const response = await axios.get(`/activity-bookings/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Can't get activity bookings", error);
+    throw error;
+  }
+}
+export async function getAdvertiserBookings() {
+  try {
+    const response = await axios.get(`/my-activities-bookings`);
+    return response;
+  } catch (error) {
+    console.error("Can't get activity bookings", error);
+    throw error;
+  }
+}
 
+                               
 export async function getActivityById(id) {
   try {
     const response = await axios.get(`/activity/${id}`);

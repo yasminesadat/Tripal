@@ -8,7 +8,6 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-
 export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
   //#region 1. Variables
@@ -41,6 +40,7 @@ export default function ActivityDetails({ activity, userRole, refActivityBook })
                 <OthersInformation groupSize={activity.bookings.reduce((total, booking) => total + booking.tickets, 0)} />
               </div>
               <Overview activityDescription={activity.description} />
+             
               <div className="line mt-60 mb-60"></div>
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
@@ -52,6 +52,7 @@ export default function ActivityDetails({ activity, userRole, refActivityBook })
                 />
 
               </div>
+              
               <h2 className="text-30">Customer Reviews</h2>
               <ActivityReviews activityId={activityId} />
               {page === "history" && (

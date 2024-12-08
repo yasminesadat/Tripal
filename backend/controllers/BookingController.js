@@ -134,6 +134,7 @@ const bookResource = async (req, res) => {
 const cancelResource = async (req, res) => {
   const { resourceType, resourceId } = req.params;
   const touristId = req.userId;
+  var refundedAmount = 0.0;
   const model = resourceType === 'activity' ? Activity : itineraryModel;
   const currentTime = new Date();
 
@@ -172,6 +173,7 @@ const cancelResource = async (req, res) => {
       if (tourist) {
         tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets;
         ticketsForPoints = resource.bookings[bookingIndex].tickets;
+        refundedAmount = resource.price * resource.bookings[bookingIndex].tickets;;
         await tourist.save();
       }
       resource.bookings.splice(bookingIndex, 1);
@@ -189,6 +191,7 @@ const cancelResource = async (req, res) => {
       if (tourist) {
         tourist.wallet.amount += resource.price * resource.bookings[bookingIndex].tickets + resource.serviceFee;
         ticketsForPoints = resource.bookings[bookingIndex].tickets;
+        refundedAmount = resource.price * resource.bookings[bookingIndex].tickets + resource.serviceFee;
         await tourist.save();
       }
       resource.bookings.splice(bookingIndex, 1);
@@ -221,7 +224,7 @@ const cancelResource = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.` });
+    res.status(200).json({ message: `${resourceType} booking canceled successfully, kindly check your balance.`, refunded: refundedAmount });
   } catch (error) {
     res.status(500).json({ message: 'Error canceling booking', error });
   }

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Menu from "../components/GuestMenu";
-import Currency from "../components/Currency";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function GuestHeader({ refLogin, setOpen }) {
+export default function GuestHeader({ refLogin, setOpen, homepage }) {
   const location = useLocation();
   const navigate = useNavigate();
   const isLoginPage = location.pathname === "/login";
@@ -55,14 +54,13 @@ export default function GuestHeader({ refLogin, setOpen }) {
           </div>
 
           <div className="header__right">
-            {!isLoginPage && !isSignupPage && (
+            {!isLoginPage && !isSignupPage && homepage && (
               <button type="primary" onClick={() => setOpen(true)}>
                 Guide
               </button>
             )}
             < div className="header__right" ref={refLogin} >
 
-              <Currency />
               < div className="header__right" ref={refLogin} >
                 <Link to="/register" className="ml-10">
                   Sign up
