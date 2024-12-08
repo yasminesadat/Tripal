@@ -24,16 +24,22 @@ export default function DbBooking() {
   const [bookedHotels, setBookedHotels] = useState([]); // state to store bookedHotels
   const [bookedActivities, setBookedActivities] = useState([]);
   const [bookedItineraries, setBookedItineraries] = useState([]);
-  const [currency, setCurrency] = useState('EGP');
+  const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
-  const [refundDetails, setRefundDetails] = useState({ amount: 0, walletBalance: 0 });
+  const [refundDetails, setRefundDetails] = useState({
+    amount: 0,
+    walletBalance: 0,
+  });
   const navigate = useNavigate();
   const metadata = {
     title: "My Bookings || Tripal",
   };
   const [isRefundModalVisible, setIsRefundModalVisible] = useState(false);
-  const [currentResource, setCurrentResource] = useState({ resourceId: null, resourceType: '' });
+  const [currentResource, setCurrentResource] = useState({
+    resourceId: null,
+    resourceType: "",
+  });
 
   //#endregion
 
@@ -128,7 +134,7 @@ export default function DbBooking() {
   //     startDate: '2024-05-20T16:00:00',  // Upcoming
   //     price: 400,
   //   },
-  // ];  
+  // ];
 
   //#region useEffect and methods
   useEffect(() => {
@@ -234,8 +240,8 @@ export default function DbBooking() {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const year = d.getFullYear();
 
     return `${day}/${month}/${year}`;
@@ -246,18 +252,18 @@ export default function DbBooking() {
     const dateObj = new Date(date);
 
     if (dateObj > today) {
-      return { stat: 'upcoming ', icon: '⏳' };
+      return { stat: "upcoming ", icon: "⏳" };
     } else {
-      return { stat: 'completed ', icon: '✔️' };
+      return { stat: "completed ", icon: "✔️" };
     }
   };
 
   const handleActivityRedirect = (activityId) => {
-    navigate(`/activity/${activityId}`, { state: { page: 'history' } });
+    navigate(`/activity/${activityId}`, { state: { page: "history" } });
   };
 
   const handleItineraryRedirect = (itineraryId) => {
-    navigate(`/itinerary/${itineraryId}`, { state: { page: 'history' } });
+    navigate(`/itinerary/${itineraryId}`, { state: { page: "history" } });
   };
 
   const handleCancelResource = async () => {
@@ -270,24 +276,34 @@ export default function DbBooking() {
       setModalVisible(false);
 
       // Update the lists
-      if (resourceType === 'activity') {
-        setBookedActivities((prev) => prev.filter((activity) => activity._id !== resourceId));
-      } else if (resourceType === 'itinerary') {
-        setBookedItineraries((prev) => prev.filter((itinerary) => itinerary._id !== resourceId));
+      if (resourceType === "activity") {
+        setBookedActivities((prev) =>
+          prev.filter((activity) => activity._id !== resourceId)
+        );
+      } else if (resourceType === "itinerary") {
+        setBookedItineraries((prev) =>
+          prev.filter((itinerary) => itinerary._id !== resourceId)
+        );
       }
 
       // Then show the refund details modal
       setRefundDetails({
         amount: response.refunded,
-        walletBalance: touristWallet.wallet.amount
+        walletBalance: touristWallet.wallet.amount,
       });
       setIsRefundModalVisible(true);
 
       // Show success message
-      message.success(`${resourceType === 'activity' ? 'Activity' : 'Itinerary'} reservation is canceled successfully.`);
-
+      message.success(
+        `${
+          resourceType === "activity" ? "Activity" : "Itinerary"
+        } reservation is canceled successfully.`
+      );
     } catch (err) {
-      message.error(err.response?.data?.error || 'An error occurred while canceling the resource.');
+      message.error(
+        err.response?.data?.error ||
+          "An error occurred while canceling the resource."
+      );
       setModalVisible(false);
     }
   };
@@ -330,9 +346,15 @@ export default function DbBooking() {
                     <div className="tabs -underline-2 js-tabs">
                       <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                         {tabs.map((elm, i) => (
-                          <div key={i} className="col-auto" onClick={() => setCurrentTab(elm)}>
+                          <div
+                            key={i}
+                            className="col-auto"
+                            onClick={() => setCurrentTab(elm)}
+                          >
                             <button
-                              className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${elm === currentTab ? "is-tab-el-active" : ""}`}
+                              className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${
+                                elm === currentTab ? "is-tab-el-active" : ""
+                              }`}
                             >
                               {elm}
                             </button>
@@ -341,7 +363,6 @@ export default function DbBooking() {
                       </div>
 
                       <div className="tabs__content js-tabs-content">
-
                         {/* Flights Tab */}
                         {currentTab === "Flights" && (
                           <div className="tabs__pane -tab-item-1 is-tab-el-active">
@@ -369,11 +390,29 @@ export default function DbBooking() {
                                       <td>{flight.origin}</td>
                                       <td>{flight.destination}</td>
 
-                                      <td>{convertPrice(flight.price)} {currency}</td>
-                                      <td>{new Date(flight.departureTime).toLocaleString()}</td>
-                                      <td>{new Date(flight.arrivalTime).toLocaleString()}</td>
                                       <td>
-                                        <div className={`circle ${getFlightStatus(flight.arrivalTime) === "Flight Complete" ? "text-purple-1" : "text-yellow-1"}`}>
+                                        {convertPrice(flight.price)} {currency}
+                                      </td>
+                                      <td>
+                                        {new Date(
+                                          flight.departureTime
+                                        ).toLocaleString()}
+                                      </td>
+                                      <td>
+                                        {new Date(
+                                          flight.arrivalTime
+                                        ).toLocaleString()}
+                                      </td>
+                                      <td>
+                                        <div
+                                          className={`circle ${
+                                            getFlightStatus(
+                                              flight.arrivalTime
+                                            ) === "Flight Complete"
+                                              ? "text-purple-1"
+                                              : "text-yellow-1"
+                                          }`}
+                                        >
                                           {getFlightStatus(flight.arrivalTime)}
                                         </div>
                                       </td>
@@ -392,12 +431,12 @@ export default function DbBooking() {
                                     </tr>
                                   ))}
                                 </tbody>
-
                               </table>
                             </div>
 
                             <div className="text-14 text-center mt-20">
-                              Showing results {bookedFlights.length} of {bookedFlights.length}
+                              Showing results {bookedFlights.length} of{" "}
+                              {bookedFlights.length}
                             </div>
                           </div>
                         )}
@@ -424,12 +463,31 @@ export default function DbBooking() {
                                     <tr key={i}>
                                       <td>{hotel.hotelname}</td>
                                       <td>{hotel.cityCode}</td>
-                                      <td>{format(hotel.checkIn, 'M/d/yyyy, h:mm:ss a')}</td>
-                                      <td>{format(hotel.checkOut, 'M/d/yyyy, h:mm:ss a')}</td>
-                                      {/* <td>{hotel.pricing} EGP</td> */}
-                                      <td>{convertPrice(hotel.pricing)} {currency}</td>
                                       <td>
-                                        <div className={`circle ${getHotelStatus(hotel.checkOut) === "completed" ? "text-purple-1" : "text-yellow-1"}`}>
+                                        {format(
+                                          hotel.checkIn,
+                                          "M/d/yyyy, h:mm:ss a"
+                                        )}
+                                      </td>
+                                      <td>
+                                        {format(
+                                          hotel.checkOut,
+                                          "M/d/yyyy, h:mm:ss a"
+                                        )}
+                                      </td>
+                                      {/* <td>{hotel.pricing} EGP</td> */}
+                                      <td>
+                                        {convertPrice(hotel.pricing)} {currency}
+                                      </td>
+                                      <td>
+                                        <div
+                                          className={`circle ${
+                                            getHotelStatus(hotel.checkOut) ===
+                                            "completed"
+                                              ? "text-purple-1"
+                                              : "text-yellow-1"
+                                          }`}
+                                        >
                                           {getHotelStatus(hotel.checkOut)}
                                         </div>
                                       </td>
@@ -443,13 +501,15 @@ export default function DbBooking() {
                                             </button>
                                           </div>
                                         </td> */}
+                                    </tr>
                                   ))}
                                 </tbody>
                               </table>
                             </div>
 
                             <div className="text-14 text-center mt-20">
-                              Showing results {bookedHotels.length} of {bookedHotels.length}
+                              Showing results {bookedHotels.length} of{" "}
+                              {bookedHotels.length}
                             </div>
                           </div>
                         )}
@@ -473,39 +533,62 @@ export default function DbBooking() {
 
                                 <tbody>
                                   {bookedActivities.map((activity, i) => {
-                                    const { stat, icon } = checkStatus(activity.date);
-                                    const actionButton = stat === "upcoming " ? (
-                                      <button
-                                        style={{
-                                          backgroundColor: '#e74c3c',
-                                          color: 'white',
-                                          border: 'none',
-                                          padding: '8px 15px',
-                                          borderRadius: '5px',
-                                          cursor: 'pointer',
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')}
-                                        onClick={() => handleCancelBooking(activity._id, 'activity')}                                          >
-                                        Cancel
-                                      </button>
-                                    ) : (
-                                      <button
-                                        style={{
-                                          backgroundColor: '#2ecc71',
-                                          color: 'white',
-                                          border: 'none',
-                                          padding: '8px 15px',
-                                          borderRadius: '5px',
-                                          cursor: 'pointer',
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = '#27ae60')}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = '#2ecc71')}
-                                        onClick={() => handleActivityRedirect(activity._id)}
-                                      >
-                                        Review
-                                      </button>
+                                    const { stat, icon } = checkStatus(
+                                      activity.date
                                     );
+                                    const actionButton =
+                                      stat === "upcoming " ? (
+                                        <button
+                                          style={{
+                                            backgroundColor: "#e74c3c",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "8px 15px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                          onMouseOver={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#c0392b")
+                                          }
+                                          onMouseOut={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#e74c3c")
+                                          }
+                                          onClick={() =>
+                                            handleCancelBooking(
+                                              activity._id,
+                                              "activity"
+                                            )
+                                          }
+                                        >
+                                          Cancel
+                                        </button>
+                                      ) : (
+                                        <button
+                                          style={{
+                                            backgroundColor: "#2ecc71",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "8px 15px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                          onMouseOver={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#27ae60")
+                                          }
+                                          onMouseOut={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#2ecc71")
+                                          }
+                                          onClick={() =>
+                                            handleActivityRedirect(activity._id)
+                                          }
+                                        >
+                                          Review
+                                        </button>
+                                      );
                                     return (
                                       <tr key={i}>
                                         <td>{activity.title}</td>
@@ -515,7 +598,9 @@ export default function DbBooking() {
                                         <td>{activity.price}</td>
                                         <td>
                                           {stat}
-                                          <span style={{ fontSize: '18px' }}>{icon}</span>
+                                          <span style={{ fontSize: "18px" }}>
+                                            {icon}
+                                          </span>
                                         </td>
                                         <td>{actionButton}</td>
                                       </tr>
@@ -526,7 +611,8 @@ export default function DbBooking() {
                             </div>
 
                             <div className="text-14 text-center mt-20">
-                              Showing results {bookedActivities.length} of {bookedActivities.length}
+                              Showing results {bookedActivities.length} of{" "}
+                              {bookedActivities.length}
                             </div>
                           </div>
                         )}
@@ -548,49 +634,79 @@ export default function DbBooking() {
 
                                 <tbody>
                                   {bookedItineraries.map((itinerary, i) => {
-                                    const { stat, icon } = checkStatus(itinerary.startDate);
-                                    const actionButton = stat === "upcoming " ? (
-                                      <button
-                                        style={{
-                                          backgroundColor: '#e74c3c',
-                                          color: 'white',
-                                          border: 'none',
-                                          padding: '8px 15px',
-                                          borderRadius: '5px',
-                                          cursor: 'pointer',
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = '#c0392b')}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = '#e74c3c')}
-                                        onClick={() => handleCancelBooking(itinerary._id, 'itinerary')}
-                                      >
-                                        Cancel
-                                      </button>
-
-                                    ) : (
-                                      <button
-                                        style={{
-                                          backgroundColor: '#2ecc71',
-                                          color: 'white',
-                                          border: 'none',
-                                          padding: '8px 15px',
-                                          borderRadius: '5px',
-                                          cursor: 'pointer',
-                                        }}
-                                        onMouseOver={(e) => (e.target.style.backgroundColor = '#27ae60')}
-                                        onMouseOut={(e) => (e.target.style.backgroundColor = '#2ecc71')}
-                                        onClick={() => handleItineraryRedirect(itinerary._id)}
-                                      >
-                                        Review
-                                      </button>
+                                    const { stat, icon } = checkStatus(
+                                      itinerary.startDate
                                     );
+                                    const actionButton =
+                                      stat === "upcoming " ? (
+                                        <button
+                                          style={{
+                                            backgroundColor: "#e74c3c",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "8px 15px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                          onMouseOver={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#c0392b")
+                                          }
+                                          onMouseOut={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#e74c3c")
+                                          }
+                                          onClick={() =>
+                                            handleCancelBooking(
+                                              itinerary._id,
+                                              "itinerary"
+                                            )
+                                          }
+                                        >
+                                          Cancel
+                                        </button>
+                                      ) : (
+                                        <button
+                                          style={{
+                                            backgroundColor: "#2ecc71",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "8px 15px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                          onMouseOver={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#27ae60")
+                                          }
+                                          onMouseOut={(e) =>
+                                            (e.target.style.backgroundColor =
+                                              "#2ecc71")
+                                          }
+                                          onClick={() =>
+                                            handleItineraryRedirect(
+                                              itinerary._id
+                                            )
+                                          }
+                                        >
+                                          Review
+                                        </button>
+                                      );
                                     return (
                                       <tr key={i}>
                                         <td>{itinerary.title}</td>
-                                        <td>{formatDate(itinerary.startDate)}</td>
-                                        <td>{convertPrice(itinerary.price)} {currency}</td>
+                                        <td>
+                                          {formatDate(itinerary.startDate)}
+                                        </td>
+                                        <td>
+                                          {convertPrice(itinerary.price)}{" "}
+                                          {currency}
+                                        </td>
                                         <td>
                                           {stat}
-                                          <span style={{ fontSize: '18px' }}>{icon}</span>
+                                          <span style={{ fontSize: "18px" }}>
+                                            {icon}
+                                          </span>
                                         </td>
                                         <td>{actionButton}</td>
                                       </tr>
@@ -601,11 +717,11 @@ export default function DbBooking() {
                             </div>
 
                             <div className="text-14 text-center mt-20">
-                              Showing results {bookedItineraries.length} of {bookedItineraries.length}
+                              Showing results {bookedItineraries.length} of{" "}
+                              {bookedItineraries.length}
                             </div>
                           </div>
                         )}
-
                       </div>
                     </div>
                   </div>
