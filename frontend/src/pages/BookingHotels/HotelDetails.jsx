@@ -18,13 +18,10 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 export default function HotelDetails() {
   const { cityCode, name, hotelID, dates1, dates2 } = useParams();
   console.log("1111", name);
-  const [headerVisible, setHeaderVisible] = useState(true);  // State to manage header visibility
-
-  // Function to hide the header
+  const [headerVisible, setHeaderVisible] = useState(true);
   const handleSeeAllPhotosClick = () => {
-    setHeaderVisible(!headerVisible);  // Hide the header when the button is clicked
+    setHeaderVisible(!headerVisible);  
   };
-
 
   const metadata = {
     title: "Home || Tripal - Travel Agency",
@@ -39,7 +36,7 @@ export default function HotelDetails() {
           <>
             <section>
               <div className="container">
-                <MainInformation name={name} /> {/* Pass hotelID as a prop */}
+                <MainInformation name={name} />
                 <Gallery1 onSeeAllPhotosClick={handleSeeAllPhotosClick} />
               </div>
             </section>
@@ -48,9 +45,6 @@ export default function HotelDetails() {
               <div className="container">
                 <div className="row y-gap-30 justify-between">
                   <div className="col-lg-8">
-                    {/* <div className="row y-gap-20 justify-between items-center layout-pb-md">
-                <OthersInformation />
-              </div> */}
 
                     <Overview name={name} />
 
