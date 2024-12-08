@@ -3,21 +3,25 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "@/components/activity/Pagination";
-import {message } from "antd";
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
-import { viewUpcomingItineraries, getItinerariesByTourGuide } from "@/api/ItineraryService";
-import { getAdminItineraries} from "@/api/AdminService";
+import {
+  viewUpcomingItineraries,
+  getItinerariesByTourGuide,
+} from "@/api/ItineraryService";
+import { getAdminItineraries } from "@/api/AdminService";
 import Spinner from "../common/Spinner";
-import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
-
+import {
+  getConversionRate,
+  getTouristCurrency,
+} from "@/api/ExchangeRatesService";
 
 export default function ItinerariesList({
   searchTerm,
   page,
   refItineraryDetails,
-  onFirstItineraryId
+  onFirstItineraryId,
 }) {
-
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
@@ -33,7 +37,7 @@ export default function ItinerariesList({
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -51,11 +55,11 @@ export default function ItinerariesList({
   const indexOfLastItinerary = currentPage * itinerariesPerPage;
   const indexOfFirstItinerary = indexOfLastItinerary - itinerariesPerPage;
   const currentItineraries = filteredItineraries.slice(
-      indexOfFirstItinerary,
-      indexOfLastItinerary
+    indexOfFirstItinerary,
+    indexOfLastItinerary
   );
 
-  const [currency, setCurrency] = useState( "EGP");
+  const [currency, setCurrency] = useState("EGP");
 
   const getExchangeRate = async () => {
     if (currency) {
@@ -73,12 +77,13 @@ export default function ItinerariesList({
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
+    }, 1);
+    return () => clearInterval(intervalId);
   }, [currency]);
 
-//#endregion
+  //#endregion
 
-//#region useEffect
+  //#region useEffect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -110,10 +115,9 @@ export default function ItinerariesList({
           response = await viewUpcomingItineraries();
         } else if (userRole === "Admin") {
           response = await getAdminItineraries();
-        }
-        else if(userRole==='Tour Guide'){
+        } else if (userRole === "Tour Guide") {
           response = await getItinerariesByTourGuide();
-        } 
+        }
         const itinerariesData = Array.isArray(response?.data)
           ? response?.data
           : [];
@@ -139,8 +143,10 @@ export default function ItinerariesList({
       const itineraryStartDate = new Date(itinerary.startDate);
       const itineraryRating = itinerary.averageRating;
       const itineraryPrice = itinerary.price * exchangeRate;
-      const itineraryTags = itinerary.tags.map(tag => tag.toLowerCase());
-      const itineraryLanguage = itinerary.language ? itinerary.language.toLowerCase() : "";
+      const itineraryTags = itinerary.tags.map((tag) => tag.toLowerCase());
+      const itineraryLanguage = itinerary.language
+        ? itinerary.language.toLowerCase()
+        : "";
 
       const isDateValid =
         !startDate ||
@@ -151,9 +157,11 @@ export default function ItinerariesList({
         ratingFilter.length === 0 ||
         ratingFilter.some((rating) => itineraryRating >= rating);
 
-        const isLanguageValid =
+      const isLanguageValid =
         !selectedLanguage ||
-        itineraryLanguage.toLowerCase().startsWith(selectedLanguage.toLowerCase());
+        itineraryLanguage
+          .toLowerCase()
+          .startsWith(selectedLanguage.toLowerCase());
 
       const isPriceValid =
         itineraryPrice >= priceRange[0] && itineraryPrice <= priceRange[1];
@@ -235,6 +243,21 @@ export default function ItinerariesList({
     setCurrentPage(newPage);
   };
 
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this itinerary!",
+          url: link,
+        })
+        .catch(() => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
+    }
+  };
+
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) {
       return text;
@@ -244,32 +267,38 @@ export default function ItinerariesList({
 
   const navigate = useNavigate();
   const handleRedirect = (itineraryId) => {
-    if (userRole === "Tourist"|| userRole === "Admin"|| userRole === "Tour Guide")
+    if (
+      userRole === "Tourist" ||
+      userRole === "Admin" ||
+      userRole === "Tour Guide"
+    )
       navigate(`/itinerary/${itineraryId}`, { state: { page } });
     else navigate(`/itineraries/${itineraryId}`, { state: { page } });
   };
 
   const formatDate = (date) => {
     const d = new Date(date);
-    const day = d.getDate().toString().padStart(2, '0');  
-    const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const year = d.getFullYear();
-  
+
     return `${day}/${month}/${year}`;
   };
-//#endregion
-if(loading)return <Spinner/>
+  //#endregion
+  if (loading) return <Spinner />;
   return (
     <section className="layout-pb-xl">
       <div className="container">
         <div className="row">
-          {userRole !== "Admin" &&(
+          {userRole !== "Admin" && (
             <div className="col-xl-3 col-lg-4">
-              {(userRole === "Tourist" || userRole === "Guest"||userRole==='Tour Guide') && (
+              {(userRole === "Tourist" ||
+                userRole === "Guest" ||
+                userRole === "Tour Guide") && (
                 <>
                   <div className="lg:d-none">
                     <Sidebar
-                    userRole={userRole}
+                      userRole={userRole}
                       setStartDate={setStartDate}
                       setEndDate={setEndDate}
                       setRatingFilter={setRatingFilter}
@@ -325,9 +354,7 @@ if(loading)return <Spinner/>
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                 
-                    <span>{filteredItineraries?.length} results</span>
-                
+                  <span>{filteredItineraries?.length} results</span>
                 </div>
               </div>
 
@@ -377,6 +404,7 @@ if(loading)return <Spinner/>
                       <img
                         src="/img/activities/touristsGroup1.jpg"
                         alt="image"
+                        onClick={() => handleRedirect(elm._id)}
                       />
 
                       {elm.badgeText && (
@@ -395,7 +423,20 @@ if(loading)return <Spinner/>
                         </div>
                       )}
 
-                      <div className="tourCard__favorite">
+                      <div
+                        className="tourCard__favorite"
+                        style={{ display: "flex", gap: "10px" }}
+                      >
+                        <button
+                          className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                          onClick={() =>
+                            handleShare(
+                              `${window.location.origin}/itineraries/${elm._id}`
+                            )
+                          }
+                        >
+                          <i className="icon-share text-15"></i>
+                        </button>
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
                           <i className="icon-heart text-15"></i>
                         </button>
@@ -406,7 +447,6 @@ if(loading)return <Spinner/>
                       <h3 className="tourCard__title mt-5">
                         <span>{elm.title}</span>
                       </h3>
-
                       <div className="d-flex items-center mt-5">
                         <div className="d-flex items-center x-gap-5">
                           <Stars star={elm.averageRating} font={12} />
@@ -426,9 +466,7 @@ if(loading)return <Spinner/>
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className="text-14 text-accent-1">
-                              {elm2}
-                            </div>
+                            <div className="text-14 text-accent-1">{elm2}</div>
                           </div>
                         ))}
                       </div>
@@ -437,18 +475,16 @@ if(loading)return <Spinner/>
                     <div className="tourCard__info">
                       <div>
                         <div className="d-flex items-center text-14">
-                          <i className="icon-calendar mr-10"></i> 
+                          <i className="icon-calendar mr-10"></i>
                           {formatDate(elm.startDate)}
                         </div>
+                        <div className="d-flex items-center text-14">To</div>
                         <div className="d-flex items-center text-14">
-                          To
-                        </div>
-                        <div className="d-flex items-center text-14">
-                          <i className="icon-calendar mr-10"></i> 
+                          <i className="icon-calendar mr-10"></i>
                           {formatDate(elm.endDate)}
                         </div>
                         <div className="tourCard__price">
-                            {currency} {(elm.price*exchangeRate).toFixed(2)}
+                          {currency} {(elm.price * exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
