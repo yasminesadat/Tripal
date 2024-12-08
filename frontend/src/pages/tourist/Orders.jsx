@@ -11,6 +11,8 @@ const metadata = {
   title: "Orders || Tripal",
 };
 
+const tabs = ["Current Orders", "Past Orders"];
+
 const statusClass = (status) => {
   if (status === "Delivered") return "text-purple-1";
   if (status === "Pending") return "text-yellow-1";
@@ -20,6 +22,7 @@ const statusClass = (status) => {
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [currentTab, setCurrentTab] = useState("Current Orders");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -35,6 +38,13 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+  const filteredOrders = orders.filter((order) => {
+    if (currentTab === "Current Orders") {
+      return order.status === "Pending";
+    }
+    return order.status === "Delivered" || order.status === "Cancelled";
+  });
+
   return (
     <>
       <MetaComponent meta={metadata} />
@@ -44,7 +54,27 @@ const Orders = () => {
           <div className="dashboard__content_content">
             <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-50">
               <h1>My Orders</h1>
-              <div className="overflowAuto">
+              <div className="tabs -underline-2 js-tabs mt-30">
+                <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20">
+                  {tabs.map((tab, index) => (
+                    <div
+                      key={index}
+                      className="col-auto"
+                      onClick={() => setCurrentTab(tab)}
+                    >
+                      <button
+                        className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 ${
+                          tab === currentTab ? "is-tab-el-active" : ""
+                        }`}
+                      >
+                        {tab}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="overflowAuto mt-30">
                 <table className="tableTest mb-30">
                   <thead className="bg-light-1 rounded-12">
                     <tr>
@@ -57,14 +87,14 @@ const Orders = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {orders?.length === 0 ? (
+                    {filteredOrders?.length === 0 ? (
                       <tr>
                         <td colSpan="6" style={{ textAlign: "center" }}>
-                          No orders found.
+                          No {currentTab.toLowerCase()} found.
                         </td>
                       </tr>
                     ) : (
-                      orders?.map((order, index) => (
+                      filteredOrders?.map((order, index) => (
                         <tr key={index}>
                           <td>#{order._id.slice(-6)}</td>
                           <td className="min-w-300">
@@ -114,7 +144,8 @@ const Orders = () => {
               </div>
               <Pagination />
               <div className="text-14 text-center mt-20">
-                Showing results 1-{orders?.length} of {orders?.length}
+                Showing results 1-{filteredOrders?.length} of{" "}
+                {filteredOrders?.length}
               </div>
             </div>
           </div>
