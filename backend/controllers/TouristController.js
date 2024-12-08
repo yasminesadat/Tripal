@@ -732,7 +732,7 @@ const saveFlightBooking = async (req, res) => {
         line_items: lineItems,
         mode: 'payment',
         success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}&userId=${userId}&bookedFlights=${encodeURIComponent(JSON.stringify(bookedFlights))}`,
-        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+        cancel_url: `${process.env.FRONTEND_URL}/tourist/book-flight`,
       });
 
       return res.status(200).json({
