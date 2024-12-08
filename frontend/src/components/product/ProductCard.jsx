@@ -29,9 +29,11 @@ const ProductCard = ({
   const [isSaved, setIsSaved] = useState(false);
 
   const handleCardClick = () => {
+    console.log("seller name: ",seller);
     navigate(`product/${id}`, {
       state: {
         id,
+        productSeller,
         name,
         seller,
         price,
@@ -216,7 +218,12 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
+              {userRole === "Tourist" ? (
               <span className="text-16 fw-500">{currency} {(price*exchangeRate).toFixed(2)}</span>
+              ):(
+                <span className="text-16 fw-500">EGP {(price).toFixed(2)}</span>
+              )
+              }
             </div>
           </div>
         </div>

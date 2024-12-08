@@ -18,6 +18,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   const location = useLocation();
   const {
     id,
+    productSeller,
     name,
     seller,
     price,
@@ -260,86 +261,97 @@ const steps = [
             className="contentPlaceholder"
             style={{ flex: "1", marginLeft: "3%" }}
           >
-            <Content style={{ padding: "0 5%" }}>
-              <Breadcrumb style={{ margin: "1.5%" }}>
-                <Breadcrumb.Item>
-                  <Link to={homeURL}>Home</Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                  <Link to={productsURL}>Products</Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>{name}</Breadcrumb.Item>
-              </Breadcrumb>
-              <div style={{ minHeight: 280 }}>
-                <Title level={1}>{name}</Title>
+        <Content style={{ padding: "0 5%" }}>
+          <Breadcrumb style={{ margin: "1.5%" }}>
+            <Breadcrumb.Item>
+              <Link to={homeURL}>Home</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={productsURL}>Products</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{name}</Breadcrumb.Item>
+          </Breadcrumb>
+
+          <div style={{ minHeight: 280 }}>
+            <Title level={1}>{name}</Title>
+            {userRole === "Tourist"? (
+            <Paragraph>
+              <strong>Price:</strong> {currency || "EGP"} {(price * exchangeRate).toFixed(2)}
+            </Paragraph>
+              ):(
+            <Paragraph>
+              <strong>Price:</strong> {"EGP"} {(price * 1).toFixed(2)}
+            </Paragraph>
+              )}
+            <Paragraph>
+              <strong>Seller:</strong> {seller}
+            </Paragraph>
+            <Paragraph>
+              <strong>Description:</strong> {description}
+            </Paragraph>
+            {userId === productSeller && (
+              <div>
                 <Paragraph>
-                  <strong>Price:</strong> {}{currency||'EGP'} {(price*exchangeRate).toFixed(2)}
+                  <strong>Quantity:</strong> {quantity}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Seller:</strong> {seller}
-                </Paragraph>
-                <Paragraph>
-                  <strong>Description:</strong> {description}
-                </Paragraph>
-                {userRole !== "Tourist" && (
-                  <div>
-                    <Paragraph>
-                      <strong>Quantity:</strong> {quantity}
-                    </Paragraph>
-                    <Paragraph>
-                      <strong>Sales:</strong> {sales}
-                    </Paragraph>
-                  </div>
-                )}
-                <Paragraph>
-                  <strong>Average Rating:</strong>{" "}
-                  <Rate value={averageRating} disabled allowHalf />
-                  <span style={{ marginLeft: "5%" }}>({averageRating?.toFixed(2)})</span>{" "}
+                  <strong>Sales:</strong> {sales}
                 </Paragraph>
               </div>
-             <div style={{display: "flex",
-                  alignItems: "center"}} >
-                {userRole === "Tourist" && (
-                  <>
-                    {quantity === 0 ? (
-                      <Paragraph style={{ color: "red", fontWeight: "bold", marginTop:"-5%" }}>
-                        Product out of stock
-                      </Paragraph>
-                    ) : (
-                      <>
-                        <InputNumber
-                          min={1}
-                          max={quantity}
-                          value={selectedQuantity}
-                          onChange={(value) => setSelectedQuantity(value)}
-                          style={{ marginRight: "10px", marginTop:"5%" }}
-                        />
-                        <Button
-                          className="button purple-button"
-                          type="primary"
-                          style={{ marginLeft: "10px", marginTop:"5%" }}
-                          onClick={handleAddToCart} 
-                          ref={refProdToCart}
-                        >
-                          Add to Cart
-                        </Button>
-                      </>
-                    )}
-                    <style>{`
+            )}
+            <Paragraph>
+              <strong>Average Rating:</strong>{" "}
+              <Rate value={averageRating} disabled allowHalf />
+              <span style={{ marginLeft: "5%" }}>({averageRating?.toFixed(2)})</span>{" "}
+            </Paragraph>
+            {userRole === "Tourist" && (
+              <>
+                {quantity === 0 ? (
+                  <Paragraph style={{ color: "red", fontWeight: "bold" }}>
+                    Product out of stock
+                  </Paragraph>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px", 
+                    }}
+                  >
+                    <InputNumber
+                      min={1}
+                      max={quantity}
+                      value={selectedQuantity}
+                      onChange={(value) => setSelectedQuantity(value)}
+                    />
+                    <Button
+                      className="button purple-button"
+                      type="primary"
+                      onClick={handleAddToCart}
+                      ref={refProdToCart}
+                    >
+                      Add to Cart
+                    </Button>
+                  </div>
+                )}
+                <style>
+                  {`
                   .purple-button {
-                      background-color: #8f5774 !important;  /* Purple-600 */
-                      color: white !important;
-                      transition: background-color 0.3s ease !important;
+                    background-color: #8f5774 !important; /* Purple-600 */
+                    color: white !important;
+                    transition: background-color 0.3s ease !important;
                   }
 
                   .purple-button:hover {
-                      background-color: #5d384d !important;  /* Purple-700 */
+                    background-color: #5d384d !important; /* Purple-700 */
                   }
-                  `}</style>
-                  </>
-                )}
-        </div>            
+                  `}
+                </style>
+              </>
+            )}
+          </div>
         </Content>
+
           </div>
         </div>
         <Divider
@@ -384,17 +396,19 @@ const steps = [
           ) : (
             <p>No reviews available for this product.</p>
           )}
+         {userId === productSeller && (
+                  <>
           <Divider
             orientation="left"
             style={{ borderColor: "#aaa" }}
           >
             Revenue
           </Divider>
-
           <ProductRevenue 
             productSales={sales} 
             price={price}
           />
+          </>)}
 
           <Divider />
           {userRole === "Tourist" && <ReviewBox id={id} type={"products"} />}
