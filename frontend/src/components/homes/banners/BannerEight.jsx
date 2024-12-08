@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React from "react";
 
-export default function BannerEight() {
+export default function BannerEight({tourist}) {
   return (
     <>
       <section className="cta -type-2">
@@ -40,19 +40,27 @@ export default function BannerEight() {
                   data-aos-delay=""
                   className="mt-30 md:mt-20"
                 >
-                  <button
-                    className="custom-button"
-                    style={{
-                      width: "50%",
-                      padding: "10px",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <Link to="/tourist/book-flight">
-                      Book Now
-                      <i className="icon-arrow-top-right ml-10 text-16"></i>
-                    </Link>
-                  </button>
+                  {tourist ? (
+                    <button
+                      className="custom-button"
+                      style={{ width: "50%", padding: "10px", borderRadius: "8px" }}
+                    >
+                      <Link to="/tourist/book-flight">
+                        Book Now
+                        <i className="icon-arrow-top-right ml-10 text-16"></i>
+                      </Link>
+                    </button>
+                  ) : (
+                    <button
+                      className="custom-button"
+                      style={{ width: "50%", padding: "10px", borderRadius: "8px" }}
+                    >
+                      <Link to="/login">
+                        Book Now
+                        <i className="icon-arrow-top-right ml-10 text-16"></i>
+                      </Link>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
