@@ -295,14 +295,13 @@ export default function DbBooking() {
 
       // Show success message
       message.success(
-        `${
-          resourceType === "activity" ? "Activity" : "Itinerary"
+        `${resourceType === "activity" ? "Activity" : "Itinerary"
         } reservation is canceled successfully.`
       );
     } catch (err) {
       message.error(
         err.response?.data?.error ||
-          "An error occurred while canceling the resource."
+        "An error occurred while canceling the resource."
       );
       setModalVisible(false);
     }
@@ -352,9 +351,8 @@ export default function DbBooking() {
                             onClick={() => setCurrentTab(elm)}
                           >
                             <button
-                              className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${
-                                elm === currentTab ? "is-tab-el-active" : ""
-                              }`}
+                              className={`tabs__button text-20 lh-12 fw-500 pb-15 lg:pb-0 js-tabs-button ${elm === currentTab ? "is-tab-el-active" : ""
+                                }`}
                             >
                               {elm}
                             </button>
@@ -405,13 +403,12 @@ export default function DbBooking() {
                                       </td>
                                       <td>
                                         <div
-                                          className={`circle ${
-                                            getFlightStatus(
-                                              flight.arrivalTime
-                                            ) === "Flight Complete"
+                                          className={`circle ${getFlightStatus(
+                                            flight.arrivalTime
+                                          ) === "Flight Complete"
                                               ? "text-purple-1"
                                               : "text-yellow-1"
-                                          }`}
+                                            }`}
                                         >
                                           {getFlightStatus(flight.arrivalTime)}
                                         </div>
@@ -481,12 +478,11 @@ export default function DbBooking() {
                                       </td>
                                       <td>
                                         <div
-                                          className={`circle ${
-                                            getHotelStatus(hotel.checkOut) ===
-                                            "completed"
+                                          className={`circle ${getHotelStatus(hotel.checkOut) ===
+                                              "completed"
                                               ? "text-purple-1"
                                               : "text-yellow-1"
-                                          }`}
+                                            }`}
                                         >
                                           {getHotelStatus(hotel.checkOut)}
                                         </div>
@@ -548,12 +544,12 @@ export default function DbBooking() {
                                             cursor: "pointer",
                                           }}
                                           onMouseOver={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#c0392b")
+                                          (e.target.style.backgroundColor =
+                                            "#c0392b")
                                           }
                                           onMouseOut={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#e74c3c")
+                                          (e.target.style.backgroundColor =
+                                            "#e74c3c")
                                           }
                                           onClick={() =>
                                             handleCancelBooking(
@@ -575,12 +571,12 @@ export default function DbBooking() {
                                             cursor: "pointer",
                                           }}
                                           onMouseOver={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#27ae60")
+                                          (e.target.style.backgroundColor =
+                                            "#27ae60")
                                           }
                                           onMouseOut={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#2ecc71")
+                                          (e.target.style.backgroundColor =
+                                            "#2ecc71")
                                           }
                                           onClick={() =>
                                             handleActivityRedirect(activity._id)
@@ -595,7 +591,8 @@ export default function DbBooking() {
                                         <td>{activity.category.Name}</td>
                                         <td>{formatDate(activity.date)}</td>
                                         <td>{activity.time}</td>
-                                        <td>{activity.price}</td>
+                                        <td>    {convertPrice(activity.price)}{" "}
+                                          {currency}</td>
                                         <td>
                                           {stat}
                                           <span style={{ fontSize: "18px" }}>
@@ -649,12 +646,12 @@ export default function DbBooking() {
                                             cursor: "pointer",
                                           }}
                                           onMouseOver={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#c0392b")
+                                          (e.target.style.backgroundColor =
+                                            "#c0392b")
                                           }
                                           onMouseOut={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#e74c3c")
+                                          (e.target.style.backgroundColor =
+                                            "#e74c3c")
                                           }
                                           onClick={() =>
                                             handleCancelBooking(
@@ -676,12 +673,12 @@ export default function DbBooking() {
                                             cursor: "pointer",
                                           }}
                                           onMouseOver={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#27ae60")
+                                          (e.target.style.backgroundColor =
+                                            "#27ae60")
                                           }
                                           onMouseOut={(e) =>
-                                            (e.target.style.backgroundColor =
-                                              "#2ecc71")
+                                          (e.target.style.backgroundColor =
+                                            "#2ecc71")
                                           }
                                           onClick={() =>
                                             handleItineraryRedirect(
