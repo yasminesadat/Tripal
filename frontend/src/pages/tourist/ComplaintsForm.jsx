@@ -73,7 +73,14 @@ const ComplaintsForm = ({ open, onCancel, onSubmitSuccess }) => {
               { required: true, message: "Please enter the complaint title" },
             ]}
           >
-            <Input placeholder="Enter complaint title" />
+            <Input
+              style={{
+                height: "50px",
+                border: "1px solid #d9d9d9",
+                outline: "none",
+                width: "100%",
+                backgroundColor: "transparent"
+              }} placeholder="Enter complaint title" />
           </Form.Item>
           <Form.Item
             label="Description"

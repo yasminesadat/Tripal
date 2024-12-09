@@ -16,11 +16,23 @@ export default function ActivityRevenue() {
   const [tabs, setTabs] = useState([{ label: "Revenue", data: [] }, { label: "Bookings", data: [] }]);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [totalTickets, setTotalTickets] = useState(null);
+ 
   const generateRandomPastDate = (start, end) => {
     const startDate = new Date(start.getTime());
     const randomDate = new Date(startDate.getTime() + Math.random() * (end.getTime() - startDate.getTime()));
-    return randomDate.toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
+    return randomDate.toLocaleDateString("en-CA");
   };
+  const getValue = (monthStr) => {
+    const monthMap = {
+      "01": 1, "02": 2, "03": 3, "04": 4, "05": 5,
+      "06": 6, "07": 7, "08": 8, "09": 9, "10": 10,
+      "11": 11, "12": 12,"13":13,"14":14,"15":15,"16":16,"17":17,
+      "18":18,"19":19,"20":20,"21":21 ,"22":22,"23":23,"24":24,"25":25,
+      "26":26,"27":27,"28":28,"29":29,"30":30,"31":31,
+    };
+    return monthMap[monthStr] || 0; // Return 0 if the month is invalid
+  };
+
   useEffect(() => {
     const fetchRevenue = async () => {
       try {
@@ -65,8 +77,14 @@ export default function ActivityRevenue() {
           item.bookings.map(booking => ({
             name: generateRandomPastDate(startDate, endDate),
             value: booking.tickets
-          }))
-        );
+          }))).sort((a, b) =>(
+            (getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))===0?
+            (getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1]))===0?
+            (getValue(a.name.split("-")[2]) - getValue(b.name.split("-")[2])):
+            (getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1])):
+            (getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))
+          ));
+        
         const totalTickets = updatedBookings.reduce((total, item) => total + item.value, 0);
         console.log("tba", updatedBookings);
         setTotalTickets(totalTickets);
@@ -147,7 +165,7 @@ export default function ActivityRevenue() {
               <div className="tabs__pane -tab-item-1 is-tab-el-active">
               {activeTab.label ==="Revenue" && 
               <div className="text-18 fw-500">Weekly Revenue Statistics
-              <h3>Total Revenue: {totalRevenue}</h3></div>} 
+              <h3>Total Revenue: EGP {totalRevenue}</h3></div>} 
               {activeTab.label ==="Bookings" && 
               <div className="text-18 fw-500">Bookings Statistics
               <h3>Total Tickets : {totalTickets}</h3></div>} 

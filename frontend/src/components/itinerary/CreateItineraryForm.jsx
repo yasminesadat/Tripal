@@ -337,7 +337,7 @@ export default function CreateItineraryForm() {
       </MDBContainer>
       <style>{`
           .full-height-container {
-            height: 250vh !important;
+            height: 200vh !important;
             margin-left: 2% !important;
             margin-top: 10vh !important;
             margin-right:-15% !important;
@@ -394,12 +394,13 @@ export default function CreateItineraryForm() {
             grid-row: 1 / 3;
           }
   
-          .itinerary-form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-          }
+         .itinerary-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    
+}
   
           .form-title {
             font-size: 24px;

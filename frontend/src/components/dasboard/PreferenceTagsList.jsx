@@ -14,7 +14,7 @@ const TagManagerList = () => {
   const [updateTagId, setUpdateTagId] = useState("");
   const [updateTagName, setUpdateTagName] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchTags();
@@ -188,92 +188,99 @@ const TagManagerList = () => {
       },
     },
   };
-if(loading) return <Spinner/>
+  if (loading) return <Spinner />
   return (
     <>
-     
-          <div style={styles.container}>
-            <style>{globalStyles}</style>
-            <div style={styles.card}>
-              <div style={styles.header}>
-                <h1 style={styles.headerTitle}>Preference Tags</h1>
-              </div>
 
-              <div style={styles.section}>
-                <h2 style={styles.title}>Create New Tag</h2>
-                <div style={styles.inputGroup}>
-                  <Input
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    placeholder="Enter new tag name"
-                    style={styles.input}
-                  />
-                  <Button
-                    onClick={handleCreateTag}
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    style={styles.button}
-                  >
-                    Add
-                  </Button>
-                </div>
+      <div style={styles.container}>
+        <style>{globalStyles}</style>
+        <div style={styles.card}>
+          <div style={styles.header}>
+            <h1 style={styles.headerTitle}>Preference Tags</h1>
+          </div>
 
-                <h2 style={styles.title}>Existing Tags</h2>
-                <List
-                  itemLayout="horizontal"
-                  dataSource={tags}
-                  renderItem={(tag) => (
-                    <List.Item
-                      style={styles.listItem}
-                      actions={[
-                        <Button
-                          type="text"
-                          icon={<EditOutlined />}
-                          style={styles.editButton}
-                          onClick={() => showUpdateModal(tag._id, tag.name)}
-                        >
-                          Edit
-                        </Button>,
-                        <Button
-                          type="text"
-                          icon={<DeleteOutlined />}
-                          style={styles.deleteButton}
-                          onClick={() => handleDeleteTag(tag._id)}
-                        >
-                          Delete
-                        </Button>,
-                      ]}
-                    >
-                      <List.Item.Meta
-                        title={
-                          <span style={styles.categoryName}>
-                            {tag.name}
-                          </span>
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              </div>
+          <div style={styles.section}>
+            <h2 style={styles.title}>Create New Tag</h2>
+            <div style={styles.inputGroup}>
+              <Input
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Enter new tag name"
+                style={styles.input}
+              />
+              <Button
+                onClick={handleCreateTag}
+                type="primary"
+                icon={<PlusOutlined />}
+                style={styles.button}
+              >
+                Add
+              </Button>
             </div>
 
-            <Modal
-              title={<span style={styles.modal.title}>Update Tag</span>}
-              visible={isModalVisible}
-              onOk={handleUpdateTag}
-              okButtonProps={{ style: styles.button }}
-              onCancel={() => setIsModalVisible(false)}
-              cancelButtonProps={{ style: { display: 'none' } }}
-            >
-              <Input
-                value={updateTagName}
-                onChange={(e) => setUpdateTagName(e.target.value)}
-                placeholder="Enter new tag name"
-                style={styles.modal.input}
-              />
-            </Modal>
+            <h2 style={styles.title}>Existing Tags</h2>
+            <List
+              itemLayout="horizontal"
+              dataSource={tags}
+              renderItem={(tag) => (
+                <List.Item
+                  style={styles.listItem}
+                  actions={[
+                    <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      style={styles.editButton}
+                      onClick={() => showUpdateModal(tag._id, tag.name)}
+                    >
+                      Edit
+                    </Button>,
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      style={styles.deleteButton}
+                      onClick={() => handleDeleteTag(tag._id)}
+                    >
+                      Delete
+                    </Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={
+                      <span style={styles.categoryName}>
+                        {tag.name}
+                      </span>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
           </div>
-          
+        </div>
+
+        <Modal
+          title={<span style={styles.modal.title}>Update Tag</span>}
+          visible={isModalVisible}
+          onOk={handleUpdateTag}
+          okButtonProps={{ style: styles.button }}
+          onCancel={() => setIsModalVisible(false)}
+          cancelButtonProps={{ style: { display: 'none' } }}
+        >
+          <Input
+            value={updateTagName}
+            onChange={(e) => setUpdateTagName(e.target.value)}
+            placeholder="Enter new tag name"
+
+            style={{
+              height: "50px",
+              border: "1px solid #d9d9d9",
+              outline: "none",
+              width: "100%",
+              backgroundColor: "transparent"
+            }}
+          />
+        </Modal>
+      </div>
+
     </>
   );
 };

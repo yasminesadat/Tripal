@@ -7,8 +7,6 @@ import { useState, useEffect } from "react";
 import Spinner from "@/components/common/Spinner";
 import { getActivityById } from "@/api/ActivityService";
 
-//const [isBookmarked, setIsBookmarked] = useState(false);
-
 //#region 1. functions
 const handleShare = (link) => {
   if (navigator.share) {
@@ -28,7 +26,6 @@ const handleShare = (link) => {
 const handleBookmark = async (eventId, eventType) => {
   try {
     await bookmarkEvent(eventId, eventType);
-    //setIsBookmarked(true);
     message.success("Added Event to Bookmark");
   } catch (error) {
     console.error("Error bookmarking event:", error);

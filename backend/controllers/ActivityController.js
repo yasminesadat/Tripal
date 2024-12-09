@@ -81,15 +81,10 @@ const notifyTouristsOnBookingOpen = async (activityId) => {
     // Find the activity by ID
     const activity = await Activity.findById(activityId).populate('bookings.touristId');
     if (!activity) {
-      console.log('Activity not found');
       return;
     }
-    console.log("will try to send emails now")
-    // Loop through the bookings and send an email to each tourist
     for (let id of activity.bookmarked) {
       const tourist = await Tourist.findById(id);
-      console.log(tourist)
-      console.log(tourist.email)
       if (tourist && tourist.email) {
         const subject = `Your upcoming activity is now open for booking: ${activity.title}`;
         const html = `
@@ -101,7 +96,6 @@ const notifyTouristsOnBookingOpen = async (activityId) => {
           <p>Tripal Team</p>
         `;
         await sendEmail(tourist.email, subject, html); // Send email via utility function
-        console.log(`Email sent to ${tourist.email}`);
       }
     }
   } catch (error) {
