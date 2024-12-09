@@ -76,7 +76,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
   };
 
   useEffect(() => {
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [viewedPlaces]);
 
   useEffect(() => {
@@ -289,11 +289,11 @@ export default function HistoricalPlacesList({ searchTerm }) {
         const matchesHistoricType =
           historicType.length > 0
             ? place.tags?.some((tag) =>
-                historicType.some(
-                  (historicTag) =>
-                    tag.name?.toLowerCase() === historicTag.name.toLowerCase()
-                )
+              historicType.some(
+                (historicTag) =>
+                  tag.name?.toLowerCase() === historicTag.name.toLowerCase()
               )
+            )
             : true;
         return matchesHistoricType;
       });
@@ -301,12 +301,12 @@ export default function HistoricalPlacesList({ searchTerm }) {
         const matchesHistoricalTag =
           historicalTagPeriod.length > 0
             ? place.historicalPeriod?.some((tag) =>
-                historicalTagPeriod.some(
-                  (historicPeriod) =>
-                    tag.name?.toLowerCase() ===
-                    historicPeriod.name.toLowerCase()
-                )
+              historicalTagPeriod.some(
+                (historicPeriod) =>
+                  tag.name?.toLowerCase() ===
+                  historicPeriod.name.toLowerCase()
               )
+            )
             : true;
         return matchesHistoricalTag;
       });
@@ -566,7 +566,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
                         ref={i === 0 ? refHPDetails : null}
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => {
-                          navigate("/historical-places/${elm._id}");
+                          navigate(`/historical-places/${elm._id}`);
                         }}
                       >
                         View Details
