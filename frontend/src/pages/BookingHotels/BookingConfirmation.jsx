@@ -136,7 +136,7 @@ export default function BookingPages() {
                             triplePrice={triplePrice}
                             doubleNumber={doubleNumber}
                             tripleNumber={tripleNumber}
-                            total={total / exchangeRate}
+                            total={total}
                             checkIn={checkIn}
                             checkOut={checkOut}
                             setIsBookedOriginatingTransportation={setIsBookedOriginatingTransportation}
@@ -182,7 +182,7 @@ export default function BookingPages() {
                             <div className="col-md-3 col-6">
                               <div>Total</div>
                               <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>
-                                {currency} {total}
+                                {currency} {total*exchangeRate}
                               </div>
                             </div>
 

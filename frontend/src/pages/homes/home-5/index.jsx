@@ -26,14 +26,16 @@ export default function HomePage5() {
   const steps = [
     {
       title: "Welcome to TriPal!",
-      description: "This is your guide to hassle-free travel planning, from start to finish.",
+      description:
+        "This is your guide to hassle-free travel planning, from start to finish.",
       target: () => {
         refHeader.current;
       },
     },
     {
       title: "Sign up or Log in",
-      description: "You are 1 step away from getting introduced to a rollercoaster of events.",
+      description:
+        "You are 1 step away from getting introduced to a rollercoaster of events.",
       target: () => refLogin.current,
     },
   ];
@@ -49,13 +51,13 @@ export default function HomePage5() {
           border-radius: 50% !important;
           background: #dac4d0 !important;
         }
-           .ant-tour {
-  z-index: 2000 !important;
-}
+        .ant-tour {
+          z-index: 2000 !important;
+        }
 
-.ant-tour-mask {
-  z-index: 1999 !important; 
-}
+        .ant-tour-mask {
+          z-index: 1999 !important;
+        }
         .ant-tour .ant-tour-indicators > span[class*="active"] {
           background: #036264 !important;
         }
@@ -97,23 +99,22 @@ export default function HomePage5() {
           transition: all 0.3s ease;
         }
 
-        .ant-tour .ant-tour-buttons .ant-btn-primary
-        {
+        .ant-tour .ant-tour-buttons .ant-btn-primary {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        .ant-tour .ant-tour-buttons .ant-btn-default{
+        .ant-tour .ant-tour-buttons .ant-btn-default {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        
+
         .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
         .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-          color:white;
+          color: white;
           background: #5a9ea0;
           transform: translateY(-1px);
           box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
@@ -121,18 +122,23 @@ export default function HomePage5() {
         .ant-tour .ant-tour-arrow-content {
           background: white;
           border: 1px solid rgba(0, 0, 0, 0.06);
-        }  
+        }
       `}</style>
       <MetaComponent meta={metadata} />
-      <main >
-        <GuestHeader ref={refHeader} refLogin={refLogin} setOpen={setOpen} homepage={"home"} />
+      <main>
+        <GuestHeader
+          ref={refHeader}
+          refLogin={refLogin}
+          setOpen={setOpen}
+          homepage={"home"}
+        />
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
-        <Hero5 />
+        <Hero5 tourist={false} />
         <BrandsThree />
         <TourTypesTwo />
         <br></br>
         <br></br>
-        <BannerEight tourist={false}/>
+        <BannerEight tourist={false} />
         <DestinationsFive />
         <TestimonialsFour />
         <FooterThree />

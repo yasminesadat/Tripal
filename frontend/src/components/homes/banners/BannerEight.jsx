@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { message } from "antd";
 
-export default function BannerEight({tourist}) {
+export default function BannerEight({ tourist }) {
   return (
     <>
       <section className="cta -type-2">
@@ -24,8 +25,7 @@ export default function BannerEight({tourist}) {
                   data-aos-delay=""
                   className="text-40 md:text-30  lh-13"
                 >
-                  Search for a flight{" "}
-                  <br className="lg:d-none" />
+                  Search for a flight <br className="lg:d-none" />
                   to your favorite
                   <br className="lg:d-none" />
                   destination
@@ -43,7 +43,11 @@ export default function BannerEight({tourist}) {
                   {tourist ? (
                     <button
                       className="custom-button"
-                      style={{ width: "50%", padding: "10px", borderRadius: "8px" }}
+                      style={{
+                        width: "50%",
+                        padding: "10px",
+                        borderRadius: "8px",
+                      }}
                     >
                       <Link to="/tourist/book-flight">
                         Book Now
@@ -53,9 +57,16 @@ export default function BannerEight({tourist}) {
                   ) : (
                     <button
                       className="custom-button"
-                      style={{ width: "50%", padding: "10px", borderRadius: "8px" }}
+                      style={{
+                        width: "50%",
+                        padding: "10px",
+                        borderRadius: "8px",
+                      }}
                     >
-                      <Link to="/login">
+                      <Link
+                        to="/login"
+                        onClick={() => message.info("You need to log in first")}
+                      >
                         Book Now
                         <i className="icon-arrow-top-right ml-10 text-16"></i>
                       </Link>

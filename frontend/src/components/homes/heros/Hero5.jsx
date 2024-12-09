@@ -6,7 +6,7 @@ import SearchBar from "@/components/tourist/HomeSearchBar";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Hero5() {
+export default function Hero5({ tourist }) {
   const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [location, setLocation] = useState("");
   const [calender, setCalender] = useState("");
@@ -76,7 +76,7 @@ export default function Hero5() {
                 data-aos-delay="400"
                 className="hero__filter mt-60 md:mt-30"
               >
-                <SearchBar />
+                <SearchBar tourist={tourist} />
               </div>
             </div>
           </div>

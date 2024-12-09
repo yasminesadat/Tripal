@@ -206,7 +206,12 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     try {
       await addToCart(userId, product.id, selectedQuantity);
       message.success("Product added to cart successfully!");
-      setOpenDrawer(true); 
+  
+      if (userRole === "Tourist") {
+        await fetchCart(); 
+      }
+  
+      setOpenDrawer(true);  
     } catch (error) {
       message.error("Error adding product to cart.");
     }
@@ -239,9 +244,8 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     if (cart.length > 0 && product.id) {
       updateCartQuantity();
     }
-    fetchCart();
-    console.log("cart: ",cart);
   }, [cart, product.id]);
+  
   return (
     <>
       <style jsx global>{`

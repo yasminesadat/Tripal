@@ -168,7 +168,7 @@ export default function BookingPagesStripe() {
                             <div className="col-md-3 col-6">
                               <div>Total</div>
                               <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>
-                                {currency} {total}
+                                {currency} {total*exchangeRate}
                               </div>
                             </div>
 
