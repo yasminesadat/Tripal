@@ -15,6 +15,7 @@ import {
   Spin,
   message,
   InputNumber,
+  Drawer
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import ReviewBox from "../common/ReviewBox";
@@ -24,7 +25,7 @@ import {
   getTouristCurrency,
 } from "@/api/ExchangeRatesService";
 import { getUserData } from "@/api/UserService";
-import { addToCart } from "../../api/TouristService";
+import { addToCart, getCart } from "../../api/TouristService";
 import { getOrders } from "../../api/OrderService";
 import { LetterTextIcon } from "lucide-react";
 
@@ -61,6 +62,9 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   const [orders,setOrders] = useState([]);
   const [hasOrderedProduct, setHasOrderedProduct] = useState(false);
   const refProdToCart = useRef(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [cartQuantity, setCartQuantity] = useState(null);
 
   // Memoize complex calculations
   const displayPrice = useMemo(() => {
@@ -80,6 +84,16 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     }
   };
 
+  const fetchCart = async () => {
+    try {
+      const response = await getCart();
+      setCart(response.cart || []);
+    } catch (error) {
+      message.error("Failed to fetch cart.");
+    } finally {
+      setLoading(false);
+    }
+  };
   // Currency update effect
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -159,7 +173,6 @@ const ProductDetails = ({ homeURL, productsURL }) => {
         console.log("this product: ",product.id);
       }
     };
-
     fetchOrders();
   }, []);
 
@@ -193,6 +206,7 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     try {
       await addToCart(userId, product.id, selectedQuantity);
       message.success("Product added to cart successfully!");
+      setOpenDrawer(true); 
     } catch (error) {
       message.error("Error adding product to cart.");
     }
@@ -216,7 +230,18 @@ const ProductDetails = ({ homeURL, productsURL }) => {
       .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colors[hash % colors.length];
   };
-
+  const updateCartQuantity = () => {
+    const cartItem = cart.find((item) => item.product._id === product.id);
+    setCartQuantity(cartItem ? cartItem.quantity : null);
+  };
+  
+  useEffect(() => {
+    if (cart.length > 0 && product.id) {
+      updateCartQuantity();
+    }
+    fetchCart();
+    console.log("cart: ",cart);
+  }, [cart, product.id]);
   return (
     <>
       <style jsx global>{`
@@ -396,6 +421,90 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                         >
                           Add to Cart
                         </Button>
+
+<Drawer
+  title="Cart"
+  placement="right"
+  onClose={() => setOpenDrawer(false)}
+  open={openDrawer}
+  style={{ overflow: "hidden" }}
+>
+  <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div
+      style={{
+        flex: 1,
+        overflowY: "auto", 
+        paddingBottom: "15px", 
+        fontSize: "0.8rem", 
+      }}
+    >
+      {cart.length > 0 ? (
+        cart.map((cartItem, index) => (
+          <div key={cartItem.product._id}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
+                marginTop: "7%",
+                fontSize: "0.9rem", 
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <h5 style={{ fontSize: "1rem" }}>{cartItem.product.name}</h5> 
+                <p style={{ marginBottom: "5px" }}>
+                  Price: {currency} {(cartItem.price * exchangeRate).toFixed(2)}
+                </p>
+                <p style={{ marginBottom: "5px" }}>
+                  Quantity: {cartItem.quantity !== null ? cartItem.quantity : "Not in cart"}
+                </p>
+              </div>
+
+              {cartItem.product.picture && (
+                <img
+                  src={cartItem.product.picture}
+                  alt={cartItem.product.name}
+                  style={{
+                    width: "70px", 
+                    height: "70px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    
+                  }}
+                />
+              )}
+            </div>
+            <Divider style={{margin:"-1%"}}/>
+          </div>
+        ))
+      ) : (
+        <p>Your cart is empty.</p>
+      )}
+    </div>
+
+    <div style={{ padding: "20px" }}>
+      <Button
+        className="purple-button2"
+        style={{ width: "100%", marginBottom: "10px" }}
+        onClick={() => navigate("/tourist/view-products")}
+      >
+        Back to Shopping
+      </Button>
+      <Button
+        className="purple-button"
+        type="primary"
+        style={{ width: "100%" }}
+        onClick={() => navigate("/cart")}
+      >
+        View Cart
+      </Button>
+    </div>
+  </div>
+</Drawer>
+
+
+
+
                       </div>
                     )}
                     <style>
@@ -409,6 +518,18 @@ const ProductDetails = ({ homeURL, productsURL }) => {
                   .purple-button:hover {
                     background-color: #5d384d !important; /* Purple-700 */
                   }
+                  .purple-button2 {
+                    background-color: #ffffff !important; /* White background */
+                    color: black !important; /* Black text */
+                    border: 1px solid #d3d3d3 !important; /* Lighter, thinner border */
+                    transition: border-color 0.3s ease !important; /* Smooth transition for border color */
+                  }
+
+                  .purple-button2:hover {
+                    border-color: #5d384d !important; /* Purple border on hover */
+                  }
+
+
                   `}
                     </style>
                   </>
