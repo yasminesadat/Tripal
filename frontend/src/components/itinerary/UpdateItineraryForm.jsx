@@ -13,29 +13,50 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
   const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
   const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
   const [selectedActivities, setSelectedActivities] = useState(itinerary.activities || []);
+
+  // Reset form and state when the modal is opened or itinerary changes
+  useEffect(() => {
+    if (visible) {
+      form.setFieldsValue({
+        title: itinerary.title,
+        description: itinerary.description,
+        serviceFee: itinerary.serviceFee,
+        language: itinerary.language,
+        accessibility: itinerary.accessibility || [],
+      });
+
+      setPickUpLocation(itinerary.pickupLocation || '');
+      setDropOffLocation(itinerary.dropoffLocation || '');
+      setSelectedActivities(itinerary.activities.map(activity => activity._id) || []);
+    }
+  }, [visible, itinerary, form]);
+
   const duration = (new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24) + 1;
 
-  useEffect(() => {
-    if (itinerary.activities) {
-      setSelectedActivities(itinerary.activities);
-    }
-  }, [itinerary]);
-
   const handleSelectActivities = (activities) => {
-    setSelectedActivities(activities);
+    setSelectedActivities(activities.map(activity => activity._id));
+    setIsModalVisible(false);
   };
 
   const handleSubmit = async () => {
     try {
       await form.validateFields();
-      const updatedItinerary = { ...form.getFieldsValue(), activities: selectedActivities };
-      updatedItinerary.startDate = itinerary.startDate;
-      updatedItinerary.endDate = itinerary.endDate;
-      updatedItinerary.pickupLocation = pickupLocation;
-      updatedItinerary.dropoffLocation = dropoffLocation;
+      const formValues = form.getFieldsValue();
+      
+      const updatedItinerary = {
+        ...itinerary,
+        ...formValues,
+        activities: selectedActivities,
+        pickupLocation,
+        dropoffLocation,
+        startDate: itinerary.startDate,
+        endDate: itinerary.endDate
+      };
+
       onUpdate(updatedItinerary);
+      onCancel();
     } catch (error) {
-      console.log(error);
+      console.error('Form validation failed:', error);
     }
   };
 
@@ -49,14 +70,6 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
     >
       <Form
         form={form}
-        initialValues={{
-          title: itinerary.title,
-          description: itinerary.description,
-          serviceFee: itinerary.serviceFee,
-          language: itinerary.language,
-          accessibility: itinerary.accessibility || [],
-          activities: itinerary.activities || [],
-        }}
         layout="vertical"
         onFinish={handleSubmit}
         requiredMark={false}
@@ -91,13 +104,13 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             }}
             onClick={() => setIsModalVisible(true)}
           >
-            Select Activities
+            Select Activities ({selectedActivities.length} selected)
           </Button>
           <ActivitySelectionModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
             onSelectActivities={handleSelectActivities}
-            preSelectedActivities={selectedActivities}
+            preSelectedActivities={selectedActivities.map(id => ({ _id: id }))}
             maxActivities={duration}
           />
         </Form.Item>
@@ -158,6 +171,7 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             type="text"
             name="pickupLocation"
             value={pickupLocation}
+            onChange={(e) => setPickUpLocation(e.target.value)}
             required
           />
           <MapPopUp
@@ -173,6 +187,7 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             type="text"
             name="dropoffLocation"
             value={dropoffLocation}
+            onChange={(e) => setDropOffLocation(e.target.value)}
             required
           />
           <MapPopUp
