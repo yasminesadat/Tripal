@@ -143,11 +143,7 @@ export default function UserForm() {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: "Please enter your password" },
-              {
-                min: 6,
-                message: "Password is at least 6 characters",
-              },
+              { required: true, message: "Please enter your password" }
             ]}
           >
             <Input.Password
