@@ -196,6 +196,16 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
           </Button>
         </Form.Item>
       </Form>
+      <style>{`
+      .custom-button {
+        background-color: var(--color-dark-purple) !important;
+        border-color: var(--color-dark-purple) !important;
+      }
+      .custom-button:hover {
+        background-color: var(--color-light-purple) !important;
+        border-color: var(--color-light-purple) !important;
+      }
+    `}</style>
     </Modal>
   );
 };
