@@ -3,8 +3,15 @@ import Sidebar from "./components/Sidebar";
 import { getUserData } from "@/api/UserService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { message, Tour } from "antd";
-import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
-import { getAllHistoricalPlacesByTourismGoverner, deleteHistoricalPlace, getAllHistoricalPlaces } from '../../api/HistoricalPlaceService';
+import {
+  getConversionRate,
+  getTouristCurrency,
+} from "@/api/ExchangeRatesService";
+import {
+  getAllHistoricalPlacesByTourismGoverner,
+  deleteHistoricalPlace,
+  getAllHistoricalPlaces,
+} from "../../api/HistoricalPlaceService";
 import Spinner from "../../components/common/Spinner";
 import Pagination from "@/components/activity/Pagination";
 
@@ -26,7 +33,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [viewedPlaces, setViewedPlaces] = useState([]);
   const [error, setError] = useState(null);
   const [filterHistoricType, setFilterHistoricType] = useState([]);
-  const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState([]);
+  const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState(
+    []
+  );
   const placesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastPlace = currentPage * placesPerPage;
@@ -40,11 +49,11 @@ export default function HistoricalPlacesList({ searchTerm }) {
       target: () => refHPDetails.current,
       onFinish: () => {
         setOpen(false);
-        localStorage.setItem('currentStep', 6);
-        navigate('/tourist', { state: { fromTour: true, targetStep: 6 } });
-      }
+        localStorage.setItem("currentStep", 6);
+        navigate("/tourist", { state: { fromTour: true, targetStep: 6 } });
+      },
     },
-  ]
+  ];
 
   const [exchangeRate, setExchangeRate] = useState(1);
   const getExchangeRate = async () => {
@@ -71,9 +80,9 @@ export default function HistoricalPlacesList({ searchTerm }) {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1); return () => clearInterval(intervalId);
+    }, 1);
+    return () => clearInterval(intervalId);
   }, [currency]);
-
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
@@ -112,7 +121,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
           console.log("result: ", result);
           setPlaces(result);
           setSearchedPlaces(result);
-          setViewedPlaces(result)
+          setViewedPlaces(result);
           setFilteredPlaces(result);
         }
         setLoading(false);
@@ -120,7 +129,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
         setLoading(false);
         //toast.error('Error while fetching')
       }
-    }
+    };
     const fetchPlaces = async () => {
       setLoading(true);
       try {
@@ -139,16 +148,18 @@ export default function HistoricalPlacesList({ searchTerm }) {
       }
     };
     if (userRole !== null) {
-      if (userRole === "Guest" || userRole === "Admin" || userRole === "Tourist") {
+      if (
+        userRole === "Guest" ||
+        userRole === "Admin" ||
+        userRole === "Tourist"
+      ) {
         fetchPlaces();
       }
       if (userRole === "Tourism Governor") {
         getHistoricalPlacesByGoverner();
       }
     }
-
-
-  }, [userRole])
+  }, [userRole]);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -177,17 +188,16 @@ export default function HistoricalPlacesList({ searchTerm }) {
     try {
       const response = await deleteHistoricalPlace(id);
       if (response) {
-        setPlaces(places.filter(place => place._id !== id));
-        setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
-        setViewedPlaces(viewedPlaces.filter(place => place._id !== id));
-        setSearchedPlaces(searchedPlaces.filter(place => place._id !== id));
+        setPlaces(places.filter((place) => place._id !== id));
+        setFilteredPlaces(filteredPlaces.filter((place) => place._id !== id));
+        setViewedPlaces(viewedPlaces.filter((place) => place._id !== id));
+        setSearchedPlaces(searchedPlaces.filter((place) => place._id !== id));
         message.success("Deleted Successfully");
       }
-    }
-    catch (e) {
+    } catch (e) {
       message.error("Failed to delete");
     }
-  }
+  };
 
   const handleCopyLink = (link) => {
     navigator.clipboard
@@ -221,11 +231,13 @@ export default function HistoricalPlacesList({ searchTerm }) {
     return text.substring(0, maxLength) + "...";
   };
   const getMinPrice = (Place) => {
-
-    const minValue = Math.min(Place.ticketPrices.foreigner, Place.ticketPrices.native, Place.ticketPrices.student);
+    const minValue = Math.min(
+      Place.ticketPrices.foreigner,
+      Place.ticketPrices.native,
+      Place.ticketPrices.student
+    );
     return minValue;
-
-  }
+  };
 
   useEffect(() => {
     const curr = sessionStorage.getItem("currency");
@@ -246,7 +258,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
             (tag) =>
               tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
           );
-        const matchesPeriods = place.historicalPeriod &&
+        const matchesPeriods =
+          place.historicalPeriod &&
           place.historicalPeriod.some(
             (tag) =>
               tag.name && tag.name.toLowerCase().includes(lowerCaseSearchTerm)
@@ -255,7 +268,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
         return matchesName || matchesTags || matchesPeriods;
       });
       setSearchedPlaces(results);
-
     };
     handleSearch();
   }, [searchTerm, places]);
@@ -263,45 +275,49 @@ export default function HistoricalPlacesList({ searchTerm }) {
     const handleFilter = () => {
       const historicType = filterHistoricType;
       const historicalTagPeriod = filterHistoricalTagPeriod;
-      console.log("tags", filterHistoricType)
-      console.log("periods", filterHistoricalTagPeriod)
+      console.log("tags", filterHistoricType);
+      console.log("periods", filterHistoricalTagPeriod);
       if (historicType.length == 0 && historicalTagPeriod.length == 0) {
         setFilteredPlaces(places);
         return;
       }
       const filteredType = places.filter((place) => {
-        const matchesHistoricType = historicType.length > 0
-          ? place.tags?.some(tag =>
-            historicType.some(historicTag =>
-              tag.name?.toLowerCase() === historicTag.name.toLowerCase()
-            )
-          )
-          : true;
+        const matchesHistoricType =
+          historicType.length > 0
+            ? place.tags?.some((tag) =>
+                historicType.some(
+                  (historicTag) =>
+                    tag.name?.toLowerCase() === historicTag.name.toLowerCase()
+                )
+              )
+            : true;
         return matchesHistoricType;
       });
       const filteredPeriod = places.filter((place) => {
-        const matchesHistoricalTag = historicalTagPeriod.length > 0
-          ? place.historicalPeriod?.some(tag =>
-            historicalTagPeriod.some(historicPeriod =>
-              tag.name?.toLowerCase() === historicPeriod.name.toLowerCase()
-            )
-          )
-          : true;
+        const matchesHistoricalTag =
+          historicalTagPeriod.length > 0
+            ? place.historicalPeriod?.some((tag) =>
+                historicalTagPeriod.some(
+                  (historicPeriod) =>
+                    tag.name?.toLowerCase() ===
+                    historicPeriod.name.toLowerCase()
+                )
+              )
+            : true;
         return matchesHistoricalTag;
       });
-      const commonPlaces = filteredType.filter(place1 =>
-        filteredPeriod.some(place2 => place1._id === place2._id)
+      const commonPlaces = filteredType.filter((place1) =>
+        filteredPeriod.some((place2) => place1._id === place2._id)
       );
       setFilteredPlaces(commonPlaces);
     };
     handleFilter();
   }, [filterHistoricType, filterHistoricalTagPeriod, places]);
   useEffect(() => {
-    const commonPlaces = filteredPlaces.filter(place1 =>
-      searchedPlaces.some(place2 => place1._id === place2._id)
+    const commonPlaces = filteredPlaces.filter((place1) =>
+      searchedPlaces.some((place2) => place1._id === place2._id)
     );
-    setViewedPlaces(commonPlaces)
-
+    setViewedPlaces(commonPlaces);
   }, [searchedPlaces, filteredPlaces]);
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
@@ -358,23 +374,22 @@ export default function HistoricalPlacesList({ searchTerm }) {
           transition: all 0.3s ease;
         }
 
-        .ant-tour .ant-tour-buttons .ant-btn-primary
-        {
+        .ant-tour .ant-tour-buttons .ant-btn-primary {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        .ant-tour .ant-tour-buttons .ant-btn-default{
+        .ant-tour .ant-tour-buttons .ant-btn-default {
           background: #036264;
           border: none;
           color: white;
           transition: all 0.2s;
         }
-        
+
         .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
         .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-          color:white;
+          color: white;
           background: #5a9ea0;
           transform: translateY(-1px);
           box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
@@ -382,14 +397,17 @@ export default function HistoricalPlacesList({ searchTerm }) {
         .ant-tour .ant-tour-arrow-content {
           background: white;
           border: 1px solid rgba(0, 0, 0, 0.06);
-        }  
+        }
       `}</style>
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <div className="container">
         <div className="row">
           <div className="col-xl-3 col-lg-4">
             <div className="lg:d-none">
-              <Sidebar setFilterHistoricType={setFilterHistoricType} setFilterHistoricalTagPeriod={setFilterHistoricalTagPeriod} />
+              <Sidebar
+                setFilterHistoricType={setFilterHistoricType}
+                setFilterHistoricalTagPeriod={setFilterHistoricalTagPeriod}
+              />
             </div>
           </div>
 
@@ -397,14 +415,14 @@ export default function HistoricalPlacesList({ searchTerm }) {
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-
                   <span>{viewedPlaces?.length} results</span>
-
                 </div>
               </div>
-              {loading &&
-                <span><Spinner /></span>
-              }
+              {loading && (
+                <span>
+                  <Spinner />
+                </span>
+              )}
             </div>
             <style>
               {`
@@ -415,7 +433,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
   z-index: 1;
 }
 `}
-
             </style>
 
             <div className="row y-gap-30 pt-30">
@@ -423,46 +440,72 @@ export default function HistoricalPlacesList({ searchTerm }) {
                 <div className="col-12" key={i}>
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
-                      {elm?.images?.length > 0 && elm.images[0]?.url && <img src={elm.images[0].url} alt="image" />}
-                      {userRole === "Tourism Governor" && <div className="tourCard__favorite2">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
-
-                          navigate(`/update-historical-place/${elm._id}`, { state: { historicalPlace: elm } });
-
-                        }}>
-                          <i className="icon-pencil text-15"></i>
-                        </button>
-                      </div>}
-                      {userRole === "Tourism Governor" && <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => {
-                          handleDelete(elm._id);
-
-                        }}>
-                          <i className="icon-delete text-15"></i>
-                        </button>
-                      </div>}
-                      {userRole === "Tourist" && <div className="tourCard__favorite2">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
-                          handleCopyLink(
-                            `${window.location.origin}/historical-places/${elm._id}`
-                          )
-                        }>
-                          <i className="icon-clipboard text-15"></i>
-                        </button>
-                      </div>}
-                      {userRole === "Tourist" && <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() =>
-                          handleShare(
-                            `${window.location.origin}/historical-places/${elm._id}`
-                          )
-                        }>
-                          <i className="icon-share text-15"></i>
-                        </button>
-                      </div>}
-
+                      {elm?.images?.length > 0 && elm.images[0]?.url && (
+                        <img
+                          src={elm.images[0].url}
+                          alt="image"
+                          onClick={() =>
+                            navigate(`/historical-places/${elm._id}`)
+                          }
+                        />
+                      )}
+                      {userRole === "Tourism Governor" && (
+                        <div className="tourCard__favorite2">
+                          <button
+                            className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                            onClick={() => {
+                              navigate(`/update-historical-place/${elm._id}`, {
+                                state: { historicalPlace: elm },
+                              });
+                            }}
+                          >
+                            <i className="icon-pencil text-15"></i>
+                          </button>
+                        </div>
+                      )}
+                      {userRole === "Tourism Governor" && (
+                        <div className="tourCard__favorite">
+                          <button
+                            className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                            onClick={() => {
+                              handleDelete(elm._id);
+                            }}
+                          >
+                            <i className="icon-delete text-15"></i>
+                          </button>
+                        </div>
+                      )}
+                      {userRole !== "Tourism Governor" &&
+                        userRole !== "Admin" && (
+                          <div className="tourCard__favorite2">
+                            <button
+                              className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                              onClick={() =>
+                                handleCopyLink(
+                                  `${window.location.origin}/historical-places/${elm._id}`
+                                )
+                              }
+                            >
+                              <i className="icon-clipboard text-15"></i>
+                            </button>
+                          </div>
+                        )}
+                      {userRole !== "Tourism Governor" &&
+                        userRole !== "Admin" && (
+                          <div className="tourCard__favorite">
+                            <button
+                              className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                              onClick={() =>
+                                handleShare(
+                                  `${window.location.origin}/historical-places/${elm._id}`
+                                )
+                              }
+                            >
+                              <i className="icon-share text-15"></i>
+                            </button>
+                          </div>
+                        )}
                     </div>
-
-
 
                     <div className="tourCard__content">
                       <div className="tourCard__location">
@@ -474,52 +517,59 @@ export default function HistoricalPlacesList({ searchTerm }) {
                         <span>{elm.name}</span>
                       </h3>
 
-
-
-                      <p className="tourCard__text mt-5"> {truncateText(elm.description, 50)}</p>
+                      <p className="tourCard__text mt-5">
+                        {" "}
+                        {truncateText(elm.description, 50)}
+                      </p>
                       <div className="row x-gap-20 y-gap-5 pt-30">
                         {elm.tags?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
+                            <div
+                              className=" rounded-12 text-white lh-11 text-13 px-15 py-10"
+                              style={{ backgroundColor: "#8f5774" }}
+                            >
                               {elm2.name}
                             </div>
                           </div>
                         ))}
                         {elm.historicalPeriod?.map((elm2, i2) => (
                           <div key={i2} className="col-auto">
-                            <div className=" rounded-12 text-white lh-11 text-13 px-15 py-10" style={{ backgroundColor: '#8f5774' }}>
+                            <div
+                              className=" rounded-12 text-white lh-11 text-13 px-15 py-10"
+                              style={{ backgroundColor: "#8f5774" }}
+                            >
                               {elm2.name}
                             </div>
                           </div>
                         ))}
                       </div>
-
                     </div>
 
                     <div className="tourCard__info">
                       <div>
-
-
                         <div className="tourCard__price">
                           <div></div>
 
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5">
-                              From  {currency ? currency : "EGP"} {getMinPrice(elm)}
+                              From {currency ? currency : "EGP"}{" "}
+                              {getMinPrice(elm)}
                             </span>
                           </div>
                         </div>
                       </div>
 
-                      <button ref={i === 0 ? refHPDetails : null} className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/historical-places/${elm._id}`}>
-                          View Details
-                          <i className="icon-arrow-top-right ml-10"></i>
-                        </Link>
+                      <button
+                        ref={i === 0 ? refHPDetails : null}
+                        className="button -outline-accent-1 text-accent-1"
+                        onClick={() => {
+                          navigate("/historical-places/${elm._id}");
+                        }}
+                      >
+                        View Details
+                        <i className="icon-arrow-top-right ml-10"></i>
                       </button>
                     </div>
-
-
                   </div>
                 </div>
               ))}

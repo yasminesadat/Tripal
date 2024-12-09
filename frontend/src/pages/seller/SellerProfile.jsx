@@ -104,7 +104,7 @@ export default function Profile() {
 
     } catch (error) {
       message.error(
-        error.response?.data?.message || "Failed to change password"
+        error.response?.data?.error || "Failed to change password"
       );
       console.error("Password change error:", error);
     }

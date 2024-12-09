@@ -1,9 +1,9 @@
 import Stars from "../../common/Stars";
 import { message } from "antd";
-import { Flag,FlagOff  } from 'lucide-react';
-import { flagActivity,getEventOwnerData } from "@/api/AdminService";
-import {bookmarkEvent} from "@/api/TouristService";
-import { useState,useEffect } from "react";
+import { Flag, FlagOff } from "lucide-react";
+import { flagActivity, getEventOwnerData } from "@/api/AdminService";
+import { bookmarkEvent } from "@/api/TouristService";
+import { useState, useEffect } from "react";
 import Spinner from "@/components/common/Spinner";
 import { getActivityById } from "@/api/ActivityService";
 
@@ -29,50 +29,62 @@ const handleBookmark = async (eventId, eventType) => {
   try {
     await bookmarkEvent(eventId, eventType);
     //setIsBookmarked(true);
-    message.success("Added Event to Bookmark")
+    message.success("Added Event to Bookmark");
   } catch (error) {
-    console.error('Error bookmarking event:', error);
+    console.error("Error bookmarking event:", error);
   }
 };
 
 const formatDate = (date) => {
   const d = new Date(date);
-  const day = d.getDate().toString().padStart(2, '0');
-  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, "0");
+  const month = (d.getMonth() + 1).toString().padStart(2, "0");
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
 //#endregion
 
-export default function ActivityMainInformation({ activity: initialActivity, userRole }) {
-  
+export default function ActivityMainInformation({
+  activity: initialActivity,
+  userRole,
+}) {
   const [loading, setLoading] = useState(false);
   const [activity, setActivity] = useState(initialActivity);
-  
+
   //#region 2. useEffect/methods
   const handleFlag = async (activityId, currentFlagStatus) => {
     const updatedFlagStatus = !currentFlagStatus;
     setLoading(true);
     try {
       const userData = await getEventOwnerData(activity.advertiser);
-      await flagActivity(activityId,userData);
-      setActivity((prevActivity) =>( { 
-        ...prevActivity, 
-        flagged: updatedFlagStatus 
+      await flagActivity(activityId, userData);
+      setActivity((prevActivity) => ({
+        ...prevActivity,
+        flagged: updatedFlagStatus,
       }));
-      message.success(`Activity ${updatedFlagStatus ? "is flagged as inappropriate " : "has been unflagged"} successfully.`);
+      message.success(
+        `Activity ${
+          updatedFlagStatus
+            ? "is flagged as inappropriate "
+            : "has been unflagged"
+        } successfully.`
+      );
     } catch (error) {
-      message.error(error.response?.data?.message ||error.response?.data?.error|| "Failed to update activity flag status.");
+      message.error(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to update activity flag status."
+      );
     } finally {
       //having the effect of reloading page
       fetchActivities(activityId);
-      setLoading(false);     
+      setLoading(false);
     }
   };
-  
+
   const fetchActivities = async (activityId) => {
     try {
-      if(userRole !== "Admin") return;
+      if (userRole !== "Admin") return;
       const response = await getActivityById(activityId);
       setActivity(response.data);
     } catch (error) {
@@ -80,9 +92,14 @@ export default function ActivityMainInformation({ activity: initialActivity, use
     }
   };
   //#endregion
-  
-  if (loading || !activity) return <div><Spinner/></div>; 
- 
+
+  if (loading || !activity)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
@@ -113,8 +130,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
                 <div className="d-flex x-gap-5 pr-10">
                   <Stars star={activity?.averageRating} font={12} />
                 </div>
-                {activity?.averageRating.toFixed(2)} ({activity.totalRatings}
-                )
+                {activity?.averageRating.toFixed(2)} ({activity.totalRatings})
               </div>
             </div>
 
@@ -134,50 +150,48 @@ export default function ActivityMainInformation({ activity: initialActivity, use
           </div>
         </div>
 
-
-        {userRole ==='Tourist' ? (<div className="col-auto">
-          <div className="d-flex x-gap-30 y-gap-10">
-            <a
-              className="d-flex items-center"
-              style={{ color: "grey" }}
-              onClick={() =>
-                handleShare(
-                  `${window.location.origin}/activities/${activity._id}`
-                )
-              }
-            >
-              <i className="icon-share flex-center text-16 mr-10"></i>
-              Share
-            </a>
-
-            <div
-              className="d-flex items-center"
-              style={{ color: "grey" }}
-            >
-              <i
-                className="icon-heart flex-center text-16 mr-10"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleBookmark(activity._id, "activity")}
-              ></i>
-              Add to Bookmark
+        {userRole === "Tourist" || userRole === "Guest" ? (
+          <div className="col-auto">
+            <div className="d-flex x-gap-30 y-gap-10">
+              <a
+                className="d-flex items-center"
+                style={{ color: "grey" }}
+                onClick={() =>
+                  handleShare(
+                    `${window.location.origin}/activities/${activity._id}`
+                  )
+                }
+              >
+                <i className="icon-share flex-center text-16 mr-10"></i>
+                Share
+              </a>
+              {userRole === "Tourist" && (
+                <div className="d-flex items-center" style={{ color: "grey" }}>
+                  <i
+                    className="icon-heart flex-center text-16 mr-10"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleBookmark(activity._id, "activity")}
+                  ></i>
+                  Add to Bookmark
+                </div>
+              )}
             </div>
           </div>
-
-        </div>)
-        :userRole === 'Admin' ? (
-      <div className="col-auto">
-        <button className="flag-button" onClick={() => handleFlag(activity._id, activity.flagged)}>
-               {!activity.flagged? 
-               <Flag  size={16} className="mr-10" />:
-                <FlagOff size={16} className="mr-10" />}
-                {activity.flagged ? 
-                "Unflag" :
-                 "Flag as Inappropriate"}
-              </button>
-        </div>
-      ) : null}
-                
-
+        ) : userRole === "Admin" ? (
+          <div className="col-auto">
+            <button
+              className="flag-button"
+              onClick={() => handleFlag(activity._id, activity.flagged)}
+            >
+              {!activity.flagged ? (
+                <Flag size={16} className="mr-10" />
+              ) : (
+                <FlagOff size={16} className="mr-10" />
+              )}
+              {activity.flagged ? "Unflag" : "Flag as Inappropriate"}
+            </button>
+          </div>
+        ) : null}
       </div>
       <style>
         {`
@@ -217,8 +231,7 @@ export default function ActivityMainInformation({ activity: initialActivity, use
           .button-custom:hover {
             background-color: var(--color-stone);
             border: 1px solid var(--color-stone);
-            color: white;`
-        }
+            color: white;`}
       </style>
     </>
   );

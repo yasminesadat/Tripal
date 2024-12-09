@@ -178,7 +178,7 @@ export default function Profile() {
       message.success("Password changed successfully");
     } catch (error) {
       message.error(
-        error.response?.data?.message || "Failed to change password"
+        error.response?.data?.error || "Failed to change password"
       );
       console.error("Password change error:", error);
     }
@@ -318,9 +318,8 @@ export default function Profile() {
         <TouristHeader />
         <main className="mt-30">
           <div
-            className={`dashboard ${
-              sideBarOpen ? "-is-sidebar-visible" : ""
-            } js-dashboard`}
+            className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""
+              } js-dashboard`}
           >
             <Sidebar setSideBarOpen={setSideBarOpen} />
             <div className="dashboard__content">

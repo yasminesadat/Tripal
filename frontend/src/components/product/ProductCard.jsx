@@ -185,7 +185,7 @@ const ProductCard = ({
               <Stars star={averageRating} />
             </div>
             <span className="text-dark-1 ml-10" style={{ cursor: 'default' }}>
-              ({averageRating})
+              ({averageRating.toFixed(2)})
             </span>
           </div>
 
