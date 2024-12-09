@@ -80,6 +80,9 @@ export default function ItinerariesList({
 
 //#region useEffect
   useEffect(() => {
+  setCurrentPage(1);
+  }, [filteredItineraries]);
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await getUserData();
@@ -180,6 +183,7 @@ export default function ItinerariesList({
     });
 
     setFilteredItineraries(filtered);
+    setCurrentPage(1);
   }, [
     startDate,
     endDate,

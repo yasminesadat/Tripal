@@ -153,7 +153,6 @@ export default function ProductList() {
 
   useEffect(() => {
     if (userRole) {
-      console.log("User role:", userRole);
       getProducts(currentPage);
     }
   }, [userRole, sortOrder]);
@@ -553,10 +552,6 @@ export default function ProductList() {
                   totalPages={totalPages}
                   onPageChange={onPageChange}
                 />
-
-                {/* <div className="text-14 text-center mt-20">
-              Showing results 1-30 of 1,415
-            </div> */}
               </div>
             </>
           )}

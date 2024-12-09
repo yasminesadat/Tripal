@@ -67,6 +67,10 @@ export default function HistoricalPlacesList({ searchTerm }) {
   };
 
   useEffect(() => {
+    setCurrentPage(1); 
+  }, [viewedPlaces]);
+
+  useEffect(() => {
     const intervalId = setInterval(() => {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
@@ -301,10 +305,8 @@ export default function HistoricalPlacesList({ searchTerm }) {
       searchedPlaces.some(place2 => place1._id === place2._id)
     );
     setViewedPlaces(commonPlaces)
-
+    setCurrentPage(1);
   }, [searchedPlaces, filteredPlaces]);
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="layout-pb-xl">
@@ -414,8 +416,7 @@ export default function HistoricalPlacesList({ searchTerm }) {
   right: 60px;
   z-index: 1;
 }
-`}
-
+              `}
             </style>
 
             <div className="row y-gap-30 pt-30">

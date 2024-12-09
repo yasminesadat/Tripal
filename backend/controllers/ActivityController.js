@@ -5,7 +5,6 @@ const PreferenceTag = require("../models/PreferenceTag");
 const { sendEmail } = require('./Mailer');
 const Tourist = require('../models/users/Tourist');
 
-
 const createActivity = async (req, res) => {
   const {
     title,

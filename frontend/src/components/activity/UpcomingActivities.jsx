@@ -10,7 +10,6 @@ import { getAdminActivities} from "@/api/AdminService";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import Spinner from "../common/Spinner";
 
-
 export default function ActivitiesList({
   searchTerm,
   page,
@@ -78,6 +77,10 @@ export default function ActivitiesList({
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when filteredActivities change
+  }, [filteredActivities]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -178,6 +181,7 @@ export default function ActivitiesList({
     });
 
     setFilteredActivities(filtered);
+    setCurrentPage(1);
   }, [
     startDate,
     endDate,
