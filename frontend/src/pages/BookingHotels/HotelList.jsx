@@ -4,22 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg"
-import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg"
-import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg"
-import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg"
-import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg"
-import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg"
-import { getTouristCurrency, getConversionRate } from "@/api/ExchangeRatesService.js";
-
+import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg";
+import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg";
+import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg";
+import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg";
+import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg";
+import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg";
+import {
+  getTouristCurrency,
+  getConversionRate,
+} from "@/api/ExchangeRatesService.js";
 
 import { useParams, useNavigate } from "react-router-dom";
 //import styles from "../../components/style.module.css";
 
-
-
 import { getHotels } from "../../api/HotelService.js";
-
 
 export default function TourList1() {
   const [setDdActives] = useState(false);
@@ -28,7 +27,7 @@ export default function TourList1() {
   const dropDownContainer = useRef();
   const { cityCode, dates1, dates2 } = useParams();
 
-  const images = [img1, img2, img3, img4, img5, img6]
+  const images = [img1, img2, img3, img4, img5, img6];
 
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -51,10 +50,9 @@ export default function TourList1() {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1); return () => clearInterval(intervalId);
+    }, 1);
+    return () => clearInterval(intervalId);
   }, [currency]);
-
-
 
   const fetchTourData = async () => {
     try {
@@ -115,19 +113,12 @@ export default function TourList1() {
     };
   }, []);
 
-
-
   const metadata = {
     title: "Hotels || Tripal ",
   };
 
   return (
     <>
-
-
-
-
-
       <style>{`
   .search-container {
     margin: 20px 0;
@@ -209,9 +200,11 @@ export default function TourList1() {
               />
             </div>
 
-            <div className="container" style={{ placeItems: 'center', marginRight: "10px" }}>
+            <div
+              className="container"
+              style={{ placeItems: "center", marginRight: "10px" }}
+            >
               <div className="col-xl-9 col-lg-8" style={{}}>
-
                 <div className="row y-gap-30 pt-30">
                   {filteredHotelList.map((elm, i) => (
                     <div className="col-12" key={i}>
@@ -226,27 +219,42 @@ export default function TourList1() {
                               </div>
                             </div>
                           )}
-
-
                         </div>
 
                         <div className="tourCard__content">
-                          <div className="tourCard__location" style={{ cursor: 'default' }}>
+                          <div
+                            className="tourCard__location"
+                            style={{ cursor: "default" }}
+                          >
                             <i className="icon-pin"></i>
                             {elm.location}
                           </div>
 
-                          <h3 className="tourCard__title mt-5" style={{ cursor: 'default' }}>
+                          <h3
+                            className="tourCard__title mt-5"
+                            style={{ cursor: "default" }}
+                          >
                             <span>{elm.title}</span>
                           </h3>
 
-                          <p className="tourCard__text mt-5 " style={{ cursor: 'default' }}>{elm.description}</p>
+                          <p
+                            className="tourCard__text mt-5 "
+                            style={{ cursor: "default" }}
+                          >
+                            {elm.description}
+                          </p>
 
                           <div className="row x-gap-20 y-gap-5 pt-30">
                             {elm.features?.map((elm2, i2) => (
                               <div key={i2} className="col-auto">
-                                <div className="text-14" style={{ color: 'var(--color-stone)', cursor: 'default' }}>
-                                  <i className={`${elm2.icon} mr-10`} ></i>
+                                <div
+                                  className="text-14"
+                                  style={{
+                                    color: "var(--color-stone)",
+                                    cursor: "default",
+                                  }}
+                                >
+                                  <i className={`${elm2.icon} mr-10`}></i>
                                   {elm2.name}
                                 </div>
                               </div>
@@ -257,23 +265,42 @@ export default function TourList1() {
                         <div className="tourCard__info">
                           <div>
                             <div className="d-flex items-center text-14">
-                              <i className="icon-clock mr-10" style={{ cursor: 'default' }}></i>
+                              <i
+                                className="icon-clock mr-10"
+                                style={{ cursor: "default" }}
+                              ></i>
                               {elm.duration}
                             </div>
 
-                            <div className="tourCard__price" style={{ cursor: 'default' }}>
-                              <div>{currency || 'EGP'} {(elm.fromPrice * exchangeRate).toFixed(2)}</div>
+                            <div
+                              className="tourCard__price"
+                              style={{ cursor: "default" }}
+                            >
+                              <div>
+                                {currency || "EGP"}{" "}
+                                {(elm.fromPrice * exchangeRate).toFixed(2)}
+                              </div>
 
                               <div className="d-flex items-center">
                                 From{" "}
-                                <span className="text-20 fw-500 ml-5" style={{ cursor: 'default' }}>
-                                  {currency || 'EGP'} {(elm.price * exchangeRate).toFixed(2)}
+                                <span
+                                  className="text-20 fw-500 ml-5"
+                                  style={{ cursor: "default" }}
+                                >
+                                  {currency || "EGP"}{" "}
+                                  {(elm.price * exchangeRate).toFixed(2)}
                                 </span>
                               </div>
                             </div>
                           </div>
 
-                          <button className="button -outline-accent-1 " style={{ color: 'var(--color-stone)' }} onClick={() => window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`} >
+                          <button
+                            className="button -outline-accent-1 "
+                            style={{ color: "var(--color-stone)" }}
+                            onClick={() =>
+                              (window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`)
+                            }
+                          >
                             {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
                             View Details
                             <i className="icon-arrow-top-right ml-10"></i>
@@ -284,15 +311,12 @@ export default function TourList1() {
                     </div>
                   ))}
                 </div>
-
-
               </div>
             </div>
-          </section>        </main>
+          </section>{" "}
+        </main>
         <FooterThree />
       </div>
-    </>
-      </div >
     </>
   );
 }
