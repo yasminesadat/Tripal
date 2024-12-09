@@ -5,7 +5,7 @@ import MetaComponent from "@/components/common/MetaComponent";
 import React, { useState } from "react";
 import States from "@/components/dasboard/main/States";
 import Activities from "@/components/dasboard/main/Activities";
-import Statistics from "@/components/dasboard/main/Statistics";
+import UserStatistics from "./UsersStatistics";
 import Header from "@/components/dasboard/Header";
 const metadata = {
   title: "Admin Dashboard || Tripal - Travel Agency",
@@ -16,7 +16,9 @@ const metadata = {
 
 
 export default function AdminDashboard() {
+  const [addClass] = useState(true);
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [totalUsers,setTotalUsers]=useState(0);
   return (
     <>
       <div
@@ -32,31 +34,26 @@ export default function AdminDashboard() {
             <h1 className="text-30">Dashboard</h1>
             <p className="">Welcome back Admin!</p>
 
-            <States />
+            <States  setTotalUsers={setTotalUsers}/>
 
             <div className="row pt-30 y-gap-30">
-              <Statistics />
+              <UserStatistics totalUsers={totalUsers} />
 
               <div className="col-xl-4 col-lg-12 col-md-6">
                 <div className="px-30 py-25 rounded-12 bg-white shadow-2">
                   <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Recent Activities</div>
+                    <div className="text-18 fw-500">Recent Notifications</div>
                   </div>
 
                   <Activities />
 
-                  <div className="pt-40">
-                    <button className="button -md -outline-accent-1 col-12 text-accent-1">
-                      View More
-                      <i className="icon-arrow-top-right text-16 ml-10"></i>
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
             </div>
 
             <div className="text-center pt-30">
-            © Copyright Tripal {new Date().getFullYear()}
+              © Copyright Tripal {new Date().getFullYear()}
             </div>
           </div>
         </div>

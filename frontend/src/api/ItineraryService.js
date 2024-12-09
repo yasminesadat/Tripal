@@ -1,6 +1,5 @@
 import { axios } from "./axios";
 
-// for tourist
 export async function viewUpcomingItineraries() {
   try {
     const response = await axios.get("/itinerary/upcoming/view");
@@ -11,17 +10,6 @@ export async function viewUpcomingItineraries() {
   }
 }
 
-export async function viewPaidItineraries() {
-  try {
-    const response = await axios.get("/itinerary/paid/view");
-    return response.data;
-  } catch (error) {
-    console.error("Can't fetch itineraries", error);
-    throw error;
-  }
-}
-
-// for tourguide return all itineraries created by a tourguide 
 export const getItinerariesByTourGuide = async () => {
   try {
     const response = await axios.get("/my-itineraries");
@@ -41,6 +29,16 @@ export const getAllItineraries = async () => {
     throw error;
   }
 };
+
+export async function getTourGuideBookings() {
+  try {
+    const response = await axios.get(`/my-itineraries-bookings`);
+    return response;
+  } catch (error) {
+    console.error("Can't get tourguide bookings", error);
+    throw error;
+  }
+}
 
 export const createItinerary = async (itinerary) => {
   try {
@@ -115,3 +113,14 @@ export const getItineraryById = async (id) => {
     throw error;
   }
 };
+
+export async function getRevenue() {
+  try {
+    const response = await axios.get(`/itineraries/revenue`);
+    console.log(response.data)
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching revenue:", error);
+    throw error;
+  }
+}

@@ -26,29 +26,28 @@ const createSeller = asyncHandler(async (req, res) => {
     email: email,
     password: hashedPassword,
   });
-  // const id = sellernew._id
-  // await userModel.create({
-  //     userID: id,
-  //     role: "Seller"
-  // })
+  
   res.status(201).json(sellernew);
 });
 
 const readSellerData = asyncHandler(async (req, res) => {
-  const seller = await Seller.findById(req.params.id);
-
+  try{
+  const id =  req.userId;
+  const seller = await Seller.findById(id);
   if (!seller) {
     return res.status(404).json({ error: "Seller not found" });
   }
-
   res.status(200).json({ status: "success", data: seller });
+}
+catch (error) {
+  return res.status(400).json({ error: error.message });
+}
 });
 
 const updateSellerData = asyncHandler(async (req, res) => {
   const { initialLogo, currLogo, ...updateData } = req.body;
   let result;
 
-  // Delete old logo if provided
   if (initialLogo) {
     try {
       const oldPicturePublicId = initialLogo
@@ -57,7 +56,6 @@ const updateSellerData = asyncHandler(async (req, res) => {
         .join("/")
         .split(".")[0];
 
-      // Delete old picture
       await cloudinary.uploader.destroy(oldPicturePublicId);
       updateData.logo = "";
     } catch (error) {
@@ -65,7 +63,6 @@ const updateSellerData = asyncHandler(async (req, res) => {
     }
   }
 
-  // Check if new logo is provided for upload
   if (currLogo) {
     try {
       result = await cloudinary.uploader.upload(currLogo, {
@@ -78,9 +75,9 @@ const updateSellerData = asyncHandler(async (req, res) => {
   }
 
   const updatedSeller = await Seller.findByIdAndUpdate(
-    req.params.id,
+    req.userId,
     updateData,
-    { new: true, runValidators: true } // Options: return updated document, run validation
+    { new: true, runValidators: true }
   );
 
   if (!updatedSeller) {
@@ -90,4 +87,41 @@ const updateSellerData = asyncHandler(async (req, res) => {
   res.status(200).json({ status: "success", data: updatedSeller });
 });
 
-module.exports = { createSeller, readSellerData, updateSellerData };
+
+const getSellerNotifications = async (req, res) => {
+  try {
+    const userid=req.userId;
+    const seller = await Seller.findById(userid);
+    console.log("hi1")
+
+    if (!seller) {
+      return res.status(404).json({ error: "Seller not found" });
+    }
+    res.status(200).json(seller.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const markNotificationSeller = async (req, res) => {
+  try {
+    const userid=req.userId;
+  
+    const seller = await Seller.findById(userid);
+    if (!seller) {
+      return res.status(404).json({ error: "Seller not found" });
+    }   
+
+    seller.notificationList.forEach((n)=>{(n.read=true)})
+
+    await seller.save();
+    
+    res.status(200).json(seller.notificationList);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { createSeller, readSellerData, updateSellerData,getSellerNotifications,markNotificationSeller };

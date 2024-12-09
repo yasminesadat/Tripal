@@ -170,23 +170,26 @@
 }
 
 .activeMenu {
-  color: var(--color-accent-1) !important;
+  color: var(--color-pink) !important;
 }
 
 .rmdp-range {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-pink) !important;
 }
 .rmdp-today span {
-  background-color: var(--bs-yellow) !important;
+  background-color: var(--color-light-purple) !important;
 }
 .rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden) span:hover {
-  background-color: var(--color-accent-1) !important;
+  background-color: var(--color-pink) !important;
 }
 .rmdp-week-day {
-  color: var(--color-accent-1) !important;
+  color: var(--color-pink) !important;
+}
+.rmdp-range-hover {
+  background-color: #f7c9d2 !important;
 }
 .rmdp-arrow {
-  border-color: var(--color-accent-1) !important;
+  border-color: var(--color-pink) !important;
 }
 
 @media (max-width: 1150px) {

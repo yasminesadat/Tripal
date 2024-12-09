@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getConversionRate } from "../../api/ExchangeRatesService";
-import { message } from 'antd';
 
 const ItineraryHistory = ({ itineraries, curr = "EGP", page }) => {
     const [exchangeRate, setExchangeRate] = useState(1);
@@ -18,7 +17,6 @@ const ItineraryHistory = ({ itineraries, curr = "EGP", page }) => {
                     setExchangeRate(rate);
                 } catch (error) {
                     if (!errorDisplayedRef.current) {
-                        message.error("Failed to fetch exchange rate.");
                         errorDisplayedRef.current = true;
                     }
                 } finally {

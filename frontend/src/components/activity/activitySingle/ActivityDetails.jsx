@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ActivityMainInformation from "./ActivityMainInformation";
 import OthersInformation from "./OthersInformation";
@@ -8,44 +8,27 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import { Tag, message } from "antd";
-import { getUserData } from "@/api/UserService";
-
-export default function ActivityDetails({ activity }) {
+export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
   //#region 1. Variables
   const location = useLocation();
   const { page } = location.state || {};
   const markerPosition = [activity?.latitude|| 35.11, activity?.longitude||35.11];
-  const [userRole, setUserRole] = useState(null); 
-  const [userId, setUserId] = useState(null); 
   const activityId = activity._id;  
   //#endregion
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getUserData();
-        if (response.data.status === "success") {
-          setUserRole(response.data.role);
-          setUserId(response.data.id); 
-        } else {
-          setUserRole("Guest");
-        }
-      } catch (error) {
-        message.error("Failed to fetch user data.");
-      }
-    };
-    fetchUserData();
-  }, []);
+  //#region 2. useEffect
+  
+  //#endregion
 
-  if (!activity) return <div><Index/></div>;
+  if (!activity) return <div><Index /></div>;
 
   return (
     <>
-      <section className="">
+      <section className="" >
         <div className="container">
-          <ActivityMainInformation activity={activity} role ={userRole}/>
+
+          <ActivityMainInformation activity={activity} userRole ={userRole}/>
           <Gallery1 />
         </div>
       </section>
@@ -54,16 +37,22 @@ export default function ActivityDetails({ activity }) {
           <div className="row y-gap-30 justify-between">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-center layout-pb-md">
-              <OthersInformation groupSize={activity.bookings.reduce((total, booking) => total + booking.tickets, 0)} />
+                <OthersInformation groupSize={activity.bookings.reduce((total, booking) => total + booking.tickets, 0)} />
               </div>
               <Overview activityDescription={activity.description} />
+             
               <div className="line mt-60 mb-60"></div>
               <h2 className="text-30 mt-60 mb-30">Tour Map</h2>
               <div className="mapTourSingle">
+
                 <LocationMap 
                   markerPosition={markerPosition} 
+                  search={"dont search bro"}
+
                 />
+
               </div>
+              
               <h2 className="text-30">Customer Reviews</h2>
               <ActivityReviews activityId={activityId} />
               {page === "history" && (
@@ -74,14 +63,14 @@ export default function ActivityDetails({ activity }) {
               )}
               <div className="line mt-60 mb-60"></div>
             </div>
-            {page === "upcoming" && userRole ==='Tourist' &&(
+            {page === "upcoming" && userRole === 'Tourist' && (
               <div className="col-lg-4">
                 <div className="d-flex justify-end js-pin-content">
-                  <TourSingleSidebar activity={activity}/>
+                  <TourSingleSidebar activity={activity} refActivityBook={refActivityBook}/>
                 </div>
               </div>
             )}
-            
+
           </div>
         </div>
       </section>

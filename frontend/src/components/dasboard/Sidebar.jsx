@@ -1,7 +1,16 @@
 import { sidebarItems } from "@/data/dashboard";
 import { Link, useLocation } from "react-router-dom";
 import React from "react";
+import { logout } from "@/api/UserService";
 
+const handleLogout = async () => {
+  const result = await logout();
+  if (result.status === "success") {
+    window.location.href = "/login";
+  } else {
+    message.error(result.message);
+  }
+};
 export default function Sidebar({ setSideBarOpen }) {
   const { pathname } = useLocation();
 
@@ -25,7 +34,13 @@ export default function Sidebar({ setSideBarOpen }) {
             key={item.id}
             className={`sidebar__item ${pathname === item.href ? "-is-active" : ""}`}
           >
-            <Link to={item.href}>
+            <Link to={item.href}
+             onClick={(e) => {
+              if (item.label === "Logout") {
+                e.preventDefault(); 
+                handleLogout(); 
+              }
+            }}>
               {item.icon}
               <span className="ml-10">{item.label}</span>
             </Link>

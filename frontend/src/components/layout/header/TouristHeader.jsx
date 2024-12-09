@@ -4,19 +4,22 @@ import { profile } from "@/data/touristMenu";
 import Currency from "../components/Currency";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "@/api/UserService";
+import NotificationTab from "@/components/common/NotificationBell";
 import { message } from "antd";
 import {
   updateTouristInformation,
   getTouristInformation,
 } from "@/api/TouristService";
+import { setTouristCurrency } from "@/api/ExchangeRatesService";
 
-export default function TouristHeader() {
+export default function TouristHeader({ setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts, homepage }) {
   const [profileInformation, setProfileInformation] = useState({});
   const navigate = useNavigate();
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
+
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -50,8 +53,9 @@ export default function TouristHeader() {
 
     try {
       await updateTouristInformation(updatedProfileData);
-      // sessionStorage.removeItem("currency");
-      // sessionStorage.setItem("currency", currency);
+      setTouristCurrency(currency);
+      setProfileInformation((prev) => ({ ...prev, choosenCurrency: currency }));
+      sessionStorage.setItem("currency", currency);
     } catch (error) {
       message.error("Failed to update user information:", error);
     }
@@ -62,8 +66,8 @@ export default function TouristHeader() {
       try {
         const response = await getTouristInformation();
         setProfileInformation(response);
-        // sessionStorage.removeItem("currency");
-        // sessionStorage.setItem("currency", response.choosenCurrency);
+        sessionStorage.setItem("currency", response.choosenCurrency);
+        setTouristCurrency(response.choosenCurrency);
       } catch (error) {
         message.error("Failed to fetch user information:", error);
       }
@@ -91,8 +95,17 @@ export default function TouristHeader() {
             <Link to="/tourist" className="header__logo">
               <img src="/img/general/logo.svg" alt="logo icon" />
             </Link>
+            <div >
+              <Menu
+                refFlights={refFlights}
+                refHotels={refHotels}
+                refActivities={refActivities}
+                refItineraries={refItineraries}
+                refHisPlaces={refHisPlaces}
+                refProducts={refProducts}
+              />
+            </div>
 
-            <Menu />
           </div>
 
           <div className="headerMobile__right">
@@ -112,23 +125,26 @@ export default function TouristHeader() {
           </div>
 
           <div className="header__right">
+            
+            {homepage && <button type="primary" className="ml-10" onClick={() => setOpen(true)}>
+              Guide
+            </button>}
+
             <div className="ml-15">
               <Currency
                 userCurrency={profileInformation.choosenCurrency}
                 onCurrencyChange={handleCurrencyChange}
               />
             </div>
-            <Link to="/" className="ml-20">
-              {/*/help-center*/}
-              Help
-            </Link>
+
+            <NotificationTab />
+
             <button
               onClick={() => setMobileMenuOpen(true)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${
-                dropdownOpen ? "hovered" : ""
-              }`}
+              className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""
+                }`}
             >
               <i className="icon-person text-18"></i>
             </button>
@@ -152,6 +168,7 @@ export default function TouristHeader() {
               </div>
             )}
           </div>
+
         </div>
       </header>
       <style>{`
@@ -184,6 +201,7 @@ export default function TouristHeader() {
         .dropdown-menu a {
           text-decoration: none;
           color: inherit;
+      
         }`}</style>
     </>
   );

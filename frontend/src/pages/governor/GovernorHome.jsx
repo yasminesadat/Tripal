@@ -1,7 +1,8 @@
 import GovernorHeader from "../../components/layout/header/GovernorHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-
 import MetaComponent from "@/components/common/MetaComponent";
+import Information from "@/components/pages/about/Information";
+import FeturesTwo from "@/components/homes/features/FeturesTwo";
 
 const metadata = {
   title: "Home || Tripal",
@@ -14,8 +15,8 @@ const GovernorHome = () => {
       <div className="page-wrapper">
         <GovernorHeader />
         <main className="page-content">
-          <h1>Welcome Governor</h1>
-          <p>This is a dummy component.</p>
+          <FeturesTwo />
+          <Information />
           <div className="admin-content-details"></div>
         </main>
         <FooterThree />

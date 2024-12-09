@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { saveBooking } from "../../../api/HotelService";
 import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "@/pages/tourist/TransportationBooking";
 import moment from "moment";
-import { Checkbox } from 'antd';
-import { format,compareAsc, parseISO } from 'date-fns';
-
-
-//Inline styles for the component
+import { Checkbox, message } from 'antd';
+import { loadStripe } from '@stripe/stripe-js';
+import {Modal} from 'antd';
+import { AlertCircle } from 'lucide-react';
+import { getWalletAndTotalPoints } from "../../../api/TouristService";
+// Inline styles for the component
 const styles = {
     appcc: {
         fontFamily: 'sans-serif',
@@ -21,69 +20,61 @@ const styles = {
         margin: '30px auto 0',
         maxWidth: '400px',
     },
-    rccsCardcc: {
-        height: '182.873px',
-        marginTop: '10px',
-        marginBottom: '10px',
-        position: 'relative',
-        transformStyle: 'preserve-3d',
-        transition: 'all 0.4s linear',
-        width: '290px',
-        backgroundImage: 'url(./images/6.jpeg)', // Example background image
-
-    },
     rowcc: {
         marginBottom: '15px',
     },
-    inputcc: {
-        width: '100%',
-        padding: '10px',
-        border: '1px solid #ced4da',
-        borderRadius: '0.25rem',
-        backgroundColor: '#ffffff',
-        outline: 'none',
-        boxShadow: 'none',
-    },
-    errorcc: {
-        color: 'red',
-        fontSize: '12px',
-        marginTop: '5px',
+    button: {
+        padding: '10px 20px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
     },
 };
 
-
-
-const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
-    const [number, setNumber] = useState("");
-    const [name, setName] = useState("");
-    const [date, setDate] = useState("");
-    const [cvc, setCvc] = useState("");
-    const [focus, setFocus] = useState("");
-    const [errors, setErrors] = useState({});
-    const currentDate = new Date();
-    const navigate = useNavigate()
+const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singlePrice, doublePrice, triplePrice, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
+    const [paymentMethod, setPaymentMethod] = useState("wallet");
+    const navigate = useNavigate();
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
-   const [isBooked, setBooked] = useState(false);
-
+    const [isBooked, setBooked] = useState(false);
+    const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+    const [isWalletInfoModalVisible, setIsWalletInfoModalVisible] = useState(false);
+    const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0);
+    const [totalPoints, setTotalPoints] = useState(0);
+    const stripePromise = loadStripe("pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb");
 
     useEffect(() => {
         const getBookedFlights = async () => {
             try {
                 const flights = await getTouristFlights();
-
-                // console.log("result: ", flights);
+                console.log("Fetched Flights:", flights);  // Log fetched flights
                 setTouristFlights(flights.bookedFlights);
-                // console.log("cheeckin", checkIn)
-                // console.log("cheeckout", checkOut)
             } catch (err) {
-                console.log(err);
+                console.log("Error fetching flights:", err);
             }
         };
+
+        const fetchWalletData = async () => {
+            try {
+              const data = await getWalletAndTotalPoints();
+              console.log("Fetched Wallet Data:", data);
+              setUpdatedWalletInfo(data.wallet);
+              setTotalPoints(data.totalPoints);
+            } catch (error) {
+              console.error("Error fetching wallet data:", error);
+            }
+          };
+
+
         getBookedFlights();
+        fetchWalletData();
     }, []);
+
     useEffect(() => {
         function showTransportationOffer() {
+            console.log("Showing Transportation Offer...");
             for (let i = 0; i < touristFlights.length; i++) {
                 const flightDeparture = touristFlights[i].origin;
                 const flightDest = touristFlights[i].destination;
@@ -95,14 +86,16 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
                 const diffInDays1 = diffInMilliseconds1 / (1000 * 60 * 60 * 24);
                 const diffInMilliseconds2 = Math.abs(hotelCheckIn - flightArrivalTime);
                 const diffInDays2 = diffInMilliseconds2 / (1000 * 60 * 60 * 24);
+
                 // console.log("diff 1", diffInDays1);
                 // console.log("diff 2", diffInDays2);
                 // console.log(cityCode);
                 // console.log(flightDeparture);
                 // console.log(flightDest);
+
                 if (diffInDays1 <= 1) {
-                        if (cityCode === flightDeparture) {
-                            // console.log("truue");
+                    if (cityCode === flightDeparture) {
+                        // console.log("truue");
                         setIsBookedReturnTransportation(true);
                     }
                 }
@@ -113,162 +106,377 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
                     }
                 }
             }
-
         }
+
         if (touristFlights.length > 0) {
             showTransportationOffer();
         }
     }, [checkIn, checkOut, cityCode, isBookedOriginatingTransportation, isBookedReturnTransportation,touristFlights]);
-    const validate = () => {
-        const newErrors = {};
-        const cardNumberPattern = /^[0-9]{16}$/; // 16 digits
-        const cvcPattern = /^[0-9]{3}$/; // 3 digits
-        const datePattern = /^(0[1-9]|1[0-2])\/?([0-9]{2}|[0-9]{4})$/; // MM/YY or MM/YYYY
 
-        // Validate card number
-        if (!number) {
-            newErrors.number = "Card number is required.";
-        } else if (number.length !== 16) {
-            newErrors.number = "Card number must be exactly 16 digits.";
-        } else if (!cardNumberPattern.test(number)) {
-            newErrors.number = "Invalid card number. Must be 16 digits.";
-        }
-
-        // Validate cardholder name
-        if (!name) {
-            newErrors.name = "Cardholder name is required.";
-        } else if (name.length < 3 || name.length > 30) {
-            newErrors.name = "Cardholder name must be between 3 and 30 characters.";
-        }
-
-        // Validate expiration date
-        if (!date) {
-            newErrors.date = "Expiration date is required.";
-        } else if (!datePattern.test(date)) {
-            newErrors.date = "Invalid expiration date. Format: MM/YY.";
-        }
-
-
-        // Validate CVV
-        if (!cvc) {
-            newErrors.cvc = "CVV is required.";
-        } else if (cvc.length !== 3) {
-            newErrors.cvc = "CVV must be exactly 3 digits.";
-        } else if (!cvcPattern.test(cvc)) {
-            newErrors.cvc = "Invalid CVV. Must be 3 digits.";
-        }
-
-        return newErrors;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-
-        setBookingStage(3);
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log("Form submitted.");
+    
+    //     if (paymentMethod === "wallet") {
+    //         setBookingStage(3);
+    //     }
+        
+    //     try {
+    //         const response = await saveBooking(
+    //             hotelid,
+    //             hotelname,
+    //             cityCode,
+    //             singleNumber,
+    //             doubleNumber,
+    //             tripleNumber,
+    //             checkIn,
+    //             checkOut,
+    //             total,
+    //             "confirmed",
+    //             paymentMethod
+    //         );
+    //         console.log("Response from saveBooking:", response);
+    
+    //         if (paymentMethod === "card") {
+    //             const stripe = await stripePromise;
+    //             const sessionId = response?.sessionId;
+                
+    //             if (sessionId) {
+    //                 const { error } = await stripe.redirectToCheckout({ sessionId });
+    //                 if (error) {
+    //                     console.error("Stripe redirection error:", error);
+    //                     message.error("Failed to redirect to payment. Please try again.");
+    //                 }
+    //             } else {
+    //                 console.log("Session ID returned:", response.data?.sessionId);
+    //                 console.error("Session ID not received.");
+    //                 message.error("Failed to initiate payment session.");
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to save Booking", error);
+    //         message.error("Booking failed. Please try again.");
+    //     }
+    // };
+    
+               
+    const handleWalletPayment = async () => {
         try {
-            const responseSingle = await saveBooking( hotelid, hotelname, cityCode, singleNumber, doubleNumber, tripleNumber, checkIn, checkOut, total, "confirmed");
+          const response = await saveBooking({
+            hotelid,
+            hotelname,
+            cityCode,
+            singleNumber,
+            doubleNumber,
+            tripleNumber,
+            checkIn,
+            checkOut,
+            pricing: total,
+            singlePrice,
+            doublePrice,
+            triplePrice,
+            status: "confirmed",
+            paymentMethod:"wallet"
+        });
+          const updatedData = await getWalletAndTotalPoints();
+        setUpdatedWalletInfo(updatedData.wallet);
+        setTotalPoints(updatedData.totalPoints);
+        setIsWalletInfoModalVisible(true);
 
-            setErrors({});
+        message.success("Booking successful!");
+        
+        setTimeout(() => {
+            setBookingStage(3);
+        }, 6000);
+        } catch (error) {
+          console.error("Failed to save booking:", error);
+          message.error( error.message );
         }
-        catch (error) {
-            console.error("Failed to save Booking");
+      };
+    
+      const handleCreditCardPayment = async () => {
+        try {
+          const response = await saveBooking({
+            hotelid,
+            hotelname,
+            cityCode,
+            singleNumber,
+            doubleNumber,
+            tripleNumber,
+            checkIn,
+            checkOut,
+            pricing: total,
+            singlePrice,
+            doublePrice,
+            triplePrice,
+            status: "confirmed",
+            paymentMethod:"card"
+        });
+    
+          const stripe = await stripePromise;
+          const sessionId = response?.sessionId;
+    
+          if (sessionId) {
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) {
+              console.error("Stripe redirection error:", error);
+              message.error("Failed to redirect to payment. Please try again.");
+            }
+          } else {
+            message.error("Failed to initiate payment session.");
+          }
+        } catch (error) {
+          console.error("Failed to save booking:", error);
+          message.error("Booking failed. Please try again.");
         }
-        // setTimeout(() => {
-        //     navigate("/tourist");
-        // }, 7000);
+      };
+    
+      const handleConfirmPayment = () => {
+        setIsConfirmationModalVisible(false);
+        handleWalletPayment();
+      };
+    
+      const cancelConfirmationModal = () => {
+        setIsConfirmationModalVisible(false);
+      };
+    
+      const closeWalletInfoModal = () => {
+        setIsWalletInfoModalVisible(false);
+      };
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        if (paymentMethod === "wallet") {
+          setIsConfirmationModalVisible(true);
+        } else if (paymentMethod === "card") {
+          handleCreditCardPayment();
+        }
+      };
 
-    }
     return (
-        <div style={styles.appcc}>
-            <div className="rccs__card rccs__card--unknown" style={styles.rccsCardcc}>
-                <Cards
-                    number={number}
-                    name={name}
-                    expiry={date}
-                    cvc={cvc}
-                    focused={focus}
-                />
-            </div>
-
-            <form style={styles.formcc} onSubmit={handleSubmit}>
-                <div className="row" style={styles.rowcc}>
-                    <div className="col-sm-11">
-                        <label htmlFor="number">Card Number</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={number}
-                            name="number"
-                            onChange={(e) => setNumber(e.target.value)}
-                            onFocus={(e) => setFocus(e.target.name)}
-                            style={styles.inputcc}
-                            required
-                        />
-                        {errors.number && <p style={styles.errorcc}>{errors.number}</p>}
+        <div className="payment-container">
+            <form onSubmit={handleSubmit} className="payment-form">
+                <div className="payment-method-section">
+                    <h3 className="payment-title">Payment Method</h3>
+                    <div className="radio-group">
+                        <div 
+                            className={`radio-option ${paymentMethod === 'card' ? 'selected' : ''}`}
+                            onClick={() => setPaymentMethod('card')}
+                        >
+                            <input
+                                type="radio"
+                                id="card"
+                                name="paymentMethod"
+                                value="card"
+                                checked={paymentMethod === "card"}
+                                onChange={() => setPaymentMethod("card")}
+                                className="hidden-radio"
+                            />
+                            <label htmlFor="card" className="radio-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="radio-icon">
+                                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                                </svg>
+                                Card
+                            </label>
+                        </div>
+                        
+                        <div 
+                            className={`radio-option ${paymentMethod === 'wallet' ? 'selected' : ''}`}
+                            onClick={() => setPaymentMethod('wallet')}
+                        >
+                            <input
+                                type="radio"
+                                id="wallet"
+                                name="paymentMethod"
+                                value="wallet"
+                                checked={paymentMethod === "wallet"}
+                                onChange={() => setPaymentMethod("wallet")}
+                                className="hidden-radio"
+                            />
+                            <label htmlFor="wallet" className="radio-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="radio-icon">
+                                    <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                                </svg>
+                                Wallet
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <div className="row" style={styles.rowcc}>
-                    <div className="col-sm-11">
-                        <label htmlFor="name">Card Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={name}
-                            name="name"
-                            onChange={(e) => setName(e.target.value)}
-                            onFocus={(e) => setFocus(e.target.name)}
-                            style={styles.inputcc}
-                            required
-                        />
-                        {errors.name && <p style={styles.errorcc}>{errors.name}</p>}
+                {(isBookedOriginatingTransportation || isBookedReturnTransportation) && (
+                    <div className="checkbox-container">
+                        <Checkbox
+                            checked={isBookedAccepted} 
+                            onChange={() => {
+                                setIsBookedAccepted(!isBookedAccepted);
+                            }}
+                            className="transportation-checkbox"
+                        >
+                            Transportation Booked
+                        </Checkbox>
                     </div>
-                </div>
+                )}
 
-                <div className="row" style={styles.rowcc}>
-                    <div className="col-sm-6">
-                        <label htmlFor="expiry">Expiration Date</label>
-                        <input
-                            type="text"
-                            name="expiry"
-                            className="form-control"
-                            value={date}
-                            onChange={(e) => setDate((e.target.value))}
-                            onFocus={(e) => setFocus(e.target.name)}
-                            style={styles.inputcc}
-                            required
-                        />
-                        {errors.date && <p style={styles.errorcc}>{errors.date}</p>}
-                    </div>
-                    <div className="col-sm-5">
-                        <label htmlFor="cvc">CVV</label>
-                        <input
-                            type="tel"
-                            name="cvc"
-                            className="form-control"
-                            value={cvc}
-                            onChange={(e) => setCvc(e.target.value)}
-                            onFocus={(e) => setFocus(e.target.name)}
-                            style={styles.inputcc}
-                            required
-                        />
-                        {errors.cvc && <p style={styles.errorcc}>{errors.cvc}</p>}
-                    </div>
-                </div>
+                {!doneBookTransportation && 
+                    (isBookedOriginatingTransportation || isBookedReturnTransportation) && 
+                    <TransportationBookingPopUp 
+                        setDoneBookTransportation={setDoneBookTransportation} 
+                        setIsBookedAccepted={setIsBookedAccepted} 
+                    />
+                }
 
-                {(isBookedOriginatingTransportation || isBookedReturnTransportation) && <Checkbox
-                    checked={isBookedAccepted} onChange={() => {
-                        setIsBookedAccepted(!isBookedAccepted);
-                    }}
-                >Transportation Booked</Checkbox>}
-                {!doneBookTransportation && (isBookedOriginatingTransportation || isBookedReturnTransportation) && <TransportationBookingPopUp setDoneBookTransportation={setDoneBookTransportation} setIsBookedAccepted={setIsBookedAccepted} />}
-                <button type="submit" className="button -md -dark-1 bg-accent-1 text-white" >Confirm Booking</button>
+                <button 
+                    type="submit" 
+                    className="confirm-booking-button"
+                >
+                    Confirm Booking
+                </button>
             </form>
+            <Modal
+            visible={isConfirmationModalVisible}
+            onOk={handleConfirmPayment}
+            onCancel={cancelConfirmationModal}
+            okText="Yes, Pay"
+            cancelText="Cancel"
+            className="custom-confirmation-modal"
+            okButtonProps={{
+              className: "bg-[#036264] hover:bg-[#04494b] text-white",
+              style: { backgroundColor: '#036264', color: 'white' },
+            }}
+            cancelButtonProps={{
+              className: "text-gray-600 hover:text-gray-800",
+            }}
+          >
+            <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+              <AlertCircle className="text-[#036264] w-12 h-12" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Payment</h3>
+                <p className="text-gray-600">
+                  Are you sure you want to proceed with this payment? 
+                  Please review the details before confirming.
+                </p>
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            title={null}
+            visible={isWalletInfoModalVisible}
+            onOk={closeWalletInfoModal}
+            footer={null}
+            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
+            style={{ 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              width: '350px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+            bodyStyle={{
+              backgroundColor: '#ffffff',
+              color: '#333',
+              textAlign: 'center',
+              padding: '30px 20px',
+            }}
+          >
+            <div className="wallet-modal-content">
+              <p>
+                <strong>New Wallet Balance:</strong> {updatedWalletInfo?.amount ? updatedWalletInfo.amount.toLocaleString() : '0'} {updatedWalletInfo?.wallet?.currency}
+              </p>
+              <p>
+                <strong>Total Points:</strong> {totalPoints ? totalPoints.toLocaleString() : '0'} points!
+              </p>
+            </div>
+          </Modal>
+            <style jsx>{`
+                .payment-container {
+    max-width: 400px;
+    margin: 30px auto 0;
+}
+
+.payment-form {
+    background-color: #dac4d0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.payment-title {
+    color: #036264;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.radio-option {
+    flex: 1;
+    border: 2px solid #8f5774;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    color: #8f5774;
+}
+
+.radio-option.selected {
+    background-color: #036264;
+    border-color: #036264;
+    color: white;
+}
+
+.hidden-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.radio-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    fill: #8f5774;
+}
+
+.radio-option.selected .radio-icon {
+    fill: white;
+}
+
+.checkbox-container {
+    margin-bottom: 20px;
+}
+
+.transportation-checkbox {
+    color: #11302a;
+}
+
+.confirm-booking-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #8f5774;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-booking-button:hover {
+    background-color: #8f5774;
+}
+            `}</style>
         </div>
     );
 };

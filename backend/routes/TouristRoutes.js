@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Tourist = require("../models/users/Tourist.js");
 const validateIDs = require("../middleware/IDMiddleware");
+const { getRandomPromoCode } = require("../controllers/TouristController.js");
+
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 const {
   createTourist,
@@ -19,7 +21,19 @@ const {
   getBookmarkedEvents,
   saveProduct,
   getWishList,
-  removeFromWishList
+  removeFromWishList,
+  saveFlightBooking,
+  completeFlightBooking, getTouristNotifications,
+  addToCart,
+  removeFromCart, checkTouristPromocode,
+  getCart,
+  markTouristNotificationsRead,
+  getAddresses,
+  addAddress,
+  getWalletAndTotalPoints,
+  updateQuantity,
+  checkStock
+
 } = require("../controllers/TouristController.js");
 const { changePassword } = require("../controllers/PasswordController.js");
 
@@ -124,6 +138,102 @@ router.post(
   verifyToken,
   authorizeRoles("Tourist"),
   removeFromWishList
+);
+
+router.post(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addToCart
+);
+
+router.delete(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  removeFromCart
+);
+
+router.get(
+  "/tourist/cart",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getCart
+);
+
+router.post(
+  "/tourist/book-flight",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  saveFlightBooking
+);
+
+router.post(
+  "/tourist/flight-payment",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  completeFlightBooking
+);
+
+router.get(
+  "/promoCode",
+
+  getRandomPromoCode
+);
+router.get(
+  "/tourist/notifications",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getTouristNotifications
+);
+
+router.post(
+  "/tourist/checkPromoCode",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  checkTouristPromocode
+);
+
+router.get(
+  "/tourist/address",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getAddresses
+);
+
+router.post(
+  "/tourist/address",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  addAddress
+);
+
+router.get(
+  "/tourist/wallet",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  getWalletAndTotalPoints
+);
+
+router.patch(
+  "/tourist/markNotifications",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  markTouristNotificationsRead
+);
+
+router.put(
+  "/tourist/product-quantity",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  updateQuantity
+);
+
+router.post(
+  "/tourist/check-stock",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  checkStock
 );
 
 module.exports = router;

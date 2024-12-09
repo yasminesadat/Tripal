@@ -1,10 +1,9 @@
-import React, { useEffect, useState,useRef } from "react";
-import { useParams } from "react-router-dom";
-import { message } from "antd";
+import { useEffect, useState } from "react";
 import { getBookmarkedEvents } from "../../api/TouristService"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import { Link } from "react-router-dom";
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
 
 export default function BookmarkedEvents() {
 
@@ -13,6 +12,23 @@ export default function BookmarkedEvents() {
         "https://viatour-reactjs.ibthemespro.com/img/tourCards/3/4.png",
 
       ];
+      const [exchangeRate, setExchangeRate] = useState(1);
+      const [currency, setCurrency] = useState( "EGP");
+
+      const getExchangeRate = async () => {
+        if (currency) {
+          const rate = await getConversionRate(currency);
+          setExchangeRate(rate);
+        }
+      };
+    
+      useEffect(() => {
+        const intervalId = setInterval(() => {
+          const newCurrency = getTouristCurrency();
+          setCurrency(newCurrency);
+          getExchangeRate();
+        }, 1);  return () => clearInterval(intervalId);
+      }, [currency]);
   
   useEffect(() => {
     const fetchBookmarked = async () => {
@@ -26,6 +42,12 @@ export default function BookmarkedEvents() {
     fetchBookmarked();
   }, []);
 
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + "...";
+  };
   return (
     <div>
     <TouristHeader />
@@ -35,7 +57,7 @@ export default function BookmarkedEvents() {
         <div className="row">
           
 
-          <div className="col-xl-9 col-lg-8" >
+          <div className="col-xl-15 col-lg-14" >
             <div className="row y-gap-30 pt-30">
             {bookmarkedEvents?.map((event, index) => (
                 <div className="col-12" key={index}>
@@ -55,18 +77,9 @@ export default function BookmarkedEvents() {
                         <span>{event.title}</span>
                       </h3>
 
-                      <p className="tourCard__text mt-5">{event.description}</p>
+                      <p className="tourCard__text mt-5">{truncateText(event.description, 700)}
+                      </p>
 
-                      {/* <div className="row x-gap-20 y-gap-5 pt-30">
-                        {elm.features?.map((elm2, i2) => (
-                          <div key={i2} className="col-auto">
-                            <div className="text-14 text-accent-1">
-                              <i className={`${elm2.icon} mr-10`}></i>
-                              {elm2.name}
-                            </div>
-                          </div>
-                        ))}
-                      </div> */}
                     </div>
 
                     <div className="tourCard__info">
@@ -86,7 +99,7 @@ export default function BookmarkedEvents() {
                           
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ">
-                              price: {event.price}
+                              price: {currency} {(event.price*exchangeRate).toFixed(2)}
                             </span>
                           </div>
                         </div>

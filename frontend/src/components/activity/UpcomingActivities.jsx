@@ -3,22 +3,23 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Stars from "../common/Stars";
 import Pagination from "./Pagination";
-import { Tag, message } from "antd";
-
+import { message } from "antd";
 import { getUserData } from "@/api/UserService";
+import { viewUpcomingActivities } from "@/api/ActivityService";
+import { getAdminActivities } from "@/api/AdminService";
+import { bookmarkEvent } from "@/api/TouristService";
+
 import {
-  viewUpcomingActivities,
-  getAllActivities,
-} from "@/api/ActivityService";
-import { getAdminActivities} from "@/api/AdminService";
+  getConversionRate,
+  getTouristCurrency,
+} from "@/api/ExchangeRatesService";
+import Spinner from "../common/Spinner";
 
 export default function ActivitiesList({
   searchTerm,
-  book,
-  onCancel,
-  cancel,
-  curr = "EGP",
   page,
+  refActivityDetails,
+  onFirstActivityId,
 }) {
   //#region States
   const [sortOption, setSortOption] = useState("");
@@ -35,13 +36,19 @@ export default function ActivitiesList({
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 2000000]);
-
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const activitiesPerPage = 2;
+  const activitiesPerPage = 5;
+  const navigate = useNavigate();
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = filteredActivities.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
 
   const sortOptions = [
     { label: "Price: Low to High", field: "price", order: "asc" },
@@ -49,9 +56,35 @@ export default function ActivitiesList({
     { label: "Rating: Low to High", field: "ratings", order: "asc" },
     { label: "Rating: High to Low", field: "ratings", order: "desc" },
   ];
+  const [currency, setCurrency] = useState("EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);
+    return () => clearInterval(intervalId);
+  }, [currency]);
 
   const errorDisplayed = useRef(false);
   //#endregion
+
+  //#region useEffect
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when filteredActivities change
+  }, [filteredActivities]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -113,8 +146,7 @@ export default function ActivitiesList({
       const activityDate = new Date(activity.date);
       const activityRating = activity.averageRating;
       const activityCategory = activity.category.Name.toLowerCase();
-      // const activityPrice = activity.price * exchangeRate;
-      const activityPrice = activity.price;
+      const activityPrice = activity.price * exchangeRate;
 
       const isDateValid =
         !startDate ||
@@ -154,6 +186,7 @@ export default function ActivitiesList({
     });
 
     setFilteredActivities(filtered);
+    setCurrentPage(1);
   }, [
     startDate,
     endDate,
@@ -162,17 +195,22 @@ export default function ActivitiesList({
     selectedCategories,
     priceRange,
     searchTerm,
+    exchangeRate,
   ]);
 
   useEffect(() => {}, [filteredActivities]);
+
+  useEffect(() => {
+    if (filteredActivities.length > 0) {
+      onFirstActivityId(filteredActivities[0]._id);
+    }
+  }, [filteredActivities, onFirstActivityId]);
 
   const handleSort = (field, order) => {
     const sortedActivities = [...filteredActivities].sort((a, b) => {
       let aValue, bValue;
 
       if (field === "price") {
-        // aValue = a.price * exchangeRate;
-        // bValue = b.price * exchangeRate;
         aValue = a.price;
         bValue = b.price;
       } else if (field === "ratings") {
@@ -184,7 +222,30 @@ export default function ActivitiesList({
     });
     setFilteredActivities(sortedActivities);
   };
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this activity!",
+          url: link,
+        })
+        .catch(() => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this activity!&body=Check out this link: ${link}`;
+    }
+  };
 
+  const handleBookmark = async (eventId, eventType) => {
+    try {
+      await bookmarkEvent(eventId, eventType);
+      message.success("Added Event to Bookmark");
+    } catch (error) {
+      console.error("Error bookmarking event:", error);
+    }
+  };
+  
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -200,6 +261,9 @@ export default function ActivitiesList({
     };
   }, []);
 
+  //#endregion
+
+  //#region Functions
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -211,28 +275,22 @@ export default function ActivitiesList({
     return text.substring(0, maxLength) + "...";
   };
 
-  const indexOfLastActivity = currentPage * activitiesPerPage;
-  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
-  const currentActivities = filteredActivities.slice(
-    indexOfFirstActivity,
-    indexOfLastActivity
-  );
-
-  const navigate = useNavigate();
   const handleRedirect = (activityId) => {
-    if (userRole === "Tourist"|| userRole === "Admin")
+    if (userRole === "Tourist" || userRole === "Admin")
       navigate(`/activity/${activityId}`, { state: { page } });
     else navigate(`/activities/${activityId}`, { state: { page } });
   };
 
   const formatDate = (date) => {
     const d = new Date(date);
-    const day = d.getDate().toString().padStart(2, '0');  
-    const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const year = d.getFullYear();
-  
+
     return `${day}/${month}/${year}`;
   };
+  //#endregion
+  if (loading) return <Spinner />;
 
   return (
     <section className="layout-pb-xl">
@@ -297,11 +355,7 @@ export default function ActivitiesList({
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                  {loading ? (
-                    <span>Loading results...</span>
-                  ) : (
-                    <span>{filteredActivities?.length} results</span>
-                  )}
+                  <span>{filteredActivities?.length} results</span>
                 </div>
               </div>
 
@@ -351,6 +405,8 @@ export default function ActivitiesList({
                       <img
                         src="/img/activities/touristsGroup1.jpg"
                         alt="image"
+                        onClick={() => handleRedirect(elm._id)}
+                        style={{ cursor: 'pointer' }}
                       />
 
                       {elm.badgeText && (
@@ -369,8 +425,22 @@ export default function ActivitiesList({
                         </div>
                       )}
 
-                      <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
+                      <div
+                        className="tourCard__favorite"
+                        style={{ display: "flex", gap: "10px" }}
+                      >
+                        <button
+                          className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                          onClick={() =>
+                            handleShare(
+                              `${window.location.origin}/activities/${elm._id}`
+                            )
+                          }
+                        >
+                          <i className="icon-share text-15"></i>
+                        </button>
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => handleBookmark(elm._id, "activity")}
+                        >
                           <i className="icon-heart text-15"></i>
                         </button>
                       </div>
@@ -417,7 +487,7 @@ export default function ActivitiesList({
                     <div className="tourCard__info">
                       <div>
                         <div className="d-flex items-center text-14">
-                          <i className="icon-calendar mr-10"></i> 
+                          <i className="icon-calendar mr-10"></i>
                           {formatDate(elm.date)}
                         </div>
                         <div className="d-flex items-center text-14">
@@ -426,7 +496,8 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {elm.price}
+                          {currency || "EGP"}{" "}
+                          {(elm.price * exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
@@ -436,6 +507,7 @@ export default function ActivitiesList({
                       <button
                         className="button -outline-accent-1 text-accent-1"
                         onClick={() => handleRedirect(elm._id)}
+                        ref={i === 0 ? refActivityDetails : null}
                       >
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>

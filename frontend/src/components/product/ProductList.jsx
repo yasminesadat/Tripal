@@ -1,34 +1,23 @@
-import { tourDataThree } from "@/data/tours";
-import {
-  fetchProducts,
-  archiveProduct,
-  unArchiveProduct,
-} from "../../api/ProductService";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Tour, message, Input, Slider } from "antd";
+import { fetchProducts } from "../../api/ProductService";
 import { getUserData } from "../../api/UserService";
-import React, { useState, useRef, useEffect } from "react";
-import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
 import Spinner from "../common/Spinner";
 import ProductCard from "./ProductCard";
-import {
-  durations,
-  features,
-  languages,
-  rating,
-  speedFeatures,
-} from "@/data/tourFilteringOptions";
-import RangeSlider from "../common/RangeSlider";
-import { Link } from "react-router-dom";
-import { Card, Rate, message, Input, Select, Slider } from "antd";
 import MetaComponent from "../common/MetaComponent";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+
 const { Search } = Input;
-const { Option } = Select;
 
 const metadata = {
   title: "Products || Tripal",
 };
 
 export default function ProductList() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
@@ -40,7 +29,6 @@ export default function ProductList() {
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  const [exchangeRate, setExchangeRate] = useState(1);
   const errorDisplayedRef = useRef(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -48,6 +36,55 @@ export default function ProductList() {
   const [userId, setUserId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newIsArchived, setNewIsArchived] = useState(false);
+  const refProductDetails = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [firstProductId, setFirstProductId] = useState(null);  
+
+  const steps = [
+    {
+      title: "See More Details",
+      description: "Check it out to make your choice.",
+      target: () => refProductDetails.current, 
+      onNext: () => {
+        const firstProduct = filteredProducts[0];
+        if (firstProduct){
+          navigate(`/tourist/view-products/product/${firstProductId}`, { 
+            state: { 
+              fromTour: true, 
+              id: firstProduct._id,
+              productSeller: firstProduct.seller._id,
+              name: firstProduct.name,
+              description: firstProduct.description,
+              price: firstProduct.price,
+              picture: firstProduct.picture,
+              seller: firstProduct.seller.name,
+              quantity: firstProduct.quantity,
+              averageRating: firstProduct.averageRating,
+              isArchived: firstProduct.isArchived,
+              sales: firstProduct.sales,
+              userRole: userRole,
+              userId: userId,
+            } 
+          })
+        }   
+      }
+    },
+    {
+      title: "Nothing",
+    },
+  ]
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1000);
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
 
   const getProducts = async (page = 1) => {
     setLoading(true);
@@ -61,7 +98,6 @@ export default function ProductList() {
         userRole
       );
       let filtered = productsData.products;
-      console.log(filtered);
       if (productsData.totalPages) setTotalPages(productsData.totalPages);
 
       setProducts(filtered);
@@ -79,6 +115,28 @@ export default function ProductList() {
     }
   };
 
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,25 +153,9 @@ export default function ProductList() {
 
   useEffect(() => {
     if (userRole) {
-      console.log("User role:", userRole);
       getProducts(currentPage);
     }
   }, [userRole, sortOrder]);
-
-  // useEffect(() => {
-  //   const getExchangeRate = async () => {
-  //     if (curr) {
-  //       try {
-  //         const rate = await getConversionRate(curr);
-  //         setExchangeRate(rate);
-  //       } catch (error) {
-  //         message.error("Failed to fetch exchange rate.");
-  //       }
-  //     }
-  //   };
-
-  //   getExchangeRate();
-  // }, [curr]);
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -131,16 +173,11 @@ export default function ProductList() {
     getProducts(1);
   };
 
-  const formatPrice = (price) => {
-    const convertedPrice = (price * exchangeRate).toFixed(2);
-    return convertedPrice;
-  };
-
   const formatPriceRange = () => {
     if (priceRange[1] === 3000) {
-      return `${priceRange[0]} - ${priceRange[1]} & above`;
+      return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate} & above`;
     }
-    return `${priceRange[0]} - ${priceRange[1]}`;
+    return `${priceRange[0]*exchangeRate} - ${priceRange[1]*exchangeRate}`;
   };
 
   const onPageChange = (page) => {
@@ -178,6 +215,83 @@ export default function ProductList() {
   return (
     <>
       <MetaComponent meta={metadata} />
+      <style jsx global>{`
+        /* Base style for all dots */
+        /* Try multiple selectors and approaches */
+        .ant-tour .ant-tour-indicators > span {
+          width: 8px !important;
+          height: 8px !important;
+          border-radius: 50% !important;
+          background: #dac4d0 !important;
+        }
+        .ant-tour .ant-tour-indicators > span[class*="active"] {
+          background: #036264 !important;
+        }
+
+        /* Additional specificity */
+        .ant-tour-indicators span[role="dot"][aria-current="true"] {
+          background: #036264 !important;
+        }
+
+        .ant-tour .ant-tour-inner {
+          border: 1px solid #5a9ea0;
+          box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
+        }
+
+        .ant-tour .ant-tour-content {
+          color: #8f5774;
+          font-weight: 500 !important;
+          letter-spacing: 0.3px !important;
+          text-rendering: optimizeLegibility !important;
+        }
+
+        .ant-tour .ant-tour-title {
+          color: #5a9ea0;
+          font-weight: 600;
+        }
+
+        .ant-tour .ant-tour-close {
+          color: #5a9ea0;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+        }
+
+        .ant-tour .ant-tour-close:hover {
+          opacity: 1;
+          color: #e5f8f8;
+        }
+
+        .ant-tour .ant-tour-buttons .ant-btn {
+          transition: all 0.3s ease;
+        }
+
+        .ant-tour .ant-tour-buttons .ant-btn-primary
+        {
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+        .ant-tour .ant-tour-buttons .ant-btn-default{
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+        
+        .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
+        .ant-tour .ant-tour-buttons .ant-btn-default:hover {
+          color:white;
+          background: #5a9ea0;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
+        }
+        .ant-tour .ant-tour-arrow-content {
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+        }  
+      `}</style>
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <section className="layout-pt-lg layout-pb-xl">
         <div className="container">
           <div className="row custom-dd-container justify-between items-center relative z-5">
@@ -427,6 +541,7 @@ export default function ProductList() {
                     sales={product.sales}
                     userRole={userRole}
                     userId={userId}
+                    refProductDetails={i === 0 ? refProductDetails : null}
                   />
                 ))}
               </div>
@@ -437,10 +552,6 @@ export default function ProductList() {
                   totalPages={totalPages}
                   onPageChange={onPageChange}
                 />
-
-                {/* <div className="text-14 text-center mt-20">
-              Showing results 1-30 of 1,415
-            </div> */}
               </div>
             </>
           )}
@@ -449,3 +560,4 @@ export default function ProductList() {
     </>
   );
 }
+

@@ -11,8 +11,8 @@ import ItineraryReviews from "./ItineraryReviews";
 import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";
 import Index from './Index'
-
-export default function ItineraryDetails({ itinerary, userRole }) {
+import ItineraryBooking from "../ItineraryBooking";
+export default function ItineraryDetails({ itinerary, userRole, refItineraryBook }) {
   
   //#region 1. Variables
   const location = useLocation();
@@ -26,7 +26,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
 
   if (!itinerary) return <div><Index/></div>;
   const itineraryId = itinerary._id;
-
+ 
   return (
     <>
       <section className="">
@@ -55,10 +55,10 @@ export default function ItineraryDetails({ itinerary, userRole }) {
                 <LocationMap
                   markerPosition={markerPosition}
                   search={"dont search bro"}
-                 
                 />
               </div>
-
+             {userRole=== "Tour Guide"&& <div><div className="line mt-60 mb-60"></div>
+              <ItineraryBooking bookings={itinerary.bookings} price={itinerary.price+itinerary.serviceFee}/></div>}
               <div className="line mt-60 mb-60"></div>
               <h2 className="text-30">Customer Reviews</h2>
 
@@ -84,7 +84,7 @@ export default function ItineraryDetails({ itinerary, userRole }) {
 
             <div className="col-lg-4">
               <div className="d-flex justify-end js-pin-content">
-                {page == "upcoming" && userRole === 'Tourist' && <TourSingleSidebar itinerary={itinerary} />}
+                {page == "upcoming" && userRole === 'Tourist' && <TourSingleSidebar itinerary={itinerary} refItineraryBook={refItineraryBook}/>}
               </div>
             </div>
           </div>

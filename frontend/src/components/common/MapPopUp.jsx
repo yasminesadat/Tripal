@@ -44,7 +44,7 @@ const MapPopUp = ({ markerPosition, setMarkerPosition, setSelectedLocation, sele
 
   return (
     <>
-      <Button type="primary" onClick={showModal} style={{ width: '100%' }}>
+      <Button type="primary"className='custom-button' onClick={showModal} style={{ width: '100%' }}>
         Add location
       </Button>
       <Modal
@@ -52,6 +52,9 @@ const MapPopUp = ({ markerPosition, setMarkerPosition, setSelectedLocation, sele
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#4CAF50', color: '#fff' }
+        }}
       >
         <LocationMap
           markerPosition={markerPosition}
@@ -62,6 +65,16 @@ const MapPopUp = ({ markerPosition, setMarkerPosition, setSelectedLocation, sele
         <div style={{ marginTop: '10px' }}>
           <strong>Selected Location:</strong> {address || 'No location selected yet'}
         </div>
+        <style>{`
+      .custom-button {
+        background-color: var(--color-dark-purple) !important;
+        border-color: var(--color-dark-purple) !important;
+      }
+      .custom-button:hover {
+        background-color: var(--color-light-purple) !important;
+        border-color: var(--color-light-purple) !important;
+      }
+    `}</style>
       </Modal>
     </>
   );

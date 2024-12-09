@@ -74,8 +74,13 @@ export default function HeaderSerch({ white, selected, setSelected }) {
   }, []);
 
   return (
-    <div ref={dropDownContainer} className="header__search js-liverSearch js-form-dd">
-      <i className="icon-search text-18"></i>
+    <div
+      ref={dropDownContainer}
+      className="header__search js-liverSearch js-form-dd"
+    >
+      <div className="searchFormItem__icon size-50 rounded-full bg-white  flex-center">
+        <i className="text-20 icon-pin"></i>
+      </div>
       <input
         onChange={handleInputChange}
         ref={inputRef}
@@ -83,34 +88,46 @@ export default function HeaderSerch({ white, selected, setSelected }) {
         placeholder="Search cities by 3-10 characters"
         className={`js-search ${white ? "text-white" : ""}`}
         onClick={() => setDdActive((prev) => !prev)}
+        style={{ marginLeft: "-9%" }}
       />
 
-      <div className={ddActive ? "headerSearchRecent is-active" : "headerSearchRecent"} data-x="headerSearch">
+      <div
+        className={
+          ddActive ? "headerSearchRecent is-active" : "headerSearchRecent"
+        }
+        data-x="headerSearch"
+      >
         <div className="headerSearchRecent__container">
           <div className="headerSearchRecent__title">
             <h4 className="text-18 fw-500">Recent Searches</h4>
           </div>
 
           <div className="headerSearchRecent__list js-results">
-            {searchData.filter((elm) => elm.cityCode != null).map((elm, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setSelected(elm.cityCode);
-                  setDdActive(false);
-                }}
-                className="headerSearchRecent__item js-search-option"
-                data-x-click="headerSearch"
-              >
-                <div className="size-50 bg-white rounded-12 border-1 flex-center">
-                  {elm.iconClass && <i className={elm.iconClass}></i>}
-                </div>
-                <div className="ml-10">
-                  <div className="fw-500 js-search-option-target">{elm.title}</div>
-                  <div className="lh-14 text-14 text-light-2">{elm.cityCode} {elm.location}</div>
-                </div>
-              </button>
-            ))}
+            {searchData
+              .filter((elm) => elm.cityCode != null)
+              .map((elm, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setSelected(elm.cityCode);
+                    setDdActive(false);
+                  }}
+                  className="headerSearchRecent__item js-search-option"
+                  data-x-click="headerSearch"
+                >
+                  <div className="size-50 bg-white rounded-12 border-1 flex-center">
+                    {elm.iconClass && <i className={elm.iconClass}></i>}
+                  </div>
+                  <div className="ml-10">
+                    <div className="fw-500 js-search-option-target">
+                      {elm.title}
+                    </div>
+                    <div className="lh-14 text-14 text-light-2">
+                      {elm.cityCode} {elm.location}
+                    </div>
+                  </div>
+                </button>
+              ))}
           </div>
         </div>
       </div>

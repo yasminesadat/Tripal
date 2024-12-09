@@ -12,18 +12,27 @@ import {
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { login } from "../../../api/UserService";
-
+import OtpModal from "./OtpEmailModal";
 const { Title, Text } = Typography;
 
 export default function UserForm() {
+  //#region user State
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [error, setError] = useState("");
+  //#endregion
 
-  const handleLogin = (role) => {
+  //#region functions
+  const handleLogin = (role, isFirstTime) => {
     if (role === "Admin") {
       window.location.href = "/admin";
     } else if (role === "Tourist") {
-      window.location.href = "/tourist";
+      if (isFirstTime) {
+        window.location.href = "/tourist/preferences";
+      } else {
+        window.location.href = "/tourist";
+      }
     } else if (role === "Advertiser") {
       window.location.href = "/advertiser";
     } else if (role === "Tour Guide") {
@@ -42,10 +51,12 @@ export default function UserForm() {
       form.getFieldValue("password")
     );
     setLoading(false);
-    if (response.status == "success") {
+    console.log(response);
+    if (response.status === "success") {
       message.success(response.message);
-      handleLogin(response.role);
-    } else if (response.status == "warning") {
+      handleLogin(response.role, response.isFirstTime);
+      console.log("isFirstTime:", response.isFirstTime);
+    } else if (response.status === "warning") {
       message.warning(response.message);
     } else {
       message.error(response.message);
@@ -56,6 +67,18 @@ export default function UserForm() {
     message.error("Please check the form and try again.");
     console.log("Failed:", errorInfo);
   };
+
+  const showOtpModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+  const clearError = () => {
+    setError("");
+  };
+  //#endregion
 
   return (
     <>
@@ -107,7 +130,10 @@ export default function UserForm() {
               size="large"
               style={{
                 height: "50px",
-                borderColor: "#d9d9d9",
+                border: "1px solid #d9d9d9",
+                outline: "none",
+                width: "100%",
+                backgroundColor: "transparent",
               }}
             />
           </Form.Item>
@@ -117,11 +143,7 @@ export default function UserForm() {
             label="Password"
             name="password"
             rules={[
-              { required: true, message: "Please enter your password" },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters",
-              },
+              { required: true, message: "Please enter your password" }
             ]}
           >
             <Input.Password
@@ -137,11 +159,18 @@ export default function UserForm() {
           <Form.Item>
             <Row justify="space-between" align="middle">
               <Checkbox>Remember me</Checkbox>
-              <Link to="/forgot-password" className="sign-up-link">
+              <Link to="#" className="sign-up-link" onClick={showOtpModal}>
                 Forgot password?
               </Link>
             </Row>
           </Form.Item>
+
+          {/* OTP Modal */}
+          <OtpModal
+            visible={isModalVisible}
+            onClose={handleCloseModal}
+            clearError={clearError}
+          />
 
           {/* Submit Button */}
           <Form.Item>
@@ -158,6 +187,7 @@ export default function UserForm() {
         </Form>
       </Card>
       <style>{`
+
         .sign-up-link {
           color: var(--color-stone)!important;
           font-weight: bold;

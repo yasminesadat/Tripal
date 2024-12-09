@@ -16,11 +16,11 @@ const sellerSchema = new Schema(
       type: String,
       required: true,
     },
-    name: {
-      type: String,
-      required: false,
-      default: "",
-    },
+    // name: {
+    //   type: String,
+    //   required: false,
+    //   default: "",
+    // },
 
     description: {
       type: String,
@@ -32,7 +32,12 @@ const sellerSchema = new Schema(
       type: String,
       required: false,
       default: "",
-    }
+    },
+    notificationList:[ {
+      message: String,
+      read: {type:Boolean , default: false} ,
+      createdAt:{type:Date , default: Date.now} 
+    }]
   },
   { timestamps: true }
 );

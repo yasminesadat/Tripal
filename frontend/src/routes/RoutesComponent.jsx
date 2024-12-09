@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import RoleProtectedRoute from "./RoleProtectedRouteComponent";
 
-import templateRoutes from "./TemplateRoutes";
 import guestRoutes from "./GuestRoutes";
 import touristRoutes from "./TouristRoutes";
 import advertiserRoutes from "./AdvertiserRoutes";
@@ -9,7 +8,8 @@ import adminRoutes from "./AdminRoutes";
 import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import governorRoutes from "./GovernorRoutes";
-import commonRoutes from "./CommonRoute"; 
+import commonRoutes from "./CommonRoute";
+import templateRoutes from "./TemplateRoutes";
 
 const RoutesComponent = () => (
   <Routes>
@@ -28,7 +28,7 @@ const RoutesComponent = () => (
         }
       />
     ))}
-  
+
     {touristRoutes.map((route, index) => (
       <Route
         key={`tourist-${index}`}

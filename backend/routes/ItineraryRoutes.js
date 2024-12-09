@@ -10,17 +10,23 @@ const {
   updateItinerary,
   deleteItinerary,
   viewUpcomingItineraries,
-  viewPaidItineraries,
   getTouristItineraries,
   toggleItineraryStatus,
   getAllItinerariesForAdmin,
   getItineraryById,
+  revenue,
+  getTourguideBookings
 } = require("../controllers/ItineraryController");
 
 const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.get("/itinerary/:id", getItineraryById);
-
+router.get(
+  "/my-itineraries-bookings",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  getTourguideBookings
+);
 router.post(
   "/create-itinerary",
   verifyToken,
@@ -48,16 +54,7 @@ router.delete(
 );
 
 router.get("/itinerary/upcoming/view",
-  verifyToken,
-  authorizeRoles("Tourist"),
   viewUpcomingItineraries);
-
-router.get(
-  "/itinerary/paid/view",
-  verifyToken,
-  authorizeRoles("Tourist"),
-  viewPaidItineraries
-);
 
 router.get(
   "/itineraries/booked-itineraries",
@@ -88,6 +85,12 @@ router.patch(
   verifyToken,
   authorizeRoles("Tour Guide"),
   toggleItineraryStatus
+);
+router.get(
+  "/itineraries/revenue",
+  verifyToken,
+  authorizeRoles("Tour Guide"),
+  revenue
 );
 
 module.exports = router;

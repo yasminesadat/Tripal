@@ -31,6 +31,7 @@ const createProduct = asyncHandler(async (req, res) => {
     quantity,
     picture: result.secure_url,
   });
+
   await product.save();
   if (product) {
     res.status(201).json(product);
@@ -93,7 +94,6 @@ const getProducts = asyncHandler(async (req, res) => {
         : undefined,
     });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
@@ -170,10 +170,8 @@ const editProduct = asyncHandler(async (req, res) => {
         .join("/")
         .split(".")[0];
 
-      // Delete old picture
       await cloudinary.uploader.destroy(oldPicturePublicId);
 
-      // Upload new picture
       result = await cloudinary.uploader.upload(picture, {
         folder: "products",
       });
@@ -183,9 +181,7 @@ const editProduct = asyncHandler(async (req, res) => {
         { name, price, description, quantity, picture: result.secure_url },
         { new: true }
       );
-    } catch (error) {
-      console.log(error.message);
-    }
+    } catch (error) {}
   } else {
     updatedProduct = await Product.findByIdAndUpdate(
       id,
@@ -210,9 +206,7 @@ const archiveProduct = asyncHandler(async (req, res) => {
     await product.save();
 
     res.status(200).json({ message: "Product archived successfully", product });
-  } catch (error) {
-    console.log(error.message);
-  }
+  } catch (error) {}
 });
 
 const unArchiveProduct = asyncHandler(async (req, res) => {
@@ -230,9 +224,69 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
     res
       .status(200)
       .json({ message: "Product unarchived successfully", product });
+  } catch (error) {}
+});
+
+const revenue = async (req, res) => {
+  try {
+    const id = req.userId;
+    const products = await Product.find({ seller: id });
+    let totalRevenue = 0;
+    products.forEach((product) => {
+      const productRevenue = product.sales * product.price;
+      totalRevenue += productRevenue;
+    });
+
+    res.status(200).json({ totalRevenue });
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch revenue" });
   }
+};
+
+const getProductImages = asyncHandler(async (req, res) => {
+  const { ids } = req.body; // Expecting an array of product IDs in the request body
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400);
+    throw new Error("Invalid input: Please provide an array of product IDs");
+  }
+
+  const products = await Product.find({ _id: { $in: ids } }, "picture"); // Fetch products by IDs and select only the 'picture' field
+
+  if (!products || products.length === 0) {
+    res.status(404);
+    throw new Error("No products found");
+  }
+
+  const images = products.map((product) => product.picture); // Extract images from products
+  res.status(200).json(images);
+});
+
+const isArchived = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    } else {
+      res.status(200).json(product.isArchived);
+    }
+  } catch (error) {}
+});
+
+const getProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id).populate("seller");
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    } else {
+      res.status(200).json(product);
+    }
+  } catch (error) {}
 });
 
 module.exports = {
@@ -244,4 +298,8 @@ module.exports = {
   editProduct,
   archiveProduct,
   unArchiveProduct,
+  revenue,
+  getProductImages,
+  isArchived,
+  getProduct,
 };

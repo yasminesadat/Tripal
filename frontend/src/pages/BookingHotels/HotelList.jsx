@@ -1,79 +1,97 @@
-import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "./Components/Sidebar.jsx";
-import { speedFeatures } from "./Components/TourFilteringOptions.jsx";
-import Pagination from "./Components/pagination.jsx";
+import { useState, useEffect, useRef } from "react";
+
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg"
-import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg"
-import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg"
-import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg"
-import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg"
-import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg"
+import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg";
+import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg";
+import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg";
+import img6 from "../BookingHotels/Components/HotelsImages/hotel3.jpeg";
+import img2 from "../BookingHotels/Components/HotelsImages/hotel5.jpeg";
+import img4 from "../BookingHotels/Components/HotelsImages/hotel4.jpeg";
+import {
+  getTouristCurrency,
+  getConversionRate,
+} from "@/api/ExchangeRatesService.js";
 
-
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 //import styles from "../../components/style.module.css";
 
-
-
-import { Link } from "react-router-dom";
-import { getHotelPrices, getHotels } from "../../api/HotelService.js";
-
+import { getHotels } from "../../api/HotelService.js";
 
 export default function TourList1() {
-  const [sortOption, setSortOption] = useState("");
-  const [ddActives, setDdActives] = useState(false);
-  const [sidebarActive, setSidebarActive] = useState(false);
+  const [setDdActives] = useState(false);
   const [filteredHotels, setFilteredHotels] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const dropDownContainer = useRef();
-  const {cityCode,dates1,dates2}  = useParams();
-  
-  const images=[img1,img2,img3,img4,img5,img6]
+  const { cityCode, dates1, dates2 } = useParams();
+  const navigate = useNavigate();
 
+  const images = [img1, img2, img3, img4, img5, img6];
 
+  const [exchangeRate, setExchangeRate] = useState(1);
 
-const fetchTourData = async () => {
-   try {
-       // console.log("hiiiiiiiiii",cityCode);
+  const [currency, setCurrency] = useState("EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);
+    return () => clearInterval(intervalId);
+  }, [currency]);
+
+  const fetchTourData = async () => {
+    try {
+      // Fetch hotel data
       const response = await getHotels(cityCode);
-  
-  
-      const transformedData = response.map((hotel,index) => ({
+
+      // Transform the data as before
+      const transformedData = response.map((hotel, index) => ({
         id: hotel.hotelId,
         title: hotel.name,
-        location: hotel.iataCode, 
-        description: "A beautiful hotel in the heart of Paris", 
-       price: 10000, // Default or mock price
-       fromPrice: 15000, // Default starting price
-       features: [
-        {
-          icon:`icon-price-tag`,
-          name: "Best Price Guarantee",
-        },
-        {
-          icon: `icon-check`,
-          name: "Free Cancellation",
-        },
-      ],
-        imageSrc: images[index % images.length], 
-        // featured: true,
-        // badgeText: "Best Seller",
+        location: hotel.iataCode,
+        description: "A beautiful hotel for a remarkable holiday.",
+        price: 10000, // Default or mock price
+        fromPrice: 15000, // Default starting price
+        features: [
+          {
+            icon: `icon-price-tag`,
+            name: "Best Price Guarantee",
+          },
+          {
+            icon: `icon-check`,
+            name: "Free Cancellation",
+          },
+        ],
+        imageSrc: images[index % images.length],
         duration: "1 night", // Default duration
       }));
-  
+
       // Set the transformed data to the component's state
       setFilteredHotels(transformedData);
-      }
-      catch (error) {
+    } catch (error) {
       console.error("Error fetching tours:", error);
     }
-  }; 
+  };
 
- 
+  // Filter the hotels based on the search query
+  const filteredHotelList = filteredHotels.filter((hotel) =>
+    hotel.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Fetch tours on component mount and when sortOption changes
   useEffect(() => {
     fetchTourData();
   }, [cityCode]);
@@ -95,201 +113,207 @@ const fetchTourData = async () => {
   }, []);
 
   const metadata = {
-    title: "Home || Tripal - Travel Agency",
-};
+    title: "Hotels || Tripal ",
+  };
 
   return (
     <>
-    <MetaComponent meta={metadata} />
-    <div className="page-wrapper">
+      <style>{`
+  .search-container {
+    margin: 20px 0;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid var(--color-light-purple);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-left: auto; /* This pushes it to the right */
+  }
+
+  .search-container:hover {
+    border-color: var(--color-pink);
+  }
+
+  .search-container:focus-within {
+    border-color: var(--color-stone);
+    box-shadow: 0 2px 8px rgba(3, 98, 100, 0.1);
+  }
+
+  .search-icon {
+    padding: 0 12px;
+    color: var(--color-dark-purple);
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 45px;
+    padding: 0 12px;
+    font-size: 15px;
+    border: none;
+    background: transparent;
+    color: var(--color-dark-green);
+  }
+
+  .search-input:focus {
+    outline: none;
+  }
+
+  .search-input::placeholder {
+    color: var(--color-dark-purple);
+    opacity: 0.6;
+  }
+`}</style>
+      <MetaComponent meta={metadata} />
+      <div className="page-wrapper">
         <TouristHeader />
         <main className="page-content">
-        <section className="layout-pb-xl">
-      <div className="container">
-        <div className="row">
-          <div className="col-xl-3 col-lg-4">
-            <div className="lg:d-none">
-              <Sidebar />
-            </div>
-
-            <div className="accordion d-none mb-30 lg:d-flex js-accordion">
-              <div
-                className={`accordion__item col-12 ${
-                  sidebarActive ? "is-active" : ""
-                } `}
-              >
-                <button
-                  className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
-                  onClick={() => setSidebarActive((pre) => !pre)}
+          <section className="layout-pb-xl">
+            <div className="search-container">
+              <span className="search-icon">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <i className="icon-sort-down mr-10 text-16"></i>
-                  Filter
-                </button>
-
-                <div
-                  className="accordion__content"
-                  style={sidebarActive ? { maxHeight: "2000px" } : {}}
-                >
-                  <div className="pt-20">
-                    <Sidebar />
-                  </div>
-                </div>
-              </div>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                placeholder="Search for hotels..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
             </div>
-          </div>
+            <div
+              className="container"
+              style={{ placeItems: "center", marginRight: "10px" }}
+            >
+              <div className="col-xl-9 col-lg-8" style={{}}>
+                <div className="row y-gap-30 pt-30">
+                  {filteredHotelList.map((elm, i) => (
+                    <div className="col-12" key={i}>
+                      <div className="tourCard -type-2">
+                        <div className="tourCard__image">
+                          <img src={elm.imageSrc} alt="image" />
 
-          <div className="col-xl-9 col-lg-8">
-            <div className="row y-gap-5 justify-between">
-              <div className="col-auto">
-                <div>1362 results</div>
-              </div>
+                          {elm.ho && (
+                            <div className="tourCard__badge">
+                              <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
+                                {elm.id}
+                              </div>
+                            </div>
+                          )}
+                        </div>
 
-              <div ref={dropDownContainer} className="col-auto">
-                <div
-                  className={`dropdown -type-2 js-dropdown js-form-dd ${
-                    ddActives ? "is-active" : ""
-                  } `}
-                  data-main-value=""
-                >
-                  <div
-                    className="dropdown__button js-button"
-                    onClick={() => setDdActives((pre) => !pre)}
-                  >
-                    <span>Sort by: </span>
-                    <span className="js-title">
-                      {sortOption ? sortOption : "Featured"}
-                    </span>
-                    <i className="icon-chevron-down"></i>
-                  </div>
+                        <div className="tourCard__content">
+                          <div
+                            className="tourCard__location"
+                            style={{ cursor: "default" }}
+                          >
+                            <i className="icon-pin"></i>
+                            {elm.location}
+                          </div>
 
-                  <div className="dropdown__menu js-menu-items">
-                    {speedFeatures.map((elm, i) => (
-                      <div
-                        onClick={() => {
-                          setSortOption((pre) => (pre == elm ? "" : elm));
-                          setDdActives(false);
-                        }}
-                        key={i}
-                        className="dropdown__item"
-                        data-value="fast"
-                      >
-                        {elm}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+                          <h3
+                            className="tourCard__title mt-5"
+                            style={{ cursor: "default" }}
+                          >
+                            <span>{elm.title}</span>
+                          </h3>
 
-            <div className="row y-gap-30 pt-30">
-              {filteredHotels.map((elm, i) => (
-                <div className="col-12" key={i}>
-                  <div className="tourCard -type-2">
-                    <div className="tourCard__image">
-                      <img src={elm.imageSrc} alt="image" />
+                          <p
+                            className="tourCard__text mt-5 "
+                            style={{ cursor: "default" }}
+                          >
+                            {elm.description}
+                          </p>
 
-                      {elm.ho && (
-                        <div className="tourCard__badge">
-                          <div className="bg-accent-1 rounded-12 text-white lh-11 text-13 px-15 py-10">
-                            {elm.id}
+                          <div className="row x-gap-20 y-gap-5 pt-30">
+                            {elm.features?.map((elm2, i2) => (
+                              <div key={i2} className="col-auto">
+                                <div
+                                  className="text-14"
+                                  style={{
+                                    color: "var(--color-stone)",
+                                    cursor: "default",
+                                  }}
+                                >
+                                  <i className={`${elm2.icon} mr-10`}></i>
+                                  {elm2.name}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      )}
 
-                      {/* {elm.featured && (
-                        <div className="tourCard__badge">
-                          <div className="bg-accent-2 rounded-12 text-white lh-11 text-13 px-15 py-10">
-                            FEATURED
-                          </div>
-                        </div>
-                      )} */}
+                        <div className="tourCard__info">
+                          <div>
+                            <div className="d-flex items-center text-14">
+                              <i
+                                className="icon-clock mr-10"
+                                style={{ cursor: "default" }}
+                              ></i>
+                              {elm.duration}
+                            </div>
 
-                      <div className="tourCard__favorite">
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
-                          <i className="icon-heart text-15"></i>
-                        </button>
-                      </div>
-                    </div>
+                            <div
+                              className="tourCard__price"
+                              style={{ cursor: "default" }}
+                            >
+                              <div>
+                                {currency || "EGP"}{" "}
+                                {(elm.fromPrice * exchangeRate).toFixed(2)}
+                              </div>
 
-                    <div className="tourCard__content">
-                      <div className="tourCard__location">
-                        <i className="icon-pin"></i>
-                        {elm.location}
-                      </div>
-
-                      <h3 className="tourCard__title mt-5">
-                        <span>{elm.title}</span>
-                      </h3>
-
-                      <div className="d-flex items-center mt-5">
-                        {/* <div className="d-flex items-center x-gap-5">
-                          <Stars star={elm.rating} font={12} />
-                        </div> */}
-
-                        {/* <div className="text-14 ml-10">
-                          <span className="fw-500">{elm.rating}</span> (
-                          {elm.ratingCount})
-                        </div> */}
-                      </div>
-
-                      <p className="tourCard__text mt-5">{elm.description}</p>
-
-                      <div className="row x-gap-20 y-gap-5 pt-30">
-                        {elm.features?.map((elm2, i2) => (
-                          <div key={i2} className="col-auto">
-                            <div className="text-14 text-accent-1">
-                              <i className={`${elm2.icon} mr-10`}></i>
-                              {elm2.name}
+                              <div className="d-flex items-center">
+                                From{" "}
+                                <span
+                                  className="text-20 fw-500 ml-5"
+                                  style={{ cursor: "default" }}
+                                >
+                                  {currency || "EGP"}{" "}
+                                  {(elm.price * exchangeRate).toFixed(2)}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
 
-                    <div className="tourCard__info">
-                      <div>
-                        <div className="d-flex items-center text-14">
-                          <i className="icon-clock mr-10"></i>
-                          {elm.duration}
-                        </div>
-
-                        <div className="tourCard__price">
-                          <div>EGP {elm.fromPrice}</div>
-
-                          <div className="d-flex items-center">
-                            From{" "}
-                            <span className="text-20 fw-500 ml-5">
-                              EGP {elm.price}
-                            </span>
-                          </div>
+                          <button
+                            className="button -outline-accent-1 "
+                            style={{ color: "var(--color-stone)" }}
+                            onClick={() =>
+                              (window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`)
+                            }
+                          >
+                            {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
+                            View Details
+                            <i className="icon-arrow-top-right ml-10"></i>
+                            {/* </Link> */}
+                          </button>
                         </div>
                       </div>
-
-                      <button className="button -outline-accent-1 text-accent-1">
-                        <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}>
-                          View Details
-                          <i className="icon-arrow-top-right ml-10"></i>
-                        </Link>
-                      </button>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            <div className="d-flex justify-center flex-column mt-60">
-              <Pagination />
-
-              <div className="text-14 text-center mt-20">
-                Showing results 1-30 of 1,415
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>        </main>
+          </section>{" "}
+        </main>
         <FooterThree />
-    </div>
-</>
+      </div>
+    </>
   );
 }

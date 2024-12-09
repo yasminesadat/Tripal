@@ -1,31 +1,14 @@
 import React from "react";
 
-export default function Overview() {
+export default function Overview({name}) {
   return (
     <>
-      <h2 className="text-30">Tour Overview</h2>
+      <h2 className="text-30">Hotel Overview</h2>
       <p className="mt-20">
-        The Phi Phi archipelago is a must-visit while in Phuket, and this
-        speedboat trip whisks you around the islands in one day. Swim over the
-        coral reefs of Pileh Lagoon, have lunch at Phi Phi Leh, snorkel at
-        Bamboo Island, and visit Monkey Beach and Maya Bay, immortalized in "The
-        Beach." Boat transfers, snacks, buffet lunch, snorkeling equipment, and
-        Phuket hotel pickup and drop-off all included.
+        {`Nestled in the heart of the city, ${name} offers a perfect blend of comfort, style, and convenience. With elegantly designed rooms equipped with modern amenities, guests can enjoy a peaceful retreat after a busy day of exploration. The hotel features a world-class restaurant serving gourmet meals, a relaxing spa, and a well-equipped fitness center to ensure a rejuvenating stay.  Just steps away from popular attractions, shopping centers, and vibrant nightlife, our hotel is the ideal choice for those seeking both relaxation and adventure.`}
       </p>
 
-      <h3 className="text-20 fw-500 mt-20">Tour Highlights</h3>
-      <ul className="ulList mt-20">
-        <li>
-          Experience the thrill of a speedboat to the stunning Phi Phi Islands
-        </li>
-        <li>Be amazed by the variety of marine life in the archepelago</li>
-        <li>
-          Enjoy relaxing in paradise with white sand beaches and azure turquoise
-          water
-        </li>
-        <li>Feel the comfort of a tour limited to 35 passengers</li>
-        <li>Catch a glimpse of the wild monkeys around Monkey Beach</li>
-      </ul>
+     
     </>
   );
 }

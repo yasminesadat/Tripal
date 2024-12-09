@@ -343,7 +343,7 @@ export default function AddTour() {
 
                           <div className="col-lg-4">
                             <div className="form-input ">
-                              <input type="text" required />
+                              <input type="text" required  />
                               <label className="lh-1 text-16 text-light-1">
                                 Map Latitude
                               </label>

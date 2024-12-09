@@ -91,11 +91,13 @@ export async function getRequests() {
 
 export async function requestAccountDeletion() {
     try {
+        console.log("hiiiiii")
       const response = await axios.delete(`/request-deletion`);
+      console.log(response.data);
       return response.data;
     } catch (error) {
 
-      console.error(`Error requesting account deletion `, error);
+      console.error(`Error requesting account deletion0 `, error);
 
       throw error;
     }

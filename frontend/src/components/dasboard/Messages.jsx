@@ -3,34 +3,30 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import PropTypes from 'prop-types';
 import { useState } from "react";
-import { messageSanders } from "@/data/dashboard";  // Assuming this has message details
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Space, message } from 'antd';
 import { getUserData } from "../../api/UserService";
 import { useEffect } from "react";
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { replyToComplaint } from "@/api/ComplaintsService";
+
 export default function Messages({ complaint, user, role }) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
-
   const [replyMessage, setReplyMessage] = useState("");
-
-  // Assuming `complaint.replies` holds the messages array
   const replies = complaint?.replies;
+
   const handleReplyChange = (event) => {
     setReplyMessage(event.target.value);
   };
 
   const handleReplySubmit = async (event) => {
     event.preventDefault();
-
     if (!replyMessage) {
       message.warning("Please write a reply!");
       return;
     }
 
     try {
-      //console.log(replyMessage)
       await replyToComplaint(complaint._id, {
         message: replyMessage,
         senderId: user,
@@ -57,276 +53,392 @@ export default function Messages({ complaint, user, role }) {
       message.error("Failed to send reply. Please try again.");
     }
   };
+
   return (
     <>
-      <div
-        className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}
-      >
+      <div className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}>
         <Sidebar setSideBarOpen={setSideBarOpen} />
 
-        <div>
-          {/* <Header setSideBarOpen={setSideBarOpen} /> */}
+        <div className="dashboard-main">
+          <div className="dashboard-content">
+            <h1 className="page-title">Complaint Details</h1>
+            <p className="complaint-subtitle">{complaint?.title}</p>
 
-          <div className="dashboard__content_content">
-            <h1 className="text-30">Complaint Details</h1>
-            <p className="">{complaint?.title}</p>
-            <div className="row y-gap-30 pt-60">
-              <div className="col-lg-4">
-                <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
+            <div className="dashboard-grid">
+              {/* Complaint Info Card */}
+              <div className="complaint-info">
+                <div className="complaint-card">
+                  <h2 className="complaint-title">{complaint?.title}</h2>
+                  <p className="complaint-body">{complaint?.body}</p>
 
-                  <div className="row y-gap-30 pt-30">
-                    {/* Complaint Title */}
-                    <div className="col-12">
-                      <h2 className="text-20 font-bold">{complaint?.title}</h2>
+                  <div className="status-container">
+                    <div className={`status-badge ${complaint?.status === 'resolved' ? 'resolved' : 'pending'}`}>
+                      {complaint?.status === 'resolved' ? (
+                        <CheckCircleOutlined className="status-icon" />
+                      ) : (
+                        <ExclamationCircleOutlined className="status-icon" />
+                      )}
+                      <span>{complaint?.status === 'resolved' ? 'Resolved' : 'Pending'}</span>
                     </div>
-
-                    {/* Complaint Body */}
-                    <div className="col-12">
-                      <p className="text-16">{complaint?.body}</p>
-                    </div>
-
-                    <div className="col-12">
-                      {/* Complaint Status with Badge and Icon */}
-                      <div className="d-flex align-items-center">
-                        {/* Conditional Icon Based on Status */}
-
-
-                        {/* Status Text with Badge */}
-                        <div className="d-flex align-items-center">
-                          {/* Status Text with Badge */}
-                          <p className={`text-16 font-bold ${complaint?.status === 'resolved' ? 'text-green-500' : 'text-red-500'} mr-10`}>
-                            {complaint?.status === 'resolved' ? 'Resolved' : 'Pending'}
-                          </p>
-
-                          {/* Status Icon with Space */}
-                          <div className={`status-icon ${complaint?.status === 'resolved' ? 'bg-green-500' : 'bg-red-500'}`}>
-                            {complaint?.status === 'resolved' ? (
-                              <CheckCircleOutlined style={{ fontSize: '20px', color: complaint?.status === 'resolved' ? 'green' : 'red' }} />
-                            ) : (
-                              <ExclamationCircleOutlined style={{ fontSize: '20px', color: complaint?.status === 'resolved' ? 'green' : 'red' }} />
-                            )}
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-
-
-                    {/* Complaint Date */}
-                    <div className="col-12">
-                      <div className="text-14 text-gray-500">
-                        {new Date(complaint?.date).toLocaleDateString()} {/* Format the date as needed */}
-                      </div>
-                    </div>
-                    {role === "Admin" && (
-                      <>
-                        <div className="text-14 text-gray-500">
-                          Issuer ID: {complaint?.issuerId}
-                        </div>
-
-                        {/* Complaint Issuer Username */}
-                        <div className="text-14 text-gray-500">
-                          Issuer: {complaint?.issuerUserName}
-                        </div>
-                      </>
-                    )}
-
-
                   </div>
 
+                  <div className="complaint-date">
+                    {new Date(complaint?.date).toLocaleDateString()}
+                  </div>
+
+                  {role === "Admin" && (
+                    <div className="issuer-info">
+                      <p>Issuer ID: {complaint?.issuerId}</p>
+                      <p>Issuer: {complaint?.issuerUserName}</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="col-lg-8">
-                <div className="rounded-12 bg-white shadow-2 px-40 pt-20 pb-30">
-                  <div className="row x-gap-10 y-gap-10 justify-between items-center pb-20 border-1-bottom">
-                    <div className="col-auto">
-                      <div className="d-flex items-center">
-                        <Avatar size={40}>{role === "Admin" ? "TOURIST" : "ADMIN"}</Avatar>
-
-                        <div className="ml-10">
-                          <h5 className="text-15 lh-13 fw-500">
-                            Chat with {role === "Admin" ? "Tourist" : "Admin"}
-                          </h5>
-                          <div className="text-14 lh-13">Active</div>
-                        </div>
+              {/* Chat Section */}
+              <div className="chat-section">
+                <div className="chat-container">
+                  {/* Chat Header */}
+                  <div className="chat-header">
+                    <div className="user-info">
+                      <Avatar size={48} className="user-avatar">
+                        {role === "Admin" ? "T" : "A"}
+                      </Avatar>
+                      <div className="user-details">
+                        <h3>Chat with {role === "Admin" ? "Tourist" : "Admin"}</h3>
+                        <p className="status-active">Active</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Scrollable Container for Replies */}
-                  {/* Dynamic Mapping of Replies */}
-                  <div
-                    className="messages-container"
-                    style={{
-                      maxHeight: '400px', // You can adjust this based on your design
-                      overflowY: 'auto', // Allows vertical scrolling
-                      overflowX: 'hidden',
-                    }}
-                  >
+                  {/* Messages Section */}
+                  <div className="messages-container">
                     {replies?.length === 0 ? (
-                      <div className="row pt-20 justify-center text-center">
-                        <div className="col-lg-6">
-                          <div className="d-flex items-center justify-center">
-                            <Avatar style={{ backgroundColor: '#e0e0e0' }} icon={<UserOutlined />} />
-                            <h5 className="ml-10 text-15 fw-500">System</h5>
-                          </div>
-                          <div
-                            className="text-14 rounded-12 py-20 px-30 mt-15"
-                            style={{
-                              backgroundColor: 'var(--color-light-purple)',
-                              color: '#555',
-                            }}
-                          >
-                            Start the chat by sending a message.
-                          </div>
-                        </div>
+                      <div className="empty-chat">
+                        <Avatar size={64} icon={<UserOutlined />} className="system-avatar" />
+                        <p>Start the chat by sending a message.</p>
                       </div>
                     ) : (
-                      replies?.map((reply, index) => (
-                        <div key={index} className={`row pt-20 ${reply.senderId !== user ? '' : 'justify-end text-right'}`}>
-                          <div className="col-lg-6">
-                            <div className={`d-flex items-center ${reply.senderId !== user ? '' : 'justify-end'}`}>
-                              {reply.senderId === user && (
-                                <Avatar style={{ backgroundColor: '#8f5774' }} icon={<UserOutlined />} />
-                              )}
-                              {reply.senderId !== user && (
-                                <Avatar style={{ backgroundColor: '#e0829d' }} icon={<UserOutlined />} />
-                              )}
+                      <div className="messages-list">
+                        {replies?.map((reply, index) => (
+                          <div key={index} className={`message-wrapper ${reply.senderId === user ? 'sent' : 'received'}`}>
+                            <div className="message-content">
+                              <div className="message-header">
+                                <Avatar
+                                  className={`message-avatar ${reply.senderId === user ? 'sent' : 'received'}`}
+                                  icon={<UserOutlined />}
+                                />
+                                <span className="sender-name">
+                                  {reply.senderId === user ? 'You' : role === "Admin" ? "Tourist" : "Admin"}
+                                </span>
+                              </div>
 
-                              <h5 className={`ml-10 text-15 fw-500 ${reply.senderId !== user ? '' : 'mr-10'}`}>
-                                {reply.senderId === user ? 'You' : role === "Admin" ? "Tourist" : "Admin"}
-                              </h5>
-                            </div>
-
-                            <div
-                              className={`text-14 rounded-12 py-20 px-30 mt-15 ${reply.senderId === user ? 'bg-accent-1-05' : ''}`}
-                              style={{
-                                backgroundColor: reply.senderId !== user ? 'var(--color-light-purple)' : 'var(--color-light-6)',
-                              }}
-                            >
-                              <div className={`${reply.senderId !== user ? 'text-left' : 'text-left'}`}>
+                              <div className={`message-bubble ${reply.senderId === user ? 'sent' : 'received'}`}>
                                 {reply.message}
                               </div>
-                            </div>
-                            <div className="text-14 mt-2" style={{ color: '#666666', textAlign: reply.senderId !== user ? 'left' : 'right' }}>
-                              {new Date(reply.date).toLocaleString('en-US', {
-                                weekday: 'short',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true,
-                              })}
+
+                              <div className="message-timestamp">
+                                {new Date(reply.date).toLocaleString()}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        ))}
+                      </div>
                     )}
                   </div>
 
-
-                  <div className="mt-40 mb-30 border-1-top"></div>
-
-                  {/* Reply Input Section */}
-                  <div className="row y-gap-20 justify-between items-center">
-                    <div className="custom-row">
-                      <input
-                        type="text"
-                        className="custom-input"
-                        placeholder="Type a Message"
-                        value={replyMessage} // Binding the value of the input to replyMessage
-                        onChange={handleReplyChange} // Handling input changes
-                      />
-                    </div>
-
-                    <div className="col-auto">
-                      <button className="custom-button" onClick={handleReplySubmit}>
-                        Send Reply
-                        <i className="icon-arrow-top-right text-16"></i>
-                      </button>
-                    </div>
+                  {/* Input Section */}
+                  <div className="input-container">
+                    <input
+                      type="text"
+                      className="message-input"
+                      placeholder="Type your message..."
+                      value={replyMessage}
+                      onChange={handleReplyChange}
+                    />
+                    <button
+                      onClick={handleReplySubmit}
+                      className="send-button"
+                    >
+                      Send
+                      <i className="icon-arrow-top-right"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-
-            </div>
-
-            <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
             </div>
           </div>
         </div>
       </div>
-      <style>
-        {`
-      .custom-input {
-        padding: 10px 15px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        width: 100%;
-        outline: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
 
-      .custom-input:focus {
-        border-color: #8f5774; /* Custom color on focus */
-        box-shadow: 0 0 5px rgba(143, 87, 116, 0.5); /* Custom focus shadow */
-      }
-        /* styles.css */
-.custom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px; /* 20px gap between items */
-  width: 60%; /* Full width of the container */
-  padding: 20px; /* Add padding to make the div bigger */
-  background-color: #f9f9f9; /* Optional: background color to make the div more noticeable */
-}
+      <style jsx>{`
+        .dashboard {
+          min-height: 100vh;
+          background-color: #f5f5f5;
+          display: flex;
+        }
 
-.custom-row .col-auto {
-  flex-grow: 1; /* Make the columns grow to take available space */
-}
-/* styles.css */
+        .dashboard-main {
+          flex: 1;
+          padding: 2rem;
+        }
 
-/* Custom button class */
-.custom-button {
-  background-color: #8f5774; /* Initial background color */
-  color: white; /* Text color */
-  padding: 12px 24px; /* Increase padding for a bigger button */
-  font-size: 16px; /* Set button font size */
-  border: none; /* Remove default button border */
-  border-radius: 8px; /* Rounded corners */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer; /* Change cursor to pointer */
-  transition: background-color 0.3s ease; /* Smooth transition for background color on hover */
-}
+        .dashboard-content {
+          max-width: 1400px;
+          margin: 0 auto;
+        }
 
-/* Button hover effect */
-.custom-button:hover {
-  background-color: #7a4363; /* Lighter purple shade on hover */
-}
+        .page-title {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #1a1a1a;
+          margin-bottom: 0.5rem;
+        }
 
-/* Icon color inside button */
-.custom-button i {
-  color: #ffffff; /* Ensure the icon is white */
-  margin-left: 10px; /* Space between text and icon */
-}
+        .complaint-subtitle {
+          font-size: 1.5rem;
+          color: #4a4a4a;
+          margin-bottom: 2rem;
+        }
 
-/* Button size modification on hover (optional) */
-.custom-button:hover {
-  transform: scale(1.05); /* Slightly enlarge the button on hover */
-}
+        .dashboard-grid {
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+          gap: 2rem;
+        }
 
-    `}
-      </style>
+        .complaint-card {
+          background: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .complaint-title {
+          font-size: 1.8rem;
+          font-weight: bold;
+          margin-bottom: 1rem;
+        }
+
+        .complaint-body {
+          font-size: 1.2rem;
+          line-height: 1.6;
+          color: #4a4a4a;
+          margin-bottom: 2rem;
+        }
+
+        .status-container {
+          margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          border-radius: 2rem;
+          font-weight: 600;
+        }
+
+        .status-badge.resolved {
+          background-color: #dcfce7;
+          color: #166534;
+        }
+
+        .status-badge.pending {
+          background-color: #fee2e2;
+          color: #991b1b;
+        }
+
+        .complaint-date {
+          font-size: 1.1rem;
+          color: #666;
+          margin-bottom: 1rem;
+        }
+
+        .issuer-info {
+          font-size: 1.1rem;
+          color: #666;
+          margin-top: 1.5rem;
+        }
+
+        .chat-container {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+        }
+
+        .chat-header {
+          padding: 1.5rem;
+          border-bottom: 1px solid #e5e5e5;
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .user-details h3 {
+          font-size: 1.3rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .status-active {
+          color: #22c55e;
+          font-size: 1rem;
+        }
+
+        .messages-container {
+          height: 500px;
+          overflow-y: auto;
+          padding: 1.5rem;
+        }
+
+        .empty-chat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          color: #666;
+          font-size: 1.2rem;
+        }
+
+        .messages-list {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .message-wrapper {
+          display: flex;
+          flex-direction: column;
+          max-width: 70%;
+        }
+
+        .message-wrapper.sent {
+          align-self: flex-end;
+        }
+
+        .message-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .message-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .message-avatar.sent {
+          background-color: #8f5774;
+        }
+
+        .message-avatar.received {
+          background-color: #e0829d;
+        }
+
+        .sender-name {
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+
+        .message-bubble {
+          padding: 1rem 1.5rem;
+          border-radius: 1rem;
+          font-size: 1.1rem;
+          line-height: 1.5;
+        }
+
+        .message-bubble.sent {
+          background-color: var(--color-light-6);
+          color: #333;
+        }
+
+        .message-bubble.received {
+          background-color: var(--color-light-purple);
+          color: #333;
+        }
+
+        .message-timestamp {
+          font-size: 0.9rem;
+          color: #666;
+        }
+
+        .input-container {
+          padding: 1.5rem;
+          border-top: 1px solid #e5e5e5;
+          display: flex;
+          gap: 1rem;
+        }
+
+        .message-input {
+          flex: 1;
+          padding: 10px 15px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+          outline: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-input:focus {
+          border-color: #8f5774;
+          box-shadow: 0 0 5px rgba(143, 87, 116, 0.5);
+        }
+
+        .send-button {
+          padding: 0.75rem 1.5rem;
+          background-color: #8f5774;
+          color: white;
+          border: none;
+          border-radius: 0.75rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+          background-color: #7a4363;
+        }
+
+        @media (max-width: 1024px) {
+          .dashboard-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .chat-section {
+            margin-top: 2rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .dashboard-main {
+            padding: 1rem;
+          }
+
+          .page-title {
+            font-size: 2rem;
+          }
+
+          .message-wrapper {
+            max-width: 85%;
+          }
+        }
+      `}</style>
     </>
   );
 }
+
 Messages.propTypes = {
   complaint: PropTypes.shape({
     replies: PropTypes.array,
@@ -338,5 +450,5 @@ Messages.propTypes = {
 Messages.defaultProps = {
   complaint: {},
   user: {},
-  role: 'Tourist', // Default value for role
+  role: 'Tourist',
 };

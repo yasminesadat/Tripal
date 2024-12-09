@@ -11,7 +11,8 @@ import {
   LineChart,
   LogOut,
   Martini,
-  ShoppingCart
+  ShoppingCart,
+  FerrisWheel, CirclePercent
 } from 'lucide-react';
 
 export const sidebarItems = [
@@ -64,6 +65,12 @@ export const sidebarItems = [
     label: "All Activities",
   },
   {
+    id: 10,
+    href: "/admin/itineraries",
+    icon: <FerrisWheel size={26} />,
+    label: "All Itineraries",
+  },
+  {
     id: 14,
     href: "/admin/view-products",
     icon: <ShoppingCart size={26} />,
@@ -88,20 +95,24 @@ export const sidebarItems = [
     label: "Revenue",
   },
   {
+    id: 15,
+    href: "/admin/promo-codes",
+    icon: <CirclePercent />,
+    label: "Promo Codes",
+  },
+  {
     id: 8,
-    href: "/",
     icon: <LogOut size={26} />,
     label: "Logout"
   },
 ];
 
-
 export const states = [
   {
     id: 1,
-    title: "Total Earnings",
+    title: "Total Users",
     amount: "$10,800",
-    today: "$50",
+    
     iconClass: "icon-wallet text-accent-1",
   },
   {
@@ -160,6 +171,10 @@ export const notificationData = [
   },
 ];
 
+export var adminNotification = [
+  
+];
+
 export const tabContentStaticties = [
   {
     id: 1,
@@ -209,6 +224,40 @@ export const tabContentStaticties = [
       { name: "Dec", value: 235 },
     ],
   },
+];
+
+export var StatictiesAdminUsers = [
+  {
+    id: 0,
+    label: "Monthly",
+    data: [
+      { name: "Jan", value: 158 },
+      { name: "Feb", value: 100 },
+      { name: "Marc", value: 235 },
+      { name: "April", value: 210 },
+      { name: "May", value: 165 },
+      { name: "Jun", value: 145 },
+      { name: "July", value: 190 },
+      { name: "Agust", value: 156 },
+      { name: "Sept", value: 148 },
+      { name: "Oct", value: 210 },
+      { name: "Now", value: 180 },
+      { name: "Dec", value: 235 },
+    ],
+  },
+  {
+    id: 1,
+    label: "Year",
+    data: [
+      { name: "2019", value: 0 },
+      { name: "2020", value: 0 },
+      { name: "2021", value: 0 },
+      { name: "2022", value: 0 },
+      { name: "2023", value: 0 },
+      { name: "2024", value: 10 },
+    ],
+  },
+ 
 ];
 
 export const bookingData = [
@@ -268,7 +317,6 @@ export const bookingData = [
     cost: "$380.00",
     status: "Approved",
   },
-  // Add more entries as needed
 ];
 
 export const messageSanders = [

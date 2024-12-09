@@ -9,8 +9,7 @@ const touristSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: true
   },
   password: {
     type: String,
@@ -86,17 +85,39 @@ const touristSchema = new Schema({
   bookedHotels: [{
     type: Schema.Types.ObjectId
   }],
-  cart:[{
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-  }],
+  deliveryAddresses: [
+    {
+      _id: false,
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      zipCode: { type: String, required: true },
+      country: { type: String, required: true },
+    },
+  ],
+  cart: [
+    {
+      product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+      quantity: { type: Number, required: true },
+      price: {type: Number, required: true},
+    },
+  ],
   wishlist:[{
     type: Schema.Types.ObjectId,
     ref: "Product",
   }],
-  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: []}],
-  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: []}],
-
+  promoCodes: [{
+    type: Schema.Types.ObjectId,
+    ref: "PromoCode",
+  }],
+  notificationList: [{
+    message: String,
+    read: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now },
+    notifType: String
+  }],
+  bookmarkedActivities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity", default: [] }],
+  bookmarkedItineraries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Itinerary", default: [] }],
+  isFirstTime: { type: Boolean, default: true },
 }, { timestamps: true });
 
 touristSchema.methods.calculateAge = function () {

@@ -10,6 +10,7 @@ export async function createActivity(body) {
     throw error;
   }
 }
+                     
 export async function updateActivity(id,body) {
   try {
     const response =  await axios.put(`/activities/${id}`, body)
@@ -30,6 +31,16 @@ export async function getAdvertiserActivities() {
   }
 }
 
+export async function getAdvertiserBookings() {
+  try {
+    const response = await axios.get(`/my-activities-bookings`);
+    return response;
+  } catch (error) {
+    console.error("Can't get activity bookings", error);
+    throw error;
+  }
+}
+                               
 export async function getActivityById(id) {
   try {
     const response = await axios.get(`/activity/${id}`);
@@ -70,16 +81,6 @@ export async function viewUpcomingActivities() {
   }
 }
 
-export async function viewHistoryActivities() {
-  try {
-    const response = await axios.get("/activities/history");
-    return response;
-  } catch (error) {
-    console.error("Can't view activities", error);
-    throw error;
-  }
-}
-
 export const getRatings = async (id) => {
   try {
     const response = await axios.get(`/activities/${id}/ratings`);
@@ -110,6 +111,17 @@ export async function getAllActivities() {
     return response;
   } catch (error) {
     console.error("Can't get all activities", error);
+    throw error;
+  }
+}
+
+export async function getRevenue() {
+  try {
+    const response = await axios.get(`/activities/revenue`);
+    console.log(response.data)
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching revenue:", error);
     throw error;
   }
 }

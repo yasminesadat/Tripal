@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useState,useEffect } from "react";
+import { EditOutlined } from "@ant-design/icons";
 import { message } from "antd"; 
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
 import { saveProduct } from "@/api/TouristService";
 import Stars from "../common/Stars";
+import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getUserData } from "@/api/UserService";
 
 const ProductCard = ({
   id,
@@ -19,16 +21,19 @@ const ProductCard = ({
   isArchived,
   sales,
   userRole,
-  userId
+  userId, 
+  refProductDetails
 }) => {
   const navigate = useNavigate();
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
   const [isSaved, setIsSaved] = useState(false);
 
   const handleCardClick = () => {
+    console.log("seller name: ",seller);
     navigate(`product/${id}`, {
       state: {
         id,
+        productSeller,
         name,
         seller,
         price,
@@ -37,11 +42,46 @@ const ProductCard = ({
         picture,
         averageRating,
         sales,
-        userRole
+        userRole,
+        userId
       },
     });
   };
 
+  
+  const [exchangeRate, setExchangeRate] = useState(1);
+  const [currency, setCurrency] = useState( "EGP");
+  
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData();
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
   const handleEditClick = (e) => {
     navigate(`/seller/edit-product/${id}`, {
       state: {
@@ -126,12 +166,14 @@ const ProductCard = ({
           ) : [] }
         </div>
         <div className="tourCard__content px-10 pt-10">
-          <h3
-            className="tourCardName text-16 fw-500 mt-5"
-          >            
+          <h3 className="tourCardName text-16 fw-500 mt-5">            
             <span 
-            onClick={handleCardClick}
-            style={{ cursor: 'pointer' }}>{name}</span>
+              onClick={handleCardClick}
+              style={{ cursor: 'pointer' }}
+              ref={refProductDetails}
+            >
+              {name}
+            </span>
           </h3>
 
           <div className="tourCard__location text-13 text-light-2" style={{ cursor: 'default' }}>
@@ -143,7 +185,7 @@ const ProductCard = ({
               <Stars star={averageRating} />
             </div>
             <span className="text-dark-1 ml-10" style={{ cursor: 'default' }}>
-              ({averageRating})
+              ({averageRating.toFixed(2)})
             </span>
           </div>
 
@@ -176,7 +218,12 @@ const ProductCard = ({
                 )]
             }
             <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
-              <span className="text-16 fw-500">${price}</span>
+              {userRole === "Tourist" ? (
+              <span className="text-16 fw-500">{currency} {(price*exchangeRate).toFixed(2)}</span>
+              ):(
+                <span className="text-16 fw-500">EGP {(price).toFixed(2)}</span>
+              )
+              }
             </div>
           </div>
         </div>

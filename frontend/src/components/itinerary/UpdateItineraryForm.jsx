@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, Row, Col, Select, DatePicker, message } from 'antd';
-const { RangePicker } = DatePicker;
+import { Modal, Form, Input, Button, Row, Col, Select } from 'antd';
 import { useState, useEffect } from 'react';
 import ActivitySelectionModal from './ActivitySelectionModal';
 import languages from '@/assets/constants/Languages';
@@ -14,65 +13,50 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
   const [pickupMarkerPosition, setPickUpMarkerPosition] = useState([51.505, -0.09]);
   const [dropoffMarkerPosition, setDropOffMarkerPosition] = useState([51.505, -0.09]);
   const [selectedActivities, setSelectedActivities] = useState(itinerary.activities || []);
-  const [numDays, setNumDays] = useState(itinerary.timeline.length || 1);
 
-  const [dateRange, setDateRange] = useState([
-    itinerary.startDate ? new Date(itinerary.startDate) : null,
-    itinerary.endDate ? new Date(itinerary.endDate) : null
-  ]);
-
+  // Reset form and state when the modal is opened or itinerary changes
   useEffect(() => {
-    // Whenever itinerary changes, update the state with the new start and end dates
-    setDateRange([
-      itinerary.startDate ? new Date(itinerary.startDate) : null,
-      itinerary.endDate ? new Date(itinerary.endDate) : null
-    ]);
-  }, [itinerary]);
+    if (visible) {
+      form.setFieldsValue({
+        title: itinerary.title,
+        description: itinerary.description,
+        serviceFee: itinerary.serviceFee,
+        language: itinerary.language,
+        accessibility: itinerary.accessibility || [],
+      });
 
-  const handleDateChange = (dates) => {
-    if (dates && dates.length === 2) {
-        var startDate = dates[0].startOf("day");
-        if(startDate.isBefore(new Date(), "day")) {
-            message.error("Start date cannot be in the past.");
-            dates = null;
-            startDate = null;
-            return;
-        }
-        var endDate = dates[1].startOf("day");
-        if(endDate.isBefore(startDate, "day")) {
-            message.error("End date cannot be before start date.");
-            dates = null;
-            endDate = null;
-            return;
-        }
-        if(endDate.isBefore(new Date(), "day")) {
-            message.error("End date cannot be in the past.");
-            dates = null;
-            endDate = null;
-            return;
-        }
-        const duration = endDate.diff(startDate, "days") + 1;
-        setNumDays(duration);
-    } else 
-        setNumDays(0);
-    };
+      setPickUpLocation(itinerary.pickupLocation || '');
+      setDropOffLocation(itinerary.dropoffLocation || '');
+      setSelectedActivities(itinerary.activities.map(activity => activity._id) || []);
+    }
+  }, [visible, itinerary, form]);
+
+  const duration = (new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24) + 1;
 
   const handleSelectActivities = (activities) => {
-    setSelectedActivities(activities);
+    setSelectedActivities(activities.map(activity => activity._id));
+    setIsModalVisible(false);
   };
 
   const handleSubmit = async () => {
     try {
       await form.validateFields();
-      const updatedItinerary = { ...form.getFieldsValue() };
-      updatedItinerary.activities = selectedActivities;
-      updatedItinerary.pickupLocation = pickupLocation;
-      updatedItinerary.dropoffLocation = dropoffLocation;
-      updatedItinerary.startDate = dateRange[0] ? dateRange[0].toISOString() : null;
-      updatedItinerary.endDate = dateRange[1] ? dateRange[1].toISOString() : null;
+      const formValues = form.getFieldsValue();
+      
+      const updatedItinerary = {
+        ...itinerary,
+        ...formValues,
+        activities: selectedActivities,
+        pickupLocation,
+        dropoffLocation,
+        startDate: itinerary.startDate,
+        endDate: itinerary.endDate
+      };
+
       onUpdate(updatedItinerary);
+      onCancel();
     } catch (error) {
-      console.log(error);
+      console.error('Form validation failed:', error);
     }
   };
 
@@ -86,15 +70,6 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
     >
       <Form
         form={form}
-        initialValues={{
-          title: itinerary.title,
-          description: itinerary.description,
-          serviceFee: itinerary.serviceFee,
-          language: itinerary.language,
-          accessibility: itinerary.accessibility || [],
-          startDate: dateRange[0],
-        endDate: dateRange[1],
-        }}
         layout="vertical"
         onFinish={handleSubmit}
         requiredMark={false}
@@ -118,20 +93,6 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
           <Input.TextArea rows={4} size="large" />
         </Form.Item>
 
-        {/* Available Date */}
-        <Form.Item
-          label="Available Date"
-          name="availableDate"
-          rules={[{ required: true, message: 'Please select the available dates' }]}
-        >
-          <RangePicker
-            style={{ width: '100%' }}
-            size="large"
-            value={dateRange.length === 2 ? [dateRange[0], dateRange[1]] : []}
-            onChange={handleDateChange}
-          />
-        </Form.Item>
-
         {/* Activities Button */}
         <Form.Item>
           <Button
@@ -143,14 +104,14 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             }}
             onClick={() => setIsModalVisible(true)}
           >
-            Select Activities
+            Select Activities ({selectedActivities.length} selected)
           </Button>
           <ActivitySelectionModal
             isVisible={isModalVisible}
             onClose={() => setIsModalVisible(false)}
             onSelectActivities={handleSelectActivities}
-            preSelectedActivities={selectedActivities}
-            maxActivities={numDays}
+            preSelectedActivities={selectedActivities.map(id => ({ _id: id }))}
+            maxActivities={duration}
           />
         </Form.Item>
 
@@ -162,7 +123,7 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
               name="serviceFee"
               rules={[{ required: true, message: 'Please enter the service fee' }]}
             >
-              <Input prefix="$" size="large" placeholder="0" />
+              <Input prefix="EGP" size="large" placeholder="0" />
             </Form.Item>
           </Col>
 
@@ -210,13 +171,14 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             type="text"
             name="pickupLocation"
             value={pickupLocation}
+            onChange={(e) => setPickUpLocation(e.target.value)}
             required
           />
           <MapPopUp
             markerPosition={pickupMarkerPosition}
             setMarkerPosition={setPickUpMarkerPosition}
             setSelectedLocation={setPickUpLocation}
-            selectedLocation = {pickupLocation}
+            selectedLocation={pickupLocation}
           />
         </Form.Item>
         <Form.Item>
@@ -225,13 +187,14 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
             type="text"
             name="dropoffLocation"
             value={dropoffLocation}
+            onChange={(e) => setDropOffLocation(e.target.value)}
             required
           />
           <MapPopUp
             markerPosition={dropoffMarkerPosition}
             setMarkerPosition={setDropOffMarkerPosition}
             setSelectedLocation={setDropOffLocation}
-            selectedLocation = {dropoffLocation}
+            selectedLocation={dropoffLocation}
           />
         </Form.Item>
 
@@ -248,6 +211,16 @@ const UpdateItineraryModal = ({ itinerary, visible, onCancel, onUpdate }) => {
           </Button>
         </Form.Item>
       </Form>
+      <style>{`
+      .custom-button {
+        background-color: var(--color-dark-purple) !important;
+        border-color: var(--color-dark-purple) !important;
+      }
+      .custom-button:hover {
+        background-color: var(--color-light-purple) !important;
+        border-color: var(--color-light-purple) !important;
+      }
+    `}</style>
     </Modal>
   );
 };

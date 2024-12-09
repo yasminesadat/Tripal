@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const crypto = require("crypto");
 
 const userSchema = new Schema({
   userId: {
@@ -8,20 +9,50 @@ const userSchema = new Schema({
   },
   userName: {
     type: String,
-    required: true,
-    unique: true,
+    required: true
   },
   email: {
     type: String,
-    unique: true,
     sparse: true
   },
   role: {
     type: String,
     required: true,
     enum: ["Tour Guide", "Advertiser", "Seller", "Tourist", "Tourism Governor", "Admin"],
+  },
+  otp: {
+    type: String,
+    select: false,
+  },
+  otpExpiresAt: {
+    type: Date,
+    select: false,
+  },
+  timestamp: { // Custom field for storing the random timestamp
+    type: Date,
+    default: Date.now,
+    required: false,  // This field is not required since not all users might have it initially
   }
-});
+  
+},
+   );
+
+userSchema.methods.generateOtp = async function () {
+  const otp = crypto.randomInt(100000, 999999).toString();
+  const expirationTime = new Date(Date.now() + 10 * 60 * 1000); //10 minutes
+  this.otp = otp;
+  this.otpExpiresAt = expirationTime;
+  await this.save();
+  return otp;
+};
+
+userSchema.methods.clearExpiredOtp = function () {
+  if (this.otpExpiresAt && new Date() > this.otpExpiresAt) {
+    this.otp = undefined;
+    this.otpExpiresAt = undefined;
+  }
+};
+
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

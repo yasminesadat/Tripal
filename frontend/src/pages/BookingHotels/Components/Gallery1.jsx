@@ -24,9 +24,10 @@ const images = [
     image: img4,
   },
 ];
-export default function Gallery1() {
+export default function Gallery1({onSeeAllPhotosClick}) {
   const [activeLightBox, setActiveLightBox] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(1);
+  
   return (
     <>
       <div className="tourSingleGrid -type-1 mt-30">
@@ -44,8 +45,9 @@ export default function Gallery1() {
             data-gallery="gallery1"
           >
             <span
-              onClick={() => setActiveLightBox(true)}
-              className="button -accent-1 py-10 px-20 rounded-200 bg-dark-1 lh-16 text-white"
+              onClick={() => {setActiveLightBox(true); onSeeAllPhotosClick()}}
+              className="button -accent-Hotelsss py-10 px-20 rounded-200 bg-dark-1 lh-16 text-white"
+            
             >
               See all photos
             </span>
@@ -73,6 +75,7 @@ export default function Gallery1() {
         setActiveLightBox={setActiveLightBox}
         currentSlideIndex={currentSlideIndex}
         setCurrentSlideIndex={setCurrentSlideIndex}
+        onSeeAllPhotosClick={onSeeAllPhotosClick}
       />
     </>
   );

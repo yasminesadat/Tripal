@@ -143,5 +143,75 @@ const updateAdvertiser = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Failed to update advertiser" });
   }
-};
-module.exports = { createAdvertiser, readAdvertiser, updateAdvertiser };
+}
+
+
+
+  const getAdvertiserNotifications = async (req, res) => {
+    try {
+      const userid=req.userId;
+      const advertiser = await advertiserModel.findById(userid);
+  
+      if (!advertiser) {
+        return res.status(404).json({ error: "Advertiser not found" });
+      }
+      res.status(200).json(advertiser.notificationList);
+      
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+  
+  const deleteAdvertiserNotification = async (req, res) => {
+    try {
+      const userid=req.userId;
+      const notificationID=req.params;   
+     
+     
+      const advertiser = await advertiserModel.findById(userid);
+      if (!advertiser) {
+        return res.status(404).json({ error: "Advertiser not found" });
+      }
+       
+      
+      const updatedNotificationList = advertiser.notificationList.filter(
+        notification => (notification._id).toString() !== notificationID.id
+      );
+  
+      advertiser.notificationList=updatedNotificationList;
+      await advertiser.save();
+      
+      
+      res.status(200).json(advertiser.notificationList);
+      
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+  
+  const markNotificationAdvertiser = async (req, res) => {
+    try {
+      const userid=req.userId;
+     
+     
+      const advertiser = await advertiserModel.findById(userid);
+      if (!advertiser) {
+        return res.status(404).json({ error: "Advertiser not found" });
+      }
+       
+  
+      advertiser.notificationList.forEach((n)=>{(n.read=true)})
+  
+      await advertiser.save();
+  
+      console.log(advertiser.notificationList)
+      
+      
+      res.status(200).json(advertiser.notificationList);
+      
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+
+module.exports = { createAdvertiser, readAdvertiser, updateAdvertiser, getAdvertiserNotifications,deleteAdvertiserNotification,markNotificationAdvertiser };

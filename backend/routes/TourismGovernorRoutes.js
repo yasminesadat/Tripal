@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const validateIDs = require("../middleware/IDMiddleware");
+
 const {
   addTourismGovernor,
   getTourismGovernors,
@@ -25,8 +25,7 @@ router.get(
   getTourismGovernors
 );
 router.put(
-  "/governor-change-pass/:id",
-  validateIDs(["id"]),
+  "/governor-change-pass",
   verifyToken,
   authorizeRoles("Tourism Governor"),
   changePassword(TourismGovernor)

@@ -5,6 +5,9 @@ const {
   createAdvertiser,
   readAdvertiser,
   updateAdvertiser,
+  markNotificationAdvertiser,
+  deleteAdvertiserNotification,
+  getAdvertiserNotifications,
 } = require("../controllers/AdvertiserController");
 const Advertiser = require("../models/users/Advertiser");
 const { changePassword } = require("../controllers/PasswordController.js");
@@ -24,11 +27,28 @@ router.put(
   updateAdvertiser
 );
 router.put(
-  "/advertiser-change-pass/:id",
-  validateIDs(["id"]),
+  "/advertiser-change-pass",
   verifyToken,
-  authorizeRoles("Admin"),
+  authorizeRoles("Advertiser"),
   changePassword(Advertiser)
+);
+router.get(
+  "/advertiser/notificationList",
+  verifyToken,
+  authorizeRoles("Advertiser"),
+  getAdvertiserNotifications
+);
+router.delete(
+  "/advertiser/deleteNotificationList/:id",
+  verifyToken,
+  authorizeRoles("Advertiser"),
+  deleteAdvertiserNotification
+);
+router.patch(
+  "/advertiser/markNotifications",
+  verifyToken,
+  authorizeRoles("Advertiser"),
+  markNotificationAdvertiser
 );
 
 module.exports = router;

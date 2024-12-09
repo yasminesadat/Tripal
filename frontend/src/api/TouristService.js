@@ -23,6 +23,16 @@ export async function changeTouristPassword(oldPassword, newPassword) {
     throw error;
   }
 }
+export async function checkTouristPromoCode(promocode) {
+  try {
+
+    const response = await axios.post(`/tourist/checkPromoCode`, promocode);
+    return response.data;
+  } catch (error) {
+    console.error("error", error);
+    throw error;
+  }
+}
 
 export async function getTouristInformation() {
   try {
@@ -68,7 +78,6 @@ export async function getTouristItineraries() {
 export async function getTouristActivities() {
   try {
     const response = await axios.get(`/booked-activities`);
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error getting tourist activities:", error);
@@ -165,7 +174,6 @@ export async function saveProduct(productId) {
     throw error;
   }
 }
-
 export async function removeWishList(productId) {
   try {
     await axios.post('/tourist/remove-wishlist', { productId });
@@ -174,7 +182,6 @@ export async function removeWishList(productId) {
     throw error;
   }
 }
-
 export async function getWishList() {
   try {
     const response = await axios.get('/tourist/wishlist');
@@ -184,3 +191,138 @@ export async function getWishList() {
     throw error;
   }
 }
+
+export async function saveFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/book-flight', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
+
+export async function completeFlightBooking(flightDetails) {
+  try {
+    const response = await axios.post('/tourist/flight-payment', flightDetails);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || "An error occurred while saving the flight booking.";
+    throw new Error(errorMessage);
+  }
+}
+export async function getTouristNotifications() {
+  try {
+    const response = await axios.get('/tourist/notifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw error;
+  }
+}
+
+export async function addToCart(touristId, productId, quantity) {
+  try {
+    const response = await axios.post('/tourist/cart', {
+      touristId,
+      productId,
+      quantity,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    throw error;
+  }
+}
+
+export async function getCart() {
+  try {
+    const response = await axios.get(`/tourist/cart`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    throw error;
+  }
+}
+
+export async function removeFromCart(touristId, productId) {
+  try {
+    const response = await axios.delete('/tourist/cart', {
+      data: {
+        touristId,
+        productId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    throw error;
+  }
+}
+
+
+
+export async function getAddresses() {
+  try {
+    const response = await axios.get(`/tourist/address`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    throw error;
+  }
+}
+
+export async function addAddress(street, city, country, zipCode) {
+  try {
+    const response = await axios.post('/tourist/address', {
+      street, city, country, zipCode
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding address:", error);
+  }
+}
+export async function getWalletAndTotalPoints() {
+  try {
+    const response = await axios.get(`/tourist/wallet`);
+    console.log("Incoming", response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error("Error fetching wallet:", error);
+    throw error;
+  }
+}
+
+export async function markNotifications() {
+  try {
+    const response = await axios.patch('/tourist/markNotifications');
+    return response.data;
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    throw error;
+  }
+}
+
+export async function updateQuantity(productId, quantity) {
+  try {
+    const response = await axios.put('/tourist/product-quantity', {
+      productId, quantity
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function checkStock(cart) {
+  try {
+    const response = await axios.post('/tourist/check-stock', {
+      cart,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+

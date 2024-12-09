@@ -17,18 +17,6 @@ export default function DestinationsFive() {
               Trending Destinations
             </h2>
           </div>
-
-          <div className="col-auto">
-            <Link
-              to={"/tour-list-1"}
-              data-aos="fade-left"
-              data-aos-delay=""
-              className="buttonArrow d-flex items-center "
-            >
-              <span>See all</span>
-              <i className="icon-arrow-top-right text-16 ml-10"></i>
-            </Link>
-          </div>
         </div>
 
         <div
@@ -38,8 +26,7 @@ export default function DestinationsFive() {
         >
           {destinationCards.map((elm, i) => (
             <div key={i} className="w-1/5 lg:w-1/3 md:w-1/2">
-              <Link
-                to="/tour-list-1"
+              <div
                 className="featureCard -type-4 -hover-image-scale"
               >
                 <div className="featureCard__image ratio ratio-3:4 -hover-image-scale__image rounded-12">
@@ -52,7 +39,7 @@ export default function DestinationsFive() {
                     {elm.tourCount}+ Tours
                   </div>
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
         </div>

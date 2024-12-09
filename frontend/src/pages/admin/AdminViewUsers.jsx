@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
-import { message } from 'antd'
-import { requestAccountDeletion } from "../../api/RequestService";
-import FooterThree from '@/components/layout/footers/FooterThree';
+import {message} from 'antd';
 import Sidebar from '@/components/dasboard/Sidebar';
 import Header from '@/components/dasboard/Header';
+import UserListComponent from '@/components/dasboard/ViewUsers';
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const [initLoading, setInitLoading] = useState(true);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [notification, setNotification] = useState(null);
+    const [notification, ] = useState(null);
     const [sideBarOpen, setSideBarOpen] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
@@ -18,33 +17,46 @@ const UserList = () => {
                 setUsers(response.users);
                 setInitLoading(false);
             } catch (error) {
+                const key = 'updatable';
                 console.error("Error fetching users:", error);
                 setInitLoading(false);
-                showNotification("Failed to fetch users!", "error");
+                message.error({ content: 'Failed to fetch users', key });
+                setTimeout(() => {
+                message.destroy(key); // Destroy the message after timeout
+                }, 2500);
+                message.error("Failed to fetch users!", "error");
             }
         };
 
         fetchData();
     }, []);
 
-    const showNotification = (message, type) => {
-        setNotification({ message, type });
-        setTimeout(() => setNotification(null), 3000);
-    };
+   
 
-    const deleteUsers = async (id, role) => {
+    const deleteUsers = async (name,id, role) => {
         try {
-            if (role === "Tourism Governor" || role === "Admin") {
-                await deleteUser(id);
-            } else {
-                await requestAccountDeletion(role, id);
-            }
+           
+            await deleteUser(role, id);    
             const updatedData = users.filter((item) => item.userId !== id);
             setUsers(updatedData);
-            showNotification("User deleted successfully", "success");
+            const key3="updated3"
+           // message.success(`${name} deleted successfully`, "success");
+            message.success({ content: `${name} deleted successfully`, key3 });
+
+            // Set timeout to close the message after 3 seconds (3000 ms)
+            setTimeout(() => {
+            message.destroy(key3); // Destroy the message after timeout
+            }, 2500);
         } catch (error) {
-            console.error("Error deleting user with id ${ id }:, error");
-            showNotification("Failed to delete user!", "error");
+            console.error(`00Error deleting user with id ${ id }:`, error);
+            const key2 = 'updatable2';
+            message.error({ content: 'Failed to delete user!', key2 });
+            // Set timeout to close the message after 3 seconds (3000 ms)
+            setTimeout(() => {
+            message.destroy(key2); // Destroy the message after timeout
+            }, 2500);
+
+
         }
         setDeleteConfirm(null);
     };
@@ -88,129 +100,14 @@ const UserList = () => {
 
                 <div className="dashboard__content">
                     <Header setSideBarOpen={setSideBarOpen} />
-                    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-                        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-                            <div style={{
-                                backgroundColor: 'white',
-                                borderRadius: '8px',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                                padding: '1.5rem'
-                            }}>
-                                <h1 style={{
-                                    fontSize: '1.875rem',
-                                    fontWeight: '600',
-                                    color: '#111827',
-                                    marginBottom: '1rem'
-                                }}>
-                                    User Management
-                                </h1>
+                    
 
-                                {notification && (
-                                    <div style={{
-                                        padding: '1rem',
-                                        borderRadius: '6px',
-                                        marginBottom: '1rem',
-                                        backgroundColor: notification.type === 'error' ? '#fee2e2' : '#dcfce7',
-                                        color: notification.type === 'error' ? '#991b1b' : '#166534'
-                                    }}>
-                                        {notification.message}
-                                    </div>
-                                )}
+<UserListComponent/>
 
-                                <div style={{
-                                    overflowX: 'auto',
-                                    marginTop: '1rem'
-                                }}>
-                                    <table style={{
-                                        width: '100%',
-                                        borderCollapse: 'collapse',
-                                        textAlign: 'left'
-                                    }}>
-                                        <thead>
-                                            <tr style={{
-                                                borderBottom: '1px solid #e5e7eb',
-                                                backgroundColor: '#f9fafb'
-                                            }}>
-                                                <th style={{ padding: '0.75rem 1rem' }}>Username</th>
-                                                <th style={{ padding: '0.75rem 1rem' }}>User ID</th>
-                                                <th style={{ padding: '0.75rem 1rem' }}>Role</th>
-                                                <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {users.map(user => (
-                                                <tr key={user._id} style={{
-                                                    borderBottom: '1px solid #e5e7eb',
-                                                    '&:hover': { backgroundColor: '#f9fafb' }
-                                                }}>
-                                                    <td style={{ padding: '1rem' }}>{user.userName}</td>
-                                                    <td style={{ padding: '1rem' }}>{user.userId}</td>
-                                                    <td style={{ padding: '1rem' }}>
-                                                        <span style={{
-                                                            display: 'inline-block',
-                                                            padding: '0.25rem 0.75rem',
-                                                            borderRadius: '9999px',
-                                                            fontSize: '0.875rem',
-                                                            fontWeight: '500',
-                                                            ...getRoleStyle(user.role)
-                                                        }}>
-                                                            {user.role}
-                                                        </span>
-                                                    </td>
-                                                    <td style={{ padding: '1rem', textAlign: 'right' }}>
-                                                        {deleteConfirm === user.userId ? (
-                                                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                                                <button
-                                                                    onClick={() => deleteUsers(user.userId, user.role)}
-                                                                    style={{
-                                                                        backgroundColor: '#dc2626',
-                                                                        color: 'white',
-                                                                        padding: '0.5rem 1rem',
-                                                                        borderRadius: '6px',
-                                                                        border: 'none',
-                                                                        cursor: 'pointer'
-                                                                    }}
-                                                                >
-                                                                    Confirm
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => setDeleteConfirm(null)}
-                                                                    style={{
-                                                                        backgroundColor: '#e5e7eb',
-                                                                        color: '#374151',
-                                                                        padding: '0.5rem 1rem',
-                                                                        borderRadius: '6px',
-                                                                        border: 'none',
-                                                                        cursor: 'pointer'
-                                                                    }}
-                                                                >
-                                                                    Cancel
-                                                                </button>
-                                                            </div>
-                                                        ) : (
-                                                            <button
-                                                                onClick={() => setDeleteConfirm(user.userId)}
-                                                                style={{
-                                                                    backgroundColor: '#fee2e2',
-                                                                    color: '#dc2626',
-                                                                    padding: '0.5rem 1rem',
-                                                                    borderRadius: '6px',
-                                                                    border: 'none',
-                                                                    cursor: 'pointer'
-                                                                }}
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                    <div className="text-center pt-30">
+              © Copyright Tripal {new Date().getFullYear()}
+            </div>
                 </div>
             </div>
         </>

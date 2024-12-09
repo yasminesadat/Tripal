@@ -1,29 +1,18 @@
 import { useState } from "react";
 import Menu from "../components/GuestMenu";
-import Currency from "../components/Currency";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function GuestHeader() {
+export default function GuestHeader({ refLogin, setOpen, homepage }) {
+  const location = useLocation();
   const navigate = useNavigate();
+  const isLoginPage = location.pathname === "/login";
+  const isSignupPage = location.pathname === "/register";
 
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
-
-  const handleCurrencyChange = async (currency) => {
-    // const updatedProfileData = {
-    //   choosenCurrency: currency,
-    // };
-    // try {
-    //   await updateTouristInformation(updatedProfileData);
-    //   // sessionStorage.removeItem("currency");
-    //   // sessionStorage.setItem("currency", currency);
-    // } catch (error) {
-    //   message.error("Failed to update user information:", error);
-    // }
-  };
 
   return (
     <>
@@ -65,18 +54,35 @@ export default function GuestHeader() {
           </div>
 
           <div className="header__right">
-            <Currency />
-            <Link to="/register" className="ml-10">
-              Sign up
-            </Link>
+            
+            <div className="header__right ml-10">
+              {!isLoginPage && !isSignupPage && homepage && (
+                <button type="primary" onClick={() => setOpen(true)}>
+                  Guide
+                </button>
+              )}
+            </div>
+            
+            <div className="header__right ml-30" ref={refLogin} >
+              <Link to="/register">
+                Sign up
+              </Link>
 
-            <Link
-              to="/login"
-              className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
-            >
-              Log in
-            </Link>
+              <Link
+                to="/login"
+                className="button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30"
+              >
+                Log in
+              </Link>
+            </div>
+
+            <div className="header__right ml-30" >
+              <Link to="/help-center">
+                Help
+              </Link>
+            </div>
           </div>
+
         </div>
       </header>
       <style>{`
@@ -109,6 +115,13 @@ export default function GuestHeader() {
         .dropdown-menu a {
           text-decoration: none;
           color: inherit;
+          .ant-tour {
+  z-index: 2000 !important;
+}
+
+.ant-tour-mask {
+  z-index: 1999 !important; 
+}
         }`}</style>
     </>
   );

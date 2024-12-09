@@ -1,13 +1,26 @@
 import Spinner from "@/components/common/Spinner";
 import Stars from "../../common/Stars";
 import { message } from "antd";
-import { Flag, Pencil,CircleX,ShieldMinus,ShieldCheck } from 'lucide-react';
-import { flagItinerary } from "@/api/AdminService";
-import { deleteItinerary, getItinerariesByTourGuide, toggleItineraryStatus,updateItinerary } from "@/api/ItineraryService";
-import  { useState, useEffect } from "react";
+import {
+  Flag,
+  Pencil,
+  CircleX,
+  ShieldMinus,
+  ShieldCheck,
+  FlagOff,
+} from "lucide-react";
+import { flagItinerary, getEventOwnerData } from "@/api/AdminService";
+import {
+  deleteItinerary,
+  toggleItineraryStatus,
+  updateItinerary,
+  getItineraryById,
+} from "@/api/ItineraryService";
+import { useState } from "react";
 import AreYouSure from "@/components/common/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import UpdateItineraryModal from "../UpdateItineraryForm";
+import { bookmarkEvent } from "@/api/TouristService";
 
 //#region 1. methods
 const handleShare = (link) => {
@@ -24,6 +37,14 @@ const handleShare = (link) => {
     window.location.href = `mailto:?subject=Check out this itinerary!&body=Check out this link: ${link}`;
   }
 };
+const handleBookmark = async (eventId, eventType) => {
+  try {
+    await bookmarkEvent(eventId, eventType);
+    message.success("Added Event to Bookmark");
+  } catch (error) {
+    console.error("Error bookmarking event:", error);
+  }
+};
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -32,59 +53,82 @@ const formatDate = (date) => {
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
-
-const handleFlag = (id) => {
-  console.log(`Flagging itinerary with ID: ${id}`);
-};
 //#endregion
 
 export default function ItineraryMainInformation({
   itinerary: initialItinerary,
   userRole,
-   }) {
+}) {
+  //#region 1. Variables
+  const [itinerary, setItinerary] = useState(initialItinerary);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [itineraryToDelete, setItineraryToDelete] = useState(null);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [itineraryToEdit, setItineraryToEdit] = useState(null);
+  const navigate = useNavigate();
+  //#endregion
 
-    //#region 1. Variables
-    const [itinerary, setItinerary] = useState(initialItinerary);
-    const [loading, setLoading] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [itineraryToDelete, setItineraryToDelete] = useState(null);
-    const [itineraries, setItineraries] = useState([]);
-    const [modalVisible2, setModalVisible2] = useState(false);
-    const [itineraryToEdit, setItineraryToEdit] = useState(null);
-    const navigate = useNavigate();
-    //#endregion
-
-    //#region 2. event handlers
+  //#region 2. event handlers
   const handleDeactivateItinerary = async (itineraryId, currentStatus) => {
     const updatedStatus = !currentStatus;
     setLoading(true);
     try {
-        await toggleItineraryStatus(itineraryId);
-        setItinerary((prevItinerary) => ({
-          ...prevItinerary,
-          isActive: updatedStatus,
-        }));
-        message.success(`Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`);
+      await toggleItineraryStatus(itineraryId);
+      setItinerary((prevItinerary) => ({
+        ...prevItinerary,
+        isActive: updatedStatus,
+      }));
+      fetchItinerary(itineraryId);
+      message.success(
+        `Itinerary ${updatedStatus ? "activated" : "deactivated"} successfully.`
+      );
     } catch (error) {
-        message.error(error.response.data.message);
-    }
-    finally {
+      message.error(error.response.data.message);
+    } finally {
       setLoading(false);
     }
   };
 
-  const fetchItineraries = async () => {
+  const handleFlag = async (itineraryId, currentFlagStatus) => {
+    const updatedFlagStatus = !currentFlagStatus;
+    setLoading(true);
     try {
-      const response = await getItinerariesByTourGuide();
-      setItineraries(response.data);
+      const userData = await getEventOwnerData(itinerary.tourGuide);
+      await flagItinerary(itineraryId, userData);
+      setItinerary((previousItinerary) => ({
+        ...previousItinerary,
+        flagged: updatedFlagStatus,
+      }));
+      message.success(
+        `Itinerary ${
+          updatedFlagStatus
+            ? "is flagged as inappropriate "
+            : "has been unflagged"
+        } successfully.`
+      );
+    } catch (error) {
+      message.error(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to update itinerary flag status."
+      );
+    } finally {
+      //having the effect of reloading page
+      fetchItinerary(itineraryId);
+      setLoading(false);
+    }
+  };
+
+  const fetchItinerary = async (itineraryId) => {
+    try {
+      if (userRole !== "Tour Guide" && userRole !== "Admin") return;
+      const response = await getItineraryById(itineraryId);
+      setItinerary(response.data);
     } catch (error) {
       message.error("Failed to fetch itineraries");
     }
   };
-
-  useEffect(() => {
-    fetchItineraries();
-  }, []);
 
   const handleDeleteItinerary = (id) => {
     setItineraryToDelete(id);
@@ -103,7 +147,11 @@ export default function ItineraryMainInformation({
       }, 2000);
       navigate("/my-itineraries");
     } catch (error) {
-      message.error("Failed to delete itinerary.");
+      message.error(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to delete itinerary."
+      );
       setModalVisible(false);
     } finally {
       setLoading(false);
@@ -111,38 +159,43 @@ export default function ItineraryMainInformation({
   };
 
   const handleCancelDelete = () => {
-    setModalVisible(false);  // Close the modal without deleting
+    setModalVisible(false);
   };
 
-  const onEditItinerary = (id) => {
-    const itinerary = itineraries.find((itinerary) => itinerary._id === id);
-    setItineraryToEdit(itinerary);
-    setModalVisible2(true);  // Show the modal
+  const onEditItinerary = async (id) => {
+    const itinerary = await getItineraryById(id);
+    setItineraryToEdit(itinerary.data);
+    setModalVisible2(true);
   };
 
   const handleSaveChanges = async (updatedItinerary) => {
     setModalVisible2(false);
+    setLoading(true);
     try {
-      const response = await updateItinerary(itinerary._id,updatedItinerary);
-      if (response.ok) {
-        fetchItineraries();
-      } 
+      await updateItinerary(itinerary._id, updatedItinerary);
+      fetchItinerary(itinerary._id);
       message.success("Itinerary updated successfully!");
-
     } catch (error) {
       message.error(error.response.data.error);
+    } finally {
+      setLoading(false);
     }
   };
   //#endregion
-  
-  if (loading || !itinerary) return <div><Spinner/></div>; 
+
+  if (loading || !itinerary)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
 
   return (
     <>
       <div className="row y-gap-20 justify-between items-end">
         <div className="col-auto">
           <div className="row x-gap-10 y-gap-10 items-center">
-          <div className="col-auto">
+            <div className="col-auto">
               <button className="button-custom text-14 py-5 px-15 rounded-200">
                 Bestseller
               </button>
@@ -154,9 +207,7 @@ export default function ItineraryMainInformation({
             </div>
           </div>
 
-          <h2 className="text-40 sm:text-30 lh-14 mt-20">
-            {itinerary?.title}
-          </h2>
+          <h2 className="text-40 sm:text-30 lh-14 mt-20">{itinerary?.title}</h2>
           <h3 className="text-20 sm:text-16 text-light-2 mt-10">
             {itinerary?.description}
           </h3>
@@ -180,7 +231,7 @@ export default function ItineraryMainInformation({
           </div>
         </div>
 
-        {userRole === "Tourist" && (
+        {(userRole === "Tourist" || userRole === "Guest") && (
           <div className="col-auto">
             <div className="d-flex x-gap-30 y-gap-10">
               <a
@@ -188,17 +239,23 @@ export default function ItineraryMainInformation({
                 style={{ color: "grey" }}
                 onClick={() =>
                   handleShare(
-                    `${window.location.origin}/itinerary/${itinerary._id}`
+                    `${window.location.origin}/itineraries/${itinerary._id}`
                   )
                 }
               >
                 <i className="icon-share flex-center text-16 mr-10"></i>
                 Share
               </a>
-              <a href="#" className="d-flex items-center" style={{ color: "grey" }}>
-                <i className="icon-heart flex-center text-16 mr-10"></i>
-                Wishlist
-              </a>
+              {userRole === "Tourist" && (
+                <div className="d-flex items-center" style={{ color: "grey" }}>
+                  <i
+                    className="icon-heart flex-center text-16 mr-10"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleBookmark(itinerary._id, "itinerary")}
+                  ></i>
+                  Add to Bookmark
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -209,35 +266,31 @@ export default function ItineraryMainInformation({
               <button
                 className="action-button edit"
                 style={{ color: "grey" }}
-                onClick={() =>
-                  onEditItinerary(itinerary._id)
-                }
+                onClick={() => onEditItinerary(itinerary._id)}
               >
-                <Pencil size={16} className="mr-10" color='#8f5774'/>
+                <Pencil size={16} className="mr-10" color="#8f5774" />
                 Edit Details
               </button>
-              
+
               <button
                 className="action-button deactivate"
                 style={{ color: "grey" }}
                 onClick={() =>
-                  handleDeactivateItinerary(itinerary._id,itinerary.isActive)
+                  handleDeactivateItinerary(itinerary._id, itinerary.isActive)
                 }
               >
-               {!itinerary.isActive? 
-               <ShieldCheck size={16} className="mr-10" color="#5a9ea0" />:
-                <ShieldMinus size={16} color="#05073c" className="mr-10" />}
-                {itinerary.isActive ? 
-                "Deactivate" :
-                 "Activate"}
+                {!itinerary.isActive ? (
+                  <ShieldCheck size={16} className="mr-10" color="#5a9ea0" />
+                ) : (
+                  <ShieldMinus size={16} color="#05073c" className="mr-10" />
+                )}
+                {itinerary.isActive ? "Deactivate" : "Activate"}
               </button>
 
               <button
                 className="action-button delete"
                 style={{ color: "red" }}
-                onClick={() =>
-                  handleDeleteItinerary(itinerary._id)
-                }
+                onClick={() => handleDeleteItinerary(itinerary._id)}
               >
                 <CircleX size={16} className="mr-10" />
                 Delete
@@ -247,33 +300,37 @@ export default function ItineraryMainInformation({
         )}
 
         <AreYouSure
-        visible={modalVisible}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        message="Are you sure you want to delete this itinerary?"
-      />
-    {itineraryToEdit && (
-        <UpdateItineraryModal
-          visible={modalVisible2}
-          itinerary={itineraryToEdit}
-          onCancel={() => setModalVisible2(false)}
-          onUpdate={handleSaveChanges}
+          visible={modalVisible}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          message="Are you sure you want to delete this itinerary?"
         />
-      )}
+        {itineraryToEdit && (
+          <UpdateItineraryModal
+            visible={modalVisible2}
+            itinerary={itineraryToEdit}
+            onCancel={() => setModalVisible2(false)}
+            onUpdate={handleSaveChanges}
+          />
+        )}
         {userRole === "Admin" && (
           <div className="col-auto">
             <button
               className="flag-button"
-              onClick={() => handleFlag(itinerary._id)}
+              onClick={() => handleFlag(itinerary._id, itinerary.flagged)}
             >
-              <Flag size={16} className="mr-10"/>
-              Flag
+              {!itinerary.flagged ? (
+                <Flag size={16} className="mr-10" />
+              ) : (
+                <FlagOff size={16} className="mr-10" />
+              )}
+              {itinerary.flagged ? "Unflag" : "Flag as Inappropriate"}
             </button>
           </div>
         )}
       </div>
       <style>
-      {`
+        {`
         .action-button {
           display: flex;
           align-items: center;
@@ -342,7 +399,7 @@ export default function ItineraryMainInformation({
           color: white;
         }
       `}
-    </style>
+      </style>
     </>
   );
 }
