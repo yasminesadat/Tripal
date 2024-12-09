@@ -230,9 +230,7 @@ export default function TourList1() {
                             className="button -outline-accent-1 "
                             style={{ color: "var(--color-stone)" }}
                             onClick={() =>
-                              navigate(
-                                `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`
-                              )
+                              (window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`)
                             }
                           >
                             {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
