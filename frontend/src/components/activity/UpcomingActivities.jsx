@@ -7,6 +7,8 @@ import { message } from "antd";
 import { getUserData } from "@/api/UserService";
 import { viewUpcomingActivities } from "@/api/ActivityService";
 import { getAdminActivities } from "@/api/AdminService";
+import { bookmarkEvent } from "@/api/TouristService";
+
 import {
   getConversionRate,
   getTouristCurrency,
@@ -235,6 +237,15 @@ export default function ActivitiesList({
     }
   };
 
+  const handleBookmark = async (eventId, eventType) => {
+    try {
+      await bookmarkEvent(eventId, eventType);
+      message.success("Added Event to Bookmark");
+    } catch (error) {
+      console.error("Error bookmarking event:", error);
+    }
+  };
+  
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -395,6 +406,7 @@ export default function ActivitiesList({
                         src="/img/activities/touristsGroup1.jpg"
                         alt="image"
                         onClick={() => handleRedirect(elm._id)}
+                        style={{ cursor: 'pointer' }}
                       />
 
                       {elm.badgeText && (
@@ -427,7 +439,8 @@ export default function ActivitiesList({
                         >
                           <i className="icon-share text-15"></i>
                         </button>
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => handleBookmark(elm._id, "activity")}
+                        >
                           <i className="icon-heart text-15"></i>
                         </button>
                       </div>

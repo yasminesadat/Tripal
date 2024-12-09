@@ -1,12 +1,10 @@
 import  { useEffect, useRef, useState } from "react";
 
-// The search component now accepts an `onSearch` prop to send data back to the parent
-export default function HeaderSearch({ white, onSearch }) {
-  const [selected, setSelected] = useState(""); // The selected search term
-  const [ddActive, setDdActive] = useState(false); // Whether the dropdown is active
+export default function HeaderSearch({ white, onSearch, activity }) {
+  const [selected, setSelected] = useState(""); 
+  const [ddActive, setDdActive] = useState(false);
   const inputRef = useRef();
 
-  // Update the input value whenever `selected` changes
   useEffect(() => {
     inputRef.current.value = selected;
   }, [selected]);
@@ -40,14 +38,22 @@ export default function HeaderSearch({ white, onSearch }) {
   return (
     <div ref={dropDownContainer} className="header__search js-liverSearch js-form-dd">
       <i className="icon-search text-18"></i>
-      <input
-        onChange={handleInputChange} // Trigger onChange for the input field
+      {activity && <input
+        onChange={handleInputChange}
         ref={inputRef}
         onClick={() => setDdActive((prev) => !prev)}
         type="text"
-        placeholder="Search activities' titles, categories, or tags"
+        placeholder="Search for activities by name, category, or tags..."
         className={`js-search ${white ? "text-white" : ""}`}
-      />
+      />}
+      {!activity && <input
+        onChange={handleInputChange}
+        ref={inputRef}
+        onClick={() => setDdActive((prev) => !prev)}
+        type="text"
+        placeholder="Search for itineraries by name, or tags..."
+        className={`js-search ${white ? "text-white" : ""}`}
+      />}
     </div>
   );
 }
