@@ -342,6 +342,81 @@ const TourGuideProfile = () => {
 
                                                 <style>
                                                     {`
+                                                    /* General text color in the select */
+.select__options {
+    color: #11302a; /* dark green for default text */
+}
+
+.select__options__button {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+
+/* Text color when hovering over an option */
+.select__options__button:hover {
+    background-color: #dac4d0; /* light purple background */
+    color: #8f5774; /* dark purple text on hover */
+}
+
+/* Selected option text */
+.select__options__button.selected {
+    color: #036264; /* stone color */
+}
+
+/* Specific styling for the text next to checkbox */
+.js-target-title {
+    color: #11302a; /* dark green */
+}
+
+/* Text color when option is hovered */
+.select__options__button:hover .js-target-title {
+    color: #8f5774; /* dark purple */
+}
+
+/* Checkbox styling remains the same */
+.form-checkbox {
+    position: relative;
+    display: inline-block;
+}
+
+.form-checkbox input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+}
+
+.form-checkbox__mark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #8f5774;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background-color: white;
+}
+
+.form-checkbox input[type="checkbox"]:checked + .form-checkbox__mark {
+    background-color: #8f5774;
+    border-color: #8f5774;
+}
+
+.select__options__button:hover .form-checkbox__mark {
+    border-color: #e0829d;
+}
+
+.form-checkbox__icon {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+}
+
+.form-checkbox input[type="checkbox"]:checked + .form-checkbox__mark .form-checkbox__icon {
+    opacity: 1;
+    transform: scale(1);
+}
                           .contactForm .form-input {
                             position: relative;
                             margin-bottom: 20px;
