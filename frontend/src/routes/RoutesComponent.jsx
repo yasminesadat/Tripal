@@ -9,10 +9,11 @@ import sellerRoutes from "./SellerRoutes";
 import tourguideRoutes from "./TourguideRoutes";
 import governorRoutes from "./GovernorRoutes";
 import commonRoutes from "./CommonRoute";
+import templateRoutes from "./TemplateRoutes";
 
 const RoutesComponent = () => (
   <Routes>
-    {[...guestRoutes].map((route, index) => (
+    {[...guestRoutes, ...templateRoutes].map((route, index) => (
       <Route key={index} path={route.path} element={route.element} />
     ))}
     {commonRoutes.map((route, index) => (
