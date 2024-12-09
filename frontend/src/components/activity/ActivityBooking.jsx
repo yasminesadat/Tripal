@@ -1,6 +1,5 @@
 
 import { useState, useEffect,useRef } from "react";
-import { useParams } from 'react-router-dom';
 import {
   LineChart,
   Tooltip,
@@ -23,6 +22,7 @@ export default function ActivityBooking({ bookings, price }) {
   const [ddActives2, setDdActives2] = useState(false);
   const [filterRevenueOption, setFilterRevenueOption] = useState("");
   const [filterTicketsOption, setFilterTicketsOption] = useState("");
+  
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -57,8 +57,21 @@ export default function ActivityBooking({ bookings, price }) {
   const generateRandomPastDate = (start, end) => {
     const startDate = new Date(start.getTime());
     const randomDate = new Date(startDate.getTime() + Math.random() * (end.getTime() - startDate.getTime()));
-    return randomDate.toISOString().split('T')[0];
+    return randomDate.toLocaleDateString("en-CA");
   };
+  const getValue = (monthStr) => {
+    const monthMap = {
+      "01": 1, "02": 2, "03": 3, "04": 4, "05": 5,
+      "06": 6, "07": 7, "08": 8, "09": 9, "10": 10,
+      "11": 11, "12": 12,"13":13,"14":14,"15":15,"16":16,"17":17,
+      "18":18,"19":19,"20":20,"21":21 ,"22":22,"23":23,"24":24,"25":25,
+      "26":26,"27":27,"28":28,"29":29,"30":30,"31":31,
+    };
+    return monthMap[monthStr] || 0; // Return 0 if the month is invalid
+  };
+
+  
+  
   useEffect(() => {
     const startDate = new Date();
     startDate.setFullYear(startDate.getFullYear() - 1); 
@@ -66,54 +79,102 @@ export default function ActivityBooking({ bookings, price }) {
     let updatedBookings = bookings.map((booking) => ({
       name: generateRandomPastDate(startDate, endDate),
       value: booking.tickets,
-    }));
+    })).sort((a, b) =>(
+      (getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))===0?
+      (getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1]))===0?
+      (getValue(a.name.split("-")[2]) - getValue(b.name.split("-")[2])):
+      (getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1])):
+      (getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))
+    ));
     let bookingsTickets = updatedBookings.map((booking) => ({
-      fullDate: generateRandomPastDate(startDate, endDate),
+      fullDate: booking.name,
       monthDate: new Date(booking.name).toLocaleString('default', { month: 'long' }),
       value: booking.value,
-    }));
+    })).sort((a, b) =>(
+      (getValue(a.fullDate.split("-")[0].substring(2, 4)) - getValue(b.fullDate.split("-")[0].substring(2, 4)))===0?
+      (getValue(a.fullDate.split("-")[1]) - getValue(b.fullDate.split("-")[1]))===0?
+      (getValue(a.fullDate.split("-")[2]) - getValue(b.fullDate.split("-")[2])):
+      (getValue(a.fullDate.split("-")[1]) - getValue(b.fullDate.split("-")[1])):
+       (getValue(a.fullDate.split("-")[0].substring(2, 4)) - getValue(b.fullDate.split("-")[0].substring(2, 4)))
+
+    ));
     let bookingRevenue = updatedBookings.map((booking) => ({
-      fullDate: generateRandomPastDate(startDate, endDate),
+      fullDate: booking.name,
       monthDate: new Date(booking.name).toLocaleString('default', { month: 'long' }),
       value: booking.value*price- 0.1*price,
-    }));
+    })).sort((a, b) =>(
+      (getValue(a.fullDate.split("-")[0].substring(2, 4)) - getValue(b.fullDate.split("-")[0].substring(2, 4)))===0?
+      (getValue(a.fullDate.split("-")[1]) - getValue(b.fullDate.split("-")[1]))===0?
+      (getValue(a.fullDate.split("-")[2]) - getValue(b.fullDate.split("-")[2])):
+      (getValue(a.fullDate.split("-")[1]) - getValue(b.fullDate.split("-")[1])):
+      (getValue(a.fullDate.split("-")[0].substring(2, 4)) - getValue(b.fullDate.split("-")[0].substring(2, 4)))
+    ));
     setRevenue(bookingRevenue);
     setTickets(bookingsTickets)
     console.log(bookingRevenue)
     let AdvertiserRevenue = updatedBookings.map((booking) => ({
       name: booking.name,
       value: booking.value * price- 0.1*price,
-    }));
+    })).sort((a, b) =>(
+      (getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))===0?
+      (getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1]))===0?
+      (getValue(a.name.split("-")[2]) - getValue(b.name.split("-")[2])):(getValue(a.name.split("-")[1]) - getValue(b.name.split("-")[1])):(getValue(a.name.split("-")[0].substring(2, 4)) - getValue(b.name.split("-")[0].substring(2, 4)))
+    ));
     setTabs([
-      { label: "Revenue", data: AdvertiserRevenue },
-      { label: "Bookings", data: updatedBookings }])
+      { label: "Revenue", data: [...AdvertiserRevenue] }, // Clone array to prevent mutation issues
+      { label: "Bookings", data: [...updatedBookings] },
+    ]);
   }, []);
   useEffect(() => {
-    setTabs((prevTabs)=>(prevTabs.map((tab) =>
-      tab.label === "Revenue"
-        ? {
-          ...tab,
-           data: revenue.map((booking) => ({
-            name: filterRevenueOption.order === "month" ? booking.monthDate : booking.fullDate,
-            value: booking.value,
-          }))
-        } 
-        : tab)
-   ))
+    setTabs((prevTabs) => 
+      prevTabs.map((tab) =>
+        tab.label === "Revenue"
+          ? {
+              ...tab,
+              data: filterRevenueOption.order === "month"
+                ? Object.entries(
+                    revenue.reduce((acc, booking) => {
+                      // Group by month
+                      const monthDate = booking.monthDate; // Assuming `monthDate` is already extracted as "YYYY-MM"
+                      acc[monthDate] = (acc[monthDate] || 0) + booking.value; // Sum the revenue
+                      return acc;
+                    }, {})
+                  ).map(([name, value]) => ({ name, value })) // Convert the grouped object to an array
+                : revenue.map((booking) => ({
+                    name: booking.fullDate,
+                    value: booking.value,
+                  })), // Keep original structure for "fullDate"
+            }
+          : tab
+      )
+    );
+    
   
   }, [revenue, filterRevenueOption]);
   useEffect(() => {
-    setTabs((prevTabs)=>(prevTabs.map((tab) =>
-      tab.label === "Bookings"
-        ? {
-          ...tab,
-           data: tickets.map((booking) => ({
-            name: filterTicketsOption.order === "month" ? booking.monthDate : booking.fullDate,
-            value: booking.value,
-          }))
-        } 
-        : tab)
-   ))
+    setTabs((prevTabs) => 
+      prevTabs.map((tab) =>
+        tab.label === "Bookings"
+          ? {
+              ...tab,
+              data: filterTicketsOption.order === "month"
+                ? Object.entries(
+                    tickets.reduce((acc, booking) => {
+                      // Group by month
+                      const monthDate = booking.monthDate; // Assuming monthDate is already extracted as "YYYY-MM"
+                      acc[monthDate] = (acc[monthDate] || 0) + booking.value; // Sum the tickets
+                      return acc;
+                    }, {})
+                  ).map(([name, value]) => ({ name, value })) // Convert the grouped object to an array
+                : tickets.map((booking) => ({
+                    name: booking.fullDate,
+                    value: booking.value,
+                  })), // Keep original structure for "fullDate"
+            }
+          : tab
+      )
+    );
+    
   }, [tickets, filterTicketsOption]);
   useEffect(() => {
    setActiveTab((preTab)=>(
