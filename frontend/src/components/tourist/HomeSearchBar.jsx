@@ -108,7 +108,8 @@ export default function SearchBar() {
             <div className="searchForm__button">
               <button
                 onClick={() => validate()}
-                className="button -dark-1 bg-accent-1 rounded-200 text-white"
+                className="button -dark-1 bg-stone rounded-200 text-white"
+                style={{ padding: "10px 20px" }}
               >
                 <i className="icon-search text-16 mr-10"></i>
                 Search
@@ -119,51 +120,13 @@ export default function SearchBar() {
       </div>
       <style>{`
       .searchForm {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  background: #fff;
-  border-radius: 15px;
-}
-
-.searchForm__form {
-  display: flex;
-  gap: 20px;
-}
-
-.searchFormItem__button {
-  cursor: pointer;
-}
-
-.searchFormItem__icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-
-.searchForm__button .button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.button.bg-accent-1 {
-  background-color: #036264;
-  color: #fff;
-  transition: all 0.3s ease;
-}
-
-.button.bg-accent-1:hover {
-  background-color: #5a9ea0;
-}
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background: #fff;
+        border-radius: 850px !important; /* Rounded edges */
+      }
 
       `}</style>
     </>
