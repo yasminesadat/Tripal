@@ -66,7 +66,7 @@ export default function ProductRevenue() {
       <div className="rounded-12 bg-white shadow-2 h-full">
         <div className="pt-20 px-30">
           <div className="text-18 fw-500">Weekly Revenue Statistics</div>
-          <h3>Total Revenue: {totalRevenue}</h3>
+          <h3>Total Revenue: EGP {totalRevenue}</h3>
           <div className="pt-30">{chart("preserveEnd")}</div>
         </div>
       </div>

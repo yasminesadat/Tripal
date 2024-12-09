@@ -147,7 +147,7 @@ export default function ActivityRevenue() {
               <div className="tabs__pane -tab-item-1 is-tab-el-active">
               {activeTab.label ==="Revenue" && 
               <div className="text-18 fw-500">Weekly Revenue Statistics
-              <h3>Total Revenue: {totalRevenue}</h3></div>} 
+              <h3>Total Revenue: EGP {totalRevenue}</h3></div>} 
               {activeTab.label ==="Bookings" && 
               <div className="text-18 fw-500">Bookings Statistics
               <h3>Total Tickets : {totalTickets}</h3></div>} 
