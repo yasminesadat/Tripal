@@ -49,7 +49,7 @@ const OrderDetails = () => {
     try {
       const isArchived = await getIsArchived(productId);
       if (isArchived) {
-        message.warning("Product no longer exists");
+        message.info("Product no longer exists");
       } else {
         window.location.href = `/tourist/view-products/product/${productId}`;
       }
