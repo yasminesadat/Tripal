@@ -6,7 +6,7 @@ import { message } from "antd";
 import { DateObject } from "react-multi-date-picker";
 import { useNavigate } from "react-router-dom";
 
-export default function SearchBar() {
+export default function SearchBar({ tourist }) {
   const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [selected, setSelected] = useState("");
   const today = new Date();
@@ -40,7 +40,11 @@ export default function SearchBar() {
     } else if (!dates) {
       message.error("Please enter dates.");
     } else {
-      navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
+      if (tourist) {
+        navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
+      } else {
+        navigate(`/guest/hotelList/${selected}/${dates[0]}/${dates[1]}`);
+      }
     }
   };
 

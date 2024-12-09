@@ -254,7 +254,7 @@ export default function TouristHome() {
           onChange={handleStepChange}
         />
         <Divider />
-        <Hero5 />
+        <Hero5 tourist={true} />
         <BrandsThree />
         <TourTypesTwo />
         <br></br>

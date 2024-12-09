@@ -1,16 +1,22 @@
 import { Link } from "react-router-dom";
 
-export default function Menu({ refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts }) {
+export default function Menu({
+  refFlights,
+  refHotels,
+  refActivities,
+  refItineraries,
+  refHisPlaces,
+  refProducts,
+}) {
   return (
     <>
       <div className="xl:d-none ">
         <div className="desktopNav">
-
           <div className="desktopNav__item">
             <Link to="/tourist">Home</Link>
           </div>
           <div className="desktopNav__item" ref={refFlights}>
-            <Link to="/tourist/book-flight" >Flights</Link>
+            <Link to="/tourist/book-flight">Flights</Link>
           </div>
 
           <div className="desktopNav__item" ref={refHotels}>
@@ -32,7 +38,6 @@ export default function Menu({ refFlights, refHotels, refActivities, refItinerar
           <div className="desktopNav__item" ref={refProducts}>
             <Link to="/tourist/view-products">Products</Link>
           </div>
-
         </div>
       </div>
     </>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import TouristHeader from "@/components/layout/header/TouristHeader";
+import GuestHeader from "@/components/layout/header/GuestHeader";
 import img3 from "../BookingHotels/Components/HotelsImages/hotel2.jpeg";
 import img5 from "../BookingHotels/Components/HotelsImages/hotel8.jpeg";
 import img1 from "../BookingHotels/Components/HotelsImages/hotel7.jpeg";
@@ -18,6 +18,7 @@ import { useParams, useNavigate } from "react-router-dom";
 //import styles from "../../components/style.module.css";
 
 import { getHotels } from "../../api/HotelService.js";
+import { message } from "antd";
 
 export default function TourList1() {
   const [setDdActives] = useState(false);
@@ -113,14 +114,14 @@ export default function TourList1() {
   }, []);
 
   const metadata = {
-    title: "Hotels || Tripal ",
+    title: "Hotels || Tripal",
   };
 
   return (
     <>
       <MetaComponent meta={metadata} />
       <div className="page-wrapper">
-        <TouristHeader />
+        <GuestHeader />
         <main className="page-content">
           <section className="layout-pb-xl">
             <div>
@@ -229,13 +230,11 @@ export default function TourList1() {
                           <button
                             className="button -outline-accent-1 "
                             style={{ color: "var(--color-stone)" }}
-                            onClick={() =>
-                              navigate(
-                                `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`
-                              )
-                            }
+                            onClick={() => {
+                              message.info("You need to login first");
+                              navigate("/login");
+                            }}
                           >
-                            {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
                             View Details
                             <i className="icon-arrow-top-right ml-10"></i>
                             {/* </Link> */}
