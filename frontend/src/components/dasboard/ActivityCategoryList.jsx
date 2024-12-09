@@ -11,7 +11,7 @@ const ActivityCategoryDetailsList = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [updateCategoryName, setUpdateCategoryName] = useState("");
     const [updateCategoryID, setUpdateCategoryID] = useState("");
-    const [loading ,setLoading]= useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -212,98 +212,104 @@ const ActivityCategoryDetailsList = () => {
             },
         },
     };
-    if(loading)return <Spinner/>
+    if (loading) return <Spinner />
 
     return (
         <>
-                    <div style={styles.container}>
-                        <style>{globalStyles}</style>
-                        <div style={styles.card}>
-                            <div style={styles.header}>
-                                <h1 style={styles.headerTitle}>Activity Categories</h1>
-                            </div>
+            <div style={styles.container}>
+                <style>{globalStyles}</style>
+                <div style={styles.card}>
+                    <div style={styles.header}>
+                        <h1 style={styles.headerTitle}>Activity Categories</h1>
+                    </div>
 
-                            <div style={styles.section}>
-                                <h2 style={styles.title}>Create New Category</h2>
-                                <div style={styles.inputGroup}>
-                                    <Input
-                                        value={nameValue}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter new category name"
-                                        style={styles.input}
-                                    />
-                                    <Button
-                                        onClick={handleButtonClick}
-                                        type="primary"
-                                        icon={<PlusOutlined />}
-                                        style={styles.button}
-                                    >
-                                        Add
-                                    </Button>
-                                </div>
-
-                                <h2 style={styles.title}>Existing Categories</h2>
-                                <List
-                                    itemLayout="horizontal"
-                                    dataSource={data}
-                                    renderItem={(activityCategory) => (
-                                        <List.Item
-                                            style={styles.listItem}
-                                            actions={[
-                                                <Button
-                                                    type="text"
-                                                    icon={<EditOutlined />}
-                                                    style={styles.editButton}
-                                                    onClick={() => editActivityCategory(
-                                                        activityCategory._id,
-                                                        activityCategory.Name
-                                                    )}
-                                                >
-                                                    Edit
-                                                </Button>,
-                                                <Button
-                                                    type="text"
-                                                    icon={<DeleteOutlined />}
-                                                    style={styles.deleteButton}
-                                                    onClick={() => deleteActivityCategory(
-                                                        activityCategory._id,
-                                                        activityCategory.Name
-                                                    )}
-                                                >
-                                                    Delete
-                                                </Button>,
-                                            ]}
-                                        >
-                                            <List.Item.Meta
-                                                title={
-                                                    <span style={styles.categoryName}>
-                                                        {activityCategory.Name}
-                                                    </span>
-                                                }
-                                            />
-                                        </List.Item>
-                                    )}
-                                />
-                            </div>
+                    <div style={styles.section}>
+                        <h2 style={styles.title}>Create New Category</h2>
+                        <div style={styles.inputGroup}>
+                            <Input
+                                value={nameValue}
+                                onChange={handleInputChange}
+                                placeholder="Enter new category name"
+                                style={styles.input}
+                            />
+                            <Button
+                                onClick={handleButtonClick}
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                style={styles.button}
+                            >
+                                Add
+                            </Button>
                         </div>
 
-                        <Modal
-                            title={<span style={styles.modal.title}>Update Activity Category</span>}
-                            open={isModalVisible}
-                            onOk={() => handleUpdate(updateCategoryID, updateCategoryName)}
-                            onCancel={() => setIsModalVisible(false)}
-                            okButtonProps={{ style: styles.button }}
-                            cancelButtonProps={{ style: { display: 'none' } }}
-                        >
-                            <Input
-                                value={updateCategoryName}
-                                onChange={(e) => setUpdateCategoryName(e.target.value)}
-                                placeholder="Enter new category name"
-                                style={styles.modal.input}
-                            />
-                        </Modal>
+                        <h2 style={styles.title}>Existing Categories</h2>
+                        <List
+                            itemLayout="horizontal"
+                            dataSource={data}
+                            renderItem={(activityCategory) => (
+                                <List.Item
+                                    style={styles.listItem}
+                                    actions={[
+                                        <Button
+                                            type="text"
+                                            icon={<EditOutlined />}
+                                            style={styles.editButton}
+                                            onClick={() => editActivityCategory(
+                                                activityCategory._id,
+                                                activityCategory.Name
+                                            )}
+                                        >
+                                            Edit
+                                        </Button>,
+                                        <Button
+                                            type="text"
+                                            icon={<DeleteOutlined />}
+                                            style={styles.deleteButton}
+                                            onClick={() => deleteActivityCategory(
+                                                activityCategory._id,
+                                                activityCategory.Name
+                                            )}
+                                        >
+                                            Delete
+                                        </Button>,
+                                    ]}
+                                >
+                                    <List.Item.Meta
+                                        title={
+                                            <span style={styles.categoryName}>
+                                                {activityCategory.Name}
+                                            </span>
+                                        }
+                                    />
+                                </List.Item>
+                            )}
+                        />
                     </div>
-                    
+                </div>
+
+                <Modal
+                    title={<span style={styles.modal.title}>Update Activity Category</span>}
+                    open={isModalVisible}
+                    onOk={() => handleUpdate(updateCategoryID, updateCategoryName)}
+                    onCancel={() => setIsModalVisible(false)}
+                    okButtonProps={{ style: styles.button }}
+                    cancelButtonProps={{ style: { display: 'none' } }}
+                >
+                    <Input
+                        value={updateCategoryName}
+                        onChange={(e) => setUpdateCategoryName(e.target.value)}
+                        placeholder="Enter new category name"
+                        style={{
+                            height: "50px",
+                            border: "1px solid #d9d9d9",
+                            outline: "none",
+                            width: "100%",
+                            backgroundColor: "transparent"
+                        }}
+                    />
+                </Modal>
+            </div>
+
         </>
     );
 };
