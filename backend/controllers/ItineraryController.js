@@ -135,9 +135,9 @@ const updateItinerary = async (req, res) => {
         if (!itinerary) {
             return res.status(404).json({ error: 'Itinerary not found' });
         }
-        if (itinerary.bookings.length > 0) {
-            return res.status(400).json({ error: 'Cannot update itinerary with bookings' });
-        }
+        // if (itinerary.bookings.length > 0) {
+        //     return res.status(400).json({ error: 'Cannot update itinerary with bookings' });
+        // }
 
         const updatedItinerary = await itineraryModel.findByIdAndUpdate(id, {
             title, description,
