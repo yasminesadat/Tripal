@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useState, useEffect, useRef } from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -31,7 +30,6 @@ export default function TourList1() {
 
   const [exchangeRate, setExchangeRate] = useState(1);
 
-  const [currency, setCurrency] = useState("EGP");
   const [currency, setCurrency] = useState("EGP");
 
   const getExchangeRate = async () => {

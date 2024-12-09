@@ -3,7 +3,7 @@ import Location from "../../components/dropdownSearch/Location";
 import image from "./Components/bg.svg";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import { Tour, message } from 'antd';
+import { Tour, message } from "antd";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -34,15 +34,18 @@ export default function Hero6() {
         localStorage.setItem("currentStep", 3);
         setOpen(false);
         navigate("/tourist", { state: { fromTour: true, targetStep: 3 } });
-      }
-    }
-  ]
+      },
+    },
+  ];
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
 
     if (isFromTour && refHotelsSearch.current) {
-      refHotelsSearch.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      refHotelsSearch.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   });
 
@@ -65,13 +68,11 @@ export default function Hero6() {
 
   const validate = () => {
     if (!selected) {
-      message.error("Please search for a city.")
-    }
-    else if (!dates) {
-      message.error("Please enter dates.")
-    }
-    else navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
-  }
+      message.error("Please search for a city.");
+    } else if (!dates) {
+      message.error("Please enter dates.");
+    } else navigate(`/hotelList/${selected}/${dates[0]}/${dates[1]}`);
+  };
 
   useEffect(() => {
     setCurrentActiveDD("");
@@ -98,87 +99,90 @@ export default function Hero6() {
   return (
     <>
       <style jsx global>{`
-          /* Base style for all dots */
-          /* Try multiple selectors and approaches */
-          .ant-tour .ant-tour-indicators > span {
-            width: 8px !important;
-            height: 8px !important;
-            border-radius: 50% !important;
-            background: #dac4d0 !important;
-          }
-          .ant-tour .ant-tour-indicators > span[class*="active"] {
-            background: #036264 !important;
-          }
+        /* Base style for all dots */
+        /* Try multiple selectors and approaches */
+        .ant-tour .ant-tour-indicators > span {
+          width: 8px !important;
+          height: 8px !important;
+          border-radius: 50% !important;
+          background: #dac4d0 !important;
+        }
+        .ant-tour .ant-tour-indicators > span[class*="active"] {
+          background: #036264 !important;
+        }
 
-          /* Additional specificity */
-          .ant-tour-indicators span[role="dot"][aria-current="true"] {
-            background: #036264 !important;
-          }
+        /* Additional specificity */
+        .ant-tour-indicators span[role="dot"][aria-current="true"] {
+          background: #036264 !important;
+        }
 
-          .ant-tour .ant-tour-inner {
-            border: 1px solid #5a9ea0;
-            box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
-          }
+        .ant-tour .ant-tour-inner {
+          border: 1px solid #5a9ea0;
+          box-shadow: 0 4px 12px rgba(3, 98, 100, 0.15);
+        }
 
-          .ant-tour .ant-tour-content {
-            color: #8f5774;
-            font-weight: 500 !important;
-            letter-spacing: 0.3px !important;
-            text-rendering: optimizeLegibility !important;
-          }
+        .ant-tour .ant-tour-content {
+          color: #8f5774;
+          font-weight: 500 !important;
+          letter-spacing: 0.3px !important;
+          text-rendering: optimizeLegibility !important;
+        }
 
-          .ant-tour .ant-tour-title {
-            color: #5a9ea0;
-            font-weight: 600;
-          }
+        .ant-tour .ant-tour-title {
+          color: #5a9ea0;
+          font-weight: 600;
+        }
 
-          .ant-tour .ant-tour-close {
-            color: #5a9ea0;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-          }
+        .ant-tour .ant-tour-close {
+          color: #5a9ea0;
+          opacity: 0.8;
+          transition: opacity 0.2s;
+        }
 
-          .ant-tour .ant-tour-close:hover {
-            opacity: 1;
-            color: #e5f8f8;
-          }
+        .ant-tour .ant-tour-close:hover {
+          opacity: 1;
+          color: #e5f8f8;
+        }
 
-          .ant-tour .ant-tour-buttons .ant-btn {
-            transition: all 0.3s ease;
-          }
+        .ant-tour .ant-tour-buttons .ant-btn {
+          transition: all 0.3s ease;
+        }
 
-          .ant-tour .ant-tour-buttons .ant-btn-primary
-          {
-            background: #036264;
-            border: none;
-            color: white;
-            transition: all 0.2s;
-          }
-          .ant-tour .ant-tour-buttons .ant-btn-default{
-            background: #036264;
-            border: none;
-            color: white;
-            transition: all 0.2s;
-          }
-          
-          .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
-          .ant-tour .ant-tour-buttons .ant-btn-default:hover {
-            color:white;
-            background: #5a9ea0;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
-          }
-          .ant-tour .ant-tour-arrow-content {
-            background: white;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-          }  
-        `}</style>
+        .ant-tour .ant-tour-buttons .ant-btn-primary {
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+        .ant-tour .ant-tour-buttons .ant-btn-default {
+          background: #036264;
+          border: none;
+          color: white;
+          transition: all 0.2s;
+        }
+
+        .ant-tour .ant-tour-buttons .ant-btn-primary:hover,
+        .ant-tour .ant-tour-buttons .ant-btn-default:hover {
+          color: white;
+          background: #5a9ea0;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(3, 98, 100, 0.2);
+        }
+        .ant-tour .ant-tour-arrow-content {
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .searchForm {
+          width: 800px !important;
+        }
+      `}</style>
       <MetaComponent meta={metadata} />
       <div className="page-wrapper">
         <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
         <TouristHeader />
         <main className="page-content-hana">
-          <section className="hero -type-6" style={{ paddingBottom: '500px' }}>
+          <section className="hero -type-6" style={{ paddingBottom: "500px" }}>
             <div className="hero__bg">
               <img src={image} alt="background" />
             </div>
@@ -196,8 +200,13 @@ export default function Hero6() {
                       You'll Never <span className="text-accent-1">Forget</span>
                     </h1>
 
-                    <p data-aos="fade-up" data-aos-delay="250" className="mt-20">
-                      From cozy rooms to luxury suites, discover your perfect sanctuary
+                    <p
+                      data-aos="fade-up"
+                      data-aos-delay="250"
+                      className="mt-20"
+                    >
+                      From cozy rooms to luxury suites, discover your perfect
+                      sanctuary
                       <br className="md:d-none" />
                       at our world-class hotel
                     </p>
@@ -212,20 +221,22 @@ export default function Hero6() {
                         ref={dropDownContainer}
                         className="searchForm -type-1 shadow-1 rounded-200"
                       >
-                        <div className="searchForm__form" >
+                        <div className="searchForm__form">
                           <div className="searchFormItem js-select-control js-form-dd">
                             <div
                               className="searchFormItem__button"
                               onClick={() =>
                                 setCurrentActiveDD((pre) =>
-                                  pre === "location" ? "" : "location",
+                                  pre === "location" ? "" : "location"
                                 )
                               }
-                            >
-                            </div>
+                            ></div>
 
-                            <div className="xl:d-none ml-30" >
-                              <HeaderSerch selected={selected} setSelected={setSelected} />
+                            <div className="xl:d-none ml-30">
+                              <HeaderSerch
+                                selected={selected}
+                                setSelected={setSelected}
+                              />
                             </div>
                             <Location
                               setLocation={setSelected}
@@ -238,20 +249,25 @@ export default function Hero6() {
                               className="searchFormItem__button"
                               onClick={() =>
                                 setCurrentActiveDD((pre) =>
-                                  pre === "calender" ? "" : "calender",
+                                  pre === "calender" ? "" : "calender"
                                 )
                               }
                             >
                               <div className="searchFormItem__icon size-50 rounded-full border-1 flex-center">
-                                <i className="text-20 icon-calendar" onClick={() =>
-                                  setCurrentActiveDD("calender",
-                                  )
-                                }></i>
+                                <i
+                                  className="text-20 icon-calendar"
+                                  onClick={() => setCurrentActiveDD("calender")}
+                                ></i>
                               </div>
-                              <div className="searchFormItem__content" >
+                              <div className="searchFormItem__content">
                                 <div>
-                                  <span className="js-first-date" style={{ cursor: "pointer" }}>
-                                    <Calender dates={dates} setDates={setDates}
+                                  <span
+                                    className="js-first-date"
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    <Calender
+                                      dates={dates}
+                                      setDates={setDates}
                                       active={currentActiveDD === "calender"}
                                     />
                                   </span>
@@ -281,4 +297,4 @@ export default function Hero6() {
       </div>
     </>
   );
-};
+}
