@@ -5,6 +5,8 @@ import Stars from "../common/Stars";
 import Pagination from "@/components/activity/Pagination";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
+import { bookmarkEvent } from "@/api/TouristService";
+
 import {
   viewUpcomingItineraries,
   getItinerariesByTourGuide,
@@ -84,6 +86,9 @@ export default function ItinerariesList({
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+  setCurrentPage(1);
+  }, [filteredItineraries]);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -188,6 +193,7 @@ export default function ItinerariesList({
     });
 
     setFilteredItineraries(filtered);
+    setCurrentPage(1);
   }, [
     startDate,
     endDate,
@@ -284,6 +290,16 @@ export default function ItinerariesList({
 
     return `${day}/${month}/${year}`;
   };
+
+  const handleBookmark = async (eventId, eventType) => {
+    try {
+      await bookmarkEvent(eventId, eventType);
+      message.success("Added Event to Bookmark");
+    } catch (error) {
+      console.error("Error bookmarking event:", error);
+    }
+  };
+  
   //#endregion
   if (loading) return <Spinner />;
   return (
@@ -437,7 +453,8 @@ export default function ItinerariesList({
                         >
                           <i className="icon-share text-15"></i>
                         </button>
-                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
+                        <button className="button -accent-1 size-35 bg-white rounded-full flex-center" onClick={() => handleBookmark(elm._id, "itinerary")}
+                        >
                           <i className="icon-heart text-15"></i>
                         </button>
                       </div>
