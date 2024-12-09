@@ -254,17 +254,31 @@ const TermsModal = ({
           padding: 12px 20px;
           border-radius: 0 0 4px 4px;
         }
+.terms-modal .ant-btn-default {
+    height: 32px;
+    padding: 0 16px;
+    border: 1px solid #999;
+    color: #fff !important;
+    margin-right: 8px;
 
+    background: var(--color-stone) !important;
+}
+
+.terms-modal .ant-btn-default:hover {
+   background: var(--color-stone-light) !important;
+    border-color: var(--color-stone) !important;
+    color: #fff !important;
+}
         .terms-modal .ant-btn-primary {
-          background: var(--color-stone);
-          border-color: var(--color-stone);
+          background: var(--color-stone) !important;
+          border-color: var(--color-stone) !important;
           height: 32px;
           padding: 0 16px;
           font-weight: 500;
         }
 
         .terms-modal .ant-btn-primary:hover {
-          background: var(--color-stone-light);
+          background: var(--color-stone-light) !important;
           border-color: var(--color-stone-light);
         }
 
@@ -1056,6 +1070,8 @@ export default function Register() {
         .ant-picker:hover {
           border-color: #8f5774 !important;
         }
+
+
 
         .ant-input:focus,
         .ant-input-password-focused,
