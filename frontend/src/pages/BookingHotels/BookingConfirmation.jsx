@@ -9,6 +9,7 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 import {message} from 'antd';
 
 import { getTouristUserName } from "@/api/TouristService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 
 export default function BookingPages() {
@@ -36,12 +37,35 @@ export default function BookingPages() {
     boardType,
     checkIn,
     checkOut,
-    currency,
-    exchangeRate,
+   
   } = useParams();
 
   const date1=  format((new Date(checkIn)), 'dd MMMM yyyy');
   const date2=  format((new Date(checkOut)), 'dd MMMM yyyy');
+
+  
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
 
 
   const fetchUserName= async() => {
@@ -62,9 +86,9 @@ export default function BookingPages() {
 
   useEffect(() => {
     const calculatedTotal = (
-      (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber +
-      (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
-      (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber
+      (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber  +
+      (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber  +
+      (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber 
     ).toFixed(2);
     setTotal(calculatedTotal); // Update the total
     fetchUserName()
@@ -280,8 +304,8 @@ export default function BookingPages() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Single Rooms:</div>
                             <div className="">
-                              {singleNumber} x {singlePrice} = {currency}{" "}
-                              {singleNumber * singlePrice}
+                              {singleNumber} x {Math.round(singlePrice * exchangeRate)} = {currency}{" "}
+                              {Math.round(singleNumber * singlePrice * exchangeRate)}
                             </div>
                           </div>
                         )}
@@ -290,8 +314,8 @@ export default function BookingPages() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Double Rooms:</div>
                             <div className="">
-                              {doubleNumber} x {doublePrice} = {currency}{" "}
-                              {doubleNumber * doublePrice}
+                              {doubleNumber} x {Math.round(doublePrice*exchangeRate)} = {currency}{" "}
+                              {Math.round(doubleNumber * doublePrice*exchangeRate)}
                             </div>
                           </div>
                         )}
@@ -300,8 +324,8 @@ export default function BookingPages() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Triple Rooms:</div>
                             <div className="">
-                              {tripleNumber} x {triplePrice} = {currency}{" "}
-                              {tripleNumber * triplePrice}
+                              {tripleNumber} x {Math.round(triplePrice * exchangeRate)} = {currency}{" "}
+                              {Math.round(tripleNumber * triplePrice * exchangeRate)}
                             </div>
                           </div>
                         )}
@@ -324,7 +348,7 @@ export default function BookingPages() {
                         <div className="d-flex items-center justify-between">
                           <div className="fw-500">Total : </div>
                           <div className="">
-                            {currency} {total}
+                            {currency} {Math.round(total*exchangeRate)}
                           </div>
                         </div>
                       </div>

@@ -190,7 +190,7 @@ const requestAccountDeletion = async (req, res) => {
             }
         }
         else if (role === "Tour Guide") {
-            const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, "bookings.selectedDate": { $gt: new Date() } });
+            const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, bookings: { $ne: [] }, startDate: { $gt: new Date() }});
             if (hasBookedItineraries) {
                 return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
             }

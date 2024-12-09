@@ -8,6 +8,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import { getTouristUserName } from "@/api/TouristService";
 import {message} from 'antd';
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 
 export default function BookingPagesStripe() {
   const metadata = {
@@ -31,11 +32,34 @@ export default function BookingPagesStripe() {
   const [boardType, setBoardType] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [currency, setCurrency] = useState("");
-  const [exchangeRate, setExchangeRate] = useState(1);
+ 
   const [userName,setUserName]=useState("")
   const [date1,setDate1]=useState("")
   const [date2,setDate2]=useState("");
+
+  const [exchangeRate, setExchangeRate] = useState(1);
+
+  const [currency, setCurrency] = useState( "EGP");
+
+  const getExchangeRate = async () => {
+    if (currency) {
+      try {
+        const rate = await getConversionRate(currency);
+        setExchangeRate(rate);
+      } catch (error) {
+        //message.error("Failed to fetch exchange rate.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newCurrency = getTouristCurrency();
+      setCurrency(newCurrency);
+      getExchangeRate();
+    }, 1);  return () => clearInterval(intervalId);
+  }, [currency]);
+
 
 
 
@@ -113,47 +137,47 @@ export default function BookingPagesStripe() {
                 <div className="col-lg-8">
                   <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
 
-                    <div>
-                      <div className="d-flex flex-column items-center text-center">
-                        <div className="size-80 rounded-full flex-center bg-accent-1 text-white">
-                          <i className="icon-check text-26"></i>
-                        </div>
-
-                        <h2 className="text-30 md:text-24 fw-700 mt-20">
-                          {userName}, your order was submitted successfully!
-                        </h2>
-                        <div className="mt-10">
-                          Booking details have been sent to: booking@tourz.com
-                        </div>
-                      </div>
-
-                      <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30">
-                        <div className="row y-gap-15">
-                          <div className="col-md-3 col-6">
-                            <div>Order Number</div>
-                            <div className="text-accent-2">13119</div>
+                  <div>
+                        <div className="d-flex flex-column items-center text-center">
+                          <div className="size-80 rounded-full flex-center bg-accent-1 text-white" >
+                            <i className="icon-check text-26"></i>
                           </div>
 
-                          <div className="col-md-3 col-6">
-                            <div>Date of Booking</div>
-                            <div className="text-accent-2">
-                              {format(today, "MMMM dd, yyyy")}
+                          <h2 className="text-30 md:text-24 fw-700 mt-20">
+                            {userName}, your order was submitted successfully!
+                          </h2>
+                          <div className="mt-10">
+                            Booking details has been sent to: booking@tourz.com
+                          </div>
+                        </div>
+
+                        <div className="border-dashed-1 py-30 px-50 rounded-12 mt-30" style={{ color: "var(--color-light-purple" }}>
+                          <div className="row y-gap-15">
+                            <div className="col-md-3 col-6" >
+                              <div>Order Number</div>
+                              <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>13119</div>
+                            </div>
+
+                            <div className="col-md-3 col-6">
+                              <div>Date of Booking</div>
+                              <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>
+                                {format(today, "MMMM dd, yyyy")}
+                              </div>
+                            </div>
+
+                            <div className="col-md-3 col-6">
+                              <div>Total</div>
+                              <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>
+                                {currency} {total}
+                              </div>
+                            </div>
+
+                            <div className="col-md-3 col-6">
+                              <div>Payment Method</div>
+                              <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>Online Payment</div>
                             </div>
                           </div>
-
-                          <div className="col-md-3 col-6">
-                            <div>Total</div>
-                            <div className="text-accent-2">
-                              {currency} {total}
-                            </div>
-                          </div>
-
-                          <div className="col-md-3 col-6">
-                            <div>Payment Method</div>
-                            <div className="text-accent-2">Online Payment</div>
-                          </div>
                         </div>
-                      </div>
                     </div>
 
                   </div>
@@ -186,8 +210,8 @@ export default function BookingPagesStripe() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Single Rooms:</div>
                             <div className="">
-                              {singleNumber} x {singlePrice} = {currency}{" "}
-                              {singleNumber * singlePrice}
+                              {singleNumber} x {Math.round(singlePrice*exchangeRate)} = {currency}{" "}
+                              {Math.round(singleNumber * singlePrice*exchangeRate)}
                             </div>
                           </div>
                         )}
@@ -196,8 +220,8 @@ export default function BookingPagesStripe() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Double Rooms:</div>
                             <div className="">
-                              {doubleNumber} x {doublePrice} = {currency}{" "}
-                              {doubleNumber * doublePrice}
+                              {doubleNumber} x {Math.round(doublePrice*exchangeRate)} = {currency}{" "}
+                              {Math.round(doubleNumber * doublePrice*exchangeRate)}
                             </div>
                           </div>
                         )}
@@ -206,16 +230,16 @@ export default function BookingPagesStripe() {
                           <div className="d-flex items-center justify-between">
                             <div className="fw-500">Triple Rooms:</div>
                             <div className="">
-                              {tripleNumber} x {triplePrice} = {currency}{" "}
-                              {tripleNumber * triplePrice}
+                              {tripleNumber} x {Math.round(triplePrice*exchangeRate)} = {currency}{" "}
+                              {Math.round(tripleNumber * triplePrice*exchangeRate)}
                             </div>
                           </div>
                         )}
 
                         <div className="d-flex items-center justify-between mt-30">
                           <div className="fw-500">Total</div>
-                          <div className="text-accent-2">
-                            {currency} {total}
+                          <div className="text-accent-2" style={{ color: "var(--color-dark-purple" }}>
+                            {currency} {Math.round(total*exchangeRate)}
                           </div>
                         </div>
                       </div>

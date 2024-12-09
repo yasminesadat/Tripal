@@ -23,7 +23,14 @@ const createProduct = asyncHandler(async (req, res) => {
     console.log(error.message);
   }
 
-  const product = await Product.create({name,seller,price,description,quantity,picture: result.secure_url});
+  const product = await Product.create({
+    name,
+    seller,
+    price,
+    description,
+    quantity,
+    picture: result.secure_url,
+  });
 
   await product.save();
   if (product) {
@@ -174,8 +181,7 @@ const editProduct = asyncHandler(async (req, res) => {
         { name, price, description, quantity, picture: result.secure_url },
         { new: true }
       );
-    } catch (error) {
-    }
+    } catch (error) {}
   } else {
     updatedProduct = await Product.findByIdAndUpdate(
       id,
@@ -200,8 +206,7 @@ const archiveProduct = asyncHandler(async (req, res) => {
     await product.save();
 
     res.status(200).json({ message: "Product archived successfully", product });
-  } catch (error) {
-  }
+  } catch (error) {}
 });
 
 const unArchiveProduct = asyncHandler(async (req, res) => {
@@ -219,8 +224,7 @@ const unArchiveProduct = asyncHandler(async (req, res) => {
     res
       .status(200)
       .json({ message: "Product unarchived successfully", product });
-  } catch (error) {
-  }
+  } catch (error) {}
 });
 
 const revenue = async (req, res) => {
@@ -259,6 +263,32 @@ const getProductImages = asyncHandler(async (req, res) => {
   res.status(200).json(images);
 });
 
+const isArchived = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    } else {
+      res.status(200).json(product.isArchived);
+    }
+  } catch (error) {}
+});
+
+const getProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findById(id).populate("seller");
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    } else {
+      res.status(200).json(product);
+    }
+  } catch (error) {}
+});
+
 module.exports = {
   createProduct,
   getProducts,
@@ -270,4 +300,6 @@ module.exports = {
   unArchiveProduct,
   revenue,
   getProductImages,
+  isArchived,
+  getProduct,
 };

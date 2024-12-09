@@ -26,7 +26,7 @@ export default function PageHeader({onSearch, title, tourist, admin}) {
 
           <div className="col-auto">
             <div className="pageHeader__subtitle">
-              <HeaderSearch onSearch={onSearch}/>
+              <HeaderSearch onSearch={onSearch} activity={true}/>
             </div>
           </div>
         </div>

@@ -382,6 +382,21 @@ const completeBooking = async (req, res) => {
     }
 
     await resource.save();
+
+    // Calculate loyalty points
+    let pointsToReceive = 0;
+    if (tourist.totalPoints <= 100000) {
+      pointsToReceive = resource.price * 0.5 * tickets;
+    } else if (tourist.totalPoints <= 500000) {
+      pointsToReceive = resource.price * 1 * tickets;
+    } else {
+      pointsToReceive = resource.price * 1.5 * tickets;
+    }
+
+    // Update tourist's points and save
+    tourist.totalPoints += pointsToReceive;
+    tourist.currentPoints += pointsToReceive;
+
     await tourist.save();
 
     // Send booking confirmation email
@@ -394,14 +409,15 @@ const completeBooking = async (req, res) => {
       <p>Total Cost: ${resource.price * tickets + (resource.serviceFee ? resource.serviceFee : 0)}</p>
       <p>Wallet Balance: ${tourist.wallet.amount}</p>
       <p>Payment Method: Credit Card</p>
-    <p>Thank you for booking with us!</p>
-
+      <p>Points Earned: ${pointsToReceive}</p>
+      <p>Thank you for booking with us!</p>
     `;
 
     try {
       await sendEmail(tourist.email, subject, html);
       res.status(200).json({
         message: "Booking completed successfully, confirmation email sent",
+        pointsEarned: pointsToReceive,
       });
     } catch (error) {
       console.error('Error sending booking confirmation:', error.message);
@@ -412,5 +428,6 @@ const completeBooking = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 module.exports = { cancelResource, bookResource, completeBooking };

@@ -19,10 +19,13 @@ import Header from "../../components/layout/header/TouristHeader";
 import Footer from "../../components/layout/footers/FooterThree";
 import { createOrder } from "@/api/OrderService";
 import { loadStripe } from "@stripe/stripe-js";
-import { message, Modal } from 'antd';
-import { getWalletAndTotalPoints } from '@/api/TouristService';
-import { AlertCircle } from 'lucide-react';
-import { getTouristCurrency, getConversionRate } from '@/api/ExchangeRatesService';
+import { message, Modal } from "antd";
+import { getWalletAndTotalPoints } from "@/api/TouristService";
+import { AlertCircle } from "lucide-react";
+import {
+  getTouristCurrency,
+  getConversionRate,
+} from "@/api/ExchangeRatesService";
 
 const steps = ["Shipping address", "Payment details"];
 
@@ -32,7 +35,8 @@ export default function Checkout(props) {
   const [discount, setDiscount] = useState(0.0);
   const [paymentType, setPaymentType] = useState(null);
   const location = useLocation();
-
+  const navigate = useNavigate();
+  const [order,setOrder] = useState(null);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
 
@@ -52,11 +56,13 @@ export default function Checkout(props) {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1); return () => clearInterval(intervalId);
+    }, 1);
+    return () => clearInterval(intervalId);
   }, [currency]);
 
   const cart = location.state?.cart || [];
-  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] =
+    useState(false);
   const [isWalletInfoModalVisible, setWalletInfoModalVisible] = useState(false);
   const [updatedWalletInfo, setUpdatedWalletInfo] = useState(null);
   const [totalPoints, setTotalPoints] = useState(0);
@@ -90,7 +96,7 @@ export default function Checkout(props) {
       console.log("Redirecting to Stripe...");
       const response = await createOrder(orderData);
       const sessionId = response?.sessionId;
-
+      setOrder(response.order);      
       if (sessionId) {
         const { error } = await stripe.redirectToCheckout({ sessionId });
         if (error) {
@@ -117,8 +123,9 @@ export default function Checkout(props) {
     //showConfirmationModal();
     console.log("Deducting from wallet...");
     try {
-      await createOrder(orderData);
-    } catch (error) {
+      const response = await createOrder(orderData);
+      setOrder(response.order);
+        } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         message.error(error.response.data.error);
       } else {
@@ -135,13 +142,18 @@ export default function Checkout(props) {
     cancelConfirmationModal(); // Close the confirmation modal
 
     // Process wallet payment after confirmation
-    const orderData = { deliveryAddress: address, paymentMethod: "Wallet", discountPercentage: discount };
+    const orderData = {
+      deliveryAddress: address,
+      paymentMethod: "Wallet",
+      discountPercentage: discount,
+    };
     await processWalletPayment(orderData);
   };
 
   const processCashOnDelivery = async (orderData) => {
     console.log("Proceeding with cash on delivery...");
-    await createOrder(orderData);
+    const response = await createOrder(orderData);
+    setOrder(response.order);
     //message.success("COD successful!");
     setActiveStep(activeStep + 1);
   };
@@ -178,7 +190,9 @@ export default function Checkout(props) {
       case 0:
         return <AddressForm onNext={handleNextAddress} />;
       case 1:
-        return <PaymentForm onNext={handleNextPayment} onApplyPromo={setDiscount} />;
+        return (
+          <PaymentForm onNext={handleNextPayment} onApplyPromo={setDiscount} />
+        );
       default:
         throw new Error("Unknown step");
     }
@@ -233,7 +247,13 @@ export default function Checkout(props) {
                   height: "auto",
                 }}
               >
-                <Info totalPrice={'0'} cart={cart} currency={currency} exchangeRate={exchangeRate} promo={discount} />
+                <Info
+                  totalPrice={"0"}
+                  cart={cart}
+                  currency={currency}
+                  exchangeRate={exchangeRate}
+                  promo={discount}
+                />
               </Box>
             </Grid>
 
@@ -313,7 +333,7 @@ export default function Checkout(props) {
                       variant="body1"
                       sx={{ color: "text.secondary" }}
                     >
-                      Your order number is <strong>&nbsp;#140396</strong>. We
+                      Your order number is <strong>&nbsp;#{order._id.slice(-6)}</strong>. We
                       have emailed your order confirmation and will update you
                       once it's shipped.
                     </Typography>
@@ -388,8 +408,8 @@ export default function Checkout(props) {
                   Confirm Payment
                 </h3>
                 <p className="text-gray-600">
-                  Are you sure you want to proceed with this payment?
-                  Please review the details before confirming.
+                  Are you sure you want to proceed with this payment? Please
+                  review the details before confirming.
                 </p>
               </div>
             </div>
@@ -399,13 +419,17 @@ export default function Checkout(props) {
             visible={isWalletInfoModalVisible}
             onOk={closeWalletInfoModal}
             footer={null}
-            closeIcon={<div className="modal-close-icon" onClick={closeWalletInfoModal}>✕</div>}
+            closeIcon={
+              <div className="modal-close-icon" onClick={closeWalletInfoModal}>
+                ✕
+              </div>
+            }
             style={{
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '350px',
-              borderRadius: '12px',
-              overflow: 'hidden',
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "350px",
+              borderRadius: "12px",
+              overflow: "hidden",
             }}
             bodyStyle={{
               backgroundColor: "#ffffff",

@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getCart,
-  removeFromCart,
-  updateQuantity,
-} from "../../api/TouristService";
+import { getCart , removeFromCart, updateQuantity, checkStock} from "../../api/TouristService"
 // import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -88,26 +84,43 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  const handleQuantityChange = async (productId, newQuantity) => {
-    try {
-      setCart((prevCart) =>
-        prevCart.map((item) =>
-          item.product._id === productId
-            ? { ...item, quantity: newQuantity }
-            : item
-        )
-      );
-
-      await updateQuantity(productId, newQuantity);
-      fetchCart();
-    } catch (error) {
-      message.error("Failed to update product's quantity in cart.");
+    const handleQuantityChange = async (productId, newQuantity) => {
+        try {
+          setCart((prevCart) =>
+            prevCart.map((item) =>
+              item.product._id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+            )
+          );
+      
+          await updateQuantity(productId, newQuantity); 
+          fetchCart();  
+        } catch (error) {
+          message.error(error.response?.data?.message || "Failed to update product's quantity.");
+          fetchCart(); 
+        }
+      };
+     
+      const handleProceedToCheckout = async () => {
+        try {
+          const response = await checkStock(cart);  
+      
+          if (response.valid) {
+            navigate("/checkout", { state: { cart, currency, exchangeRate } });
+          }
+        } catch (error) {
+          if (error.response) {
+            message.error(error.response.data.message);
+          } else {
+            message.error("An error occurred while checking the stock.");
+          }
+        }
+      };
+      
+    if (loading) {
+        return <Spinner />;
     }
-  };
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   return (
     <>
@@ -131,85 +144,92 @@ const Cart = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {cart.map((item) => (
-                        <tr key={item.product._id}>
-                          <td>
-                            <span style={{ marginRight: "20px" }}>
-                              {item.product.name}
-                            </span>
-                            <img
-                              src={item.product.picture}
-                              alt=""
-                              style={{ width: "70px", height: "70px" }}
-                            />
-                          </td>
-                          <td>
-                            {currency}{" "}
-                            {(item.product.price * exchangeRate).toFixed(2)}
-                          </td>
-                          <td>
-                            <InputNumber
-                              value={item.quantity}
-                              min={1}
-                              formatter={(value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                              }
-                              parser={(value) =>
-                                value?.replace(/\$\s?|(,*)/g, "")
-                              }
-                              onChange={(value) =>
-                                handleQuantityChange(item.product._id, value)
-                              }
-                              style={{ textAlign: "center", width: "100px" }}
-                            />
-                          </td>
-                          <td>
-                            <td>
-                              {currency}{" "}
-                              {(item.price * exchangeRate).toFixed(2)}
-                            </td>
-                          </td>
-                          <td>
-                            <button
-                              style={{
-                                background: "none",
-                                border: "none",
-                                color: "red",
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => removeItem(item.product._id)}
-                            >
-                              Remove
-                            </button>
+                      {cart?.length === 0 ? (
+                        <tr>
+                          <td colSpan="6" style={{ textAlign: "center" }}>
+                            No products found in the cart.
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        cart.map((item) => (
+                          <tr key={item.product._id}>
+                            <td>
+                              <span style={{ marginRight: "20px" }}>
+                                {item.product.name}
+                              </span>
+                              <img
+                                src={item.product.picture}
+                                alt=""
+                                style={{ width: "70px", height: "70px" }}
+                              />
+                            </td>
+                            <td>
+                              {currency}{" "}
+                              {(item.product.price * exchangeRate).toFixed(2)}
+                            </td>
+                            <td>
+                            <InputNumber
+                                value={item.quantity}
+                                min={1}
+                                formatter={(value) =>
+                                `${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                )
+                                }
+                                parser={(value) =>
+                                value?.replace(/\$\s?|(,*)/g, "")
+                                }
+                                onChange={(value) =>
+                                handleQuantityChange(item.product._id, value)
+                                }
+                                style={{ textAlign: "center", width: "100px" }}
+                            />
+                            </td>
+                            <td>
+                              <td>
+                                {currency}{" "}
+                                {(item.price * exchangeRate).toFixed(2)}
+                              </td>
+                            </td>
+                            <td>
+                              <button
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  color: "red",
+                                  textDecoration: "underline",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => removeItem(item.product._id)}
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
 
-                  {cart.length > 0 && (
-                    <Button
-                      type="primary"
-                      className="custom-button"
-                      onClick={() =>
-                        navigate("/checkout", {
-                          state: { cart, currency, exchangeRate },
-                        })
-                      }
-                      style={{ marginLeft: "83%" }}
-                    >
-                      Proceed to Checkout
-                    </Button>
-                  )}
+                            {cart.length>0 &&(
+                            <Button
+                                type="primary"
+                                className="custom-button"
+                                onClick={handleProceedToCheckout}
+                                style={{marginLeft:"83%"}}
+                            >
+                                Proceed to Checkout
+                            </Button>
+                            )}
+                            </div>
+                    </div>
+                    </div>
+                </main>
                 </div>
-              </div>
+                <FooterThree />
             </div>
-          </main>
-        </div>
-        <FooterThree />
-      </div>
-      {/* <ComplaintsForm
+            {/* <ComplaintsForm
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onSubmitSuccess={handleComplaintSubmit}

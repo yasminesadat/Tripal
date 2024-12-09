@@ -48,7 +48,6 @@ export async function getUsersPerMonth(searchYear){
 
 export async function deleteUser(role, userId) {
   try {
-    console.log("delete userr")
     const response = await axios.delete(`/admin/user/${role}/${userId}`);
     return response.data;
   } catch (error) {
@@ -56,8 +55,6 @@ export async function deleteUser(role, userId) {
     throw error;
   }
 }
-
-
 
 export const createAdmin = async (name, password) => {
   const requestBody = {

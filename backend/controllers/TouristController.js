@@ -294,7 +294,7 @@ const redeemPoints = async (req, res) => {
     }
 
     const amount = tourist.currentPoints - (tourist.currentPoints % 10000);
-    tourist.wallet.amount = tourist.wallet.amount + amount * 100;
+    tourist.wallet.amount = tourist.wallet.amount + amount / 100;
     tourist.currentPoints = tourist.currentPoints % 10000;
 
     await tourist.save();
@@ -890,8 +890,8 @@ const getWalletAndTotalPoints = asyncHandler(async (req, res) => {
     if (!tourist) {
       return res.status(404).json({ message: "Tourist not found." });
     }
-    const { wallet, totalPoints } = tourist;
-    res.status(200).json({ wallet, totalPoints });
+    const { wallet, currentPoints } = tourist;
+    res.status(200).json({ wallet, currentPoints });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred while retrieving wallet and total points.",
@@ -973,9 +973,17 @@ const updateQuantity = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Product not found in the cart." });
     }
 
-    tourist.cart[cartIndex].quantity = quantity;
-    tourist.cart[cartIndex].price =
-      quantity * tourist.cart[cartIndex].product.price;
+    const productInCart = tourist.cart[cartIndex];
+    const availableStock = productInCart.product.quantity; 
+    
+    if (quantity > productInCart.quantity && quantity > availableStock) {
+      return res.status(400).json({
+        message: `No more of this product in stock. Only ${availableStock} available.`,
+      });
+    }
+
+    productInCart.quantity = quantity;
+    productInCart.price = quantity * productInCart.product.price;
 
     await tourist.save();
 
@@ -990,6 +998,44 @@ const updateQuantity = asyncHandler(async (req, res) => {
     });
   }
 });
+
+
+
+const checkStock = asyncHandler(async (req, res) => { 
+  const { cart } = req.body;
+
+  if (!cart || cart.length === 0) {
+    return res.status(400).json({ message: "Cart is empty." });
+  }
+
+  try {
+    const productIds = cart.map((item) => item.product._id);
+
+    const products = await productModel.find({ _id: { $in: productIds } });
+
+    for (const item of cart) {
+      const product = products.find((p) => p._id.toString() === item.product._id.toString());
+
+      if (product) {
+        if (item.quantity > product.quantity) {
+          return res.status(400).json({
+            message: `Product "${product.name}" has ${product.quantity} remaining in stock.`,
+          });
+        }
+      } else {
+        return res.status(404).json({
+          message: `Product with ID ${item.product._id} not found.`,
+        });
+      }
+    }
+
+    res.status(200).json({ valid: true });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to validate stock.", error: error.message });
+  }
+});
+
+
 
 
 module.exports = {
@@ -1022,5 +1068,6 @@ module.exports = {
   addAddress,
   getWalletAndTotalPoints,
   markTouristNotificationsRead,
-  updateQuantity
+  updateQuantity,
+  checkStock
 };

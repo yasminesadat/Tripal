@@ -11,6 +11,8 @@ const {
   unArchiveProduct,
   revenue,
   getProductImages,
+  isArchived,
+  getProduct,
 } = require("../controllers/ProductController");
 const validateIDs = require("../middleware/IDMiddleware");
 const { addRating, getRatings } = require("../controllers/RatingController");
@@ -20,6 +22,12 @@ const { verifyToken, authorizeRoles } = require("../middleware/AuthMiddleware");
 
 router.post("/products", verifyToken, authorizeRoles("Seller"), createProduct);
 router.get("/products", getProducts);
+router.get(
+  "/product/:id",
+  verifyToken,
+  authorizeRoles("Tourist", "Seller", "Admin"),
+  getProduct
+);
 router.get("/products/search", searchProductsByName);
 router.get("/products/filter", filterProductsByPrice);
 router.get("/products/sort", sortProductsByRatings);
@@ -63,6 +71,13 @@ router.post(
   verifyToken,
   authorizeRoles("Tourist"),
   getProductImages
+);
+
+router.get(
+  "/product/:id/isArchived",
+  verifyToken,
+  authorizeRoles("Tourist"),
+  isArchived
 );
 
 module.exports = router;

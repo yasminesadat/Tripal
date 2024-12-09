@@ -132,7 +132,7 @@ export default function HomePage5() {
         <TourTypesTwo />
         <br></br>
         <br></br>
-        <BannerEight />
+        <BannerEight tourist={false}/>
         <DestinationsFive />
         <TestimonialsFour />
         <FooterThree />
