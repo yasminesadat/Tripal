@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import{ useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Calender from "../../../components/dropdownSearch/Calender";
 import { times } from "./tourSingleContent";
 import { getHotelPrices } from "../../../api/HotelService";
@@ -18,8 +18,31 @@ export default function TourSingleSidebar({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const today = new Date();
-  const [dates, setDates] = useState([new Date(format(dates1, "dd MMM yy")), new Date(format(dates2, "dd MMM yy"))]);
-  const [singleNumber, setSingleNumber] = useState(0);
+  const [dates, setDates] = useState(() => {
+    try {
+      // If dates1 and dates2 exist, use them
+      if (dates1 && dates2) {
+        return [
+          new Date(format(dates1, "dd MMM yy")),
+          new Date(format(dates2, "dd MMM yy"))
+        ];
+      }
+
+      // Default values: today and tomorrow
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      return [today, tomorrow];
+    } catch (error) {
+      // Fallback in case of parsing errors
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      return [today, tomorrow];
+    }
+  }); const [singleNumber, setSingleNumber] = useState(0);
   const [doubleNumber, setDoubleNumber] = useState(0);
   const [tripleNumber, setTripleNumber] = useState(0);
   const [singlePrice, setSinglePrice] = useState(0.0);
@@ -45,7 +68,7 @@ export default function TourSingleSidebar({
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
+    }, 1); return () => clearInterval(intervalId);
   }, [currency]);
 
   useEffect(() => {
@@ -65,7 +88,7 @@ export default function TourSingleSidebar({
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return;
 
-    const numberofdays = ( dates[1]-dates[0] ) / (1000 * 60 * 60 * 24);
+    const numberofdays = (dates[1] - dates[0]) / (1000 * 60 * 60 * 24);
     try {
       const responseSingle = await getHotelPrices(
         hotelID,
@@ -80,7 +103,7 @@ export default function TourSingleSidebar({
       const rateValue = ratesArray.length > 0 ? ratesArray[0].rate : 1;
       setSinglePrice(Math.ceil(price1 * numberofdays * rateValue * exchangeRate));
     } catch (error) {
-      setSinglePrice(25708*exchangeRate);
+      setSinglePrice(25708 * exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -102,7 +125,7 @@ export default function TourSingleSidebar({
         Math.ceil(price2 * numberofdays * rateValue2 * exchangeRate)
       );
     } catch (error) {
-      setDoublePrice(35918*exchangeRate);
+      setDoublePrice(35918 * exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
 
@@ -125,19 +148,19 @@ export default function TourSingleSidebar({
         Math.ceil(price3 * numberofdays * rateValue3 * exchangeRate)
       );
     } catch (error) {
-      setTriplePrice(39817*exchangeRate);
+      setTriplePrice(39817 * exchangeRate);
       setError("No rooms available for the selected dates and criteria.");
     }
   }, [hotelID, dates, boardType, currency]);
 
   useEffect(() => {
     fetchHotelPrices();
-  }, [hotelID, currency, dates, boardType, fetchHotelPrices]); 
+  }, [hotelID, currency, dates, boardType, fetchHotelPrices]);
   const canBook =
     (
-      (isNaN(singlePrice) ? 0 : singlePrice*exchangeRate) * singleNumber +
-      (isNaN(doublePrice) ? 0 : doublePrice*exchangeRate) * doubleNumber +
-      (isNaN(triplePrice) ? 0 : triplePrice*exchangeRate) * tripleNumber
+      (isNaN(singlePrice) ? 0 : singlePrice * exchangeRate) * singleNumber +
+      (isNaN(doublePrice) ? 0 : doublePrice * exchangeRate) * doubleNumber +
+      (isNaN(triplePrice) ? 0 : triplePrice * exchangeRate) * tripleNumber
     ).toFixed(2) > 0;
 
   return (
@@ -185,9 +208,8 @@ export default function TourSingleSidebar({
             </div>
 
             <div
-              className={`searchFormItemDropdown -tour-type ${
-                activeTimeDD ? "is-active" : ""
-              }`}
+              className={`searchFormItemDropdown -tour-type ${activeTimeDD ? "is-active" : ""
+                }`}
               data-x="time"
               data-x-toggle="is-active"
             >
@@ -220,7 +242,7 @@ export default function TourSingleSidebar({
             Single (1 Person){" "}
             <span className="fw-500">
               {singlePrice && !isNaN(singlePrice)
-                ? `${currency} ${(singlePrice * singleNumber*exchangeRate).toFixed(2)}`
+                ? `${currency} ${(singlePrice * singleNumber * exchangeRate).toFixed(2)}`
                 : "NA"}{" "}
             </span>
           </div>
@@ -254,7 +276,7 @@ export default function TourSingleSidebar({
             Double (2 Persons){" "}
             <span className="fw-500">
               {doublePrice && !isNaN(doublePrice)
-                ? `${currency} ${(doublePrice * doubleNumber*exchangeRate).toFixed(2)}`
+                ? `${currency} ${(doublePrice * doubleNumber * exchangeRate).toFixed(2)}`
                 : "NA"}
             </span>
           </div>
@@ -288,7 +310,7 @@ export default function TourSingleSidebar({
             Triple (3 Persons){" "}
             <span className="fw-500">
               {triplePrice && !isNaN(triplePrice)
-                ? `${currency} ${(triplePrice * tripleNumber*exchangeRate).toFixed(2)}`
+                ? `${currency} ${(triplePrice * tripleNumber * exchangeRate).toFixed(2)}`
                 : "NA"}
             </span>
           </div>
@@ -322,9 +344,9 @@ export default function TourSingleSidebar({
         <div className="text-18 fw-500">
           {currency}
           {(
-            (isNaN(singlePrice) ? 0 : singlePrice*exchangeRate) * singleNumber +
-            (isNaN(doublePrice) ? 0 : doublePrice*exchangeRate) * doubleNumber +
-            (isNaN(triplePrice) ? 0 : triplePrice*exchangeRate) * tripleNumber
+            (isNaN(singlePrice) ? 0 : singlePrice * exchangeRate) * singleNumber +
+            (isNaN(doublePrice) ? 0 : doublePrice * exchangeRate) * doubleNumber +
+            (isNaN(triplePrice) ? 0 : triplePrice * exchangeRate) * tripleNumber
           ).toFixed(2)}
         </div>
       </div>
@@ -332,8 +354,8 @@ export default function TourSingleSidebar({
         <button
           className="button -md -lightpurple col-12 bg-accent-1 text-white mt-20"
           onClick={() => {
-            if (touristAge>18){
-            window.location.href = `/confirmBooking/${cityCode}/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}/${exchangeRate}`;
+            if (touristAge > 18) {
+              window.location.href = `/confirmBooking/${cityCode}/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}/${exchangeRate}`;
             }
             else {
               message.error('You must be at least 18 years old to book a flight.');
