@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useState, useEffect, useRef } from "react";
 
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -26,12 +25,12 @@ export default function TourList1() {
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const dropDownContainer = useRef();
   const { cityCode, dates1, dates2 } = useParams();
+  const navigate = useNavigate();
 
   const images = [img1, img2, img3, img4, img5, img6];
 
   const [exchangeRate, setExchangeRate] = useState(1);
 
-  const [currency, setCurrency] = useState("EGP");
   const [currency, setCurrency] = useState("EGP");
 
   const getExchangeRate = async () => {
@@ -174,7 +173,6 @@ export default function TourList1() {
         <TouristHeader />
         <main className="page-content">
           <section className="layout-pb-xl">
-            <h1>Hotels</h1>
             <div className="search-container">
               <span className="search-icon">
                 <svg
@@ -199,7 +197,6 @@ export default function TourList1() {
                 className="search-input"
               />
             </div>
-
             <div
               className="container"
               style={{ placeItems: "center", marginRight: "10px" }}
