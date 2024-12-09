@@ -5,6 +5,8 @@ import { times } from "./tourSingleContent";
 import { getHotelPrices } from "../../../api/HotelService";
 import { getConversionRate, getTouristCurrency } from "../../../api/ExchangeRatesService";
 import { format } from "date-fns";
+import { getTouristAge } from "@/api/TouristService";
+import { message } from 'antd';
 
 export default function TourSingleSidebar({
   cityCode,
@@ -27,6 +29,9 @@ export default function TourSingleSidebar({
   const [activeTimeDD, setActiveTimeDD] = useState(false);
   const [currency, setCurrency] = useState("EGP");
   const [exchangeRate, setExchangeRate] = useState(1);
+  const [touristAge, setTouristAge] = useState(0);
+
+
 
   const getExchangeRate = async () => {
     if (currency) {
@@ -42,6 +47,20 @@ export default function TourSingleSidebar({
       getExchangeRate();
     }, 1);  return () => clearInterval(intervalId);
   }, [currency]);
+
+  useEffect(() => {
+    const fetchTouristAge = async () => {
+      try {
+        const data = await getTouristAge();
+        setTouristAge(data.age);
+      } catch (error) {
+        message.error('Failed to fetch tourist age');
+        console.error(error);
+      }
+    };
+
+    fetchTouristAge();
+  }, []);
 
   const fetchHotelPrices = useCallback(async () => {
     if (!dates || !boardType) return;
@@ -313,7 +332,12 @@ export default function TourSingleSidebar({
         <button
           className="button -md -lightpurple col-12 bg-accent-1 text-white mt-20"
           onClick={() => {
+            if (touristAge>18){
             window.location.href = `/confirmBooking/${cityCode}/${hotelID}/${name}/${singlePrice}/${singleNumber}/${doublePrice}/${doubleNumber}/${triplePrice}/${tripleNumber}/${boardType}/${dates[0]}/${dates[1]}/${currency}/${exchangeRate}`;
+            }
+            else {
+              message.error('You must be at least 18 years old to book a flight.');
+            }
           }}
         >
           Book Now
