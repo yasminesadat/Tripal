@@ -1,16 +1,17 @@
 const bcrypt = require("bcrypt");
 const Admin = require("../models/users/Admin.js");
 const TourismGovernor = require("../models/users/TourismGovernor.js");
+const Advertiser = require("../models/users/Advertiser.js");
+const Tourist = require("../models/users/Tourist.js");
+const TourGuide = require("../models/users/TourGuide.js");
 const User = require("../models/users/User.js");
 const Request = require('../models/Request.js')
 const PromoCode = require("../models/PromoCode.js")
 const Activity = require("../models/Activity");
 const Itinerary = require("../models/Itinerary");
 const Product = require("../models/Product");
-const Advertiser = require("../models/users/Advertiser.js");
-const TourGuide = require("../models/users/TourGuide.js");
-const Seller = require("../models/users/Seller.js");
-const Tourist = require("../models/users/Tourist.js");
+const Seller = require("../models/users/Seller.js")
+
 
 const addAdmin = async (req, res) => {
   try {
@@ -58,7 +59,8 @@ const deleteUser = async (req, res) => {
   const { role, userId } = req.params; 
 
   try {
-      const user = await User.findOne({ userId }); 
+      const user = await User.findOne({ userId }); // userid references tourist, seller etc
+      console.log(user) 
       if (!user) {
           return res.status(404).json({ message: "User not found" });
       }
@@ -66,14 +68,14 @@ const deleteUser = async (req, res) => {
       if (role === "Advertiser") {
           const hasBookedActivities = await Activity.exists({ advertiser: userId, bookings: { $ne: [] }, date: { $gt: new Date() } });
           if (hasBookedActivities) {
-              return res.status(200).json({ message: "Cannot request deletion. Advertiser has booked activities." });
+              return res.status(400).json({ message: "Cannot request deletion. Advertiser has booked activities." });
           }
       }
       
       if (role === "Tour Guide") {
           const hasBookedItineraries = await Itinerary.exists({ tourGuide: userId, bookings: { $ne: [] }, endDate: { $gt: new Date() } });
           if (hasBookedItineraries) {
-              return res.status(200).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
+              return res.status(400).json({ message: "Cannot request deletion. Tour Guide has booked itineraries." });
           }
       }
 

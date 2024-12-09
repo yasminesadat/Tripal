@@ -185,7 +185,7 @@ const [pendingPaymentBody, setPendingPaymentBody] = useState(null);
       setPendingPaymentBody(null);
     } catch (error) {
       console.error("Error processing wallet payment:", error);
-      message.error("There was an issue updating your information.");
+      message.error(error.message);
     }
   };
   

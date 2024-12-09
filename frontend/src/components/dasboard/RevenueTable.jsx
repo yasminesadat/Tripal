@@ -27,7 +27,6 @@ const RevenueTable = () => {
                 setProducts(productResponse.products);
             } catch (error) {
                 message.error("Error fetching data.");
-                console.error("Error fetching data", error);
             } finally {
                 setLoading(false);
             }
@@ -54,14 +53,16 @@ const RevenueTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {itineraries.map((itinerary) => (
+                    {itineraries
+                        .filter((itinerary) => itinerary.bookings.length > 0)
+                        .map((itinerary) => (
                             <tr key={itinerary.id}>
                                 <td>#{itinerary._id.slice(-3)}</td>
                                 <td>{itinerary.title}</td>
                                 <td>{new Date(itinerary.startDate).toLocaleDateString()}</td>
                                 <td style={{ paddingLeft: '50px' }}>{itinerary.bookings.length}</td>
                                 <td>EGP {itinerary.price}</td>
-                                <td>EGP {(itinerary.bookings.length*itinerary.price*0.1)}</td>
+                                <td>EGP {(itinerary.bookings.length * itinerary.price * 0.1)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -83,14 +84,16 @@ const RevenueTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {activities.map((activity) => (
+                    {activities
+                        .filter((activity) => activity.bookings.length > 0)
+                        .map((activity) => (
                             <tr key={activity.id}>
                                 <td>#{activity._id.slice(-3)}</td>
                                 <td>{activity.title}</td>
                                 <td>{new Date(activity.date).toLocaleDateString()}</td>
                                 <td style={{ paddingLeft: '50px' }}>{activity.bookings.length}</td>
                                 <td>EGP {activity.price}</td>
-                                <td>EGP {(activity.bookings.length*activity.price*0.1)}</td>
+                                <td>EGP {(activity.bookings.length * activity.price * 0.1)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -111,13 +114,15 @@ const RevenueTable = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product) => (
+                    {products
+                        .filter((product) => product.sales > 0)
+                        .map((product) => (
                             <tr key={product.id}>
                                 <td>#{product._id.slice(-3)}</td>
                                 <td>{product.name}</td>
                                 <td>{product.sales}</td>
                                 <td>EGP {product.price}</td>
-                                <td>EGP {product.sales*product.price*0.1}</td>
+                                <td>EGP {product.sales * product.price * 0.1}</td>
                             </tr>
                         ))}
                     </tbody>

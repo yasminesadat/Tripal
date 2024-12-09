@@ -5,9 +5,12 @@ import Stars from "../common/Stars";
 import Pagination from "./Pagination";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
-import {viewUpcomingActivities,} from "@/api/ActivityService";
-import { getAdminActivities} from "@/api/AdminService";
-import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+import { viewUpcomingActivities } from "@/api/ActivityService";
+import { getAdminActivities } from "@/api/AdminService";
+import {
+  getConversionRate,
+  getTouristCurrency,
+} from "@/api/ExchangeRatesService";
 import Spinner from "../common/Spinner";
 
 export default function ActivitiesList({
@@ -16,7 +19,6 @@ export default function ActivitiesList({
   refActivityDetails,
   onFirstActivityId,
 }) {
-
   //#region States
   const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
@@ -52,7 +54,7 @@ export default function ActivitiesList({
     { label: "Rating: Low to High", field: "ratings", order: "asc" },
     { label: "Rating: High to Low", field: "ratings", order: "desc" },
   ];
-  const [currency, setCurrency] = useState( "EGP");
+  const [currency, setCurrency] = useState("EGP");
 
   const getExchangeRate = async () => {
     if (currency) {
@@ -70,7 +72,8 @@ export default function ActivitiesList({
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
+    }, 1);
+    return () => clearInterval(intervalId);
   }, [currency]);
 
   const errorDisplayed = useRef(false);
@@ -190,7 +193,7 @@ export default function ActivitiesList({
     selectedCategories,
     priceRange,
     searchTerm,
-    exchangeRate
+    exchangeRate,
   ]);
 
   useEffect(() => {}, [filteredActivities]);
@@ -217,6 +220,20 @@ export default function ActivitiesList({
     });
     setFilteredActivities(sortedActivities);
   };
+  const handleShare = (link) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this activity!",
+          url: link,
+        })
+        .catch(() => {
+          message.error("Failed to share");
+        });
+    } else {
+      window.location.href = `mailto:?subject=Check out this activity!&body=Check out this link: ${link}`;
+    }
+  };
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -233,7 +250,6 @@ export default function ActivitiesList({
     };
   }, []);
 
-  
   //#endregion
 
   //#region Functions
@@ -249,21 +265,21 @@ export default function ActivitiesList({
   };
 
   const handleRedirect = (activityId) => {
-    if (userRole === "Tourist"|| userRole === "Admin")
+    if (userRole === "Tourist" || userRole === "Admin")
       navigate(`/activity/${activityId}`, { state: { page } });
     else navigate(`/activities/${activityId}`, { state: { page } });
   };
 
   const formatDate = (date) => {
     const d = new Date(date);
-    const day = d.getDate().toString().padStart(2, '0');  
-    const month = (d.getMonth() + 1).toString().padStart(2, '0'); 
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const year = d.getFullYear();
-  
+
     return `${day}/${month}/${year}`;
   };
   //#endregion
-  if(loading)return <Spinner/>
+  if (loading) return <Spinner />;
 
   return (
     <section className="layout-pb-xl">
@@ -328,8 +344,7 @@ export default function ActivitiesList({
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
                 <div>
-                    <span>{filteredActivities?.length} results</span>
-                  
+                  <span>{filteredActivities?.length} results</span>
                 </div>
               </div>
 
@@ -379,6 +394,7 @@ export default function ActivitiesList({
                       <img
                         src="/img/activities/touristsGroup1.jpg"
                         alt="image"
+                        onClick={() => handleRedirect(elm._id)}
                       />
 
                       {elm.badgeText && (
@@ -397,7 +413,20 @@ export default function ActivitiesList({
                         </div>
                       )}
 
-                      <div className="tourCard__favorite">
+                      <div
+                        className="tourCard__favorite"
+                        style={{ display: "flex", gap: "10px" }}
+                      >
+                        <button
+                          className="button -accent-1 size-35 bg-white rounded-full flex-center"
+                          onClick={() =>
+                            handleShare(
+                              `${window.location.origin}/activities/${elm._id}`
+                            )
+                          }
+                        >
+                          <i className="icon-share text-15"></i>
+                        </button>
                         <button className="button -accent-1 size-35 bg-white rounded-full flex-center">
                           <i className="icon-heart text-15"></i>
                         </button>
@@ -445,7 +474,7 @@ export default function ActivitiesList({
                     <div className="tourCard__info">
                       <div>
                         <div className="d-flex items-center text-14">
-                          <i className="icon-calendar mr-10"></i> 
+                          <i className="icon-calendar mr-10"></i>
                           {formatDate(elm.date)}
                         </div>
                         <div className="d-flex items-center text-14">
@@ -454,7 +483,8 @@ export default function ActivitiesList({
                         </div>
 
                         <div className="tourCard__price">
-                          {currency||'EGP'} {(elm.price*exchangeRate).toFixed(2)}
+                          {currency || "EGP"}{" "}
+                          {(elm.price * exchangeRate).toFixed(2)}
                           <div className="d-flex items-center">
                             <span className="text-20 fw-500 ml-5"></span>
                           </div>
@@ -469,7 +499,6 @@ export default function ActivitiesList({
                         View Details
                         <i className="icon-arrow-top-right ml-10"></i>
                       </button>
-                      
                     </div>
                   </div>
                 </div>
