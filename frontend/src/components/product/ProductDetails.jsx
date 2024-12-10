@@ -183,7 +183,6 @@ const ProductDetails = ({ homeURL, productsURL }) => {
     console.log("ordersss: ",orders);
   },[orders,product]);
  
-
   // Tour steps
   const steps = [
     {
@@ -245,6 +244,26 @@ const ProductDetails = ({ homeURL, productsURL }) => {
       updateCartQuantity();
     }
   }, [cart, product.id]);
+  
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+
+    if ( isFromTour && refProdToCart.current) {
+      refProdToCart.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  useEffect(() => {
+    const isFromTour = location.state?.fromTour;
+  
+    const timer = setTimeout(() => {
+      if (isFromTour) {
+        setOpen(true); 
+      }
+    }, 1000); 
+  
+    return () => clearTimeout(timer); 
+  }, [location]);
   
   return (
     <>
