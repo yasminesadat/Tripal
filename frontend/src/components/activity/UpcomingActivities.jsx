@@ -132,7 +132,10 @@ export default function ActivitiesList({
           response = await getAdminActivities();
         }
         const activitiesData = Array.isArray(response?.data)
-          ? response?.data
+          ? response?.data.map((activity, index) => ({
+            ...activity,
+            imageIndex: index % imageSources.length // This ensures we don't go past array bounds
+          }))
           : [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData);
@@ -411,10 +414,11 @@ export default function ActivitiesList({
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
                       <img
-                        src={imageSources[indexOfFirstActivity + i]} // Use absolute index
+                        src={imageSources[elm.imageIndex]}
                         alt="image"
                         style={{ cursor: 'pointer' }}
                       />
+
 
                       {elm.badgeText && (
                         <div className="tourCard__badge">
