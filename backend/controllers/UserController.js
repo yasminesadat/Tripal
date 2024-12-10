@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "2h",
   });
 };
 
@@ -88,7 +88,7 @@ const loginUser = async (req, res) => {
       const token = generateToken(roleUser._id, user.role);
       res.cookie("jwt", token, {
         httpOnly: true,
-        maxAge: 3600 * 1000,
+        //maxAge: 3600 * 1000,
       });
       res.status(200).json({ role: user.role, isFirstTime});
     } else {
