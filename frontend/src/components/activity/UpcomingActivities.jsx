@@ -29,6 +29,17 @@ export default function ActivitiesList({
 
   const [userRole, setUserRole] = useState(null);
 
+  const imageSources = [
+    "/img/activities/ski.jpg",
+    "/img/activities/kayaking.jpg",
+    "/img/activities/cooking.jpg",
+    "/img/activities/khan.jpg",
+    "/img/activities/cruise.jpg",
+    "/img/activities/horse.jpg",
+    "/img/activities/blue.jpg"
+  ];
+
+
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState(activities);
 
@@ -121,7 +132,10 @@ export default function ActivitiesList({
           response = await getAdminActivities();
         }
         const activitiesData = Array.isArray(response?.data)
-          ? response?.data
+          ? response?.data.map((activity, index) => ({
+            ...activity,
+            imageIndex: index % imageSources.length // This ensures we don't go past array bounds
+          }))
           : [];
         setActivities(activitiesData);
         setFilteredActivities(activitiesData);
@@ -198,7 +212,7 @@ export default function ActivitiesList({
     exchangeRate,
   ]);
 
-  useEffect(() => {}, [filteredActivities]);
+  useEffect(() => { }, [filteredActivities]);
 
   useEffect(() => {
     if (filteredActivities.length > 0) {
@@ -245,7 +259,7 @@ export default function ActivitiesList({
       console.error("Error bookmarking event:", error);
     }
   };
-  
+
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -313,9 +327,8 @@ export default function ActivitiesList({
 
                   <div className="accordion d-none mb-30 lg:d-flex js-accordion">
                     <div
-                      className={`accordion__item col-12 ${
-                        sidebarActive ? "is-active" : ""
-                      } `}
+                      className={`accordion__item col-12 ${sidebarActive ? "is-active" : ""
+                        } `}
                     >
                       <button
                         className="accordion__button button -dark-1 bg-light-1 px-25 py-10 border-1 rounded-12"
@@ -348,9 +361,8 @@ export default function ActivitiesList({
           )}
 
           <div
-            className={`col-xl-${userRole === "Admin" ? "12" : "9"} col-lg-${
-              userRole === "Admin" ? "12" : "8"
-            }`}
+            className={`col-xl-${userRole === "Admin" ? "12" : "9"} col-lg-${userRole === "Admin" ? "12" : "8"
+              }`}
           >
             <div className="row y-gap-5 justify-between">
               <div className="col-auto">
@@ -361,9 +373,8 @@ export default function ActivitiesList({
 
               <div ref={dropDownContainer} className="col-auto">
                 <div
-                  className={`dropdown -type-2 js-dropdown js-form-dd ${
-                    ddActives ? "is-active" : ""
-                  } `}
+                  className={`dropdown -type-2 js-dropdown js-form-dd ${ddActives ? "is-active" : ""
+                    } `}
                   data-main-value=""
                 >
                   <div
@@ -403,11 +414,11 @@ export default function ActivitiesList({
                   <div className="tourCard -type-2">
                     <div className="tourCard__image">
                       <img
-                        src="/img/activities/touristsGroup1.jpg"
+                        src={imageSources[elm.imageIndex]}
                         alt="image"
-                        onClick={() => handleRedirect(elm._id)}
                         style={{ cursor: 'pointer' }}
                       />
+
 
                       {elm.badgeText && (
                         <div className="tourCard__badge">
