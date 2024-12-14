@@ -23,13 +23,11 @@ const ActivitySelectionModal = ({ isVisible, onClose, onSelectActivities, preSel
 
     const handleSelect = (activity, checked) => {
         const updatedSelected = checked 
-            ? [...selectedActivities, activity] // Store the full activity object
+            ? [...selectedActivities, activity]
             : selectedActivities.filter(a => a._id !== activity._id);
-    
         setSelectedActivities(updatedSelected);
     };
     
-
     const handleOk = () => {
         onSelectActivities(selectedActivities);
         onClose();

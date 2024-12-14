@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import{ useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
 import { completeBooking } from '../../../api/BookingService';
 import MetaComponent from '@/components/common/MetaComponent';
 import TouristHeader from '@/components/layout/header/TouristHeader';
 import FooterThree from '@/components/layout/footers/FooterThree';
 
-// Function to extract URL parameters
 const extractBookingParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
   return {
@@ -17,7 +16,6 @@ const extractBookingParams = () => {
   };
 };
 
-// Function to handle booking completion
 const handleBookingCompletion = async ({
   sessionId,
   touristId,
@@ -25,14 +23,9 @@ const handleBookingCompletion = async ({
   tickets,
   resourceId,
 }) => {
-  console.log('Received parameters:', { sessionId, touristId, resourceType, tickets, resourceId });
 
-  // Check if all parameters are provided
   if (sessionId && touristId && resourceType && tickets && resourceId) {
-    console.log('Booking details:', { sessionId, touristId, resourceType, tickets, resourceId });
-
     try {
-      // Call completeBooking API
       await completeBooking(
         sessionId,
         touristId,
@@ -43,42 +36,34 @@ const handleBookingCompletion = async ({
       message.success('Booking completed successfully.');
       return true;
     } catch (error) {
-      // Log and display the entire error
       console.error('Error completing booking:', error);
-      
-      // Check if error has a message or other properties, and display them in the message.error
       const errorMessage = error instanceof Error ? error.stack || error.message : error.toString();
       message.error(`Failed to complete booking. Error: ${errorMessage}`);
-      
       return false;
     }
   } else {
-    // Check and log the missing parameters
     if (!sessionId) console.log('Missing sessionId');
     if (!touristId) console.log('Missing touristId');
     if (!resourceType) console.log('Missing resourceType');
     if (!tickets) console.log('Missing tickets');
     if (!resourceId) console.log('Missing resourceId');
-
-    // Display error message for missing information
     message.error('Missing required booking information. Please check the URL parameters.');
     return false;
   }
 };
 export default function SuccessPage() {
   const [bookingCompleted, setBookingCompleted] = useState(false);
-  const hasCompletedBooking = useRef(false); // Ref to prevent multiple calls
+  const hasCompletedBooking = useRef(false);
 
   useEffect(() => {
-    if (hasCompletedBooking.current) return; // Prevent second call
-    hasCompletedBooking.current = true; // Set the ref to true after the first call
+    if (hasCompletedBooking.current) return;
+    hasCompletedBooking.current = true;
 
     const completeBookingAsync = async () => {
       const bookingParams = extractBookingParams();
       const completionStatus = await handleBookingCompletion(bookingParams);
       setBookingCompleted(completionStatus);
     };
-
     completeBookingAsync();
   }, []);
 
@@ -92,7 +77,7 @@ export default function SuccessPage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: 'calc(100vh - 80px)', // Adjust for header and footer
+          height: 'calc(100vh - 80px)',
           backgroundColor: '#e5f8f8',
           fontFamily: 'Helvetica, Arial, sans-serif',
         }}

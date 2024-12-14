@@ -1,15 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Divider, Tour } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import ArticlesOne from "@/components/homes/articles/ArticlesOne";
-import Banner9 from "@/components/homes/banners/Banner9";
 import BannerEight from "@/components/homes/banners/BannerEight";
 import BrandsThree from "@/components/homes/brands/BrandsThree";
 import DestinationsFive from "@/components/homes/destinations/DestinationsFive";
 import Hero5 from "@/components/homes/heros/Hero5";
 import TestimonialsFour from "@/components/homes/testimonials/TestimonialsFour";
 import TourTypesTwo from "@/components/homes/tourTypes/TourTypesTwo";
-import FeaturedTrips from "@/components/homes/tours/FeaturedTrips";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import MetaComponent from "@/components/common/MetaComponent";
@@ -153,9 +150,7 @@ export default function TouristHome() {
 
   return (
     <>
-      <style jsx global>{`
-        /* Base style for all dots */
-        /* Try multiple selectors and approaches */
+      <style>{`
         .ant-tour .ant-tour-indicators > span {
           width: 8px !important;
           height: 8px !important;
@@ -166,7 +161,6 @@ export default function TouristHome() {
           background: #036264 !important;
         }
 
-        /* Additional specificity */
         .ant-tour-indicators span[role="dot"][aria-current="true"] {
           background: #036264 !important;
         }

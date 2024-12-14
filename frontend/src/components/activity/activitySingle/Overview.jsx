@@ -1,6 +1,3 @@
-import React from "react";
-
-
 export default function Overview({serviceFee, accessibility, itineraryDescription, activityDescription, refActivityBook}) {
   const resource = itineraryDescription? 'Itinerary':'Activity';
   return (

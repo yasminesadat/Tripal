@@ -6,10 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "@/api/UserService";
 import NotificationTab from "@/components/common/NotificationBell";
 import { message } from "antd";
-import {
-  updateTouristInformation,
-  getTouristInformation,
-} from "@/api/TouristService";
+import {updateTouristInformation,getTouristInformation,} from "@/api/TouristService";
 import { setTouristCurrency } from "@/api/ExchangeRatesService";
 
 export default function TouristHeader({ setOpen, refFlights, refHotels, refActivities, refItineraries, refHisPlaces, refProducts, homepage }) {

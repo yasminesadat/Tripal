@@ -9,6 +9,7 @@ export const getUsers = async () => {
     throw error;
   }
 }
+
 export async function changeAdminPassword(oldPassword, newPassword) {
   try {
     const body = {
@@ -145,7 +146,8 @@ export const getPromoCodes = async () => {
   } catch (error) {
     console.error(`Error getting promo cods`, error);
   }
-}
+};
+
 export const getEventOwnerData = async (userId) => {
   try {
     const response = await axios.get(`/admin/getDataForEventOwner/${userId}`);

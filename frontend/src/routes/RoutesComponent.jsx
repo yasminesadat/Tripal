@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import RoleProtectedRoute from "./RoleProtectedRouteComponent";
-
 import guestRoutes from "./GuestRoutes";
 import touristRoutes from "./TouristRoutes";
 import advertiserRoutes from "./AdvertiserRoutes";

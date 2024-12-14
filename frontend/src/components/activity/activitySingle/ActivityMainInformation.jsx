@@ -3,7 +3,7 @@ import { message } from "antd";
 import { Flag, FlagOff } from "lucide-react";
 import { flagActivity, getEventOwnerData } from "@/api/AdminService";
 import { bookmarkEvent } from "@/api/TouristService";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Spinner from "@/components/common/Spinner";
 import { getActivityById } from "@/api/ActivityService";
 
@@ -73,7 +73,6 @@ export default function ActivityMainInformation({
           "Failed to update activity flag status."
       );
     } finally {
-      //having the effect of reloading page
       fetchActivities(activityId);
       setLoading(false);
     }
@@ -85,7 +84,7 @@ export default function ActivityMainInformation({
       const response = await getActivityById(activityId);
       setActivity(response.data);
     } catch (error) {
-      // message.error("Failed to fetch activities.");
+      console.error("Error fetching activities:", error);
     }
   };
   //#endregion

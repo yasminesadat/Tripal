@@ -23,9 +23,9 @@ export async function changeTouristPassword(oldPassword, newPassword) {
     throw error;
   }
 }
+
 export async function checkTouristPromoCode(promocode) {
   try {
-
     const response = await axios.post(`/tourist/checkPromoCode`, promocode);
     return response.data;
   } catch (error) {
@@ -36,7 +36,6 @@ export async function checkTouristPromoCode(promocode) {
 
 export async function getTouristInformation() {
   try {
-
     const response = await axios.get(`/getTouristInfo`);
     return response.data;
   } catch (error) {
@@ -174,6 +173,7 @@ export async function saveProduct(productId) {
     throw error;
   }
 }
+
 export async function removeWishList(productId) {
   try {
     await axios.post('/tourist/remove-wishlist', { productId });
@@ -182,6 +182,7 @@ export async function removeWishList(productId) {
     throw error;
   }
 }
+
 export async function getWishList() {
   try {
     const response = await axios.get('/tourist/wishlist');
@@ -211,6 +212,7 @@ export async function completeFlightBooking(flightDetails) {
     throw new Error(errorMessage);
   }
 }
+
 export async function getTouristNotifications() {
   try {
     const response = await axios.get('/tourist/notifications');
@@ -260,8 +262,6 @@ export async function removeFromCart(touristId, productId) {
   }
 }
 
-
-
 export async function getAddresses() {
   try {
     const response = await axios.get(`/tourist/address`);
@@ -282,6 +282,7 @@ export async function addAddress(street, city, country, zipCode) {
     console.error("Error adding address:", error);
   }
 }
+
 export async function getWalletAndTotalPoints() {
   try {
     const response = await axios.get(`/tourist/wallet`);
@@ -325,4 +326,3 @@ export async function checkStock(cart) {
     throw error;
   }
 }
-

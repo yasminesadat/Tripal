@@ -12,10 +12,7 @@ import TourList1 from "../pages/BookingHotels/HotelListGuest";
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
-  {
-    path: "/guest/hotelList/:cityCode/:dates1/:dates2",
-    element: <TourList1 />,
-  },
+  {path: "/guest/hotelList/:cityCode/:dates1/:dates2",element: <TourList1 />,},
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces /> },

@@ -4,7 +4,7 @@ export async function bookResource(resourceType, resourceId, tickets, myPromoCod
   try {
     const response = await axios.post(`/${resourceType}/${resourceId}/book`, {
       tickets,
-      myPromoCode,  // Include it in the request body
+      myPromoCode,
       paymentMethod
     });
     return response.data;
@@ -13,7 +13,6 @@ export async function bookResource(resourceType, resourceId, tickets, myPromoCod
     throw error;
   }
 }
-
 
 export async function cancelResource(resourceType, resourceId) {
   try {

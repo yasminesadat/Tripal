@@ -19,7 +19,6 @@ export async function getComplaintsByTourist() {
   }
 }
 
-
 export async function getAllComplaints() {
   try {
     const response = await axios.get(`/complaints`);
@@ -40,7 +39,6 @@ export async function getComplaintById(id) {
   }
 }
 
-
 export async function updateComplaintStatus(id, updatedStatus) {
   try {
     const response = await axios.put(`/complaint/status/${id}`, updatedStatus);
@@ -59,4 +57,3 @@ export async function replyToComplaint(id, updatedReply) {
     throw error;
   }
 }
-

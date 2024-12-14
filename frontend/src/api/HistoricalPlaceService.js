@@ -1,4 +1,5 @@
 import { axios } from "./axios";
+
 export async function getAllHistoricalPlaces() {
   try {
     const response = await axios.get('/historicalPlaces/');
@@ -8,6 +9,7 @@ export async function getAllHistoricalPlaces() {
     throw error;
   }
 }
+
 export async function getAllHistoricalPlacesByTourismGoverner() {
   try {
     const response = await axios.get(`/historicalPlaces/tourismGoverner`);
@@ -26,6 +28,7 @@ export const CreateNewHistoricalPlace=async(data)=>{
       throw err;
 }
 }
+
 export const updateHistoricalPlace=async(id,data)=>{
   try{
   const result =await axios.put(`/historicalPlaces/${id}`,data)
@@ -45,9 +48,9 @@ export const getHistoricalPlaceDetails= async (id)=>{
     throw err;
   }
 }
+
 export const deleteHistoricalPlace=async (id)=>{
 try{
-  //historicalPlaceRouter.delete("/historicalPlaces/:id", deleteHistoricalPlace);
   const result=await axios.delete(`/historicalPlaces/${id}/`);
   return result.data;
 }
