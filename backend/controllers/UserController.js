@@ -130,8 +130,12 @@ const getUserData = async (req, res) => {
 
 const logoutUser = (req, res) => {
   try {
-    res.clearCookie("jwt");
-
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      path: '/'
+    });
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500);

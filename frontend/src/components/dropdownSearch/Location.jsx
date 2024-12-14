@@ -1,5 +1,5 @@
-import React from "react";
 import { locations } from "./searchDDLocations";
+
 export default function Location({ active, setLocation }) {
   return (
     <div

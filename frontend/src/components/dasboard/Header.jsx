@@ -10,10 +10,7 @@ export default function Header({ setSideBarOpen }) {
             <i className="icon-main-menu text-20"></i>
           </button>
         </div>
-
       </div>
     </div >
-
   );
 }
-

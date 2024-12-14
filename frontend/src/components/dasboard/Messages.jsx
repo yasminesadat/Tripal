@@ -1,12 +1,8 @@
-import Pagination from "../common/Pagination";
 import Sidebar from "./Sidebar";
-import Header from "./Header";
 import PropTypes from 'prop-types';
 import { useState } from "react";
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Space, message } from 'antd';
-import { getUserData } from "../../api/UserService";
-import { useEffect } from "react";
+import { Avatar, message } from 'antd';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { replyToComplaint } from "@/api/ComplaintsService";
 

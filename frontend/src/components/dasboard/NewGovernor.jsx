@@ -13,22 +13,14 @@ import {
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { createGovernor } from "@/api/AdminService";
 
-
-
 const { Title, Text } = Typography;
 
 export default function CreateNewGovernorComponent() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-
-
-
-
   const onFinish = async () => {
     setLoading(true);
-    console.log("username+", form.getFieldValue("username"));
-    console.log("password+", form.getFieldValue("password"));
     try {
       const response = await createGovernor(
         form.getFieldValue("username"),
@@ -44,18 +36,11 @@ export default function CreateNewGovernorComponent() {
 
     }
   };
-
   const onFinishFailed = (errorInfo) => {
     message.error("Please check the form and try again.");
     console.log("Failed:", errorInfo);
   };
-
-
-
-
   return (
-
-
     <div className="dashboard__content_content">
       <>
         <Card
@@ -77,12 +62,10 @@ export default function CreateNewGovernorComponent() {
               display: "block",
               textAlign: "center",
               marginBottom: "1rem",
-              color: "black", // Custom color for the "Sign Up" text
+              color: "black", 
             }}
           >
-
           </Text>
-
           <Form
             form={form}
             name="login"
@@ -112,7 +95,6 @@ export default function CreateNewGovernorComponent() {
                 }}
               />
             </Form.Item>
-
             {/* Password Field */}
             <Form.Item
               label="Password"
@@ -134,10 +116,6 @@ export default function CreateNewGovernorComponent() {
                 }
               />
             </Form.Item>
-
-            {/* Remember Me and Forgot Password */}
-
-
             {/* Submit Button */}
             <Form.Item>
               <Button
@@ -152,7 +130,6 @@ export default function CreateNewGovernorComponent() {
             </Form.Item>
           </Form>
         </Card>
-
         <style>{`
         .sign-up-link {
           color: var(--color-dark-purple)!important;
@@ -253,8 +230,6 @@ export default function CreateNewGovernorComponent() {
         }
       `}</style>
       </>
-
     </div>
-
   );
 }

@@ -1,19 +1,14 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
   Form,
   Input,
   Button,
-  Checkbox,
   Card,
-  Row,
   Typography,
   message,
 } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import { createAdmin } from "@/api/AdminService";
-import Sidebar from "@/components/dasboard/Sidebar";
-import Header from "@/components/dasboard/Header";
 
 
 const { Title, Text } = Typography;
@@ -21,12 +16,9 @@ const { Title, Text } = Typography;
 export default function CreateNewAdminComponent() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
 
   const onFinish = async () => {
     setLoading(true);
-    console.log("username+", form.getFieldValue("userName"));
-    console.log("password+", form.getFieldValue("password"));
     try {
       const response = await createAdmin(
         form.getFieldValue("userName"),
@@ -48,9 +40,6 @@ export default function CreateNewAdminComponent() {
     console.log("Failed:", errorInfo);
   };
   return (
-
-   
-     
         <div className="dashboard__content_content">
           <>
             <Card
@@ -72,12 +61,10 @@ export default function CreateNewAdminComponent() {
                   display: "block",
                   textAlign: "center",
                   marginBottom: "1rem",
-                  color: "black", // Custom color for the "Sign Up" text
+                  color: "black",
                 }}
               >
-
               </Text>
-
               <Form
                 form={form}
                 name="login"
@@ -129,8 +116,6 @@ export default function CreateNewAdminComponent() {
                     }
                   />
                 </Form.Item>
-
-                {/* Remember Me and Forgot Password */}
 
                 {/* Submit Button */}
                 <Form.Item>
@@ -247,8 +232,6 @@ export default function CreateNewAdminComponent() {
         }
       `}</style>
           </>
-
         </div>
-       
   );
 }

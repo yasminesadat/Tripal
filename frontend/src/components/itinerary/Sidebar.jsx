@@ -14,8 +14,6 @@ export default function Sidebar({ userRole, setStartDate, setEndDate, setCategor
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
-
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

@@ -1,11 +1,8 @@
-import React from 'react';
-
 const ItinerarySort = ({ onSort }) => {
     const handleSortChange = (e) => {
         const value = e.target.value;
         onSort(value);
     };
-
     return (
         <div>
             <label htmlFor="sort">Sort by:</label>
