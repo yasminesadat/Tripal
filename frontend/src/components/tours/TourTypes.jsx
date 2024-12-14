@@ -1,5 +1,4 @@
 import { tagData } from "@/data/destinations";
-import React from "react";
 
 export default function TourTypes() {
   return (

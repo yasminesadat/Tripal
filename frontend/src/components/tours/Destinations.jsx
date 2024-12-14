@@ -1,7 +1,5 @@
 import { destinations12 } from "@/data/destinations";
 
-import React from "react";
-
 export default function Destinations() {
   return (
     <section className="layout-pt-lg">

@@ -9,7 +9,6 @@ export default function HeaderSearch({ white, onSearch, activity }) {
     inputRef.current.value = selected;
   }, [selected]);
 
-  // Close the dropdown if the user clicks outside of it
   const dropDownContainer = useRef();
   useEffect(() => {
     const handleClick = (event) => {
@@ -28,7 +27,6 @@ export default function HeaderSearch({ white, onSearch, activity }) {
     };
   }, []);
 
-  // Handle the input change and trigger the onSearch prop
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSelected(value); 
