@@ -20,7 +20,7 @@ const port = process.env.PORT || "5050";
 
 app.use(cors({
   origin: [
-    'https://tripal-git-main-hana-seifs-projects.vercel.app',
+    'https://tripal-sable.vercel.app/',
     'http://localhost:3000',
     /\.vercel\.app$/  // This will allow all vercel.app subdomains
   ],
