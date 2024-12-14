@@ -52,21 +52,21 @@ After installing all dependencies:
 1. Add .env to the backend directory with the following format and replace the variables values with your own
 ```
 NODE_ENV = development
-PORT = 5050
-MONGO_URI =
-JWT_SECRET =
-CLOUD_NAME = 
-CLOUD_KEY =
-CLOUD_KEY_SECRET =
-AMADEUS_CLIENT_ID =
-AMADEUS_CLIENT_SECRET =
-clientId=
-clientSecret=
-STRIPE_SECRET_KEY=
-STRIPE_PUBLIC_KEY=
-FRONTEND_URL=
-EMAIL_USER=
-EMAIL_PASS=
+MONGO_URI="mongodb+srv://tripaluser:tripaluser123@tripalcluster.eqew8.mongodb.net/?retryWrites=true&w=majority&appName=TripalCluster"
+PORT=5050
+CLOUD_NAME = "dzeosqylb"
+CLOUD_KEY = "196442561158369"
+CLOUD_KEY_SECRET = "OH_BqST30oPzqRcAdxDWBQ11758"
+clientId="IuUmwsrhvB57Vp616ZGz7y340TcWXtjQ"
+clientSecret="E9ElYuHHFRSTgjNB"
+AMADEUS_CLIENT_ID = "fC2DB3JocyVUF9TMmPG4DF14d4Q0gfuY"
+AMADEUS_CLIENT_SECRET = "rln1oCd76YKt7UT8"
+JWT_SECRET = "ad3c1dd8abe55dc1a5ea3827b3d2b65edc177dd64db505ce3a351b1b6ecb23c801b429c212367f726783f1f947573938eaeffd7fb7bc52cdf3a1650c4620afc3"
+STRIPE_SECRET_KEY="sk_test_51QOIg6DNDAJW9Du6pxE2l6PbfBdLrT24CTl4o8grSULDvjxbmnZrPByJpjnWmlQf4nsUNqF7GLmenodMNLOIZvbC00lFYMpNpV"
+STRIPE_PUBLIC_KEY="pk_test_51QOIg6DNDAJW9Du6kXAE0ci4BML4w4VbJFTY5J0402tynDZvBzG85bvKhY4C43TbOTzwoGiOTYeyC59d5PVhAhYy00OgGKWbLb"
+FRONTEND_URL="http://localhost:3000"
+EMAIL_USER=tripaltravel@gmail.com
+EMAIL_PASS=tyri xxbu ybcx lxhd
 ```
 2. To start the application
     ```npm start```
@@ -85,6 +85,30 @@ EMAIL_PASS=
 <img width="800" alt="screenshot2" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
 <img width="800" alt="screenshot" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
 
+## Existing Users 
+Tourist:
+Username: heba_fathy
+Password: pass123
+
+Advertiser:
+Username: Yara_Ahmed
+Password: pass123
+
+Tour guide:
+Username: salma_farouk
+Password: pass123
+
+Seller:
+Username: ahmed_sameh
+Password: pass12345
+
+Tourism Governor:
+Username: haitham_metwally
+Password: pass1234
+
+Admin:
+Username: admin
+Password: pass123
 
 ## Code Examples
 <details>
