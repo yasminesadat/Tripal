@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from "react";
-// import AdminNavBar from "../../components/navbar/AdminNavBar";
-import { getAllComplaints, getComplaintById, updateComplaintStatus, replyToComplaint, } from "../../api/ComplaintsService";
+import { getAllComplaints, getComplaintById, updateComplaintStatus } from "../../api/ComplaintsService";
 import { OrderedListOutlined } from '@ant-design/icons';
 import { checkTouristExists } from "../../api/TouristService";
-import { message, Dropdown, Menu } from "antd";
-import { Navigate, useNavigate } from "react-router-dom";
+import { message, Dropdown } from "antd";
+import {  useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
+
 const ComplaintsComponent = () => {
     const tabs = ["All", "Pending", "Resolved"];
     const navigate = useNavigate();
     const [currentTab, setcurrentTab] = useState("All");
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
-    const [replyMessage, setReplyMessage] = useState("");
     const [newStatus, setNewStatus] = useState("");
     const [isSorted, setIsSorted] = useState(false);
     const [userExists, setUserExists] = useState(false);
     const [userData, setUserData] = useState("");
     const [userRole, setUserRole] = useState("");
-    const [loading, setLoading] = useState(true); // Track loading state
+    const [loading, setLoading] = useState(true);
    
 
     useEffect(() => {
@@ -41,13 +40,13 @@ const ComplaintsComponent = () => {
                 const shuffledArray = response.sort(() => Math.random() - 0.5);
                 setComplaints(shuffledArray);
                 const user = await getUserData();
-                setUserData(user.data.id); // Update state
+                setUserData(user.data.id);
                 setUserRole(user.data.role);
 
-                setLoading(false); // Set loading to false once data is fetched
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching complaints:", error);
-                setLoading(false); // Set loading to false in case of error
+                setLoading(false);
             }
         };
 
@@ -76,10 +75,7 @@ const ComplaintsComponent = () => {
         }
     };
 
-
-
     useEffect(() => {
-        // Set newStatus to the current status of selectedComplaint
         if (selectedComplaint) {
             setNewStatus(selectedComplaint.status);
         }
@@ -87,10 +83,7 @@ const ComplaintsComponent = () => {
 
     const handleStatusChange = async (complaintId) => {
         try {
-            //console.log(newStatus)
-            //console.log(complaintId)
             await updateComplaintStatus(complaintId, { status: "resolved" });
-            // Update local state to reflect changes
             const updatedComplaints = complaints.map(complaint =>
                 complaint._id === complaintId ? { ...complaint, status: "resolved" } : complaint
             );
@@ -104,8 +97,6 @@ const ComplaintsComponent = () => {
     };
 
     const toggleComplaintDetails = async (complaintId) => {
-
-        // Otherwise, fetch and show the complaint details
         try {
             const complaintDetails = await getComplaintById(complaintId);
             setSelectedComplaint(complaintDetails);
@@ -119,9 +110,7 @@ const ComplaintsComponent = () => {
         } catch (error) {
             console.error("Error fetching complaint details:", error);
         }
-
     };
-
 
     const items = [
         {
@@ -146,17 +135,13 @@ const ComplaintsComponent = () => {
         }];
     if (loading) {
 
-        return <Spinner />; // Show the spinner while loading
+        return <Spinner />;
     }
     return (
         <>
            
                     <div className="complaints">
-
-                        {/* <AdminNavBar /> */}
-                        {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
                         <div >
-                            {/* <Header setSideBarOpen={setSideBarOpen} /> */}
                             <div className="dashboard__content_content">
                                 <h1 className="text-30">Complaints Management</h1>
                                 <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 md:mb-20 mt-60">
@@ -235,43 +220,19 @@ const ComplaintsComponent = () => {
                                                                         </React.Fragment>
                                                                     ))}
 
-                                                            {/* <td>
-                                <div className="d-flex items-center">
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                    <i className="icon-pencil text-14"></i>
-                                  </button>
-
-                                  <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                    <i className="icon-delete text-14"></i>
-                                  </button>
-                                </div>
-                              </td> */}
-
                                                         </tbody>
                                                     </table>
                                                 </div>
-
-                                                {/* <Pagination /> */}
-
-                                                {/* <div className="text-14 text-center mt-20">
-                    Showing results 1-30 of 1,415
-                  </div> */}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* <div className="text-center pt-30">
-            © Copyright Viatours {new Date().getFullYear()}
-          </div> */}
                             </div>
                         </div>
                     </div>
                     
-            <style>{`
-      
-      
-      .custom-button {
+            <style>{`  
+            .custom-button {
    background-color: var(--color-dark-purple) !important;
    border: 2px solid var(--color-dark-purple) !important;
    color: #fff !important; /* Text color */
@@ -320,10 +281,6 @@ const ComplaintsComponent = () => {
   background-color: var(--color-stone-light) !important;
   border-color: var(--color-stone-light) !important;
 }
- 
- 
-      
-    
      `}</style>
         </>
     );
