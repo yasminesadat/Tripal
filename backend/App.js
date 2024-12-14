@@ -13,8 +13,6 @@ const MongoURI = process.env.MONGO_URI;
 //App variables
 const app = express();
 const port = process.env.PORT || "5050";
-
-// Configure CORS
 app.use(cors({
   origin: [
     'https://tripal-git-main-hana-seifs-projects.vercel.app',
@@ -23,6 +21,7 @@ app.use(cors({
   ],
   credentials: true
 }));
+
 //Route Imports
 const routes = require("./routes/index");
 app.use(express.urlencoded({ extended: true }));
