@@ -49,7 +49,6 @@ export const getNotifications = async () => {
   }
 };
 
-
 export const deleteNotifications = async (id) => {
   try {
     const response = await axios.delete(`/tourGuide/deleteNotificationList/${id}`);
