@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation, useNavigate, Link, useParams } from "react-router-dom";
 import { getRatings } from "../../api/RatingService";
 import { getProduct } from "@/api/ProductService";
@@ -27,7 +27,6 @@ import {
 import { getUserData } from "@/api/UserService";
 import { addToCart, getCart } from "../../api/TouristService";
 import { getOrders } from "../../api/OrderService";
-import { LetterTextIcon } from "lucide-react";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -37,7 +36,6 @@ const ProductDetails = ({ homeURL, productsURL }) => {
   const location = useLocation();
   const { id } = useParams();
 
-  // Initialize state with a safe, default structure
   const [product, setProduct] = useState({
     id: id || "",
     name: "",
