@@ -170,94 +170,95 @@ const ProductCard = ({
   };
 
   return (
-    <div className="col-lg-3 col-sm-6">
-      <div className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow">
-        <div className="tourCard__header">
-          <div className="tourCard__image ratio ratio-28:20">
-            <img
-              src={picture}
-              alt={name}
-              className="img-ratio rounded-12"
-            />
-          </div>
-          {userId === productSeller ? (
-            <EditOutlined className="tourCard__favorite" key="edit" onClick={handleEditClick} />
-          ) : userRole === "Tourist" ? (
-
-            <button
-              className={`tourCard__favorite ${isInWishlist ? "saved" : ""}`}
-              onClick={handleHeartClick}
-            >
-              <i className={`icon-heart ${isSaved ? "icon-selected" : ""}`}></i>
-            </button>
-
-          ) : []}
-        </div>
-        <div className="tourCard__content px-10 pt-10">
-          <h3 className="tourCardName text-16 fw-500 mt-5">
-            <span
-              onClick={handleCardClick}
-              style={{ cursor: 'pointer' }}
-              ref={refProductDetails}
-            >
-              {name}
-            </span>
-          </h3>
-
-          <div className="tourCard__location text-13 text-light-2" style={{ cursor: 'default' }}>
-            {formattedDescription}
-          </div>
-
-          <div className="tourCard__rating d-flex items-center text-13 mt-5">
-            <div className="d-flex x-gap-5">
-              <Stars star={averageRating} />
+    loading ? <Spinner /> :
+      <div className="col-lg-3 col-sm-6">
+        <div className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow">
+          <div className="tourCard__header">
+            <div className="tourCard__image ratio ratio-28:20">
+              <img
+                src={picture}
+                alt={name}
+                className="img-ratio rounded-12"
+              />
             </div>
-            <span className="text-dark-1 ml-10" style={{ cursor: 'default' }}>
-              ({averageRating.toFixed(2)})
-            </span>
-          </div>
+            {userId === productSeller ? (
+              <EditOutlined className="tourCard__favorite" key="edit" onClick={handleEditClick} />
+            ) : userRole === "Tourist" ? (
 
-          <div
-            className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10"
-            style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-          >
-            {userId === productSeller
-              ? [
-                <span
-                  key="archive"
-                  onClick={handleArchiveClick}
-                  style={{ cursor: "pointer" }}
-                  className="archive-text"
-                >
-                  {newIsArchived ? "Unarchive" : "Archive"}
-                </span>,
-              ]
-              : [userRole === "Admin" && (
-                <span
-                  onClick={handleArchiveClick}
-                  style={{
-                    cursor: "pointer",
-                    marginRight: "auto",
-                  }}
-                  className="archive-text"
-                >
-                  {newIsArchived ? "Unarchive" : "Archive"}
-                </span>
-              )]
-            }
-            <div style={{ marginLeft: "auto", textAlign: "right", cursor: 'default' }}>
-              {userRole === "Tourist" ? (
-                <span className="text-16 fw-500">{currency} {(price * exchangeRate).toFixed(2)}</span>
-              ) : (
-                <span className="text-16 fw-500">EGP {(price).toFixed(2)}</span>
-              )
+              <button
+                className={`tourCard__favorite ${isInWishlist ? "saved" : ""}`}
+                onClick={handleHeartClick}
+              >
+                <i className={`icon-heart ${isSaved ? "icon-selected" : ""}`}></i>
+              </button>
+
+            ) : []}
+          </div>
+          <div className="tourCard__content px-10 pt-10">
+            <h3 className="tourCardName text-16 fw-500 mt-5">
+              <span
+                onClick={handleCardClick}
+                style={{ cursor: 'pointer' }}
+                ref={refProductDetails}
+              >
+                {name}
+              </span>
+            </h3>
+
+            <div className="tourCard__location text-13 text-light-2" style={{ cursor: 'default' }}>
+              {formattedDescription}
+            </div>
+
+            <div className="tourCard__rating d-flex items-center text-13 mt-5">
+              <div className="d-flex x-gap-5">
+                <Stars star={averageRating} />
+              </div>
+              <span className="text-dark-1 ml-10" style={{ cursor: 'default' }}>
+                ({averageRating.toFixed(2)})
+              </span>
+            </div>
+
+            <div
+              className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10"
+              style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+            >
+              {userId === productSeller
+                ? [
+                  <span
+                    key="archive"
+                    onClick={handleArchiveClick}
+                    style={{ cursor: "pointer" }}
+                    className="archive-text"
+                  >
+                    {newIsArchived ? "Unarchive" : "Archive"}
+                  </span>,
+                ]
+                : [userRole === "Admin" && (
+                  <span
+                    onClick={handleArchiveClick}
+                    style={{
+                      cursor: "pointer",
+                      marginRight: "auto",
+                    }}
+                    className="archive-text"
+                  >
+                    {newIsArchived ? "Unarchive" : "Archive"}
+                  </span>
+                )]
               }
+              <div style={{ marginLeft: "auto", textAlign: "right", cursor: 'default' }}>
+                {userRole === "Tourist" ? (
+                  <span className="text-16 fw-500">{currency} {(price * exchangeRate).toFixed(2)}</span>
+                ) : (
+                  <span className="text-16 fw-500">EGP {(price).toFixed(2)}</span>
+                )
+                }
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <style jsx>{`
+        <style jsx>{`
         .tourCardName span {
           background-repeat: no-repeat;
           background-image: linear-gradient(to right, black 0%, black 100%);
@@ -296,8 +297,12 @@ const ProductCard = ({
 }
        
       `}</style>
-    </div>
+      </div>
+
+
   );
+
 };
+
 
 export default ProductCard;
