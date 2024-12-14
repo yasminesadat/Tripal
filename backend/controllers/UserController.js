@@ -94,7 +94,7 @@ const loginUser = async (req, res) => {
         secure: true,
         sameSite: 'None',  // Required for cross-site requests
         path: '/',
-        domain: isProduction ? 'tripal-sable.vercel.app' : 'localhost',
+        domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
       res.status(200).json({ role: user.role, isFirstTime });
