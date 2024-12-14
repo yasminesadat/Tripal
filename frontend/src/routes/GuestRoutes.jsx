@@ -7,6 +7,8 @@ import HistoricalPlaces from "../pages/commonPagesForMultipleUsers/HistoricalPla
 import HistoricalPlacesDetails from "../pages/commonPagesForMultipleUsers/HistoricalPlacesDetails";
 import ResetPassword from "@/pages/pages/login/ResetPassword";
 import Itineraries from "../pages/commonPagesForMultipleUsers/Itineraries";
+import PendingPage from "@/pages/commonPagesForMultipleUsers/PendingRequest";
+import RegisterPage from "../pages/pages/register";
 
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
@@ -18,6 +20,8 @@ const guestRoutes = [
   { path: "/reset-password", element: <ResetPassword /> },
   { path: "/itineraries/:itineraryId", element: <ItineraryDetailsPage /> },
   { path: "/upcomingitineraries", element: <Itineraries /> },
+  { path: "/pendingRequest", element: <PendingPage /> },
+  { path: "/register", element: <RegisterPage /> },
 ];
 
 export default guestRoutes;
