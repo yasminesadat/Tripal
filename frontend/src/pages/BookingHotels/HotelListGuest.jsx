@@ -119,83 +119,18 @@ export default function TourList1() {
 
   return (
     <>
-      <style>{`
-  .search-container {
-    margin: 20px 0;
-    max-width: 400px;
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: white;
-    border: 2px solid var(--color-light-purple);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    margin-left: auto; /* This pushes it to the right */
-  }
-
-  .search-container:hover {
-    border-color: var(--color-pink);
-  }
-
-  .search-container:focus-within {
-    border-color: var(--color-stone);
-    box-shadow: 0 2px 8px rgba(3, 98, 100, 0.1);
-  }
-
-  .search-icon {
-    padding: 0 12px;
-    color: var(--color-dark-purple);
-    display: flex;
-    align-items: center;
-  }
-
-  .search-input {
-    width: 100%;
-    height: 45px;
-    padding: 0 12px;
-    font-size: 15px;
-    border: none;
-    background: transparent;
-    color: var(--color-dark-green);
-  }
-
-  .search-input:focus {
-    outline: none;
-  }
-
-  .search-input::placeholder {
-    color: var(--color-dark-purple);
-    opacity: 0.6;
-  }
-`}</style>
       <MetaComponent meta={metadata} />
       <div className="page-wrapper">
         <GuestHeader />
         <main className="page-content">
           <section className="layout-pb-xl">
-            <div className="search-container">
-              <span className="search-icon">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </span>
+            <div>
+              {/* Search bar */}
               <input
                 type="text"
                 placeholder="Search for hotels..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
+                onChange={(e) => setSearchQuery(e.target.value)} // Update search query
               />
             </div>
             <div
