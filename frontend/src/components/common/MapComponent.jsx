@@ -87,14 +87,10 @@ const LocationMap = ({
       style={{ height: "400px", width: "100%" }}
     >
       <TileLayer
-        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        subdomains={["a", "b", "c", "d"]}
-        minZoom={0}
-        maxZoom={18}
-        ext="png"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {!search&&<SearchControl />}
+      {!search && <SearchControl />}
       <LocationMarker />
     </MapContainer>
   );

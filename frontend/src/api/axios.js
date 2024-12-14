@@ -1,6 +1,10 @@
 import axiosClient from "axios";
 
+
 export const axios = axiosClient.create({
-  baseURL: "http://localhost:5050/api",
+  baseURL: "https://tripal-production.up.railway.app/api",
   withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });

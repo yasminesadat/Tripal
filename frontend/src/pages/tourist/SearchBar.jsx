@@ -47,21 +47,21 @@ export default function FlightsList() {
     {
       title: "Choose flight options",
       description: "Narrow down your flights search by specifying some options.",
-      target: () => refFlightsFilter.current, 
+      target: () => refFlightsFilter.current,
     },
     {
       title: "Enter more details",
       description: "In order to find all the flights that match your choices available for booking.",
-      target: () => refFlightsSearch.current, 
+      target: () => refFlightsSearch.current,
     },
     {
       title: "Start exploring!",
       description: "Hopefully you will find a match.",
-      target: () => refFlightsExplore.current, 
+      target: () => refFlightsExplore.current,
       onFinish: () => {
         localStorage.setItem("currentStep", 2);
         setOpen(false);
-        navigate("/tourist", {state: {fromTour: true, targetStep: 2}});
+        navigate("/tourist", { state: { fromTour: true, targetStep: 2 } });
       }
     },
   ]
@@ -81,21 +81,21 @@ export default function FlightsList() {
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
 
-    if ( isFromTour && refFlightsSearch.current) {
+    if (isFromTour && refFlightsSearch.current) {
       refFlightsSearch.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
 
   useEffect(() => {
     const isFromTour = location.state?.fromTour;
-  
+
     const timer = setTimeout(() => {
       if (isFromTour) {
-        setOpen(true); 
+        setOpen(true);
       }
     }, 300);
-  
-    return () => clearTimeout(timer); 
+
+    return () => clearTimeout(timer);
   }, [location]);
 
   const fetchCityCode = async (searchInfo, setData) => {
@@ -104,7 +104,7 @@ export default function FlightsList() {
         setData([]);
         return;
       }
-      const response = await axios.get(`http://localhost:5050/api/flightCity?searchinfo=${searchInfo}`);
+      const response = await axios.get(`https://tripal-production.up.railway.app/api/flightCity?searchinfo=${searchInfo}`);
 
       const transformedData = response.data
         .filter(city => city.iataCode)
@@ -163,7 +163,6 @@ export default function FlightsList() {
         currencyCode: 'EGP',
       });
       sessionStorage.setItem('flightSearchParams', JSON.stringify(queryParams));
-
     new URLSearchParams({
       originLocationCode,
       destinationLocationCode,
@@ -173,11 +172,12 @@ export default function FlightsList() {
       cabin: cabinType,
       currencyCode: 'EGP',
     });
+
       if (tripType === 'roundTrip' && returnDate) {
         queryParams.append('returnDate', returnDate);
       }
 
-      const response = await axios.get(`http://localhost:5050/api/flightSearch?${queryParams.toString()}`);
+      const response = await axios.get(`https://tripal-production.up.railway.app/api/flightSearch?${queryParams.toString()}`);
       navigate('/tourist/search-flights', { state: { flights: response.data, originLocationCode, destinationLocationCode, cabinType } });
     } catch (error) {
       message.error('Error fetching flights', error);
@@ -479,7 +479,7 @@ export default function FlightsList() {
           border: 1px solid rgba(0, 0, 0, 0.06);
         }  
       `}</style>
-      <MetaComponent meta={metadata}/>
+      <MetaComponent meta={metadata} />
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
       <TouristHeader />
       <section className="hero -type-5">
@@ -487,25 +487,25 @@ export default function FlightsList() {
           <img src="/img/hero/5/bg.png" alt="background" />
         </div>
         <div className="hero__image">
-        <img
-          src="/img/flights/flight background.png"
-          style={{ height: '100%', width: 'auto' }}
-          alt="Flight Background"
-        />
+          <img
+            src="/img/flights/flight background.png"
+            style={{ height: '100%', width: 'auto' }}
+            alt="Flight Background"
+          />
         </div>
 
         <h1 data-aos="fade-up" data-aos-delay="300" className="hero__title">
-            Plan Your <br className="md:d-none" />
-            <span style={{ color: '#036264' }}>Next Journey</span>
-          </h1>
-          <div
-            data-aos="fade-up"x
-            data-aos-delay="100"
-            className="hero__subtitle mb-10"
-          >
-            Search, compare and book flights easily.
-          </div>
-        
+          Plan Your <br className="md:d-none" />
+          <span style={{ color: '#036264' }}>Next Journey</span>
+        </h1>
+        <div
+          data-aos="fade-up" x
+          data-aos-delay="100"
+          className="hero__subtitle mb-10"
+        >
+          Search, compare and book flights easily.
+        </div>
+
 
         <div className="search-container" style={{ position: 'relative', zIndex: 10 }}>
           <div className="flight-options" ref={refFlightsFilter} style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
@@ -515,7 +515,7 @@ export default function FlightsList() {
             >
               <ArrowLeftRight size={16} />
               Round trip
-              
+
             </button>
 
             <button
@@ -530,37 +530,38 @@ export default function FlightsList() {
             </button>
 
             <button className="select-button" onClick={() => setShowPassengersDropdown(!showPassengersDropdown)}>
-          <Users size={16} />
-          {passengers} passenger{passengers > 1 ? 's' : ''}
-          <ChevronDown size={16} />
-        </button>
-        {showPassengersDropdown && (
-          <ul className="dropdowns">
-            {[1, 2, 3, 4, 5].map((count) => (
-              <li key={count} onClick={() => handlePassengerSelect(count)} className="dropdown-item">
-                {count} passenger{count > 1 ? 's' : ''}
-              </li>
-            ))}
-          </ul>
-        )}
+              <Users size={16} />
+              {passengers} passenger{passengers > 1 ? 's' : ''}
+              <ChevronDown size={16} />
+            </button>
+            {showPassengersDropdown && (
+              <ul className="dropdowns">
+                {[1, 2, 3, 4, 5].map((count) => (
+                  <li key={count} onClick={() => handlePassengerSelect(count)} className="dropdown-item">
+                    {count} passenger{count > 1 ? 's' : ''}
+                  </li>
+                ))}
+              </ul>
+            )}
 
-        <button className="select-button" onClick={() => setShowCabinDropdown(!showCabinDropdown)}>
-        {cabinOptions.find(option => option.value === cabinType)?.label}
-        <ChevronDown size={16} />
-      </button>
-      {showCabinDropdown && (
-        <ul className="dropdowns">
-          {cabinOptions.map((option) => (
-            <li
-              key={option.value}
-              onClick={() => handleCabinSelect(option.value)}
-              className="dropdown-item"
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      )}
+            {/* Cabin Dropdown */}
+            <button className="select-button" onClick={() => setShowCabinDropdown(!showCabinDropdown)}>
+              {cabinOptions.find(option => option.value === cabinType)?.label}
+              <ChevronDown size={16} />
+            </button>
+            {showCabinDropdown && (
+              <ul className="dropdowns">
+                {cabinOptions.map((option) => (
+                  <li
+                    key={option.value}
+                    onClick={() => handleCabinSelect(option.value)}
+                    className="dropdown-item"
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="search-grid" ref={refFlightsSearch} style={{ display: 'grid', justifyContent: 'center' }}>
@@ -572,8 +573,8 @@ export default function FlightsList() {
                 className="location-input"
                 style={{
                   border: '1px solid #dac4d0',
-                  outline: "none", 
-                  borderRadius: '10px', 
+                  outline: "none",
+                  borderRadius: '10px',
                   transition: 'all 0.3s ease'
                 }}
                 value={originInput}
@@ -616,8 +617,8 @@ export default function FlightsList() {
                 className="location-input"
                 style={{
                   border: '1px solid #dac4d0',
-                  outline: "none", 
-                  borderRadius: '10px', 
+                  outline: "none",
+                  borderRadius: '10px',
                   transition: 'all 0.3s ease'
                 }}
                 value={destinationInput}
@@ -677,7 +678,7 @@ export default function FlightsList() {
           </button>
         </div>
       </section>
-<FooterThree />
+      <FooterThree />
     </>
   );
 }

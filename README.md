@@ -852,8 +852,15 @@ To contribute:
 **Youtube Videos**
 
 - [Create a REST API with Node.js and Express](https://youtu.be/O3BUHwfHf84?si=RhnzgbodBxzWAL8b)
-- [MERN Stack Tutorial](https://youtu.be/-0exw-9YJBo?si=_7WHciKbByTxXlTV)  
+- [MERN Stack Tutorial](https://youtu.be/-0exw-9YJBo?si=_7WHciKbByTxXlTV)
+
+## Deployment
+
+This application is deployed and accessible at the following URL:
+- Deployed on Vercel
+- URL: https://tripal-sable.vercel.app/
 ## License
+
 
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
 See the LICENSE file for detailed terms and conditions.

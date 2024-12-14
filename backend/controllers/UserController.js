@@ -86,11 +86,17 @@ const loginUser = async (req, res) => {
       }
 
       const token = generateToken(roleUser._id, user.role);
-      res.cookie("jwt", token, {
+
+      const isProduction = process.env.NODE_ENV === 'production';
+
+      res.cookie('jwt', token, {
         httpOnly: true,
-        //maxAge: 3600 * 1000,
+        secure: true,
+        sameSite: 'None',  // Required for cross-site requests
+        path: '/',
+        domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost',
       });
-      res.status(200).json({ role: user.role, isFirstTime});
+      res.status(200).json({ role: user.role, isFirstTime });
     } else {
       res.status(400).json({ message: "Invalid username or password" });
     }
@@ -130,11 +136,13 @@ const getUserData = async (req, res) => {
 
 const logoutUser = (req, res) => {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: true,
       sameSite: 'None',
-      path: '/'
+      path: '/',
+      domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost'
     });
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {

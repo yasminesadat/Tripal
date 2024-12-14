@@ -14,14 +14,18 @@ const MongoURI = process.env.MONGO_URI;
 const app = express();
 const port = process.env.PORT || "5050";
 
-// Configure CORS
-const corsOptions = {
-  origin: "http://localhost:3000", // Allow requests from this origin
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-};
 
-app.use(cors(corsOptions));
 
+// cors 
+
+app.use(cors({
+  origin: [
+    'https://tripal-sable.vercel.app/',
+    'http://localhost:3000',
+    /\.vercel\.app$/  // This will allow all vercel.app subdomains
+  ],
+  credentials: true
+}));
 //Route Imports
 const routes = require("./routes/index");
 app.use(express.urlencoded({ extended: true }));
