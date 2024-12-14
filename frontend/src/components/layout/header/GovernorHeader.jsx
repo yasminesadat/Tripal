@@ -4,13 +4,12 @@ import { profile } from "@/data/governorMenu";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { logout } from "@/api/UserService";
+
 export default function GovernorHeader() {
   const navigate = useNavigate();
-
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
-
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
