@@ -90,7 +90,8 @@ const loginUser = async (req, res) => {
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: true,
-        domain: '.vercel.app'  // Make sure this matches your deployed domain
+        sameSite: 'Strict',  // or 'Lax'
+        domain: 'tripal-sable.vercel.app'  // Your exact Vercel domain
       });
       res.status(200).json({ role: user.role, isFirstTime });
     } else {
