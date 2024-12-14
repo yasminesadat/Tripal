@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 import TagManagerList from "@/components/dasboard/PreferenceTagsList";
@@ -22,6 +22,5 @@ const TagManager = () => {
     </>
   );
 };
-
 
 export default TagManager;

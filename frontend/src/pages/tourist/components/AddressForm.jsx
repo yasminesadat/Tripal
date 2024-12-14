@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 import {
   Checkbox,
@@ -72,7 +71,7 @@ export default function AddressForm({ onNext }) {
     }
 
     try {
-      const response = await addAddress(street, city, country, zipCode);
+      await addAddress(street, city, country, zipCode);
       message.success("Added new address successfully!");
     } catch (error) {
       if (error.response && error.response.status === 400) {

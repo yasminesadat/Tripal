@@ -1,5 +1,5 @@
 import { getUsersPerMonth } from "@/api/AdminService";
-import { StatictiesAdminUsers, tabContentStaticties } from "@/data/dashboard";
+import { StatictiesAdminUsers } from "@/data/dashboard";
 import { useState , useEffect} from "react";
 import {
   LineChart,
@@ -13,9 +13,7 @@ import {
 
 export default function UserStatistics({totalUsers}) {
   const [activeTab, setActiveTab] = useState(StatictiesAdminUsers[0]);
-  const [statictiesData, setStatictiesData] = useState(StatictiesAdminUsers); // Store the data in state
-
-  const [countData, setCountData] = useState([]); 
+  const [setCountData] = useState([]); 
 
   useEffect(() => {
     const fetchMonths = async () => {
@@ -38,20 +36,12 @@ export default function UserStatistics({totalUsers}) {
           ];
        
         setCountData(formattedData);
-        console.log("hi1")
         StatictiesAdminUsers[0].data=formattedData;
-        console.log("hi1")
         StatictiesAdminUsers[1].data[5].value=totalUsers;
-
-        console.log( StatictiesAdminUsers[1].data[5].value)
-       
       } catch (error) {
         console.error("Error fetching revenue data:", error);
       }
     };
-
-    
-
     fetchMonths();
   },[totalUsers]);
 
@@ -76,7 +66,6 @@ export default function UserStatistics({totalUsers}) {
           fill="#336CFB"
           activeDot={{ r: 8 }}
         />
-        {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
       </LineChart>
     </ResponsiveContainer>
   );

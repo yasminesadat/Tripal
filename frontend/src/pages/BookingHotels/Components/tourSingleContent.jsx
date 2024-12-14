@@ -188,7 +188,7 @@ export const included = [
         "/img/reviews/1/3.png",
       ],
     },
-    // More review objects can be added to this array
+    
   ];
   
   export const times = [

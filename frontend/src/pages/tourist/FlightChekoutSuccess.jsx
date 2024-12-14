@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
-import { completeFlightBooking, saveFlightBooking } from '@/api/TouristService';  // Assuming you have this service to handle the database saving
+import { completeFlightBooking } from '@/api/TouristService';
 import MetaComponent from '@/components/common/MetaComponent';
 import TouristHeader from '@/components/layout/header/TouristHeader';
 import FooterThree from '@/components/layout/footers/FooterThree';
@@ -60,7 +60,7 @@ export default function FlightCheckout() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: 'calc(100vh - 80px)', // Adjust for header and footer
+          height: 'calc(100vh - 80px)',
           backgroundColor: '#e5f8f8',
           fontFamily: 'Helvetica, Arial, sans-serif',
         }}

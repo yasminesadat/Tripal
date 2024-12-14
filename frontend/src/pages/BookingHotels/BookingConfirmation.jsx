@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CreditCard from "./Components/Payment";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -7,10 +7,8 @@ import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import {message} from 'antd';
-
 import { getTouristUserName } from "@/api/TouristService";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
-
 
 export default function BookingPages() {
   const metadata = {
@@ -50,12 +48,8 @@ export default function BookingPages() {
 
   const getExchangeRate = async () => {
     if (currency) {
-      try {
-        const rate = await getConversionRate(currency);
-        setExchangeRate(rate);
-      } catch (error) {
-        //message.error("Failed to fetch exchange rate.");
-      }
+      const rate = await getConversionRate(currency);
+      setExchangeRate(rate);
     }
   };
 
@@ -82,15 +76,13 @@ export default function BookingPages() {
 }
 
 
-
-
   useEffect(() => {
     const calculatedTotal = (
       (isNaN(singlePrice) ? 0 : singlePrice) * singleNumber  +
       (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber  +
       (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber 
     ).toFixed(2);
-    setTotal(calculatedTotal); // Update the total
+    setTotal(calculatedTotal);
     fetchUserName()
     
   }, [
@@ -100,7 +92,7 @@ export default function BookingPages() {
     singlePrice,
     doublePrice,
     triplePrice,
-  ]); // Dependencies for re-calculation
+  ]);
 
   return (
 
@@ -193,82 +185,6 @@ export default function BookingPages() {
                           </div>
                         </div>
 
-                        {/* <h2 className="text-30 md:text-24 fw-700 mt-60 md:mt-30">
-                Order Details
-              </h2>
-
-              <div className="d-flex item-center justify-between y-gap-5 pt-30">
-                <div className="text-18 fw-500">
-                 {name}
-                </div>
-                <div className="text-18 fw-500">$382</div>
-              </div>
-
-              <div className="mt-25">
-                <div className="d-flex items-center justify-between">
-                  <div className="fw-500">Date:</div>
-                  <div className="">06 April 2023</div>
-                </div>
-
-                <div className="d-flex items-center justify-between">
-                  <div className="fw-500">Time:</div>
-                  <div className="">10:00 am</div>
-                </div>
-
-                <div className="d-flex items-center justify-between">
-                  <div className="fw-500">Duration:</div>
-                  <div className="">12 Days</div>
-                </div>
-
-                <div className="d-flex items-center justify-between">
-                  <div className="fw-500">Tickets:</div>
-                  <div className="">
-                    Adult x2 = $98 - Youth x3 = $383 - Children x6 = $394
-                  </div>
-                </div>
-              </div>
-
-              <div className="line mt-30 mb-30"></div>
-
-              <div className="d-flex item-center justify-between y-gap-5">
-                <div className="text-18 fw-500">Service per booking</div>
-                <div className="text-18 fw-500">$43</div>
-              </div>
-
-              <div className="line mt-30 mb-30"></div>
-
-              <div className="d-flex item-center justify-between y-gap-5">
-                <div className="text-18 fw-500">
-                  Service per person 1 Adult, 2 Youth, 4 Children
-                </div>
-                <div className="text-18 fw-500">$125</div>
-              </div>
-
-              <div className="line mt-30 mb-30"></div>
-
-              <div className="row justify-end">
-                <div className="col-md-4">
-                  <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Subtotal</div>
-                    <div className="text-18 fw-500">$382</div>
-                  </div>
-
-                  <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Total</div>
-                    <div className="text-18 fw-500">$23</div>
-                  </div>
-
-                  <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Amount Paid</div>
-                    <div className="text-18 fw-500">$3.482</div>
-                  </div>
-
-                  <div className="d-flex items-center justify-between">
-                    <div className="text-18 fw-500">Amount Due</div>
-                    <div className="text-18 fw-500">$43.242</div>
-                  </div>
-                </div>
-              </div> */}
                       </div>
                     )}
 
@@ -361,6 +277,5 @@ export default function BookingPages() {
         <FooterThree />
       </div>
     </>
-
   );
 }

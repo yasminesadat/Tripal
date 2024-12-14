@@ -20,7 +20,6 @@ export default function TouristHome() {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
-
   const refHeader = useRef(null);
   const refFlights = useRef(null);
   const refHotels = useRef(null);

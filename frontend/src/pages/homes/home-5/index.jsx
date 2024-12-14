@@ -1,14 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import { Tour, ConfigProvider } from "antd";
-import ArticlesOne from "@/components/homes/articles/ArticlesOne";
-import Banner9 from "@/components/homes/banners/Banner9";
+import { useState, useRef } from "react";
+import { Tour } from "antd";
 import BannerEight from "@/components/homes/banners/BannerEight";
 import BrandsThree from "@/components/homes/brands/BrandsThree";
 import DestinationsFive from "@/components/homes/destinations/DestinationsFive";
 import Hero5 from "@/components/homes/heros/Hero5";
 import TestimonialsFour from "@/components/homes/testimonials/TestimonialsFour";
 import TourTypesTwo from "@/components/homes/tourTypes/TourTypesTwo";
-import FeaturedTrips from "@/components/homes/tours/FeaturedTrips";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 

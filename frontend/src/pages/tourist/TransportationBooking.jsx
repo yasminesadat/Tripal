@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Button, Modal } from 'antd';
-import React, { useEffect, useState } from "react";
+import { Modal } from 'antd';
+import { useState } from "react";
 import bg from '../../assets/images/bg.png';
 import front from '../../assets/images/1.png';
 
@@ -17,13 +17,8 @@ const TransportationBookingPopUp = ({ setDoneBookTransportation, setIsBookedAcce
 
   return (
     <>
-      {/* <Button type="primary" onClick={showModal}>
-        Open
-      </Button> */}
       <Modal
         open={open}
-        // onOk={handleOk}
-        // //confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[]}
       >
@@ -55,19 +50,8 @@ const TransportationBookingPopUp = ({ setDoneBookTransportation, setIsBookedAcce
                     FREE
                   </p>
 
-                  {/* <div
-                data-aos="fade-up"
-                data-aos-delay=""
-                className="text-18 text-white mt-40 md:mt-20"
-              >
-                Get a magic link sent to your email
-              </div> */}
-
                   <div className="mt-10">
                     <div className="singleInput -type-2 row x-gap-10 y-gap-10">
-                      {/* <div className="col-md-auto col-12">
-                    <input type="email" placeholder="Email" className="" />
-                  </div> */}
                       <div className="col-md-auto col-12">
                         <button
                           data-aos="fade-right"
@@ -77,7 +61,7 @@ const TransportationBookingPopUp = ({ setDoneBookTransportation, setIsBookedAcce
                             setIsBookedAccepted(true);
                             setOpen(false);
                             setDoneBookTransportation(true);
-                          }} // Close the modal on click
+                          }}
                         >
                           Confirm
                         </button>

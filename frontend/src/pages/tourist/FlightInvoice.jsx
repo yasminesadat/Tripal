@@ -1,5 +1,4 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import MetaComponent from "@/components/common/MetaComponent";
 import TouristHeader from "../../components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -14,8 +13,6 @@ const FlightInvoice = () => {
   const isBookedOriginatingTransportation = location.state?.isBookedOriginatingTransportation;
   const isBookedReturnTransportation = location.state?.isBookedReturnTransportation;
   
-  
-
   const convertPrice = (price) => {
     return (price * exchangeRate).toFixed(2);
   };
@@ -97,7 +94,6 @@ const FlightInvoice = () => {
 
                   </div>
 
-                  {/* Print Button - Positioned at top right */}
                   <div className="position-absolute top-0 center-0 mt-3 mr-3 print-hide">
                     <button 
                       onClick={handlePrintClick} 
@@ -127,7 +123,6 @@ const FlightInvoice = () => {
                     </div>
                   </div>
 
-                  {/* Passenger and Flight Details */}
                   <div className="row justify-between pt-50">
                     <div className="col-auto">
                       <div className="text-30 fw-500">Passenger Details</div>
@@ -203,36 +198,6 @@ const FlightInvoice = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Footer with Print Button
-                <div className="border-1-top py-40 text-center">
-                  <div className="print-hide mb-4">
-                    <button 
-                      onClick={handlePrintClick} 
-                      className="btn btn-lg"
-                      style={{
-                        backgroundColor: '#8f5774',
-                        color: 'white',
-                        padding: '10px 30px',
-                        borderRadius: '5px',
-                        fontSize: '18px'
-                      }}
-                    >
-                      Print Boarding Pass
-                    </button>
-                  </div>
-                  <div className="row x-gap-60 y-gap-10 justify-center">
-                    <div className="col-auto">
-                      <a href="#" className="text-14">www.tripal.com</a>
-                    </div>
-                    <div className="col-auto">
-                      <a href="#" className="text-14">invoice@tripal.com</a>
-                    </div>
-                    <div className="col-auto">
-                      <a href="#" className="text-14">(+20) 123-456-789</a>
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
@@ -14,33 +13,23 @@ import {
   getConversionRate,
 } from "@/api/ExchangeRatesService.js";
 
-import { useParams, useNavigate } from "react-router-dom";
-//import styles from "../../components/style.module.css";
+import { useParams } from "react-router-dom";
 
 import { getHotels } from "../../api/HotelService.js";
 
 export default function TourList1() {
   const [setDdActives] = useState(false);
   const [filteredHotels, setFilteredHotels] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
+  const [searchQuery, setSearchQuery] = useState("");
   const dropDownContainer = useRef();
   const { cityCode, dates1, dates2 } = useParams();
-  const navigate = useNavigate();
-
   const images = [img1, img2, img3, img4, img5, img6];
-
   const [exchangeRate, setExchangeRate] = useState(1);
-
   const [currency, setCurrency] = useState("EGP");
-
   const getExchangeRate = async () => {
     if (currency) {
-      try {
-        const rate = await getConversionRate(currency);
-        setExchangeRate(rate);
-      } catch (error) {
-        //message.error("Failed to fetch exchange rate.");
-      }
+      const rate = await getConversionRate(currency);
+      setExchangeRate(rate);
     }
   };
 
@@ -55,17 +44,15 @@ export default function TourList1() {
 
   const fetchTourData = async () => {
     try {
-      // Fetch hotel data
-      const response = await getHotels(cityCode);
 
-      // Transform the data as before
+      const response = await getHotels(cityCode);
       const transformedData = response.map((hotel, index) => ({
         id: hotel.hotelId,
         title: hotel.name,
         location: hotel.iataCode,
         description: "A beautiful hotel for a remarkable holiday.",
-        price: 10000, // Default or mock price
-        fromPrice: 15000, // Default starting price
+        price: 10000,
+        fromPrice: 15000,
         features: [
           {
             icon: `icon-price-tag`,
@@ -77,17 +64,15 @@ export default function TourList1() {
           },
         ],
         imageSrc: images[index % images.length],
-        duration: "1 night", // Default duration
+        duration: "1 night",
       }));
 
-      // Set the transformed data to the component's state
       setFilteredHotels(transformedData);
     } catch (error) {
       console.error("Error fetching tours:", error);
     }
   };
 
-  // Filter the hotels based on the search query
   const filteredHotelList = filteredHotels.filter((hotel) =>
     hotel.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -96,7 +81,6 @@ export default function TourList1() {
     fetchTourData();
   }, [cityCode]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (event) => {
       if (
@@ -298,10 +282,8 @@ export default function TourList1() {
                               (window.location.href = `/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`)
                             }
                           >
-                            {/* <Link to={`/hotelDetails/${cityCode}/${elm.title}/${elm.id}/${dates1}/${dates2}`}> */}
-                            View Details
+                              View Details
                             <i className="icon-arrow-top-right ml-10"></i>
-                            {/* </Link> */}
                           </button>
                         </div>
                       </div>

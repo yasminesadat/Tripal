@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
 import { completeOrder as completeOrderService } from '@/api/OrderService'; // Assuming this service handles order completion
 import MetaComponent from '@/components/common/MetaComponent';
 import TouristHeader from '@/components/layout/header/TouristHeader';
 import FooterThree from '@/components/layout/footers/FooterThree';
 
-// Extract order parameters from URL
 const extractOrderParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
   return {
@@ -16,7 +15,6 @@ const extractOrderParams = () => {
   };
 };
 
-// Handle order completion logic
 const handleOrderCompletion = async ({ sessionId, touristId, totalPrice, deliveryAddress }) => {
   if (sessionId && touristId && totalPrice && deliveryAddress) {
     try {
@@ -59,7 +57,7 @@ export default function OrderCheckout() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: 'calc(100vh - 80px)', // Adjust for header and footer
+          height: 'calc(100vh - 80px)',
           backgroundColor: '#e5f8f8',
           fontFamily: 'Helvetica, Arial, sans-serif',
         }}

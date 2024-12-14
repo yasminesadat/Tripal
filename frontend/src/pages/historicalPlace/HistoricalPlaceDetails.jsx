@@ -20,12 +20,8 @@ const HistoricalPlaceDetails = ({ userRole }) => {
 
   const getExchangeRate = async () => {
     if (currency) {
-      try {
-        const rate = await getConversionRate(currency);
-        setExchangeRate(rate);
-      } catch (error) {
-        //message.error("Failed to fetch exchange rate.");
-      }
+      const rate = await getConversionRate(currency);
+      setExchangeRate(rate);
     }
   };
 
@@ -51,10 +47,10 @@ const HistoricalPlaceDetails = ({ userRole }) => {
             result?.location?.coordinates?.longitude
           ];
 
-          // Check if coordinates are valid numbers
+
           if (newCoords[0] && newCoords[1]) {
             setCoordinates(newCoords);
-            setValidCoordinates(true);  // Set to true only when we have valid coordinates
+            setValidCoordinates(true); 
           }
           setHistoricalPlace(result);
           setAddress(result?.location?.address);
@@ -87,18 +83,6 @@ const HistoricalPlaceDetails = ({ userRole }) => {
 
               <div className="line mt-60 mb-60"></div>
 
-              {/* <h2 className="text-30">What's included</h2>
-
-              <Included />
-
-              <div className="line mt-60 mb-60"></div> */}
-
-              {/* <h2 className="text-30">Itinerary</h2>
-
-              <div className="mt-30">
-                <RoadMap />
-              </div> */}
-
               <h2 className="text-30 mt-60 mb-30">Location</h2>
               <div className="mapTourSingle">
                 {validCoordinates ? (
@@ -112,40 +96,9 @@ const HistoricalPlaceDetails = ({ userRole }) => {
 
               </div>
 
-              {/* <div className="line mt-60 mb-60"></div>
-
-              <h2 className="text-30">Availability Calendar</h2>
-
-              <DateCalender /> */}
-
               <div className="line mt-60 mb-60"></div>
 
-              {/*<h2 className="text-30">FAQ</h2>
-
-              <div className="accordion -simple row y-gap-20 mt-30 js-accordion">
-                <Faq />
-              </div> */}
-
-              {/* <div className="line mt-60 mb-60"></div>
-
-              <h2 className="text-30">Customer Reviews</h2>
-
-              <div className="mt-30">
-                <Rating />
-              </div> */}
-
-              {/* <Reviews /> */}
-
-              {/* <button className="button -md -outline-accent-1 text-accent-1 mt-30">
-                See more reviews
-                <i className="icon-arrow-top-right text-16 ml-10"></i>
-              </button> */}
-
-              {/* <CommentBox /> */}
             </div>
-
-
-            {/* <TourSlider historicalPlaces={props} /> */}
 
           </div>
         </div>

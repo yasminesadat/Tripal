@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 
@@ -21,8 +20,6 @@ const ComplaintsPage = () => {
                 </div>
             </div>
             <style>{`
-      
-      
       .custom-button {
    background-color: var(--color-dark-purple) !important;
    border: 2px solid var(--color-dark-purple) !important;
@@ -72,10 +69,6 @@ const ComplaintsPage = () => {
   background-color: var(--color-stone-light) !important;
   border-color: var(--color-stone-light) !important;
 }
- 
- 
-      
-    
      `}</style>
         </>
     );

@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCityCode } from "../../../api/HotelService";
-import { message } from "antd";
 
 export default function HeaderSerch({ white, selected, setSelected }) {
   const [ddActive, setDdActive] = useState(false);
   const [searchData, setSearchData] = useState([]);
   const inputRef = useRef();
-  const debounceTimeout = useRef(null); // Reference to store the timeout
+  const debounceTimeout = useRef(null);
 
   useEffect(() => {
     inputRef.current.value = selected;
@@ -15,8 +14,8 @@ export default function HeaderSerch({ white, selected, setSelected }) {
   const fetchSearchData = async (searchinfo) => {
     try {
       if (searchinfo.length < 3 || searchinfo.length > 10) {
-        setSearchData([]); // Clear search data if input is invalid
-        setDdActive(false); // Hide dropdown
+        setSearchData([]);
+        setDdActive(false);
         return;
       }
       const response = await getCityCode(searchinfo);
@@ -28,32 +27,26 @@ export default function HeaderSerch({ white, selected, setSelected }) {
       }));
 
       setSearchData(transformedData);
-      setDdActive(transformedData.length > 0); // Show dropdown if there are results
+      setDdActive(transformedData.length > 0);
     } catch (error) {
       console.error("Error fetching city codes:", error);
-      // message.error("Error fetching city codes.");
-      // console.log("after errorrrrrrrrrrrrrrr")
     }
   };
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     setSelected(inputValue);
-
-    // Clear the previous timeout if it exists
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
-
-    // Set a new timeout
     debounceTimeout.current = setTimeout(() => {
       if (inputValue === "") {
-        setSearchData([]); // Clear search data if input is empty
-        setDdActive(false); // Hide dropdown
+        setSearchData([]); 
+        setDdActive(false); 
       } else {
-        fetchSearchData(inputValue); // Fetch data on input change
+        fetchSearchData(inputValue);
       }
-    }, 50); // Adjust the delay time (in milliseconds) as needed
+    }, 50);
   };
 
   const dropDownContainer = useRef();
@@ -63,7 +56,7 @@ export default function HeaderSerch({ white, selected, setSelected }) {
         dropDownContainer.current &&
         !dropDownContainer.current.contains(event.target)
       ) {
-        setDdActive(false); // Hide dropdown on outside click
+        setDdActive(false);
       }
     };
 

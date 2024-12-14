@@ -13,14 +13,12 @@ const Requests = () => {
 
                 <div className="dashboard__content">
                     <Header setSideBarOpen={setSideBarOpen} />
-                   <RequestsList/>
+                    <RequestsList/>
                     <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
-            </div>
+                        © Copyright Tripal {new Date().getFullYear()}
+                    </div>
                 </div>
             </div>
-
-            
         </>
     );
 };

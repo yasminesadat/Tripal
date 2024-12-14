@@ -103,7 +103,6 @@ export default function AddHistoricalPlace() {
 
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -111,7 +110,6 @@ export default function AddHistoricalPlace() {
   };
 
   async function handleSubmission() {
-    console.log("ia m hereee")
     const newHistoricalPlace = {
 
       name: formData.name
@@ -145,7 +143,6 @@ export default function AddHistoricalPlace() {
       historicalPeriod: await formData.historicalPeriod,
     };
     setLoading(true);
-    console.log("historical Places", newHistoricalPlace);
     if (id === undefined) {
       try {
         const result = await CreateNewHistoricalPlace(newHistoricalPlace);
@@ -196,20 +193,14 @@ export default function AddHistoricalPlace() {
           historicalPeriod: await formData.historicalPeriod,
           deletedImages: [...deletedImages]
         }
-        console.log("in update ", updatedHistoricalPlace);
         const result = await updateHistoricalPlace(id, updatedHistoricalPlace);
         if (result) {
           setLoading(false);
-
-
           navigate(`/my-historical-places`);
           message.success("Updated Successfully");
-
-
         }
 
       } catch (err) {
-        // toast.error(err);
         setLoading(false);
       }
     }
@@ -230,14 +221,6 @@ export default function AddHistoricalPlace() {
     form.setFieldsValue({
       name: formData.name,
       description: formData.description,
-      // historicalPeriod: [...formData.historicalPeriod.map((period) => ({
-      //   label: period.name,
-      //   value: period._id
-      // }))],
-      // tags: [...formData.tags.map((tag) => ({
-      //   label: tag.name,
-      //   value: tag._id
-      // }))],
       weekendOpeningTime: formData.openingHours.weekends.openingTime ? moment(formData.openingHours.weekends.openingTime, "HH:mm:ss") : null,
       weekendClosingTime: formData.openingHours?.weekends?.closingTime
         ? moment(formData.openingHours.weekends.closingTime, "HH:mm:ss")
@@ -262,14 +245,10 @@ export default function AddHistoricalPlace() {
           >
 
             <div className="dashboard__content">
-              {/* <Header setSideBarOpen={setSideBarOpen} /> */}
-
               <div className="dashboard__content_content">
 
                 {id === undefined && <h1 className="text-30">Add Historical Place</h1>}
                 {id !== undefined && <h1 className="text-30">Update Historical Place</h1>}
-                {/* // <p className="">Lorem ipsum dolor sit amet, consectetur.</p> */}
-
                 <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60">
                   <div className="tabs -underline-2 js-tabs">
                     <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
@@ -329,30 +308,6 @@ export default function AddHistoricalPlace() {
                                 ...formData,
                                 name: allValues.name,
                                 description: allValues.description,
-                                // historicalPeriod: allValues.historicalPeriod.map((tagValue) => {
-                                //   const period = periodTagsOptions.find((p) => p._id === tagValue);
-                                //   return {
-                                //     name: period ? period.name : tagValue,
-                                //     _id: period ? period._id : ''
-                                //   };
-                                // }),
-                                // tags: allValues.tags.map((tagValue) => {
-                                //   const tag = tagsOptions.find((p) => p._id === tagValue);
-                                //   return {
-                                //     name: tag ? tag.name : tagValue,
-                                //     _id: tag ? tag._id : ''
-                                //   };
-                                //}),
-                                // openingHours: {
-                                //   weekdays: {
-                                //     openingTime: allValues.weekdayOpeningTime ? moment(allValues.weekdayOpeningTime, "HH:mm") : null,
-                                //     closingTime: allValues.weekdayClosingTime ? moment(allValues.weekdayClosingTime, "HH:mm") : null,
-                                //   },
-                                //   weekends: {
-                                //     openingTime: allValues.weekendOpeningTime ? moment(allValues.weekendOpeningTime, "HH:mm") : null,
-                                //     closingTime: allValues.weekendClosingTime ? moment(allValues.weekendClosingTime, "HH:mm") : null,
-                                //   }
-                                // },
                                 ticketPrices: {
                                   foreigner: allValues.foreignerPrice,
                                   native: allValues.nativePrice,
@@ -420,11 +375,11 @@ export default function AddHistoricalPlace() {
                                     type="text"
                                     style={{
                                       width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      padding: '10px 15px', // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
+                                      height: '50px', 
+                                      padding: '10px 15px',
+                                      fontSize: '18px',
                                       border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
+                                      borderRadius: '10px',
                                     }}
                                   />
                                 </Form.Item>
@@ -446,11 +401,11 @@ export default function AddHistoricalPlace() {
 
                                   <Input.TextArea style={{
                                     width: '100%',
-                                    height: '50px', // Adjust the height as needed
-                                    padding: '10px 15px', // Increase padding for taller appearance
-                                    fontSize: '18px', // Increase font size for better readability
+                                    height: '50px', 
+                                    padding: '10px 15px', 
+                                    fontSize: '18px',
                                     border: '1px solid #ccc',
-                                    borderRadius: '10px', // Optional for a rounded look
+                                    borderRadius: '10px',
                                   }}
                                     type="text"
                                   />
@@ -467,17 +422,12 @@ export default function AddHistoricalPlace() {
                                   <Select
                                     mode="tags"
                                     placeholder="Please select or create period tags"
-                                    // defaultValue={[...formData.historicalPeriod.map((period) => ({
-                                    //     label: period.name,
-                                    //     value: period._id
-                                    // }))]}
                                     style={{
                                       width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
+                                      height: '50px', 
+                                      fontSize: '18px',
                                       border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
+                                      borderRadius: '10px',
                                     }}
                                     onChange={(selectedTags) => {
                                       const selectedPeriods = selectedTags.map((tagValue) => {
@@ -487,7 +437,6 @@ export default function AddHistoricalPlace() {
                                           _id: period ? period._id : ''
                                         };
                                       });
-                                      console.log(selectedPeriods);
                                       setFormData((data) => ({
                                         ...data,
                                         historicalPeriod: selectedPeriods,
@@ -514,20 +463,14 @@ export default function AddHistoricalPlace() {
                                   <Select
                                     mode="tags"
                                     placeholder="Please select or new tags"
-                                    // defaultValue={[...formData.tags.map((tag) => ({
-                                    //     label: tag.name,
-                                    //     value: tag._id
-                                    // }))]}
                                     style={{
                                       width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
+                                      height: '50px',
+                                      fontSize: '18px',
                                       border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
+                                      borderRadius: '10px',
                                     }}
                                     onChange={(selectedTags) => {
-                                      console.log("helo", selectedTags);
                                       const tags = selectedTags.map((tagValue) => {
                                         const tag = tagsOptions.find((p) => p._id === tagValue);
                                         return {
@@ -535,7 +478,6 @@ export default function AddHistoricalPlace() {
                                           _id: tag ? tag._id : ''
                                         };
                                       });
-                                      console.log(tags);
                                       setFormData((data) => ({
                                         ...data,
                                         tags: tags,
@@ -570,13 +512,11 @@ export default function AddHistoricalPlace() {
                                     multiple
                                     onChange={handleChoosingImage}
                                     onRemove={(file) => {
-                                      console.log("the file to be removed", file);
                                       if ('url' in file) {
                                         setDeletedImages((oldImages) => new Set([...oldImages]).add({
                                           public_id: file.uid,
                                           url: file.url,
                                         }))
-                                        console.log("deleted images set", deletedImages)
                                       } else {
                                         setNewImages((oldData) => {
                                           const reader = new FileReader();
@@ -586,17 +526,16 @@ export default function AddHistoricalPlace() {
                                             return new Set([...oldData].filter((image) => image !== encodedImage))
                                           }
                                         });
-                                        console.log("the new images set", newImages)
                                       }
                                     }}
                                     listType="picture"
                                     style={{
                                       width: '100%',
-                                      height: '50px', // Adjust the height as needed
-                                      padding: '10px 15px', // Increase padding for taller appearance
-                                      fontSize: '18px', // Increase font size for better readability
+                                      height: '50px', 
+                                      padding: '10px 15px', 
+                                      fontSize: '18px',
                                       border: '1px solid #ccc',
-                                      borderRadius: '10px', // Optional for a rounded look
+                                      borderRadius: '10px',
                                     }}
                                   >
                                     <p >
@@ -640,11 +579,11 @@ export default function AddHistoricalPlace() {
                                     <TimePicker
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px',
+                                        fontSize: '18px',
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                       placeholder="please select the weekends opening time"
                                       onChange={(time, timeString) => {
@@ -677,11 +616,11 @@ export default function AddHistoricalPlace() {
                                     <TimePicker
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px',
+                                        fontSize: '18px', 
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                       placeholder="please select the weekends closing time"
                                       onChange={(time, timeString) => {
@@ -714,11 +653,11 @@ export default function AddHistoricalPlace() {
                                     <TimePicker
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px', 
+                                        padding: '10px 15px',
+                                        fontSize: '18px',
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                       placeholder="please select the weekdays opening time"
                                       onChange={(time, timeString) => {
@@ -751,11 +690,11 @@ export default function AddHistoricalPlace() {
                                     <TimePicker
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px',
+                                        fontSize: '18px',
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                       placeholder="please select the weekdays closing time"
                                       onChange={(time, timeString) => {
@@ -833,11 +772,11 @@ export default function AddHistoricalPlace() {
                                       placeholder="Enter foreigner ticket price"
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px',
+                                        fontSize: '18px', 
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                     />
                                   </Form.Item>
@@ -855,11 +794,11 @@ export default function AddHistoricalPlace() {
                                       min={0}
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px',
+                                        fontSize: '18px',
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                       placeholder="Enter native ticket price"
 
@@ -879,11 +818,11 @@ export default function AddHistoricalPlace() {
                                       placeholder="Enter student ticket price"
                                       style={{
                                         width: '100%',
-                                        height: '50px', // Adjust the height as needed
-                                        padding: '10px 15px', // Increase padding for taller appearance
-                                        fontSize: '18px', // Increase font size for better readability
+                                        height: '50px',
+                                        padding: '10px 15px', 
+                                        fontSize: '18px',
                                         border: '1px solid #ccc',
-                                        borderRadius: '10px', // Optional for a rounded look
+                                        borderRadius: '10px',
                                       }}
                                     />
                                   </Form.Item>

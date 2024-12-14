@@ -1,17 +1,14 @@
 import  { useEffect, useRef, useState } from "react";
 
-// The search component now accepts an `onSearch` prop to send data back to the parent
 export default function HeaderSearch({ white, onSearch }) {
-  const [selected, setSelected] = useState(""); // The selected search term
-  const [ddActive, setDdActive] = useState(false); // Whether the dropdown is active
+  const [selected, setSelected] = useState("");
+  const [ddActive, setDdActive] = useState(false);
   const inputRef = useRef();
 
-  // Update the input value whenever `selected` changes
   useEffect(() => {
     inputRef.current.value = selected;
   }, [selected]);
 
-  // Close the dropdown if the user clicks outside of it
   const dropDownContainer = useRef();
   useEffect(() => {
     const handleClick = (event) => {
@@ -30,7 +27,6 @@ export default function HeaderSearch({ white, onSearch }) {
     };
   }, []);
 
-  // Handle the input change and trigger the onSearch prop
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSelected(value); 
@@ -41,7 +37,7 @@ export default function HeaderSearch({ white, onSearch }) {
     <div ref={dropDownContainer} className="header__search js-liverSearch js-form-dd">
       <i className="icon-search text-18"></i>
       <input
-        onChange={handleInputChange} // Trigger onChange for the input field
+        onChange={handleInputChange}
         ref={inputRef}
         onClick={() => setDdActive((prev) => !prev)}
         type="text"

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ImageLightBox from "./ImageLightBox";
 import img1 from "../Components/HotelsImages/hotel7.jpeg";
 import img2 from "../Components/HotelsImages/beach.jpeg";
 import img3 from "../Components/HotelsImages/pool.jpeg";
 import img4 from "../Components/HotelsImages/room.jpeg";
-
 
 const images = [
   {
@@ -52,21 +51,6 @@ export default function Gallery1({onSeeAllPhotosClick}) {
               See all photos
             </span>
           </div>
-          {/* <a
-            href="/img/tourSingle/1/2.png"
-            className="js-gallery"
-            data-gallery="gallery1"
-          ></a>
-          <a
-            href="/img/tourSingle/1/3.png"
-            className="js-gallery"
-            data-gallery="gallery1"
-          ></a>
-          <a
-            href="/img/tourSingle/1/4.png"
-            className="js-gallery"
-            data-gallery="gallery1"
-          ></a> */}
         </div>
       </div>
       <ImageLightBox

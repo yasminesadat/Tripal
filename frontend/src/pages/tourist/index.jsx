@@ -5,8 +5,7 @@ import TourList1 from "@/components/tours/TourList1";
 import { useEffect, useState } from "react";
 import { message } from "antd";
 import { viewUpcomingActivities, getAdvertiserActivities, getAllActivities } from "@/api/ActivityService";
-import AdvertiserActivities from "@/components/activity/AdvertiserActivities";
-import { getAdminActivities, flagActivity } from "@/api/AdminService";
+import { getAdminActivities } from "@/api/AdminService";
 import { getUserData } from "@/api/UserService";
 
 import MetaComponent from "@/components/common/MetaComponent";
@@ -40,25 +39,17 @@ export default function TourListPage1() {
 
   useEffect(() => {
     const fetchActivities = async () => {
-      try {
-        let response;
-        if (userRole === 'Advertiser') {
-          response = await getAdvertiserActivities();
-        } else if (userRole === 'Tourist') {
-          response = await viewUpcomingActivities();
-        } else if (userRole === 'Admin') {
-          response = await getAdminActivities();
-        }
-        else { response = await getAllActivities(); }
-        const activitiesData = Array.isArray(response?.data) ? response?.data : [];
-        setActivities(activitiesData);
-        // setFilteredActivities(activitiesData);
-      } catch (err) {
-        const errorMessage = err?.response?.data?.error || err?.message || "Error fetching activities";
-        // setError(errorMessage);
-      } finally {
-        // setLoading(false);
+      let response;
+      if (userRole === 'Advertiser') {
+        response = await getAdvertiserActivities();
+      } else if (userRole === 'Tourist') {
+        response = await viewUpcomingActivities();
+      } else if (userRole === 'Admin') {
+        response = await getAdminActivities();
       }
+      else { response = await getAllActivities(); }
+      const activitiesData = Array.isArray(response?.data) ? response?.data : [];
+      setActivities(activitiesData);
     };
     fetchActivities();
   });

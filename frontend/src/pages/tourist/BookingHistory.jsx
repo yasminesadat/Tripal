@@ -20,8 +20,8 @@ export default function DbBooking() {
   //#region use state and variables
   const tabs = ["Flights", "Hotels", "Activities", "Itineraries"];
   const [currentTab, setCurrentTab] = useState("Flights");
-  const [bookedFlights, setBookedFlights] = useState([]); //stored flights
-  const [bookedHotels, setBookedHotels] = useState([]); // state to store bookedHotels
+  const [bookedFlights, setBookedFlights] = useState([]);
+  const [bookedHotels, setBookedHotels] = useState([]);
   const [bookedActivities, setBookedActivities] = useState([]);
   const [bookedItineraries, setBookedItineraries] = useState([]);
   const [currency, setCurrency] = useState("EGP");
@@ -192,22 +192,18 @@ export default function DbBooking() {
   };
 
   const fetchBookedItineraries = async () => {
-    try {
-      const response = await getTouristItineraries();
-      if (response.length === 0) {
-        setBookedItineraries([]);
-        console.log("No booked itineraries found.");
-        return;
-      }
-      const sortedItineraries = response.sort((a, b) => {
-        const dateA = new Date(a.startDate);
-        const dateB = new Date(b.startDate);
-        return dateB - dateA;
-      });
-      setBookedItineraries(sortedItineraries);
-    } catch (error) {
-      console.error("Error fetching booked itineraries", error);
+    const response = await getTouristItineraries();
+    if (response.length === 0) {
+      setBookedItineraries([]);
+      console.log("No booked itineraries found.");
+      return;
     }
+    const sortedItineraries = response.sort((a, b) => {
+      const dateA = new Date(a.startDate);
+      const dateB = new Date(b.startDate);
+      return dateB - dateA;
+    });
+    setBookedItineraries(sortedItineraries);
   };
 
   useEffect(() => {
@@ -216,12 +212,8 @@ export default function DbBooking() {
   }, []);
 
   const fetchExchangeRate = async (curr) => {
-    try {
-      const rate = await getConversionRate(curr);
-      setExchangeRate(rate);
-    } catch (error) {
-      console.error("Failed to fetch exchange rate:", error);
-    }
+    const rate = await getConversionRate(curr);
+    setExchangeRate(rate);
   };
 
   const getFlightStatus = (arrivalTime) => {
@@ -272,10 +264,8 @@ export default function DbBooking() {
       const response = await cancelResource(resourceType, resourceId);
       const touristWallet = await getWalletAndTotalPoints();
 
-      // First close the confirmation modal
       setModalVisible(false);
 
-      // Update the lists
       if (resourceType === "activity") {
         setBookedActivities((prev) =>
           prev.filter((activity) => activity._id !== resourceId)
@@ -286,14 +276,12 @@ export default function DbBooking() {
         );
       }
 
-      // Then show the refund details modal
       setRefundDetails({
         amount: response.refunded,
         walletBalance: touristWallet.wallet.amount,
       });
       setIsRefundModalVisible(true);
 
-      // Show success message
       message.success(
         `${resourceType === "activity" ? "Activity" : "Itinerary"
         } reservation is canceled successfully.`
@@ -361,7 +349,6 @@ export default function DbBooking() {
                       </div>
 
                       <div className="tabs__content js-tabs-content">
-                        {/* Flights Tab */}
                         {currentTab === "Flights" && (
                           <div className="tabs__pane -tab-item-1 is-tab-el-active">
                             <div className="overflowAuto">
@@ -376,7 +363,6 @@ export default function DbBooking() {
                                     <th>Departure Time</th>
                                     <th>Arrival Time</th>
                                     <th>Status</th>
-                                    {/* <th>Action</th> */}
                                   </tr>
                                 </thead>
 
@@ -413,18 +399,6 @@ export default function DbBooking() {
                                           {getFlightStatus(flight.arrivalTime)}
                                         </div>
                                       </td>
-                                      {/* <td>
-                                          <div className="d-flex items-center">
-                                          <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                              <i className="icon-pencil text-14"></i>
-                                          </button>
-                                          {getFlightStatus(flight.arrivalTime) === "Flight Upcoming" && (
-                                              <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                              <i className="icon-delete text-14"></i>
-                                              </button>
-                                          )}
-                                          </div>
-                                      </td> */}
                                     </tr>
                                   ))}
                                 </tbody>
@@ -438,7 +412,6 @@ export default function DbBooking() {
                           </div>
                         )}
 
-                        {/* Hotels Tab */}
                         {currentTab === "Hotels" && (
                           <div className="tabs__pane -tab-item-2 is-tab-el-active">
                             <div className="overflowAuto">
@@ -451,7 +424,6 @@ export default function DbBooking() {
                                     <th>Check-out Date</th>
                                     <th>Total Price</th>
                                     <th>Status</th>
-                                    {/* <th>Action</th> */}
                                   </tr>
                                 </thead>
 
@@ -472,7 +444,6 @@ export default function DbBooking() {
                                           "M/d/yyyy, h:mm:ss a"
                                         )}
                                       </td>
-                                      {/* <td>{hotel.pricing} EGP</td> */}
                                       <td>
                                         {convertPrice(hotel.pricing)} {currency}
                                       </td>
@@ -487,16 +458,6 @@ export default function DbBooking() {
                                           {getHotelStatus(hotel.checkOut)}
                                         </div>
                                       </td>
-                                      {/* <td>
-                                          <div className="d-flex items-center">
-                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center">
-                                              <i className="icon-pencil text-14"></i>
-                                            </button>
-                                            <button className="button -dark-1 size-35 bg-light-1 rounded-full flex-center ml-10">
-                                              <i className="icon-delete text-14"></i>
-                                            </button>
-                                          </div>
-                                        </td> */}
                                     </tr>
                                   ))}
                                 </tbody>
@@ -510,7 +471,6 @@ export default function DbBooking() {
                           </div>
                         )}
 
-                        {/* Activities Tab */}
                         {currentTab === "Activities" && (
                           <div className="tabs__pane -tab-item-1 is-tab-el-active">
                             <div className="overflowAuto">
@@ -614,7 +574,6 @@ export default function DbBooking() {
                           </div>
                         )}
 
-                        {/* Itineraries Tab */}
                         {currentTab === "Itineraries" && (
                           <div className="tabs__pane -tab-item-1 is-tab-el-active">
                             <div className="overflowAuto">
