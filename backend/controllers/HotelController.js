@@ -8,61 +8,61 @@ const amadeus = new Amadeus({
   });
   
 
-  const getCityCode= async(req,res)=>{
-    const searchinfo=req.query.searchinfo;
-    try{
-      const response = await amadeus.referenceData.locations.cities.get({
-        keyword: searchinfo,
-        max:12
-      });
-      res.json(response.data);
-    }
-    catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+const getCityCode= async(req,res)=>{
+  const searchinfo=req.query.searchinfo;
+  try{
+    const response = await amadeus.referenceData.locations.cities.get({
+      keyword: searchinfo,
+      max:12
+    });
+    res.json(response.data);
   }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
-  const searchHotels= async (req, res) => {
-  const cityCode = req.query.cityCode;
-    try {
-      const response = await amadeus.referenceData.locations.hotels.byCity.get({
-        cityCode, 
-      });
-      res.json(response.data);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }; 
+const searchHotels= async (req, res) => {
+const cityCode = req.query.cityCode;
+  try {
+    const response = await amadeus.referenceData.locations.hotels.byCity.get({
+      cityCode, 
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}; 
 
-  const getHotelDetails= async(req,res)=>{
-    const hotelIds= req.query.hotelID;
-    try {
-      const response = await amadeus.eReputation.hotelSentiments.get({
-        hotelIds,
-      });
-       
-      res.json(response.data);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }; 
+const getHotelDetails= async(req,res)=>{
+  const hotelIds= req.query.hotelID;
+  try {
+    const response = await amadeus.eReputation.hotelSentiments.get({
+      hotelIds,
+    });
+      
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}; 
 
-  const getHotelPrices= async(req,res)=>{
-    const {hotelIds,checkInDate,checkOutDate,adults,boardType}=req.query;
-    try{
-      const response = await amadeus.shopping.hotelOffersSearch.get({
-        hotelIds:hotelIds,
-        adults,
-        checkInDate,
-        checkOutDate,
-        boardType,
-       bestRateOnly:true,
-       currency:'EGP'
-      });
-      res.json(response.result);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+const getHotelPrices= async(req,res)=>{
+  const {hotelIds,checkInDate,checkOutDate,adults,boardType}=req.query;
+  try{
+    const response = await amadeus.shopping.hotelOffersSearch.get({
+      hotelIds:hotelIds,
+      adults,
+      checkInDate,
+      checkOutDate,
+      boardType,
+      bestRateOnly:true,
+      currency:'EGP'
+    });
+    res.json(response.result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
   const saveBooking = async (req, res) => {
@@ -120,7 +120,7 @@ const amadeus = new Amadeus({
                   name: `${hotelname} - ${cityCode}`,
                   description: `Hotel ID: ${hotelid} | ${checkIn} - ${checkOut}`,
                 },
-                unit_amount: Math.round (pricing * 100), // Convert to smallest currency unit (e.g., EGP cents)
+                unit_amount: Math.round (pricing * 100),
               },
               quantity: 1,
             },
@@ -163,8 +163,6 @@ const amadeus = new Amadeus({
   
       res.status(500).json({ error: error.message });
     }
-  
   };
-
 
 module.exports={searchHotels,getHotelDetails,getHotelPrices,getCityCode,saveBooking};

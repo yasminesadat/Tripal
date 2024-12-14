@@ -4,7 +4,7 @@ import { getAdvertiserActivities, getActivityById } from "../../api/ActivityServ
 import { message} from 'antd';
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import NotFoundPage from "../itinerary/itinerarySingle/Index";
+import NotFoundPage from "@/pages/pages/404";
 import Spinner from "../common/Spinner";
 
 const AdvertiserActivities = () => {

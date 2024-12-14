@@ -158,16 +158,6 @@ export default function AdvertiserActivityDetails() {
                       </div>
                     </div>
                   </div>
-                {/* <div className="line mt-60 mb-60"></div>
-
-              <h2 className="text-30">Customer Reviews</h2>
-
-              <div className="mt-30">
-                <Rating />
-              </div>
-
-              <ActivityReviews activityId={activityId} /> */}
-
               </div>
               <div>
               <ActivityBooking bookings={activity.bookings} price={activity.price}/>
@@ -194,7 +184,6 @@ export default function AdvertiserActivityDetails() {
         </section>
       </div>
       <FooterThree />
-
     </div>
   );
 }

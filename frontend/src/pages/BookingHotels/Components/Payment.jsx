@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { saveBooking } from "../../../api/HotelService";
 import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "@/pages/tourist/TransportationBooking";
@@ -10,33 +9,10 @@ import {Modal} from 'antd';
 import { AlertCircle } from 'lucide-react';
 import { getWalletAndTotalPoints } from "../../../api/TouristService";
 
-const styles = {
-    appcc: {
-        fontFamily: 'sans-serif',
-        textAlign: 'left',
-    },
-    formcc: {
-        margin: '30px auto 0',
-        maxWidth: '400px',
-    },
-    rowcc: {
-        marginBottom: '15px',
-    },
-    button: {
-        padding: '10px 20px',
-        backgroundColor: '#007bff',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-    },
-};
-
 const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singlePrice, doublePrice, triplePrice, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
     const [paymentMethod, setPaymentMethod] = useState("wallet");
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
-    const [isBooked, setBooked] = useState(false);
     const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
     const [isWalletInfoModalVisible, setIsWalletInfoModalVisible] = useState(false);
     const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0);

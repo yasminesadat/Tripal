@@ -49,7 +49,7 @@ export default function HelpCenterPage() {
         return <SellerHeader />;
       case "Advertiser":
         return <AdvertiserHeader />;
-      case "TourGuide":
+      case "Tour Guide":
         return <TourGuideHeader />;
       case "Tourism Governor":
         return <GovernorHeader />;

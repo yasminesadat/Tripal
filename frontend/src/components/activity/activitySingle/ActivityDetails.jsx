@@ -7,7 +7,7 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
-import NotFoundPage from "@/components/itinerary/itinerarySingle/Index";
+import NotFoundPage from "@/pages/pages/404";
 
 export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
