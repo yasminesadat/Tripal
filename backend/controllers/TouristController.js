@@ -14,7 +14,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
 const Tourist = require("../models/users/Tourist");
 
-cron.schedule('43 00 * * *', async () => {
+cron.schedule('00 00 * * *', async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -465,10 +465,10 @@ const bookmarkEvent = async (req, res) => {
     }
 
     const bookmarkArray = eventType === 'activity' ? 'bookmarkedActivities' : 'bookmarkedItineraries';
-    if (!tourist[bookmarkArray].includes(eventId)) { 
+    if (!tourist[bookmarkArray].includes(eventId)) {
       tourist[bookmarkArray].push(eventId);
       await tourist.save();
-    }                           
+    }
     if (!event.bookmarked.includes(touristId)) {
       event.bookmarked.push(touristId);
       await event.save();
@@ -495,7 +495,7 @@ const getBookmarkedEvents = async (req, res) => {
     const bookmarkedEvents = [
       ...tourist.bookmarkedActivities.map(activity => ({
         ...activity.toObject(),
-        type: "activity"                   
+        type: "activity"
       })),
       ...tourist.bookmarkedItineraries.map(itinerary => ({
         ...itinerary.toObject(),
@@ -580,7 +580,7 @@ const removeFromWishList = async (req, res) => {
 const getRandomPromoCode = async (req, res) => {
   try {
     const randomPromoCode = await PromoCode.aggregate([
-      { $sample: { size: 1 } } 
+      { $sample: { size: 1 } }
     ]);
 
 
@@ -720,7 +720,7 @@ const saveFlightBooking = async (req, res) => {
           product_data: {
             name: `Your Flight Number: ${flight.flightNumber}`,
           },
-          unit_amount: Math.round(parseFloat(flight.price) * 100),  
+          unit_amount: Math.round(parseFloat(flight.price) * 100),
         },
         quantity: 1,
       }));
@@ -974,8 +974,8 @@ const updateQuantity = asyncHandler(async (req, res) => {
     }
 
     const productInCart = tourist.cart[cartIndex];
-    const availableStock = productInCart.product.quantity; 
-    
+    const availableStock = productInCart.product.quantity;
+
     if (quantity > productInCart.quantity && quantity > availableStock) {
       return res.status(400).json({
         message: `No more of this product in stock. Only ${availableStock} available.`,
@@ -1001,7 +1001,7 @@ const updateQuantity = asyncHandler(async (req, res) => {
 
 
 
-const checkStock = asyncHandler(async (req, res) => { 
+const checkStock = asyncHandler(async (req, res) => {
   const { cart } = req.body;
 
   if (!cart || cart.length === 0) {
