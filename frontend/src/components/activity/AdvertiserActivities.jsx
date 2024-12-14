@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 import { getAdvertiserActivities, getActivityById } from "../../api/ActivityService";
 import { message} from 'antd';
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
-
 import FooterThree from "@/components/layout/footers/FooterThree";
-
-
+import NotFoundPage from "../itinerary/itinerarySingle/Index";
+import Spinner from "../common/Spinner";
 
 const AdvertiserActivities = () => {
   const [activities, setActivities] = useState([]);
@@ -29,10 +28,8 @@ const AdvertiserActivities = () => {
     fetchActivities();
   }, []);
 
- 
-  
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
+  if (loading) return <div><Spinner></Spinner></div>;
+  if (error) return <div><NotFoundPage/>{error}</div>;
 
   return (
     <div className="advertiser-activities-page">
@@ -55,7 +52,6 @@ const AdvertiserActivities = () => {
                       justifyContent: "space-between",
                     }}>
             <div className="col">
-              
                 <div className="text-18 lh-15 fw-500 mt-5">{activity.title}</div>
                 <div className="d-flex items-center" style={{ maxWidth: '400px', }}> <i className="icon-pin mr-5"></i> {activity.location}</div>
                 <div className="text-right md:text-left">
@@ -66,7 +62,6 @@ const AdvertiserActivities = () => {
               
             </div>
             </div>
-           
                 <button
                  className="button -md -dark-1 bg-accent-1 text-white"
                  style={{
@@ -75,7 +70,6 @@ const AdvertiserActivities = () => {
                 }}
                  onClick={async () => {
                     try {
-                      // Fetch the full activity details
                       const id=activity._id;
                       const response = await getActivityById(id);
                       console.log(response)
@@ -89,21 +83,16 @@ const AdvertiserActivities = () => {
                 >
                   View More
                   <i className="icon-arrow-top-right text-16 ml-10"></i>
-
-                </button>
-              
+                </button>      
           </div>
           </div>
         ))}
       </div>
-
     </div>
     </div>
     </div>
     <FooterThree />
-
     </div>
   );
 };
-
 export default AdvertiserActivities;

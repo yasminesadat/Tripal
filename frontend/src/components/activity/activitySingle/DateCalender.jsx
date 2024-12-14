@@ -1,4 +1,5 @@
-import DatePicker, { Calendar } from "react-multi-date-picker";
+import  { Calendar } from "react-multi-date-picker";
+
 export default function DateCalender() {
   return (
     <>

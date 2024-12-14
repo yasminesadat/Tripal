@@ -1,8 +1,5 @@
 import { destinationsNine } from "@/data/destinations";
 
-import { Link } from "react-router-dom";
-import React from "react";
-
 export default function TourTypesTwo() {
   return (
     <section className="layout-pt-xl">
