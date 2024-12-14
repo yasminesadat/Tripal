@@ -22,8 +22,6 @@ const FlightResults = () => {
   const [currency, setCurrency] = useState('EGP');
   const [exchangeRate, setExchangeRate] = useState(1);
   const [touristAge, setTouristAge] = useState(0);
-  //const [selectedClass, setSelectedClass] = useState('economy');
-
 
   const getExchangeRate = async () => {
     if (currency) {
@@ -123,7 +121,6 @@ const FlightResults = () => {
     return (price * exchangeRate).toFixed(2);
   };
 
-  // Mock data for amenities based on selected class
   const classAmenities = {
     economy: [
       { icon: <Plane size={18} />, label: 'Wi-Fi' },

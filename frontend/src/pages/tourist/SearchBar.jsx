@@ -136,7 +136,7 @@ export default function FlightsList() {
 
   const handlePassengerSelect = (count) => {
     setPassengers(count);
-    setShowPassengersDropdown(false); // Close the dropdown after selection
+    setShowPassengersDropdown(false);
   };
 
   const handleSearch = async () => {
@@ -164,7 +164,7 @@ export default function FlightsList() {
       });
       sessionStorage.setItem('flightSearchParams', JSON.stringify(queryParams));
 
-    const urlParams = new URLSearchParams({
+    new URLSearchParams({
       originLocationCode,
       destinationLocationCode,
       departureDate,
@@ -522,7 +522,7 @@ export default function FlightsList() {
               className={`select-button ${tripType === 'oneWay' ? 'active' : ''}`}
               onClick={() => {
                 setTripType('oneWay');
-                setReturnDate(''); // Clear return date when selecting one-way trip
+                setReturnDate(''); 
               }}
             >
               <ArrowRight size={16} />
@@ -544,7 +544,6 @@ export default function FlightsList() {
           </ul>
         )}
 
-        {/* Cabin Dropdown */}
         <button className="select-button" onClick={() => setShowCabinDropdown(!showCabinDropdown)}>
         {cabinOptions.find(option => option.value === cabinType)?.label}
         <ChevronDown size={16} />

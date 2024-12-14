@@ -7,7 +7,7 @@ import { dataDisplayCustomizations } from './customizations/dataDisplay';
 import { feedbackCustomizations } from './customizations/feedback';
 import { navigationCustomizations } from './customizations/navigation';
 import { surfacesCustomizations } from './customizations/surfaces';
-import { colorSchemes, typography, shadows, shape } from './themePrimitives';
+import { typography, shadows, shape } from './themePrimitives';
 
 function AppTheme({ children, disableCustomTheme, themeComponents }) {
   const theme = React.useMemo(() => {
@@ -191,9 +191,6 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
 
 AppTheme.propTypes = {
   children: PropTypes.node,
-  /**
-   * This is for the docs site. You can ignore it or remove it.
-   */
   disableCustomTheme: PropTypes.bool,
   themeComponents: PropTypes.object,
 };

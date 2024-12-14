@@ -1,8 +1,7 @@
-import React from 'react';
 import { Modal } from 'antd';
 import { CheckCircleFilled, DollarOutlined, WalletOutlined } from '@ant-design/icons';
 
-const RefundToast = ({ amount, resourceType, walletBalance, visible, onClose }) => {
+const RefundToast = ({ amount, walletBalance, visible, onClose }) => {
     return (
         <Modal
             title={
@@ -19,10 +18,10 @@ const RefundToast = ({ amount, resourceType, walletBalance, visible, onClose }) 
                     borderBottom: 'none',
                 },
                 mask: {
-                    backgroundColor: 'rgba(17, 48, 42, 0.5)', // dark-green with opacity
+                    backgroundColor: 'rgba(17, 48, 42, 0.5)',
                 },
                 content: {
-                    boxShadow: '0 4px 12px rgba(143, 87, 116, 0.15)', // dark-purple with opacity
+                    boxShadow: '0 4px 12px rgba(143, 87, 116, 0.15)',
                 }
             }}
         >

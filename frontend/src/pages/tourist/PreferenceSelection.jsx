@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTags } from "../../api/PreferenceTagService";
 import { CloseOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,7 +24,6 @@ export default function PreferenceSelection() {
           setTags([]);
         }
       } catch (error) {
-        console.error("Error fetching tags:", error);
         setTags([]);
       }
     };
@@ -55,7 +54,6 @@ export default function PreferenceSelection() {
     try {
       const body = { tags: selectedTags };
       await updateTouristInformation(body);
-      console.log("Preferences saved successfully!");
       navigate(`/tourist/select-categories`);
     } catch (error) {
       console.error("Error saving preferences:", error);
@@ -98,12 +96,12 @@ export default function PreferenceSelection() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#374971', // Background color
-    color: 'white', // Text color
+    backgroundColor: '#374971',
+    color: 'white',
     borderRadius: '20px',
     padding: '5px 10px',
-    fontSize: '14px', // Font size
-    position: 'relative', // For positioning the close icon
+    fontSize: '14px',
+    position: 'relative',
   };
 
   const closeIconStyle = {

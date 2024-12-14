@@ -27,7 +27,7 @@ const ActivityDetailsPage = () => {
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [selectedCurrency, setSelectedCurrency] = useState("EGP");  // For currency state
+  const selectedCurrency="EGP";
   const refActivityBook = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -193,7 +193,7 @@ const ActivityDetailsPage = () => {
             />
             <ActivityDetails
               activity={activity}
-              selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+              selectedCurrency={selectedCurrency}
               userRole={userRole}
               refActivityBook={refActivityBook}
             />
@@ -215,7 +215,7 @@ const ActivityDetailsPage = () => {
               />
               <ActivityDetails
                 activity={activity}
-                selectedCurrency={selectedCurrency}  // Pass selectedCurrency
+                selectedCurrency={selectedCurrency}
                 userRole={userRole}
               />
               <div className="text-center pt-30">
@@ -232,12 +232,10 @@ const ActivityDetailsPage = () => {
             <PageHeader
               activityId={activityId}
               activityTitle={activity.title}
-              tourist={"ana t3ebt"}
             />
             <ActivityDetails
               activity={activity}
               selectedCurrency={selectedCurrency} 
-            
               userRole={userRole}
               refActivityBook={refActivityBook}
             />
