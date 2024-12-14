@@ -1,6 +1,4 @@
 import { clients } from "@/data/clients";
-
-import React from "react";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 

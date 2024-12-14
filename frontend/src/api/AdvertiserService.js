@@ -8,6 +8,7 @@ export async function createAdvertiser(newUser) {
     throw new Error(error.response?.data?.message || "An error occurred while creating the advertiser.");
   }
 }
+
 export async function getAdvertiser() {
   try {
     const response = await axios.get(`/advertiser`);
@@ -18,6 +19,7 @@ export async function getAdvertiser() {
     throw error;
   }
 }
+
 export async function changeAdvertiserPassword(oldPassword, newPassword) {
   try {
     const body = {
@@ -32,6 +34,7 @@ export async function changeAdvertiserPassword(oldPassword, newPassword) {
     throw error;
   }
 }
+
 export async function updateAdvertiser(updatedUser) {
   try {
     const response = await axios.put(`/advertiser`, updatedUser);
@@ -50,7 +53,6 @@ export const getNotifications = async () => {
     throw error;
   }
 };
-
 
 export const deleteNotifications = async (id) => {
   try {

@@ -3,7 +3,6 @@ import { Bell} from 'lucide-react';
 import { format } from 'date-fns';
 import { markNotification, getNotifications } from "@/api/AdvertiserService";
 
-
 const AdvertiserNotification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -18,7 +17,6 @@ const AdvertiserNotification = () => {
             const notifications = await getNotifications();
             if (notifications){
            await markNotification();
-            // Sort notifications by date in descending order (most recent first)
             const sortedNotifications = [...notifications].sort((a, b) =>
                 new Date(b.createdAt) - new Date(a.createdAt)
             );
@@ -31,31 +29,24 @@ const AdvertiserNotification = () => {
         }
         setLoading(false);
     };
-
-
-
  
     useEffect(() => {
             fetchNotifications();     
     }, [isOpen]);
-
-
- 
-
     return (
         <div className="relative">
-            <style jsx>{`
-     .notification-panel {
-  box-shadow: 0 15px 35px rgba(143, 87, 116, 0.15);
-  transform: translateX(-230px) translateY(20px); /* Slide in from left and down */
-  opacity: 1; /* Make it fully visible */
-  width: 320px !important;
-  max-height: 70vh;
-background: var(--color-footer);
-background-color: var(--color-footer);
+            <style>{`
+        .notification-panel {
+        box-shadow: 0 15px 35px rgba(143, 87, 116, 0.15);
+        transform: translateX(-230px) translateY(20px); /* Slide in from left and down */
+        opacity: 1; /* Make it fully visible */
+        width: 320px !important;
+        max-height: 70vh;
+        background: var(--color-footer);
+        background-color: var(--color-footer);
 
-color: var(--color-stone);
-}
+        color: var(--color-stone);
+        }
 
                .notification-badge {
                    animation: pulse 2s infinite;
@@ -166,15 +157,6 @@ color: var(--color-stone);
                                                         <span className="text-[9px] text-[#5a9ea0]">
                                                             {format(new Date(notification.createdAt), 'h:mm a')}
                                                         </span>
-                                                        {/* <span
-                                                            className="text-[9px] bg-[#e0829d] text-black px-1.5 py-0.5 rounded-full cursor-pointer"
-                                                            onClick={() => {
-                                                                // Mark the notification as read
-                                                                setNotification({ ...notification, read: true });
-                                                            }}
-                                                        >
-                                                            Mark as Read
-                                                        </span> */}
                                                     </div>
                                                 </div>
                                             </div>

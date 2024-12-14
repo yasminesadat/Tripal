@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -31,7 +31,7 @@ const LocationMap = ({
       click(e) {
         const { lat, lng } = e.latlng;
         setMarkerPosition([lat, lng]);
-        setSelectedLocation(`${lat}, ${lng}`); // Save coordinates when clicking on the map
+        setSelectedLocation(`${lat}, ${lng}`);
       },
     });
 
@@ -51,7 +51,7 @@ const LocationMap = ({
       const searchControl = new GeoSearchControl({
         provider,
         style: "bar",
-        showMarker: false, // Disable default marker
+        showMarker: false,
         showPopup: false,
         marker: {
           icon: new L.Icon.Default(),
@@ -68,11 +68,10 @@ const LocationMap = ({
 
       map.addControl(searchControl);
 
-      // Event listener for when a location is selected from the search
       map.on("geosearch/showlocation", (result) => {
         const { x, y, label } = result.location;
         setMarkerPosition([y, x]);
-        setSelectedLocation(label); // Save the readable place name when searching
+        setSelectedLocation(label);
       });
 
       return () => map.removeControl(searchControl);

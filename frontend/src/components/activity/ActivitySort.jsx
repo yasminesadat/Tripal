@@ -1,5 +1,3 @@
-import React from "react";
-
 const ActivitySort = ({ onSort }) => {
   const handleSortChange = (e) => {
     const [field, order] = e.target.value.split("-");

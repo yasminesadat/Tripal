@@ -1,5 +1,7 @@
 import { axios } from "./axios";
+
 const tagsPath = '/typetags';
+
 export async function getAllTypeTags() {
   try {
     const response = await axios.get(tagsPath);
@@ -17,9 +19,7 @@ export const CreateNewTypeTag = async (data) => {
   } catch (err) {
     throw err;
   }
-
 }
-
 
 export const getTypeTagDetails = (id) => {
   axios.get(tagsPath + `/${id}`)

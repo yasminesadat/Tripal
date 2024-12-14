@@ -7,6 +7,7 @@ import { checkTouristPromoCode } from "@/api/TouristService";
 import { loadStripe } from "@stripe/stripe-js";
 import { getWalletAndTotalPoints } from "@/api/TouristService";
 import { AlertCircle } from 'lucide-react';
+
 export default function TourSingleSidebar({ itinerary, activity, refActivityBook, refItineraryBook }) {
   const [userRole, setUserRole] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(1);
@@ -140,12 +141,9 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
 
       const updatedData = await getWalletAndTotalPoints();
       setUpdatedWalletInfo(updatedData.wallet);
-        setTotalPoints(updatedData.currentPoints);
+      setTotalPoints(updatedData.currentPoints);
 
-    showWalletInfoModal();
-      //showWalletInfoModal();
-      
-      
+      showWalletInfoModal();     
       message.success(response.message);
     } catch (error) {
       console.error("Booking error:", error);
@@ -193,56 +191,6 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
               </div>
             </div>
           </div>
-
-          {/* <h5 className="text-18 fw-500 mb-20 mt-20">Add Extra</h5> */}
-
-          {/* <div className="d-flex items-center justify-between">
-        <div className="d-flex items-center">
-          <div className="form-checkbox">
-            <input
-              checked={isExtraService ? true : false}
-              onChange={() => setisExtraService((pre) => !pre)}
-              type="checkbox"
-            />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon">
-                <img src="/img/icons/check.svg" alt="icon" />
-              </div>
-            </div>
-          </div>
-          <div className="ml-10">Add Service per booking</div>
-        </div>
-
-        <div className="text-14">$40</div>
-      </div> */}
-
-          {/* <div className="d-flex justify-between mt-20">
-        <div className="d-flex">
-          <div className="form-checkbox mt-5">
-            <input
-              checked={isServicePerPerson ? true : false}
-              onChange={() => setIsServicePerPerson((pre) => !pre)}
-              type="checkbox"
-            />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon">
-                <img src="/img/icons/check.svg" alt="icon" />
-              </div>
-            </div>
-          </div>
-
-          <div className="ml-10">
-            Add Service per person
-            <div className="lh-16">
-              Adult: <span className="fw-500">$17.00</span> - Youth:{" "}
-              <span className="fw-500">$14.00</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-14">$40</div>
-      </div> */}
-
           <div className="line mt-20 mb-20" />
                 <h5 className="text-18 fw-500 mb-20">Select Payment Method</h5>
             <div className="d-flex items-center justify-between">
@@ -290,12 +238,7 @@ export default function TourSingleSidebar({ itinerary, activity, refActivityBook
             Book Now
             <i className="icon-arrow-top-right ml-10"></i>
           </button>
-
-
-
-
         </div>
-
         <div className="bg-white rounded-12 shadow-2 py-30 px-30 md:py-20 md:px-20 mt-30">
           <h2 className="text-20 fw-500">Do you have a promo code?</h2>
 

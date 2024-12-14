@@ -149,9 +149,7 @@ export default function TouristHome() {
 
   return (
     <>
-      <style jsx global>{`
-        /* Base style for all dots */
-        /* Try multiple selectors and approaches */
+      <style>{`
         .ant-tour .ant-tour-indicators > span {
           width: 8px !important;
           height: 8px !important;
@@ -162,7 +160,6 @@ export default function TouristHome() {
           background: #036264 !important;
         }
 
-        /* Additional specificity */
         .ant-tour-indicators span[role="dot"][aria-current="true"] {
           background: #036264 !important;
         }

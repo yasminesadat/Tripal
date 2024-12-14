@@ -13,6 +13,10 @@ import RegisterPage from "../pages/pages/register";
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
+<<<<<<< HEAD
+=======
+  {path: "/guest/hotelList/:cityCode/:dates1/:dates2",element: <TourList1 />,},
+>>>>>>> develop
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces /> },
