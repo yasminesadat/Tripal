@@ -138,10 +138,11 @@ const getUserData = async (req, res) => {
 const logoutUser = (req, res) => {
   try {
     const isProduction = process.env.NODE_ENV === 'production';
+
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'None',  // Capitalized to match login
       path: '/',
       domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost'
     });
