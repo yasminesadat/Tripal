@@ -38,11 +38,8 @@ export default function ActivitiesList({
     "/img/activities/horse.jpg",
     "/img/activities/blue.jpg"
   ];
-
-
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState(activities);
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [ratingFilter, setRatingFilter] = useState([]);
@@ -94,7 +91,7 @@ export default function ActivitiesList({
 
   //#region useEffect
   useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 when filteredActivities change
+    setCurrentPage(1);
   }, [filteredActivities]);
 
   useEffect(() => {
@@ -134,7 +131,7 @@ export default function ActivitiesList({
         const activitiesData = Array.isArray(response?.data)
           ? response?.data.map((activity, index) => ({
             ...activity,
-            imageIndex: index % imageSources.length // This ensures we don't go past array bounds
+            imageIndex: index % imageSources.length
           }))
           : [];
         setActivities(activitiesData);

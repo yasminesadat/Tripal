@@ -50,14 +50,11 @@ const ChangePassword = ({ id, userType }) => {
         <div
             className="signUpUsersForm-container"
             style={{
-                // backgroundColor: '#f2dce4',
                 padding: '3rem',
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                // backgroundImage: 'linear-gradient(45deg, #f2dce4 25%, #dac4d0 25%, #dac4d0 50%, #f2dce4 50%, #f2dce4 75%, #dac4d0 75%, #dac4d0 100%)',
-                // backgroundSize: '56.57px 56.57px'
             }}
         >
             <div style={{

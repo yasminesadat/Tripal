@@ -5,13 +5,8 @@ import { deleteNotifications, getNotifications, markNotification } from "@/api/A
 
 export default function AdvertiserNotification() {
 
-  
-  
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-
-  // Sample notifications data
   const [notifications, setNotifications] = useState([]);
-
   const fetchNotifications = async () => {
     try {
       const response = await getNotifications();
@@ -30,12 +25,7 @@ export default function AdvertiserNotification() {
     fetchNotifications();
   }, []);
 
-  // Count unread notifications
   const unreadCount = notifications.filter((n) => !n.read).length;
-
-
-  
-  // Notification handling methods
   const handleNotificationRead = async(id) => {
     try{
     setNotifications(
@@ -43,7 +33,7 @@ export default function AdvertiserNotification() {
         n.id === id ? { ...n, read: true } : n
       )
     );
-    const response= await markNotification(id);
+    await markNotification(id);
   }
   catch(error){
     message.error(error);
@@ -53,18 +43,13 @@ export default function AdvertiserNotification() {
   const handleNotificationRemove = async(id) => {
     try{
      setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
-     const response= await deleteNotifications(id);
-
+     await deleteNotifications(id);
         } catch(error){
           message.error(error);
-            }
+        }
   };
-
-
   return (
     <>
-     
-
             {/* Notifications Button */}
             <div className="relative ml-30">
               <button onClick={() => setNotificationsOpen(!notificationsOpen)} className="d-flex">
@@ -115,9 +100,6 @@ export default function AdvertiserNotification() {
     </div>
   )}
 </div>
-
-  
-
       <style>{`
         .button.hovered {
           background-color: var(--color-dark-1) !important;
@@ -233,7 +215,6 @@ export default function AdvertiserNotification() {
 .check-x-container .cursor-pointer:hover {
   color:var(--color-light-purple); /* Color for x mark */
 }
-
       `}</style>
     </>
   );

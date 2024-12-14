@@ -87,7 +87,6 @@ export default function Profile() {
         const user = await getUserData();
         setUserData(user.data.id);
         setUserRole(user.data.role);
-        console.log("id is ", user.data.id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -158,13 +157,6 @@ export default function Profile() {
         message.error("Passwords don't match");
         return;
       }
-
-      console.log("user", userData);
-      console.log(
-        "old pass, new pass",
-        PasswordForm.oldPassword,
-        PasswordForm.newPassword
-      );
       await changeTouristPassword(
         PasswordForm.oldPassword,
         PasswordForm.newPassword
@@ -177,6 +169,7 @@ export default function Profile() {
       console.error("Password change error:", error);
     }
   };
+  
   const handleEditClick = async () => {
     try {
       await updateTouristInformation(editedProfile);

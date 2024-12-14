@@ -7,6 +7,7 @@ import Gallery1 from "./Gallery1";
 import ReviewBox from "../../common/ReviewBox";
 import ActivityReviews from "./ActivityReviews";
 import LocationMap from "../../common/MapComponent";
+import NotFoundPage from "@/components/itinerary/itinerarySingle/Index";
 
 export default function ActivityDetails({ activity, userRole, refActivityBook }) {
 
@@ -17,7 +18,7 @@ export default function ActivityDetails({ activity, userRole, refActivityBook })
   const activityId = activity._id;  
   //#endregion
 
-  if (!activity) return <div><Index /></div>;
+  if (!activity) return <div><NotFoundPage/></div>;
 
   return (
     <>
