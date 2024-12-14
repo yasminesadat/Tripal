@@ -1,12 +1,15 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { EditOutlined } from "@ant-design/icons";
-import { message } from "antd"; 
+import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { archiveProduct, unArchiveProduct } from '../../api/ProductService';
 import { saveProduct } from "@/api/TouristService";
 import Stars from "../common/Stars";
-import { getConversionRate,getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getUserData } from "@/api/UserService";
+import { getWishList } from "@/api/TouristService";
+import WishList from "../tourist/WishList";
+import Spinner from "../common/Spinner";
 
 const ProductCard = ({
   id,
@@ -21,15 +24,18 @@ const ProductCard = ({
   isArchived,
   sales,
   userRole,
-  userId, 
+  userId,
   refProductDetails
 }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [wishlist, setWishlist] = useState([]);
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
   const [isSaved, setIsSaved] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
   const handleCardClick = () => {
-    console.log("seller name: ",seller);
+    console.log("seller name: ", seller);
     navigate(`product/${id}`, {
       state: {
         id,
@@ -47,11 +53,31 @@ const ProductCard = ({
       },
     });
   };
+  useEffect(() => {
 
-  
+    setIsInWishlist(wishlist.some(product => product._id === id))
+
+  }, [wishlist]);
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      try {
+        setLoading(true);
+
+        const data = await getWishList();
+        setWishlist(data);
+      } catch (error) {
+        console.error("Error fetching wishlist", error);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+    fetchWishlist();
+  }, []);
+
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [currency, setCurrency] = useState( "EGP");
-  
+  const [currency, setCurrency] = useState("EGP");
+
   const getExchangeRate = async () => {
     if (currency) {
       try {
@@ -62,15 +88,15 @@ const ProductCard = ({
       }
     }
   };
-  
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const newCurrency = getTouristCurrency();
       setCurrency(newCurrency);
       getExchangeRate();
-    }, 1);  return () => clearInterval(intervalId);
+    }, 1); return () => clearInterval(intervalId);
   }, [currency]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,7 +105,7 @@ const ProductCard = ({
         console.error("Error fetching user data:", error);
       }
     };
-  
+
     fetchData();
   }, []);
   const handleEditClick = (e) => {
@@ -112,19 +138,19 @@ const ProductCard = ({
         console.error("Error archiving product:", error);
       }
     }
-    setNewIsArchived(!newIsArchived); 
+    setNewIsArchived(!newIsArchived);
   };
 
   const formattedDescription = (
     <div
       style={{
         display: "-webkit-box",
-        WebkitLineClamp: 3, 
+        WebkitLineClamp: 3,
         WebkitBoxOrient: "vertical",
         overflow: "hidden",
         textOverflow: "ellipsis",
         minHeight: "4.5em",
-        lineHeight: "1.5em", 
+        lineHeight: "1.5em",
       }}
     >
       {description}
@@ -136,9 +162,9 @@ const ProductCard = ({
     try {
       await saveProduct(id);
       message.success("Product added to wishlist!");
-      setIsSaved(true); 
+      setIsSaved(true);
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || "An unexpected error occurred";      
+      const errorMessage = error?.response?.data?.message || "An unexpected error occurred";
       message.warning(errorMessage);
     }
   };
@@ -157,17 +183,19 @@ const ProductCard = ({
           {userId === productSeller ? (
             <EditOutlined className="tourCard__favorite" key="edit" onClick={handleEditClick} />
           ) : userRole === "Tourist" ? (
-            <button className="tourCard__favorite" onClick={handleHeartClick}>
-              <i 
-                className={!isSaved ? "icon-heart" : ""}
-              />
-              <i>{ isSaved && "❤" }</i>
+
+            <button
+              className={`tourCard__favorite ${isInWishlist ? "saved" : ""}`}
+              onClick={handleHeartClick}
+            >
+              <i className={`icon-heart ${isSaved ? "icon-selected" : ""}`}></i>
             </button>
-          ) : [] }
+
+          ) : []}
         </div>
         <div className="tourCard__content px-10 pt-10">
-          <h3 className="tourCardName text-16 fw-500 mt-5">            
-            <span 
+          <h3 className="tourCardName text-16 fw-500 mt-5">
+            <span
               onClick={handleCardClick}
               style={{ cursor: 'pointer' }}
               ref={refProductDetails}
@@ -195,32 +223,32 @@ const ProductCard = ({
           >
             {userId === productSeller
               ? [
-                  <span
-                    key="archive"
-                    onClick={handleArchiveClick}
-                    style={{ cursor: "pointer" }}
-                    className="archive-text"
-                  >
-                    {newIsArchived ? "Unarchive" : "Archive"}
-                  </span>,
-                ]
+                <span
+                  key="archive"
+                  onClick={handleArchiveClick}
+                  style={{ cursor: "pointer" }}
+                  className="archive-text"
+                >
+                  {newIsArchived ? "Unarchive" : "Archive"}
+                </span>,
+              ]
               : [userRole === "Admin" && (
-                  <span
-                    onClick={handleArchiveClick}
-                    style={{
-                      cursor: "pointer",
-                      marginRight: "auto", 
-                    }}
-                    className="archive-text"
-                  >
-                    {newIsArchived ? "Unarchive" : "Archive"}
-                  </span>
-                )]
+                <span
+                  onClick={handleArchiveClick}
+                  style={{
+                    cursor: "pointer",
+                    marginRight: "auto",
+                  }}
+                  className="archive-text"
+                >
+                  {newIsArchived ? "Unarchive" : "Archive"}
+                </span>
+              )]
             }
-            <div style={{ marginLeft: "auto", textAlign: "right",cursor: 'default' }}>
+            <div style={{ marginLeft: "auto", textAlign: "right", cursor: 'default' }}>
               {userRole === "Tourist" ? (
-              <span className="text-16 fw-500">{currency} {(price*exchangeRate).toFixed(2)}</span>
-              ):(
+                <span className="text-16 fw-500">{currency} {(price * exchangeRate).toFixed(2)}</span>
+              ) : (
                 <span className="text-16 fw-500">EGP {(price).toFixed(2)}</span>
               )
               }
@@ -237,11 +265,36 @@ const ProductCard = ({
           background-size: 0px 1px;
           transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
           padding: 0.1% 0px;
-          }
+        }
 
         .tourCardName span:hover {
-         background-size: 100% 1px;
+          background-size: 100% 1px;
         }
+
+        .tourCard__favorite {
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: white;
+  }
+
+
+  .icon-heart {
+    font-size: 16px; /* Adjust as needed */
+    transition: color 0.3s ease;
+  }
+
+ 
+   
+  .tourCard.-type-1 .tourCard__favorite.saved{
+  color: white;
+  background-color: var(--color-dark-purple);
+}
+       
       `}</style>
     </div>
   );
