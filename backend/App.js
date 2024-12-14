@@ -22,6 +22,8 @@ app.use(cors({
   credentials: true
 }));
 
+
+// cors 
 //Route Imports
 const routes = require("./routes/index");
 app.use(express.urlencoded({ extended: true }));
