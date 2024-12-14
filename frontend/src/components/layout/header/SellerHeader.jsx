@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Menu from "../components/SellerMenu";
 import { profile } from "@/data/sellerMenu";
-
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { logout } from "@/api/UserService";
 import SellerNotification from "@/components/common/NotificationSeller";
+
 export default function SellerHeader() {
   const navigate = useNavigate();
 

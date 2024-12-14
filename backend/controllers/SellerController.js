@@ -92,8 +92,7 @@ const getSellerNotifications = async (req, res) => {
   try {
     const userid=req.userId;
     const seller = await Seller.findById(userid);
-    console.log("hi1")
-
+    
     if (!seller) {
       return res.status(404).json({ error: "Seller not found" });
     }

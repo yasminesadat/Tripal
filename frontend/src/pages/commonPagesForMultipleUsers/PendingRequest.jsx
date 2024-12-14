@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { Card, Timeline } from 'antd';
 import { CheckCircleOutlined, SyncOutlined, ClockCircleOutlined } from '@ant-design/icons';
@@ -7,8 +6,6 @@ import GuestHeader from "@/components/layout/header/GuestHeader";
 import MetaComponent from "@/components/common/MetaComponent";
 const PendingPage = () => {
     const location = useLocation();
-
-
     const metadata = {
         title: 'Request Processing | Tripal',
         description: 'Your application is being reviewed by our team'

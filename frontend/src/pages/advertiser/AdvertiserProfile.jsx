@@ -1,17 +1,10 @@
-//import Sidebar from "./Sidebar";
-import Header from "../../components/dasboard/Header";
-import Map from "../../components/pages/contact/Map";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getAdvertiser,
-  createAdvertiser,
   updateAdvertiser,
 } from "../../api/AdvertiserService";
-import { useParams, useNavigate } from "react-router-dom";
-//import AdvertiserNavBar from "../../components/navbar/AdvertiserNavBar";
-//import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
-import { Button, message, Upload } from "antd";
+import { message, Upload } from "antd";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { changeAdvertiserPassword } from "../../api/AdvertiserService";
@@ -19,12 +12,7 @@ import FooterThree from "@/components/layout/footers/FooterThree";
 
 const tabs = ["General", "Location", "Contact"];
 export default function AdvertiserProfile() {
-  //const [sideBarOpen, setSideBarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("General");
-  //   const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("/img/dashboard/addtour/1.jpg");
-  //   const [image3, setImage3] = useState("/img/dashboard/addtour/2.jpg");
-  //   const [image4, setImage4] = useState("/img/dashboard/addtour/3.jpg");
   const [advertiser, setAdvertiser] = useState(null);
   const [formData, setFormData] = useState({ currentLogo: null });
   const [showPassword, setShowPassword] = useState({
@@ -61,38 +49,20 @@ export default function AdvertiserProfile() {
         return;
       }
 
-
       await changeAdvertiserPassword(PasswordForm.oldPassword, PasswordForm.newPassword);
       message.success("Password changed successfully");
-
 
     } catch (error) {
       message.error(
         error.response?.data?.error || "Failed to change password"
       );
-      console.error("Password change error:", error);
     }
   };
-  //   const handleImageChange = (event, func) => {
-  //     const file = event.target.files[0];
-
-  //     if (file) {
-  //       const reader = new FileReader();
-
-  //       reader.onloadend = () => {
-  //         func(reader.result);
-  //       };
-
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
 
   useEffect(() => {
     const fetchAdvertiser = async () => {
       try {
-        const data = await getAdvertiser(); // Make the API call
-        console.log(data);
-        console.log("im in use effect");
+        const data = await getAdvertiser();
         setAdvertiser(data);
         setFormData({
           ...data,
@@ -100,7 +70,7 @@ export default function AdvertiserProfile() {
           currentLogo: data?.companyProfile?.logo || null,
         });
       } catch (error) {
-        console.error("Error fetching advertiser:", error); // This should log if there's an error
+        console.error("Error fetching advertiser:", error);
       }
     };
 
@@ -113,10 +83,8 @@ export default function AdvertiserProfile() {
     const keys = name.split(".");
 
     if (name === "companyProfile.employees") {
-      // Convert value to number
       const numberValue = Number(value);
 
-      // Check if the value is a valid number
       if (isNaN(numberValue) || numberValue < 0) {
         message.error("Please enter a valid number for Employees.");
         return;
@@ -124,7 +92,6 @@ export default function AdvertiserProfile() {
     }
     if (name === "companyProfile.foundedYear") {
       const numberValue = Number(value);
-      const currentYear = new Date().getFullYear();
 
       if (isNaN(numberValue)) {
         message.error("Please enter a valid year.");
@@ -157,13 +124,11 @@ export default function AdvertiserProfile() {
       const updatedItems = [...prevData.companyProfile[type]];
 
       if (type === "certifications") {
-        // Directly update the certification value
         updatedItems[index] = value || "";
       } else if (type === "awards") {
-        // Update the specific field for awards (e.g., title, year, issuer)
         updatedItems[index] = {
-          ...updatedItems[index], // Preserve the other fields
-          [field]: value || "", // Update the specific field (title, issuer, etc.)
+          ...updatedItems[index],
+          [field]: value || "",
         };
       }
 
@@ -171,7 +136,7 @@ export default function AdvertiserProfile() {
         ...prevData,
         companyProfile: {
           ...prevData.companyProfile,
-          [type]: updatedItems, // Update the certifications or awards
+          [type]: updatedItems,
         },
       };
     });
@@ -182,7 +147,7 @@ export default function AdvertiserProfile() {
     setFormData((prevAdvertiser) => {
       const updatedCertificates = [
         ...prevAdvertiser.companyProfile.certifications,
-        "", // Add an empty string for the new certificate
+        "", 
       ];
 
       return {
@@ -199,7 +164,7 @@ export default function AdvertiserProfile() {
     setFormData((prevAdvertiser) => {
       const updatedAwards = [
         ...prevAdvertiser.companyProfile.awards,
-        { title: "", issuer: "", year: "" }, // Add an empty award object
+        { title: "", issuer: "", year: "" },
       ];
 
       return {
@@ -217,7 +182,6 @@ export default function AdvertiserProfile() {
     setFormData((prevData) => {
       const items = prevData.companyProfile[type] || [];
 
-      // Only proceed if it's a valid array
       const updatedItems = Array.isArray(items)
         ? items.filter((_, i) => i !== index)
         : [];
@@ -283,7 +247,6 @@ export default function AdvertiserProfile() {
       // Call API to update the advertiser
       const advertiserData = { ...formData };
 
-      // Only include the logo if it has been changed
       if (formData.currentLogo === formData.existingImage) {
         advertiserData.currentLogo = null;
         advertiserData.existingImage = null;
@@ -301,12 +264,10 @@ export default function AdvertiserProfile() {
     try {
       const response = await requestAccountDeletion();
       message.success(response.message);
-      navigate("/login");
     } catch (error) {
       message.warning(error.response?.data?.message || "An error occurred.");
     }
   };
-  //   console.log(advertiser)
   const General = advertiser
     ? [
       {
@@ -470,9 +431,9 @@ export default function AdvertiserProfile() {
                               name="logo"
                               listType="picture"
                               accept=".png,.jpeg,.jpg"
-                              beforeUpload={handleBeforeUpload} // Prevent multiple uploads
+                              beforeUpload={handleBeforeUpload}
                               onChange={handleLogoChange}
-                              onRemove={handleRemove} // Allow removal of the logo
+                              onRemove={handleRemove}
                               fileList={
                                 formData.currentLogo
                                   ? [
@@ -484,7 +445,7 @@ export default function AdvertiserProfile() {
                                     },
                                   ]
                                   : []
-                              } // Ensure only one file is shown
+                              } 
                             >
                               {formData.currentLogo ? (
                                 <div className="uploaded-image-container">
@@ -512,8 +473,6 @@ export default function AdvertiserProfile() {
                               )}
                             </Upload>
                           </div>
-
-                          {/* end logo */}
 
                           <div className="col-12">
                             <div className="form-input">
@@ -602,7 +561,7 @@ export default function AdvertiserProfile() {
                               General[5]?.value?.split(", ").map(
                                 (
                                   certificate,
-                                  index // Split string back into array
+                                  index 
                                 ) => (
                                   <div
                                     key={index}
@@ -620,7 +579,7 @@ export default function AdvertiserProfile() {
                                               "",
                                               "certifications"
                                             )
-                                          } // Update handler
+                                          }
                                         />
                                         <label className="lh-1 text-16 text-light-1">
                                           Certificate
@@ -635,7 +594,7 @@ export default function AdvertiserProfile() {
                                             index,
                                             "certifications"
                                           )
-                                        } // Delete handler
+                                        }
                                       >
                                         <i className="icon-delete"></i>
                                       </button>
@@ -662,8 +621,6 @@ export default function AdvertiserProfile() {
                             </div>
                           </div>
 
-                          {/* this is for awardss!!!!! */}
-
                           <div className="mt-30">
                             <h3 className="text-18 fw-500 mb-20">Awards</h3>
 
@@ -686,7 +643,7 @@ export default function AdvertiserProfile() {
                                                 index,
                                                 "title",
                                                 "awards"
-                                              ) // Update the title
+                                              )
                                           }
                                           required
                                         />
@@ -708,7 +665,7 @@ export default function AdvertiserProfile() {
                                                 index,
                                                 "issuer",
                                                 "awards"
-                                              ) // Update the issuer
+                                              )
                                           }
                                           required
                                         />
@@ -731,7 +688,7 @@ export default function AdvertiserProfile() {
                                                   index,
                                                   "year",
                                                   "awards"
-                                                ) // Update the year
+                                                )
                                             }
                                             required
                                           />

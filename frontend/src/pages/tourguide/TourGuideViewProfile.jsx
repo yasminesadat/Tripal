@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile, getProfileData } from "../../api/TourGuideService";
-import ChangePassword from "../../components/common/ChangePassword";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { message } from 'antd';
 import languages from "../../assets/constants/Languages";
@@ -150,28 +149,6 @@ const TourGuideProfile = () => {
         setFormData({ ...formData, [field]: value });
     }
 
-    // useEffect(() => {
-    //   form.setFieldsValue({
-    //     email: formData.email,
-    //     name: formData.name,
-    //     mobileNumber: formData.mobileNumber,
-    //     yearsOfExperience: formData.yearsOfExperience,
-    //     nationality: formData.nationality,
-    //     languagesSpoken: formData.languagesSpoken,
-    //     education: formData.education,
-    //     previousWork: formData.previousWork,
-    //   });
-    // }, [formData, form]);
-    // const handleImageChange = (event, func) => {
-    //   const file = event.target.files[0];
-    //   if (file) {
-    //     const reader = new FileReader();
-    //     reader.onloadend = () => {
-    //       func(reader.result);
-    //     };
-    //     reader.readAsDataURL(file);
-    //   }
-    // };
     const handleImageChange = (info) => {
         console.log(info)
         if (info.target.files.length === 0) {
@@ -215,7 +192,6 @@ const TourGuideProfile = () => {
         for (const key in formData) {
             if (key.startsWith("initial")) continue;
             if (key === "currProfilePicture") {
-                // detect image change
                 if (formData.initialProfilePicture !== formData.currProfilePicture) {
                     hasChanges = true;
                     if (formData.initialProfilePicture !== "")
@@ -264,7 +240,7 @@ const TourGuideProfile = () => {
             setLoading(false);
             return;
         }
-        // formatting data
+
         if (changedFields.previousWork)
             changedFields.previousWork = Object.values(
                 changedFields.previousWork
@@ -284,36 +260,17 @@ const TourGuideProfile = () => {
             setLoading(false);
         }
     };
-    // if (loading) {
-    //   return <div>Loading...</div>;
-    // }
-
-    // if (error) {
-    //   return <div>Error: {error}</div>;
-    // }
-
 
     return (
         <div className="page-wrapper">
-
-            {/* <TourguideNavBar /> */}
-            {/* <div
-        className={`dashboard ${
-          sideBarOpen ? "-is-sidebar-visible" : ""
-        } js-dashboard`}
-      > */}
-            {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
             <TourGuideHeader />
             <main className="page-content-hana">
                 <div className="dashboard__content">
-                    {/* <Header setSideBarOpen={setSideBarOpen} /> */}
 
                     <div className="dashboard__content_content">
                         <h1 className="text-35">My Profile</h1>
                         <p className="text-20">{formData.name}</p>
                         <div className="mt-50 rounded-12 bg-white shadow-2 px-40 pt-40 pb-30">
-
-                            {/* <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-60"> */}
                             <div className="tabs -underline-2 js-tabs">
                                 <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
                                     {tabs.map((elm, i) => (
@@ -491,7 +448,6 @@ const TourGuideProfile = () => {
                             }
                         `}
                                                 </style>
-
                                                 <div className="col-12">
                                                     <h4 className="text-18 fw-500 mb-20">Your photo</h4>
                                                     <div className="row x-gap-20 y-gap">
@@ -546,7 +502,6 @@ const TourGuideProfile = () => {
                                                 </div>
                                                 <div className="row pt-40">
                                                     <div className="contactForm row y-gap-30">
-                                                        {/* <div className="col-xl-9 col-lg-10"> */}
                                                         <div className="col-md-6">
                                                             <div className="form-input ">
 
@@ -700,17 +655,8 @@ const TourGuideProfile = () => {
                                                                     </div>
 
                                                                 </div>
-
-
-
                                                             </div>
                                                         </div>
-
-
-
-
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -721,9 +667,7 @@ const TourGuideProfile = () => {
                                             >
 
                                                 <div className="contactForm row y-gap-30">
-                                                    <div className="mt-30">
-                                                        {/* <h3 className="text-18 fw-500 mb-20">Education</h3> */}
-                                                        {formData?.education?.length > 0 ? (
+                                                    <div className="mt-30">                                                        {formData?.education?.length > 0 ? (
                                                             formData?.education.map(
                                                                 (edu, index) => (
                                                                     <div
@@ -811,8 +755,6 @@ const TourGuideProfile = () => {
                                                                             </button>
                                                                         </div>
                                                                     </div>
-
-
                                                                 )
                                                             )
                                                         ) : (
@@ -985,21 +927,13 @@ const TourGuideProfile = () => {
                                                                                                         ),
                                                                                                     });
                                                                                                 }}
-                                                                                                // Sets minimum date to today
                                                                                                 required={true}
                                                                                             />
-
-
                                                                                             <label className="lh-1 text-16 text-light-1"> Start Date</label>
                                                                                         </div>
-
                                                                                     </div>
-
-
-
                                                                                     <div className="col-lg-6">
                                                                                         <div className="form-input ">
-
                                                                                             <input type="date" value={prevWork.endDate ? new Date(prevWork.endDate).toISOString().split('T')[0] : null}
                                                                                                 onChange={(e) => {
                                                                                                     setWorkChanged(true);
@@ -1010,16 +944,11 @@ const TourGuideProfile = () => {
                                                                                                         ),
                                                                                                     });
                                                                                                 }}
-                                                                                                // Sets minimum date to today
                                                                                                 required={true} />
                                                                                             <label className="lh-1 text-16 text-light-1"> End Date </label>
-
                                                                                         </div>
                                                                                     </div>
-
-
                                                                                 </div></div>
-
                                                                             <div className="col-md-12">
                                                                                 <div className="row x-gap-20 y-gap">
                                                                                     <label style={{ color: 'black', marginBottom: '10px' }} className="lh-1 text-16 text-light-1">Description</label>
@@ -1037,12 +966,9 @@ const TourGuideProfile = () => {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-
                                                                             <br />
                                                                         </div>
                                                                     </div>
-
-
                                                                 )
                                                             )
                                                         ) : (
@@ -1052,7 +978,6 @@ const TourGuideProfile = () => {
                                                                 </span>
                                                             </div>
                                                         )}
-
                                                         <div className="mt-30">
                                                             <button
                                                                 className="button -md -outline-dark-1 bg-light-1"
@@ -1077,13 +1002,7 @@ const TourGuideProfile = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
-
-
                                             <div className="col-lg-4">
-
                                                 <button className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
                                                     handleSubmit();
                                                 }}>
@@ -1093,19 +1012,16 @@ const TourGuideProfile = () => {
 
                                             </div>
                                             <div style={{ position: "relative", height: "100%" }}>
-
                                                 <button style={{
                                                     position: "absolute",
-                                                    bottom: "0px", // Adjust as needed
-                                                    right: "0px",  // Adjust as needed
+                                                    bottom: "0px",
+                                                    right: "0px",
                                                 }} className="button -md -dark-1 bg-accent-1 text-white mt-30" onClick={() => {
                                                     handleDeletion();
                                                 }}>
                                                     Delete Account
                                                     <i className="icon-delete text-16 ml-10"></i>
                                                 </button>
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -1231,8 +1147,6 @@ const TourGuideProfile = () => {
             </main>
             <FooterThree />
         </div >
-
-
     );
 };
 

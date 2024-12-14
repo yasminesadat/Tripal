@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 export default function Pagination({ range = 20 }) {
   const [activeIndex, setActiveIndex] = useState(1);
   return (

@@ -49,7 +49,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
                 }
               >
                 <h5 className="text-18 fw-500">Historical Tag</h5>
-
                 <div className="accordion__icon flex-center">
                   <i className="icon-chevron-down"></i>
                   <i className="icon-chevron-down"></i>
@@ -70,7 +69,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
                             value: tag._id
                         }))}
                         onChange={(selected) => {
-                            console.log("helo", selected);
                             const tags = selected.map((tagValue) => {
                                 const tag = tagsOptions.find((p) => p._id === tagValue);
                                 return {
@@ -78,7 +76,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
                                     _id: tag ? tag._id : ''
                                 };
                             });
-                            console.log(tags);
                             setSelectedTags(tags)
                             setFilterHistoricType(tags);
                         }}
@@ -133,7 +130,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
                             value: period._id
                         }))}
                         onChange={(selected) => {
-                            console.log("helo", selected);
                             const periods = selected.map((tagValue) => {
                                 const period = periodTagsOptions.find((p) => p._id === tagValue);
                                 return {
@@ -141,7 +137,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
                                     _id: period ? period._id : ''
                                 };
                             });
-                            console.log(periods);
                             setSelectedPeriods(periods);
                             setFilterHistoricalTagPeriod(periods);
                             
@@ -161,18 +156,6 @@ export default function Sidebar({setFilterHistoricType,setFilterHistoricalTagPer
             </div>
           </div>
         </div>
-
-        
-
-        
-
-        
-
-       
-
-       
-        
-       
       </div>
     </div>
   );

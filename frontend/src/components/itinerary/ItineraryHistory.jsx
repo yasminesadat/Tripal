@@ -45,9 +45,7 @@ const ItineraryHistory = ({ itineraries, curr = "EGP", page }) => {
                 itineraries.map(itinerary => {
                     const formattedServiceFee = formatPrice(itinerary.serviceFee);
                     const formattedPrice = formatPrice(itinerary.price);
-
                     return (
-                        
                         <div className="list-item">
                             <button className="list-item-header" key={itinerary._id} onClick={() => handleNavigate(itinerary._id)}>
                                 {itinerary.title}

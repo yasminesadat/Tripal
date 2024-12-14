@@ -3,7 +3,6 @@ import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 import GovernorHeader from "@/components/layout/header/GovernorHeader";
-import PageHeader from "@/components/layout/header/HistoricalPlacesHeader";
 import { useEffect, useState, useRef } from "react";
 import { message } from "antd";
 import { getUserData } from "@/api/UserService";
@@ -18,7 +17,7 @@ const metadata = {
 export default function HistoricalPlacesDetails() {
   const [userRole, setUserRole] = useState(null);
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [setSearchTerm] = useState("");
   const errorDisplayed = useRef(false);
 
   useEffect(() => {

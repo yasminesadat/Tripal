@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
 import { updateTouristInformation } from "../../api/TouristService";
 import { CloseOutlined } from "@ant-design/icons";
 import { message } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 export default function CategorySelection() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const touristId = location.state?.touristId;
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -65,7 +63,6 @@ export default function CategorySelection() {
     navigate("/tourist");
   };
 
-  // Inline styles
   const tagItemStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -96,12 +93,12 @@ export default function CategorySelection() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#374971', // Background color
-    color: 'white', // Text color
+    backgroundColor: '#374971', 
+    color: 'white',
     borderRadius: '20px',
     padding: '5px 10px',
-    fontSize: '14px', // Font size
-    position: 'relative', // For positioning the close icon
+    fontSize: '14px',
+    position: 'relative',
   };
 
   const closeIconStyle = {
@@ -120,7 +117,6 @@ export default function CategorySelection() {
                 <div className="text-center mb-lg">
                   <h1 className="text-30">What categories of activities do you prefer?</h1>
                 </div>
-                {/* Display selected categories as bubbles */}
                 <div style={selectedTagContainerStyle}>
                   {selectedCategories.map((categoryId) => {
                     const category = categories.find((cat) => cat._id === categoryId);

@@ -42,15 +42,10 @@ const RoleProtectedRoute = ({ element, requiredRoles }) => {
         setLoading(false);
       }
     };
-
     fetchUserData();
   }, [requiredRoles, element]);
 
-  if (loading) {
-    // Render a loading indicator while data is being fetched
-    return <Spinner />;
-  }
-
+  if (loading) {return <Spinner />;}
   return redirectTo;
 };
 

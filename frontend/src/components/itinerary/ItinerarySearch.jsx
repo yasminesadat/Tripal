@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const ItinerarySearch = ({ onSearch }) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -8,7 +8,6 @@ const ItinerarySearch = ({ onSearch }) => {
         setSearchTerm(value);
         onSearch(value); 
     };
-
     return (
             <input
                 className="search-bar"
@@ -19,5 +18,4 @@ const ItinerarySearch = ({ onSearch }) => {
             />
     );
 };
-
 export default ItinerarySearch;

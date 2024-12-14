@@ -136,7 +136,7 @@ export default function FlightsList() {
 
   const handlePassengerSelect = (count) => {
     setPassengers(count);
-    setShowPassengersDropdown(false); // Close the dropdown after selection
+    setShowPassengersDropdown(false);
   };
 
   const handleSearch = async () => {
@@ -163,16 +163,16 @@ export default function FlightsList() {
         currencyCode: 'EGP',
       });
       sessionStorage.setItem('flightSearchParams', JSON.stringify(queryParams));
+    new URLSearchParams({
+      originLocationCode,
+      destinationLocationCode,
+      departureDate,
+      adults: passengers,
+      max: 150,
+      cabin: cabinType,
+      currencyCode: 'EGP',
+    });
 
-      const urlParams = new URLSearchParams({
-        originLocationCode,
-        destinationLocationCode,
-        departureDate,
-        adults: passengers,
-        max: 150,
-        cabin: cabinType,
-        currencyCode: 'EGP',
-      });
       if (tripType === 'roundTrip' && returnDate) {
         queryParams.append('returnDate', returnDate);
       }
@@ -522,7 +522,7 @@ export default function FlightsList() {
               className={`select-button ${tripType === 'oneWay' ? 'active' : ''}`}
               onClick={() => {
                 setTripType('oneWay');
-                setReturnDate(''); // Clear return date when selecting one-way trip
+                setReturnDate(''); 
               }}
             >
               <ArrowRight size={16} />

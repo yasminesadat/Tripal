@@ -1,4 +1,3 @@
-import React from "react";
 import Sidebar from "./Sidebar";
 
 export default function ToggleSidebar({ sidebarOpen, setSidebarOpen }) {
@@ -8,7 +7,6 @@ export default function ToggleSidebar({ sidebarOpen, setSidebarOpen }) {
       <div className="tourPagesSidebar__content">
         <div className="tourPagesSidebar__header d-flex items-center justify-between">
           <div className="text-20 fw-500">All filters</div>
-
           <button
             onClick={() => setSidebarOpen(false)}
             className="button -dark-1 size-40 rounded-full bg-light-1"
@@ -16,7 +14,6 @@ export default function ToggleSidebar({ sidebarOpen, setSidebarOpen }) {
             <i className="icon-cross text-10"></i>
           </button>
         </div>
-
         <Sidebar />
       </div>
     </div>

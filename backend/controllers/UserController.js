@@ -95,7 +95,6 @@ const loginUser = async (req, res) => {
         sameSite: 'None',  // Required for cross-site requests
         path: '/',
         domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
       res.status(200).json({ role: user.role, isFirstTime });
     } else {
@@ -137,13 +136,11 @@ const getUserData = async (req, res) => {
 
 const logoutUser = (req, res) => {
   try {
-
     const isProduction = process.env.NODE_ENV === 'production';
-
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: true,
-      sameSite: 'None',  // Capitalized to match login
+      sameSite: 'None',
       path: '/',
       domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost'
     });

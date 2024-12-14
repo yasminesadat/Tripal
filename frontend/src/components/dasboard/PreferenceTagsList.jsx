@@ -20,7 +20,6 @@ const TagManagerList = () => {
     fetchTags();
   }, []);
 
-  // GET all tags
   const fetchTags = async () => {
     setLoading(true);
     try {
@@ -33,13 +32,12 @@ const TagManagerList = () => {
     }
   };
 
-  // POST a new tag
   const handleCreateTag = async () => {
     try {
       await createTag({ name: newTag });
       message.success("Tag created successfully!");
       setNewTag("");
-      fetchTags(); // refresh tag list after creating
+      fetchTags();
     } catch (error) {
       message.error("Error creating tag");
     }
@@ -67,7 +65,6 @@ const TagManagerList = () => {
     try {
       await deleteTag(id);
       message.success("Tag deleted successfully!");
-      // Update the state by filtering out the deleted tag
       setTags((prevTags) => prevTags.filter((tag) => tag._id !== id));
     } catch (error) {
       message.error("Error deleting tag");
@@ -81,12 +78,10 @@ const TagManagerList = () => {
         border-color: #5a9ea0 !important;
         box-shadow: 0 0 0 2px rgba(90, 158, 160, 0.1) !important;
     }
-
     .ant-btn-primary:hover {
         background-color: #036264 !important;
         border-color: #036264 !important;
     }
-
     .ant-modal-content .ant-btn-primary {
         background-color: #5a9ea0 !important;
         border-color: #5a9ea0 !important;
@@ -280,10 +275,8 @@ const TagManagerList = () => {
           />
         </Modal>
       </div>
-
     </>
   );
 };
-
 
 export default TagManagerList;

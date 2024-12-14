@@ -62,7 +62,7 @@ const RevenueTable = () => {
                                 <td>{new Date(itinerary.startDate).toLocaleDateString()}</td>
                                 <td style={{ paddingLeft: '50px' }}>{itinerary.bookings.length}</td>
                                 <td>EGP {itinerary.price}</td>
-                                <td>EGP {(itinerary.bookings.length * itinerary.price * 0.1)}</td>
+                                <td>EGP {(itinerary.bookings.length * itinerary.price * 0.1).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -93,7 +93,7 @@ const RevenueTable = () => {
                                 <td>{new Date(activity.date).toLocaleDateString()}</td>
                                 <td style={{ paddingLeft: '50px' }}>{activity.bookings.length}</td>
                                 <td>EGP {activity.price}</td>
-                                <td>EGP {(activity.bookings.length * activity.price * 0.1)}</td>
+                                <td>EGP {(activity.bookings.length * activity.price * 0.1).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -122,7 +122,7 @@ const RevenueTable = () => {
                                 <td>{product.name}</td>
                                 <td>{product.sales}</td>
                                 <td>EGP {product.price}</td>
-                                <td>EGP {product.sales * product.price * 0.1}</td>
+                                <td>EGP {(product.sales * product.price * 0.1).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>

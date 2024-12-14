@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import HeaderSerch from "../components/HeaderSerch";
 import Destinations from "../components/Destinations";
 import Activities from "../components/Activities";
-import Currency from "../components/Currency";
 import MobileMenu from "../components/MobileMenu";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -18,7 +17,6 @@ export default function Header1() {
 
   const [addClass, setAddClass] = useState(false);
 
-  // Add a class to the element when scrolled 50px
   const handleScroll = () => {
     if (window.scrollY >= 50) {
       setAddClass(true);
@@ -30,7 +28,6 @@ export default function Header1() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup the event listener when the component unmounts
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };

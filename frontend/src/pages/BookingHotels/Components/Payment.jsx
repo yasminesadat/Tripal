@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { saveBooking } from "../../../api/HotelService";
 import { getTouristFlights } from '../../../api/TouristService';
 import TransportationBookingPopUp from "@/pages/tourist/TransportationBooking";
@@ -10,35 +8,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import {Modal} from 'antd';
 import { AlertCircle } from 'lucide-react';
 import { getWalletAndTotalPoints } from "../../../api/TouristService";
-// Inline styles for the component
-const styles = {
-    appcc: {
-        fontFamily: 'sans-serif',
-        textAlign: 'left',
-    },
-    formcc: {
-        margin: '30px auto 0',
-        maxWidth: '400px',
-    },
-    rowcc: {
-        marginBottom: '15px',
-    },
-    button: {
-        padding: '10px 20px',
-        backgroundColor: '#007bff',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-    },
-};
 
 const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCode, singlePrice, doublePrice, triplePrice, singleNumber, doubleNumber, tripleNumber, total, checkIn, checkOut, setIsBookedOriginatingTransportation, setIsBookedReturnTransportation, setIsBookedAccepted, isBookedOriginatingTransportation, isBookedReturnTransportation, isBookedAccepted }) => {
     const [paymentMethod, setPaymentMethod] = useState("wallet");
-    const navigate = useNavigate();
     const [touristFlights, setTouristFlights] = useState([]);
     const [doneBookTransportation, setDoneBookTransportation] = useState(false);
-    const [isBooked, setBooked] = useState(false);
     const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
     const [isWalletInfoModalVisible, setIsWalletInfoModalVisible] = useState(false);
     const [updatedWalletInfo, setUpdatedWalletInfo] = useState(0);
@@ -47,13 +21,9 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
 
     useEffect(() => {
         const getBookedFlights = async () => {
-            try {
-                const flights = await getTouristFlights();
-                console.log("Fetched Flights:", flights);  // Log fetched flights
-                setTouristFlights(flights.bookedFlights);
-            } catch (err) {
-                console.log("Error fetching flights:", err);
-            }
+          const flights = await getTouristFlights();
+          console.log("Fetched Flights:", flights);
+          setTouristFlights(flights.bookedFlights);
         };
 
         const fetchWalletData = async () => {
@@ -87,21 +57,13 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
                 const diffInMilliseconds2 = Math.abs(hotelCheckIn - flightArrivalTime);
                 const diffInDays2 = diffInMilliseconds2 / (1000 * 60 * 60 * 24);
 
-                // console.log("diff 1", diffInDays1);
-                // console.log("diff 2", diffInDays2);
-                // console.log(cityCode);
-                // console.log(flightDeparture);
-                // console.log(flightDest);
-
                 if (diffInDays1 <= 1) {
                     if (cityCode === flightDeparture) {
-                        // console.log("truue");
                         setIsBookedReturnTransportation(true);
                     }
                 }
                 if (diffInDays2 <= 1) {
                     if (cityCode === flightDest) {
-                        // console.log("truue");
                         setIsBookedOriginatingTransportation(true);
                     }
                 }
@@ -112,57 +74,10 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
             showTransportationOffer();
         }
     }, [checkIn, checkOut, cityCode, isBookedOriginatingTransportation, isBookedReturnTransportation,touristFlights]);
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log("Form submitted.");
-    
-    //     if (paymentMethod === "wallet") {
-    //         setBookingStage(3);
-    //     }
-        
-    //     try {
-    //         const response = await saveBooking(
-    //             hotelid,
-    //             hotelname,
-    //             cityCode,
-    //             singleNumber,
-    //             doubleNumber,
-    //             tripleNumber,
-    //             checkIn,
-    //             checkOut,
-    //             total,
-    //             "confirmed",
-    //             paymentMethod
-    //         );
-    //         console.log("Response from saveBooking:", response);
-    
-    //         if (paymentMethod === "card") {
-    //             const stripe = await stripePromise;
-    //             const sessionId = response?.sessionId;
-                
-    //             if (sessionId) {
-    //                 const { error } = await stripe.redirectToCheckout({ sessionId });
-    //                 if (error) {
-    //                     console.error("Stripe redirection error:", error);
-    //                     message.error("Failed to redirect to payment. Please try again.");
-    //                 }
-    //             } else {
-    //                 console.log("Session ID returned:", response.data?.sessionId);
-    //                 console.error("Session ID not received.");
-    //                 message.error("Failed to initiate payment session.");
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error("Failed to save Booking", error);
-    //         message.error("Booking failed. Please try again.");
-    //     }
-    // };
-    
                
     const handleWalletPayment = async () => {
         try {
-          const response = await saveBooking({
+          await saveBooking({
             hotelid,
             hotelname,
             cityCode,
@@ -219,14 +134,12 @@ const CreditCard = ({ bookingStage, setBookingStage, hotelid, hotelname, cityCod
           if (sessionId) {
             const { error } = await stripe.redirectToCheckout({ sessionId });
             if (error) {
-              console.error("Stripe redirection error:", error);
               message.error("Failed to redirect to payment. Please try again.");
             }
           } else {
-            message.error("Failed to initiate payment session.");
+              message.error("Failed to initiate payment session.");
           }
         } catch (error) {
-          console.error("Failed to save booking:", error);
           message.error("Booking failed. Please try again.");
         }
       };

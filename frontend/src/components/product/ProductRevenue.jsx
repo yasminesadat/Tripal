@@ -16,7 +16,7 @@ const extractPrice = (priceString) => {
   } else if (typeof priceString === "number") {
     return priceString;
   } else {
-    return 0; // Default to 0 if price is not a valid string or number
+    return 0;
   }
 };
 

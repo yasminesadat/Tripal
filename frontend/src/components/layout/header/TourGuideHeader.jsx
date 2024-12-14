@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { logout } from "@/api/UserService";
 import TourGuideNotification from "@/components/common/NotificationsTourGuide";
+import { getNotifications } from "@/api/TourGuideService";
 
 export default function TourGuideHeader() {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ export default function TourGuideHeader() {
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   // Sample notifications data
   const [notifications, setNotifications] = useState([]);
@@ -38,10 +38,6 @@ export default function TourGuideHeader() {
   useEffect(() => {
     fetchNotifications();
   }, []);
-
-  // Count unread notifications
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
   let closeTimeout;
 
   const handleMouseLeave = () => {
@@ -53,31 +49,6 @@ export default function TourGuideHeader() {
   const handleMouseEnter = () => {
     clearTimeout(closeTimeout);
     setDropdownOpen(true);
-  };
-
-  // Notification handling methods
-  const handleNotificationRead = async (id) => {
-    try {
-      setNotifications(
-        notifications.map((n) =>
-          n.id === id ? { ...n, read: true } : n
-        )
-      );
-      const response = await markNotification(id);
-    }
-    catch (error) {
-      message.error(error);
-    }
-  };
-
-  const handleNotificationRemove = async (id) => {
-    try {
-      setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
-      const response = await deleteNotifications(id);
-
-    } catch (error) {
-      message.error(error);
-    }
   };
 
   const handleLogout = async () => {
@@ -119,13 +90,9 @@ export default function TourGuideHeader() {
           <div className="header__right">
           
             <TourGuideNotification/>
-
-
             <Link to="/help-center" className="ml-20">
               Help
             </Link>
-
-
             <button onClick={() => setMobileMenuOpen(true)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`button -sm -outline-dark-1 rounded-200 text-dark-1 ml-30 ${dropdownOpen ? "hovered" : ""}`}>
               <i className="icon-person text-18"></i>
             </button>
@@ -263,7 +230,6 @@ export default function TourGuideHeader() {
 .check-x-container .cursor-pointer:hover {
   color:var(--color-light-purple); /* Color for x mark */
 }
-
       `}</style>
     </>
   );

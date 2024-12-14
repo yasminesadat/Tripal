@@ -1,13 +1,11 @@
 export const clients = [
   "/img/clients/1/1.svg",
   "/img/clients/1/2.svg",
-  // "/img/clients/1/3.svg",
   "/img/clients/1/4.svg",
   "/img/clients/1/5.svg",
   "/img/clients/1/6.svg",
   "/img/clients/1/1.svg",
   "/img/clients/1/2.svg",
-  // "/img/clients/1/3.svg",
   "/img/clients/1/4.svg",
   "/img/clients/1/5.svg",
   "/img/clients/1/6.svg",

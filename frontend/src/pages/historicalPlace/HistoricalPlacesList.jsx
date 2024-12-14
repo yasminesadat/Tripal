@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
 import { getUserData } from "@/api/UserService";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { message, Tour } from "antd";
 import {
   getConversionRate,
@@ -16,13 +16,12 @@ import Spinner from "../../components/common/Spinner";
 import Pagination from "@/components/activity/Pagination";
 
 export default function HistoricalPlacesList({ searchTerm }) {
-  const [ddActives, setDdActives] = useState(false);
+  const [setDdActives] = useState(false);
   const dropDownContainer = useRef();
   const [loading, setLoading] = useState(false);
   const [currency, setCurrency] = useState("EGP");
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
-  const [searchKey, setSearchKey] = useState(searchTerm);
   const errorDisplayed = useRef(false);
   const location = useLocation();
   const refHPDetails = useRef(null);
@@ -31,7 +30,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [searchedPlaces, setSearchedPlaces] = useState([]);
   const [viewedPlaces, setViewedPlaces] = useState([]);
-  const [error, setError] = useState(null);
   const [filterHistoricType, setFilterHistoricType] = useState([]);
   const [filterHistoricalTagPeriod, setFilterHistoricalTagPeriod] = useState(
     []
@@ -65,10 +63,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
         message.error("Failed to fetch exchange rate.");
       }
     }
-  };
-
-  const convertPrice = (price) => {
-    return (price * exchangeRate).toFixed(2);
   };
 
   const handlePageChange = (newPage) => {
@@ -131,7 +125,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
         setLoading(false);
       } catch (e) {
         setLoading(false);
-        //toast.error('Error while fetching')
       }
     };
     const fetchPlaces = async () => {
@@ -144,9 +137,6 @@ export default function HistoricalPlacesList({ searchTerm }) {
         setFilteredPlaces(response);
       } catch (err) {
         setLoading(false);
-        setError(
-          err.response?.data?.error || "Error fetching historical places"
-        );
       } finally {
         setLoading(false);
       }

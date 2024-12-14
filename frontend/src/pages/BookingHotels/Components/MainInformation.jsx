@@ -23,9 +23,7 @@ export default function MainInformation({name}) {
                     <div className="row x-gap-20 y-gap-20 items-center pt-20">
                       
                     </div>
-                </div>
-
-               
+                </div>               
             </div>
         </>
     );

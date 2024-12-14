@@ -166,11 +166,11 @@ const Orders = () => {
                                             src={image || defaultPlace}
                                             alt="Order"
                                             style={{
-                                              width: "70px", // Increased size
-                                              height: "70px", // Increased size
+                                              width: "70px", 
+                                              height: "70px",
                                               borderRadius: "4px",
                                               objectFit: "cover",
-                                              marginRight: "10px", // Increased spacing
+                                              marginRight: "10px",
                                             }}
                                           />
                                         ))}

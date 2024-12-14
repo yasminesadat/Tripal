@@ -2,18 +2,14 @@ import React, { useState, useEffect } from "react";
 import {
   getComplaintsByTourist,
   getComplaintById,
-  replyToComplaint,
 } from "../../api/ComplaintsService";
-// import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
-import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "@/api/UserService";
 import Spinner from "@/components/common/Spinner";
 import MetaComponent from "@/components/common/MetaComponent";
 import ComplaintsForm from "./ComplaintsForm";
-import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 const metadata = {
   title: "Complaints || Tripal",
@@ -23,7 +19,7 @@ const MyComplaints = () => {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [userData, setUserData] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fetchUserData = async () => {
     try {
@@ -33,15 +29,9 @@ const MyComplaints = () => {
   };
 
   useEffect(() => {
-    console.log("Im rendering this page");
-
-    fetchUserData(); // Invoke the renamed function
-    // Log userData when it changes
+    fetchUserData(); 
   }, []);
   const handleComplaintSubmit = (complaintData) => {
-    // Now you have access to the complaint data here
-    console.log("Complaint data:", complaintData);
-    // Add to complaints list if you want to display them
     setComplaints((prev) => [...prev, complaintData]);
   };
   const navigate = useNavigate();
@@ -49,29 +39,24 @@ const MyComplaints = () => {
     const fetchComplaints = async () => {
       try {
         const response = await getComplaintsByTourist();
-        setComplaints(response); // Set complaints data
-
+        setComplaints(response); 
         const user = await getUserData();
-        console.log("data is ", user.data);
-        setUserData(user.data.id); // Update user data state
-        setUserRole(user.data.role); // Update user role state
-        console.log("id is ", user.data.id); // Log user ID directly
+        setUserData(user.data.id);
+        setUserRole(user.data.role);
       } catch (error) {
         console.error("Error fetching complaints:", error);
       } finally {
-        setLoading(false); // Set loading to false once the async operation is finished
+        setLoading(false);
       }
     };
 
     fetchComplaints();
-  }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
+  }, []);
 
   const toggleComplaintDetails = async (complaintId) => {
-    // Otherwise, fetch and show the complaint details
     try {
       const complaintDetails = await getComplaintById(complaintId);
       setSelectedComplaint(complaintDetails);
-      console.log("selected is", complaintDetails);
       navigate("/tourist/complaints-replies", {
         state: {
           complaint: complaintDetails,
@@ -85,7 +70,7 @@ const MyComplaints = () => {
   };
 
   if (loading) {
-    return <Spinner />; // Show the spinner while loading
+    return <Spinner />;
   }
 
   return (
@@ -95,11 +80,8 @@ const MyComplaints = () => {
         <TouristHeader />
         <main>
           <div className="complaints">
-            {/* <TouristNavBar /> */}
-            {/* <Sidebar setSideBarOpen={setSideBarOpen} /> */}
             <div className="dashboard__content">
               <div className="page-content-hana">
-                {/* <Header setSideBarOpen={setSideBarOpen} /> */}
                 <div className="dashboard__content_content">
                   <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 md:px-20 md:pt-20 mt-60">
                     <h1 className="text-30">My Complaints</h1>
@@ -244,11 +226,6 @@ const MyComplaints = () => {
   cursor: not-allowed;
   box-shadow: none;
 }
-
-
-
-     
-   
     `}</style>
     </>
   );

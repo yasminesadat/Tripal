@@ -1,5 +1,5 @@
 import { faqData } from "./tourSingleContent";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function Faq() {
   const [currentActiveFaq, setCurrentActiveFaq] = useState(0);

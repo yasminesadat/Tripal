@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Form, Input, Button, message, Upload, InputNumber } from "antd";
 import { createProduct, editProduct } from "../../api/ProductService";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { UploadOutlined } from "@ant-design/icons";
 import MetaComponent from "../common/MetaComponent";
 
 const metadata = {

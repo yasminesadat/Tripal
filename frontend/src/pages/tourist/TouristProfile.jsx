@@ -7,20 +7,14 @@ import TouristHeader from "@/components/layout/header/TouristHeader";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import Badge from "@/components/tourist/Badge";
 import { nationalities } from "@/assets/Nationalities";
-import {
-  getTouristInformation,
-  updateTouristInformation,
-  redeemPoints,
-} from "../../api/TouristService";
+import {getTouristInformation,updateTouristInformation,redeemPoints,} from "../../api/TouristService";
 import { requestAccountDeletion } from "../../api/RequestService";
 import { getTouristTags, getTouristCategories } from "../../api/TouristService";
 import { getTags } from "../../api/PreferenceTagService";
 import ActivityCategoryService from "../../api/ActivityCategoryService";
-
 import { changeTouristPassword } from "../../api/TouristService";
 import { getUserData } from "@/api/UserService";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-
 import Spinner from "@/components/common/Spinner";
 
 const metadata = {
@@ -63,7 +57,7 @@ const StyledNationalitySelect = ({ value, onChange, options }) => {
       <label className="lh-1 text-16 text-light-1 elevated-label">
         Nationality
       </label>
-      <style jsx global>{`
+      <style>{`
         .form-input .elevated-label {
           transform: translateY(-29px) !important;
           font-size: 16px !important; /* Increased from 12px to 16px */
@@ -93,7 +87,6 @@ export default function Profile() {
         const user = await getUserData();
         setUserData(user.data.id);
         setUserRole(user.data.role);
-        console.log("id is ", user.data.id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -164,13 +157,6 @@ export default function Profile() {
         message.error("Passwords don't match");
         return;
       }
-
-      console.log("user", userData);
-      console.log(
-        "old pass, new pass",
-        PasswordForm.oldPassword,
-        PasswordForm.newPassword
-      );
       await changeTouristPassword(
         PasswordForm.oldPassword,
         PasswordForm.newPassword
@@ -183,6 +169,7 @@ export default function Profile() {
       console.error("Password change error:", error);
     }
   };
+  
   const handleEditClick = async () => {
     try {
       await updateTouristInformation(editedProfile);
@@ -295,17 +282,6 @@ export default function Profile() {
     fetchAllTags();
     fetchAllCategories();
   }, []);
-
-  const handleImageChange = (event, func) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        func(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   if (loading) {
     return <Spinner />;
@@ -504,7 +480,6 @@ export default function Profile() {
 
                 <div className="rounded-12 bg-white shadow-2 px-40 pt-40 pb-30 mt-30">
                   <h5 className="text-20 fw-500 mb-30">Change Password</h5>
-
                   <div className="contactForm y-gap-30">
                     <div className="row y-gap-30">
                       <div className="col-md-6">
@@ -535,7 +510,7 @@ export default function Profile() {
                               <EyeInvisibleOutlined />
                             )}
                           </button>
-                          <style jsx>{`
+                          <style>{`
                             .form-input {
                               position: relative;
                             }
@@ -564,7 +539,6 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-
                     <div className="row">
                       <div className="col-md-6">
                         <div className="form-input">
@@ -597,7 +571,6 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-
                     <div className="row">
                       <div className="col-md-6">
                         <div className="form-input">
@@ -650,8 +623,7 @@ export default function Profile() {
         </main>
         <FooterThree />
       </div>
-
-      <style jsx global>{`
+      <style>{`
         :root {
           --color-dark-purple: #8f5774;
           --color-light-purple: #dac4d0;
@@ -660,13 +632,10 @@ export default function Profile() {
           --color-stone-light: #5a9ea0;
           --color-footer: #e5f8f8;
         }
-
-        /* Form Inputs */
         .contactForm .form-input {
           position: relative;
           margin-bottom: 20px;
         }
-
         .contactForm .form-input label {
           position: absolute;
           left: 10px;
@@ -678,7 +647,6 @@ export default function Profile() {
           background: white;
           padding: 0 5px;
         }
-
         .contactForm .form-input input:focus + label,
         .contactForm .form-input textarea:focus + label,
         .contactForm .form-input input:not(:placeholder-shown) + label,
@@ -693,7 +661,6 @@ export default function Profile() {
           font-size: 12px;
           color: var(--color-stone);
         }
-
         .contactForm .form-input input,
         .contactForm .form-input textarea {
           padding: 10px;
@@ -704,13 +671,10 @@ export default function Profile() {
           border-radius: 8px;
           height: 44px;
         }
-
-        /* Select Styles */
         .styled-select,
         .styled-multi-select {
           width: 100%;
         }
-
         .styled-select .ant-select-selector,
         .styled-multi-select .ant-select-selector {
           height: 44px !important;
@@ -720,28 +684,23 @@ export default function Profile() {
           border-radius: 8px !important;
           background-color: white !important;
         }
-
         .styled-multi-select .ant-select-selector {
           min-height: 44px !important;
           height: auto !important;
           padding: 4px 8px !important;
         }
-
         .styled-select .ant-select-selection-search-input,
         .styled-multi-select .ant-select-selection-search-input {
           height: 42px !important;
         }
-
         .styled-select .ant-select-selection-item,
         .styled-multi-select .ant-select-selection-item {
           line-height: 32px !important;
           color: var(--color-stone) !important;
         }
-
         .styled-multi-select .ant-select-selection-overflow {
           padding: 4px 0;
         }
-
         .styled-multi-select .ant-select-selection-item {
           height: 32px !important;
           background-color: var(--color-footer) !important;
@@ -752,54 +711,43 @@ export default function Profile() {
           display: flex !important;
           align-items: center !important;
         }
-
         .styled-select:hover .ant-select-selector,
         .styled-multi-select:hover .ant-select-selector {
           border-color: var(--color-stone) !important;
         }
-
         .styled-select.ant-select-focused .ant-select-selector,
         .styled-multi-select.ant-select-focused .ant-select-selector {
           border-color: var(--color-stone) !important;
           box-shadow: 0 0 0 2px rgba(3, 98, 100, 0.1) !important;
         }
-
         .styled-select-dropdown,
         .styled-multi-dropdown {
           padding: 6px !important;
           border-radius: 8px !important;
         }
-
         .styled-select-dropdown .ant-select-item,
         .styled-multi-dropdown .ant-select-item {
           padding: 8px 12px !important;
           color: var(--color-stone) !important;
           border-radius: 6px !important;
         }
-
         .styled-select-dropdown .ant-select-item-option-selected,
         .styled-multi-dropdown .ant-select-item-option-selected {
           background-color: var(--color-footer) !important;
           font-weight: 500 !important;
         }
-
         .styled-select-dropdown .ant-select-item-option-active,
         .styled-multi-dropdown .ant-select-item-option-active {
           background-color: var(--color-light-purple) !important;
         }
-
-        /* Points Container */
         .points-container {
           display: flex;
           gap: 5px;
         }
-
         .points-container .form-input {
           flex: 2;
           margin-bottom: 0;
         }
-
-        /* Button Styles */
         .button.-md.-dark-1 {
           background-color: var(--color-stone) !important;
           border: none;
@@ -814,45 +762,32 @@ export default function Profile() {
           color: white !important;
           cursor: pointer;
         }
-
         .button.-md.-dark-1:hover {
           background-color: var(--color-stone-light) !important;
         }
-
         .button.-md.-dark-1.delete-btn {
           background-color: var(--color-pink) !important;
         }
-
         .button.-md.-dark-1.delete-btn:hover {
           background-color: var(--color-dark-purple) !important;
         }
-
-        /* Section Headers */
         .section-header {
           color: var(--color-stone);
           margin: 20px 0 10px;
           font-size: 16px;
         }
-
-        /* Clear Icon */
         .ant-select-clear {
           background: white !important;
           color: var(--color-stone) !important;
         }
-
-        /* Remove Tag Icon */
         .ant-select-selection-item-remove {
           color: var(--color-stone) !important;
           font-size: 12px !important;
           margin-left: 4px !important;
         }
-
-        /* Dropdown Arrow */
         .ant-select-arrow {
           color: var(--color-stone) !important;
         }
-
-        /* Empty Content */
         .ant-select-empty {
           color: #aaa !important;
           padding: 10px !important;

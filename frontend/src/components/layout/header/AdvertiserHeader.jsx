@@ -1,24 +1,19 @@
 import { useState } from "react";
 import Menu from "../components/AdvertiserMenu";
 import { profile } from "@/data/advertiserMenu";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import { message } from "antd";
 import { logout } from "@/api/UserService";
 import AdvertiserNotification from "@/components/common/NotificationAdvertiser";
 
 export default function AdvertiserHeader() {
   const navigate = useNavigate();
-
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
-
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
   let closeTimeout;
 
   const handleMouseLeave = () => {

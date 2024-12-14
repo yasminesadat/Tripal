@@ -1,6 +1,5 @@
 import ScrollToTop from "@/components/common/ScrollToTop";
 import "../public/css/style.css";
-
 import { DM_Sans } from "next/font/google";
 import ScrollTopBehaviour from "@/components/common/ScrollTopBehavier";
 import Wrapper from "@/components/layout/Wrapper";
@@ -10,7 +9,6 @@ const dmsans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
 });
-// const inter = Inter({ subsets: ["latin"] });
 if (typeof window !== "undefined") {
   import("bootstrap");
 }

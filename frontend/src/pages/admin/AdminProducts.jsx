@@ -3,7 +3,6 @@ import Header from "@/components/dasboard/Header";
 import Sidebar from "@/components/dasboard/Sidebar";
 import { useState } from "react";
 
-
 const AdminProducts = () => {
   const [sideBarOpen, setSideBarOpen] = useState(true);
   return (

@@ -15,7 +15,6 @@ export async function login(userName, password) {
   }
 }
 
-//used to handle login errors
 function handleError(error) {
   let userFriendlyMessage = {
     status: "error",
@@ -23,8 +22,6 @@ function handleError(error) {
   };
 
   if (error.response) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
     switch (error.response.status) {
       case 400:
         userFriendlyMessage.message =

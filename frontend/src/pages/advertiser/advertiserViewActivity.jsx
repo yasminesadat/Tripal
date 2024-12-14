@@ -1,15 +1,4 @@
 import { useLocation } from "react-router-dom";
-// import ActivityMainInformation from "./ActivityMainInformation";
-// import OthersInformation from "./OthersInformation";
-// import Overview from "./Overview";
-// import MapComponent from "../../common/MapComponent";
-// import Rating from "./Rating";
-// import TourSingleSidebar from "./TourSingleSidebar";
-// import Gallery1 from "./Gallery1";
-// import DateCalender from "./DateCalender";
-// import ReviewBox from "../../common/reviewBox";
-// import ActivityReviews from "./ActivityReviews";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, notification } from "antd";
 import { deleteActivity } from "../../api/ActivityService";
@@ -17,15 +6,11 @@ import { DollarOutlined ,TagOutlined,PartitionOutlined ,WalletOutlined,Percentag
 import AdvertiserGallery from "../../components/tourSingle/Galleries/AdvertiserGallery";
 import AdvertiserHeader from "../../components/layout/header/AdvertiserHeader";
 import ActivityBooking from "@/components/activity/ActivityBooking";
-
 import FooterThree from "@/components/layout/footers/FooterThree";
-
-
 
 export default function AdvertiserActivityDetails() {
   const location = useLocation();
   const activity = location.state?.activity;
-  console.log(activity)
   const navigate = useNavigate();
 
   if (!activity) return <div>Activity not found.</div>;
@@ -48,7 +33,7 @@ export default function AdvertiserActivityDetails() {
     <div>
             <AdvertiserHeader />
 
-      <div class="dashboard__content_content" style={{ marginTop: "70px" }}>
+      <div className="dashboard__content_content" style={{ marginTop: "70px" }}>
 
        <AdvertiserGallery />
         <section className="">
@@ -173,16 +158,6 @@ export default function AdvertiserActivityDetails() {
                       </div>
                     </div>
                   </div>
-                {/* <div className="line mt-60 mb-60"></div>
-
-              <h2 className="text-30">Customer Reviews</h2>
-
-              <div className="mt-30">
-                <Rating />
-              </div>
-
-              <ActivityReviews activityId={activityId} /> */}
-
               </div>
               <div>
               <ActivityBooking bookings={activity.bookings} price={activity.price}/>
@@ -209,7 +184,6 @@ export default function AdvertiserActivityDetails() {
         </section>
       </div>
       <FooterThree />
-
     </div>
   );
 }

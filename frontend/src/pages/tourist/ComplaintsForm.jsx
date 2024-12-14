@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Input, Button, message, Modal } from "antd";
 import { createComplaint } from "../../api/ComplaintsService";
 

@@ -2,7 +2,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Step from "@mui/material/Step";
@@ -74,7 +73,6 @@ export default function Checkout(props) {
     const fetchWalletData = async () => {
       try {
         const data = await getWalletAndTotalPoints();
-        console.log("Fetched Wallet Data:", data); // Debug log
         setUpdatedWalletInfo(data.wallet);
         setTotalPoints(data.totalPoints);
       } catch (error) {
@@ -120,7 +118,6 @@ export default function Checkout(props) {
   const closeWalletInfoModal = () => setWalletInfoModalVisible(false);
 
   const processWalletPayment = async (orderData) => {
-    //showConfirmationModal();
     console.log("Deducting from wallet...");
     try {
       const response = await createOrder(orderData);
@@ -139,9 +136,7 @@ export default function Checkout(props) {
     setActiveStep(activeStep + 1);
   };
   const handleConfirmPayment = async () => {
-    cancelConfirmationModal(); // Close the confirmation modal
-
-    // Process wallet payment after confirmation
+    cancelConfirmationModal();
     const orderData = {
       deliveryAddress: address,
       paymentMethod: "Wallet",
@@ -154,7 +149,6 @@ export default function Checkout(props) {
     console.log("Proceeding with cash on delivery...");
     const response = await createOrder(orderData);
     setOrder(response.order);
-    //message.success("COD successful!");
     setActiveStep(activeStep + 1);
   };
 
@@ -170,13 +164,10 @@ export default function Checkout(props) {
         await processCreditCardPayment(orderData);
       } else if (newPaymentType === "Wallet") {
         showConfirmationModal();
-        //await processWalletPayment(orderData);
       } else if (newPaymentType === "Cash on Delivery") {
         await processCashOnDelivery(orderData);
       }
     } catch (error) {
-      console.error("Error creating order:", error);
-      console.error("Full Error Object:", error.response || error.message);
       message.error("Failed to create the order. Please try again.");
     }
   };
@@ -201,7 +192,6 @@ export default function Checkout(props) {
   return (
     <div className="page-wrapper">
       <AppTheme {...props}>
-        {/* <CssBaseline enableColorScheme /> */}
         <Header />
         <main className="page-content-hana">
           <Grid
@@ -285,7 +275,7 @@ export default function Checkout(props) {
                   alignItems: "center",
                   width: "100%",
                   maxWidth: { sm: "100%", md: 600 },
-                  height: "auto", // Adjust height dynamically
+                  height: "auto",
                 }}
               >
                 <Box
@@ -295,7 +285,7 @@ export default function Checkout(props) {
                     justifyContent: "space-between",
                     alignItems: "flex-end",
                     flexGrow: 1,
-                    height: "auto", // Ensure height adjusts to content
+                    height: "auto",
                   }}
                 >
                   <Stepper
@@ -320,7 +310,7 @@ export default function Checkout(props) {
                   width: "100%",
                   maxWidth: { sm: "100%", md: 600 },
                   gap: { xs: 5, md: "none" },
-                  height: "auto", // Let the content adjust its height as needed
+                  height: "auto",
                 }}
               >
                 {activeStep === steps.length ? (

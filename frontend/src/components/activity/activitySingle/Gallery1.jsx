@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ImageLightBox from "./ImageLightBox";
 
 const images = [
@@ -19,6 +19,7 @@ const images = [
     image: `/img/activities/touristsGroup4.jpg`,
   },
 ];
+
 export default function Gallery1() {
   const [activeLightBox, setActiveLightBox] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(1);

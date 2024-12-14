@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getCart , removeFromCart, updateQuantity, checkStock} from "../../api/TouristService"
-// import TouristNavBar from "../../components/navbar/TouristNavBar"
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 import { message } from "antd";
@@ -229,11 +228,6 @@ const Cart = () => {
                 </div>
                 <FooterThree />
             </div>
-            {/* <ComplaintsForm
-                open={isModalOpen}
-                onCancel={() => setIsModalOpen(false)}
-                onSubmitSuccess={handleComplaintSubmit}
-            /> */}
       <style>{`
       
       .header-section {

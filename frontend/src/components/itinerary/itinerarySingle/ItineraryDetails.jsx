@@ -10,7 +10,7 @@ import ReviewBox from "../../common/ReviewBox";
 import ItineraryReviews from "./ItineraryReviews";
 import Roadmap2 from "./Roadmap2";
 import TourGuideReviews from "./TourGuideReviews";
-import Index from './Index'
+import NotFoundPage from "@/pages/pages/404";
 import ItineraryBooking from "../ItineraryBooking";
 export default function ItineraryDetails({ itinerary, userRole, refItineraryBook }) {
   
@@ -24,7 +24,7 @@ export default function ItineraryDetails({ itinerary, userRole, refItineraryBook
   const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24); // Convert milliseconds to days
   //#endregion
 
-  if (!itinerary) return <div><Index/></div>;
+  if (!itinerary) return <div><NotFoundPage/></div>;
   const itineraryId = itinerary._id;
  
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTags } from '../../api/PreferenceTagService';
 
 const ItineraryFilter = ({ onFilter }) => {

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 import ProductList from "../../components/product/ProductList"; 
 import FooterThree from "@/components/layout/footers/FooterThree";

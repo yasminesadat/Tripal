@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import LocationMap from '../common/MapComponent';
 import { Form, Input, Button, Select, Checkbox, InputNumber, message } from 'antd';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ const ActivityForm = ({ isUpdate }) => {
 
   const existingActivity = location.state?.activity;
   const [activityData, setActivityData] = useState({
-    advertiser: existingActivity?.advertiser._id, // Use optional chaining here as well
+    advertiser: existingActivity?.advertiser._id,
     title: existingActivity?.title || '',
     description: existingActivity?.description || '',
     date: existingActivity?.date ? new Date(existingActivity.date).toISOString().split('T')[0] : '',
@@ -30,15 +30,12 @@ const ActivityForm = ({ isUpdate }) => {
     location: existingActivity?.location || 'No location selected yet',
   });
 
-
-
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]); // Default position (London)
   const [selectedLocation, setSelectedLocation] = useState('');
 
   useEffect(() => {
-
     const fetchCategories = async () => {
       try {
         const response = await ActivityCategoryService.getActivityCategories();
@@ -90,11 +87,11 @@ const ActivityForm = ({ isUpdate }) => {
     try {
       if (isUpdate) {
         console.log("print activityData", activityData)
-        const response = await updateActivity(id, {
+        await updateActivity(id, {
           ...activityData,
-          location: selectedLocation, // Store the location string
-          latitude: markerPosition[0], // Send the latitude
-          longitude: markerPosition[1], // Send the longitude
+          location: selectedLocation,
+          latitude: markerPosition[0],
+          longitude: markerPosition[1],
         });
         message.success('Activity updated successfully!');
         setTimeout(() => navigate(`/advertiser/activities`), 1000);
@@ -103,11 +100,10 @@ const ActivityForm = ({ isUpdate }) => {
         console.log(activityData.advertiser)
         const response = await createActivity({
           ...activityData,
-          location: selectedLocation, // Store the location string
-          latitude: markerPosition[0], // Send the latitude
-          longitude: markerPosition[1], // Send the longitude
+          location: selectedLocation,
+          latitude: markerPosition[0],
+          longitude: markerPosition[1],
         });
-
         message.success('Activity created successfully!');
         console.log('Activity created:', response.data);
         setTimeout(() => navigate(`/advertiser/activities`), 1000);
@@ -493,9 +489,8 @@ const ActivityForm = ({ isUpdate }) => {
                         </Form.Item>
                       </MDBCol>
                     </MDBRow>
-
-                    <Form.Item label="Booking Open">                     <Checkbox checked={activityData.isBookingOpen} onChange={(e) => handleChange('isBookingOpen', e.target.checked)}                      >                       Is Booking Open?                     </Checkbox>                   </Form.Item>
-
+                    <Form.Item label="Booking Open">                     
+                      <Checkbox checked={activityData.isBookingOpen} onChange={(e) => handleChange('isBookingOpen', e.target.checked)}                      >                       Is Booking Open?                     </Checkbox>                   </Form.Item>
                     <MDBRow>
                       <MDBCol md="12">
                         <Form.Item
@@ -538,5 +533,4 @@ const ActivityForm = ({ isUpdate }) => {
     </div>
   );
 };
-
 export default ActivityForm;

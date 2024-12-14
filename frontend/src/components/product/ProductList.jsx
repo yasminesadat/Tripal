@@ -18,7 +18,6 @@ const metadata = {
 export default function ProductList() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sortOption, setSortOption] = useState("");
   const [ddActives, setDdActives] = useState(false);
   const dropDownContainer = useRef();
   const dropDownContainer2 = useRef();
@@ -34,8 +33,6 @@ export default function ProductList() {
   const [totalPages, setTotalPages] = useState(1);
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [newIsArchived, setNewIsArchived] = useState(false);
   const refProductDetails = useRef(null);
   const [open, setOpen] = useState(false);
   const [firstProductId, setFirstProductId] = useState(null);  
@@ -215,7 +212,7 @@ export default function ProductList() {
   return (
     <>
       <MetaComponent meta={metadata} />
-      <style jsx global>{`
+      <style>{`
         /* Base style for all dots */
         /* Try multiple selectors and approaches */
         .ant-tour .ant-tour-indicators > span {
@@ -545,7 +542,6 @@ export default function ProductList() {
                   />
                 ))}
               </div>
-
               <div className="d-flex justify-center flex-column mt-60">
                 <Pagination
                   curr={currentPage}
@@ -560,4 +556,3 @@ export default function ProductList() {
     </>
   );
 }
-

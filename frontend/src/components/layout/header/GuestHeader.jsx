@@ -7,13 +7,11 @@ export default function GuestHeader({ refLogin, setOpen, homepage }) {
   const navigate = useNavigate();
   const isLoginPage = location.pathname === "/login";
   const isSignupPage = location.pathname === "/register";
-
   const pageNavigate = (pageName) => {
     navigate(pageName);
   };
   const [, setMobileMenuOpen] = useState(false);
   const [addClass] = useState(true);
-
   return (
     <>
       <header

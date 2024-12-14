@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-//import Calender from "../../../components/dropdownSearch/Calender";
+import { useState } from "react";
 import {
   durations,
   languages,
@@ -16,26 +15,6 @@ export default function Sidebar() {
     <div className="sidebar -type-1 rounded-12">
       <div className="sidebar__header bg-accent-1">
         <div className="text-15 text-white fw-500">When are you traveling?</div>
-
-        {/* <div className="mt-10">
-          <div className="searchForm -type-1 -col-1 -narrow">
-            <div className="searchForm__form">
-              <div className="searchFormItem js-select-control js-form-dd js-calendar">
-                <div className="searchFormItem__button" data-x-click="calendar">
-                  <div className="pl-calendar d-flex items-center">
-                    <i className="icon-calendar text-20 mr-15"></i>
-                    <div>
-                      <span className="js-first-date">
-                        <Calender />
-                      </span>
-                      <span className="js-last-date"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
 
       <div className="sidebar__content">
@@ -352,7 +331,6 @@ export default function Sidebar() {
                               </div>
                             </div>
                           </div>
-
                           <div className="lh-11 ml-10">{elm}</div>
                         </div>
                       </div>
