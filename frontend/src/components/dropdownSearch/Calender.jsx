@@ -1,13 +1,6 @@
-import { useState } from "react";
-import DatePicker, { DateObject } from "react-multi-date-picker";
+import DatePicker from "react-multi-date-picker";
 
 export default function Calender({dates,setDates}) {
-  // const [dates, setDates] = useState([
-  //   new DateObject().setDay(5),
-  //   new DateObject().setDay(14).add(1, "month"),
-  // ]);
- 
-  // console.log("in calendar",dates)
   return (
     <DatePicker
       inputClass="custom_input-picker"
@@ -17,7 +10,6 @@ export default function Calender({dates,setDates}) {
       numberOfMonths={2}
       offsetY={10}
       range
-      // className="yellow"
       rangeHover
       format="DD MMM YY"
     />
