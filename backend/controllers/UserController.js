@@ -137,6 +137,7 @@ const getUserData = async (req, res) => {
 
 const logoutUser = (req, res) => {
   try {
+
     const isProduction = process.env.NODE_ENV === 'production';
 
     res.clearCookie("jwt", {
@@ -146,11 +147,9 @@ const logoutUser = (req, res) => {
       path: '/',
       domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost'
     });
-
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
-    console.error("Logout error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500);
   }
 };
 
