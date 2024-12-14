@@ -855,6 +855,13 @@ To contribute:
 - [MERN Stack Tutorial](https://youtu.be/-0exw-9YJBo?si=_7WHciKbByTxXlTV)  
 ## License
 
+## Deployment
+
+This application is deployed and accessible at the following URLs:
+
+### Frontend
+- Deployed on Vercel
+- URL: https://tripal-sable.vercel.app/
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
 See the LICENSE file for detailed terms and conditions.
 
