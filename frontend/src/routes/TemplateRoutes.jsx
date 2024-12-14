@@ -1,13 +1,3 @@
-import HomePage1 from "../pages/homes/home-1";
-import HomePage2 from "../pages/homes/home-2";
-import HomePage3 from "../pages/homes/home-3";
-import HomePage4 from "../pages/homes/home-4";
-import HomePage6 from "../pages/homes/home-6";
-import HomePage7 from "../pages/homes/home-7";
-import HomePage8 from "../pages/homes/home-8";
-import HomePage9 from "../pages/homes/home-9";
-import HomePage10 from "../pages/homes/home-10";
-
 import TourListPage1 from "../pages/tour-lists/tour-list-1";
 import TourListPage2 from "../pages/tour-lists/tour-list-2";
 import TourListPage3 from "../pages/tour-lists/tour-list-3";
@@ -40,16 +30,6 @@ import Header3 from "@/components/layout/header/Header3";
 
 const templateRoutes = [
   { path: "/template", element: <Header3></Header3> },
-  { path: "/home-5", element: <HomePage1 /> },
-  { path: "/home-2", element: <HomePage2 /> },
-  { path: "/home-3", element: <HomePage3 /> },
-  { path: "/home-4", element: <HomePage4 /> },
-  { path: "/home-1", element: <HomePage1 /> },
-  { path: "/home-6", element: <HomePage6 /> },
-  { path: "/home-7", element: <HomePage7 /> },
-  { path: "/home-8", element: <HomePage8 /> },
-  { path: "/home-9", element: <HomePage9 /> },
-  { path: "/home-10", element: <HomePage10 /> },
 
   { path: "/tour-list-1", element: <TourListPage1 /> },
   { path: "/tour-list-2", element: <TourListPage2 /> },
