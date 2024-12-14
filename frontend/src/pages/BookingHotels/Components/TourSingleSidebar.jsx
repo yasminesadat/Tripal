@@ -15,12 +15,9 @@ export default function TourSingleSidebar({
   dates1,
   dates2,
 }) {
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const today = new Date();
   const [dates, setDates] = useState(() => {
     try {
-      // If dates1 and dates2 exist, use them
       if (dates1 && dates2) {
         return [
           new Date(format(dates1, "dd MMM yy")),
@@ -28,7 +25,6 @@ export default function TourSingleSidebar({
         ];
       }
 
-      // Default values: today and tomorrow
       const today = new Date();
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);

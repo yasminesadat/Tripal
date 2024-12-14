@@ -14,7 +14,7 @@ const metadata = {
   description: "Hotels Search || Tripal",
 };
 
-export default function Hero6() {
+export default function SearchHotel2() {
   const [currentActiveDD, setCurrentActiveDD] = useState("");
   const [calender, setCalender] = useState("");
   const [tourType, setTourType] = useState("");
@@ -211,9 +211,6 @@ export default function Hero6() {
                       at our world-class hotel
                     </p>
                     <div
-                      // data-aos="fade-up"
-                      // data-aos-delay="400"
-                      // the option doesn't appear unless you scroll down + it also messes with the guide highlight
                       className="hero__filter mt-60 md:mt-30"
                       ref={refHotelsSearch}
                     >

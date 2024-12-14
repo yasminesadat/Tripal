@@ -1,5 +1,5 @@
 import { roadmapData2 } from "./tourSingleContent";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function RoadMap2() {
   const [activeRoadmap, setActiveRoadmap] = useState(2);

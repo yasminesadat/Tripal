@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState} from "react";
 import MainInformation from "./Components/MainInformation";
 import Overview from "./Components/Overview";
 import Included from "./Components/Included";
@@ -7,17 +7,13 @@ import Rating from "./Components/Rating";
 import Reviews from "./Components/Reviews";
 import TourSingleSidebar from "./Components/TourSingleSidebar";
 import Gallery1 from "./Components/Gallery1";
-
 import { useParams } from "react-router-dom";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
 import TouristHeader from "@/components/layout/header/TouristHeader";
 
-
-
 export default function HotelDetails() {
   const { cityCode, name, hotelID, dates1, dates2 } = useParams();
-  console.log("1111", name);
   const [headerVisible, setHeaderVisible] = useState(true);
   const handleSeeAllPhotosClick = () => {
     setHeaderVisible(!headerVisible);  
@@ -72,8 +68,6 @@ export default function HotelDetails() {
                     <div className="accordion -simple row y-gap-20 mt-30 js-accordion">
                       <Faq />
                     </div>
-
-
 
                   </div>
 

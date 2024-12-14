@@ -7,15 +7,10 @@ import HistoricalPlaces from "../pages/commonPagesForMultipleUsers/HistoricalPla
 import HistoricalPlacesDetails from "../pages/commonPagesForMultipleUsers/HistoricalPlacesDetails";
 import ResetPassword from "@/pages/pages/login/ResetPassword";
 import Itineraries from "../pages/commonPagesForMultipleUsers/Itineraries";
-import TourList1 from "../pages/BookingHotels/HotelListGuest";
 
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
-  {
-    path: "/guest/hotelList/:cityCode/:dates1/:dates2",
-    element: <TourList1 />,
-  },
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces /> },

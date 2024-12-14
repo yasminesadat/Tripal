@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import CreditCard from "./Components/Payment";
-import { useLocation } from "react-router-dom";  // Import useLocation for reading query params
-import { format, set } from "date-fns";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { format } from "date-fns";
 import img from "./Components/HotelsImages/bookingicon2.png";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
@@ -15,13 +14,9 @@ export default function BookingPagesStripe() {
     title: "Home || Tripal - Travel Agency",
   };
 
-  const [isBookedOriginatingTransportation, setIsBookedOriginatingTransportation] = useState(false);
-  const [isBookedReturnTransportation, setIsBookedReturnTransportation] = useState(false);
-  const [isBookedAccepted, setIsBookedAccepted] = useState(false);
-  const [bookingStage, setBookingStage] = useState(2);
   const [total, setTotal] = useState(0);
-  const [cityCode, setCityCode] = useState("");
-  const [hotelID, setHotelID] = useState("");
+  const [setCityCode] = useState("");
+  const [setHotelID] = useState("");
   const [name, setName] = useState("");
   const [singlePrice, setSinglePrice] = useState(0);
   const [singleNumber, setSingleNumber] = useState(0);
@@ -29,7 +24,7 @@ export default function BookingPagesStripe() {
   const [doubleNumber, setDoubleNumber] = useState(0);
   const [triplePrice, setTriplePrice] = useState(0);
   const [tripleNumber, setTripleNumber] = useState(0);
-  const [boardType, setBoardType] = useState("");
+  const [setBoardType] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
  
@@ -43,12 +38,8 @@ export default function BookingPagesStripe() {
 
   const getExchangeRate = async () => {
     if (currency) {
-      try {
-        const rate = await getConversionRate(currency);
-        setExchangeRate(rate);
-      } catch (error) {
-        //message.error("Failed to fetch exchange rate.");
-      }
+      const rate = await getConversionRate(currency);
+      setExchangeRate(rate);
     }
   };
 
@@ -65,7 +56,6 @@ export default function BookingPagesStripe() {
 
   const location = useLocation();
 
-  // Function to decode query params from the URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     setCityCode(params.get("cityCode"));
@@ -91,13 +81,11 @@ export default function BookingPagesStripe() {
     if (checkOut) {
       setDate2(format(new Date(checkOut), 'dd MMMM yyyy'));
     }
-  }, [checkIn, checkOut]); // This will run when checkIn or checkOut changes
+  }, [checkIn, checkOut]);
 
   const fetchUserName= async() => {
     try{
-    console.log("hi")  
     const name = await getTouristUserName();
-    console.log("hi",name.userName)
     setUserName(name.userName)
     }
     catch(error)
@@ -112,7 +100,7 @@ export default function BookingPagesStripe() {
       (isNaN(doublePrice) ? 0 : doublePrice) * doubleNumber +
       (isNaN(triplePrice) ? 0 : triplePrice) * tripleNumber
     ).toFixed(2);
-    setTotal(calculatedTotal); // Update the total
+    setTotal(calculatedTotal);
     fetchUserName();
   }, [
     singleNumber,
@@ -121,7 +109,7 @@ export default function BookingPagesStripe() {
     singlePrice,
     doublePrice,
     triplePrice,
-  ]); // Dependencies for re-calculation
+  ]);
 
   const today = new Date();
 

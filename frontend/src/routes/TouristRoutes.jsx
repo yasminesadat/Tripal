@@ -16,7 +16,7 @@ import FlightInvoice from "@/pages/tourist/FlightInvoice";
 import BookingPages from "../pages/BookingHotels/BookingConfirmation";
 import HotelDetails from "../pages/BookingHotels/HotelDetails";
 import TourList1 from "../pages/BookingHotels/HotelList";
-import Hero6 from "../pages/BookingHotels/SearchHotel2";
+import SearchHotel2 from "../pages/BookingHotels/SearchHotel2";
 import BookmarkedEvents from "../pages/tourist/bookmarked";
 import WishListPage from "@/pages/tourist/WishList";
 import FlightCheckout from "@/pages/tourist/FlightChekoutSuccess";
@@ -50,7 +50,7 @@ const touristRoutes = [
   },
   { path: "/checkout", element: <Checkout /> },
   { path: "/tourist/booking-history", element: <DbBooking /> },
-  { path: "/hotel2", element: <Hero6 /> },
+  { path: "/hotel2", element: <SearchHotel2 /> },
   { path: "/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 /> },
   {path: "/hotelDetails/:cityCode/:name/:hotelID/:dates1/:dates2",
     element: <HotelDetails />,},

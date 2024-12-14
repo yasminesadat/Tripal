@@ -1,13 +1,9 @@
 import { reviews } from "./tourSingleContent";
-import React from "react";
 import Stars from "./Stars";
 import img1 from "../Components/HotelsImages/profile.jpeg";
 import img2 from "../Components/HotelsImages/reception.jpeg";
-
 import img3 from "../Components/HotelsImages/review1.jpeg";
 import img4 from "../Components/HotelsImages/review2.jpeg";
-
-
 
 export default function Reviews() {
   return (
@@ -50,8 +46,6 @@ export default function Reviews() {
                 </div>
               ))}
           </div>
-
-         
         </div>
       ))}
     </>
