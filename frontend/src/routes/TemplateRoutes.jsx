@@ -15,21 +15,8 @@ import TourSinglePage3 from "../pages/tour-singles/tour-single-3";
 import TourSinglePage4 from "../pages/tour-singles/tour-single-4";
 import TourSinglePage5 from "../pages/tour-singles/tour-single-5";
 import PendingPage from "@/pages/commonPagesForMultipleUsers/PendingRequest";
-import BookingPage from "../pages/pages/booking-pages";
-
-import DestinationsPage from "../pages/pages/destinations";
-import AboutPage from "../pages/pages/about";
-import HelpCenterPage from "../pages/pages/help-center";
-import TermsPage from "../pages/pages/terms";
-import RegisterPage from "../pages/pages/register";
-import InvoicePage from "../pages/pages/invoice";
-import UIElementsPage from "../pages/pages/ui-elements";
-import NotFoundPage from "../pages/pages/404";
-import ContactPage from "../pages/pages/contact";
-import Header3 from "@/components/layout/header/Header3";
-
 const templateRoutes = [
-  { path: "/template", element: <Header3></Header3> },
+  // { path: "/template", element: <Header3></Header3> },
 
   { path: "/tour-list-1", element: <TourListPage1 /> },
   { path: "/tour-list-2", element: <TourListPage2 /> },
@@ -48,19 +35,6 @@ const templateRoutes = [
   { path: "/tour-single-4/:id", element: <TourSinglePage4 /> },
   { path: "/tour-single-5/:id", element: <TourSinglePage5 /> },
 
-  { path: "/booking-pages", element: <BookingPage /> },
-
-  { path: "/destinations", element: <DestinationsPage /> },
-  { path: "/about", element: <AboutPage /> },
-  { path: "/help-center", element: <HelpCenterPage /> },
-  { path: "/terms", element: <TermsPage /> },
-  { path: "/register", element: <RegisterPage /> },
-  { path: "/invoice", element: <InvoicePage /> },
-  { path: "/ui-elements", element: <UIElementsPage /> },
-  { path: "/contact", element: <ContactPage /> },
-
-  { path: "/404", element: <NotFoundPage /> },
-  { path: "/*", element: <NotFoundPage /> },
   { path: "/pendingRequest", element: <PendingPage /> },
 ];
 

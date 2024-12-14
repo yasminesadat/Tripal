@@ -1,8 +1,7 @@
-import FooterOne from "@/components/layout/footers/FooterOne";
 import GuestHeader from "@/components/layout/header/GuestHeader";
 import MetaComponent from "@/components/common/MetaComponent";
 import FooterThree from "@/components/layout/footers/FooterThree";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const metadata = {
   title: "Not found || Tripal",
   description: "Tripal",
