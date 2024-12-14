@@ -35,11 +35,6 @@ import DBFavoritesPage from "../pages/dashboard/db-favorites";
 import DBMessagesPage from "../pages/dashboard/db-messages";
 import DBProfilePage from "../pages/dashboard/db-profile";
 
-import BlogListPage1 from "../pages/blogs/blog-list-1";
-import BlogListPage2 from "../pages/blogs/blog-list-2";
-import BlogListPage3 from "../pages/blogs/blog-list-3";
-import BlogSinglePage from "../pages/blogs/blog-single";
-
 import DestinationsPage from "../pages/pages/destinations";
 import AboutPage from "../pages/pages/about";
 import HelpCenterPage from "../pages/pages/help-center";
@@ -90,11 +85,6 @@ const templateRoutes = [
   { path: "/db-favorites", element: <DBFavoritesPage /> },
   { path: "/db-messages", element: <DBMessagesPage /> },
   { path: "/db-profile", element: <DBProfilePage /> },
-
-  { path: "/blog-list-1", element: <BlogListPage1 /> },
-  { path: "/blog-list-2", element: <BlogListPage2 /> },
-  { path: "/blog-list-3", element: <BlogListPage3 /> },
-  { path: "/blog-single/:id", element: <BlogSinglePage /> },
 
   { path: "/destinations", element: <DestinationsPage /> },
   { path: "/about", element: <AboutPage /> },

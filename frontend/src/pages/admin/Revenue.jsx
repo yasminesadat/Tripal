@@ -12,11 +12,10 @@ return (
                     <Header setSideBarOpen={setSideBarOpen} />
                     <RevenueTable/>
                     <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
-            </div>
+                        © Copyright Tripal {new Date().getFullYear()}
+                    </div>
                 </div>
             </div>
-        
         </>
     );
 }

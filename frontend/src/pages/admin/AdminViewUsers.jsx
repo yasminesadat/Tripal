@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from "../../api/AdminService";
 import {message} from 'antd';
 import Sidebar from '@/components/dasboard/Sidebar';
@@ -7,8 +7,7 @@ import UserListComponent from '@/components/dasboard/ViewUsers';
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const [initLoading, setInitLoading] = useState(true);
-    const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [notification, ] = useState(null);
+    const [setDeleteConfirm] = useState(null);
     const [sideBarOpen, setSideBarOpen] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +21,7 @@ const UserList = () => {
                 setInitLoading(false);
                 message.error({ content: 'Failed to fetch users', key });
                 setTimeout(() => {
-                message.destroy(key); // Destroy the message after timeout
+                message.destroy(key);
                 }, 2500);
                 message.error("Failed to fetch users!", "error");
             }
@@ -40,23 +39,17 @@ const UserList = () => {
             const updatedData = users.filter((item) => item.userId !== id);
             setUsers(updatedData);
             const key3="updated3"
-           // message.success(`${name} deleted successfully`, "success");
             message.success({ content: `${name} deleted successfully`, key3 });
-
-            // Set timeout to close the message after 3 seconds (3000 ms)
             setTimeout(() => {
-            message.destroy(key3); // Destroy the message after timeout
+            message.destroy(key3);
             }, 2500);
         } catch (error) {
             console.error(`00Error deleting user with id ${ id }:`, error);
             const key2 = 'updatable2';
             message.error({ content: 'Failed to delete user!', key2 });
-            // Set timeout to close the message after 3 seconds (3000 ms)
             setTimeout(() => {
-            message.destroy(key2); // Destroy the message after timeout
+            message.destroy(key2);
             }, 2500);
-
-
         }
         setDeleteConfirm(null);
     };
@@ -100,14 +93,10 @@ const UserList = () => {
 
                 <div className="dashboard__content">
                     <Header setSideBarOpen={setSideBarOpen} />
-                    
-
-<UserListComponent/>
-
-
+                    <UserListComponent/>
                     <div className="text-center pt-30">
-              © Copyright Tripal {new Date().getFullYear()}
-            </div>
+                         © Copyright Tripal {new Date().getFullYear()}
+                    </div>
                 </div>
             </div>
         </>

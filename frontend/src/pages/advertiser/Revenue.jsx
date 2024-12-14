@@ -30,14 +30,12 @@ export default function ActivityRevenue() {
       "18":18,"19":19,"20":20,"21":21 ,"22":22,"23":23,"24":24,"25":25,
       "26":26,"27":27,"28":28,"29":29,"30":30,"31":31,
     };
-    return monthMap[monthStr] || 0; // Return 0 if the month is invalid
+    return monthMap[monthStr] || 0;
   };
 
   useEffect(() => {
     const fetchRevenue = async () => {
-      try {
         const revenueResponse = await getRevenue();
-        console.log("Revenue Data:", revenueResponse);
         setTotalRevenue(revenueResponse.totalRevenue);
         const formattedData = [
             { name: "Week 1", value: revenueResponse.totalRevenue * 0.25 }, 
@@ -57,9 +55,6 @@ export default function ActivityRevenue() {
               : tab
           )
         );
-      } catch (error) {
-        console.error("Error fetching revenue data:", error);
-      }
     };
     fetchRevenue();
    
@@ -71,7 +66,7 @@ export default function ActivityRevenue() {
         const AdvertiserBooking = await getAdvertiserBookings();
         console.log("Revenue :", AdvertiserBooking.data.flat());
         const startDate = new Date();
-        startDate.setFullYear(startDate.getFullYear() - 1); // 1 year in the past
+        startDate.setFullYear(startDate.getFullYear() - 1); 
         const endDate = new Date();
         const updatedBookings = AdvertiserBooking.data.flatMap(item =>
           item.bookings.map(booking => ({
@@ -98,14 +93,10 @@ export default function ActivityRevenue() {
               : tab
           )
         );
-        
-
 } catch (error) {
   console.error("Error fetching bookings:", error);
 }
     };
-
-    
     getAdvertiserBooking();
   },[]);
   useEffect(() => {
@@ -121,7 +112,7 @@ export default function ActivityRevenue() {
         <XAxis tick={{ fontSize: 12 }} dataKey="name" interval={interval} />
         <YAxis
           tick={{ fontSize: 12 }}
-          domain={[0, "auto"]} // Auto-adjust Y-axis
+          domain={[0, "auto"]} 
           tickCount={7}
           interval={interval}
         />

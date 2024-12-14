@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import Sidebar from "@/components/dasboard/Sidebar";
 import Header from "@/components/dasboard/Header";
 import PromoCodeDetailsComponent from "@/components/dasboard/ViewPromocode"; 
 const PromoCodeDetails = () => {
     const [sideBarOpen, setSideBarOpen] = useState(true);
-
     
-
     return (
         <>
             <div className={`dashboard ${sideBarOpen ? "-is-sidebar-visible" : ""} js-dashboard`}>
