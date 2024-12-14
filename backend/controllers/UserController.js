@@ -86,11 +86,12 @@ const loginUser = async (req, res) => {
       }
 
       const token = generateToken(roleUser._id, user.role);
-      res.cookie("jwt", token, {
+      res.cookie('jwt', token, {
         httpOnly: true,
-        //maxAge: 3600 * 1000,
+        secure: true,
+        domain: '.vercel.app'  // Make sure this matches your deployed domain
       });
-      res.status(200).json({ role: user.role, isFirstTime});
+      res.status(200).json({ role: user.role, isFirstTime });
     } else {
       res.status(400).json({ message: "Invalid username or password" });
     }

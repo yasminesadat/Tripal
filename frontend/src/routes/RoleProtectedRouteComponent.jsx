@@ -16,7 +16,9 @@ const RoleProtectedRoute = ({ element, requiredRoles }) => {
       try {
         const response = await getUserData();
         if (response.data.status === "success") {
+
           if (requiredRoles.includes(response.data.role)) {
+            console.log("HEYYY", response);
             setRedirectTo(element);
           } else {
             setRedirectTo(<NotFoundPage />);
