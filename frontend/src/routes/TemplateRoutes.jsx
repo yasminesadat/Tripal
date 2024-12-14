@@ -27,14 +27,6 @@ import TourSinglePage5 from "../pages/tour-singles/tour-single-5";
 import PendingPage from "@/pages/commonPagesForMultipleUsers/PendingRequest";
 import BookingPage from "../pages/pages/booking-pages";
 
-import DBMainPage from "../pages/dashboard/db-main";
-import DBBookingPage from "../pages/dashboard/db-booking";
-import DBListingPage from "../pages/dashboard/db-listing";
-import DBAddTourPage from "../pages/dashboard/db-add-tour";
-import DBFavoritesPage from "../pages/dashboard/db-favorites";
-import DBMessagesPage from "../pages/dashboard/db-messages";
-import DBProfilePage from "../pages/dashboard/db-profile";
-
 import DestinationsPage from "../pages/pages/destinations";
 import AboutPage from "../pages/pages/about";
 import HelpCenterPage from "../pages/pages/help-center";
@@ -77,14 +69,6 @@ const templateRoutes = [
   { path: "/tour-single-5/:id", element: <TourSinglePage5 /> },
 
   { path: "/booking-pages", element: <BookingPage /> },
-
-  { path: "/db-main", element: <DBMainPage /> },
-  { path: "/db-booking", element: <DBBookingPage /> },
-  { path: "/db-listing", element: <DBListingPage /> },
-  { path: "/db-add-tour", element: <DBAddTourPage /> },
-  { path: "/db-favorites", element: <DBFavoritesPage /> },
-  { path: "/db-messages", element: <DBMessagesPage /> },
-  { path: "/db-profile", element: <DBProfilePage /> },
 
   { path: "/destinations", element: <DestinationsPage /> },
   { path: "/about", element: <AboutPage /> },
