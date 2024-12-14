@@ -87,13 +87,15 @@ const loginUser = async (req, res) => {
 
       const token = generateToken(roleUser._id, user.role);
 
+      const isProduction = process.env.NODE_ENV === 'production';
+
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: true,
-        sameSite: 'None',
-        domain: 'tripal-sable.vercel.app',
+        sameSite: 'None',  // Required for cross-site requests
         path: '/',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+        domain: isProduction ? 'tripal-sable.vercel.app' : 'localhost',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
       res.status(200).json({ role: user.role, isFirstTime });
     } else {
