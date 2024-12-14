@@ -137,8 +137,16 @@ const getUserData = async (req, res) => {
 
 const logoutUser = (req, res) => {
   try {
-    res.clearCookie("jwt");
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',  // Capitalized to match login
+      path: '/',
+      domain: isProduction ? 'tripal-production.up.railway.app' : 'localhost'
+    });
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500);

@@ -245,7 +245,7 @@ const cancelResource = async (req, res) => {
 //LAW ANA YOOM 1 EL EMAIL HAYETBE3ET LAW EL EVENT YOOM 4
 
 // Cron job to run every day at midnight
-cron.schedule('6 22 * * *', async () => {
+cron.schedule('00 00 * * *', async () => {
   const today = moment().utc();  // Current date and time in UTC
   const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
   const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
@@ -298,7 +298,7 @@ cron.schedule('6 22 * * *', async () => {
   }
 });
 
-cron.schedule('41 17 * * *', async () => {
+cron.schedule('00 00 * * *', async () => {
   const today = moment().utc();  // Current date and time in UTC
   const fiveDaysLater = today.add(3, 'days').startOf('day').utc(); // Start of the day in UTC
   const endOfDay = fiveDaysLater.clone().endOf('day'); // End of the day in UTC
