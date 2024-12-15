@@ -8,6 +8,7 @@ import Spinner from "../common/Spinner";
 import ProductCard from "./ProductCard";
 import MetaComponent from "../common/MetaComponent";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
+import { getWishList, removeWishList } from "@/api/TouristService";
 
 const { Search } = Input;
 
@@ -36,6 +37,7 @@ export default function ProductList() {
   const refProductDetails = useRef(null);
   const [open, setOpen] = useState(false);
   const [firstProductId, setFirstProductId] = useState(null);  
+  const [wishlist, setWishlist] = useState([]);
 
   const steps = [
     {
@@ -111,7 +113,14 @@ export default function ProductList() {
       setLoading(false);
     }
   };
-
+  const fetchWishlist = async () => {
+    try {
+      const data = await getWishList();
+      setWishlist(data);
+    } catch (error) {
+      console.error("Error fetching wishlist", error);
+    }
+  };
   const [exchangeRate, setExchangeRate] = useState(1);
   const [currency, setCurrency] = useState( "EGP");
 
@@ -151,6 +160,9 @@ export default function ProductList() {
   useEffect(() => {
     if (userRole) {
       getProducts(currentPage);
+    }
+    if(userRole === "Tourist"){
+      fetchWishlist();
     }
   }, [userRole, sortOrder]);
 
@@ -539,6 +551,8 @@ export default function ProductList() {
                     userRole={userRole}
                     userId={userId}
                     refProductDetails={i === 0 ? refProductDetails : null}
+                    wishlist={wishlist}
+                    setWishlist={setWishlist}
                   />
                 ))}
               </div>
