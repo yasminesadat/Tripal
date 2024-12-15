@@ -14,7 +14,6 @@ import TourList1 from "@/pages/BookingHotels/HotelListGuest";
 const guestRoutes = [
   { path: "/", element: <HomePage5 /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "/guest/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 />, },
   { path: "/activities/:activityId", element: <ActivityDetailsPage /> },
   { path: "/upcomingactivities", element: <Activities /> },
   { path: "/historicalPlaces", element: <HistoricalPlaces /> },
@@ -24,6 +23,7 @@ const guestRoutes = [
   { path: "/upcomingitineraries", element: <Itineraries /> },
   { path: "/pendingRequest", element: <PendingPage /> },
   { path: "/register", element: <RegisterPage /> },
+  { path: "/guest/hotelList/:cityCode/:dates1/:dates2", element: <TourList1 /> }
 ];
 
 export default guestRoutes;
