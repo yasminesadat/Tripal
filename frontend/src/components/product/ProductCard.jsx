@@ -7,9 +7,7 @@ import { saveProduct } from "@/api/TouristService";
 import Stars from "../common/Stars";
 import { getConversionRate, getTouristCurrency } from "@/api/ExchangeRatesService";
 import { getUserData } from "@/api/UserService";
-import { getWishList } from "@/api/TouristService";
-import WishList from "../tourist/WishList";
-import Spinner from "../common/Spinner";
+import { getWishList, removeWishList } from "@/api/TouristService";
 
 const ProductCard = ({
   id,
@@ -25,11 +23,11 @@ const ProductCard = ({
   sales,
   userRole,
   userId,
-  refProductDetails
+  refProductDetails,
+  wishlist,
+  setWishlist,
 }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [wishlist, setWishlist] = useState([]);
   const [newIsArchived, setNewIsArchived] = useState(isArchived);
   const [isSaved, setIsSaved] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -49,28 +47,25 @@ const ProductCard = ({
         averageRating,
         sales,
         userRole,
-        userId
+        userId,
+        wishlist
       },
     });
   };
   useEffect(() => {
-
-    setIsInWishlist(wishlist.some(product => product._id === id))
-
-  }, [wishlist]);
+    setIsInWishlist(wishlist.some((product) => product._id === id));
+  }, [wishlist, id]);
+  
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        setLoading(true);
 
         const data = await getWishList();
         setWishlist(data);
       } catch (error) {
         console.error("Error fetching wishlist", error);
       }
-      finally {
-        setLoading(false);
-      }
+     
     };
     fetchWishlist();
   }, []);
@@ -159,18 +154,27 @@ const ProductCard = ({
 
   const handleHeartClick = async (e) => {
     e.stopPropagation();
+  
     try {
-      await saveProduct(id);
-      message.success("Product added to wishlist!");
-      setIsSaved(true);
+      if (isInWishlist) {
+        await removeWishList(id);
+        message.success("Product removed from wishlist!");
+        setIsSaved(false);
+        setWishlist(wishlist.filter(product => product._id !== id));
+      } else {
+        await saveProduct(id);
+        message.success("Product added to wishlist!");
+        setIsSaved(true);
+        setWishlist([...wishlist, { _id: id }]); 
+      }
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "An unexpected error occurred";
       message.warning(errorMessage);
     }
   };
+  
 
   return (
-    loading ? <Spinner /> :
       <div className="col-lg-3 col-sm-6">
         <div className="tourCard -type-1 py-10 px-10 border-1 rounded-12 -hover-shadow">
           <div className="tourCard__header">
@@ -186,11 +190,11 @@ const ProductCard = ({
             ) : userRole === "Tourist" ? (
 
               <button
-                className={`tourCard__favorite ${isInWishlist ? "saved" : ""}`}
-                onClick={handleHeartClick}
-              >
-                <i className={`icon-heart ${isSaved ? "icon-selected" : ""}`}></i>
-              </button>
+              className={`tourCard__favorite ${isInWishlist ? "saved" : ""}`}
+              onClick={handleHeartClick}
+            >
+              <i className={`icon-heart ${isInWishlist ? "icon-selected" : ""}`}></i>
+            </button>            
 
             ) : []}
           </div>
