@@ -27,14 +27,12 @@ export default function BookingPagesStripe() {
   const [setBoardType] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
- 
   const [userName,setUserName]=useState("")
   const [date1,setDate1]=useState("")
   const [date2,setDate2]=useState("");
-
   const [exchangeRate, setExchangeRate] = useState(1);
-
   const [currency, setCurrency] = useState( "EGP");
+  const [email,setUserEmail]=useState("")
 
   const getExchangeRate = async () => {
     if (currency) {
@@ -85,8 +83,9 @@ export default function BookingPagesStripe() {
 
   const fetchUserName= async() => {
     try{
-    const name = await getTouristUserName();
-    setUserName(name.userName)
+    const response = await getTouristUserName();
+    setUserEmail(response.email)
+    setUserName(response.userName)
     }
     catch(error)
     {
@@ -135,7 +134,7 @@ export default function BookingPagesStripe() {
                             {userName}, your order was submitted successfully!
                           </h2>
                           <div className="mt-10">
-                            Booking details has been sent to: booking@tourz.com
+                            Booking details has been sent to: {email}
                           </div>
                         </div>
 
