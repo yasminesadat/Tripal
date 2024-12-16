@@ -20,6 +20,7 @@ export default function BookingPages() {
   const [bookingStage, setBookingStage] = useState(2);
   const [total, setTotal] = useState(0);
   const [userName,setUserName]=useState("")
+  const [email,setUserEmail]=useState("")
 
   const today = new Date();
   const {
@@ -64,10 +65,9 @@ export default function BookingPages() {
 
   const fetchUserName= async() => {
     try{
-    console.log("hi")  
-    const name = await getTouristUserName();
-    console.log("hi",name.userName)
-    setUserName(name.userName)
+    const response = await getTouristUserName();
+    setUserEmail(response.email)
+    setUserName(response.userName)
     }
     catch(error)
     {
@@ -153,7 +153,7 @@ export default function BookingPages() {
                             {userName}, your order was submitted successfully!
                           </h2>
                           <div className="mt-10">
-                            Booking details has been sent to: booking@tourz.com
+                            Booking details has been sent to: {email}
                           </div>
                         </div>
 
