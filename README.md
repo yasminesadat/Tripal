@@ -80,8 +80,19 @@ EMAIL_PASS=
 * **Reviews & Ratings:** Users can rate and review activities, itineraries, products, and tour guides.
 * **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
+
+
+  <details>
+  <summary>📋 General Pages</summary>
+
+  #### Login
 <img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
-<img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+
+  #### Registeration Page
+
+   <img width="1440" alt="Screenshot 2024-12-18 at 12 49 24 AM" src="https://github.com/user-attachments/assets/b6ade371-a23d-466d-a689-c6c86cd47a7c" />
+
+</details>
 <details>
   <summary>🌍 Tourist Pages</summary>
 
@@ -89,6 +100,10 @@ EMAIL_PASS=
 <img width="800" alt="screenshot2" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
   #### Complaints Details Page
 <img width="800" alt="screenshot" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
+  #### Tourist Home Page
+
+<img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+
 </details>
 
 
