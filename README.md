@@ -97,10 +97,10 @@ EMAIL_PASS=
   <summary>🌍 Tourist Pages</summary>
 
   #### Flight Booking Page  
-  <img width="800" alt="Flight Booking Page" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
+<img width="1440" alt="Flight Booking" src="https://github.com/user-attachments/assets/2b438591-b1b4-4efe-bc71-d4332cda8b2e" />
 
   #### Complaints Details Page  
-  <img width="800" alt="Complaints Details Page" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
+  <img width="1440" alt="Complaint Details" src="https://github.com/user-attachments/assets/d733d275-fd81-483a-a8fe-e7480d48bc05" />
 
   #### Tourist Home Page 
   <img width="1440" alt="Tourist Home" src="https://github.com/user-attachments/assets/e9652328-700c-4ca4-a635-003b387038b2" />
