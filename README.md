@@ -82,35 +82,29 @@ EMAIL_PASS=
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 
 ## Screenshots
- <details>
-  <summary>🛠️ Admin Pages</summary>
+<details>
+  <summary>📋 General Pages</summary>
 
-  #### Login Screen
+  #### Login Page  
   <img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
 
-  #### Example Admin Page
-  <img width="800" alt="screenshot" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
+  #### Registration Page  
+  <img width="1440" alt="Registration Page" src="https://github.com/user-attachments/assets/b6ade371-a23d-466d-a689-c6c86cd47a7c">
 </details>
 
 <details>
   <summary>🌍 Tourist Pages</summary>
 
-  #### Tourist Home Page
-  <img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+  #### Flight Booking Page  
+  <img width="800" alt="Flight Booking Page" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
 
-  #### Example Tourist Page
-  <img width="800" alt="screenshot2" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
+  #### Complaints Details Page  
+  <img width="800" alt="Complaints Details Page" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
+
+  #### Tourist Home Page  
+  <img width="960" alt="Tourist Home Page" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
 </details>
 
-<details>
-  <summary>📋 General Pages</summary>
-
-  #### Example General Page 1
-  <img width="800" alt="screenshot2" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
-
-  #### Example General Page 2
-  <img width="800" alt="screenshot" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
-</details>
 
 
 
