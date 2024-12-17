@@ -1,4 +1,4 @@
- ![logo](https://github.com/user-attachments/assets/2d83d299-a3b9-4a42-a6f0-091d3e7add52)
+<img width="1440" alt="Screenshot 2024-12-18 at 1 02 50 AM" src="https://github.com/user-attachments/assets/d59ab8e8-1b58-436b-87fd-80c2ecba11e5" /> ![logo](https://github.com/user-attachments/assets/2d83d299-a3b9-4a42-a6f0-091d3e7add52)
 --------
 ## Motivation  
 Traveling is about creating unforgettable memories, exploring new destinations, and experiencing diverse cultures. However, planning a trip can often be overwhelming and time-consuming.  
@@ -82,11 +82,12 @@ EMAIL_PASS=
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 
 ## Screenshots
+
 <details>
   <summary>📋 General Pages</summary>
 
   #### Login Page  
-  <img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
+  <img width="960" alt="Login Page" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
 
   #### Registration Page  
   <img width="1440" alt="Registration Page" src="https://github.com/user-attachments/assets/b6ade371-a23d-466d-a689-c6c86cd47a7c">
@@ -103,8 +104,45 @@ EMAIL_PASS=
 
   #### Tourist Home Page  
   <img width="960" alt="Tourist Home Page" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+
+  #### Products Page  
+  <img width="1440" alt="Products Page" src="https://github.com/user-attachments/assets/71d77c33-7771-485f-a7e3-e124f10dc07e">
+
+  #### Historical Places Page  
+  <img width="1440" alt="Historical Places Page" src="https://github.com/user-attachments/assets/0fe66f5d-6e11-4dc5-9bc8-a533c7d6eb4c">
+
+  #### Orders Page  
+  <img width="1440" alt="Orders Page" src="https://github.com/user-attachments/assets/c88519cc-8779-4b7d-b409-1ac703788f99">
+
+  #### Adding to Cart Page  
+  <img width="1440" alt="Adding to Cart Page" src="https://github.com/user-attachments/assets/687d89e0-305f-477b-bd96-5a111cb85ea4">
 </details>
 
+<details>
+  <summary>📋 Advertiser Pages</summary>
+
+  #### Create Activity Page  
+  <img width="1440" alt="Create Activity Page" src="https://github.com/user-attachments/assets/666dfe25-8321-45c6-83d6-f681f05c9a58">
+</details>
+
+<details>
+  <summary>📋 Admin Pages</summary>
+
+  #### Admin Dashboard  
+  <img width="1440" alt="Admin Dashboard" src="https://github.com/user-attachments/assets/22013562-2951-4b10-9773-dda466b4e403">
+
+  #### Managing User Requests  
+  <img width="1440" alt="Managing User Requests" src="https://github.com/user-attachments/assets/63eeaccd-9071-44f1-bc2b-47d2ddc87ba4">
+
+  #### Viewing Activities  
+  <img width="1440" alt="Viewing Activities" src="https://github.com/user-attachments/assets/da8083ff-50e5-4a73-9fd7-473d583c7867">
+
+  #### Managing Preferred Tags  
+  <img width="1440" alt="Managing Preference Tags" src="https://github.com/user-attachments/assets/0c367d1b-d133-4ef9-bd26-383a25827214">
+
+  #### Complaints Management  
+  <img width="1440" alt="Complaints Management" src="https://github.com/user-attachments/assets/d9caa99f-09e8-4964-ba2e-6f4eb8f3f54f">
+</details>
 
 
 
