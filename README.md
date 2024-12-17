@@ -119,14 +119,14 @@ EMAIL_PASS=
 </details>
 
 <details>
-  <summary>📋 Advertiser Pages</summary>
+  <summary> 📢 Advertiser Pages</summary>
 
   #### Create Activity Page  
   <img width="1440" alt="Create Activity Page" src="https://github.com/user-attachments/assets/666dfe25-8321-45c6-83d6-f681f05c9a58">
 </details>
 
 <details>
-  <summary>📋 Admin Pages</summary>
+  <summary 🛠️ Admin Pages</summary>
 
   #### Admin Dashboard  
   <img width="1440" alt="Admin Dashboard" src="https://github.com/user-attachments/assets/22013562-2951-4b10-9773-dda466b4e403">
