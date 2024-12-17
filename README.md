@@ -82,8 +82,16 @@ EMAIL_PASS=
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
 <img width="960" alt="login" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
 <img width="960" alt="touristHome" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+<details>
+  <summary>🌍 Tourist Pages</summary>
+
+  #### Flight Booking Page
 <img width="800" alt="screenshot2" src="https://github.com/user-attachments/assets/26c710d3-d339-405d-a728-bade18a88cf7">
+  #### Complaints Details Page
 <img width="800" alt="screenshot" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
+</details>
+
+
 
 
 ## Code Examples
