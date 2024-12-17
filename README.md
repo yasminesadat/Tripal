@@ -1,4 +1,4 @@
-<img width="1440" alt="Screenshot 2024-12-18 at 1 02 50 AM" src="https://github.com/user-attachments/assets/d59ab8e8-1b58-436b-87fd-80c2ecba11e5" /> ![logo](https://github.com/user-attachments/assets/2d83d299-a3b9-4a42-a6f0-091d3e7add52)
+
 --------
 ## Motivation  
 Traveling is about creating unforgettable memories, exploring new destinations, and experiencing diverse cultures. However, planning a trip can often be overwhelming and time-consuming.  
@@ -87,7 +87,7 @@ EMAIL_PASS=
   <summary>📋 General Pages</summary>
 
   #### Login Page  
-  <img width="960" alt="Login Page" src="https://github.com/user-attachments/assets/51ff20c1-2a87-4044-9356-60ce62155b93">
+<img width="1440" alt="Login Page" src="https://github.com/user-attachments/assets/4ec3d584-aedf-415a-91fc-93af0f3dce22" />
 
   #### Registration Page  
   <img width="1440" alt="Registration Page" src="https://github.com/user-attachments/assets/b6ade371-a23d-466d-a689-c6c86cd47a7c">
@@ -102,8 +102,8 @@ EMAIL_PASS=
   #### Complaints Details Page  
   <img width="800" alt="Complaints Details Page" src="https://github.com/user-attachments/assets/78f2d88b-8f04-4aea-ab6b-dddd2c82bfa4">
 
-  #### Tourist Home Page  
-  <img width="960" alt="Tourist Home Page" src="https://github.com/user-attachments/assets/8557cb55-44eb-432a-8d29-f5360ea6666a">
+  #### Tourist Home Page 
+  <img width="1440" alt="Tourist Home" src="https://github.com/user-attachments/assets/e9652328-700c-4ca4-a635-003b387038b2" />
 
   #### Products Page  
   <img width="1440" alt="Products Page" src="https://github.com/user-attachments/assets/71d77c33-7771-485f-a7e3-e124f10dc07e">
