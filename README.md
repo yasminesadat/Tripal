@@ -126,7 +126,7 @@ EMAIL_PASS=
 </details>
 
 <details>
-  <summary 🛠️ Admin Pages</summary>
+  <summary 📋 Admin Pages</summary>
 
   #### Admin Dashboard  
   <img width="1440" alt="Admin Dashboard" src="https://github.com/user-attachments/assets/22013562-2951-4b10-9773-dda466b4e403">
