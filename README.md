@@ -80,7 +80,8 @@ EMAIL_PASS=
 * **Reviews & Ratings:** Users can rate and review activities, itineraries, products, and tour guides.
 * **Admin Controls:** Admins can manage users, approve profiles, handle complaints, and access reports.
 * **Notifications:** Users receive notifications for bookings, promotions, and important updates.
-
+  
+## Screenshots 
 <details> <summary>📋 General Pages</summary>
 Login Page
 <img width="1440" alt="Login Page" src="https://github.com/user-attachments/assets/4ec3d584-aedf-415a-91fc-93af0f3dce22" />
