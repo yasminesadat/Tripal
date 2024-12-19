@@ -1,4 +1,4 @@
-<img width="172" alt="Untitled" src="https://github.com/user-attachments/assets/9b10e286-925b-456a-9ddf-9d573269c2a6" />
+<img width="172" alt="Untitled" src="https://github.com/user-attachments/assets/c58a881c-adfe-4f96-9d40-b45fcfa0de83" />
 
 
 --------
@@ -61,8 +61,8 @@ npm install
 cd ..
 ```
 
-## How to use 
-After installing all dependencies:
+### 5. After installing all dependencies:
+
 1. Add .env to the backend directory with the following format and replace the variables values with your own
 ```
 NODE_ENV = development
@@ -214,6 +214,145 @@ Complaints Management
 - Notifications for various activities and events
 
 </details>
+
+## How To Use
+
+This platform provides tailored functionality for different types of users. Expand the sections below based on your role for a step-by-step guide:  
+
+---
+
+<details>
+<summary>Tourists</summary>
+
+Tourists can explore destinations, book services, shop for products, and engage with various offerings.  
+
+1. **Set Up Your Profile**  
+   - Register and log in to create your profile.  
+   - Add personal details and preferences to customize your experience.  
+   - Update your profile anytime.  
+
+2. **Search and Discover**  
+   - Explore options for *hotels, flights, historical places, activities, products, and itineraries*.  
+   - Use filters like *price, ratings, and dates* to refine your search results.  
+
+3. **Manage Bookings**  
+   - Book tickets for *activities, flights, itineraries, and hotels*.  
+   - Pay securely online for bookings.  
+   - View booking history and cancel bookings if needed.  
+   - Bookmark events to review them later.  
+
+4. **Shop for Products**  
+   - Browse available products and add items to your *cart* or *wishlist*.  
+   - Pay online for purchases.  
+   - View *current* and *past orders* along with order details.  
+   - Cancel an order before it is shipped.  
+
+5. **Rate and Review**  
+   - Leave reviews and ratings for products, activities, tour guides, and itineraries to share your experience with others.  
+
+6. **Earn and Redeem Rewards**  
+   - Accumulate *loyalty points* and *badges* through participation.  
+   - Redeem points as cash in your wallet.  
+
+7. **Notifications**  
+   - Get alerts for *upcoming events, promotions, and bookings*.  
+
+8. **Complaints**  
+   - File complaints and track their status.  
+
+9. **Use Promo Codes**  
+   - Apply promo codes during checkout to avail discounts on bookings and purchases.  
+
+</details>
+
+
+<details>
+<summary>Tour Guides</summary>
+
+Tour guides can manage itineraries and track their performance.  
+
+1. **Create and Manage Itineraries**  
+   - Add new itineraries with detailed information, including images, dates, and descriptions.  
+   - Edit or delete itineraries as needed.  
+   - Activate or deactivate itineraries with existing bookings.  
+
+2. **Monitor Performance**  
+   - View detailed *sales reports* to track revenue and the number of tourists for each itinerary.  
+
+</details>
+
+
+<details>
+<summary>Advertisers</summary>
+
+Advertisers can create activities and track their impact.  
+
+1. **Manage Profiles and Activities**  
+   - Create and update your *company profile*.  
+   - Add, edit, or delete activities with detailed descriptions.  
+
+2. **Analyze Performance**  
+   - Access *sales reports* to monitor activity performance and revenue.  
+
+</details>
+
+
+<details>
+<summary>Sellers</summary>
+
+Sellers can list products and manage inventory effectively.  
+
+1. **Add and Update Products**  
+   - Create detailed product listings with descriptions, images, and prices.  
+   - Edit or delete products as necessary.  
+   - Archive/unarchive products that are temporarily unavailable.  
+
+2. **Track Inventory and Sales**  
+   - Monitor *available quantities* and get notified when items are out of stock.  
+   - Analyze *sales reports* to track revenue and identify top-performing products.  
+
+</details>
+
+
+<details>
+<summary>Admins</summary>
+
+Admins oversee platform functionality and manage users.  
+
+1. **User Management**  
+   - Approve or reject registrations for all roles.  
+   - Add or remove admins and manage user accounts.  
+
+2. **Oversee Platform Content**  
+   - Create, edit, and manage *activities' categories, and preference tags*.  
+   - Archive/unarchive products.  
+   - Flag/unflag itineraries and activities as inappropriate.  
+
+3. **Resolve Complaints**  
+   - Review complaints filed by users and update their status.  
+
+4. **Monitor Performance**  
+   - Access *sales reports* for itineraries, activities, products, and *user statistics*.  
+
+5. **Create Promotions**  
+   - Generate and manage *promo codes* and notifications for users.  
+
+</details>
+
+
+<details>
+<summary>Tourism Governors</summary>
+
+Tourism Governors promote and maintain historical landmarks.  
+
+1. **Manage Historical Landmarks**  
+   - Add, update, or remove information about *historical places*.  
+
+2. **Categorize Landmarks**  
+   - Assign tags to historical places for easy categorization and searchability.  
+
+</details>
+
 
 ## Code Examples
 <details>
