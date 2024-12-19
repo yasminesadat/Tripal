@@ -853,11 +853,11 @@ This project uses  [Prettier](https://prettier.io/) and [ESLint](https://eslint.
 <details>
 <summary>We use Postman to manually test all our API references by making sure the response is as expected. Below are examples of the testing:</summary>
 
-<img src="https://github.com/user-attachments/assets/faf58e2b-7fb0-48e8-8b6b-69e967fe922f" alt="Test 1" width="470"/>
-<img src="https://github.com/user-attachments/assets/1d89f1b2-3043-472f-a784-d81d064b02a5" alt="Test 2" width="470"/>
-<img src="https://github.com/user-attachments/assets/aebf2057-7a9d-420e-aab4-ad0c24789f2b" alt="Test 3" width="400"/>
-<img src="https://github.com/user-attachments/assets/f09e2ee0-0696-468f-bc3c-38ccdd4a695e" alt="Test 4" width="400"/>
-<img src="https://github.com/user-attachments/assets/058157c2-c040-44cf-8de1-f6fc806d03ca" alt="Test 5" width="400"/>
+<img src="https://github.com/user-attachments/assets/faf58e2b-7fb0-48e8-8b6b-69e967fe922f" alt="Test 1" width="470"/><br/>
+<img src="https://github.com/user-attachments/assets/1d89f1b2-3043-472f-a784-d81d064b02a5" alt="Test 2" width="470"/><br/>
+<img src="https://github.com/user-attachments/assets/aebf2057-7a9d-420e-aab4-ad0c24789f2b" alt="Test 3" width="400"/><br/>
+<img src="https://github.com/user-attachments/assets/f09e2ee0-0696-468f-bc3c-38ccdd4a695e" alt="Test 4" width="400"/><br/>
+<img src="https://github.com/user-attachments/assets/058157c2-c040-44cf-8de1-f6fc806d03ca" alt="Test 5" width="400"/><br/>
 
 
 
