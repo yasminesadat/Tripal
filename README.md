@@ -32,11 +32,23 @@ Our mission is to empower travelers with a seamless, enjoyable, and enriched jou
 - No automated CI/CD tests are currently configured.
 - Additional documentation and automation workflows should be added in the future.
 ## Setup the project locally:
-### 1. Clone the repository
+### 1. Make Sure to Have [Git](https://git-scm.com/) and [Node.js](https://nodejs.org/) Installed
+
+To verify that Node.js and npm are installed correctly, run the following commands:
+```bash
+node -v
+npm -v
+```
+
+### 2. Clone the repository
 ```
 git clone https://github.com/dianarehan/Tripal.git
 ```
-### 2. Install dependencies
+### 3. Navigate to project directory after cloning
+```
+cd Tripal
+```
+### 4. Install all dependencies
 ```
 npm install
 cd backend
