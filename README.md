@@ -127,8 +127,91 @@ Complaints Management
 <img width="1440" alt="Complaints Management" src="https://github.com/user-attachments/assets/d9caa99f-09e8-4964-ba2e-6f4eb8f3f54f" /> </details>
 
 
+## App Features
 
+<details>
+ <summary>Guest</summary>
+ 
+- Register as a tourist or tour guide/advertiser/seller
+- Upload required documents
 
+</details>
+
+<details>
+ <summary>Tourist</summary>
+ 
+- Create and update profile
+- Search for historical places/activities/itineraries
+- View and filter upcoming activities/itineraries by various criteria (price, ratings, date, etc.)
+- Book tickets for events/activities/itineraries/flights/hotels
+- Cancel bookings
+- Rate and comment on tour guides, itineraries, and events
+- Receive loyalty points and badges
+- Redeem points for cash in wallet
+- File complaints and view their status
+- View and manage wishlist and cart for products
+- Pay online for events/activities/itineraries
+- Receive notifications for upcoming events and bookings
+- View current and past orders, and order details
+- Use promo codes during bookings
+
+</details>
+
+<details>
+ <summary>Tour Guide</summary>
+ 
+- Create, read, update, and delete itineraries with detailed information
+- Activate/deactivate itineraries with bookings
+- View sales reports and total number of tourists for activities
+
+</details>
+
+<details>
+ <summary>Advertiser</summary>
+ 
+- Create, read, update, and delete company profiles and activities
+- View sales reports
+
+</details>
+
+<details>
+ <summary>Seller</summary>
+ 
+- Create, read, update, and delete product listings
+- View available quantity and sales of products
+- Receive notifications for out-of-stock products
+
+</details>
+
+<details>
+ <summary>Admin</summary>
+ 
+- Manage user accounts (delete, add admins, accept/reject registrations)
+- Create, read, update, and delete activities, categories, and preference tags
+- View and manage complaints
+- View sales reports and user statistics
+- Create promo codes and manage notifications
+
+</details>
+
+<details>
+ <summary>Tourism Governor</summary>
+ 
+- Create, read, update, and delete historical places
+- Create tags for historical locations
+
+</details>
+
+<details>
+ <summary>General Features</summary>
+ 
+- Login and password recovery via OTP
+- Change password
+- Upload pictures and documents
+- View step-by-step vacation guide
+- Notifications for various activities and events
+
+</details>
 
 ## Code Examples
 <details>
