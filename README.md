@@ -232,8 +232,6 @@ Complaints Management
 
 This platform provides tailored functionality for different types of users. Expand the sections below based on your role for a step-by-step guide:  
 
----
-
 <details>
 <summary>Tourists</summary>
 
